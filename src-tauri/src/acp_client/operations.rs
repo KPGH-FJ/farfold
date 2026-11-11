@@ -146,6 +146,7 @@ impl ManagerCommand {
             Self::Authenticate { .. } | Self::Logout { .. } => 60,
             Self::OpenSession { .. } => 120,
             Self::ListSessions { .. } | Self::DeleteSession { .. } => 30,
+            Self::McpRecoveryRead { .. } => 30,
             Self::AccountStatus { .. } => 5,
         })
     }
@@ -159,6 +160,7 @@ impl ManagerCommand {
                 native_session_id, ..
             } => format!("open:{}", native_session_id.as_deref().unwrap_or("new")),
             Self::DeleteSession { session_id, .. } => format!("open:{session_id}"),
+            Self::McpRecoveryRead { session_id, .. } => format!("open:{session_id}"),
         }
     }
 }
@@ -316,6 +318,28 @@ pub(crate) async fn run(
     } = queued;
     let operation = Operation::new().with_history(_lease.history());
     match command {
+        ManagerCommand::McpRecoveryRead {
+            session_id,
+            availability,
+            result,
+        } => {
+            if result.is_closed() || tokio::time::Instant::now() >= deadline || ops.life.finished()
+            {
+                let _ = result.send(Err("工具核对尚未开始，请重试".into()));
+                return;
+            }
+            // IPC timing never discards the only receiver. The recovery job
+            // retains it, and this exact lease survives unwitnessed failures.
+            let value = super::session_tool_recovery::read_on_connection(
+                &cx,
+                &ops.life,
+                &availability,
+                &session_id,
+            )
+            .await;
+            drop(_lease);
+            let _ = result.send(value);
+        }
         ManagerCommand::AccountStatus { query, result } => {
             execute(
                 result,

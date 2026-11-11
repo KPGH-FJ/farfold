@@ -75,3 +75,18 @@
   white-space: pre-wrap;
   unicode-bidi: plaintext;
 }
+.session-tool-management {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+.session-tool-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.session-tool-review dd {
+  margin-inline-start: 0;
+  margin-block-end: 10px;
+  overflow-wrap: anywhere;
+}

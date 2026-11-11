@@ -140,6 +140,7 @@ pub(super) async fn send(
     if result.is_closed() {
         return Err("请求等待已结束，消息尚未发送".into());
     }
+    super::super::session_tool_recovery::require_ready(config_store, ctx.session_id).await?;
     let observation = ctx
         .ops
         .prompt_escrow

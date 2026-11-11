@@ -3,6 +3,7 @@ import { permissionDecision } from "../runtime/permission_options";
 import { audioCapability } from "../runtime/audio_input";
 import { SearchDisclosure, TranscriptSearchContext } from "./transcript-search";
 import { ConfigurationChangeReview } from "./ConfigurationChangeReview";
+import { SessionToolRecovery } from "./SessionToolRecovery";
 import { AsyncTasks } from "./AsyncTasks";
 import { showToolLocation } from "./showToolLocation";
 import { ASYNC_TASKS } from "../runtime/async_task_strings";
@@ -661,6 +662,9 @@ export function ThreadView({
         {header}
         <div className="transcript" ref={scrollRef} onScroll={onScroll}>
           <div className="col">
+            {thread.sessionToolRecoveryRequired && (
+              <SessionToolRecovery thread={thread} active={active} />
+            )}
             {thread.historicalOutcomeUnknown && (
               <div className="banner" role="status">
                 <span>{STRINGS.thread.historicalOutcomeUnknown}</span>

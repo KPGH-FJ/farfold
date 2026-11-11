@@ -2,6 +2,7 @@ import type { SessionToolsCode } from "./session_tools_types";
 
 export const SESSION_TOOLS_STRINGS = {
   title: "当前对话工具报告",
+  managementTitle: "当前对话工具",
   open: "查看工具报告",
   scope: "来源：当前对话的程序",
   filter: "报告范围",
@@ -26,6 +27,7 @@ export const SESSION_TOOLS_STRINGS = {
     },
   },
   notice: "仅查看工具报告，不发送对话消息。",
+  managementNotice: "添加或撤回须在上方单独确认。读取报告不会发送对话消息。",
   initial: "读取这段对话的工具名称、说明和调用权限报告。",
   loading: "正在读取工具报告…",
   pending: "本次读取尚未结束，可以检查状态或稍后再查看。",

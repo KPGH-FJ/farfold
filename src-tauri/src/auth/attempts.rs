@@ -42,9 +42,17 @@ impl Attempt {
     }
     pub(crate) async fn configuration_guard(
         &self,
+        store: &crate::meta_store::MetaStore,
     ) -> Result<tokio::sync::OwnedMutexGuard<()>, String> {
-        self.setup(async { Ok(crate::install_job::configuration_guard(&self.agent).await) })
-            .await
+        self.setup(async {
+            let guard = crate::install_job::configuration_guard(&self.agent).await;
+            let agent = self.agent.clone();
+            store
+                .run(move |store| store.require_mcp_agent_ready(&agent))
+                .await?;
+            Ok(guard)
+        })
+        .await
     }
     pub(crate) fn operation(&self) -> AuthenticationOperation {
         self.operation.clone()
@@ -139,6 +147,64 @@ pub(crate) fn end_connection<T>(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn pending_tools_prevent_each_authentication_guard_and_recheck_after_wait() {
+        use crate::meta_store::{
+            MetaStore, SessionRow,
+            mcp_pending::{Action, Pending},
+        };
+        let store = MetaStore::test_memory();
+        let agent = "pending-authentication-source";
+        let row = SessionRow {
+            id: "auth-owned".into(),
+            agent_id: agent.into(),
+            cwd: "/fixture".into(),
+            native_session_id: Some("native".into()),
+            title: None,
+            config_options: None,
+            pinned: false,
+            archived: false,
+            created_at: 1,
+            updated_at: 1,
+        };
+        store.upsert_session(&row).unwrap();
+        let pending = Pending {
+            operation_id: "auth-protection".into(),
+            action: Action::Add,
+            before_digest: "a".repeat(64),
+            expected_digest: None,
+            target_digest: "b".repeat(64),
+        };
+        let attempt = reserve(agent, "auth-source").unwrap();
+        // The first setup may finish before a tool change, as happens while
+        // protocol authentication opens its connection outside this lock.
+        drop(attempt.configuration_guard(&store).await.unwrap());
+        let held = crate::install_job::configuration_guard(agent).await;
+        let waiting = attempt.configuration_guard(&store);
+        tokio::pin!(waiting);
+        assert!(
+            tokio::time::timeout(std::time::Duration::from_millis(20), &mut waiting)
+                .await
+                .is_err()
+        );
+        store.begin_mcp_pending(&row, &pending).unwrap();
+        drop(held);
+        assert_eq!(
+            waiting.await.unwrap_err(),
+            crate::meta_store::mcp_pending::BLOCKED
+        );
+        // Every declared, manual terminal and protocol path takes this same
+        // checked guard before it can read credentials or dispatch login.
+        assert_eq!(
+            attempt.configuration_guard(&store).await.unwrap_err(),
+            crate::meta_store::mcp_pending::BLOCKED
+        );
+        let other = reserve("pending-authentication-other", "auth-source").unwrap();
+        drop(other.configuration_guard(&store).await.unwrap());
+        assert_eq!(store.mcp_pending(&row.id).unwrap(), Some(pending.clone()));
+        store.clear_mcp_pending(&row, &pending).unwrap();
+        drop(attempt.configuration_guard(&store).await.unwrap());
+    }
     #[test]
     fn duplicate_and_stale_cancellation_cannot_affect_another_attempt() {
         let first = reserve("attempt-test", "first").unwrap();

@@ -30,6 +30,7 @@ import {
   hasConfigurationRecheckRecovery,
 } from "./session_config_recheck";
 import { SessionConfiguration } from "./session_configuration";
+import { SessionToolChangeGuards } from "./session_tool_change_guards";
 import { readSessionIdentity } from "./session_identity";
 import { forgetSessionIdentity } from "./session_identity_types";
 import type {
@@ -116,7 +117,6 @@ import {
   type PromptAdmission,
 } from "./queue";
 import { configurationPauseRevision } from "./configuration_pause";
-
 export type { PaneCard };
 export { paneCards };
 // ---------------------------------------------------------------------------
@@ -268,6 +268,10 @@ class ThreadsStore {
     emit: () => this.emit(),
     finish: (thread) => this.finishArchiveActivity(thread),
     permissionRevision: (key) => this.permissionRevisions.get(key) ?? 0,
+  });
+  readonly toolChanges = new SessionToolChangeGuards({
+    current: (key) => this.thread(key),
+    emit: (key) => this.emit(key, true),
   });
   private recordedEndings = new WeakSet<ThreadItem>();
   decidePermission = (

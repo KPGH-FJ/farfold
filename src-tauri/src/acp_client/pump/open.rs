@@ -62,6 +62,7 @@ pub(crate) async fn open_session_on_connection(
         mcp.is_some(),
     )?;
     if let Some(id) = &native_session_id {
+        super::super::session_tool_recovery::require_ready(&config_store, id).await?;
         let map = sessions.lock().map_err(|_| "session map lock poisoned")?;
         if map.contains_key(id) {
             return Err(format!("session {id} is already open"));

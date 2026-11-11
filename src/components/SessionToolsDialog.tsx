@@ -18,6 +18,8 @@ import type {
 } from "../runtime/session_tools_types";
 import { SESSION_TOOLS_STRINGS as S } from "../runtime/session_tools_strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
+import { SessionToolManagement } from "./SessionToolManagement";
+import { SessionToolRecovery } from "./SessionToolRecovery";
 import "./SessionToolsDialog.css";
 
 const CONFIGURATION_SCOPE = ":configuration";
@@ -251,7 +253,7 @@ export function SessionToolsDialog({
       : null;
   return (
     <WorkspaceDialog
-      title={S.title}
+      title={capability?.management ? S.managementTitle : S.title}
       onClose={close}
       returnFocusRef={returnFocusRef}
       returnFocusWhen={() => active && controller.isCurrent()}
@@ -269,6 +271,16 @@ export function SessionToolsDialog({
       >
         <p className="session-tools-context">{title}</p>
         <p>{S.scope}</p>
+        {thread.sessionToolRecoveryRequired && (
+          <SessionToolRecovery thread={thread} active={active} />
+        )}
+        {capability?.management && (
+          <SessionToolManagement
+            thread={thread}
+            active={active}
+            readPending={view.unresolved}
+          />
+        )}
         {!configurationOnly && (hasConfiguration || !!extensions?.length) && (
           <label className="session-tools-filter">
             <span>{S.filter}</span>
@@ -334,7 +346,9 @@ export function SessionToolsDialog({
             <SessionToolsReportView report={report.value} />
           </>
         )}
-        <p className="session-tools-note">{S.notice}</p>
+        <p className="session-tools-note">
+          {capability?.management ? S.managementNotice : S.notice}
+        </p>
       </div>
       <footer>
         <button type="button" className="btn btn-ghost" onClick={close}>

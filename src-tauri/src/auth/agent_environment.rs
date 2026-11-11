@@ -210,6 +210,7 @@ pub(crate) fn remove_agent(store: &MetaStore, id: &str) -> Result<bool, String> 
 }
 fn remove_agent_with(store: &MetaStore, id: &str, vault: &dyn Vault) -> Result<bool, String> {
     let _mutation = MUTATION.lock().map_err(|_| CLEANUP_ERROR)?;
+    store.require_mcp_agent_ready(id)?;
     if let Some(row) = store.get_agent(id)? {
         for (name, value) in row.env {
             if value == KEYCHAIN_MARKER {

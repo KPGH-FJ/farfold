@@ -4,7 +4,7 @@ pub mod mcp;
 pub mod mcp_add;
 mod mcp_add_input;
 mod mcp_add_plan;
-mod mcp_http_url;
+pub(crate) mod mcp_http_url;
 mod mcp_plan;
 pub mod mcp_remove;
 mod mcp_remove_plan;

@@ -119,6 +119,11 @@ pub enum ManagerCommand {
         all_pages: bool,
         result: oneshot::Sender<Result<serde_json::Value, String>>,
     },
+    McpRecoveryRead {
+        session_id: String,
+        availability: Arc<super::session_tools::Availability>,
+        result: oneshot::Sender<Result<super::session_tool_changes::inventory::Inventory, String>>,
+    },
     /// `session/delete` for sessions without an open pump (agent-side rows).
     DeleteSession {
         session_id: String,
@@ -133,6 +138,7 @@ impl std::fmt::Debug for ManagerCommand {
             Self::Logout { .. } => "Logout",
             Self::OpenSession { .. } => "OpenSession",
             Self::ListSessions { .. } => "ListSessions",
+            Self::McpRecoveryRead { .. } => "McpRecoveryRead",
             Self::AccountStatus { .. } => "AccountStatus",
             Self::DeleteSession { .. } => "DeleteSession",
         })
@@ -187,6 +193,7 @@ pub struct AcpManager {
     pub(crate) pending_permissions: PendingPermissions,
     /// requestId → responder for pending `elicitation/create` calls.
     pub(crate) pending_elicitations: PendingElicitations,
+    pub(crate) tool_recovery: Arc<super::session_tool_recovery::Reviews>,
     status_sink: Option<Arc<dyn Fn(AgentConnectionStatus) + Send + Sync>>,
 }
 
@@ -218,6 +225,7 @@ impl AcpManager {
             data_dir,
             pending_permissions: PendingPermissions::default(),
             pending_elicitations: PendingElicitations::default(),
+            tool_recovery: Arc::new(super::session_tool_recovery::Reviews::default()),
             status_sink: None,
         };
         manager.spawn_idle_reaper();

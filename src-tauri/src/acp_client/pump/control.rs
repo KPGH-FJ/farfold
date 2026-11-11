@@ -4,6 +4,11 @@ use agent_client_protocol::schema::v1::ContentBlock;
 
 /// Commands delivered to the session pump task.
 pub(crate) enum SessionControl {
+    ToolsChange {
+        request: Box<super::super::session_tool_changes::Request>,
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<Result<(), super::super::session_tool_changes::ChangeError>>,
+    },
     ToolsRead {
         request: Box<super::super::session_tools::Request>,
         deadline: tokio::time::Instant,
@@ -138,6 +143,41 @@ pub(crate) enum SessionControl {
 }
 
 impl SessionControl {
+    pub(super) async fn pending_tools_error(
+        &self,
+        store: &super::super::model_guard::ConfigStore,
+        native: &str,
+    ) -> Option<String> {
+        if matches!(
+            self,
+            Self::Prompt { .. }
+                | Self::SetConfig { .. }
+                | Self::ConfirmConfig { .. }
+                | Self::SetMode { .. }
+                | Self::Fork { .. }
+                | Self::Delete { .. }
+                | Self::Archive { .. }
+                | Self::WorkspaceAccessDecision { .. }
+                | Self::WorkspaceAccessDecisionCommit { .. }
+        ) {
+            super::super::session_tool_recovery::require_ready(store, native)
+                .await
+                .err()
+        } else {
+            None
+        }
+    }
+    pub(super) fn reject_abandoned(self) {
+        match self {
+            Self::Delete { result, .. } => {
+                let _ = result.send(Err(super::super::mutation::DeleteFailure::NotDispatched));
+            }
+            Self::ToolsChange { result, .. } => {
+                let _ = result.send(Err(super::super::session_tool_changes::Code::Timeout.into()));
+            }
+            _ => {}
+        }
+    }
     pub(super) fn reject_restore(
         self,
         error: String,
@@ -154,6 +194,9 @@ impl SessionControl {
     }
     pub(super) fn reject(self, error: String) {
         match self {
+            Self::ToolsChange { result, .. } => {
+                let _ = result.send(Err(super::super::session_tool_changes::Code::Changed.into()));
+            }
             Self::ToolsRead { result, .. } => {
                 let _ = result.send(Err(super::super::session_tools::Code::Changed.into()));
             }
@@ -217,6 +260,9 @@ impl SessionControl {
     }
     pub(super) fn abandoned(&self) -> bool {
         let (deadline, closed) = match self {
+            Self::ToolsChange {
+                deadline, result, ..
+            } => (*deadline, result.is_closed()),
             Self::ToolsRead {
                 deadline, result, ..
             } => (*deadline, result.is_closed()),

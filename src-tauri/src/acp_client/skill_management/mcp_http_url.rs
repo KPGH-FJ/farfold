@@ -38,7 +38,7 @@ fn authority(value: &str) -> bool {
     }
 }
 
-pub(super) fn validate(value: &str) -> Result<()> {
+pub(crate) fn validate(value: &str) -> Result<()> {
     let invalid = || Code::InvalidUrl.into();
     if value.is_empty()
         || value.len() > 4096

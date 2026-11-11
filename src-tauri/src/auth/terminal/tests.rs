@@ -7,7 +7,10 @@ use std::time::Duration;
 
 async fn owner(agent: &str) -> Ownership {
     let attempt = crate::auth::attempts::reserve(agent, "first").unwrap();
-    let configuration = attempt.configuration_guard().await.unwrap();
+    let configuration = attempt
+        .configuration_guard(&crate::meta_store::MetaStore::test_memory())
+        .await
+        .unwrap();
     Ownership {
         output: Channel::new(|_| Ok(())),
         configuration,
@@ -21,7 +24,9 @@ async fn cancellation_before_configuration_acquisition_does_not_take_the_lock() 
     let agent = "cancel-before-auth-guard";
     crate::auth::attempts::auth_cancel(agent.into(), "first".into()).unwrap();
     let attempt = crate::auth::attempts::reserve(agent, "first").unwrap();
-    let result = attempt.configuration_guard().await;
+    let result = attempt
+        .configuration_guard(&crate::meta_store::MetaStore::test_memory())
+        .await;
     assert_eq!(result.err().as_deref(), Some("AUTH_CANCELLED"));
     drop(attempt);
     let _available = crate::install_job::configuration_guard(agent).await;
@@ -32,7 +37,8 @@ async fn cancellation_while_waiting_for_configuration_ends_the_same_attempt() {
     let agent = "cancel-waiting-auth-guard";
     let held = crate::install_job::configuration_guard(agent).await;
     let attempt = crate::auth::attempts::reserve(agent, "first").unwrap();
-    let waiting = attempt.configuration_guard();
+    let store = crate::meta_store::MetaStore::test_memory();
+    let waiting = attempt.configuration_guard(&store);
     tokio::pin!(waiting);
     assert!(
         tokio::time::timeout(Duration::from_millis(20), &mut waiting)

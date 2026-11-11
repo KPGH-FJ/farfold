@@ -65,6 +65,7 @@ pub async fn auth_manual_set(
     tauri::async_runtime::spawn_blocking(move || {
         let _configuration = configuration;
         let store = app.state::<MetaStore>();
+        store.require_mcp_agent_ready(&agent_id)?;
         if store.get_agent(&agent_id)?.is_none() {
             return Err("请先连接 Agent".into());
         }
@@ -96,7 +97,9 @@ pub async fn auth_manual_run(
     let cwd = attempt
         .setup(crate::acp_client::manager::validate_cwd_async(&cwd))
         .await?;
-    let configuration = attempt.configuration_guard().await?;
+    let configuration = attempt
+        .configuration_guard(&app.state::<MetaStore>())
+        .await?;
     attempt.check()?;
     let scope = app
         .state::<crate::acp_client::manager::AcpManager>()

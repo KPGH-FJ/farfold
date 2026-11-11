@@ -28,7 +28,8 @@ pub(crate) use actor::{Request, start};
 const METHOD: &str = "_goose/unstable/tools/list";
 const BUDGET: Duration = Duration::from_secs(10);
 const MAX_OPERATIONS: usize = 4_096;
-type Wire = Pin<Box<dyn Future<Output = agent_client_protocol::Result<serde_json::Value>> + Send>>;
+pub(crate) type Wire =
+    Pin<Box<dyn Future<Output = agent_client_protocol::Result<serde_json::Value>> + Send>>;
 
 enum ReadReport {
     Tools(Report),
@@ -38,6 +39,7 @@ enum ReadReport {
 /// One current in-memory request/result per actual SessionEntry. Used IDs
 /// cannot be replayed on this actor; no previous request or result is stored.
 pub(crate) struct Slot {
+    pub(crate) changes: Arc<super::session_tool_changes::Slot>,
     control: tokio::sync::mpsc::WeakUnboundedSender<SessionControl>,
     extensions: Vec<String>,
     reads: Mutex<Reads>,
@@ -54,6 +56,7 @@ impl Slot {
         response: &serde_json::Value,
     ) -> Self {
         Self {
+            changes: Arc::new(super::session_tool_changes::Slot::default()),
             control: control.downgrade(),
             extensions: types::startup_extensions(response),
             reads: Mutex::new(Reads::default()),
@@ -372,7 +375,9 @@ pub struct ReportScope {
 }
 
 pub(crate) fn capability(connection: &ManagedConnection) -> Option<Capability> {
-    connection.session_tools.capability()
+    let mut capability = connection.session_tools.capability()?;
+    capability.management = super::session_tool_changes::supported(connection).then_some(true);
+    Some(capability)
 }
 
 pub(crate) fn opened_capability(

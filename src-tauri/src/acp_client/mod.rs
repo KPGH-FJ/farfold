@@ -69,6 +69,8 @@ mod session_config;
 pub mod session_discovery;
 pub mod session_fork;
 pub(crate) mod session_index;
+pub mod session_tool_changes;
+pub mod session_tool_recovery;
 pub mod session_tools;
 pub mod skill_management;
 pub(crate) mod startup_diagnostics;

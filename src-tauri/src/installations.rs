@@ -570,6 +570,7 @@ fn remove_installed_with_lookup(
     lookup: &dyn Fn(&str) -> Option<String>,
 ) -> Result<(), String> {
     let _lock = MUTATION.lock().map_err(|_| "程序清单暂时不可用")?;
+    store.require_mcp_agent_ready(agent_id)?;
     let mut items = read(store)?;
     let item = items
         .iter()

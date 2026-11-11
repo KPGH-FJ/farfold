@@ -16,6 +16,8 @@ pub struct Capability {
     pub extensions: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub configuration: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub management: Option<bool>,
     #[serde(rename = "toolsUnavailable", skip_serializing_if = "Option::is_none")]
     pub tools_unavailable: Option<bool>,
 }

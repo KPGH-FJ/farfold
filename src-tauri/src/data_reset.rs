@@ -63,6 +63,7 @@ pub(crate) fn clear_owned(
     store: &MetaStore,
     delete_secret: &dyn Fn(&str) -> Result<(), String>,
 ) -> Result<(), String> {
+    store.require_no_mcp_pending()?;
     for service in keychain_services(store)? {
         delete_secret(&service)?;
     }

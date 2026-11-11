@@ -6,7 +6,11 @@ import type { ThreadState } from "./session_types";
 import { freshThreadState } from "./session_projection";
 import { STRINGS } from "./strings";
 import { composerDrafts, hasUnsentWork } from "./drafts";
-import { agentOpenError, workDirectoryError } from "./ui_error";
+import {
+  agentOpenError,
+  isSessionToolChangePending,
+  workDirectoryError,
+} from "./ui_error";
 
 /** Generated only after this app's successful resumed session_open reply. */
 class HistoryReadFailure extends Error {
@@ -107,6 +111,8 @@ export function retainRecoveryFailure(
   error: unknown,
   result?: OpenResult,
 ): void {
+  if (isSessionToolChangePending(error))
+    state.sessionToolRecoveryRequired = true;
   let sourceKnown = knownService(state.service);
   if (result?.resumed && result.service !== undefined) {
     state.service = result.service ?? undefined;

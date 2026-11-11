@@ -6,6 +6,7 @@ export interface SessionToolInventoryCapability {
   extensions?: string[];
   configuration?: true;
   toolsUnavailable?: true;
+  management?: true;
 }
 export interface SessionToolStartupReport {
   reportedCount: number;
@@ -142,19 +143,25 @@ export function sessionToolInventoryCapability(
   const hasExtensions = Object.hasOwn(value, "extensions");
   const hasConfiguration = Object.hasOwn(value, "configuration");
   const toolsUnavailable = Object.hasOwn(value, "toolsUnavailable");
+  const management = Object.hasOwn(value, "management");
   if (
     Object.keys(value).length !==
     2 +
       Number(hasStartup) +
       Number(hasExtensions) +
       Number(hasConfiguration) +
-      Number(toolsUnavailable)
+      Number(toolsUnavailable) +
+      Number(management)
   )
     return null;
   const capability: SessionToolInventoryCapability = {
     source: "reviewedOfficialSupplement",
     scope: "currentConversation",
   };
+  if (management) {
+    if (value.management !== true) return null;
+    capability.management = true;
+  }
   if (hasConfiguration) {
     if (value.configuration !== true) return null;
     capability.configuration = true;

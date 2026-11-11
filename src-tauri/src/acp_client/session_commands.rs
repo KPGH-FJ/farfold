@@ -894,6 +894,14 @@ pub(super) async fn delete_session_in_scope(
 ) -> Result<SessionDeleteAgentResult, SessionDeleteFailure> {
     let cwd_string = cwd.to_string_lossy().into_owned();
     let row_id = MetaStore::dismissed_id(agent_id, &cwd_string, native_session_id);
+    let guarded_id = row_id.clone();
+    if store
+        .run(move |store| store.require_mcp_ready(&guarded_id))
+        .await
+        .is_err()
+    {
+        return Err(SessionDeleteFailure::LocalNotRemoved { agent: None });
+    }
     let remote = match manager
         .delete_session(agent_id, cwd, native_session_id)
         .await

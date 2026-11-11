@@ -593,6 +593,7 @@ impl AcpManager {
                 super::session_index::session_row_id(&agent.id, &cwd.to_string_lossy(), id);
             store
                 .run(move |store| {
+                    store.require_mcp_ready(&row_id)?;
                     Ok(store
                         .get_session(&row_id)?
                         .and_then(|row| row.config_options))

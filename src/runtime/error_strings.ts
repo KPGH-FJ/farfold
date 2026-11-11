@@ -15,6 +15,8 @@ export const ERROR_STRINGS = {
   agentOpenClosed:
     "打开对话尚未确认完成，未能取得结果。原内容已保留，请检查连接后重试。",
   agentOpenWaitCancelled: "已取消等待读取。原内容已保留。",
+  sessionToolChangePending:
+    "工具修改结果尚未确认，请先核查工具设置，再重新打开这段对话。原内容已保留。",
   workDirectoryUnavailable:
     "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
 } as const;

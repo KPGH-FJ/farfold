@@ -1,6 +1,15 @@
 import { STRINGS } from "./strings";
 import { ERROR_STRINGS } from "./error_strings";
 
+export function isSessionToolChangePending(reason: unknown): boolean {
+  return (
+    reason === "SESSION_TOOL_CHANGE_PENDING" ||
+    (reason instanceof Error &&
+      reason.name === "Error" &&
+      reason.message === "SESSION_TOOL_CHANGE_PENDING")
+  );
+}
+
 /** Exact app-owned directory error only, never an arbitrary diagnostic or path. */
 export function workDirectoryError(reason: unknown): string | undefined {
   return String(reason).replace(/^Error: /, "") ===
@@ -11,6 +20,8 @@ export function workDirectoryError(reason: unknown): string | undefined {
 
 /** Exact app-owned opening codes only; unknown objects and diagnostics stay private. */
 export function agentOpenError(reason: unknown): string | undefined {
+  if (isSessionToolChangePending(reason))
+    return ERROR_STRINGS.sessionToolChangePending;
   const code =
     typeof reason === "string"
       ? reason.replace(/^Error: /, "")

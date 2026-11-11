@@ -482,7 +482,7 @@ async fn copilot_actual_sdk_target_and_owned_pty_dispatch_share_the_current_proo
         })
     };
     let attempt = attempts::reserve(&f.row.id, "copilot-owned-pty").unwrap();
-    let configuration = attempt.configuration_guard().await.unwrap();
+    let configuration = attempt.configuration_guard(&f.store).await.unwrap();
     let id = run(
         &proof,
         terminal::Ownership {
@@ -503,7 +503,7 @@ async fn copilot_actual_sdk_target_and_owned_pty_dispatch_share_the_current_proo
     f.receipts(|items| *items = json!([]));
     let fresh = crate::acp_client::auth_route::managed_terminal_proof(&live, &f.store, &f.data);
     let attempt = attempts::reserve(&f.row.id, "copilot-denied-pty").unwrap();
-    let configuration = attempt.configuration_guard().await.unwrap();
+    let configuration = attempt.configuration_guard(&f.store).await.unwrap();
     let denied = run(
         &fresh,
         terminal::Ownership {

@@ -1013,9 +1013,7 @@ async fn session_pump(
                 None => break,
                 Some(command) => {
                     if command.abandoned() {
-                        if let SessionControl::Delete { result, .. } = command {
-                            let _ = result.send(Err(super::mutation::DeleteFailure::NotDispatched));
-                        }
+                        command.reject_abandoned();
                         continue;
                     }
                     if purpose == super::open_purpose::OpenPurpose::SearchReadOnly
@@ -1033,6 +1031,13 @@ async fn session_pump(
                     if fork_state.as_ref().is_some_and(|fork|fork.busy.load(Ordering::SeqCst)) && !matches!(command,SessionControl::Shutdown) {
                         command.reject_restore("复制结果尚未确认，请等待此操作结束".into(), RestoreConfirmCode::ForkPending);
                         continue;
+                    }
+                    if tools_report::changing(&sessions,&session_id) && !matches!(command,SessionControl::Shutdown) {
+                        command.reject("工具修改正在处理，请等待结果后再继续".into());
+                        continue;
+                    }
+                    if let Some(error) = command.pending_tools_error(&config_store, &session_id).await {
+                        command.reject(error); continue;
                     }
                     match command {
                 SessionControl::Shutdown => break,
@@ -1126,6 +1131,9 @@ async fn session_pump(
                 }
                 SessionControl::ToolsRead { request, deadline, result } => {
                     tools_report::admit(*request, &cx, &ctx, identity_read.is_some() || workspace_access_read.is_some() || mutation.is_some() || prompt_in_flight || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved), deadline, result);
+                }
+                SessionControl::ToolsChange { request, deadline, result } => {
+                    tools_report::admit_change(*request,&cx,&ctx,identity_read.is_some() || workspace_access_read.is_some() || mutation.is_some() || prompt_in_flight || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved) || !model_guard.admissible() || !permission_guard.admissible(),deadline,result);
                 }
                 SessionControl::IdentityRead { request, scope, result, deadline } => {
                     use super::identity_read::Code;

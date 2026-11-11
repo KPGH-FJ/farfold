@@ -329,6 +329,13 @@ pub(crate) fn validate_service_identity(
     expected: &ServiceIdentity,
 ) -> Result<(), String> {
     let _lock = MUTATION.lock().map_err(|_| "API 配置暂时不可用")?;
+    validate_service_identity_stable(store, expected)
+}
+
+fn validate_service_identity_stable(
+    store: &MetaStore,
+    expected: &ServiceIdentity,
+) -> Result<(), String> {
     let item = read(store)?
         .into_iter()
         .find(|c| c.id == expected.id && !c.deleting)
@@ -341,6 +348,35 @@ pub(crate) fn validate_service_identity(
         return Err("此对话的 API 来源或模型已改变，请检查设置".into());
     }
     Ok(())
+}
+
+/// Serialize only the short guard commit with service edits/deletion. Secrets
+/// are not accessed; a later destructive change will see the saved pending row.
+pub(crate) fn with_stable_mcp_source<T>(
+    store: &MetaStore,
+    row: &crate::meta_store::SessionRow,
+    commit: impl FnOnce() -> Result<T, String>,
+) -> Result<T, String> {
+    let _lock = MUTATION.lock().map_err(|_| "API 配置暂时不可用")?;
+    if let Some(source) = row
+        .config_options
+        .as_ref()
+        .and_then(|value| value.get("_farfoldService"))
+    {
+        if source.get("kind").and_then(serde_json::Value::as_str) == Some("configured") {
+            let identity: ServiceIdentity = serde_json::from_value(
+                source
+                    .get("identity")
+                    .cloned()
+                    .ok_or("无法确认此对话的服务来源")?,
+            )
+            .map_err(|_| "无法确认此对话的服务来源")?;
+            validate_service_identity_stable(store, &identity)?;
+        } else if source.get("kind").and_then(serde_json::Value::as_str) != Some("existing") {
+            return Err("无法确认此对话的服务来源".into());
+        }
+    }
+    commit()
 }
 
 // Test requests may read a credential without selecting an Agent or granting it access.
@@ -497,6 +533,8 @@ pub(crate) fn auth_key(
 
 #[cfg(test)]
 mod auth_key_tests;
+#[cfg(test)]
+mod mcp_pending_tests;
 
 fn save(store: &MetaStore, vault: &dyn Vault, mut input: SaveInput) -> Result<View, String> {
     if input.label.trim().is_empty()
@@ -522,6 +560,12 @@ fn save(store: &MetaStore, vault: &dyn Vault, mut input: SaveInput) -> Result<Vi
         None
     };
     let previous = index.map(|i| &pool[i]);
+    if let Some(previous) = previous {
+        store.require_mcp_service_ready(&previous.id)?;
+        for grant in &previous.grants {
+            store.require_mcp_agent_ready(&grant.agent_id)?;
+        }
+    }
     if previous.is_some_and(|previous| previous.purpose.as_deref() == Some("authentication")) {
         return Err("请在对应登录方式中管理此密钥，模型服务需单独保存".into());
     }
@@ -657,8 +701,12 @@ pub(crate) fn apply(
 }
 
 fn remove(store: &MetaStore, vault: &dyn Vault, id: &str) -> Result<(), String> {
+    store.require_mcp_service_ready(id)?;
     let mut pool = read(store)?;
     let item = pool.iter_mut().find(|c| c.id == id).ok_or("此密钥已移除")?;
+    for grant in &item.grants {
+        store.require_mcp_agent_ready(&grant.agent_id)?;
+    }
     item.grants.clear();
     item.deleting = true;
     let refs = std::iter::once(item.secret_ref.clone())
@@ -714,6 +762,7 @@ async fn revoke_grant(
             let _activity = activity;
             let _configuration = _configuration;
             let _lock = MUTATION.lock().map_err(|_| "密钥设置暂时不可用")?;
+            store.require_mcp_agent_ready(&agent_id)?;
             let mut pool = read(store)?;
             let c = pool.iter_mut().find(|c| c.id == id).ok_or("此密钥已移除")?;
             c.grants
@@ -1277,6 +1326,7 @@ pub fn environment_for_launch(
 }
 pub fn revoke_agent(store: &MetaStore, id: &str) -> Result<(), String> {
     let _lock = MUTATION.lock().map_err(|_| "密钥设置暂时不可用")?;
+    store.require_mcp_agent_ready(id)?;
     let mut pool = read(store)?;
     for c in &mut pool {
         c.grants.retain(|g| g.agent_id != id);

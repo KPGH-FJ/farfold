@@ -37,6 +37,7 @@ vi.mock("react", async (original) => ({
   },
 }));
 import { McpAddForm } from "./McpAddForm";
+import { McpHttpFields } from "./McpHttpFields";
 import { skillManagement } from "../runtime/skill_management_controller";
 import { setup, operation, written } from "../runtime/mcp_add.test-support";
 import { flush } from "../runtime/extension_inventory.test-support";
@@ -49,7 +50,14 @@ function walk(node: ReactNode): ReactElement<Record<string, unknown>>[] {
   const out: ReactElement<Record<string, unknown>>[] = [];
   Children.forEach(node, (c) => {
     if (isValidElement<Record<string, unknown>>(c))
-      out.push(c, ...walk(c.props.children as ReactNode));
+      out.push(
+        c,
+        ...walk(
+          c.type === McpHttpFields
+            ? McpHttpFields(c.props as ComponentProps<typeof McpHttpFields>)
+            : (c.props.children as ReactNode),
+        ),
+      );
   });
   return out;
 }

@@ -34,6 +34,17 @@ it("requires the exact optional current-conversation supplement, not a handshake
     ),
   ).toBeNull();
 });
+it("retains explicit current-conversation management without inferring it from HTTP support", () => {
+  const managed = { ...capability, management: true };
+  expect(sessionToolInventoryCapability(managed)).toEqual(managed);
+  for (const value of [false, "true", {}, null])
+    expect(
+      sessionToolInventoryCapability({ ...capability, management: value }),
+    ).toBeNull();
+  expect(sessionToolInventoryCapability(capability)).not.toHaveProperty(
+    "management",
+  );
+});
 it("accepts only bounded opening result counts in the current conversation supplement", () => {
   const startup = {
     reportedCount: 257,

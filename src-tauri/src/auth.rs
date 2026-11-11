@@ -667,7 +667,9 @@ pub async fn auth_run(
     let cwd = attempt
         .setup(crate::acp_client::manager::validate_cwd_async(&cwd))
         .await?;
-    let configuration = attempt.configuration_guard().await?;
+    let configuration = attempt
+        .configuration_guard(&app.state::<MetaStore>())
+        .await?;
     let row = attempt
         .setup(crate::acp_client::manager::require_agent_row(
             &app, &agent_id,
@@ -749,7 +751,9 @@ pub async fn auth_run(
     attempt
         .setup(ensure_connected(&manager, &store, &row, &cwd))
         .await?;
-    let _configuration = attempt.configuration_guard().await?;
+    let _configuration = attempt
+        .configuration_guard(&app.state::<MetaStore>())
+        .await?;
     let current = attempt
         .setup(crate::acp_client::manager::require_agent_row(
             &app, &agent_id,
@@ -854,7 +858,9 @@ pub async fn agent_logout(
     let cwd = attempt
         .setup(crate::acp_client::manager::validate_cwd_async(&cwd))
         .await?;
-    let configuration = attempt.configuration_guard().await?;
+    let configuration = attempt
+        .configuration_guard(&app.state::<MetaStore>())
+        .await?;
     let row = attempt
         .setup(crate::acp_client::manager::require_agent_row(
             &app, &agent_id,
@@ -870,7 +876,9 @@ pub async fn agent_logout(
     attempt
         .setup(ensure_connected(&manager, &store, &row, &cwd))
         .await?;
-    let _configuration = attempt.configuration_guard().await?;
+    let _configuration = attempt
+        .configuration_guard(&app.state::<MetaStore>())
+        .await?;
     let current = attempt
         .setup(crate::acp_client::manager::require_agent_row(
             &app, &agent_id,

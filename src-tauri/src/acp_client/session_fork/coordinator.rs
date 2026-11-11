@@ -19,6 +19,7 @@ pub(crate) async fn preflight(
     mut config: Value,
     store: &ConfigStore,
 ) -> Result<ParentSnapshot, String> {
+    super::super::session_tool_recovery::require_ready(store, &request.parent).await?;
     store.validate_service().await?;
     if let Some(service) = &store.service_record {
         config["_farfoldService"] =

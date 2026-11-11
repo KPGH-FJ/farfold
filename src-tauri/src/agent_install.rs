@@ -560,6 +560,10 @@ pub async fn agent_install(
 /// approvals, account operations, unfinished checks or unconfirmed results
 /// still block the change with an honest reason.
 pub(crate) async fn release_connections(app: &AppHandle, id: &str) -> Result<(), String> {
+    let guarded = id.to_owned();
+    app.state::<MetaStore>()
+        .run(move |store| store.require_mcp_agent_ready(&guarded))
+        .await?;
     let manager = app.state::<crate::acp_client::manager::AcpManager>();
     if manager.candidate_pending(id)? {
         return Err("版本检查进程尚未确认结束，请稍后重试".into());

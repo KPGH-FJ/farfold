@@ -15,6 +15,7 @@ use serde::{Deserialize, Serialize, de::DeserializeOwned};
 mod archive;
 mod custom_agent;
 mod fork;
+pub(crate) mod mcp_pending;
 pub(crate) mod prompt_templates;
 pub(crate) mod remembered_pages;
 pub(crate) mod schema;
@@ -137,6 +138,7 @@ impl MetaStore {
     /// keychain entries or loses the receipts needed to delete owned paths.
     pub fn clear_all(&self) -> Result<(), String> {
         let mut connection = self.lock()?;
+        mcp_pending::ensure_none(&connection)?;
         let transaction = connection
             .transaction()
             .map_err(|_| "无法清除数据".to_string())?;
@@ -195,6 +197,7 @@ impl MetaStore {
     /// Session IDs and credential grants keep referring to the same roster identity.
     pub fn replace_agent_launch(&self, agent: &AgentRow) -> Result<(), String> {
         let connection = self.lock()?;
+        mcp_pending::ensure_agent_ready(&connection, &agent.id)?;
         replace_agent_launch_row(&connection, agent)
     }
 
@@ -249,6 +252,7 @@ impl MetaStore {
         installations: &serde_json::Value,
     ) -> Result<(), String> {
         let mut connection = self.lock()?;
+        mcp_pending::ensure_agent_ready(&connection, &candidate.id)?;
         let transaction = connection
             .transaction_with_behavior(TransactionBehavior::Immediate)
             .map_err(|_| "无法保存程序选择，原设置保持不变")?;
@@ -290,8 +294,9 @@ impl MetaStore {
 
     /// Credential changes must not overwrite launch configuration or cached declarations.
     pub fn set_agent_env(&self, agent_id: &str, env: &[(String, String)]) -> Result<(), String> {
-        let changed = self
-            .lock()?
+        let connection = self.lock()?;
+        mcp_pending::ensure_agent_ready(&connection, agent_id)?;
+        let changed = connection
             .execute(
                 "UPDATE agents SET env = ?2, updated_at = ?3 WHERE id = ?1",
                 params![agent_id, encoded_agent_env(env), now_millis()],
@@ -381,6 +386,7 @@ impl MetaStore {
 
     pub fn remove_agent(&self, agent_id: &str) -> Result<bool, String> {
         let connection = self.lock()?;
+        mcp_pending::ensure_agent_ready(&connection, agent_id)?;
         let deleted = connection
             .execute("DELETE FROM agents WHERE id = ?1", params![agent_id])
             .map_err(|error| format!("cannot remove agent {agent_id}: {error}"))?;
@@ -629,6 +635,7 @@ impl MetaStore {
 
     pub fn remove_session(&self, session_id: &str) -> Result<bool, String> {
         let mut connection = self.lock()?;
+        mcp_pending::ensure_absent(&connection, session_id)?;
         let transaction = connection.transaction().map_err(sqlite_receipt)?;
         let deleted =
             Self::remove_session_metadata(&transaction, session_id).map_err(sqlite_receipt)?;
@@ -657,6 +664,7 @@ impl MetaStore {
         use LocalSessionDeleteError::{NotRemoved, Unknown};
 
         let mut connection = self.lock().map_err(|_| NotRemoved)?;
+        mcp_pending::ensure_absent(&connection, session_id).map_err(|_| NotRemoved)?;
         let tx = connection.transaction().map_err(|_| NotRemoved)?;
         if Self::remove_session_metadata(&tx, session_id)
             .and_then(|_| Self::insert_dismissal(&tx, session_id))
@@ -746,6 +754,9 @@ impl MetaStore {
     }
 
     pub fn set_setting(&self, key: &str, value: &serde_json::Value) -> Result<(), String> {
+        if key.starts_with(mcp_pending::PREFIX) {
+            return Err("请通过工具变更核对入口更新此记录".into());
+        }
         let connection = self.lock()?;
         self.ensure_worktree_write_available()?;
         connection

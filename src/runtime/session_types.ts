@@ -280,6 +280,8 @@ export interface ThreadState extends ReportedDetailsOwner {
   };
   promptAdmission?: import("./prompt_admission").PromptAdmissionView | null;
   configuring: boolean;
+  /** Only this conversation has a tool change awaiting official recheck. */
+  sessionToolRecoveryRequired?: boolean;
   configError: string | null;
   workEnabled: boolean;
   queuePaused: import("./queue").QueuePause;
