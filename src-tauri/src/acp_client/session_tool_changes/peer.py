@@ -11,6 +11,7 @@ import time
 lock = threading.Lock()
 stored = [{"extensionKey": "original-key", "extension": {"type": "platform", "name": "developer"}}]
 live = {}
+selected_model = "selected-a"
 
 def flag(name):
     return pathlib.Path(name).exists()
@@ -22,12 +23,16 @@ def send(message, value=None, error=False):
         print(json.dumps(result), flush=True)
 
 def handle(message):
+    global selected_model
     method = message["method"]
     params = message.get("params", {})
     if method == "initialize":
         send(message, {"protocolVersion": 1, "agentCapabilities": {"loadSession": True, "mcpCapabilities": {"http": True}}, "authMethods": []})
     elif method in ("session/new", "session/load"):
-        send(message, {"sessionId": "owned-change", "configOptions": []})
+        send(message, {"sessionId": "owned-change", "configOptions": options()})
+    elif method == "session/set_config_option":
+        selected_model = params["value"]
+        send(message, {"configOptions": options()})
     elif method.endswith("session/extensions/list"):
         pathlib.Path("list-started").write_text("yes")
         while flag("hold-list"):
@@ -88,6 +93,25 @@ def handle(message):
         send(message, {"stopReason": "end_turn"})
     else:
         send(message, error=True)
+
+def options():
+    if not flag("choices"):
+        return []
+    return [{"id":"model", "name":"Model", "category":"model", "type":"select", "currentValue":selected_model,
+             "options":[{"value":value,"name":value} for value in ("selected-a","selected-b")]}]
+
+def inject_configuration():
+    global selected_model
+    while True:
+        if flag("inject-configuration"):
+            selected_model = "selected-b"
+            with lock:
+                print(json.dumps({"jsonrpc":"2.0", "method":"session/update", "params":{"sessionId":"owned-change", "update":{"sessionUpdate":"config_option_update", "configOptions":options()}}}), flush=True)
+            pathlib.Path("inject-configuration").unlink()
+            pathlib.Path("configuration-injected").write_text("yes")
+        time.sleep(0.005)
+
+threading.Thread(target=inject_configuration, daemon=True).start()
 
 for line in sys.stdin:
     message = json.loads(line)

@@ -52,6 +52,8 @@ export interface DeliveryReceipt {
   size: number;
   sha256: string;
   sourceVersion: string | null;
+  /** Publication-time destination identity; absent in older in-memory receipts. */
+  destinationFile?: VerifiedFile;
 }
 
 function plainPath(path: unknown): path is string {

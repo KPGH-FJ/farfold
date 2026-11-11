@@ -548,11 +548,15 @@ impl ConfigStore {
         }
         Ok(())
     }
-    pub(crate) async fn save(&self, session_id: &str, mut value: Value) -> Result<(), String> {
+    pub(crate) fn record_with_source(&self, mut value: Value) -> Result<Value, String> {
         if let Some(service) = &self.service_record {
             value["_farfoldService"] =
                 serde_json::to_value(service).map_err(|_| "CONFIG_RECORD_FAILED")?;
         }
+        Ok(value)
+    }
+    pub(crate) async fn save(&self, session_id: &str, value: Value) -> Result<(), String> {
+        let value = self.record_with_source(value)?;
         let agent = self.agent_id.clone();
         let cwd = self.cwd.clone();
         let id = session_id.to_owned();
@@ -563,6 +567,31 @@ impl ConfigStore {
             })
             .await
             .map_err(|_| "CONFIG_RECORD_FAILED".to_string())
+    }
+    pub(crate) async fn save_initial(
+        &self,
+        session_id: &str,
+        value: Value,
+        previous: Option<crate::meta_store::SessionRow>,
+    ) -> Result<crate::meta_store::SessionRow, crate::meta_store::InitialConfigError> {
+        use crate::meta_store::InitialConfigError::SaveFailed;
+        let now = super::session_index::now_millis();
+        let row = crate::meta_store::SessionRow {
+            id: super::session_index::session_row_id(&self.agent_id, &self.cwd, session_id),
+            agent_id: self.agent_id.clone(),
+            cwd: self.cwd.clone(),
+            native_session_id: Some(session_id.to_owned()),
+            title: None,
+            config_options: Some(self.record_with_source(value).map_err(|_| SaveFailed)?),
+            pinned: false,
+            archived: false,
+            created_at: now,
+            updated_at: now,
+        };
+        self.store
+            .run(move |store| Ok(store.save_initial_session_config(&row, previous.as_ref())))
+            .await
+            .map_err(|_| SaveFailed)?
     }
 }
 

@@ -36,6 +36,7 @@ export interface SessionToolChangeOperation {
   state: "pending" | "ready" | "failed" | "unknown";
   settled: boolean;
   mutationSent: boolean;
+  conversationSaved: boolean;
   persistence: "unreported" | "confirmed" | "unknown";
   activity: "unreported" | "toolsReported" | "absentReported";
   items: SessionManagedTool[];
@@ -128,19 +129,31 @@ export function sessionToolChangeFailure(
     return null;
   return raw.code as SessionToolChangeCode;
 }
-export function sessionToolChangeRejection(
-  raw: unknown,
-): { code: SessionToolChangeCode; notDispatched: boolean } | null {
+export function sessionToolChangeRejection(raw: unknown): {
+  code: SessionToolChangeCode;
+  notDispatched: boolean;
+  conversationSaved: boolean;
+} | null {
   try {
-    const value = record(raw, ["code", "message"], ["notDispatched"]);
+    const value = record(
+      raw,
+      ["code", "message"],
+      ["notDispatched", "conversationSaved"],
+    );
     const code = sessionToolChangeFailure(value);
     if (
       !code ||
       typeof value.message !== "string" ||
-      (Object.hasOwn(value, "notDispatched") && value.notDispatched !== true)
+      (Object.hasOwn(value, "notDispatched") && value.notDispatched !== true) ||
+      (Object.hasOwn(value, "conversationSaved") &&
+        value.conversationSaved !== true)
     )
       return null;
-    return { code, notDispatched: value.notDispatched === true };
+    return {
+      code,
+      notDispatched: value.notDispatched === true,
+      conversationSaved: value.conversationSaved === true,
+    };
   } catch {
     return null;
   }
@@ -161,6 +174,7 @@ export function parseSessionToolChangeOperation(
       "state",
       "settled",
       "mutationSent",
+      "conversationSaved",
       "persistence",
       "activity",
       "items",
@@ -178,6 +192,9 @@ export function parseSessionToolChangeOperation(
     !["pending", "ready", "failed", "unknown"].includes(v.state as string) ||
     typeof v.settled !== "boolean" ||
     typeof v.mutationSent !== "boolean" ||
+    typeof v.conversationSaved !== "boolean" ||
+    (kind === "inspect" && v.conversationSaved) ||
+    (v.mutationSent && !v.conversationSaved) ||
     (v.state === "pending" && v.settled) ||
     (v.state === "ready" && !v.settled) ||
     !["unreported", "confirmed", "unknown"].includes(v.persistence as string) ||
@@ -202,6 +219,7 @@ export function parseSessionToolChangeOperation(
     state: v.state as SessionToolChangeOperation["state"],
     settled: v.settled,
     mutationSent: v.mutationSent,
+    conversationSaved: v.conversationSaved,
     persistence: v.persistence as SessionToolChangeOperation["persistence"],
     activity: v.activity as SessionToolChangeOperation["activity"],
     items: parseSessionManagedTools(v.items),

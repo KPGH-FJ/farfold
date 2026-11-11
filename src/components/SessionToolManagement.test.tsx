@@ -193,3 +193,49 @@ it("never offers an empty current list as a withdrawal success", async () => {
   expect(texts).toContain(S.empty);
   expect(texts).not.toContain(S.removed);
 });
+
+it.each([
+  "changed",
+  "busy",
+  "unavailable",
+  "invalidResponse",
+  "queryFailed",
+] as const)(
+  "shows the %s reason after inspection admission fails, without offering a nonexistent operation check",
+  async (code) => {
+    click(S.list);
+    await flush();
+    h.start.reject({
+      code,
+      message: "PRIVATE backend diagnostic",
+      notDispatched: true,
+    });
+    await flush();
+    const status = walk(render()).find((node) => node.props.role === "status")!;
+    expect(status.props.children).toBe(S.errors[code]);
+    expect(JSON.stringify(status.props.children)).not.toContain("PRIVATE");
+    expect(status.props.children).not.toMatch(
+      /runtime|host|acp|原生|绑定|代次|投影|占用|working copy|session|turn|构建|引用|对账|沉降|上游|sidecar|adapter/i,
+    );
+    expect(button(S.checkInspection)).toBeUndefined();
+    expect(button(S.list).props["aria-disabled"]).not.toBe(true);
+    expect(h.controller.check()).toBe(false);
+    expect(h.port.status).not.toHaveBeenCalled();
+  },
+);
+
+it("shows a read failure reason and status-only guidance when its dispatch is still unresolved", async () => {
+  click(S.list);
+  await flush();
+  h.start.reject({ code: "queryFailed", message: "PRIVATE" });
+  await flush();
+  const status = walk(render()).find((node) => node.props.role === "status")!;
+  expect(status.props.children).toContain(S.errors.queryFailed);
+  expect(status.props.children).toContain(S.inspectPending);
+  expect(h.owner.configuring).toBe(false);
+  expect(h.owner.sessionToolRecoveryRequired).not.toBe(true);
+  click(S.checkInspection);
+  await flush();
+  expect(h.port.status).toHaveBeenCalledExactlyOnceWith(h.request());
+  expect(h.port.start).toHaveBeenCalledOnce();
+});

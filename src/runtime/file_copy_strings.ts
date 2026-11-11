@@ -1,4 +1,5 @@
 import type { CopyFailureCode, CopyState } from "./file_copy_types";
+import type { SavedCopyFailure } from "./file_copy_actions";
 export const FILE_COPY_STRINGS = {
   title: "完整文件另存",
   activityTitle: "文件保存",
@@ -10,6 +11,21 @@ export const FILE_COPY_STRINGS = {
   cancel: "请求取消保存",
   close: "关闭此记录",
   closeUnknown: "知晓结果未知并关闭",
+  openCopy: "打开副本",
+  revealCopy: "显示副本位置",
+  checkingCopy: "正在核对副本…",
+  openedCopy: "已请求打开这份副本。",
+  revealedCopy: "已请求显示这份副本的位置。",
+  savedActionFailures: {
+    changed: "副本或保存位置已变化，本次未继续操作。请重新核对。",
+    unreadable: "无法读取副本，请检查保存位置和访问权限。",
+    pending:
+      "副本检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工作后退出重开。",
+    busy: "已有文件检查尚未结束，本次未开始新检查。请稍后重试。",
+    unsupported:
+      "此类副本不能直接打开。可单独选择“显示副本位置”，再选择打开方式。",
+    unavailable: "本次副本操作未完成，请重新核对后再试。",
+  } satisfies Record<SavedCopyFailure, string>,
   preparing: "正在准备保存完整文件…",
   notStarted: "未开始保存；准备结果未确认。可以关闭此记录后再操作。",
   rejected: "未开始保存，请检查目标位置后重新操作。",

@@ -119,9 +119,7 @@ export function SessionToolManagement({
       ? S.listing
       : S.checking
     : view.error
-      ? inspection
-        ? S.inspectFailed
-        : S.errors[view.error]
+      ? `${S.errors[view.error]}${view.unresolved ? ` ${inspection ? S.inspectPending : S.pending}` : ""}`
       : view.recovered
         ? S.recovered
         : view.unresolved

@@ -30,7 +30,9 @@ if stage == "get":
         sys.exit(9)
     if state["writes"] and mode == "postget-wait":
         __import__("signal").signal(__import__("signal").SIGTERM, __import__("signal").SIG_IGN)
-        (root / "postget-waiting").write_text(str(__import__("os").getpid()))
+        temporary = root / "postget-waiting.tmp"
+        temporary.write_text(str(__import__("os").getpid()))
+        temporary.replace(root / "postget-waiting")
         __import__("time").sleep(60)
     result = state["report"]
     selected = state["config"]["layers"][0]

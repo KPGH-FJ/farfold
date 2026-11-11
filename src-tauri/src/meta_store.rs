@@ -15,6 +15,8 @@ use serde::{Deserialize, Serialize, de::DeserializeOwned};
 mod archive;
 mod custom_agent;
 mod fork;
+mod initial_config;
+pub(crate) use initial_config::InitialConfigError;
 pub(crate) mod mcp_pending;
 pub(crate) mod prompt_templates;
 pub(crate) mod remembered_pages;

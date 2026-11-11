@@ -1,5 +1,47 @@
 import type { DeliveryReceipt, VerifiedFile } from "./file_delivery";
 import { samePreviewFile } from "./preview_capture";
+import { isAbsoluteFilePath } from "./file_paths";
+
+/** This is the complete published destination, never an inferred source path. */
+export function checkedCopyDestination(value: unknown): VerifiedFile {
+  const keys = [
+    "root",
+    "path",
+    "resolvedPath",
+    "name",
+    "size",
+    "sha256",
+    "version",
+  ] as const;
+  if (
+    !value ||
+    typeof value !== "object" ||
+    Array.isArray(value) ||
+    Object.keys(value).length !== keys.length ||
+    keys.some((key) => !Object.hasOwn(value, key))
+  )
+    throw new Error("Invalid copy destination");
+  const file = value as VerifiedFile;
+  if (
+    ["root", "path", "resolvedPath", "name", "version"].some((key) => {
+      const part = file[key as keyof VerifiedFile];
+      return (
+        typeof part !== "string" ||
+        !part.length ||
+        part.length > 32768 ||
+        /[\u0000-\u001f\u007f]/.test(part)
+      );
+    }) ||
+    ![file.root, file.path, file.resolvedPath].every(isAbsoluteFilePath) ||
+    !Number.isSafeInteger(file.size) ||
+    file.size < 0 ||
+    file.size > 256 * 1024 * 1024 ||
+    typeof file.sha256 !== "string" ||
+    !/^[a-f0-9]{64}$/.test(file.sha256)
+  )
+    throw new Error("Invalid copy destination");
+  return { ...file };
+}
 export type CopyState =
   | "ready"
   | "copying"
@@ -109,6 +151,16 @@ export function parseCopyStatus(
       v.bytesCopied !== v.total
     )
       throw new Error("Invalid completed copy receipt");
+    if (r.destinationFile !== undefined) {
+      const saved = checkedCopyDestination(r.destinationFile);
+      if (
+        saved.path !== destination ||
+        saved.size !== r.size ||
+        saved.sha256 !== r.sha256 ||
+        saved.resolvedPath === file.resolvedPath
+      )
+        throw new Error("Invalid published copy destination");
+    }
   } else if (v.receipt !== undefined)
     throw new Error("Unexpected copy receipt");
   return v;

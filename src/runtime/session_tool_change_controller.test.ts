@@ -294,6 +294,29 @@ it("releases only an explicit native pre-dispatch refusal and allows a corrected
   expect(h.owner.sessionToolRecoveryRequired).not.toBe(true);
   expect(h.controller.start(changeInput)).toBe(true);
 });
+it("never interprets a status-query refusal as proof the original write was not dispatched", async () => {
+  const h = changeFixture();
+  expect(h.controller.start(changeInput)).toBe(true);
+  await flush();
+  h.start.resolve(changeOperation(h.request()));
+  await flush();
+  expect(h.controller.check()).toBe(true);
+  await flush();
+  h.status.reject({
+    code: "queryFailed",
+    message: "PRIVATE",
+    notDispatched: true,
+  });
+  await flush();
+  expect(h.controller.getSnapshot()).toMatchObject({
+    unresolved: true,
+    error: "queryFailed",
+  });
+  expect(h.owner.configuring).toBe(true);
+  expect(h.owner.sessionToolRecoveryRequired).toBe(true);
+  expect(h.controller.start(changeInput)).toBe(false);
+  expect(h.port.start).toHaveBeenCalledOnce();
+});
 it.each(["replace", "connection", "source"])(
   "drops a %s owner before the invoke microtask and releases only its unsent guard",
   async (change) => {

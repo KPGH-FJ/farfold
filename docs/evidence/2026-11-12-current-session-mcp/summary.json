@@ -1,10 +1,9 @@
 {
   "scope": "P41 current-conversation HTTP MCP management and pending recovery",
   "implementationBaseCommit": "d8de4c7f82ba8c3556e08c33ef25d82fad46548f",
-  "implementationCommit": null,
-  "formalAtThisRecord": "92e052a67",
-  "installed": false,
-  "actualAgentRequests": 0,
+  "implementationCommit": "f44c42248b441516272713d98cd5047110c12f36",
+  "formalAtThisRecord": "f44c42248b441516272713d98cd5047110c12f36",
+  "installed": true,
   "actualToolCalls": 0,
   "allSevenPassed": true,
   "frontend": {
@@ -129,8 +128,15 @@
     "sha256": "0818cf028a834f1f48f575b8c7f5ebd76d255eeb6bc130d78b7479b4e385ae81"
   },
   "remaining": [
-    "Installed native IPC, real selected Agent tool call and formal history restoration not yet observed in this batch.",
+    "Followup empty-dialog and saved-copy fixes not yet installed. Real selected-model tool call and formal history restoration remain unverified.",
     "External full configuration drift remains pending; no arbitrary adoption flow.",
     "Other agents, Windows, full P41 and 29x8 remain open."
-  ]
+  ],
+  "actualModelRequests": 0,
+  "firstFormalPass": {
+    "path": "docs/evidence/2026-11-12-current-session-mcp/first-formal-pass.json",
+    "sha256": "b8ed9337d7dc7661462bd500975e0c6f033cc7c6ccff37274ea54c2e263f5b8b",
+    "toolManagement": "failed empty-conversation admission; followup repair not yet installed",
+    "fileDelivery": "failed same-name retains bytes/opinion; new59Bcopy success, missing direct savedcopy action"
+  }
 }

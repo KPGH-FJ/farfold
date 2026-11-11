@@ -147,17 +147,17 @@ impl AcpManager {
             cwd.to_string_lossy().into_owned(),
             session_id.to_owned(),
         );
-        let row: SessionRow = store
+        let row: Option<SessionRow> = store
             .run(move |store| {
                 let rows: Vec<_> = store
                     .list_sessions_for(&agent, &directory)?
                     .into_iter()
-                    .filter(|r| r.native_session_id.as_deref() == Some(&native) && !r.archived)
+                    .filter(|r| r.native_session_id.as_deref() == Some(&native))
                     .collect();
-                if rows.len() != 1 {
+                if rows.len() > 1 || rows.iter().any(|row| row.archived) {
                     return Err("对话已变化".into());
                 }
-                Ok(rows.into_iter().next().expect("one row"))
+                Ok(rows.into_iter().next())
             })
             .await
             .map_err(|_| ChangeError::from(Code::Changed).before_dispatch())?;
@@ -174,6 +174,7 @@ impl AcpManager {
             state: State::Pending,
             settled: false,
             mutation_sent: false,
+            conversation_saved: false,
             persistence: Persistence::Unreported,
             activity: Activity::Unreported,
             items: owner.slot.items().map_err(ChangeError::before_dispatch)?,
@@ -210,7 +211,9 @@ impl AcpManager {
         }
         let value = owner.slot.wait(operation_id, deadline).await?;
         if !(owner.current)() {
-            return Err(Code::Changed.into());
+            return Err(
+                ChangeError::from(Code::Changed).with_saved_conversation(value.conversation_saved)
+            );
         }
         Ok(value)
     }

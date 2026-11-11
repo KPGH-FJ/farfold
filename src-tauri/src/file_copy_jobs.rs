@@ -108,7 +108,7 @@ impl Job {
         self.settle(|status| match outcome {
             CopyOutcome::Completed(receipt) => {
                 status.state = CopyState::Completed;
-                status.receipt = Some(receipt);
+                status.receipt = Some(*receipt);
             }
             CopyOutcome::Cancelled => status.state = CopyState::Cancelled,
             CopyOutcome::Failed(error) => {

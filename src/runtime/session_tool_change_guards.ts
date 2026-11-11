@@ -29,6 +29,7 @@ export class SessionToolChangeGuards {
     private hooks: {
       current: (key: string) => ThreadState | undefined;
       emit: (key: string) => void;
+      saved?: (state: ThreadState) => void;
     },
   ) {}
 
@@ -72,6 +73,26 @@ export class SessionToolChangeGuards {
       return false;
     s.sessionToolRecoveryRequired = true;
     this.publish(s);
+    return true;
+  }
+
+  /** A matching native persistence receipt establishes the conversation, not
+   * the tool outcome or current model. Keep all existing pauses intact. */
+  saved(s: ThreadState, operationId: string): boolean {
+    const owner = this.owners.get(s);
+    if (
+      !owner ||
+      owner.operationId !== operationId ||
+      owner.identity !== identity(s) ||
+      this.hooks.current(s.key) !== s ||
+      !s.configuring
+    )
+      return false;
+    if (s.identity !== "established") {
+      s.identity = "established";
+      this.hooks.saved?.(s);
+      this.publish(s);
+    }
     return true;
   }
 

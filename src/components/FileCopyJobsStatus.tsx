@@ -3,7 +3,14 @@ import type { VerifiedFile } from "../runtime/file_delivery";
 import { samePreviewFile } from "../runtime/preview_capture";
 import { copyTerminal } from "../runtime/file_copy_types";
 import { FILE_COPY_STRINGS as S } from "../runtime/file_copy_strings";
-export function FileCopyJobsStatus({ file }: { file?: VerifiedFile }) {
+import { SavedCopyActions } from "./SavedCopyActions";
+export function FileCopyJobsStatus({
+  file,
+  active = true,
+}: {
+  file?: VerifiedFile;
+  active?: boolean;
+}) {
   const jobs = useFileCopyJobs().filter(
     (j) => !file || samePreviewFile(j.file, file),
   );
@@ -38,6 +45,7 @@ export function FileCopyJobsStatus({ file }: { file?: VerifiedFile }) {
             <p>{S.progress(job.status.bytesCopied, job.status.total)}</p>
           )}
           <div className="ac-actions" style={{ flexWrap: "wrap" }}>
+            <SavedCopyActions job={job} active={active} />
             {job.phase !== "notStarted" &&
               !job.absence &&
               (!job.status ||

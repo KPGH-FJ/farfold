@@ -20,10 +20,16 @@ impl Drop for Fixture {
 }
 impl Fixture {
     async fn open() -> (Self, ManagedConnection) {
+        Self::open_with_index(true).await
+    }
+    async fn open_with_index(seed_index: bool) -> (Self, ManagedConnection) {
         let dir = tempfile::tempdir().unwrap();
         let cwd = dir.path().canonicalize().unwrap();
         let script = cwd.join("peer.py");
         std::fs::write(&script, include_str!("peer.py")).unwrap();
+        if !seed_index {
+            std::fs::write(cwd.join("choices"), "").unwrap();
+        }
         let store = MetaStore::open(&cwd.join("meta.db")).unwrap();
         let agent = AgentRow {
             id: "change-fixture".into(),
@@ -52,7 +58,7 @@ impl Fixture {
             &cwd.to_string_lossy(),
             &opened.session_id,
         );
-        if store.get_session(&row_id).unwrap().is_none() {
+        if seed_index && store.get_session(&row_id).unwrap().is_none() {
             store
                 .upsert_session(&SessionRow {
                     id: row_id.clone(),
@@ -124,6 +130,326 @@ impl Fixture {
     fn pending(&self) -> bool {
         self.store.mcp_pending(&self.row_id).unwrap().is_some()
     }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn empty_conversation_inspection_needs_no_index_and_creates_no_record() {
+    let (f, c) = Fixture::open_with_index(false).await;
+    assert!(f.store.get_session(&f.row_id).unwrap().is_none());
+    let inspected = f
+        .change(&c, "inspect-empty", Change::Inspect)
+        .await
+        .unwrap();
+    assert_eq!(inspected.state, State::Ready);
+    assert!(!inspected.mutation_sent);
+    assert!(!inspected.conversation_saved);
+    assert!(f.store.get_session(&f.row_id).unwrap().is_none());
+    assert_eq!(f.trace().iter().filter(|v| v["method"] == LIST).count(), 1);
+    assert!(
+        !f.trace()
+            .iter()
+            .any(|v| matches!(v["method"].as_str(), Some(ADD | REMOVE | "session/prompt")))
+    );
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn empty_conversation_never_overwrites_an_existing_different_baseline() {
+    let (f, c) = Fixture::open_with_index(false).await;
+    let original = SessionRow {
+        id: f.row_id.clone(),
+        agent_id: f.agent.id.clone(),
+        cwd: f.cwd.to_string_lossy().into(),
+        native_session_id: Some("owned-change".into()),
+        title: Some("Keep original".into()),
+        pinned: true,
+        archived: false,
+        created_at: 17,
+        updated_at: 19,
+        config_options: Some(
+            json!({"choices":[{"id":"model","category":"model","type":"select","value":"selected-b"}],"_farfoldService":{"kind":"existing"}}),
+        ),
+    };
+    f.store.upsert_session(&original).unwrap();
+    let failure = f
+        .change(&c, "existing-baseline", Fixture::add())
+        .await
+        .unwrap_err();
+    assert_eq!(failure.code, Code::Changed);
+    assert_eq!(failure.not_dispatched, Some(true));
+    assert_eq!(failure.conversation_saved, None);
+    assert_eq!(f.store.get_session(&f.row_id).unwrap(), Some(original));
+    assert!(!f.pending());
+    assert!(
+        !f.trace()
+            .iter()
+            .any(|v| matches!(v["method"].as_str(), Some(ADD | REMOVE | "session/prompt")))
+    );
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn empty_conversation_change_saves_selected_baseline_and_establishes_future_choices() {
+    let (f, c) = Fixture::open_with_index(false).await;
+    f.manager
+        .session_set_config(
+            &f.agent.id,
+            &f.cwd,
+            "owned-change",
+            "model",
+            json!("selected-b"),
+        )
+        .await
+        .unwrap();
+    assert!(f.store.get_session(&f.row_id).unwrap().is_none());
+    let inspected = f
+        .change(&c, "inspect-before-add", Change::Inspect)
+        .await
+        .unwrap();
+    assert_eq!(inspected.state, State::Ready);
+    let added = f.change(&c, "add-empty", Fixture::add()).await.unwrap();
+    assert_eq!(added.state, State::Ready);
+    assert!(added.conversation_saved);
+    let inspected = f
+        .change(&c, "inspect-after-add", Change::Inspect)
+        .await
+        .unwrap();
+    assert_eq!(inspected.state, State::Ready);
+    assert!(!inspected.conversation_saved);
+    let baseline = f
+        .store
+        .get_session(&f.row_id)
+        .unwrap()
+        .unwrap()
+        .config_options
+        .unwrap();
+    assert_eq!(baseline["_farfoldService"], json!({"kind":"existing"}));
+    assert_eq!(baseline["choices"][0]["value"], "selected-b");
+    assert!(!f.pending());
+    f.manager
+        .session_set_config(
+            &f.agent.id,
+            &f.cwd,
+            "owned-change",
+            "model",
+            json!("selected-a"),
+        )
+        .await
+        .unwrap();
+    let later = f
+        .store
+        .get_session(&f.row_id)
+        .unwrap()
+        .unwrap()
+        .config_options
+        .unwrap();
+    assert_eq!(later["choices"][0]["value"], "selected-a");
+    let sql = rusqlite::Connection::open(f.cwd.join("meta.db")).unwrap();
+    sql.execute(
+        "UPDATE sessions SET title='Keep title', pinned=1 WHERE id=?1",
+        [&f.row_id],
+    )
+    .unwrap();
+    let original = serde_json::to_value(f.store.get_session(&f.row_id).unwrap().unwrap()).unwrap();
+    let removed = f
+        .change(
+            &c,
+            "remove-empty",
+            Change::Remove {
+                item_ref: inspected.items[0].item_ref.clone(),
+            },
+        )
+        .await
+        .unwrap();
+    assert_eq!(removed.state, State::Ready);
+    assert_eq!(
+        serde_json::to_value(f.store.get_session(&f.row_id).unwrap().unwrap()).unwrap(),
+        original
+    );
+    assert!(!f.trace().iter().any(|v| v["method"] == "session/prompt"));
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn empty_conversation_failed_baseline_save_never_dispatches_change() {
+    let (f, c) = Fixture::open_with_index(false).await;
+    let sql = rusqlite::Connection::open(f.cwd.join("meta.db")).unwrap();
+    sql.execute_batch("CREATE TRIGGER fail_baseline BEFORE INSERT ON sessions BEGIN SELECT RAISE(FAIL, 'test'); END;").unwrap();
+    let failure = f
+        .change(&c, "save-empty", Fixture::add())
+        .await
+        .unwrap_err();
+    assert_eq!(failure.code, Code::SaveFailed);
+    assert_eq!(failure.not_dispatched, Some(true));
+    assert_eq!(failure.conversation_saved, None);
+    assert!(f.store.get_session(&f.row_id).unwrap().is_none());
+    assert!(!f.pending());
+    assert!(
+        !f.trace()
+            .iter()
+            .any(|v| matches!(v["method"].as_str(), Some(ADD | REMOVE | "session/prompt")))
+    );
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn empty_conversation_unknown_write_retains_index_and_durable_guard_without_prompt() {
+    let (f, c) = Fixture::open_with_index(false).await;
+    f.flag("save-failure");
+    let outcome = f.change(&c, "empty-unknown", Fixture::add()).await.unwrap();
+    assert_eq!(outcome.state, State::Unknown);
+    assert!(outcome.conversation_saved && outcome.mutation_sent && f.pending());
+    let row = f.store.get_session(&f.row_id).unwrap().unwrap();
+    assert_eq!(
+        row.config_options.unwrap()["_farfoldService"],
+        json!({"kind":"existing"})
+    );
+    assert!(f.store.require_mcp_ready(&f.row_id).is_err());
+    assert!(!f.trace().iter().any(|v| v["method"] == "session/prompt"));
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn empty_conversation_can_remove_an_exact_inspected_http_item_without_prompt() {
+    let (f, c) = Fixture::open_with_index(false).await;
+    f.flag("seed-http");
+    let inspected = f
+        .change(&c, "inspect-existing-empty", Change::Inspect)
+        .await
+        .unwrap();
+    assert!(f.store.get_session(&f.row_id).unwrap().is_none());
+    let removed = f
+        .change(
+            &c,
+            "remove-existing-empty",
+            Change::Remove {
+                item_ref: inspected.items[0].item_ref.clone(),
+            },
+        )
+        .await
+        .unwrap();
+    assert_eq!(removed.state, State::Ready);
+    assert!(removed.conversation_saved && removed.mutation_sent);
+    assert_eq!(removed.persistence, Persistence::Confirmed);
+    assert_eq!(removed.activity, Activity::Unreported);
+    assert!(removed.items.is_empty());
+    assert!(f.store.get_session(&f.row_id).unwrap().is_some());
+    let calls = f.trace();
+    let removal = calls.iter().find(|v| v["method"] == REMOVE).unwrap();
+    assert_eq!(removal["params"]["extensionKey"], "prior-key");
+    assert!(
+        !calls
+            .iter()
+            .any(|v| matches!(v["method"].as_str(), Some(ADD | "session/prompt")))
+    );
+}
+
+async fn queue_empty_change(
+    f: &Fixture,
+    c: &ManagedConnection,
+    id: &str,
+) -> (
+    tokio::sync::OwnedMutexGuard<()>,
+    oneshot::Receiver<Result<(), ChangeError>>,
+) {
+    use std::sync::atomic::{AtomicBool, Ordering};
+    let owner = f
+        .manager
+        .change_owner(&f.agent.id, &f.cwd, "owned-change", &c.connection_id)
+        .unwrap();
+    let configuration = crate::install_job::configuration_guard(&f.agent.id).await;
+    let entered = Arc::new(AtomicBool::new(false));
+    let reached = entered.clone();
+    let original = owner.current.clone();
+    let current_owner = Arc::new(move || {
+        reached.store(true, Ordering::SeqCst);
+        original()
+    });
+    let request = Request {
+        operation: Operation {
+            kind: "addHttp",
+            operation_id: id.into(),
+            agent_id: f.agent.id.clone(),
+            cwd: f.cwd.to_string_lossy().into(),
+            native_session_id: "owned-change".into(),
+            connection_id: c.connection_id.clone(),
+            state: State::Pending,
+            settled: false,
+            mutation_sent: false,
+            conversation_saved: false,
+            persistence: Persistence::Unreported,
+            activity: Activity::Unreported,
+            items: vec![],
+            error: None,
+        },
+        change: Fixture::add(),
+        slot: owner.slot.clone(),
+        availability: owner.availability,
+        current_owner,
+        store: f.store.clone(),
+        row: None,
+    };
+    let (result, receive) = oneshot::channel();
+    owner
+        .control
+        .send(SessionControl::ToolsChange {
+            request: Box::new(request),
+            deadline: tokio::time::Instant::now() + Duration::from_secs(4),
+            result,
+        })
+        .unwrap();
+    until(|| entered.load(Ordering::SeqCst)).await;
+    (configuration, receive)
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn empty_conversation_rejects_a_baseline_created_while_waiting_for_configuration() {
+    let (f, c) = Fixture::open_with_index(false).await;
+    let (configuration, receive) = queue_empty_change(&f, &c, "concurrent-baseline").await;
+    let original = SessionRow {
+        id: f.row_id.clone(),
+        agent_id: f.agent.id.clone(),
+        cwd: f.cwd.to_string_lossy().into(),
+        native_session_id: Some("owned-change".into()),
+        title: Some("Keep concurrent".into()),
+        pinned: true,
+        archived: false,
+        created_at: 17,
+        updated_at: 19,
+        config_options: Some(
+            json!({"choices":[{"id":"model","category":"model","type":"select","value":"selected-b"}],"_farfoldService":{"kind":"existing"}}),
+        ),
+    };
+    f.store.upsert_session(&original).unwrap();
+    drop(configuration);
+    let failure = receive.await.unwrap().unwrap_err();
+    assert_eq!(failure.code, Code::Changed);
+    assert_eq!(failure.conversation_saved, None);
+    assert_eq!(f.store.get_session(&f.row_id).unwrap(), Some(original));
+    assert!(!f.pending());
+    assert!(
+        !f.trace()
+            .iter()
+            .any(|v| matches!(v["method"].as_str(), Some(ADD | REMOVE | "session/prompt")))
+    );
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn empty_conversation_saved_baseline_drift_keeps_saved_proof_and_never_dispatches_change() {
+    let (f, c) = Fixture::open_with_index(false).await;
+    let (configuration, receive) = queue_empty_change(&f, &c, "save-then-drift").await;
+    f.flag("inject-configuration");
+    until(|| f.cwd.join("configuration-injected").exists()).await;
+    drop(configuration);
+    let failure = receive.await.unwrap().unwrap_err();
+    assert_eq!(failure.code, Code::Changed);
+    assert_eq!(failure.conversation_saved, Some(true));
+    let row = f.store.get_session(&f.row_id).unwrap().unwrap();
+    assert_eq!(
+        row.config_options.unwrap()["choices"][0]["value"],
+        "selected-a"
+    );
+    assert!(!f.pending());
+    assert!(
+        !f.trace()
+            .iter()
+            .any(|v| matches!(v["method"].as_str(), Some(ADD | REMOVE | "session/prompt")))
+    );
 }
 async fn until(mut condition: impl FnMut() -> bool) {
     tokio::time::timeout(Duration::from_secs(4), async {
@@ -426,6 +752,7 @@ async fn observer_disappearing_after_pump_takes_command_cannot_offer_a_mutation(
             state: State::Pending,
             settled: false,
             mutation_sent: false,
+            conversation_saved: false,
             persistence: Persistence::Unreported,
             activity: Activity::Unreported,
             items: vec![],
@@ -436,7 +763,7 @@ async fn observer_disappearing_after_pump_takes_command_cannot_offer_a_mutation(
         availability: owner.availability,
         current_owner,
         store: f.store.clone(),
-        row: f.store.get_session(&f.row_id).unwrap().unwrap(),
+        row: f.store.get_session(&f.row_id).unwrap(),
     };
     owner
         .control

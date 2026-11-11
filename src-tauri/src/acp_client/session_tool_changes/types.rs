@@ -44,10 +44,16 @@ pub struct ChangeError {
     pub message: &'static str,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub not_dispatched: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub conversation_saved: Option<bool>,
 }
 impl ChangeError {
     pub(super) fn before_dispatch(mut self) -> Self {
         self.not_dispatched = Some(true);
+        self
+    }
+    pub(crate) fn with_saved_conversation(mut self, saved: bool) -> Self {
+        self.conversation_saved = saved.then_some(true);
         self
     }
 }
@@ -69,6 +75,7 @@ impl From<Code> for ChangeError {
             code,
             message,
             not_dispatched: None,
+            conversation_saved: None,
         }
     }
 }
@@ -113,6 +120,7 @@ pub struct Operation {
     pub state: State,
     pub settled: bool,
     pub mutation_sent: bool,
+    pub conversation_saved: bool,
     pub persistence: Persistence,
     pub activity: Activity,
     pub items: Vec<Item>,

@@ -57,15 +57,12 @@ import {
 /**
  * Session command client and normalized conversation state.
  * Agent updates enter the shared `applyUpdate` projection.
- *
- * Wire shapes mirror `acp_client/session_commands.rs`,
- * `acp_client/pump.rs` and `meta_store.rs` (camelCase). Raw updates arrive
+ * Wire shapes mirror native session commands, pump and meta_store. Updates arrive
  * over a per-conversation `Channel` as `{sessionId, update}` envelopes;
  * side-band events carry `kind`: `permissionRequest` | `elicitation` |
  * `interactionsCancelled` | `turnEnd` | `connectionLost` | `notification`.
  *
- * Naming note: user-facing vocabulary is "会话/thread"; `session*` stays
- * inside this runtime module only (AGENTS.md vocabulary rule).
+ * Internal `session*` identifiers follow AGENTS.md's UI vocabulary boundary.
  */
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { checkDesktopNotifications } from "./desktop_notifications";
@@ -256,8 +253,7 @@ class ThreadsStore {
   private deletions = new SessionDeletions();
   /** dedupe concurrent opens (same agent+cwd+native target). */
   private openings = new Map<string, Promise<ThreadState>>();
-  /** Unprompted ("draft") conversations per agent+cwd — re-picking the
-   *  same pair reuses the draft instead of spawning another session. */
+  /** Reuse unprompted conversations for the same agent and folder. */
   private drafts = new Map<string, string>();
   private interactions = new InteractionActions(
     (key) => this.thread(key),
@@ -272,6 +268,11 @@ class ThreadsStore {
   readonly toolChanges = new SessionToolChangeGuards({
     current: (key) => this.thread(key),
     emit: (key) => this.emit(key, true),
+    saved: (state) => {
+      if (this.drafts.get(state.draftGroup ?? "") === state.key)
+        this.drafts.delete(state.draftGroup ?? "");
+      void this.refreshIndex(true);
+    },
   });
   private recordedEndings = new WeakSet<ThreadItem>();
   decidePermission = (
@@ -440,7 +441,7 @@ class ThreadsStore {
       : DEFAULT_AUTO_ARCHIVE_DAYS;
   }
 
-  async refreshIndex(): Promise<void> {
+  async refreshIndex(preserveQueues = false): Promise<void> {
     const archiveRevision = this.archiveRevision;
     try {
       await this.indexReader.refresh();
@@ -457,7 +458,7 @@ class ThreadsStore {
     } catch {
       // A failed read cannot replace a confirmed setting with an invented default.
     }
-    this.emit();
+    this.emit(undefined, preserveQueues);
   }
 
   private recordPermissionChanges(key: string, count = 1): void {
@@ -847,9 +848,7 @@ class ThreadsStore {
     return state;
   }
 
-  /** Materialize the index row for an agent-side session (rename / pin /
-   *  archive on a `source: "agent"` row) — `session_touch` upserts so the
-   *  meta op that follows has a row to mutate. */
+  /** Materialize an Agent-history row before an index operation. */
   async ensureIndexRow(input: {
     agentId: string;
     cwd: string;

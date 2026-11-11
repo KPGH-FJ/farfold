@@ -55,7 +55,25 @@ fn independent_completed_copy_retains_the_explicit_destination_identity() {
     assert_eq!(std::fs::read(&destination).unwrap().len() as u64, file.size);
     assert_eq!(done.destination, destination);
     // This is the exact destination equality required by parseCopyStatus.
-    assert_eq!(done.receipt.unwrap().destination, done.destination);
+    let receipt = done.receipt.unwrap();
+    assert_eq!(receipt.destination, done.destination);
+    let saved = receipt.destination_file.unwrap();
+    assert_eq!(saved.path, done.destination);
+    assert_eq!(
+        saved.root,
+        actual_parent.canonicalize().unwrap().to_str().unwrap()
+    );
+    assert_eq!(
+        saved,
+        file_delivery::inspect(&actual_parent, Path::new(&destination)).unwrap()
+    );
+    assert_eq!(
+        file_delivery::revalidate_for_open(&saved).unwrap(),
+        saved.resolved_path
+    );
+    std::fs::remove_file(&selected_parent).unwrap();
+    std::os::unix::fs::symlink(directory.path(), &selected_parent).unwrap();
+    assert!(file_delivery::revalidate_for_open(&saved).is_err());
 }
 
 #[test]

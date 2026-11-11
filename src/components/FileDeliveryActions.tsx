@@ -346,7 +346,7 @@ export function FileDeliveryControls({
           {result}
         </span>
       )}
-      {file && <FileCopyJobsStatus file={file} />}
+      {file && <FileCopyJobsStatus file={file} active={active} />}
       {preview && (
         <details open>
           <summary>{S.currentTitle}</summary>

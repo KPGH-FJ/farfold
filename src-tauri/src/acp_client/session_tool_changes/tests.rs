@@ -11,6 +11,15 @@ fn public_early_admission_proof_is_camel_case_and_never_implicitly_attached() {
     let unknown = serde_json::to_value(ChangeError::from(Code::Unknown)).unwrap();
     assert!(unknown.get("notDispatched").is_none());
     assert_eq!(unknown.as_object().unwrap().len(), 2);
+    let saved = serde_json::to_value(
+        ChangeError::from(Code::Changed)
+            .before_dispatch()
+            .with_saved_conversation(true),
+    )
+    .unwrap();
+    assert_eq!(saved["conversationSaved"], true);
+    assert_eq!(saved.as_object().unwrap().len(), 4);
+    assert!(saved.get("conversation_saved").is_none());
 }
 
 fn descriptor() -> Value {
@@ -81,9 +90,30 @@ fn full_inventory_rejects_duplicate_keys_incomplete_shapes_and_unknown_transport
         json!({"extensions":[],"nextCursor":"more"}),
         json!({"extensions":[{"extensionKey":"a","extension":{"type":"future"}}]}),
         json!({"extensions":[entry("a",json!({"type":"mcp","server":{"type":"http","name":"x","url":"https://x.invalid"}}))]}),
+        json!({"extensions":[entry("a",json!({"type":"mcp","server":{"type":"sse","name":"x","url":"https://x.invalid"}}))]}),
+        json!({"extensions":[entry("a",json!({"type":"mcp","server":{"type":"future","name":"x","url":"https://x.invalid","headers":[]}}))]}),
     ] {
         assert!(inventory::Inventory::parse(malformed).is_err());
     }
+}
+#[test]
+fn official_sse_is_preserved_in_full_digest_but_never_managed_as_http() {
+    let value = json!({"type":"mcp","server":{"type":"sse","name":"Sse","url":"https://example.invalid/events","headers":[]}});
+    let before = inventory(vec![builtin(), entry("sse-exact", value.clone())]);
+    assert!(before.reviewed().unwrap().is_empty());
+    let mut changed = value.clone();
+    changed["server"]["url"] = json!("https://example.invalid/changed");
+    assert_ne!(
+        before.digest(),
+        inventory(vec![builtin(), entry("sse-exact", changed)]).digest()
+    );
+    let after = inventory(vec![
+        builtin(),
+        entry("sse-exact", value),
+        entry("new-http", descriptor()),
+    ]);
+    assert!(after.added(&before, &descriptor()).is_ok());
+    assert_eq!(after.reviewed().unwrap().len(), 1);
 }
 #[test]
 fn unknown_descriptor_fields_are_not_erased_by_optional_default_normalization() {

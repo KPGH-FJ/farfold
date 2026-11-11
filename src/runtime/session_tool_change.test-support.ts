@@ -33,6 +33,8 @@ export function changeOperation(
     state: "pending",
     settled: false,
     mutationSent: false,
+    conversationSaved:
+      patch.kind !== "inspect" && (patch.mutationSent ?? false),
     persistence: "unreported",
     activity: "unreported",
     items: [],
@@ -87,6 +89,7 @@ export function changeFixture() {
       subscribe: protection.subscribe,
       unknown: protection.markUnknown.bind(protection),
       unsent: protection.releaseUnsent.bind(protection),
+      saved: protection.saved.bind(protection),
     },
     100,
     () => `aaaaaaaa-aaaa-aaaa-aaaa-${String(++sequence).padStart(12, "0")}`,

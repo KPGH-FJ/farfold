@@ -2,7 +2,7 @@
 use super::*;
 
 pub(crate) enum CopyOutcome {
-    Completed(DeliveryReceipt),
+    Completed(Box<DeliveryReceipt>),
     Cancelled,
     Failed(DeliveryError),
     Unknown(DeliveryError),
@@ -114,9 +114,10 @@ pub(crate) fn stream_copy(
             size: file.size,
             sha256: file.sha256.clone(),
             source_version: Some(file.version.clone()),
+            destination_file: None,
         },
     ) {
-        Ok(receipt) => CopyOutcome::Completed(receipt),
+        Ok(receipt) => CopyOutcome::Completed(Box::new(receipt)),
         Err(error) => CopyOutcome::Unknown(error),
     }
 }

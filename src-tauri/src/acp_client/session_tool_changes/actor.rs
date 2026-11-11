@@ -7,13 +7,30 @@ use serde_json::{Value, json};
 use std::sync::atomic::{AtomicBool, Ordering};
 
 pub(crate) struct Request {
-    pub(super) operation: Operation,
-    pub(super) change: Change,
+    pub(crate) operation: Operation,
+    pub(crate) change: Change,
     pub(super) slot: Arc<Slot>,
     pub(super) availability: Arc<super::super::session_tools::Availability>,
-    pub(super) current_owner: Arc<dyn Fn() -> bool + Send + Sync>,
+    pub(crate) current_owner: Arc<dyn Fn() -> bool + Send + Sync>,
     pub(super) store: MetaStore,
-    pub(super) row: SessionRow,
+    pub(crate) row: Option<SessionRow>,
+}
+impl Request {
+    pub(crate) fn validate_target(&self) -> Result<(), ChangeError> {
+        if !(self.current_owner)() {
+            return Err(Code::Changed.into());
+        }
+        Ok(())
+    }
+    pub(crate) fn validate_new_target(&self) -> Result<(), ChangeError> {
+        if self.row.is_none()
+            && let Change::Remove { item_ref } = &self.change
+            && !self.slot.target(item_ref)?.item.can_remove
+        {
+            return Err(Code::Changed.into());
+        }
+        Ok(())
+    }
 }
 struct Execution {
     request: Request,
@@ -114,14 +131,15 @@ impl Execution {
             expected_digest: expected,
             target_digest: inventory::descriptor_digest(&descriptor),
         };
-        let (row, save) = (self.request.row.clone(), pending.clone());
+        let row = self.request.row.clone().ok_or(Code::Changed)?;
+        let (begin_row, save) = (row.clone(), pending.clone());
         let guard = crate::install_job::configuration_guard(&row.agent_id).await;
         if !(self.request.current_owner)() {
             return Err(Code::Changed.into());
         }
         self.request
             .store
-            .run(move |store| store.begin_mcp_pending(&row, &save))
+            .run(move |store| store.begin_mcp_pending(&begin_row, &save))
             .await
             .map_err(|_| Code::SaveFailed)?;
         drop(guard);
@@ -179,7 +197,7 @@ impl Execution {
             return Err(Code::Changed.into());
         }
         let reviewed = after.reviewed()?;
-        let (row, clear) = (self.request.row.clone(), pending);
+        let clear = pending;
         self.request
             .store
             .run(move |store| store.clear_mcp_pending(&row, &clear))
@@ -209,18 +227,15 @@ impl Execution {
         }
         let error = outcome.err().expect("failed outcome");
         if !self.mutation_sent
-            && let Some(pending) = self.pending.clone()
-        {
-            let row = self.request.row.clone();
-            if self
+            && let (Some(pending), Some(row)) = (self.pending.clone(), self.request.row.clone())
+            && self
                 .request
                 .store
                 .run(move |store| store.clear_mcp_pending(&row, &pending))
                 .await
                 .is_ok()
-            {
-                self.pending = None;
-            }
+        {
+            self.pending = None;
         }
         let unknown = self.mutation_sent || self.pending.is_some();
         let settled = self.unresolved.is_empty() || self.life.finished();
@@ -258,6 +273,7 @@ pub(crate) fn start(
     deadline: tokio::time::Instant,
     result: oneshot::Sender<Result<(), ChangeError>>,
 ) {
+    let conversation_saved = request.operation.conversation_saved;
     let outcome = (|| {
         if request.operation.connection_id != connection_id
             || request.operation.native_session_id != session_id
@@ -298,5 +314,6 @@ pub(crate) fn start(
         super::super::manager::runtime().spawn(execution.run(lease));
         Ok(())
     })();
-    let _ = result.send(outcome);
+    let _ = result
+        .send(outcome.map_err(|e: ChangeError| e.with_saved_conversation(conversation_saved)));
 }

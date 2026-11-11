@@ -1184,7 +1184,7 @@ export function OpenedFileView({
           {S.revisionNotices[revisionNotice]}
         </p>
       )}
-      {file && <FileCopyJobsStatus file={file} />}
+      {file && <FileCopyJobsStatus file={file} active={active} />}
       {shown.block && (
         <TextBlockPreview
           key={`${identity}:${shown.block.file.version}:${shown.block.file.sha256}`}

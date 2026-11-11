@@ -1133,7 +1133,7 @@ async fn session_pump(
                     tools_report::admit(*request, &cx, &ctx, identity_read.is_some() || workspace_access_read.is_some() || mutation.is_some() || prompt_in_flight || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved), deadline, result);
                 }
                 SessionControl::ToolsChange { request, deadline, result } => {
-                    tools_report::admit_change(*request,&cx,&ctx,identity_read.is_some() || workspace_access_read.is_some() || mutation.is_some() || prompt_in_flight || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved) || !model_guard.admissible() || !permission_guard.admissible(),deadline,result);
+                    tools_report::admit_change(*request,tools_report::ChangeInput{cx:&cx,ctx:&mut ctx,store:&config_store,guard:&mut model_guard,permissions:&mut permission_guard,inbox:&mut inbox,configuration:&mut configuration,models:&mut models,opening:&mut opening,other_busy:identity_read.is_some() || workspace_access_read.is_some() || mutation.is_some() || prompt_in_flight || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved),mutation:&mut mutation},deadline,result).await;
                 }
                 SessionControl::IdentityRead { request, scope, result, deadline } => {
                     use super::identity_read::Code;

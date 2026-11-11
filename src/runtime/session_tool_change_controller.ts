@@ -27,6 +27,7 @@ import {
   subscribeSessionToolChange,
   markSessionToolChangeUnknown,
   releaseUnsentSessionToolChange,
+  savedSessionToolChange,
 } from "./session_tool_change_guard";
 
 export interface SessionToolChangeSnapshot {
@@ -46,6 +47,7 @@ export interface SessionToolChangeGuard {
   has(owner: ThreadState, operationId?: string): boolean;
   unknown(owner: ThreadState, operationId: string): boolean;
   unsent(owner: ThreadState, operationId: string): boolean;
+  saved(owner: ThreadState, operationId: string): boolean;
   subscribe(listener: () => void): () => void;
 }
 const guard: SessionToolChangeGuard = {
@@ -55,6 +57,7 @@ const guard: SessionToolChangeGuard = {
   subscribe: subscribeSessionToolChange,
   unknown: markSessionToolChangeUnknown,
   unsent: releaseUnsentSessionToolChange,
+  saved: savedSessionToolChange,
 };
 const sourceOf = (s: ThreadState) =>
   JSON.stringify([
@@ -218,6 +221,8 @@ export class SessionToolChangeController {
       });
       return;
     }
+    if (operation.conversationSaved)
+      this.protection.saved(this.owner, expected.operationId);
     const released = (ready || refused) && this.settle(expected);
     if (
       !released &&
@@ -289,6 +294,12 @@ export class SessionToolChangeController {
           return;
         // A status error cannot prove anything about the original dispatch.
         const failure = sessionToolChangeRejection(error);
+        if (
+          admission &&
+          failure?.conversationSaved &&
+          this.snapshot.kind !== "inspect"
+        )
+          this.protection.saved(this.owner, expected.operationId);
         const released =
           admission && failure?.notDispatched === true && this.settle(expected);
         if (!released) this.markUnknown(expected);

@@ -17,6 +17,7 @@ fn fixture() -> (tempfile::TempDir, TemporaryExport, PathBuf, DeliveryReceipt) {
         size: 15,
         sha256: content_hash(b"original\0bytes\n"),
         source_version: Some("owned-verified-source".into()),
+        destination_file: None,
     };
     (directory, temporary, destination, receipt)
 }
@@ -70,8 +71,89 @@ fn unchanged_published_bytes_accept_the_original_receipt() {
     assert_eq!(receipt.size, expected.size);
     assert_eq!(receipt.source_version, expected.source_version);
     assert_eq!(
+        receipt.destination_file,
+        Some(inspect(directory.path(), &destination).unwrap())
+    );
+    assert_eq!(
         content_hash(&fs::read(destination).unwrap()),
         receipt.sha256
+    );
+}
+
+#[test]
+fn completed_copy_keeps_its_own_identity_after_later_same_byte_replacement() {
+    let directory = tempfile::tempdir().unwrap();
+    let source = directory.path().join("source.txt");
+    let destination = directory.path().join("copy.txt");
+    fs::write(&source, b"owned content").unwrap();
+    let file = inspect(directory.path(), &source).unwrap();
+    let receipt = copy(&file, &destination).unwrap();
+    let saved = receipt.destination_file.unwrap();
+    assert_ne!(saved.version, file.version);
+    assert_eq!(saved.sha256, file.sha256);
+    assert_eq!(saved.path, receipt.destination);
+    assert_eq!(revalidate_for_open(&saved).unwrap(), saved.resolved_path);
+    let before = file_access::stamp(&File::open(&destination).unwrap()).unwrap();
+    let modified = fs::metadata(&destination).unwrap().modified().unwrap();
+    fs::rename(&destination, directory.path().join("retained-copy.txt")).unwrap();
+    fs::write(&destination, b"owned content").unwrap();
+    File::options()
+        .write(true)
+        .open(&destination)
+        .unwrap()
+        .set_times(fs::FileTimes::new().set_modified(modified))
+        .unwrap();
+    let after = file_access::stamp(&File::open(&destination).unwrap()).unwrap();
+    assert_eq!(before.modified, after.modified);
+    assert_ne!(before.identity, after.identity);
+    assert_eq!(
+        inspect(directory.path(), &destination).unwrap().sha256,
+        saved.sha256
+    );
+    assert_eq!(revalidate_for_open(&saved), Err(DeliveryError::Changed));
+    assert_eq!(fs::read(&source).unwrap(), b"owned content");
+}
+
+#[test]
+fn saved_copy_rejects_changed_bytes_and_missing_destination() {
+    let directory = tempfile::tempdir().unwrap();
+    let source = directory.path().join("source.txt");
+    let destination = directory.path().join("copy.txt");
+    fs::write(&source, b"owned content").unwrap();
+    let file = inspect(directory.path(), &source).unwrap();
+    let saved = copy(&file, &destination).unwrap().destination_file.unwrap();
+    fs::write(&destination, b"other content").unwrap();
+    assert_eq!(revalidate_for_open(&saved), Err(DeliveryError::Changed));
+    fs::rename(&destination, directory.path().join("retained-copy.txt")).unwrap();
+    assert!(revalidate_for_open(&saved).is_err());
+    assert_eq!(fs::read(&source).unwrap(), b"owned content");
+}
+
+#[cfg(unix)]
+#[test]
+fn saved_copy_redirect_to_its_source_never_opens_source() {
+    let directory = tempfile::tempdir().unwrap();
+    let source = directory.path().join("source.txt");
+    let destination = directory.path().join("copy.txt");
+    fs::write(&source, b"owned content").unwrap();
+    let file = inspect(directory.path(), &source).unwrap();
+    let saved = copy(&file, &destination).unwrap().destination_file.unwrap();
+    fs::rename(&destination, directory.path().join("retained-copy.txt")).unwrap();
+    std::os::unix::fs::symlink(&source, &destination).unwrap();
+    assert!(revalidate_for_open(&saved).is_err());
+    assert_eq!(fs::read(&source).unwrap(), b"owned content");
+}
+
+#[test]
+fn text_snapshot_does_not_claim_verified_disk_copy_actions() {
+    let directory = tempfile::tempdir().unwrap();
+    let receipt = export_text("draft", &directory.path().join("draft.txt")).unwrap();
+    assert!(receipt.destination_file.is_none());
+    assert!(
+        serde_json::to_value(receipt)
+            .unwrap()
+            .get("destinationFile")
+            .is_none()
     );
 }
 

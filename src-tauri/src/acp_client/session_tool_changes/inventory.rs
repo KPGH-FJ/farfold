@@ -2,7 +2,7 @@
 //! persist descriptors, or include official values in an error.
 use super::types::{ChangeError, Code};
 use crate::meta_store::mcp_pending::{Action, Pending};
-use agent_client_protocol::schema::v1::{McpServerHttp, McpServerStdio};
+use agent_client_protocol::schema::v1::{McpServerHttp, McpServerSse, McpServerStdio};
 use serde::Deserialize;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
@@ -220,6 +220,9 @@ fn normalize(value: &Value) -> Result<Value, ChangeError> {
             match server.get("type").and_then(Value::as_str) {
                 Some("http") => {
                     McpServerHttp::deserialize(server).map_err(|_| Code::InvalidResponse)?;
+                }
+                Some("sse") => {
+                    McpServerSse::deserialize(server).map_err(|_| Code::InvalidResponse)?;
                 }
                 None => {
                     McpServerStdio::deserialize(server).map_err(|_| Code::InvalidResponse)?;
