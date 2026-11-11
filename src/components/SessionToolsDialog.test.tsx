@@ -1,5 +1,10 @@
-import { Children, isValidElement, type ReactNode } from "react";
-import { expect, it, vi } from "vitest";
+import {
+  Children,
+  isValidElement,
+  type ReactElement,
+  type ReactNode,
+} from "react";
+import { beforeEach, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import {
   SessionToolConfigurationView,
@@ -9,14 +14,18 @@ import {
 } from "./SessionToolsDialog";
 import {
   capability,
+  deferred,
+  failed,
   fixture,
   flush,
   pending,
+  ready,
 } from "../runtime/session_tools.test-support";
 import { SESSION_TOOLS_STRINGS as S } from "../runtime/session_tools_strings";
 import type { SessionToolsReport } from "../runtime/session_tools_types";
 
 const getController = vi.hoisted(() => vi.fn());
+const hooks = vi.hoisted(() => ({ cursor: 0, values: [] as unknown[] }));
 vi.mock("../runtime/session_tools_controller", async (original) => ({
   ...(await original<typeof import("../runtime/session_tools_controller")>()),
   getSessionToolsController: getController,
@@ -26,9 +35,90 @@ vi.mock("react", async (original) => ({
   useEffect: () => {},
   useMemo: (compute: () => unknown) => compute(),
   useRef: (current: unknown) => ({ current }),
-  useState: (initial: () => unknown) => [initial(), vi.fn()],
+  useState: (initial: () => unknown) => {
+    const index = hooks.cursor++;
+    if (index >= hooks.values.length) hooks.values[index] = initial();
+    return [
+      hooks.values[index],
+      (next: unknown) => (hooks.values[index] = next),
+    ];
+  },
   useSyncExternalStore: (_subscribe: unknown, get: () => unknown) => get(),
 }));
+
+beforeEach(() => {
+  hooks.values = [];
+});
+
+function renderDialog(h: ReturnType<typeof fixture>) {
+  hooks.cursor = 0;
+  return SessionToolsDialog({
+    thread: h.owner,
+    title: "Owned report",
+    active: true,
+    onClose: vi.fn(),
+  });
+}
+
+type DialogNode = ReactElement<{
+  children?: ReactNode;
+  className?: string;
+  role?: string;
+  "aria-atomic"?: string;
+  onClick?(): void;
+  onChange?(event: { target: { value: string } }): void;
+}>;
+function nodes(children: ReactNode): DialogNode[] {
+  return Children.toArray(children).filter((node): node is DialogNode =>
+    isValidElement(node),
+  );
+}
+function descendants(children: ReactNode): DialogNode[] {
+  return nodes(children).flatMap((node) => [
+    node,
+    ...descendants(node.props.children),
+  ]);
+}
+function activateRead(h: ReturnType<typeof fixture>) {
+  const footer = nodes(renderDialog(h).props.children as ReactNode).find(
+    (node) => node.type === "footer",
+  );
+  nodes(footer?.props.children)[1].props.onClick!();
+}
+function announcement(tree: ReturnType<typeof renderDialog>, expected: string) {
+  const children = tree.props.children as ReactNode;
+  const status = nodes(children).find((node) => node.props.role === "status");
+  expect(status).toBeDefined();
+  expect(status?.props["aria-atomic"]).toBe("true");
+  expect(
+    descendants(children).filter((node) => node.props.role === "status"),
+  ).toEqual([status]);
+  expect(Children.toArray(status?.props.children).join("")).toBe(expected);
+  return status;
+}
+
+it("mounts an empty report announcement outside the busy content even with an earlier receipt", async () => {
+  const h = fixture();
+  getController.mockReturnValue(h.controller);
+  h.owner.sessionToolInventory = {
+    ...capability,
+    startup: {
+      reportedCount: 1,
+      loadedCount: 1,
+      failedCount: 0,
+      unknownCount: 0,
+    },
+  };
+  h.controller.read();
+  await flush();
+  h.read.resolve(ready(h.request()));
+  await flush();
+  const tree = renderDialog(h);
+  expect(h.controller.getSnapshot().lastReport?.value.reportedItemCount).toBe(
+    1,
+  );
+  announcement(tree, "");
+});
 
 it("keeps the keyboard action mounted and focusable during read, check, and receipt", async () => {
   const h = fixture();
@@ -39,12 +129,7 @@ it("keeps the keyboard action mounted and focusable during read, check, and rece
   };
   getController.mockReturnValue(h.controller);
   const action = (label: string) => {
-    const tree = SessionToolsDialog({
-      thread: h.owner,
-      title: "Owned report",
-      active: true,
-      onClose: vi.fn(),
-    });
+    const tree = renderDialog(h);
     const footer = Children.toArray(tree.props.children as ReactNode).find(
       (node) => isValidElement(node) && node.type === "footer",
     );
@@ -63,6 +148,7 @@ it("keeps the keyboard action mounted and focusable during read, check, and rece
     expect(button.props.children).toBe(label);
     return button;
   };
+  const initialStatus = announcement(renderDialog(h), "");
   const original = action(S.read);
   const remainsFocusable = (label: string, waiting: boolean) => {
     const button = action(label);
@@ -74,6 +160,11 @@ it("keeps the keyboard action mounted and focusable during read, check, and rece
 
   original.props.onClick();
   await flush();
+  const readingStatus = announcement(renderDialog(h), S.loading);
+  expect([readingStatus?.type, readingStatus?.key]).toEqual([
+    initialStatus?.type,
+    initialStatus?.key,
+  ]);
   remainsFocusable(S.checking, true).props.onClick();
   expect(h.port.read).toHaveBeenCalledOnce();
   expect(h.port.status).not.toHaveBeenCalled();
@@ -81,8 +172,10 @@ it("keeps the keyboard action mounted and focusable during read, check, and rece
   const request = h.request();
   h.read.resolve(pending(request));
   await flush();
+  announcement(renderDialog(h), S.pending);
   remainsFocusable(S.check, false).props.onClick();
   await flush();
+  announcement(renderDialog(h), S.checking);
   remainsFocusable(S.checking, true).props.onClick();
   expect(h.port.status).toHaveBeenCalledExactlyOnceWith(request);
 
@@ -101,6 +194,95 @@ it("keeps the keyboard action mounted and focusable during read, check, and rece
   });
   await flush();
   remainsFocusable(S.refresh, false);
+  announcement(
+    renderDialog(h),
+    "程序本次返回 0 项扩展配置，配置情况仍未确认。",
+  );
+});
+
+it("announces a pending request from a previous opening only after an explicit status check", async () => {
+  const h = fixture();
+  getController.mockReturnValue(h.controller);
+  activateRead(h);
+  await flush();
+  const request = h.request();
+  h.read.resolve(failed(request, false, "timeout"));
+  await flush();
+  announcement(renderDialog(h), S.errors.timeout);
+
+  hooks.values = [];
+  announcement(renderDialog(h), "");
+  activateRead(h);
+  await flush();
+  expect(h.port.status).toHaveBeenCalledExactlyOnceWith(request);
+  announcement(renderDialog(h), S.checking);
+  h.status.resolve(ready(request, []));
+  await flush();
+  announcement(
+    renderDialog(h),
+    "程序本次返回 0 项工具信息。报告完整性未提供。",
+  );
+});
+
+it("announces the selected receipt or error and clears it when changing scope", async () => {
+  const h = fixture();
+  h.owner.sessionToolInventory = {
+    ...capability,
+    configuration: true,
+    startup: {
+      reportedCount: 1,
+      loadedCount: 1,
+      failedCount: 0,
+      unknownCount: 0,
+    },
+    extensions: ["developer"],
+  };
+  getController.mockReturnValue(h.controller);
+  const select = (value: string) => {
+    const control = descendants(
+      renderDialog(h).props.children as ReactNode,
+    ).find((node) => node.type === "select");
+    control!.props.onChange!({ target: { value } });
+  };
+
+  activateRead(h);
+  await flush();
+  h.read.resolve(ready(h.request()));
+  await flush();
+  announcement(renderDialog(h), "程序本次返回 1 项工具信息。");
+
+  select("developer");
+  announcement(renderDialog(h), "");
+  select("");
+  announcement(renderDialog(h), "");
+  select("developer");
+  const empty = deferred();
+  h.port.read.mockReturnValueOnce(empty.promise);
+  activateRead(h);
+  await flush();
+  expect(h.request().extensionName).toBe("developer");
+  empty.resolve(ready(h.request(), []));
+  await flush();
+  expect(h.controller.getSnapshot().lastReport?.value.reportedItemCount).toBe(
+    1,
+  );
+  announcement(
+    renderDialog(h),
+    "程序本次返回 0 项工具信息，该扩展的工具情况仍未确认。",
+  );
+
+  const failure = deferred();
+  h.port.read.mockReturnValueOnce(failure.promise);
+  activateRead(h);
+  await flush();
+  failure.resolve(failed(h.request()));
+  await flush();
+  expect(h.controller.getSnapshot().lastReport?.value.reportedItemCount).toBe(
+    1,
+  );
+  announcement(renderDialog(h), S.errors.queryFailed);
+  h.replace();
+  announcement(renderDialog(h), "");
 });
 
 const report: SessionToolsReport = {

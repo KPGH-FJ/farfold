@@ -18,6 +18,15 @@
   cursor: default;
   filter: none;
 }
+.session-tools-announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 .session-tools-context {
   overflow-wrap: anywhere;
   color: var(--ink-2);

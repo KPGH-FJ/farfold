@@ -17,7 +17,7 @@ const directives = new Map<string, string[]>(
     }),
 );
 
-describe("document image production policy", () => {
+describe("production media content policy", () => {
   it("allows captured Blob images alongside the existing local image sources", () => {
     expect(directives.get("img-src")).toEqual([
       "'self'",
@@ -28,9 +28,13 @@ describe("document image production policy", () => {
     ]);
   });
 
+  it("allows the local Blob used by compatibility audio playback", () => {
+    expect(directives.get("media-src")).toEqual(["'self'", "data:", "blob:"]);
+  });
+
   it("does not grant Blob execution, Worker, connection or document loading", () => {
     for (const [name, sources] of directives) {
-      if (name === "img-src") continue;
+      if (name === "img-src" || name === "media-src") continue;
       expect(sources, name).not.toContain("blob:");
     }
     expect(directives.get("default-src")).toEqual(["'self'"]);

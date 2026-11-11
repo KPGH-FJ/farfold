@@ -7,7 +7,10 @@ import {
   type RefObject,
 } from "react";
 import { threads, type ThreadState } from "../runtime/sessions";
-import { getSessionToolsController } from "../runtime/session_tools_controller";
+import {
+  getSessionToolsController,
+  type SessionToolsSnapshot,
+} from "../runtime/session_tools_controller";
 import type {
   SessionToolConfigurationReport,
   SessionToolsReport,
@@ -18,6 +21,25 @@ import { WorkspaceDialog } from "./WorkspaceDialog";
 import "./SessionToolsDialog.css";
 
 const CONFIGURATION_SCOPE = ":configuration";
+
+function reportAnnouncement(view: SessionToolsSnapshot): string {
+  if (view.phase === "loading") return S.loading;
+  if (view.checking) return S.checking;
+  if (view.error) return S.errors[view.error];
+  if (view.unresolved) return S.pending;
+  const operation = view.operation;
+  if (operation?.state !== "ready") return "";
+  const configuration = operation.configurationReport;
+  const report = configuration ?? operation.report;
+  if (!report) return "";
+  const count = report.reportedItemCount;
+  const unit = configuration ? S.configuration.count : S.countUnit;
+  const summary = `${S.count} ${count} ${unit}`;
+  if (count > 0) return `${summary}。`;
+  if (configuration) return `${summary}，配置情况仍未确认。`;
+  if (operation.extensionName) return `${summary}，该扩展的工具情况仍未确认。`;
+  return `${summary}。${S.incomplete}`;
+}
 
 export function SessionToolConfigurationView({
   report,
@@ -160,14 +182,21 @@ export function SessionToolsDialog({
   const hasConfiguration = capability?.configuration === true;
   const configurationOnly =
     hasConfiguration && capability.toolsUnavailable === true;
-  const requestedScope =
-    controller.requestedConfiguration || configurationOnly
-      ? CONFIGURATION_SCOPE
-      : (controller.requestedExtension ?? "");
+  const operationScope = controller.requestedConfiguration
+    ? CONFIGURATION_SCOPE
+    : (controller.requestedExtension ?? "");
+  const requestedScope = configurationOnly
+    ? CONFIGURATION_SCOPE
+    : operationScope;
   const [selection, setSelection] = useState(() => ({
     controller,
     name: requestedScope,
   }));
+  // The controller can outlive the dialog. Announce only work requested here.
+  const [announcedRequest, setAnnouncedRequest] = useState<{
+    controller: typeof controller;
+    operationId: string;
+  } | null>(() => null);
   const mounted = useRef(true);
   const latest = useRef({ active, controller, onClose });
   latest.current = { active, controller, onClose };
@@ -200,6 +229,14 @@ export function SessionToolsDialog({
     ? view.operation?.configurationReport
     : undefined;
   const selected = configuration || extensions?.includes(scope) ? scope : "";
+  const announcement =
+    active &&
+    controller.isCurrent() &&
+    announcedRequest?.controller === controller &&
+    announcedRequest.operationId === view.operationId &&
+    selected === operationScope
+      ? reportAnnouncement(view)
+      : "";
   const blocked = controller.blockedFor(configuration ? true : undefined);
   const error = requestedScope === selected ? (view.error ?? blocked) : blocked;
   const actionDisabled =
@@ -219,6 +256,13 @@ export function SessionToolsDialog({
       returnFocusRef={returnFocusRef}
       returnFocusWhen={() => active && controller.isCurrent()}
     >
+      <p
+        className="session-tools-announcement"
+        role="status"
+        aria-atomic="true"
+      >
+        {announcement}
+      </p>
       <div
         className="workspace-dialog-body"
         aria-busy={view.unresolved || undefined}
@@ -234,8 +278,10 @@ export function SessionToolsDialog({
                 view.unresolved || blocked === "busy" || blocked === "changed"
               }
               onChange={(event) => {
-                if (owns())
+                if (owns()) {
                   setSelection({ controller, name: event.target.value });
+                  setAnnouncedRequest(null);
+                }
               }}
             >
               <option value="">{S.allTools}</option>
@@ -256,11 +302,9 @@ export function SessionToolsDialog({
           <p>{configuration ? S.configuration.initial : S.initial}</p>
         )}
         {view.unresolved && (
-          <p role="status">
-            {view.phase === "loading" ? S.loading : S.pending}
-          </p>
+          <p>{view.phase === "loading" ? S.loading : S.pending}</p>
         )}
-        {error && <p role="status">{S.errors[error]}</p>}
+        {error && <p>{S.errors[error]}</p>}
         {startup && <SessionToolStartupView report={startup} />}
         {currentConfiguration && (
           <SessionToolConfigurationView report={currentConfiguration} />
@@ -302,12 +346,16 @@ export function SessionToolsDialog({
           aria-disabled={actionDisabled || undefined}
           onClick={() => {
             if (!owns() || actionDisabled) return;
-            if (view.unresolved) controller.check();
-            else
-              controller.read(
-                configuration ? undefined : selected || undefined,
-                configuration ? true : undefined,
-              );
+            const started = view.unresolved
+              ? controller.check()
+              : controller.read(
+                  configuration ? undefined : selected || undefined,
+                  configuration ? true : undefined,
+                );
+            const { operationId } = controller.getSnapshot();
+            setAnnouncedRequest(
+              started && operationId ? { controller, operationId } : null,
+            );
           }}
         >
           {view.unresolved
