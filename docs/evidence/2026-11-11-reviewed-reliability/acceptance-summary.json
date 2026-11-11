@@ -1,0 +1,43 @@
+{
+  "scope": "Read-only acceptance query wiring; no product behavior, official Agent requests, or historical evidence edits.",
+  "files": {
+    "scripts/acceptance-index.mjs": "c6036e46481169db0d4dff8f8d61289449e7f203741460471161d68a83abecc7",
+    "scripts/acceptance-agent-conditions.mjs": "b5d62df737be91c4b904458f6b2675083d9ffecfef3f4ecf9b30b5703aa828ea",
+    "scripts/acceptance-index.test.mjs": "b491344ec9481d13fed91f0d00d51618d38f68fd1fcbca53cf565d12924fe264",
+    "scripts/acceptance-index.conditions.test.mjs": "27f42d3032b712856f39223553c0dd48e7f87f6abc353ca46987314fe135e813"
+  },
+  "allSourceHashesMatch": true,
+  "changes": [
+    "Default query includes all 29 dated stage-one rows and 41 explicitly associated historical samples, separate from receipt coverage.",
+    "Recorded 0/29, scopes, commit, source SHA and at-time remaining conditions retained; historical prose stays unclassified.",
+    "Empty standard cells say not-indexed (未收录), never not-run; all 232 cells remain unreviewed.",
+    "Current task progress resolves existing status.md blocks; final P39 and newly migrated P41 actual CLI outputs verified.",
+    "Strict legacy ledger fields and local public evidence references; source SHA is derived from the same JSON text being parsed.",
+    "No speculative observations/dependencies extension remains; explicit typed outcomes use the existing coverage input."
+  ],
+  "validation": {
+    "red": "red.stdout.txt / red.stderr.txt / red.json: 9 failed, 15 passed before implementation; normal default query missing the actual ledger.",
+    "initialRegression": "green-first: 183 passed, 1 test failure from a hard-coded P39 word absent in the actual source; test corrected to check the source text.",
+    "finalTests": "verification-narrowed.json: 4 files / 185 passed, format and diff checks passed, four code/test inputs stable.",
+    "finalCLI": "cli-final.json: default, Kilo S4, P39, P41, explicit reviewed-coverage and saved-index validation passed; unknown Agent correctly rejected with no JSON fallback; code and authority inputs stable.",
+    "intermediateEvidence": "green-final, verification-frozen and earlier query outputs belong to pre-review candidates; they are retained but are not final input evidence."
+  },
+  "limitations": [
+    "Ledger references checked for shape and regular-file existence, not recursively reread or hash-verified as raw observations.",
+    "Historical stage-one remaining conditions are not current project blockers; current facts remain in docs/status.md.",
+    "No new Agent, standard or product acceptance; no 29x8 re-execution, real Agent requests, platform installation or broad engineering checks.",
+    "No automatic classification of prose dependencies, no inference of standard IDs, no new task queue."
+  ],
+  "review": {
+    "path": "output/2026-11-11-reviewed-reliability/review/acceptance-independent.json",
+    "sha256": "9ac146af754b440109e061e264a1c65e99f455faa16933bc1e4c473443eb1302",
+    "reviewer": "product_process",
+    "reportedResult": "passed; no open blocking findings; independent 4 files / 185 tests, format, diff and actual CLI checks passed"
+  },
+  "independentReview": {
+    "approvedWithinScope": true,
+    "sha256": "9ac146af754b440109e061e264a1c65e99f455faa16933bc1e4c473443eb1302",
+    "testsPassed": 185,
+    "openBlockingFindings": []
+  }
+}

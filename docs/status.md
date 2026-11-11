@@ -25,6 +25,16 @@
 2026-11-11核。共用清单分项已实装。Codex所选官方技能清单可区分项目与额外目录，范围变化使旧报告过期；Goose正式全部工具17项、developer范围5项，切换范围不自动读取，旧报告保留原范围。扩展配置报告返回7项，官方未给的来源与连接状态保持未知。第十一批回执后焦点丢失已由f92d19505修复并正式复验，保持「重新读取」、Tab双向回绕及Escape归还；e1762610b正式复验仍保持并提供动态结果提示。仍缺其他Agent、清单完整性及正式长等待/失败/取消组合；具体结果句读屏见P45，配置采用与连接调用见P41。 [Codex技能范围](evidence/2026-11-03-conversation-controls/control-formal-summary.json) · [清单与范围](evidence/2026-11-10-stage2-tenth-batch/README.md) · [焦点修复](evidence/2026-11-10-stage2-twelfth-batch/README.md) · [当前提示与读屏边界](evidence/2026-11-11-stage2-fifteenth-batch/README.md)。
 <!-- /task-current -->
 
+<!-- task-current: P41 -->
+
+### P41
+
+2026-11-11核。官方配置管理的启停、添加、移除及核查保护已实装。Codex正式版已验停用本地及HTTP项的添加、核查、移除与原配置恢复；HTTP审阅后、确认写入前取消已验，确认入口失效且配置未写。Goose隔离官方进程已有连接、工具清单、一次临时授权的只读调用及精确关闭证据，该调用使用模拟模型。仍缺正式对话启用与采用、真实服务下调用、历史预览/重开/分支的安全恢复，以及其他Agent和失败、在途取消组合，本项开放。 [本地项闭环](evidence/2026-11-07-cycle4-management/README.md) · [配置闭环](evidence/2026-11-10-stage2-thirteenth-batch/README.md) · [写入前取消](evidence/2026-11-10-stage2-fourteenth-batch/README.md) · [隔离调用与恢复边界](evidence/2026-11-10-pdf-and-exit/README.md)。
+
+2026-11-11只读核Goose 1.52固定官方源码：非空mcpServers才合并持久扩展，空数组不撤回旧项；load/fork仍走激活。会话级官方remove按extensionKey移除后再持久化，保存失败可能留下活动/持久状态不一致。官方list可在未激活Agent前读取，但无保存来源或list/load原子保证。实际撤回后重开/分支是否复活尚未实验，不能补通过；先做一个无模型、无工具调用的精确自有项生命周期判别。只按本次确认归属撤回，不新增全部历史/原有扩展的笼统门槛。[源码调查与边界](evidence/2026-11-11-reviewed-reliability/mcp-restoration.md)。
+
+<!-- /task-current -->
+
 <!-- task-current: P45 -->
 
 ### P45

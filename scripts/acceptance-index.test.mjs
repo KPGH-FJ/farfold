@@ -10,6 +10,7 @@ import { validateReceipt } from "./acceptance-receipts.mjs";
 import {
   buildAcceptanceIndex,
   evidenceLevels,
+  loadAgentConditions,
   loadAcceptanceAuthorities,
   normalizeMapping,
   parseAcceptanceAuthorities,
@@ -746,7 +747,10 @@ describe("read-only query and command-line contract", () => {
 
   it("defaults to deterministic in-memory output and provides a read-only usage message", () => {
     expect(runAcceptanceIndex([], { rootDir: root })).toEqual(
-      buildAcceptanceIndex({ authorities }),
+      buildAcceptanceIndex({
+        authorities,
+        conditions: loadAgentConditions(root),
+      }),
     );
     expect(runAcceptanceIndex(["--help"])).toContain("writes JSON to stdout");
     expect(
