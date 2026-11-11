@@ -89,6 +89,26 @@
 
 <!-- /task-current -->
 
+<!-- task-current: P18 -->
+
+### P18
+
+2026-11-11核。**一次编辑多个片段已有正式正例，完整P18仍开放。** macOS正式97479b185的Mistral Vibe沿用已有服务、Mistral Medium 3.5及High，一条请求、一次编辑返回第3和18行两片段，正式面板逐片打开；494字节改后文件完整核合，除两处标记外其余字节保持。前序OpenCode实时输出与零输出入口、Goose容量呈现及失败/成功编辑、当前文件核验仍限各自样本。[多片段原件](evidence/2026-11-10-stage2-live-mistral/summary.json) · [前序编辑分项](evidence/2026-11-02-p18-edit-diff-formal/failed-edit-diff-and-source-summary.json) · [完整历史及原链接](maintenance/2026-11-11-task-current-source/previous-progress.json)。
+
+仍缺合格的现有未知工具回放对象、拒绝与进行中差异窗口，以及其他来源、状态、Agent和系统的未覆盖组合；旧N/O样本的原工具终态和归属未齐，旧输出样本未证的原始字节、退出码/LF等不由新Mistral文件正例补齐。原Mistral/Poolside恢复及Kilo原目录缺失等具体限制沿原证据，不重发旧请求或造替代对象。本次只读归并未新增实测，不提升整项或整家验收。[原对象及剩余条件](evidence/2026-11-02-p18-edit-diff-formal/conditions-and-preservation-summary.json) · [旧输出范围](evidence/2026-11-02-p18-capacity-formal/p18-capacity-summary.json)。
+
+<!-- /task-current -->
+
+<!-- task-current: P22 -->
+
+### P22
+
+2026-11-11核。**正常文字返工与实际另存已有正式窄例，完整P22仍开放。** macOS正式c876的Mistral样本完成版本意见、一次返工和43字节源文件/另存副本逐字节核验；三个观察窗口与227.613秒全程分开，不作180秒内完成或性能承诺。Goose正式91dadecc的既有OpenRouter/Nemotron 3 Ultra免费模型、off样本完成60→59字节返工，发送意见与原消息保留原SHA，新稿可读；随后b40256367正式另存59字节副本并核合，这是跨批串联，未新增正文请求。本次只读核合原记录及当前改后源文件；Goose原另存记录未列副本路径，本次未重读副本，原已观察成功保留。[Mistral完整正常样本](evidence/2026-10-24-agent-acceptance/p22-formal-c876-versioned-rework-summary.json) · [Goose返工](evidence/2026-11-09-presend-visibility/real-reply-and-restore.json) · [Goose另存](evidence/2026-11-10-document-tabs-delivery/summary.json)。
+
+选址前取消保留原稿和意见、选址中源变化拒绝且无残留、重读后78字节另存已有独立正式分项；同目标不同来源/版本忙态仅受控。真实返工或写入在途取消、其余失败、正式并发、其他格式及其他未覆盖组合仍待，不能把这些分项拼成全部旅程通过；旧失败、时间与来源限制保留，不提升整项或整家验收。[选址前取消](evidence/2026-10-24-agent-acceptance/p21-formal-c876-version-retention-cancel-summary.json) · [源变化拒绝与恢复](evidence/2026-11-09-delivery-feedback-browser/README.md) · [并发边界](evidence/2026-11-10-workbook-and-unread/README.md) · [完整历史](maintenance/2026-11-11-task-current-source/previous-progress.json)。
+
+<!-- /task-current -->
+
 ## 当前分项与阶段收口证据
 
 **第2阶段文件证据已接入正常查询。** `acceptance:index`默认读取Mistral两处修改与Goose返工、另存两条既有资料，可按Agent、S5及P18/P22筛选。公开证据摘要随查询核合，本机原件和当前文件已只读复核；Goose另存副本缺原路径，本次未重新读取。原成功事实与局限保留，不制造标准回执或增加整家通过数。5文件200项定向检查及独立复核通过；仅工具与文档变更，未重装应用或新增模型请求。[索引分项](evidence/2026-11-11-mcp-lifecycle/README.md#文件实测资料查询)。
