@@ -1,14 +1,14 @@
 # Farfold 当前状态
 
-更新：2026-11-11。**当前正式版e1762610b。第1阶段共用实现及当前可执行验收已收口，第2阶段仍开放。第十五批修复兼容音频拦截和工具报告状态提示。** 执行顺序见[唯一活动计划](../plans/agent-access.md)，151条原条件与29家八项标准见[要求参考](agent-access-requirements.md)。
+更新：2026-11-11。**当前正式版92e052a67。第1阶段共用实现及当前可执行验收已收口，第2阶段仍开放。审查后可靠性批补安全凭据输入、合法音频/文档草稿恢复与Windows消息路径；不等于整项验收完成。** 执行顺序见[唯一活动计划](../plans/agent-access.md)，151条原条件与29家八项标准见[要求参考](agent-access-requirements.md)。
 
 ## 正式应用与最近功能基线
 
 | 范围           | 当前核对结果                                                                                                                                                                                                                                                                                                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 开发分支       | `codex/2026-11-04-development-resume`。本次已验证并安装的功能源码为 `e1762610b`。                                                                                                                                                                                                                                                                                                           |
-| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64，源码 `e1762610b`。本机签名摘要 `52c021665ea4a2255267d656ee25bf9f3d8df068`、程序 SHA-256 `e5a8a40685fa49d0089d1cdc52322922973e6be07418d766050aaa8fb501bb8f`。五份安装文件与回执相符，签名为内部 ad hoc。                                                                                                              |
-| Mac 工程与安装 | 完整工程七项通过，前端 745 文件 10,216 项，Rust 2,501 项通过、7 项既有忽略。独立复核通过，安装前后 206,420 项关闭态数据记录一致。[工程及安装回执](evidence/2026-11-11-stage2-fifteenth-batch/README.md)。                                                                                                                                                                                   |
+| 开发分支       | `codex/2026-11-04-development-resume`。本次已验证并安装的功能源码为 `92e052a67`。                                                                                                                                                                                                                                                                                                           |
+| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64，源码 `92e052a67`。本机签名摘要 `c925f372fd423663c63f7f011153b41378d2e0df`、程序 SHA-256 `0832bcb608862d87acf5dce6df86a8751072c8885045b3845c7613d598605e20`。五份安装文件与回执相符，签名为内部 ad hoc。                                                                                                              |
+| Mac 工程与安装 | 完整工程七项通过，前端747文件10,337项，Rust2,524项通过、8项忽略；合成系统凭据1项另行显式通过。独立复核通过，安装前后206,420项关闭态数据记录一致；正式1280×820自定义接入表单安全输入、错误反馈、暂存与键盘分项通过。[工程及安装回执](evidence/2026-11-11-reviewed-reliability/README.md)。                                                                                                   |
 | 当前开发环境   | macOS 27.0（26A425），Node 22.22.3、锁定 pnpm 9.15.0、Rust/Cargo 1.96.0、Xcode Command Line Tools 可识别。[环境恢复证据](evidence/2026-11-04-development-environment-restoration/README.md)。                                                                                                                                                                                               |
 | Windows        | 最后完整 CI 成功为固定源码 `2e23056cc` 的 [41931045918](https://github.com/KPGH-FJ/farfold/actions/runs/41931045918)，含未签名 NSIS 构建。后续固定 `5598138f2` 定向原生 30 项、前端 20 项通过。安装修复版 `5b9f1449a` 的 [41984263036](https://github.com/KPGH-FJ/farfold/actions/runs/41984263036) 因付款或支出额度未获运行机器；安装、卸载及桌面流程未执行，当前源码未重跑 Windows 全量。 |
 
@@ -22,14 +22,14 @@
 
 ### P39
 
-2026-11-11核。共用清单分项已实装。Codex所选官方技能清单可区分项目与额外目录，范围变化使旧报告过期；Goose正式全部工具17项、developer范围5项，切换范围不自动读取，旧报告保留原范围。扩展配置报告返回7项，官方未给的来源与连接状态保持未知。第十一批回执后焦点丢失已由f92d19505修复并正式复验，保持「重新读取」、Tab双向回绕及Escape归还；当前e1762610b再验仍保持并提供动态结果提示。仍缺其他Agent、清单完整性及正式长等待/失败/取消组合；具体结果句读屏见P45，配置采用与连接调用见P41。 [Codex技能范围](evidence/2026-11-03-conversation-controls/control-formal-summary.json) · [清单与范围](evidence/2026-11-10-stage2-tenth-batch/README.md) · [焦点修复](evidence/2026-11-10-stage2-twelfth-batch/README.md) · [当前提示与读屏边界](evidence/2026-11-11-stage2-fifteenth-batch/README.md)。
+2026-11-11核。共用清单分项已实装。Codex所选官方技能清单可区分项目与额外目录，范围变化使旧报告过期；Goose正式全部工具17项、developer范围5项，切换范围不自动读取，旧报告保留原范围。扩展配置报告返回7项，官方未给的来源与连接状态保持未知。第十一批回执后焦点丢失已由f92d19505修复并正式复验，保持「重新读取」、Tab双向回绕及Escape归还；e1762610b正式复验仍保持并提供动态结果提示。仍缺其他Agent、清单完整性及正式长等待/失败/取消组合；具体结果句读屏见P45，配置采用与连接调用见P41。 [Codex技能范围](evidence/2026-11-03-conversation-controls/control-formal-summary.json) · [清单与范围](evidence/2026-11-10-stage2-tenth-batch/README.md) · [焦点修复](evidence/2026-11-10-stage2-twelfth-batch/README.md) · [当前提示与读屏边界](evidence/2026-11-11-stage2-fifteenth-batch/README.md)。
 <!-- /task-current -->
 
 <!-- task-current: P45 -->
 
 ### P45
 
-2026-11-11核。所选搜索、导出、工作树、准备页和预览路径已有正式键盘分项。工具报告回执后焦点丢失已修，正式验证保持「重新读取」、Tab双向回绕和Escape回原入口。网页关闭后焦点接续剩余或新空白标签已修并正式验证；1280×820内容栏键盘调宽及恢复已验。当前正式e1762610b的报告动态状态已实装并暴露给辅助功能树。用户撤回首次听到确认；后续正常旁白复测有语音活动且用户听到内容，具体结果句仍未确认。仍缺动态结果播报、真实长等待核查、其他关键路径读屏、系统缩放及完整支持尺寸验收，本项开放。 [搜索键盘](evidence/2026-11-10-stage2-tenth-batch/README.md) · [导出与工作树](evidence/2026-11-03-conversation-controls/control-formal-summary.json) · [准备页回焦](evidence/2026-11-05-reliability-stage/formal-summary.md) · [报告焦点](evidence/2026-11-10-stage2-twelfth-batch/README.md) · [网页焦点及调宽](evidence/2026-11-10-stage2-fourteenth-batch/README.md) · [动态状态与旁白更正](evidence/2026-11-11-stage2-fifteenth-batch/README.md)。
+2026-11-11核。所选搜索、导出、工作树、准备页和预览路径已有正式键盘分项。工具报告回执后焦点丢失已修，正式验证保持「重新读取」、Tab双向回绕和Escape回原入口。网页关闭后焦点接续剩余或新空白标签已修并正式验证；1280×820内容栏键盘调宽及恢复已验。e1762610b正式版的报告动态状态已实装并暴露给辅助功能树。用户撤回首次听到确认；后续正常旁白复测有语音活动且用户听到内容，具体结果句仍未确认。仍缺动态结果播报、真实长等待核查、其他关键路径读屏、系统缩放及完整支持尺寸验收，本项开放。 [搜索键盘](evidence/2026-11-10-stage2-tenth-batch/README.md) · [导出与工作树](evidence/2026-11-03-conversation-controls/control-formal-summary.json) · [准备页回焦](evidence/2026-11-05-reliability-stage/formal-summary.md) · [报告焦点](evidence/2026-11-10-stage2-twelfth-batch/README.md) · [网页焦点及调宽](evidence/2026-11-10-stage2-fourteenth-batch/README.md) · [动态状态与旁白更正](evidence/2026-11-11-stage2-fifteenth-batch/README.md)。
 <!-- /task-current -->
 
 <!-- task-current: P48 -->
@@ -43,7 +43,7 @@
 
 ### P01
 
-2026-11-11源码修复，正式版待更新。普通草稿保存、导航、冷开及保存失败的既有正式分项保留；审查另复现合法音频/文档草稿被备份恢复预览拒绝，非普通重启丢稿。本批恢复与正常读取共用格式解析，严格未知字段及发送前重新核对保持；生产序列化和prompt builder回归、关联25文件466项通过。正式备份恢复、真实外部附件重核及其他原条件仍待验证。[本批范围](evidence/2026-11-11-reviewed-reliability/README.md)；[原进度与历史证据](maintenance/2026-11-11-task-current-source/previous-progress.json)。
+2026-11-11修复已随92e052a67安装。普通草稿保存、导航、冷开及保存失败的既有正式分项保留；审查另复现合法音频/文档草稿被备份恢复预览拒绝，非普通重启丢稿。本批恢复与正常读取共用格式解析，严格未知字段及发送前重新核对保持；生产序列化和prompt builder回归、关联25文件466项通过；真实WebKit/Chrome受控恢复预览与取消各83项检查包含此路径，未写生产库。正式备份恢复、真实外部附件重核及其他原条件仍待验证。[本批范围](evidence/2026-11-11-reviewed-reliability/README.md)；[原进度与历史证据](maintenance/2026-11-11-task-current-source/previous-progress.json)。
 
 <!-- /task-current -->
 
@@ -51,7 +51,7 @@
 
 ### H02
 
-2026-11-11源码修复，正式版待更新。合法音频/文档备份中的未发送内容不再被过期字段清单拒绝；未知未来字段仍阻止整组恢复，不从元数据获得新的文件读取许可。生产格式回归通过；正式恢复入口、完整IPC、整库损坏/中断及系统故障原条件仍开放。此前版本99拒绝覆盖等原分项保留。[本批范围](evidence/2026-11-11-reviewed-reliability/README.md)；[原进度](maintenance/2026-11-11-task-current-source/previous-progress.json)。
+2026-11-11修复已随92e052a67安装。合法音频/文档备份中的未发送内容不再被过期字段清单拒绝；未知未来字段仍阻止整组恢复，不从元数据获得新的文件读取许可。生产格式及真实WebKit/Chrome受控预览/选择/取消回归通过；正式恢复入口、完整IPC、整库损坏/中断及系统故障原条件仍开放。此前版本99拒绝覆盖等原分项保留。[本批范围](evidence/2026-11-11-reviewed-reliability/README.md)；[原进度](maintenance/2026-11-11-task-current-source/previous-progress.json)。
 
 <!-- /task-current -->
 
@@ -67,7 +67,7 @@
 
 ### ARCH-03
 
-2026-11-11源码已补明确普通/安全env输入。普通值仍按原值保存，不宣称系统凭据保护，不按名称自动迁移；安全值只进系统凭据，登记/pending只保留引用与非秘密归属。跨区重复、保留标记和非法值拒绝；失败发布/清理可恢复，缺失安全引用阻止启动而非沿用继承账号。定向与完整工程检查通过；Mac自有合成值的真实系统凭据登记、读取、移除另以1项显式测试通过，临时SQLite只存标记。正式添加/错误路径及原编辑/初始化完整条件仍待验。[本批范围](evidence/2026-11-11-reviewed-reliability/README.md)。
+2026-11-11明确普通/安全env输入已随92e052a67安装。普通值仍按原值保存，不宣称系统凭据保护，不按名称自动迁移；安全值只进系统凭据，登记/pending只保留引用与非秘密归属。跨区重复、保留标记和非法值拒绝；失败发布/清理可恢复，缺失安全引用阻止启动而非沿用继承账号。定向与完整工程检查通过；Mac自有合成值的真实系统凭据登记、读取、移除另以1项显式测试通过，临时SQLite只存标记。正式1280×820界面已验遮蔽、跨区重复/保留值错误、三项滚动、Tab/Shift+Tab、暂存重开及放弃清空；程序留空，未登记真实Agent。正式成功添加/后端失败、原编辑/初始化完整条件仍待验。[本批范围](evidence/2026-11-11-reviewed-reliability/README.md)。
 
 <!-- /task-current -->
 
@@ -80,6 +80,8 @@
 <!-- /task-current -->
 
 ## 当前分项与阶段收口证据
+
+**审查后可靠性批已安装。** 源码92e052a67及本批独立复核、完整工程、真实合成系统凭据、受控浏览器与正式界面范围见[本批记录](evidence/2026-11-11-reviewed-reliability/README.md)。本轮未发真实Agent请求；正式整库/备份恢复、Windows桌面及29家八项继续开放。安装清单从生成时直接gzip，重复.app候选已精确移除。
 
 **第十五批已安装。** 受控Mac WKWebView复现旧安全策略拦截兼容音频，新策略用同一段WAV播放到结束，已核对正式程序包含该策略。Goose正式返回7项扩展配置，辅助功能树提供单独的结果提示，焦点保持「重新读取」，Escape返回原对话入口，零新模型请求。另核Mistral Vibe官方历史点分支，仅得静态证据。同一正式版重读复验中，用户撤回先前确认并更正为未听到。旁白主进程在重读前已正常退出，重读时运行的是旁白快速入门，旁白开关已恢复关闭。随后复测「全部工具」，正常旁白在读取前后运行，辅助功能树出现17项，用户听到旁白内容，具体结果播报仍待确认。真实Agent音频仍待验。[第十五批证据](evidence/2026-11-11-stage2-fifteenth-batch/README.md)。
 
@@ -190,7 +192,7 @@ Goose实验SQLite打开失败、Kilo实验临时子进程判定属于夹具调�
 | P31 / P38整理与未读             | 元数据组合筛选及单一「新回复」筛选有正式分项。Goose并发文本中仅后台A有未读，打开正文后清除并落盘。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Goose文本两次冷开已有正式窄例；后台完成通知实际送达和点击已补，其他提醒、媒体及整理组合仍待。                                                        |
 | P32搜索                         | 已加载正文、所选未加载官方历史及附件文字分层搜索已实现，d503所选官方历史/PDF分项保留。ef788与343所选已加载查询64均为1匹配/1来源，尾64完整可见；R2所选实际独立复核通过。                                                                                                                                                                                                                                                                                                                                                                                                                                               | 旧36底缘裁切记录保留；正式压力、完整来源范围/冷恢复仍未齐；不证明历史字节、全部正文或Agent消费，不是持久全文索引，完整P32开放。                      |
 | P35导出                         | 前序分项保留；a96实际1 GiB在途取消、双版本逐字节和文件变更拒绝，485独立测试卷写满终态失败无残留。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | 其他历史字节、附件完整归档、快速选择提示正式复现及Windows待验；旧失败保留，完整P35开放。                                                             |
-| P39 清单与报告                  | Codex所选技能范围、Goose全部17项/developer 5项及7项扩展配置已有正式证据。第十一批回执后焦点丢失已由f92d19505修复并正式复验，当前e1762610b再验保持焦点，动态结果提示已实装。[技能范围](evidence/2026-11-03-conversation-controls/control-formal-summary.json) · [清单](evidence/2026-11-10-stage2-tenth-batch/README.md) · [焦点](evidence/2026-11-10-stage2-twelfth-batch/README.md) · [当前正式结果](evidence/2026-11-11-stage2-fifteenth-batch/README.md)。                                                                                                                                                         | 其他Agent、清单完整性及正式长等待/失败/取消组合未齐。具体结果句读屏见P45，配置采用与连接调用见P41。                                                  |
+| P39 清单与报告                  | Codex所选技能范围、Goose全部17项/developer 5项及7项扩展配置已有正式证据。第十一批回执后焦点丢失已由f92d19505修复并正式复验，e1762610b正式复验保持焦点，动态结果提示已实装。[技能范围](evidence/2026-11-03-conversation-controls/control-formal-summary.json) · [清单](evidence/2026-11-10-stage2-tenth-batch/README.md) · [焦点](evidence/2026-11-10-stage2-twelfth-batch/README.md) · [该批正式结果](evidence/2026-11-11-stage2-fifteenth-batch/README.md)。                                                                                                                                                         | 其他Agent、清单完整性及正式长等待/失败/取消组合未齐。具体结果句读屏见P45，配置采用与连接调用见P41。                                                  |
 | P40 技能管理                    | Codex正式技能停用、启用、清除偏好及核查已有结果。[第4周期证据](evidence/2026-11-07-cycle4-management/README.md)。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | 实际采用/调用、其他Agent和安装版失败取消组合未齐。                                                                                                   |
 | P41 MCP管理                     | Codex正式停用本地及HTTP项添加、核查、移除与原配置恢复已验，HTTP确认写入前取消已验。Goose隔离连接、工具清单和模拟模型触发的一次授权只读调用已有原件。[本地项](evidence/2026-11-07-cycle4-management/README.md) · [HTTP配置闭环](evidence/2026-11-10-stage2-thirteenth-batch/README.md) · [写入前取消](evidence/2026-11-10-stage2-fourteenth-batch/README.md) · [隔离调用](evidence/2026-11-10-pdf-and-exit/README.md)。                                                                                                                                                                                                | 正式对话启用/采用、真实服务调用、历史预览/重开/分支安全恢复，以及其他Agent和失败/在途取消组合未齐。                                                  |
 | P45 键盘与读屏                  | 所选搜索、导出、工作树、准备页和预览路径有正式键盘分项。报告回执后焦点及网页关闭后焦点已修并正式验证，1280×820内容栏调宽和恢复已验。e1762610b动态提示已进入辅助功能树。[搜索键盘](evidence/2026-11-10-stage2-tenth-batch/README.md) · [导出与工作树](evidence/2026-11-03-conversation-controls/control-formal-summary.json) · [准备页](evidence/2026-11-05-reliability-stage/formal-summary.md) · [报告焦点](evidence/2026-11-10-stage2-twelfth-batch/README.md) · [网页焦点与调宽](evidence/2026-11-10-stage2-fourteenth-batch/README.md) · [旁白更正与复测](evidence/2026-11-11-stage2-fifteenth-batch/README.md)。 | 用户撤回首次听到确认；后续正常旁白有语音活动且用户听到内容，具体结果句仍未确认。动态播报、真实长等待、其他关键路径读屏、系统缩放及完整支持尺寸仍缺。 |

@@ -47,6 +47,10 @@ Farfold 是独立的多 Agent 桌面产品。React工作台只有一套对话、
 
 认证由协议方法驱动：Agent认证调用 authenticate，终端认证使用内嵌PTY。终端退出、网页返回和安装成功不能替代认证回执。服务说明、模型ID及密钥引用属于元数据；密钥保存在系统凭据存储，不进入数据库、事件或日志。保存服务不自动分发，明确选择服务才授权本次使用，见 [service_delivery.rs](../src-tauri/src/acp_client/service_delivery.rs)。
 
+自定义接入由 [CustomAgentDialog.tsx](../src/components/CustomAgentDialog.tsx) 明确区分普通环境变量与安全输入。普通值作为非秘密元数据原样保存，保留空值和空格，不按变量名猜测秘密或迁移旧值；安全输入单独交付 [auth/agent_environment.rs](../src-tauri/src/auth/agent_environment.rs)，真实值只进入系统凭据存储，Agent登记只保留变量名与引用。写凭据前先保存不含秘密的pending归属；凭据全部保存后，[meta_store/custom_agent.rs](../src-tauri/src/meta_store/custom_agent.rs) 在同一事务中发布接入并移除pending。保存或清理结果未明时保留归属，避免误删已发布凭据。
+
+[auth.rs](../src-tauri/src/auth.rs) 在可信启动准备中解析安全引用；缺失或无法读取即失败，不沿用继承环境中的同名值。环境合并共用 [shell_env/overrides.rs](../src-tauri/src/shell_env/overrides.rs)：Windows按不区分大小写的键覆盖全部同名变体，Unix按大小写区分；未覆盖的继承变量保持。所选服务与程序交付沿各自既有优先级合并，完整环境与秘密不进入启动诊断。
+
 终端由[既有退出所有者](../src-tauri/src/pty.rs)持有同一Child、进程组与控制句柄；[startup_owner.rs](../src-tauri/src/pty/startup_owner.rs)把该工作线程前移到首个系统调用之前。每个管理器只允许一个未确认的启动，[startup_control.rs](../src-tauri/src/pty/startup_control.rs)在同一状态锁下裁定就绪与等待超时。失败、取消或析构阻塞时，认证输出闭包、配置保护和活动许可仍随原所有者保留；只有实际清退才可报告完成，未知状态不自动释放或重试。这些后续源码已随fa5689纳入macOS正式应用；选定Windows终端取消与认证退出分项另有成功证据，保留主句柄的无应答负控仍失败，不代表ConPTY全部退出路径已验。
 
 服务交付与直接API测试是独立路径：测试支持某个接口，不证明所有 Agent能使用它。仅按已核官方配置方式交付，原来源失效不能静默换号、换模型或回退默认服务。配置对象与日志不携带密钥；启动诊断只记录受控事实。
@@ -70,6 +74,8 @@ Farfold 是独立的多 Agent 桌面产品。React工作台只有一套对话、
 Agent的原始事件包括未知字段进入总线；工具、异步任务、压缩和停止按真实事件更新。取消请求发出不等于已经停止，进程退出也不等于上一请求正常完成。未知结果阻止普通重试和自动重发，不清除已发生外部操作的事实。[session_process_ended.ts](../src/runtime/session_process_ended.ts)只接收独立的本地进程结束通道，核对原连接及当前状态对象后，才允许用户明确重新准备；旧未知结果、历史和未确认输入继续保留。普通事件中的同名字段、迟到旧连接通知及通道丢失均不能提供该许可；该批后端受控检查、统一七项工程、独立源码复核与fa5689正式安装已完成，实际结束通知后显式重新准备的界面路径尚未验证。
 
 未发送内容与准备记录保存在meta_store的settings键中；文字、附件位置、意见与暂停队列可恢复，但附件需重新核验，保存失败明确呈现。保存退出采用单次共享操作和令牌校验，等当前保存完成；取消仅释放本次退出自己的锁，不释放更新、工作位置等其他操作的锁。重启仍受原有忙态与未知保护。
+
+[storage_restore.ts](../src/runtime/storage_restore.ts) 的恢复预览与普通读取共用 [drafts.ts](../src/runtime/drafts.ts) 的 `parseDraftSnapshot`：先解码持久化音频，再核同一生产格式，保留合法音频和文档元数据。恢复模式额外拒绝未知嵌套字段，普通旧格式读取保留既有兼容规则；未知内容不能被静默丢弃后覆盖旧稿。解析不发布状态、不读取外部文件，也不从备份元数据恢复文件许可；附件仍须经过发送前的重新核对。
 
 [composer_attachment_import.ts](../src/runtime/composer_attachment_import.ts)按原草稿代次及仍属于该草稿的精确附件对象持有导入责任；每次实际结果写入前重核该归属。保存继续等待所有仍归属原草稿的未完成输入；切换对话或退出锁不解除等待。用户移除输入后可释放相应保存等待；这不取消或假称实际File/系统读取已结束。原任务继续自然收尾，迟到内容不能加入新文字或另一个附件，拒绝与错误亦不能重新取得旧输入的写入权。该结构只管理当前未发送输入，不增加事件账本或另一套运行控制者；受控settings写入不替代真实退出/重启和存储故障验证。
 
