@@ -143,6 +143,7 @@ fn opened_result(
     let session_tool_inventory = super::session_tools::capability(&connection);
     let source = connection.service;
     SessionOpenResult {
+        history_empty_confirmed: opened.history_empty_confirmed,
         identity_read,
         session_tool_inventory,
         workspace_access,

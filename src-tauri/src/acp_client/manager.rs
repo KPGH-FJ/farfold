@@ -578,6 +578,7 @@ impl AcpManager {
         let receive_workspace_access = workspace_access.clone();
         let receive_identity_read = identity_read.clone();
         let ops = SessionOps {
+            session_tools: session_tools.clone(),
             configuration_dialect: Default::default(),
             live_status_enabled,
             workspace_access: workspace_access.clone(),

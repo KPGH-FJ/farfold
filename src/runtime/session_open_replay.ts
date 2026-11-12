@@ -160,7 +160,14 @@ export class SessionOpenReplay {
   ): ThreadState {
     try {
       if (result.resumed)
-        this.projection.requireReadable(this.input.agentId, result, this.lost);
+        this.projection.requireReadable(
+          this.input.agentId,
+          result,
+          this.lost,
+          !existing?.items.length &&
+            !existing?.pendingPermissions.length &&
+            !existing?.pendingElicitations.length,
+        );
       if (!this.identified || !this.baseline)
         throw new Error(STRINGS.repair.reconnectFailed);
       this.baseline.accept(result, savedTitle, existing);

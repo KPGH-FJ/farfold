@@ -16,6 +16,7 @@ import { conversationReadState } from "./conversation_read_state";
 import { pauseQueue, removeQueued } from "./queue";
 import { STRINGS } from "./strings";
 import { forgetSessionIdentity } from "./session_identity_types";
+import { receiveSessionUsage } from "./session_usage_notification";
 import type { ThreadState } from "./session_types";
 import type { PromptRequestOwner } from "./prompt_admission";
 import {
@@ -62,6 +63,10 @@ export function applySessionEvent(
 ): void {
   if (!event || typeof event !== "object") return;
   const e = event as Record<string, unknown>;
+  if (receiveSessionUsage(s, e, effects?.owns, activityConnectionId)) {
+    if (live && effects?.owns()) effects.emit();
+    return;
+  }
   // Recognized live-only hints cannot be smuggled into history by an own
   // `update` field. The original envelope has already traversed the event bus.
   if (receiveProgramStatus(s, e, live, effects?.owns, activityConnectionId)) {

@@ -32,6 +32,7 @@ fn drain(initial: Value, snapshots: Vec<Value>) -> Observed {
     life.ready().unwrap();
     let forms: PendingElicitations = Default::default();
     let ops = SessionOps {
+        session_tools: crate::acp_client::session_tools::Availability::unavailable(),
         live_status_enabled: false,
         configuration_dialect: Default::default(),
         workspace_access: crate::acp_client::workspace_access::Availability::new(None),

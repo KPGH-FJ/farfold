@@ -82,8 +82,11 @@ pub(crate) async fn open_session_on_connection(
     };
 
     let downstream = events;
+    let history_evidence = super::super::history_empty::Evidence::default();
+    let observing_history = history_evidence.clone();
     let interested = operation.observer();
     let events: SessionSink = Arc::new(move |value| {
+        observing_history.observe(&value);
         if interested.interested() {
             downstream(value);
         }
@@ -202,6 +205,47 @@ pub(crate) async fn open_session_on_connection(
             }
         }
     };
+
+    let mut history_empty_confirmed = false;
+    if resumed
+        && purpose == super::super::open_purpose::OpenPurpose::Conversation
+        && ops.live_status_enabled
+    {
+        let source = super::super::live_status::Owner::loading(
+            &ops,
+            &session_id,
+            purpose,
+            preview_token.as_deref(),
+            &operation,
+        );
+        let prefix = received.as_mut().expect("restored session owns its prefix");
+        prefix.drain(
+            &session_id,
+            &mut inbox_rx,
+            &events,
+            pending,
+            (&ops, &source),
+        );
+        if history_evidence.eligible() {
+            history_empty_confirmed = prefix
+                .while_loading(
+                    &session_id,
+                    &mut inbox_rx,
+                    &events,
+                    pending,
+                    (&ops, &source),
+                    super::super::history_empty::read(cx, &ops, &operation, &session_id, cwd),
+                )
+                .await;
+            prefix.drain(
+                &session_id,
+                &mut inbox_rx,
+                &events,
+                pending,
+                (&ops, &source),
+            );
+        }
+    }
 
     if !resumed {
         let row_id = super::super::session_index::session_row_id(
@@ -422,6 +466,7 @@ pub(crate) async fn open_session_on_connection(
         mcp.finish_opening();
     }
     Ok(OpenedSession {
+        history_empty_confirmed: history_empty_confirmed && history_evidence.eligible(),
         identity,
         purpose,
         connection_id,

@@ -1,0 +1,50 @@
+{
+  "updatedAtUtc": "2026-11-12T04:52:56.421251+00:00",
+  "requirements": ["P41", "ARCH-35"],
+  "problem": "Installedf537 successfully loaded owned Goose20261111_7 but frontend rejected its genuinely empty history. The same read failure persisted after clearing another session pending marker. A real official conversation usage notification was also rendered as unknown content.",
+  "implementation": [
+    "Only the original successful restored open on the reviewed official surface can confirm exact ID/cwd and current messageCount zero; optional top-level fact is transient.",
+    "Complete marker, identity, configuration, lost connection and conversion guards remain. Existing content and tool/thought/unknown/permission content cannot be overwritten by an empty result; following live updates remain.",
+    "Strict owned sessionUsage presentation maps actual context usage; original notification fields remain in existing details. No currency, total, compaction outcome or work completion is inferred.",
+    "New load-prefix drains take only the finite queued prefix; later frames remain in original FIFO. Other preexisting drain paths are unchanged."
+  ],
+  "engineering": {
+    "path": "output/2026-11-12-mcp-recovery/engineering-final2/result.json",
+    "sha256": "9d36527c0fcf0975af81de1a035c18073cd7e6606e572f5cb05bd80930b80b51"
+  },
+  "sourceManifest": {
+    "path": "output/2026-11-12-mcp-recovery/engineering-final2/inputs-after.json",
+    "sha256": "1787cd85fe099c1b04c9420e7744ce11f738518fe1153cc7810a5f78fe675bff"
+  },
+  "native": {
+    "passed": 2604,
+    "ignored": 8
+  },
+  "frontend": {
+    "files": 761,
+    "passed": 10536
+  },
+  "review": {
+    "path": "output/2026-11-12-mcp-recovery/review/integration.json",
+    "sha256": "b5277ad58b4e249acc1399e15fbdf7f794584cb545abe07637cd4fa2f3398c11"
+  },
+  "nativeRedGreen": {
+    "path": "output/2026-11-12-mcp-recovery/empty-history-backend/delta-freeze.json",
+    "sha256": "d111ead199621b44054c19946011cfa62e79e672e1c36fef9291be982410b8cd"
+  },
+  "frontendOriginalFailure": {
+    "path": "output/2026-11-12-mcp-recovery/empty-history-red.log",
+    "sha256": "1ee12092eb5efbc8b692b226a45a43f09e304d29dfdf4fe36bb66bb9dfdeea31"
+  },
+  "formalBefore": {
+    "path": "output/2026-11-12-mcp-recovery/ui/09-empty-notification-type.txt",
+    "sha256": "0d2fdf89acb5a0580fa09a7ec1c5b4cf38187a3301e678b3cb0082f68e563e74"
+  },
+  "formalAfter": "Pending installation and exact-sample retest; no delivery claim yet.",
+  "limits": [
+    "Other Agents lack this verified empty-history supplement and retain original behavior.",
+    "Native list/load/info is not an atomic snapshot against external concurrent writers.",
+    "Context usage only; cumulative counters and cost stay in original details, no full ARCH-35 acceptance.",
+    "P41, history-node branching, other exception combinations, Windows and29x8 remain open."
+  ]
+}

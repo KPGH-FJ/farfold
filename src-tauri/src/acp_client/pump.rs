@@ -120,6 +120,7 @@ pub(crate) use super::elicitation::{PendingElicitations, cancel as cancel_elicit
 pub(crate) struct SessionOps {
     pub(crate) configuration_dialect: super::session_config::Dialect,
     pub(crate) live_status_enabled: bool,
+    pub(crate) session_tools: Arc<super::session_tools::Availability>,
     pub(crate) workspace_access: Arc<super::workspace_access::Availability>,
     pub(crate) async_tasks_supported: Arc<AtomicBool>,
     pub(crate) opening: Option<super::lifecycle::OpenReservation>,
@@ -127,8 +128,7 @@ pub(crate) struct SessionOps {
     pub(crate) verify_identity: super::manager::SessionIdentityCheck,
     pub elicitations: PendingElicitations,
     pub(crate) inquiries: super::elicitation::ConnectionElicitations,
-    /// Unanswered permission/elicitation requests plus in-flight prompts —
-    /// while >0 the connection is mid-interaction and must not be reaped.
+    /// Owns outstanding work until actual completion or process termination.
     pub life: Arc<ConnectionLife>,
     pub(super) prompt_escrow: super::process::PromptEscrow,
 }
@@ -214,6 +214,7 @@ mod prompt;
 
 /// Result of opening a session inside the connection task.
 pub(crate) struct OpenedSession {
+    pub history_empty_confirmed: bool,
     pub(crate) identity: super::lifecycle::OpenIdentity,
     pub(crate) purpose: super::open_purpose::OpenPurpose,
     pub connection_id: String,
@@ -232,7 +233,6 @@ pub(crate) struct OpenedSession {
 }
 
 static REQUEST_COUNTER: AtomicU64 = AtomicU64::new(1);
-
 pub(super) fn next_request_id() -> String {
     format!(
         "req-{}-{}",

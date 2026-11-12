@@ -151,6 +151,7 @@ async fn read(
                 &sessions,
                 &pending,
                 SessionOps {
+                    session_tools: crate::acp_client::session_tools::Availability::unavailable(),
                     live_status_enabled: false,
                     configuration_dialect: Default::default(),
                     workspace_access: super::super::workspace_access::Availability::new(None),

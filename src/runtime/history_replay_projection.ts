@@ -28,6 +28,7 @@ export class HistoryReplayProjection {
   private owned: ThreadState | undefined;
   private marked = false;
   private readable = false;
+  private hasHistoryContent = false;
   private failed = false;
   private failure: unknown;
 
@@ -90,6 +91,11 @@ export class HistoryReplayProjection {
     if (!state || !this.current() || token !== this.token) return false;
     if (!this.marked) {
       this.readable = hasReadableMessages(state.items);
+      this.hasHistoryContent = Boolean(
+        state.items.length ||
+        state.pendingPermissions.length ||
+        state.pendingElicitations.length,
+      );
       finishHistoryPrefix(state);
       this.marked = true;
     }
@@ -110,13 +116,30 @@ export class HistoryReplayProjection {
 
   /** Read only the actually projected state and the original marker facts.
    * Caller-owned loss remains independent of a conversion exception. */
-  requireReadable(agentId: string, result: OpenResult, lost: boolean): void {
+  requireReadable(
+    agentId: string,
+    result: OpenResult,
+    lost: boolean,
+    allowConfirmedEmpty = false,
+  ): void {
     this.requireComplete(agentId, result, lost);
+    const confirmedEmpty = result.historyEmptyConfirmed === true;
+    if (confirmedEmpty && this.hasHistoryContent)
+      throw historyProjectionFailure(
+        agentId,
+        result,
+        new TypeError(
+          "Confirmed empty history conflicts with replayed content",
+        ),
+      );
     requireReadableProjectedHistory(
       agentId,
       result,
       this.marked,
-      this.readable,
+      // Only the owning open can allow the current backend fact. It must not
+      // replace previous content; preview/import rules stay intact. Following
+      // live events remain independent of the completed historical prefix.
+      this.readable || (allowConfirmedEmpty && confirmedEmpty),
       false,
     );
   }

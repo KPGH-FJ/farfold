@@ -82,6 +82,7 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
                 .unwrap();
             let forms: PendingElicitations = Default::default();
             let ops = SessionOps {
+                session_tools: crate::acp_client::session_tools::Availability::unavailable(),
                 live_status_enabled: false,
                 configuration_dialect: Default::default(),
                 workspace_access: crate::acp_client::workspace_access::Availability::new(None),

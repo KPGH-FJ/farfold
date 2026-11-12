@@ -15,6 +15,7 @@ use std::sync::{
 const METHOD: &str = "_goose/unstable/session/update";
 const MAX_MESSAGE: usize = 2048;
 mod message_usage;
+pub(crate) mod session_usage;
 
 pub(crate) fn initialize_meta(meta: &mut Meta, enabled: bool) {
     if enabled {
@@ -178,6 +179,13 @@ pub(crate) fn notification(message: UntypedMessage, owner: &Owner) -> Value {
             .pointer("/update/sessionUpdate")
             .and_then(Value::as_str)
             == Some("message_usage");
+    let is_session_usage = owner.enabled
+        && method == METHOD
+        && params.get("sessionId").and_then(Value::as_str) == Some(owner.session.as_str())
+        && params
+            .pointer("/update/sessionUpdate")
+            .and_then(Value::as_str)
+            == Some("usage_update");
     let value = present(
         json!({"kind":"notification","method":method,"params":params}),
         &owner.session,
@@ -186,6 +194,8 @@ pub(crate) fn notification(message: UntypedMessage, owner: &Owner) -> Value {
     );
     if is_message_usage {
         message_usage::present(value, &owner.connection, owner.metadata_owner())
+    } else if is_session_usage {
+        session_usage::present(value, &owner.connection, owner.metadata_owner())
     } else {
         value
     }

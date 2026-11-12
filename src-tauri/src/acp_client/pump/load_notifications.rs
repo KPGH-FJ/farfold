@@ -95,28 +95,55 @@ impl State {
                 }
                 dispatch = inbox.recv() => {
                     let Some(dispatch) = dispatch else { return load.await; };
-                    self.deferred.observe(&dispatch, ops.configuration_dialect);
-                    observe_failure(&dispatch, &mut self.failures, false);
-                    let mut context = DispatchContext {
-                        live_status: presentation,
-                        session_id,
-                        events,
-                        pending,
-                        ops,
-                        permission_ids: &mut self.permission_ids,
-                        elicitation_ids: &mut self.elicitation_ids,
-                        expirations: &self.expiry_tx,
-                        tools: &mut self.tools,
-                        compactions: &mut self.compactions,
-                        async_tasks: &mut self.async_tasks,
-                        prompt_cancelling: false,
-                    };
-                    // Original raw messages and owned inquiries progress during
-                    // load; only response-dependent configuration effects wait.
-                    handle_session_dispatch(dispatch, &mut context);
+                    self.dispatch(dispatch, session_id, events, pending, (ops, presentation));
                 }
             }
         }
+    }
+
+    pub(super) fn drain(
+        &mut self,
+        session_id: &str,
+        inbox: &mut super::super::session_routes::Inbox,
+        events: &SessionSink,
+        pending: &PendingPermissions,
+        source: (&SessionOps, &super::super::live_status::Owner),
+    ) {
+        for _ in 0..inbox.queued_len() {
+            let Ok(dispatch) = inbox.try_recv() else {
+                break;
+            };
+            self.dispatch(dispatch, session_id, events, pending, source);
+        }
+    }
+
+    fn dispatch(
+        &mut self,
+        dispatch: Dispatch,
+        session_id: &str,
+        events: &SessionSink,
+        pending: &PendingPermissions,
+        (ops, presentation): (&SessionOps, &super::super::live_status::Owner),
+    ) {
+        self.deferred.observe(&dispatch, ops.configuration_dialect);
+        observe_failure(&dispatch, &mut self.failures, false);
+        let mut context = DispatchContext {
+            live_status: presentation,
+            session_id,
+            events,
+            pending,
+            ops,
+            permission_ids: &mut self.permission_ids,
+            elicitation_ids: &mut self.elicitation_ids,
+            expirations: &self.expiry_tx,
+            tools: &mut self.tools,
+            compactions: &mut self.compactions,
+            async_tasks: &mut self.async_tasks,
+            prompt_cancelling: false,
+        };
+        // Preserve the original dispatcher and inquiry owners across load,
+        // its queued prefix and the optional read-only empty-history inquiry.
+        handle_session_dispatch(dispatch, &mut context);
     }
 }
 
@@ -135,5 +162,93 @@ pub(super) fn observe_failure(
         && let Some(meta) = message.params().pointer("/update/_meta")
     {
         failures.observe(meta, prompt_in_flight);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::atomic::AtomicUsize;
+
+    fn frame(sequence: usize) -> Dispatch {
+        Dispatch::Notification(UntypedMessage::new("session/update", serde_json::json!({
+            "sessionId":"finite-prefix", "update":{"sessionUpdate":"future_owned_update","sequence":sequence}
+        })).unwrap())
+    }
+
+    #[test]
+    fn load_prefix_drain_returns_under_replenishment_and_keeps_following_fifo() {
+        let life = ConnectionLife::new();
+        life.ready().unwrap();
+        let forms: PendingElicitations = Default::default();
+        let ops = SessionOps {
+            configuration_dialect: Default::default(),
+            live_status_enabled: false,
+            session_tools: crate::acp_client::session_tools::Availability::unavailable(),
+            workspace_access: crate::acp_client::workspace_access::Availability::new(None),
+            async_tasks_supported: Arc::new(AtomicBool::new(false)),
+            opening: None,
+            connection_id: "finite-prefix-connection".into(),
+            verify_identity: Arc::new(|_, _| Ok(None)),
+            elicitations: forms.clone(),
+            inquiries: crate::acp_client::elicitation::ConnectionElicitations::new(
+                forms,
+                life.clone(),
+                "finite-prefix-connection".into(),
+            ),
+            life: life.clone(),
+            prompt_escrow: Default::default(),
+        };
+        let pending = Default::default();
+        let (sender, mut inbox) = life.routes.channel();
+        for sequence in 0..3 {
+            sender.send(frame(sequence)).unwrap();
+        }
+        let following = sender.clone();
+        let seen = Arc::new(Mutex::new(Vec::new()));
+        let recorded = seen.clone();
+        let next = AtomicUsize::new(3);
+        let events: SessionSink = Arc::new(move |value| {
+            let Some(sequence) = value.pointer("/update/sequence").and_then(Value::as_u64) else {
+                return;
+            };
+            recorded.lock().unwrap().push(sequence);
+            let sequence = next.fetch_add(1, Ordering::SeqCst);
+            // The old unbounded drain consumes all 32. This fence makes the
+            // actual regression finite without sleep, threads or a real Agent.
+            if sequence < 32 {
+                following.send(frame(sequence)).unwrap();
+            }
+        });
+        let operation = Operation::new();
+        let owner = super::super::super::live_status::Owner::loading(
+            &ops,
+            "finite-prefix",
+            crate::acp_client::open_purpose::OpenPurpose::Conversation,
+            None,
+            &operation,
+        );
+        let mut prefix = State::new("finite-prefix", &ops);
+        prefix.drain(
+            "finite-prefix",
+            &mut inbox,
+            &events,
+            &pending,
+            (&ops, &owner),
+        );
+        assert_eq!(*seen.lock().unwrap(), vec![0, 1, 2]);
+        prefix.drain(
+            "finite-prefix",
+            &mut inbox,
+            &events,
+            &pending,
+            (&ops, &owner),
+        );
+        assert_eq!(*seen.lock().unwrap(), vec![0, 1, 2, 3, 4, 5]);
+        let mut remaining = Vec::new();
+        while let Ok(Dispatch::Notification(message)) = inbox.try_recv() {
+            remaining.push(message.params()["update"]["sequence"].as_u64().unwrap());
+        }
+        assert_eq!(remaining, vec![6, 7, 8]);
     }
 }

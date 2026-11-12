@@ -19,6 +19,8 @@ export interface OpenResult {
   models?: unknown;
   meta?: unknown;
   resumed: boolean;
+  /** Current official empty-history fact verified by the owning backend open. */
+  historyEmptyConfirmed?: boolean;
   warnings: string[];
   configCheck?: ConfigCheck;
   permissionConfigId?: string;

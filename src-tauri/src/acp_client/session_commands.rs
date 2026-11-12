@@ -187,6 +187,7 @@ pub async fn session_open(
             .map_err(|_| "未能完整读取对话内容，请重试")?;
     }
     Ok(SessionOpenResult {
+        history_empty_confirmed: opened.history_empty_confirmed,
         identity_read,
         session_tool_inventory,
         workspace_access,

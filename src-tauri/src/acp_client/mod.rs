@@ -36,6 +36,9 @@ pub(crate) mod first_release;
 pub(crate) mod handshake;
 mod history_admission;
 pub mod history_admission_commands;
+mod history_empty;
+#[cfg(all(test, unix))]
+mod history_empty_tests;
 pub mod history_search;
 pub mod identity_read;
 mod initialization;

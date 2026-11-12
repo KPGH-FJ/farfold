@@ -223,6 +223,11 @@ fn session_id(message: &Dispatch) -> Option<&str> {
     message.message()?.params().get("sessionId")?.as_str()
 }
 impl Inbox {
+    /// Snapshot only the currently queued prefix. Processing it may admit
+    /// additional frames; those remain owned by this same FIFO for later polls.
+    pub(super) fn queued_len(&self) -> usize {
+        self.receiver.len()
+    }
     pub(super) async fn recv(&mut self) -> Option<Dispatch> {
         self.current.take();
         let queued = self.receiver.recv().await?;
