@@ -561,7 +561,8 @@ export function BrowserWorkspacePage({
 
   // A native picker is not permission to finish opening after a hide or task switch.
   useLayoutEffect(() => {
-    if (!visible && busy.current === "choose") ++sequence.current;
+    // Tab switches retain the page with visible=true and only deactivate it.
+    if ((!active || !visible) && busy.current === "choose") ++sequence.current;
     if (!active || !visible) setClearPrompt(null);
   }, [active, visible]);
 
