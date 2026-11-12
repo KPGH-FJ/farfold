@@ -622,6 +622,7 @@ impl AcpManager {
                     handshake: handshake.clone(),
                     sessions: sessions.clone(),
                     child_pid: child_pid.clone(),
+                    process_identity: process.identity.clone(),
                     browser_launch,
                     mcp_spawn_facts: process.mcp_spawn_facts.clone(),
                     life: life.clone(),

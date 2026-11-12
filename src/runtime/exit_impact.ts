@@ -29,6 +29,8 @@ export const EXIT_IMPACT = {
   conversationReview: (title: string, reason: string) =>
     `尝试退出时，「${title}」${reason}。`,
   applicationReview: "退出检查时，应用后台还有操作未确认结束。",
+  browserToolUnknown:
+    "尚未确认 Agent 已移除网页工具。退出会结束连接并停止网页共享；不会把工具移除记为成功。",
 } as const;
 
 export function hasUnknownFinishedFileCopies(): boolean {

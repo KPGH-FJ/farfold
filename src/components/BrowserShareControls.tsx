@@ -42,49 +42,79 @@ export function BrowserShareControls({
     page?.phase === "ready" &&
     sharing.info?.label === page.label &&
     !sharing.pendingRequest;
+  const canConnect =
+    sharing.ready &&
+    phase === "unavailable" &&
+    sharing.info?.connectionAvailable === true &&
+    Boolean(sharing.info.connectionId) &&
+    page?.phase === "ready" &&
+    sharing.info.label === page.label &&
+    !sharing.pendingRequest;
+  const canRecheckConnection = [
+    "connection_unknown",
+    "connection_pending",
+    "connection_busy",
+    "connection_changed",
+    "tool_change_pending",
+    "status_failed",
+    "saved_conversation_required",
+  ].includes(sharing.info?.connectionReason ?? "");
   const status =
-    phase === "stop_failed"
-      ? S.stopFailed
-      : phase === "stopping" || sharing.operation === "stop"
-        ? S.stopping
-        : sharing.queryState === "no_session"
-          ? S.noSession
-          : sharing.queryState === "disconnected"
-            ? S.connectionLost
-            : sharing.queryState === "inactive"
-              ? S.inactive
-              : sharing.queryState === "failed"
-                ? S.statusFailed
-                : sharing.queryState === "checking"
-                  ? S.checking
-                  : sharing.pendingRequest
-                    ? S.confirmInChat
-                    : phase === "shared"
-                      ? S.shared
-                      : phase === "reading"
-                        ? S.reading
-                        : phase === "preparing"
-                          ? S.preparing
-                          : phase === "unavailable"
-                            ? browserSharingUnavailableReason(
-                                sharing.info?.reason,
-                              )
-                            : !page || page.phase === "closed"
-                              ? S.noPage
-                              : S.unshared;
+    sharing.info?.connectionReason === "connection_unknown"
+      ? S.connectFailed
+      : sharing.operation === "connect"
+        ? S.connecting
+        : canConnect
+          ? S.connectScope
+          : phase === "stop_failed"
+            ? S.stopFailed
+            : phase === "stopping" || sharing.operation === "stop"
+              ? S.stopping
+              : sharing.queryState === "no_session"
+                ? S.noSession
+                : sharing.queryState === "disconnected"
+                  ? S.connectionLost
+                  : sharing.queryState === "inactive"
+                    ? S.inactive
+                    : sharing.queryState === "failed"
+                      ? S.statusFailed
+                      : sharing.queryState === "checking"
+                        ? S.checking
+                        : sharing.pendingRequest
+                          ? S.confirmInChat
+                          : phase === "shared"
+                            ? S.shared
+                            : phase === "reading"
+                              ? S.reading
+                              : phase === "preparing"
+                                ? S.preparing
+                                : phase === "unavailable"
+                                  ? browserSharingUnavailableReason(
+                                      sharing.info?.connectionReason ??
+                                        sharing.info?.reason,
+                                    )
+                                  : !page || page.phase === "closed"
+                                    ? S.noPage
+                                    : S.unshared;
   return (
     <div className="browser-share-controls">
       <div className="browser-share-toggle">
         <button
           type="button"
           className="btn btn-ghost"
-          aria-expanded={!canStop && expanded}
-          aria-controls={!canStop ? scopeId : undefined}
-          disabled={busy || !sharing.ready || (!canStop && !canAllow)}
+          aria-expanded={canAllow ? expanded : undefined}
+          aria-controls={canAllow ? scopeId : undefined}
+          disabled={
+            busy || !sharing.ready || (!canStop && !canAllow && !canConnect)
+          }
           onClick={() =>
             canStop
               ? void sharing.stop()
-              : setReviewedPage((value) => (value === pageKey ? null : pageKey))
+              : canConnect
+                ? void sharing.connect()
+                : setReviewedPage((value) =>
+                    value === pageKey ? null : pageKey,
+                  )
           }
         >
           {canStop ? (
@@ -92,17 +122,31 @@ export function BrowserShareControls({
           ) : (
             <ShieldCheckIcon size={16} aria-hidden="true" />
           )}
-          {sharing.operation === "stop"
-            ? S.stopping
-            : phase === "stop_failed"
-              ? S.retryStop
-              : canStop
-                ? S.stop
-                : S.permission}
+          {sharing.operation === "connect"
+            ? S.connecting
+            : canConnect
+              ? S.connect
+              : sharing.operation === "stop"
+                ? S.stopping
+                : phase === "stop_failed"
+                  ? S.retryStop
+                  : canStop
+                    ? S.stop
+                    : S.permission}
         </button>
         <span className="browser-share-status" role="status" title={status}>
           {status}
         </span>
+        {canRecheckConnection && !sharing.error && (
+          <button
+            type="button"
+            className="btn btn-text"
+            disabled={busy}
+            onClick={() => void sharing.refresh()}
+          >
+            {S.refresh}
+          </button>
+        )}
         {onViewRequest && (
           <button
             type="button"

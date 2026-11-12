@@ -1,5 +1,14 @@
 export const BROWSER_SHARING_STRINGS = {
   permission: "读取权限",
+  connect: "连接网页工具",
+  connecting: "正在连接网页工具…",
+  connectScope: "连接工具后，再决定是否允许读取。",
+  connectFailed: "连接结果尚未确认，请重新检查。",
+  connectionBusy: "请等待当前工作结束后，再连接网页工具。",
+  connectionChanged: "对话连接已变化，请恢复连接后重新检查。",
+  savedConversationRequired:
+    "请先打开已保存的对话，再连接网页工具。你仍可手动浏览网页。",
+  toolChangePending: "工具修改结果尚未确认，请先检查工具设置，再重新打开对话。",
   awaiting: "等待你确认读取",
   requestTitle: "需要读取这张网页",
   requestScope:
@@ -62,6 +71,20 @@ export function browserSharingUnavailableReason(
 ): string {
   const S = BROWSER_SHARING_STRINGS;
   switch (reason) {
+    case "connection_busy":
+      return S.connectionBusy;
+    case "connection_changed":
+      return S.connectionChanged;
+    case "saved_conversation_required":
+      return S.savedConversationRequired;
+    case "tool_change_pending":
+      return S.toolChangePending;
+    case "status_failed":
+      return S.statusFailed;
+    case "connection_pending":
+      return S.connecting;
+    case "connection_unknown":
+      return S.connectFailed;
     case "tool_disconnected":
       return S.disconnected;
     case "source_not_reviewed":

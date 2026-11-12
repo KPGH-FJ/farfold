@@ -17,6 +17,9 @@ pub(crate) use actor::{Request, start};
 mod commands;
 pub use commands::*;
 
+pub(crate) type BrowserCompletion =
+    Arc<dyn Fn(bool, &str) -> Result<(), ChangeError> + Send + Sync>;
+
 const BUDGET: Duration = Duration::from_secs(10);
 pub(crate) const LIST: &str = "_goose/unstable/session/extensions/list";
 const ADD: &str = "_goose/unstable/session/extensions/add";
@@ -123,6 +126,32 @@ impl AcpManager {
         change: Change,
         deadline: tokio::time::Instant,
     ) -> Reply {
+        self.change_start_with_browser(
+            store,
+            agent_id,
+            cwd,
+            session_id,
+            connection_id,
+            operation_id,
+            change,
+            deadline,
+            None,
+        )
+        .await
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) async fn change_start_with_browser(
+        &self,
+        store: &MetaStore,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+        connection_id: &str,
+        operation_id: &str,
+        change: Change,
+        deadline: tokio::time::Instant,
+        browser_completion: Option<BrowserCompletion>,
+    ) -> Reply {
         if !valid_id(operation_id) {
             return Err(ChangeError::from(Code::InvalidInput).before_dispatch());
         }
@@ -164,6 +193,12 @@ impl AcpManager {
         if !(owner.current)() {
             return Err(ChangeError::from(Code::Changed).before_dispatch());
         }
+        if matches!(change, Change::AddLocalBrowser { .. })
+            && (browser_completion.is_none()
+                || row.as_ref().is_none_or(|r| r.config_options.is_none()))
+        {
+            return Err(ChangeError::from(Code::Changed).before_dispatch());
+        }
         let operation = Operation {
             kind: change.kind(),
             operation_id: operation_id.into(),
@@ -181,6 +216,7 @@ impl AcpManager {
             error: None,
         };
         let request = Request {
+            browser_completion,
             operation,
             change,
             slot: owner.slot.clone(),
@@ -217,7 +253,7 @@ impl AcpManager {
         }
         Ok(value)
     }
-    fn change_status(
+    pub(crate) fn change_status(
         &self,
         agent_id: &str,
         cwd: &Path,

@@ -8,6 +8,17 @@ pub enum Change {
         name: String,
         url: String,
     },
+    // Only the internal browser owner constructs this exact local descriptor.
+    // Deserializing user IPC cannot select an arbitrary filesystem socket.
+    #[serde(skip)]
+    AddLocalBrowser {
+        descriptor: serde_json::Value,
+    },
+    #[serde(skip)]
+    RemoveLocalBrowser {
+        key: String,
+        descriptor: serde_json::Value,
+    },
     Remove {
         #[serde(rename = "itemRef")]
         item_ref: String,
@@ -17,8 +28,8 @@ impl Change {
     pub(super) fn kind(&self) -> &'static str {
         match self {
             Self::Inspect => "inspect",
-            Self::AddHttp { .. } => "addHttp",
-            Self::Remove { .. } => "remove",
+            Self::AddHttp { .. } | Self::AddLocalBrowser { .. } => "addHttp",
+            Self::Remove { .. } | Self::RemoveLocalBrowser { .. } => "remove",
         }
     }
 }

@@ -65,6 +65,9 @@ pub(super) async fn admit_change(
         if matches!(request.change, Change::Inspect) {
             return Ok(None);
         }
+        if matches!(request.change, Change::AddLocalBrowser { .. }) && !guard.is_established() {
+            return Err(Code::Changed.into());
+        }
         if guard.is_established() {
             if request.row.is_none() {
                 return Err(Code::Changed.into());

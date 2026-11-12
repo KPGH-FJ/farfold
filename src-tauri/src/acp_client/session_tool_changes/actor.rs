@@ -7,6 +7,7 @@ use serde_json::{Value, json};
 use std::sync::atomic::{AtomicBool, Ordering};
 
 pub(crate) struct Request {
+    pub(crate) browser_completion: Option<BrowserCompletion>,
     pub(crate) operation: Operation,
     pub(crate) change: Change,
     pub(super) slot: Arc<Slot>,
@@ -96,6 +97,22 @@ impl Execution {
         if matches!(self.request.change, Change::Inspect) {
             return before.reviewed();
         }
+        if let Change::RemoveLocalBrowser { key, descriptor } = &self.request.change
+            && before.absent(key, descriptor)
+        {
+            if self.inventory().await? != before {
+                return Err(Code::Changed.into());
+            }
+            if let Some(completion) = &self.request.browser_completion {
+                completion(true, "")?;
+            }
+            self.request
+                .slot
+                .update(&self.request.operation.operation_id, |o| {
+                    o.persistence = Persistence::Confirmed;
+                });
+            return before.reviewed();
+        }
         let (action, descriptor, owned, expected, baseline_tools) =
             match &self.request.change.clone() {
                 Change::Inspect => unreachable!("handled before mutation planning"),
@@ -106,6 +123,30 @@ impl Execution {
                     }
                     let tools = self.tools(None).await?;
                     (Action::Add, descriptor, None, None, tools)
+                }
+                Change::AddLocalBrowser { descriptor } => {
+                    let name = descriptor
+                        .pointer("/server/name")
+                        .and_then(Value::as_str)
+                        .ok_or(Code::InvalidInput)?;
+                    if before.conflict(name) {
+                        return Err(Code::Changed.into());
+                    }
+                    let tools = self.tools(None).await?;
+                    (Action::Add, descriptor.clone(), None, None, tools)
+                }
+                Change::RemoveLocalBrowser { key, descriptor } => {
+                    let owned = before.owned(key, descriptor)?;
+                    let name = before.scope_name(key, descriptor)?;
+                    let tools = self.tools(Some(&name)).await?;
+                    let expected = before.without(key, descriptor)?.digest();
+                    (
+                        Action::Remove,
+                        descriptor.clone(),
+                        Some(owned),
+                        Some(expected),
+                        tools,
+                    )
                 }
                 Change::Remove { item_ref } => {
                     let owned = self.request.slot.target(item_ref)?;
@@ -165,9 +206,10 @@ impl Execution {
         if !after.matches_pending(&pending)? {
             return Err(Code::Changed.into());
         }
+        let mut added_key = String::new();
         let activity = match owned {
             None => {
-                after.added(&before, &descriptor)?;
+                added_key = after.added(&before, &descriptor)?.0;
                 let name = descriptor
                     .pointer("/server/name")
                     .and_then(Value::as_str)
@@ -197,6 +239,11 @@ impl Execution {
             return Err(Code::Changed.into());
         }
         let reviewed = after.reviewed()?;
+        // Real UDS initialization/list delivery and exact route attachment are
+        // required before durable success; an official ACK alone is insufficient.
+        if let Some(completion) = &self.request.browser_completion {
+            completion(false, &added_key)?;
+        }
         let clear = pending;
         self.request
             .store
@@ -204,6 +251,9 @@ impl Execution {
             .await
             .map_err(|_| Code::SaveFailed)?;
         self.pending = None;
+        if let Some(completion) = &self.request.browser_completion {
+            completion(true, &added_key)?;
+        }
         self.request
             .slot
             .update(&self.request.operation.operation_id, |o| {

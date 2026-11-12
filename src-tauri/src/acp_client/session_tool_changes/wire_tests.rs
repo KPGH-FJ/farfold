@@ -361,6 +361,7 @@ async fn queue_empty_change(
         original()
     });
     let request = Request {
+        browser_completion: None,
         operation: Operation {
             kind: "addHttp",
             operation_id: id.into(),
@@ -742,6 +743,7 @@ async fn observer_disappearing_after_pump_takes_command_cannot_offer_a_mutation(
         original()
     });
     let request = Request {
+        browser_completion: None,
         operation: Operation {
             kind: "addHttp",
             operation_id: "lost-admission".into(),
@@ -915,3 +917,7 @@ async fn lost_transport_retains_original_work_until_the_owned_process_really_end
     until(|| owner.slot.snapshot("transport").unwrap().settled).await;
     assert!(f.pending());
 }
+
+#[cfg(target_os = "macos")]
+#[path = "browser_wire_tests.rs"]
+mod browser_wire_tests;

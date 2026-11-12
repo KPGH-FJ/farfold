@@ -16,6 +16,7 @@ fn fixture() -> (Arc<ToolSession>, BrowserInfo, FixedPageReadScope) {
         page: Arc::new(Mutex::new(None)),
         transport: OnceLock::new(),
         state: Mutex::new(ShareState {
+            connection: None,
             phase: READY,
             ready: true,
             ended: false,

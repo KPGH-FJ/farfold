@@ -34,7 +34,6 @@ use agent_client_protocol::{
     Agent, ConnectionTo, Dispatch, RequestCancellation, Responder, UntypedMessage,
 };
 use serde_json::Value;
-
 #[cfg(test)]
 mod config_activity_pending_tests;
 use tokio::sync::{mpsc, oneshot};
@@ -174,7 +173,8 @@ pub(crate) struct SessionEntry {
     pub(super) prompt_store: crate::meta_store::MetaStore,
     /// Keeps this original connection route registered until its owner drops.
     _guard: super::session_routes::Guard,
-    _mcp_lease: Option<super::transient_mcp::SessionMcpLease>,
+    pub(super) _mcp_lease: Option<super::transient_mcp::SessionMcpLease>,
+    pub(super) browser_requests: super::transient_mcp::SessionMcpRequests,
     _retention: super::lifecycle::SessionRetention,
 }
 
@@ -1043,7 +1043,7 @@ async fn session_pump(
                 SessionControl::Shutdown => break,
                 SessionControl::Fork { request,result,.. } => {
                     let blocked = if request.parent!=session_id || request.connection.connection_id!=ops.connection_id || !fork_execution_known {Some("unavailable")}
-                        else if mcp_requests.as_ref().is_some_and(|mcp|!mcp.fork_admissible()) {Some("browser_shared")}
+                        else if let Some(reason)=mcp_requests.as_ref().and_then(|mcp|mcp.fork_blocker()) {Some(reason)}
                         else if !permission_guard.admissible() {Some("permission")}
                         else if !model_guard.admissible() {Some("configuration")}
                         else if identity_read.is_some() || !fork::idle(&ctx,prompt_in_flight,mutation.is_some(),&model_guard,&permission_guard) {Some("busy")} else {None};
@@ -1057,7 +1057,7 @@ async fn session_pump(
                     restore_config::drain(&mut inbox,&mut ctx,&mut configuration,&mut models,&mut model_guard,&mut permission_guard,&mut opening,&mut mutation);
                     if !fork_execution_known || !fork::idle(&ctx,prompt_in_flight,mutation.is_some(),&model_guard,&permission_guard) || model_guard.record()!=saved
                         || mcp_requests.as_ref().is_some_and(|mcp|!mcp.fork_admissible()) {
-                        let reason=if mcp_requests.as_ref().is_some_and(|mcp|!mcp.fork_admissible()) {"browser_shared"} else {"configuration"};
+                        let reason=mcp_requests.as_ref().and_then(|mcp|mcp.fork_blocker()).unwrap_or("configuration");
                         let _=result.send(Err(super::session_fork::AdmissionFailure::rejected(reason)));continue;
                     }
                     let started=super::session_fork::start(*request,snapshot,cx.clone(),ops.clone(),sessions.clone(),pending.clone(),config_store.clone(),events.clone()).map_err(|_|super::session_fork::AdmissionFailure::rejected("unavailable"));

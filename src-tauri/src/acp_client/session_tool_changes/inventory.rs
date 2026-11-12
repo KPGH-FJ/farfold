@@ -46,6 +46,26 @@ impl Inventory {
             })
             .collect()
     }
+    pub(super) fn absent(&self, key: &str, descriptor: &Value) -> bool {
+        !self.entries.contains_key(key) && !self.entries.values().any(|v| v == descriptor)
+    }
+    pub(super) fn owned(
+        &self,
+        key: &str,
+        descriptor: &Value,
+    ) -> Result<super::slot::Reviewed, ChangeError> {
+        let name = self.scope_name(key, descriptor)?;
+        Ok(super::slot::Reviewed {
+            item: super::Item {
+                item_ref: String::new(),
+                name,
+                can_remove: true,
+            },
+            key: key.into(),
+            descriptor: descriptor.clone(),
+            inventory_digest: self.digest(),
+        })
+    }
     pub(super) fn scope_name(&self, key: &str, descriptor: &Value) -> Result<String, ChangeError> {
         if self.entries.get(key) != Some(descriptor) {
             return Err(Code::Changed.into());

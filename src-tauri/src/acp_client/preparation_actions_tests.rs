@@ -241,6 +241,7 @@ fn api_connection(
             handshake: Arc::new(OnceLock::new()),
             sessions: Arc::new(Mutex::new(HashMap::new())),
             child_pid: Arc::new(AtomicU32::new(0)),
+            process_identity: Default::default(),
             browser_launch: None,
             mcp_spawn_facts: Arc::new(std::sync::OnceLock::new()),
             life: life.clone(),

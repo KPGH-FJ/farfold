@@ -122,6 +122,7 @@ pub(crate) struct ManagedConnection {
     pub(crate) sessions: SessionMap,
     /// Spawned agent process id (`0` until attributed), for `pids.json`.
     pub(crate) child_pid: Arc<AtomicU32>,
+    pub(crate) process_identity: Arc<OnceLock<crate::acp_client::browser_process::Identity>>,
     pub(crate) browser_launch: Option<crate::acp_client::browser_capability::LaunchKind>,
     pub(crate) mcp_spawn_facts: Arc<OnceLock<crate::acp_client::process::McpSpawnFacts>>,
     pub(crate) life: Arc<ConnectionLife>,

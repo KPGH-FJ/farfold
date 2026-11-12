@@ -42,6 +42,8 @@ export const SESSION_FORK_STRINGS = {
   sourceUnconfirmed: "尚未确认原位置已结束处理，请保留原对话并等待。",
   failedBeforeDispatch: "复制未发送，原对话保持。",
   browserShared: "请先停止网页共享，再复制当前对话。",
+  browserConnected:
+    "网页工具仍连接着当前对话。请关闭并重新打开这段对话，再复制。",
   workDisabled: "请先恢复这条对话的工作，再进行复制。",
   ownerEnded:
     "原对话的连接已结束，复制结果仍未确认；请保留本次结果，勿再次复制。",

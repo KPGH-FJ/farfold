@@ -163,6 +163,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
       const code = String(reason).replace(/^Error:\s*/, "");
       if (
         code === "EXIT_CONFIRMATION_REQUIRED" ||
+        code === "BROWSER_TOOL_EXIT_REVIEW_REQUIRED" ||
         code === "FILE_COPY_EXIT_BLOCKED" ||
         code === "WORKTREE_EXIT_BLOCKED" ||
         code === "FILE_COPY_EXIT_REVIEW_REQUIRED" ||
@@ -172,6 +173,8 @@ export function DraftStartup({ children }: { children: ReactNode }) {
         setBackendWorktreeReview(code === "WORKTREE_EXIT_BLOCKED");
         if (code === "EXIT_CONFIRMATION_REQUIRED")
           setActivityReview(E.applicationReview);
+        else if (code === "BROWSER_TOOL_EXIT_REVIEW_REQUIRED")
+          setActivityReview(E.browserToolUnknown);
         else if (code === "FILE_COPY_EXIT_REVIEW_REQUIRED")
           setActivityReview(E.copyUnknown);
         else if (code === "WORKTREE_EXIT_REVIEW_REQUIRED")

@@ -23,6 +23,8 @@ pub(crate) mod auth_compat;
 pub mod auth_connection;
 pub(crate) mod auth_route;
 pub(crate) mod browser_capability;
+mod browser_process;
+pub(crate) mod browser_uds;
 mod cold_history_open;
 mod compaction_activity;
 pub mod delivery_flow;

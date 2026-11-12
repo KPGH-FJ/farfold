@@ -21,6 +21,7 @@ fn fixture(granted: bool) -> (Arc<ToolSession>, BrowserInfo, FixedPageReadScope)
         page: Arc::new(Mutex::new(granted.then(|| scope.clone()))),
         transport: OnceLock::new(),
         state: Mutex::new(ShareState {
+            connection: None,
             phase: READY,
             ready: true,
             ended: false,
@@ -340,6 +341,10 @@ async fn p27_implicit_page_change_stops_first_screenshot_after_broker_write() {
         owner
             .transport
             .set(TransportHandle(Arc::new(HandleInner {
+                #[cfg(target_os = "macos")]
+                initialized: Arc::new(AtomicBool::new(false)),
+                #[cfg(target_os = "macos")]
+                listed: Arc::new(AtomicBool::new(false)),
                 page: owner.page.clone(),
                 controls,
                 shutdown: Arc::new(AtomicBool::new(false)),

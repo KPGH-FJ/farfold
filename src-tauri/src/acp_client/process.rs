@@ -101,6 +101,7 @@ fn process_completion(
 #[derive(Clone)]
 pub(crate) struct ProcessControl {
     pub pid: Arc<AtomicU32>,
+    pub(crate) identity: Arc<OnceLock<super::browser_process::Identity>>,
     started: Arc<AtomicBool>,
     start_failed: Arc<AtomicBool>,
     stop: watch::Sender<bool>,
@@ -117,6 +118,7 @@ impl ProcessControl {
             mcp_spawn_facts: Arc::new(OnceLock::new()),
             capture_mcp_facts: false,
             pid: Arc::new(AtomicU32::new(0)),
+            identity: Arc::new(OnceLock::new()),
             started: Arc::new(AtomicBool::new(false)),
             start_failed: Arc::new(AtomicBool::new(false)),
             stop: watch::channel(false).0,
@@ -284,6 +286,9 @@ fn spawn_process_in(
         let _ = control.mcp_spawn_facts.set(facts);
     }
     control.diagnostics.started();
+    if let Some(identity) = super::browser_process::Identity::capture(child.id()) {
+        let _ = control.identity.set(identity);
+    }
     #[cfg(not(target_os = "macos"))]
     let stdin = child
         .stdin

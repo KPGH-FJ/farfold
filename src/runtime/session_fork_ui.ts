@@ -50,6 +50,7 @@ export function sessionForkControl(
     unsupported: S.unsupported,
     unavailable: S.unavailableOwner,
     browser_shared: S.browserShared,
+    browser_connected: S.browserConnected,
     work_disabled: S.workDisabled,
     point_unavailable: S.pointUnavailable,
     point_ambiguous: S.pointAmbiguous,

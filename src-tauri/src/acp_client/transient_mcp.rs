@@ -7,7 +7,7 @@ use agent_client_protocol::schema::v1::{McpServer, McpServerStdio};
 use std::fmt;
 use std::path::Path;
 use std::sync::{
-    Arc, Weak,
+    Arc, Mutex, Weak,
     atomic::{AtomicBool, Ordering},
 };
 
@@ -75,7 +75,16 @@ pub(crate) trait SessionMcpOwner: Send + Sync {
     /// Read-only admission. An offered tool is not a page grant. Unknown
     /// cleanup/output state must reject copying without revoking anything.
     fn fork_admissible(&self) -> bool;
+    fn fork_blocker(&self) -> Option<&'static str> {
+        (!self.fork_admissible()).then_some("browser_shared")
+    }
+
     fn revoke(&self);
+    fn prepare_close(
+        self: Arc<Self>,
+    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<(), String>> + Send>> {
+        Box::pin(async { Ok(()) })
+    }
 }
 
 struct OwnerState {
@@ -163,16 +172,67 @@ pub(crate) struct SessionMcpLease {
 
 /// The pump observes its route without extending ownership or revoking it on
 /// drop. Only the original SessionMcpLease owns final route teardown.
-pub(crate) struct SessionMcpRequests(Weak<OwnerState>);
+#[derive(Clone, Default)]
+pub(crate) struct SessionMcpRequests(Arc<Mutex<Option<Weak<OwnerState>>>>);
 
 impl SessionMcpRequests {
-    pub(crate) fn fork_admissible(&self) -> bool {
+    pub(crate) fn detach(&self, expected: &Arc<dyn SessionMcpOwner>) -> bool {
+        let Ok(mut owner) = self.0.lock() else {
+            return false;
+        };
+        if owner
+            .as_ref()
+            .and_then(Weak::upgrade)
+            .is_none_or(|s| !Arc::ptr_eq(&s.owner, expected))
+        {
+            return false;
+        }
+        *owner = None;
+        true
+    }
+
+    pub(crate) fn owner(&self) -> Option<Arc<dyn SessionMcpOwner>> {
         self.0
-            .upgrade()
-            .is_some_and(|state| state.owner.fork_admissible())
+            .lock()
+            .ok()
+            .and_then(|owner| owner.as_ref().and_then(Weak::upgrade))
+            .map(|state| state.owner.clone())
+    }
+    pub(crate) fn attach(&self, lease: &SessionMcpLease) -> Result<(), String> {
+        let mut owner = self.0.lock().map_err(|_| safe_open_error())?;
+        if owner.as_ref().and_then(Weak::upgrade).is_some() {
+            return Err(safe_open_error());
+        }
+        *owner = Some(Arc::downgrade(&lease.state));
+        Ok(())
+    }
+    pub(crate) fn fork_admissible(&self) -> bool {
+        self.0.lock().is_ok_and(|owner| {
+            owner.as_ref().is_none_or(|owner| {
+                owner
+                    .upgrade()
+                    .is_some_and(|state| state.owner.fork_admissible())
+            })
+        })
+    }
+    pub(crate) fn fork_blocker(&self) -> Option<&'static str> {
+        match self.0.lock() {
+            Ok(owner) => match owner.as_ref() {
+                None => None,
+                Some(owner) => owner
+                    .upgrade()
+                    .map(|s| s.owner.fork_blocker())
+                    .unwrap_or(Some("browser_shared")),
+            },
+            Err(_) => Some("browser_shared"),
+        }
     }
     pub(crate) fn set_prompt_active(&self, active: bool) {
-        if let Some(state) = self.0.upgrade()
+        if let Some(state) = self
+            .0
+            .lock()
+            .ok()
+            .and_then(|owner| owner.as_ref().and_then(Weak::upgrade))
             && !state.revoked.load(Ordering::Acquire)
         {
             state.owner.set_prompt_active(active);
@@ -181,8 +241,17 @@ impl SessionMcpRequests {
 }
 
 impl SessionMcpLease {
+    pub(crate) fn bind(owner: Arc<dyn SessionMcpOwner>, session_id: &str) -> Result<Self, String> {
+        owner.bind_session(session_id)?;
+        Ok(Self {
+            state: Arc::new(OwnerState {
+                owner,
+                revoked: AtomicBool::new(false),
+            }),
+        })
+    }
     pub(crate) fn requests(&self) -> SessionMcpRequests {
-        SessionMcpRequests(Arc::downgrade(&self.state))
+        SessionMcpRequests(Arc::new(Mutex::new(Some(Arc::downgrade(&self.state)))))
     }
 }
 
@@ -259,6 +328,29 @@ mod tests {
                 .env(vec![EnvVariable::new("FARFOLD_TEST_CAP", FAKE_SECRET)]),
             witness,
         )
+    }
+    #[test]
+    fn dynamic_route_requests_attach_once_and_only_exact_owner_can_detach() {
+        let requests = SessionMcpRequests::default();
+        let observed = requests.clone();
+        assert!(observed.fork_admissible());
+        assert!(observed.owner().is_none());
+        let witness = Arc::new(Witness::default());
+        let owner: Arc<dyn SessionMcpOwner> = witness.clone();
+        let lease = SessionMcpLease::bind(owner.clone(), "established").unwrap();
+        requests.attach(&lease).unwrap();
+        observed.set_prompt_active(true);
+        assert_eq!(*witness.prompt_states.lock().unwrap(), [true]);
+        assert!(requests.attach(&lease).is_err());
+        let wrong: Arc<dyn SessionMcpOwner> = Arc::new(Witness::default());
+        assert!(!requests.detach(&wrong));
+        assert!(requests.detach(&owner));
+        drop(lease);
+        assert_eq!(witness.revokes.load(Ordering::Acquire), 1);
+        assert!(observed.owner().is_none());
+        assert!(observed.fork_admissible());
+        observed.set_prompt_active(false);
+        assert_eq!(*witness.prompt_states.lock().unwrap(), [true]);
     }
     #[test]
     fn typed_stdio_serializes_only_standard_request_fields() {

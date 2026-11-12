@@ -26,6 +26,12 @@ use tokio::sync::{oneshot, watch};
 #[path = "transport_admission.rs"]
 mod admission;
 
+#[cfg(target_os = "macos")]
+#[path = "transport_uds.rs"]
+mod uds;
+#[cfg(target_os = "macos")]
+pub(super) type PeerCheck = Arc<dyn Fn(&Stream) -> bool + Send + Sync>;
+
 #[cfg(test)]
 #[path = "transport_lifecycle_tests.rs"]
 mod lifecycle_tests;
@@ -35,10 +41,11 @@ const WRITE_WAIT: Duration = Duration::from_secs(1);
 const MAX_REQUEST: usize = 65_536;
 const MAX_RESPONSE: usize = 600_000;
 pub(crate) type SharedPage = Arc<Mutex<Option<FixedPageReadScope>>>;
-type Callback = Arc<dyn Fn() + Send + Sync>;
-type Closed = Arc<dyn Fn(bool) + Send + Sync>;
-type Permission = Arc<dyn Fn(&ToolRequest) -> Result<PermissionWait, String> + Send + Sync>;
-type Invalidated = Arc<dyn Fn(FixedPageReadScope) + Send + Sync>;
+pub(super) type Callback = Arc<dyn Fn() + Send + Sync>;
+pub(super) type Closed = Arc<dyn Fn(bool) + Send + Sync>;
+pub(super) type Permission =
+    Arc<dyn Fn(&ToolRequest) -> Result<PermissionWait, String> + Send + Sync>;
+pub(super) type Invalidated = Arc<dyn Fn(FixedPageReadScope) + Send + Sync>;
 
 fn operation_error_reply(id: Value, control: bool, error: ToolFailure) -> Value {
     match (control, error) {
@@ -93,6 +100,10 @@ struct HandleInner {
     controls: mpsc::Sender<Control>,
     shutdown: Arc<AtomicBool>,
     completed: watch::Receiver<u8>,
+    #[cfg(target_os = "macos")]
+    initialized: Arc<AtomicBool>,
+    #[cfg(target_os = "macos")]
+    listed: Arc<AtomicBool>,
 }
 enum Control {
     Quiesce(Option<oneshot::Sender<Result<(), String>>>),
@@ -110,6 +121,12 @@ impl Drop for HandleInner {
     }
 }
 impl TransportHandle {
+    #[cfg(target_os = "macos")]
+    pub(crate) fn locally_ready(&self) -> bool {
+        self.0.initialized.load(Ordering::Acquire)
+            && self.0.listed.load(Ordering::Acquire)
+            && *self.0.completed.borrow() == 0
+    }
     /// Cancels observation/output pending before this barrier. A partial JSON
     /// reply closes the transport; on_closed is called before this ACK.
     pub(crate) async fn quiesce(&self) -> Result<(), String> {
@@ -183,6 +200,10 @@ pub(super) fn start(
         controls,
         shutdown: shutdown.clone(),
         completed,
+        #[cfg(target_os = "macos")]
+        initialized: Arc::new(AtomicBool::new(false)),
+        #[cfg(target_os = "macos")]
+        listed: Arc::new(AtomicBool::new(false)),
     }));
     std::thread::Builder::new()
         .name("farfold-page-mcp".into())
@@ -194,6 +215,8 @@ pub(super) fn start(
                 shutdown,
                 controls: control_rx,
                 on_ready,
+                #[cfg(target_os = "macos")]
+                on_initialized: None,
                 on_closed,
                 on_permission,
                 on_invalidated,
@@ -206,12 +229,21 @@ pub(super) fn start(
         .map_err(|_| "无法启动网页工具".to_owned())?;
     Ok((handle, launch))
 }
+
+#[cfg(target_os = "macos")]
+#[path = "transport_uds_start.rs"]
+mod uds_start;
+#[cfg(target_os = "macos")]
+pub(super) use uds_start::{LocalEndpoint, start_uds};
+
 struct Worker {
     app: AppHandle,
     page: SharedPage,
     shutdown: Arc<AtomicBool>,
     controls: mpsc::Receiver<Control>,
     on_ready: Callback,
+    #[cfg(target_os = "macos")]
+    on_initialized: Option<Callback>,
     on_closed: Closed,
     on_permission: Permission,
     on_invalidated: Invalidated,
@@ -1419,4 +1451,24 @@ mod tests {
                 .is_none()
         );
     }
+}
+
+#[cfg(test)]
+pub(super) fn control_state_fixture(page: SharedPage) -> (TransportHandle, Arc<AtomicBool>) {
+    let shutdown = Arc::new(AtomicBool::new(false));
+    let (controls, _) = mpsc::channel();
+    let (_, completed) = watch::channel(0);
+    (
+        TransportHandle(Arc::new(HandleInner {
+            page,
+            controls,
+            shutdown: shutdown.clone(),
+            completed,
+            #[cfg(target_os = "macos")]
+            initialized: Arc::new(AtomicBool::new(true)),
+            #[cfg(target_os = "macos")]
+            listed: Arc::new(AtomicBool::new(true)),
+        })),
+        shutdown,
+    )
 }

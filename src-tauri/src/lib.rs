@@ -221,6 +221,7 @@ pub fn run() {
                 storage_recovery::storage_recovery_database_cancel,
                 storage_recovery::storage_recovery_database_restart,
                 browser_sharing::browser_share_status,
+                browser_sharing::browser_share_connect,
                 browser_sharing::browser_share_allow,
                 browser_sharing::browser_share_respond,
                 browser_sharing::browser_share_stop,

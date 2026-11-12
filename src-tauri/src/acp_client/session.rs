@@ -1099,7 +1099,7 @@ impl AcpManager {
                     .close
                     .is_some()
             });
-        let control = {
+        let (control, browser) = {
             let sessions = connection
                 .sessions
                 .lock()
@@ -1120,8 +1120,32 @@ impl AcpManager {
             if connection.state.load(Ordering::SeqCst) != STATE_READY {
                 return Err("会话已断开，请重新连接".into());
             }
-            entry.control.clone()
+            (entry.control.clone(), entry.browser_requests.owner())
         };
+        if !local_only && let Some(browser) = browser {
+            browser.clone().prepare_close().await?;
+            let current = self
+                .session_owner(agent_id, cwd, session_id)?
+                .ok_or("当前对话已变化")?;
+            if current.connection_id != connection.connection_id
+                || !Arc::ptr_eq(&current.state, &connection.state)
+                || current.state.load(Ordering::SeqCst) != STATE_READY
+                || !current
+                    .sessions
+                    .lock()
+                    .map_err(|_| "无法读取对话状态")?
+                    .get(session_id)
+                    .is_some_and(|e| {
+                        e.preview_token.as_deref() == preview_token
+                            && e.control.same_channel(&control)
+                            && e.browser_requests
+                                .owner()
+                                .is_none_or(|current| Arc::ptr_eq(&current, &browser))
+                    })
+            {
+                return Err("当前对话已变化".into());
+            }
+        }
         if remote_close {
             let (result_tx, result_rx) = oneshot::channel();
             control

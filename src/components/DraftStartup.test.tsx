@@ -319,6 +319,7 @@ it("requires review when backend activity starts after the renderer save began",
 
 it.each([
   ["FILE_COPY_EXIT_REVIEW_REQUIRED", EXIT_IMPACT.copyUnknown],
+  ["BROWSER_TOOL_EXIT_REVIEW_REQUIRED", EXIT_IMPACT.browserToolUnknown],
   ["WORKTREE_EXIT_REVIEW_REQUIRED", "工作位置操作的结果尚未确认。"],
 ])("explains %s and retains explicit confirmation", async (code, detail) => {
   h.invoke.mockImplementation((name, input) =>
