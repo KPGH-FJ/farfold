@@ -288,3 +288,149 @@ fn history_point_dto_rejects_injected_local_locator_or_unbounded_id() {
         assert!(!HistoryPoint { message_id: id }.valid());
     }
 }
+
+fn extensions_sample() -> Value {
+    let mut value = sample();
+    value["extension_data"] = json!({
+        "enabled_extensions.v0": {"extensions": [
+            {"type":"platform","name":"developer","available_tools":["first","second"]},
+            {"type":"stdio","name":"owned","cmd":"fixture","args":["--one","--two"],"envs":{"env":{"MODE":"ordinary"}}},
+            {"type":"platform","name":"developer","available_tools":["first","second"]}
+        ], "other_state":[1,2]},
+        "other_extension.v0": {"items":[1,2]}
+    });
+    value
+}
+fn extensions_child(original: &Value) -> Value {
+    let mut child = session(
+        "child",
+        original["conversation"].as_array().unwrap()[..3].to_vec(),
+    );
+    child["extension_data"] = original["extension_data"].clone();
+    child
+}
+fn rotate_extensions(value: &mut Value) {
+    value["extension_data"]["enabled_extensions.v0"]["extensions"]
+        .as_array_mut()
+        .unwrap()
+        .rotate_left(1);
+}
+
+#[test]
+fn official_enabled_extensions_outer_reorder_preserves_complete_parent_and_child() {
+    let original = extensions_sample();
+    let prepared = prepare(&original).unwrap();
+    let child = extensions_child(&original);
+    for reorder_parent in [false, true] {
+        for reorder_child in [false, true] {
+            let mut parent = original.clone();
+            let mut child = child.clone();
+            if reorder_parent {
+                rotate_extensions(&mut parent);
+            }
+            if reorder_child {
+                rotate_extensions(&mut child);
+            }
+            assert_eq!(
+                prepared.verify(
+                    wire(&parent),
+                    wire(&child),
+                    "parent",
+                    "child",
+                    Path::new("/owned")
+                ),
+                Ok(()),
+                "official unordered outer extension collection: parent={reorder_parent}, child={reorder_child}"
+            );
+        }
+    }
+}
+
+#[test]
+fn enabled_extension_comparison_keeps_fields_multiplicity_nested_order_and_other_state() {
+    let original = extensions_sample();
+    let prepared = prepare(&original).unwrap();
+    let child = extensions_child(&original);
+    let mut cases = vec![];
+    let mut lost = original.clone();
+    lost["extension_data"]["enabled_extensions.v0"]["extensions"]
+        .as_array_mut()
+        .unwrap()
+        .remove(0);
+    cases.push(lost);
+    let mut changed = original.clone();
+    changed["extension_data"]["enabled_extensions.v0"]["extensions"][1]["envs"]["env"]["MODE"] =
+        json!("changed");
+    cases.push(changed);
+    let mut multiplicity = original.clone();
+    multiplicity["extension_data"]["enabled_extensions.v0"]["extensions"][2] =
+        original["extension_data"]["enabled_extensions.v0"]["extensions"][1].clone();
+    cases.push(multiplicity);
+    for pointer in [
+        "/enabled_extensions.v0/extensions/0/available_tools",
+        "/enabled_extensions.v0/extensions/1/args",
+        "/enabled_extensions.v0/other_state",
+        "/other_extension.v0/items",
+    ] {
+        let mut nested = original.clone();
+        nested["extension_data"]
+            .pointer_mut(pointer)
+            .unwrap()
+            .as_array_mut()
+            .unwrap()
+            .reverse();
+        cases.push(nested);
+    }
+    for case in cases {
+        assert_eq!(
+            prepared.verify(
+                wire(&case),
+                wire(&child),
+                "parent",
+                "child",
+                Path::new("/owned")
+            ),
+            Err("point_mismatch")
+        );
+        let mut changed_child = child.clone();
+        changed_child["extension_data"] = case["extension_data"].clone();
+        assert_eq!(
+            prepared.verify(
+                wire(&original),
+                wire(&changed_child),
+                "parent",
+                "child",
+                Path::new("/owned")
+            ),
+            Err("point_mismatch")
+        );
+    }
+    let mut parent = original.clone();
+    rotate_extensions(&mut parent);
+    parent["unrelated_export_field"] = json!([2, 1]);
+    assert_eq!(
+        prepared.verify(
+            wire(&parent),
+            wire(&child),
+            "parent",
+            "child",
+            Path::new("/owned")
+        ),
+        Err("point_mismatch")
+    );
+    let mut message_order = child.clone();
+    message_order["conversation"]
+        .as_array_mut()
+        .unwrap()
+        .swap(0, 1);
+    assert_eq!(
+        prepared.verify(
+            wire(&original),
+            wire(&message_order),
+            "parent",
+            "child",
+            Path::new("/owned")
+        ),
+        Err("point_mismatch")
+    );
+}

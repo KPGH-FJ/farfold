@@ -17,6 +17,8 @@ if mode=='compacted':
     summary=body('summary-after-cutoff',original[-1]['created']+1);summary['metadata']['userVisible']=False
     original.append(summary)
 child = None
+extensions = [dict(type='platform',name=name) for name in ['skills','tom','analyze','Extension Manager','summon','apps','developer']]
+child_extensions = extensions[:]
 def send(value): print(json.dumps(dict(jsonrpc='2.0', **value)), flush=True)
 def reply(message, result): send(dict(id=message['id'], result=result))
 def update(id):
@@ -29,6 +31,9 @@ for line in sys.stdin:
     elif method=='session/new':reply(message,dict(sessionId='parent',configOptions=options))
     elif method=='session/prompt':update('parent');reply(message,dict(stopReason='end_turn'))
     elif method=='session/load':
+        if mode=='extension-reorder' and p['sessionId']=='child':
+            child_extensions=child_extensions[1:]+child_extensions[:1]
+            extensions=extensions[2:]+extensions[:2]
         if mode=='load-rewrite' and child is not None:child[1]=body('rewritten-hidden',1)
         update(p['sessionId']);reply(message,dict(configOptions=options))
     elif method=='session/set_config_option':reply(message,dict(configOptions=options))
@@ -36,6 +41,7 @@ for line in sys.stdin:
     elif method=='session/list':reply(message,dict(sessions=[]))
     elif method=='session/fork':
         cutoff=p.get('_meta',{}).get('conversationBefore')
+        child_extensions=extensions[:]
         child=original[:] if mode=='ignore-point' else [v for v in original if cutoff is None or v['created']<cutoff]
         if mode=='parent-change':original[3]=body('changed',3)
         reply(message,dict(sessionId='child',configOptions=options))
@@ -47,5 +53,6 @@ for line in sys.stdin:
             changed=json.loads(json.dumps(options));changed[0]['currentValue']='other'
             send(dict(method='session/update',params=dict(sessionId='parent',update=dict(sessionUpdate='config_option_update',configOptions=changed))))
         messages=original if p['sessionId']=='parent' else child
-        data=dict(id=p['sessionId'],working_dir=str(root),message_count=sum(item['metadata']['userVisible'] for item in messages),conversation=messages,extension_data={},provider_name='selected',model_config=dict(model_name='m'),goose_mode='approve',recipe=None,user_recipe_values=None)
+        extension_data={'enabled_extensions.v0':{'extensions':extensions if p['sessionId']=='parent' else child_extensions}} if mode=='extension-reorder' else {}
+        data=dict(id=p['sessionId'],working_dir=str(root),message_count=sum(item['metadata']['userVisible'] for item in messages),conversation=messages,extension_data=extension_data,provider_name='selected',model_config=dict(model_name='m'),goose_mode='approve',recipe=None,user_recipe_values=None)
         reply(message,dict(data=json.dumps(data)))

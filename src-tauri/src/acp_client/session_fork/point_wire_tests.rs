@@ -223,3 +223,32 @@ async fn historical_point_compacted_prefix_without_later_summary_never_dispatche
     assert_eq!(result.status, "rejected");
     assert_eq!(result.reason, Some("point_context_unavailable"));
 }
+
+#[tokio::test(flavor = "multi_thread")]
+async fn historical_point_official_extension_reorder_after_child_load_is_ready_once() {
+    let f = Fixture::new();
+    let (connection, events) = point_parent(&f, "extension-reorder").await;
+    let result = pointed(&f, &connection, &events, "b").await;
+    assert_eq!(
+        result.status,
+        "ready",
+        "the official load persisted the same seven complete descriptors in another order: reason={:?}, requests={:?}",
+        result.reason,
+        trace(&f)
+            .iter()
+            .map(|v| v["method"].clone())
+            .collect::<Vec<_>>()
+    );
+    assert_eq!(result.child_session_id.as_deref(), Some("child"));
+    assert!(result.indexed);
+    assert!(result.session.is_some());
+    assert_eq!(count(&f, "session/fork"), 1);
+    assert_eq!(count(&f, "session/load"), 2);
+    assert_eq!(count(&f, "initialize"), 2);
+    assert_eq!(count(&f, "_goose/unstable/session/export"), 5);
+    let repeat = pointed(&f, &connection, &events, "b").await;
+    assert_eq!(repeat.status, "ready");
+    assert_eq!(repeat.child_session_id, result.child_session_id);
+    assert_eq!(count(&f, "session/fork"), 1);
+    assert_eq!(count(&f, "_goose/unstable/session/export"), 5);
+}

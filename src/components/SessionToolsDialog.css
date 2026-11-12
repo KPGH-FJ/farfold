@@ -90,3 +90,34 @@
   margin-block-end: 10px;
   overflow-wrap: anywhere;
 }
+
+/* Recovery shares the transcript's remaining space with the composer. Keep
+   its actions outside the one scrollable review, including in the dialog. */
+.session-tool-recovery {
+  min-height: 0;
+  max-height: min(40vh, 360px);
+  flex-shrink: 0;
+}
+.transcript .col > .session-tool-recovery {
+  max-height: min(100%, 40vh, 360px);
+}
+.session-tool-recovery-content {
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.session-tool-recovery-content > * {
+  flex-shrink: 0;
+}
+.session-tool-recovery .session-tools-items {
+  max-height: none;
+  overflow: visible;
+}
+.session-tool-recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex-shrink: 0;
+}

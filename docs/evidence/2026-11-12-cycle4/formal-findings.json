@@ -1,0 +1,52 @@
+{
+  "kind": "Cycle4ObservedFormalFindingsAndScopedRepairs",
+  "observations": [
+    "Installedbf9 recovery correctly identified8saved entries after one externally added owned HTTP endpoint; stored pending and original21messages/IDs/user choices remained. Inspecting did not reconnect the endpoint.",
+    "At1280x820 the long recovery list scrolled but confirmation actions were hidden behind the composer. No hidden automation click was used; left viaBack and normally quit, same pending retained.",
+    "Official load rewrote the7platform extension descriptors in different outer order. This predicts a false branch mismatch under strict array order; controlled production compare/SDK tests reproduced it. No second real fork was sent on the known-affectedbf9."
+  ],
+  "repairs": [
+    "Bound recovery content scrolling and keep its action area visible; no controller semantics changed. Controlled actual ThreadView/dialog,2sizes andWebKit/Chrome verified visible final address, actions and keyboard access.",
+    "Ignore only the documented outer order of enabled_extensions.v0.extensions. Preserve complete descriptors and duplicate multiplicity, inner array order, all other extension_data and parent fields, message order and exact model/recipe checks."
+  ],
+  "externalFixtureBoundary": "One external official addition succeeded and was read back, then strict fixture preservation failed because GOOSE_THINKING_EFFORT=off added request_params.thinking_effort to native model config. Exact diff was established using an unchanged owned model config with the same originalSHA. User choice was alreadyoff; no other model field changed. EOF exited0 withoutsignals. The fixture also incorrectly expected tools/list though it did not request it. Originalfailure preserved; no retry. This is not a product recovery success claim.",
+  "engineering": {
+    "allSevenPassed": true,
+    "productInputsUnchanged": true,
+    "frontendFiles": 765,
+    "frontendPassed": 10594,
+    "rustPassed": 2626,
+    "rustIgnored": 8
+  },
+  "formalStatus": "Same existing pending case retained for repaired installation and explicit review/accept/reopen/remove, followed by historicalpoint branch. Final actual outcomes will be recorded separately.",
+  "evidence": [
+    {
+      "path": "output/2026-11-12-cycle4/formal-final/review-before-layout-fix.json",
+      "sha256": "8961d085e365b4543e152cf58263e6ef1120c4c6bfd043a7055300bac8b8d397"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-final/external-observation-addendum.json",
+      "sha256": "6a45d1fd9dfe26fc41f559ad46fd9a6b55bc7da74c30539717775da70df79d32"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/extension-order-fix/source-freeze.json",
+      "sha256": "df84149331d78818f1dd0f2a39ba906ad061d1460b33f504e7117718f74fd788"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/extension-order-fix/review/independent-review.json",
+      "sha256": "c0307054f0424e70a6465da9241b5244d8dd7e633c7e0efb9a0b29ed0d8bab20"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/engineering-closeout/result.json",
+      "sha256": "82b2866b613ed351cb45a2f84ca045c1ea5142d5710090ae8864aa52720ea274"
+    },
+    {
+      "path": "output/2026-11-12-p41-external-recovery/layout/source-freeze.json",
+      "sha256": "1d61f6ecb7e760e0e814bb1220072dc61988ccf811ca7b839349947d82c70d09"
+    },
+    {
+      "path": "output/2026-11-12-p41-external-recovery/layout/validation-summary.json",
+      "sha256": "078ef0e78e85789bb523b85698f6a480ac92c1f461c53af5b302d743b90fa731"
+    }
+  ]
+}

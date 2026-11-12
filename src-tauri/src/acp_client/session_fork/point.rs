@@ -4,7 +4,7 @@ use super::*;
 use agent_client_protocol::{Agent, ConnectionTo};
 use serde::Deserialize;
 use serde_json::json;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 const EXPORT: &str = "_goose/unstable/session/export";
 const MAX_EXPORT_BYTES: usize = 8 * 1024 * 1024;
@@ -88,6 +88,58 @@ fn exported(value: Value, id: &str, cwd: &Path) -> Result<Value, &'static str> {
     Ok(data)
 }
 
+// Goose persists this one collection from ExtensionManager's HashMap::values.
+// Loading a valid child can change only its outer order. Compare full values
+// with multiplicity: nested argument/tool arrays and all other state stay exact.
+fn same_extension_data(left: &Value, right: &Value) -> bool {
+    if left == right {
+        return true;
+    }
+    const COLLECTION: &str = "/enabled_extensions.v0/extensions";
+    let (Some(left_values), Some(right_values)) = (
+        left.pointer(COLLECTION).and_then(Value::as_array),
+        right.pointer(COLLECTION).and_then(Value::as_array),
+    ) else {
+        return false;
+    };
+    if left_values.len() != right_values.len()
+        || !left_values.iter().chain(right_values).all(Value::is_object)
+    {
+        return false;
+    }
+    let mut other_state = left.clone();
+    *other_state
+        .pointer_mut(COLLECTION)
+        .expect("known collection") = json!(right_values);
+    if other_state != *right {
+        return false;
+    }
+    let counts = |values: &[Value]| {
+        let mut counts = HashMap::new();
+        for value in values {
+            *counts.entry(value.clone()).or_insert(0usize) += 1;
+        }
+        counts
+    };
+    counts(left_values) == counts(right_values)
+}
+
+fn same_parent(current: &Value, original: &Value) -> bool {
+    let (Some(current), Some(original)) = (current.as_object(), original.as_object()) else {
+        return false;
+    };
+    current.len() == original.len()
+        && current.iter().all(|(key, value)| {
+            if key == "extension_data" {
+                original
+                    .get(key)
+                    .is_some_and(|saved| same_extension_data(value, saved))
+            } else {
+                original.get(key) == Some(value)
+            }
+        })
+}
+
 impl Prepared {
     pub(super) fn select(
         value: Value,
@@ -137,11 +189,13 @@ impl Prepared {
     ) -> Result<(), &'static str> {
         let parent = exported(parent, parent_id, cwd)?;
         let child = exported(child, child_id, cwd)?;
-        if parent != self.original || child["conversation"].as_array() != Some(&self.prefix) {
+        if !same_parent(&parent, &self.original)
+            || child["conversation"].as_array() != Some(&self.prefix)
+            || !same_extension_data(&child["extension_data"], &self.original["extension_data"])
+        {
             return Err("point_mismatch");
         }
         for key in [
-            "extension_data",
             "provider_name",
             "model_config",
             "goose_mode",
