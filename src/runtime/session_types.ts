@@ -102,6 +102,7 @@ export type ThreadItem = (
       id: string;
       /** Official message identity, kept only in the current view. */
       messageId?: string;
+      historyForkPoint?: import("./history_fork_point").OwnedHistoryForkPoint;
       text: string;
       attachments: Attachment[];
       streaming: boolean;
@@ -111,6 +112,7 @@ export type ThreadItem = (
       kind: "agent";
       id: string;
       messageId?: string;
+      historyForkPoint?: import("./history_fork_point").OwnedHistoryForkPoint;
       text: string;
       attachments?: Attachment[];
       /** In-memory order observed while projecting this Agent message. */

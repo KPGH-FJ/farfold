@@ -1,8 +1,10 @@
 import type { OpenResult } from "./session_open_types";
+import type { HistoryForkPoint } from "./history_fork_point";
 
 /** Current connection declaration; never inferred from an Agent name. */
 export interface SessionOperations {
   forkCurrentContext: boolean;
+  forkHistoricalPoint?: boolean;
 }
 
 /** Memory-only delivery state, separate from the Agent's transcript. */
@@ -15,6 +17,7 @@ export interface ForkOperation {
   childSessionId?: string;
   childKey?: string;
   indexed: boolean;
+  historyPoint?: HistoryForkPoint;
   ownerEnded?: true;
   settled?: true;
   reason?: string;
@@ -33,10 +36,16 @@ export interface ForkResult {
   sourceReleased: boolean;
   session?: OpenResult | null;
   reason?: string | null;
+  historyPoint?: HistoryForkPoint | null;
 }
 
 export function sessionOperations(value: unknown): SessionOperations {
   return {
+    forkHistoricalPoint:
+      !!value &&
+      typeof value === "object" &&
+      "forkHistoricalPoint" in value &&
+      value.forkHistoricalPoint === true,
     forkCurrentContext:
       !!value &&
       typeof value === "object" &&

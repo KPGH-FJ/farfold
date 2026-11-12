@@ -31,7 +31,6 @@ import {
   useState,
   type ReactNode,
   type RefObject,
-  type MouseEventHandler,
 } from "react";
 import {
   ArrowDownIcon,
@@ -78,8 +77,9 @@ import {
   reportedArtifactCounts,
 } from "../runtime/reported_artifacts";
 import { useContentOwner } from "./useContentOwner";
-import { settledRoundResults, type RoundResult } from "../runtime/round_result";
-import { maintenanceLabel } from "../runtime/compaction_strings";
+import { settledRoundResults } from "../runtime/round_result";
+import { SettledLine } from "./SettledLine";
+import { historyForkSelection } from "../runtime/history_fork_point";
 import { COMPACTION } from "../runtime/compaction_strings";
 import {
   hasActiveCompaction,
@@ -136,88 +136,6 @@ function itemBlocks(items: ThreadItem[]): ThreadItem[][] {
   return out;
 }
 
-function SettledLine({
-  item,
-  artifactCount,
-  result,
-  onOpenArtifacts,
-}: {
-  item: Extract<ThreadItem, { kind: "settled" }>;
-  artifactCount: number;
-  result?: RoundResult;
-  onOpenArtifacts: MouseEventHandler<HTMLButtonElement>;
-}) {
-  const maintenance = maintenanceLabel(result);
-  const label =
-    item.status === "done"
-      ? (maintenance ??
-        (result === "none"
-          ? STRINGS.thread.noResult
-          : result === "pending"
-            ? STRINGS.thread.resultPending
-            : result === "tool"
-              ? STRINGS.thread.ended
-              : STRINGS.thread.done))
-      : item.status === "stopped"
-        ? STRINGS.thread.stopped
-        : item.status === "unknown"
-          ? STRINGS.thread.unknown
-          : STRINGS.thread.failed;
-  const cls =
-    item.status === "done"
-      ? result === "none"
-        ? "warn"
-        : result === "tool" || result === "pending" || maintenance
-          ? undefined
-          : "ok"
-      : item.status === "unknown"
-        ? "warn"
-        : "no";
-  const reasonLabel =
-    item.stopReason && item.stopReason !== "end_turn"
-      ? STRINGS.thread.stopReasonLabel(item.stopReason)
-      : null;
-  return (
-    <>
-      <div className="settled">
-        <span className={cls}>
-          {item.status === "done"
-            ? result === "none"
-              ? "! "
-              : result === "pending"
-                ? "… "
-                : result === "tool" || maintenance
-                  ? "· "
-                  : "✓ "
-            : item.status === "stopped"
-              ? "■ "
-              : "✗ "}
-          {label}
-        </span>
-        {reasonLabel && reasonLabel !== label && (
-          <span className="tick">{reasonLabel}</span>
-        )}
-        {item.error && <span className="no">{item.error}</span>}
-        <span>{timeLabel(item.time)}</span>
-      </div>
-      {item.status === "done" && result === "none" && (
-        <p className="completion-note" role="status">
-          {STRINGS.thread.noResultNote}
-        </p>
-      )}
-      {artifactCount > 0 && (
-        <button
-          type="button"
-          className="round-sum round-artifacts"
-          onClick={onOpenArtifacts}
-        >
-          {STRINGS.thread.roundArtifacts(artifactCount)}
-        </button>
-      )}
-    </>
-  );
-}
-
 /* ── 主组件 ── */
 
 export function ThreadView({
@@ -229,6 +147,7 @@ export function ThreadView({
   onRecover,
   onNew,
   onNewFromMessage,
+  onForkFromMessage,
   header,
   artifactReturnFocusRef,
   contentMode,
@@ -260,6 +179,7 @@ export function ThreadView({
   onOpened: (key: string) => void;
   onRecover?: (key: string) => Promise<void>;
   onNew?: () => void;
+  onForkFromMessage?: (item: ThreadItem) => void;
   /** W3-6：从一条用户消息开新对话（宿主负责同上下文预填与草稿冲突）。 */
   onNewFromMessage?: (item: {
     text: string;
@@ -956,6 +876,12 @@ export function ThreadView({
                         {(first.text || first.attachments.length > 0) && (
                           <UserMessageActions
                             text={first.text}
+                            onForkFromMessage={
+                              onForkFromMessage &&
+                              historyForkSelection(thread, first)
+                                ? () => onForkFromMessage(first)
+                                : undefined
+                            }
                             disabled={!active}
                             onEditResend={() => prepareResend(first)}
                             onSendAgain={() => prepareResend(first)}
@@ -991,17 +917,26 @@ export function ThreadView({
                         {agent?.name ?? thread.agentId} ·{" "}
                         {timeLabel(first.time)}
                         {first.text && <MessageCopyButton text={first.text} />}
-                        {onNewFromMessage &&
+                        {(onNewFromMessage || onForkFromMessage) &&
                           (first.text ||
                             (first.attachments?.length ?? 0) > 0) && (
                             <UserMessageActions
                               text={first.text}
+                              onForkFromMessage={
+                                onForkFromMessage &&
+                                historyForkSelection(thread, first)
+                                  ? () => onForkFromMessage(first)
+                                  : undefined
+                              }
                               disabled={!active}
-                              onNewFromMessage={() =>
-                                newFromMessage({
-                                  text: first.text,
-                                  attachments: first.attachments ?? [],
-                                })
+                              onNewFromMessage={
+                                onNewFromMessage
+                                  ? () =>
+                                      newFromMessage({
+                                        text: first.text,
+                                        attachments: first.attachments ?? [],
+                                      })
+                                  : undefined
                               }
                             />
                           )}

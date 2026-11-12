@@ -12,9 +12,10 @@ use agent_client_protocol::{Agent, ConnectionTo, UntypedMessage};
 pub(crate) struct ParentSnapshot {
     config: Value,
     title: Option<String>,
+    point: Option<point::Prepared>,
 }
 
-pub(crate) async fn preflight(
+async fn configuration_preflight(
     request: &ForkRequest,
     mut config: Value,
     store: &ConfigStore,
@@ -41,7 +42,30 @@ pub(crate) async fn preflight(
     Ok(ParentSnapshot {
         config,
         title: parent.title,
+        point: None,
     })
+}
+
+pub(crate) async fn preflight(
+    request: &ForkRequest,
+    config: Value,
+    store: &ConfigStore,
+    cx: &ConnectionTo<Agent>,
+    ops: &SessionOps,
+) -> Result<ParentSnapshot, AdmissionFailure> {
+    let mut snapshot = configuration_preflight(request, config, store)
+        .await
+        .map_err(|_| AdmissionFailure::rejected("configuration"))?;
+    if let Some(selected) = request.history_point.as_ref() {
+        let value = point::read(cx, ops, &request.parent)
+            .await
+            .map_err(AdmissionFailure::rejected)?;
+        snapshot.point = Some(
+            point::Prepared::select(value, &request.parent, &request.cwd, selected)
+                .map_err(AdmissionFailure::rejected)?,
+        );
+    }
+    Ok(snapshot)
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -55,7 +79,10 @@ pub(crate) fn start(
     store: ConfigStore,
     parent_events: SessionSink,
 ) -> Result<Arc<SourceFork>, String> {
-    if !capabilities(&request.connection, &request.parent).fork_current_context {
+    let capability = capabilities(&request.connection, &request.parent);
+    if (request.history_point.is_none() && !capability.fork_current_context)
+        || (request.history_point.is_some() && !capability.fork_historical_point)
+    {
         return Err("此对话暂不支持复制当前内容".into());
     }
     let work = ops.life.work()?;
@@ -73,8 +100,10 @@ pub(crate) fn start(
         source_released: false,
         session: None,
         reason: None,
+        history_point: request.history_point.clone(),
     };
     let state = Arc::new(SourceFork {
+        open_token: request.open_token.clone(),
         busy: AtomicBool::new(true),
         result: Mutex::new(result.clone()),
         updated: watch::channel(result).0,
@@ -104,6 +133,9 @@ pub(crate) fn start(
         params["additionalDirectories"] = serde_json::json!([]);
     }
     params["mcpServers"] = serde_json::json!([]);
+    if let Some(point) = snapshot.point.as_ref() {
+        params["_meta"] = serde_json::json!({"conversationBefore":point.cutoff});
+    }
     let wire = UntypedMessage::new(AGENT_METHOD_NAMES.session_fork, &params)
         .map_err(|_| "无法准备复制请求")?;
     state.publish("running");
@@ -244,6 +276,11 @@ async fn run(
             }
         })?;
     state.result.lock().expect("fork state").indexed = true;
+    if let Some(point) = snapshot.point.as_ref() {
+        let child = point::read(cx, &ops, &id).await?;
+        let parent = point::read(cx, &ops, &request.parent).await?;
+        point.verify(parent, child, &request.parent, &id, &request.cwd)?;
+    }
     state.publish("running");
     if !state.busy.load(Ordering::SeqCst) {
         return Err("owner_ended");
@@ -284,6 +321,13 @@ async fn run(
     .await
     .map_err(|_| "source_load_failed")?;
     opened.identity.delivered();
+    // Loading may repair an incomplete official conversation. Do not approve
+    // a historical point merely because the on-disk prefix matched before load.
+    if let Some(point) = snapshot.point.as_ref() {
+        let child = point::read(cx, &ops, &id).await?;
+        let parent = point::read(cx, &ops, &request.parent).await?;
+        point.verify(parent, child, &request.parent, &id, &request.cwd)?;
+    }
     if ops.life.state.load(Ordering::SeqCst) != super::super::lifecycle::READY {
         return Err("unavailable");
     }

@@ -74,7 +74,6 @@ pub(crate) mod restore_config;
 #[path = "session_tools/dispatch.rs"]
 mod tools_report;
 pub(crate) use list::list_sessions_on_connection;
-
 /// Frontend event sink: wraps `tauri::ipc::Channel`; tests pass a collector.
 pub(crate) type SessionSink = Arc<dyn Fn(Value) + Send + Sync>;
 
@@ -370,7 +369,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                 let file_input = super::reported_file_input::input_event(&params);
                 // Raw passthrough moves the owned envelope after passive reads.
                 // Unknown fields and `_meta` survive untouched.
-                (ctx.events)(params);
+                (ctx.events)(super::live_status::history_point(params, ctx.live_status));
                 if let Some(activity) = compaction_activity {
                     (ctx.events)(activity);
                 }
@@ -1028,6 +1027,7 @@ async fn session_pump(
                         command.reject_restore(error, RestoreConfirmCode::Opening);
                         continue;
                     }
+                    let Some(command) = fork::repeat(command,fork_state.as_ref()) else { continue; };
                     if fork_state.as_ref().is_some_and(|fork|fork.busy.load(Ordering::SeqCst)) && !matches!(command,SessionControl::Shutdown) {
                         command.reject_restore("复制结果尚未确认，请等待此操作结束".into(), RestoreConfirmCode::ForkPending);
                         continue;
@@ -1051,8 +1051,8 @@ async fn session_pump(
                         let _=result.send(Err(super::session_fork::AdmissionFailure::rejected(reason)));continue;
                     }
                     let saved=model_guard.record();
-                    let snapshot=match super::session_fork::preflight(&request,saved.clone(),&config_store).await {
-                        Ok(value)=>value,Err(_)=>{let _=result.send(Err(super::session_fork::AdmissionFailure::rejected("configuration")));continue;}
+                    let snapshot=match super::session_fork::preflight(&request,saved.clone(),&config_store,&cx,&ops).await {
+                        Ok(value)=>value,Err(error)=>{let _=result.send(Err(error));continue;}
                     };
                     restore_config::drain(&mut inbox,&mut ctx,&mut configuration,&mut models,&mut model_guard,&mut permission_guard,&mut opening,&mut mutation);
                     if !fork_execution_known || !fork::idle(&ctx,prompt_in_flight,mutation.is_some(),&model_guard,&permission_guard) || model_guard.record()!=saved

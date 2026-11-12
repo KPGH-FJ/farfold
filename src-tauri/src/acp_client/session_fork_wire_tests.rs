@@ -9,6 +9,9 @@ use std::sync::{
 #[path = "history_delivery_fork_manager_tests.rs"]
 mod history_delivery_tests;
 
+#[path = "session_fork/point_wire_tests.rs"]
+mod point_wire_tests;
+
 const FORK_PEER: &str = r#"
 import sys,json,os,time,threading,pathlib
 lock=threading.Lock(); active=set();answers={}
@@ -121,6 +124,32 @@ async fn begin(f: &Fixture, connection: &str, events: &Events) -> Arc<SourceFork
         )
         .await
         .unwrap()
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn fork_completed_operation_id_returns_original_without_a_second_official_mutation() {
+    let f = Fixture::new();
+    let (connection, events) = parent(&f).await;
+    let first = begin(&f, &connection, &events).await;
+    let result = first.wait(Duration::from_secs(10)).await;
+    assert_eq!(result.status, "ready");
+    until(|| {
+        f.manager
+            .opening_sessions
+            .reserve(&f.row.id, &f.cwd, "parent")
+            .is_ok()
+    })
+    .await;
+    let second = begin(&f, &connection, &events).await;
+    let same = Arc::ptr_eq(&first, &second);
+    if !same {
+        let _ = second.wait(Duration::from_secs(10)).await;
+    }
+    assert!(
+        same,
+        "the same operation ID must retain the original result"
+    );
+    assert_eq!(count(&f, "session/fork"), 1);
 }
 
 #[tokio::test(flavor = "multi_thread")]

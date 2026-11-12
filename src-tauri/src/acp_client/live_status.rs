@@ -201,6 +201,15 @@ pub(crate) fn notification(message: UntypedMessage, owner: &Owner) -> Value {
     }
 }
 
+pub(crate) fn history_point(params: Value, owner: &Owner) -> Value {
+    super::session_fork::point::present(
+        params,
+        &owner.connection,
+        &owner.session,
+        owner.metadata_owner(),
+    )
+}
+
 #[cfg(test)]
 mod tests;
 #[cfg(test)]

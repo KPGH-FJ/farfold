@@ -13,6 +13,7 @@ import { canDrain } from "./queue";
 import { configChangeBusy } from "./protected_config";
 import { sessionForkControl } from "./session_fork_ui";
 import { openingInquiries } from "./opening_inquiries";
+import { SESSION_FORK_STRINGS as FORK } from "./session_fork_strings";
 
 const access = threads as unknown as {
   applyChannelEvent(key: string, event: unknown, live?: boolean): void;
@@ -74,6 +75,7 @@ function response(
     childSessionId: `child-${args.parentSessionId}`,
     indexed: true,
     sourceReleased: true,
+    ...(args.historyPoint ? { historyPoint: args.historyPoint } : {}),
     session: {
       nativeSessionId: `child-${args.parentSessionId}`,
       connectionId: `independent-${args.parentSessionId}`,
@@ -102,6 +104,104 @@ afterEach(() => {
   vi.restoreAllMocks();
   vi.useRealTimers();
   h.invoke.mockReset();
+});
+
+function historicalParent() {
+  const parent = seed();
+  parent.sessionOperations = {
+    forkCurrentContext: true,
+    forkHistoricalPoint: true,
+  };
+  const item = parent.items[0];
+  if (item.kind !== "agent") throw new Error("fixture");
+  item.messageId = "official-history-point";
+  item.historyForkPoint = {
+    messageId: item.messageId,
+    connectionId: parent.connectionId!,
+  };
+  return { parent, point: { messageId: item.messageId }, item };
+}
+it("reports a known child truthfully when its complete-history verification failed", () => {
+  const parent = seed();
+  parent.forkOperation = {
+    operationId: "known-fork",
+    connectionId: parent.connectionId!,
+    parentSessionId: parent.nativeSessionId,
+    status: "created_unavailable",
+    sourceReleased: true,
+    childSessionId: "actual-child",
+    indexed: true,
+    reason: "point_read_failed",
+    historyPoint: { messageId: "official-point" },
+  };
+  const control = sessionForkControl(parent, vi.fn());
+  expect(control?.child?.nativeSessionId).toBe("actual-child");
+  expect(control?.message).toBe(FORK.pointMismatch);
+  expect(control?.message).not.toContain("未创建");
+  expect(control?.prepareNew).toBeUndefined();
+});
+it("forks the reviewed official historical point through the existing single operation", async () => {
+  const { parent, point } = historicalParent();
+  const before = structuredClone(parent.items);
+  const result = await threads.forkCurrent(parent.key, point);
+  expect(result?.nativeSessionId).toBe(`child-${parent.nativeSessionId}`);
+  const calls = h.invoke.mock.calls.filter(
+    ([method]) => method === "session_fork_current",
+  );
+  expect(calls).toHaveLength(1);
+  expect(calls[0][1].historyPoint).toEqual(point);
+  expect(parent.forkOperation?.historyPoint).toEqual(point);
+  expect(parent.items).toEqual(before);
+});
+it.each(["missing", "foreign", "duplicate", "streaming", "capability"])(
+  "does not dispatch an unqualified %s historical point",
+  async (kind) => {
+    const { parent, point, item } = historicalParent();
+    if (kind === "missing") item.historyForkPoint = undefined;
+    if (kind === "foreign") item.historyForkPoint!.connectionId = "different";
+    if (kind === "duplicate") parent.items.push({ ...item, id: "duplicate" });
+    if (kind === "streaming") item.streaming = true;
+    if (kind === "capability")
+      parent.sessionOperations!.forkHistoricalPoint = false;
+    expect(await threads.forkCurrent(parent.key, point)).toBeUndefined();
+    expect(
+      h.invoke.mock.calls.filter(
+        ([method]) => method === "session_fork_current",
+      ),
+    ).toHaveLength(0);
+  },
+);
+it("refuses a current-copy or different-point result for a historical request", async () => {
+  const { parent, point } = historicalParent();
+  h.invoke.mockImplementation(async (method, args) =>
+    method === "session_fork_current"
+      ? { ...ready(args), historyPoint: { messageId: "different-point" } }
+      : method === "settings_get"
+        ? null
+        : [],
+  );
+  expect(await threads.forkCurrent(parent.key, point)).toBeUndefined();
+  expect(parent.forkOperation?.status).toBe("unknown");
+  expect(
+    threads.thread(
+      `${parent.agentId}:${parent.cwd}:child-${parent.nativeSessionId}`,
+    ),
+  ).toBeUndefined();
+  expect(await threads.forkCurrent(parent.key, point)).toBeUndefined();
+  expect(
+    h.invoke.mock.calls.filter(([method]) => method === "session_fork_current"),
+  ).toHaveLength(1);
+});
+it("rechecks the exact point after saving drafts, before the official request", async () => {
+  const { parent, point, item } = historicalParent();
+  vi.mocked(draftPersistence.flush).mockImplementationOnce(async () => {
+    item.historyForkPoint = undefined;
+  });
+  expect(await threads.forkCurrent(parent.key, point)).toBeUndefined();
+  expect(parent.forkOperation?.status).toBe("rejected");
+  expect(
+    h.invoke.mock.calls.filter(([method]) => method === "session_fork_current"),
+  ).toHaveLength(0);
 });
 
 it("loads actual child history once, preserving the entire parent input and projection", async () => {

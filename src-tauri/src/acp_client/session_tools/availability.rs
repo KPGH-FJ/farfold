@@ -9,6 +9,7 @@ struct Witness {
 }
 pub(crate) struct Availability {
     available: AtomicBool,
+    historical_fork: AtomicBool,
     configuration_available: AtomicBool,
     management_available: AtomicBool,
     // Only actual outstanding SDK requests. No history, persisted identity or
@@ -22,6 +23,7 @@ impl Availability {
     fn with_available(available: bool) -> Arc<Self> {
         Arc::new(Self {
             available: AtomicBool::new(available),
+            historical_fork: AtomicBool::new(available),
             configuration_available: AtomicBool::new(available),
             management_available: AtomicBool::new(available),
             witnesses: Mutex::new(Vec::new()),
@@ -42,6 +44,9 @@ impl Availability {
     }
     pub(super) fn supports(&self, query: Query<'_>) -> bool {
         self.flag(query).load(Ordering::SeqCst)
+    }
+    pub(crate) fn historical_fork_supported(&self) -> bool {
+        self.historical_fork.load(Ordering::SeqCst)
     }
     pub(crate) fn management_supported(&self) -> bool {
         self.management_available.load(Ordering::SeqCst)

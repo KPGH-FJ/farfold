@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { DotsThreeIcon } from "@phosphor-icons/react";
 import { WorkspaceActionMenu } from "./WorkspaceActionMenu";
 import { THREAD_VIEW_STRINGS as T } from "../runtime/thread_view_strings";
+import { SESSION_FORK_STRINGS as F } from "../runtime/session_fork_strings";
 
 /**
  * W3-6 用户消息操作菜单：复制、编辑后追加、准备再发、从这里开新对话。
@@ -14,6 +15,7 @@ export function UserMessageActions({
   onEditResend,
   onSendAgain,
   onNewFromMessage,
+  onForkFromMessage,
 }: {
   text: string;
   disabled?: boolean;
@@ -23,13 +25,16 @@ export function UserMessageActions({
   onSendAgain?: () => void;
   /** Seed the new-conversation draft with this message and open it. */
   onNewFromMessage?: () => void;
+  /** Review a verified official historical point; never dispatch from this menu. */
+  onForkFromMessage?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const [copyError, setCopyError] = useState(false);
   const enabled = useRef(!disabled);
   enabled.current = !disabled;
   const anchor = useRef<HTMLButtonElement>(null);
-  if (!onEditResend && !onSendAgain && !onNewFromMessage) return null;
+  if (!onEditResend && !onSendAgain && !onNewFromMessage && !onForkFromMessage)
+    return null;
   const close = () => setOpen(false);
   return (
     <span className="message-actions" data-copy-exclude>
@@ -108,6 +113,19 @@ export function UserMessageActions({
                 }}
               >
                 {T.newFromHere}
+              </button>
+            )}
+            {onForkFromMessage && (
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => {
+                  if (!enabled.current) return;
+                  close();
+                  onForkFromMessage();
+                }}
+              >
+                {F.pointTitle}
               </button>
             )}
             {copyError && <p role="alert">{T.copyFailed}</p>}

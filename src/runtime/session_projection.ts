@@ -25,6 +25,7 @@ import { connectionCloseReason } from "./connection_close";
 import { STRINGS } from "./strings";
 import { forgetSessionIdentity } from "./session_identity_types";
 import { reportedTokens, reportedUsage } from "./session_usage";
+import { forgetSessionCumulativeTokens } from "./session_usage_notification";
 import {
   normalizeMessageAttachment,
   sameOfficialAttachment,
@@ -32,6 +33,7 @@ import {
 import { streamTailItem } from "./session_streams";
 import { appendMessageContentPart } from "./message_content_order";
 import { retainReportedDetails } from "./reported_details";
+import { historyForkHint } from "./history_fork_point";
 import type {
   ConfigChoice,
   ConfigOptionView,
@@ -683,7 +685,21 @@ export function applyUpdate(
   let projectedTool: ToolCallView | undefined;
   if (isKnownAsyncTaskUpdate(s, update, envelope))
     pushRaw(s, update, "asyncTaskUpdate");
-  else projectedTool = applyUpdateContent(s, update);
+  else {
+    const point = historyForkHint(s, update, envelope);
+    projectedTool = applyUpdateContent(
+      s,
+      point ? { ...u, messageId: point.messageId } : update,
+    );
+    const last = lastItem(s);
+    if (
+      point &&
+      last &&
+      (last.kind === "user" || last.kind === "agent") &&
+      last.messageId === point.messageId
+    )
+      last.historyForkPoint = point;
+  }
   retainReportedDetails(s, update, envelope, projectedTool);
 }
 
@@ -803,6 +819,7 @@ export function applyTurnEnd(
   event: CompletionEvent,
 ): RoundResult {
   s.sessionTokens = reportedTokens(event.usage);
+  if (s.sessionTokens) forgetSessionCumulativeTokens(s);
   s.running = false;
   s.stopping = false;
   s.stopUnconfirmed = false;

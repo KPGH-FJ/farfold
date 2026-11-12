@@ -44,6 +44,7 @@ import { stopAsyncTask } from "./async_task_actions";
 import { hasActiveCompaction } from "./compaction_activity";
 import { hasActiveFork } from "./session_fork_activity";
 import { SessionForks } from "./session_fork";
+import type { HistoryForkPoint } from "./history_fork_point";
 import { threadNeedsAttention } from "./thread_attention";
 import { unfinishedStoppedToolCallIds } from "./stopped_tool_results";
 import {
@@ -242,10 +243,10 @@ class ThreadsStore {
     emit: (key) => this.emit(key),
     refreshIndex: () => this.refreshIndex(),
   });
-  forkCurrent(key: string): Promise<ThreadState | undefined> {
+  forkCurrent(key: string, historyPoint?: HistoryForkPoint) {
     return this.deletions.has(key)
       ? Promise.resolve(undefined)
-      : this.forks.start(key);
+      : this.forks.start(key, historyPoint);
   }
   prepareNewFork(key: string, operationId: string): boolean {
     return !this.deletions.has(key) && this.forks.prepareNew(key, operationId);

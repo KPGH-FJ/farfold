@@ -34,6 +34,7 @@ vi.mock("react", async (original) => ({
 import { UserMessageActions } from "./UserMessageActions";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { THREAD_VIEW_STRINGS as T } from "../runtime/thread_view_strings";
+import { SESSION_FORK_STRINGS as F } from "../runtime/session_fork_strings";
 
 type Props = ComponentProps<typeof UserMessageActions>;
 const render = (props: Props) => {
@@ -67,6 +68,24 @@ afterEach(() => {
 
 it("renders nothing when no action is wired", () => {
   expect(UserMessageActions({ text: "hi" })).toBeNull();
+});
+
+it("keeps historical context branching distinct from a single-message new draft", () => {
+  const review = vi.fn();
+  const draft = vi.fn();
+  const props = {
+    text: "Selected message",
+    onForkFromMessage: review,
+    onNewFromMessage: draft,
+  };
+  click(button(render(props), T.messageActions)!);
+  const tree = render(props);
+  expect(button(tree, T.newFromHere)).toBeDefined();
+  expect(button(tree, F.pointTitle)).toBeDefined();
+  click(button(tree, F.pointTitle)!);
+  expect(review).toHaveBeenCalledOnce();
+  expect(draft).not.toHaveBeenCalled();
+  expect(button(render(props), F.pointTitle)).toBeUndefined();
 });
 
 it("offers copy, edit-resend, send-again, and new-conversation in one menu", () => {

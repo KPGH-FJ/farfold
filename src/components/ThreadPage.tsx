@@ -40,6 +40,10 @@ import { SessionForkDialog } from "./SessionForkDialog";
 import { SessionToolsDialog } from "./SessionToolsDialog";
 import { SESSION_TOOLS_STRINGS as TOOLS } from "../runtime/session_tools_strings";
 import { sessionForkControl } from "../runtime/session_fork_ui";
+import {
+  historyForkSelection,
+  type HistoryForkSelection,
+} from "../runtime/history_fork_point";
 import { SESSION_FORK_STRINGS as FORK } from "../runtime/session_fork_strings";
 import { MoveConversationsDialog } from "./MoveConversationsDialog";
 import { DeleteConversationsDialog } from "./DeleteConversationsDialog";
@@ -206,14 +210,19 @@ export function ThreadPage({
   useEffect(() => {
     if (toolsOwner && !toolsVisible) setToolsOwner(null);
   }, [toolsOwner, toolsVisible]);
-  const forkControl = sessionForkControl(thread, onOpened);
   const [forkReview, setForkReview] = useState<{
     owner: object;
     thread: ThreadState;
     connectionId: string | undefined;
     isCurrent: () => boolean;
     retired: boolean;
+    selection?: HistoryForkSelection;
   } | null>(null);
+  const forkControl = sessionForkControl(
+    thread,
+    onOpened,
+    forkReview && !forkReview.retired ? forkReview.selection : undefined,
+  );
   if (
     forkReview &&
     (!active ||
@@ -409,6 +418,27 @@ export function ThreadPage({
             agents={agents.cards}
             onGoSettings={onGoSettings}
             onOpened={onOpened}
+            onForkFromMessage={(item) => {
+              if (!active || !ownsContent() || forkVisible) return;
+              const selection = historyForkSelection(thread, item);
+              if (!selection) return;
+              let control = sessionForkControl(thread, onOpened, selection);
+              if (!control || !control.isCurrent()) return;
+              if (control.prepareNew) {
+                control.prepareNew();
+                control = sessionForkControl(thread, onOpened, selection);
+              }
+              if (!control || !control.isCurrent()) return;
+              if (forkReview) forkReview.retired = true;
+              setForkReview({
+                owner: control.owner,
+                thread,
+                connectionId: thread.connectionId,
+                isCurrent: ownsContent,
+                retired: false,
+                ...(control.phase === "idle" ? { selection } : {}),
+              });
+            }}
             onRecover={onRecover}
             onNew={onNew}
             onNewFromMessage={
@@ -715,7 +745,11 @@ export function ThreadPage({
                       forkReview.retired = true;
                       setForkReview(null);
                       forkControl.prepareNew?.();
-                      const next = sessionForkControl(thread, onOpened);
+                      const next = sessionForkControl(
+                        thread,
+                        onOpened,
+                        forkReview.selection,
+                      );
                       if (
                         !forkReview.isCurrent() ||
                         forkReview.connectionId !== thread.connectionId ||
@@ -731,6 +765,7 @@ export function ThreadPage({
                         connectionId: thread.connectionId,
                         isCurrent: forkReview.isCurrent,
                         retired: false,
+                        selection: forkReview.selection,
                       });
                     },
                   }

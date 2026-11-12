@@ -152,6 +152,59 @@ it("has no copy entry without the current official capability descriptor", () =>
   expect(dialog()).toBeUndefined();
 });
 
+function pointAction() {
+  const view = nodes(render()).find((node) => node.type === ThreadView)!;
+  return view.props.onForkFromMessage as (
+    item: ThreadState["items"][number],
+  ) => void;
+}
+it("opens a message point review without dispatch and retires it on navigation", () => {
+  h.thread!.sessionOperations = {
+    forkCurrentContext: true,
+    forkHistoricalPoint: true,
+  };
+  const item: ThreadState["items"][number] = {
+    kind: "agent",
+    id: "local",
+    messageId: "official",
+    text: "Earlier",
+    streaming: false,
+    time: 0,
+    historyForkPoint: { connectionId: "connection-a", messageId: "official" },
+  };
+  h.thread!.items.push(item);
+  const start = h.control!.start;
+  const select = pointAction();
+  select(item);
+  expect(dialog()).toBeDefined();
+  expect(start).not.toHaveBeenCalled();
+  active = false;
+  render();
+  active = true;
+  render();
+  select(item);
+  expect(dialog()).toBeUndefined();
+  expect(start).not.toHaveBeenCalled();
+});
+it("does not use local message IDs or unqualified metadata as a historical point", () => {
+  h.thread!.sessionOperations = {
+    forkCurrentContext: true,
+    forkHistoricalPoint: true,
+  };
+  const item: ThreadState["items"][number] = {
+    kind: "agent",
+    id: "local",
+    messageId: "official",
+    text: "Earlier",
+    streaming: false,
+    time: 0,
+  };
+  h.thread!.items.push(item);
+  pointAction()(item);
+  expect(dialog()).toBeUndefined();
+  expect(h.control!.start).not.toHaveBeenCalled();
+});
+
 it("opens a confirmation without dispatch and suppresses underlying interaction", () => {
   const review = openReview();
   expect(review.props.control).toBe(h.control);

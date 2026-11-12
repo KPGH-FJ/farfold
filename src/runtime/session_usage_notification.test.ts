@@ -1,8 +1,12 @@
 import { expect, it, vi } from "vitest";
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn(), Channel: class {} }));
-import { receiveSessionUsage } from "./session_usage_notification";
+import {
+  getSessionCumulativeTokens,
+  receiveSessionUsage,
+} from "./session_usage_notification";
 import { freshThreadState } from "./session_projection";
 import { applySessionEvent } from "./session_event_projection";
+import { SessionOpenReplay } from "./session_open_replay";
 
 function state() {
   const s = freshThreadState("fixture:/p:owned", "fixture", "/p", "owned");
@@ -41,6 +45,10 @@ it("projects context metadata without creating a message or changing work guards
   expect(s.queuePaused).toBe("stopped");
   expect(s.modelDrift).toBe(true);
   expect(s.sessionTokens).toBeNull();
+  expect(getSessionCumulativeTokens(s)).toEqual({
+    inputTokens: 0,
+    outputTokens: 0,
+  });
 });
 it.each([
   "foreign session",
@@ -71,4 +79,88 @@ it("requires the exact active delivery owner", () => {
   s.connectionLost = true;
   expect(receiveSessionUsage(s, event())).toBe(false);
   expect(s.usage).toBeNull();
+});
+
+it.each([
+  null,
+  undefined,
+  -1,
+  0.5,
+  "10",
+  Infinity,
+  Number.MAX_SAFE_INTEGER + 1,
+])(
+  "does not invent cumulative counters from malformed or absent input %s",
+  (value) => {
+    const s = state();
+    const e: any = event();
+    e.presentation.usage.accumulatedInputTokens = value;
+    expect(receiveSessionUsage(s, e)).toBe(false);
+    expect(getSessionCumulativeTokens(s)).toBeNull();
+  },
+);
+
+it("retains the original report, does not mutate its numbers, and does not revive a retired connection's counters", () => {
+  const s = state();
+  const e = event();
+  e.presentation.usage.accumulatedInputTokens = 123;
+  e.presentation.usage.accumulatedOutputTokens = 456;
+  const before = structuredClone(e);
+  expect(receiveSessionUsage(s, e)).toBe(true);
+  expect(e).toEqual(before);
+  expect(getSessionCumulativeTokens(s)).toEqual({
+    inputTokens: 123,
+    outputTokens: 456,
+  });
+  s.connectionId = "replacement";
+  expect(getSessionCumulativeTokens(s)).toBeNull();
+  s.connectionId = "owned-connection";
+  expect(getSessionCumulativeTokens(s)).toBeNull();
+  expect(s.reportedDetails).toMatchObject({ "/usage_update/params": e.params });
+});
+
+it("keeps the passive counters when an accepted history open publishes its exact private view", () => {
+  const s = state();
+  let current = true;
+  const opening = new SessionOpenReplay(
+    { agentId: s.agentId, cwd: s.cwd, nativeSessionId: s.nativeSessionId },
+    undefined,
+    undefined,
+    "00000000-0000-4000-8000-000000000002",
+    () => current,
+  );
+  opening.push({
+    kind: "sessionOpening",
+    openToken: opening.token,
+    cwd: s.cwd,
+    sessionId: s.nativeSessionId,
+    connectionId: s.connectionId,
+  });
+  opening.push(event());
+  opening.receiveMarker({
+    kind: "session_history_complete",
+    openToken: opening.token,
+  });
+  const published = opening.accept(
+    {
+      cwd: s.cwd,
+      nativeSessionId: s.nativeSessionId,
+      connectionId: s.connectionId,
+      resumed: true,
+      historyEmptyConfirmed: true,
+      configOptions: [],
+      warnings: [],
+      service: { id: "service", fingerprint: "selected", model: "kept" },
+      configCheck: { status: "ready", current: { choices: [] }, issues: [] },
+    },
+    null,
+  );
+  expect(getSessionCumulativeTokens(published)).toEqual({
+    inputTokens: 0,
+    outputTokens: 0,
+  });
+  expect(published.items).toEqual([]);
+  expect(published.running).toBe(false);
+  current = false;
+  expect(opening.push(event())).toBe("discarded");
 });

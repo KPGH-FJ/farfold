@@ -1,6 +1,7 @@
 import type { ThreadState } from "../runtime/session_types";
 import { contextPercent, USAGE_STRINGS as U } from "../runtime/session_usage";
 import { getMessageUsage } from "../runtime/message_usage";
+import { getSessionCumulativeTokens } from "../runtime/session_usage_notification";
 import { MessageUsageDetails } from "./MessageUsageDetails";
 import { WorkspacePopover } from "./WorkspacePopover";
 import "../thread-usage.css";
@@ -19,14 +20,17 @@ const priorReport = (thread: ThreadState) =>
 
 export function ThreadUsageDetails({ thread }: { thread: ThreadState }) {
   const usage = thread.usage;
-  const total = thread.sessionTokens;
+  const cumulative = getSessionCumulativeTokens(thread);
+  // These are separate official reports. Never attach older totals/cache values
+  // to a newer pair of counters that did not report those fields.
+  const total = cumulative ? null : thread.sessionTokens;
   const message = getMessageUsage(thread);
   return (
     <div className="thread-usage-details">
       {priorReport(thread) && (
         <p role="status">{thread.connectionLost ? U.disconnected : U.stale}</p>
       )}
-      {!usage && !total && !message && <p>{U.empty}</p>}
+      {!usage && !total && !cumulative && !message && <p>{U.empty}</p>}
       <dl>
         <dt>{U.context}</dt>
         <dd>{tokens(usage?.used)}</dd>
@@ -40,12 +44,12 @@ export function ThreadUsageDetails({ thread }: { thread: ThreadState }) {
         </dd>
         <dt>{U.total}</dt>
         <dd>{tokens(total?.totalTokens)}</dd>
+        <dt>{U.accumulatedInput}</dt>
+        <dd>{tokens(cumulative?.inputTokens ?? total?.inputTokens)}</dd>
+        <dt>{U.accumulatedOutput}</dt>
+        <dd>{tokens(cumulative?.outputTokens ?? total?.outputTokens)}</dd>
         {total && (
           <>
-            <dt>{U.input}</dt>
-            <dd>{tokens(total.inputTokens)}</dd>
-            <dt>{U.output}</dt>
-            <dd>{tokens(total.outputTokens)}</dd>
             {total.thoughtTokens != null && (
               <>
                 <dt>{U.thought}</dt>

@@ -65,7 +65,7 @@ export function SessionForkDialog({
     if (owns()) latest.current.onClose();
   };
   const status = {
-    idle: S.scope,
+    idle: control.historyPoint ? S.pointScope : S.scope,
     pending: S.pending,
     unknown: S.unknown,
     "created-unavailable": S.unavailable,
@@ -78,7 +78,7 @@ export function SessionForkDialog({
     (control.phase === "created-unavailable" || control.phase === "unknown");
   return (
     <WorkspaceDialog
-      title={S.title}
+      title={control.historyPoint ? S.pointTitle : S.title}
       onClose={close}
       returnFocusRef={returnFocusRef}
     >
@@ -86,7 +86,10 @@ export function SessionForkDialog({
         <strong role="status">{status}</strong>
         {control.phase === "idle" && (
           <>
-            <p>{S.files}</p>
+            {control.historyPoint?.preview && (
+              <p aria-label={S.pointPreview}>{control.historyPoint.preview}</p>
+            )}
+            <p>{control.historyPoint ? S.pointFiles : S.files}</p>
           </>
         )}
         {(control.phase === "idle" || control.phase === "ready") && (
@@ -120,7 +123,7 @@ export function SessionForkDialog({
             disabled={disabled}
             onClick={() => dispatch("start")}
           >
-            {S.confirm}
+            {control.historyPoint ? S.pointConfirm : S.confirm}
           </button>
         )}
         {continuing && (
