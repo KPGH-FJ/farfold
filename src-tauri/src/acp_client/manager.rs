@@ -537,10 +537,7 @@ impl AcpManager {
         let browser_launch = super::browser_capability::reviewed_launch(agent);
         let process = ProcessControl::new(diagnostics.clone())
             .with_prompt_admission(self.prompt_admission.clone())
-            .review_mcp_launch(matches!(
-                browser_launch,
-                Some(super::browser_capability::LaunchKind::Node)
-            ));
+            .review_mcp_launch(browser_launch);
         let sessions: SessionMap = SessionMap::default();
         let sessions_for_task = sessions.clone();
         let sessions_for_cleanup = sessions.clone();

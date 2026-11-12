@@ -16,6 +16,9 @@ use std::{
 
 const SYNTHETIC_CAP: &str = "synthetic-transient-acp-fixture-permission";
 
+#[path = "transient_mcp_opencode_tests.rs"]
+mod opencode_tests;
+
 // The peer emits only sanitized request-shape receipts. Error mode intentionally
 // echoes the synthetic credential on the ACP wire to exercise host redaction;
 // assertions must never print that credential or a full request/error value.
@@ -249,13 +252,17 @@ impl Drop for Fixture {
 }
 
 async fn until(mut predicate: impl FnMut() -> bool) {
+    until_at("existing lifecycle condition", &mut predicate).await;
+}
+
+async fn until_at(stage: &str, mut predicate: impl FnMut() -> bool) {
     tokio::time::timeout(Duration::from_secs(10), async {
         while !predicate() {
             tokio::time::sleep(Duration::from_millis(10)).await;
         }
     })
     .await
-    .expect("controlled peer did not reach the expected lifecycle point");
+    .unwrap_or_else(|error| panic!("controlled peer did not reach {stage}: {error:?}"));
 }
 
 fn check_receipt(proof: &Value, method: &str) {
@@ -435,13 +442,16 @@ async fn transient_mcp_abandoned_real_open_revokes_after_late_reply_cleanup() {
     let owner = Arc::new(OwnerWitness::default());
     let mut opening = Box::pin(f.open(None, owner.clone()));
     tokio::select! {
-        _ = until(|| f.cwd.join("request-entered").exists()) => {},
+        _ = until_at("abandoned open request reached peer", || f.cwd.join("request-entered").exists()) => {},
         _ = &mut opening => panic!("controlled opening completed before the peer release"),
     }
     check_receipt(&f.receipt(), "session/new");
     drop(opening);
     std::fs::write(f.cwd.join("release-reply"), "release").unwrap();
-    until(|| owner.revoked.load(Ordering::Acquire) == 1).await;
+    until_at("abandoned open owner revoked after released reply", || {
+        owner.revoked.load(Ordering::Acquire) == 1
+    })
+    .await;
     let connection = f.manager.lock().unwrap().values().next().unwrap().clone();
     assert!(
         connection.sessions.lock().unwrap().is_empty(),

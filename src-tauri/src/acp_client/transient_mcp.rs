@@ -52,6 +52,9 @@ pub(crate) fn launch_rejection(
     let Some(facts) = facts else {
         return Some(McpUnavailable::LaunchUnconfirmed);
     };
+    if facts.kind != launch {
+        return Some(McpUnavailable::LaunchUnconfirmed);
+    }
     if !facts.logs_safe {
         return Some(McpUnavailable::UnsafeLogging);
     }

@@ -751,15 +751,40 @@ impl crate::acp_client::transient_mcp::SessionMcpOwner for ForkOffer {
 }
 #[tokio::test(flavor = "multi_thread")]
 async fn fork_mcp_checks_actual_owner_admission_without_copying_offer() {
+    fork_mcp_owner_admission(false).await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn opencode_fork_mcp_preview_is_closed_before_independent_target_without_offer() {
+    fork_mcp_owner_admission(true).await;
+}
+
+async fn fork_mcp_owner_admission(opencode: bool) {
     let mut f = Fixture::new();
     // The same controlled peer under an allowed executable launch shape. This
     // exercises offer admission, never an installed Agent or real browser tool.
-    f.row.id = "registry:codex-acp".into();
-    f.row.source = "registry".into();
-    f.row.command = crate::platform_tests::python_peer(&f.cwd, "codex-acp", FORK_PEER)
-        .to_string_lossy()
-        .into_owned();
+    f.row.id = if opencode {
+        "opencode"
+    } else {
+        "registry:codex-acp"
+    }
+    .into();
+    f.row.source = if opencode { "discovered" } else { "registry" }.into();
+    f.row.command = crate::platform_tests::python_peer(
+        &f.cwd,
+        if opencode { "opencode" } else { "codex-acp" },
+        FORK_PEER,
+    )
+    .to_string_lossy()
+    .into_owned();
     f.row.args.clear();
+    if opencode {
+        f.row.args.push("acp".into());
+        f.row.env.extend([
+            ("OPENCODE_AUTO_HEAP_SNAPSHOT".into(), "false".into()),
+            ("OTEL_EXPORTER_OTLP_ENDPOINT".into(), "".into()),
+        ]);
+    }
     f.store.insert_agent(&f.row).unwrap();
     let owner = Arc::new(ForkOffer(AtomicBool::new(false)));
     let offer = crate::acp_client::transient_mcp::TransientMcpOpen::new(
@@ -822,10 +847,30 @@ async fn fork_mcp_checks_actual_owner_admission_without_copying_offer() {
     assert_eq!(result.reason, Some("browser_shared"));
     assert_eq!(count(&f, "session/fork"), 0);
     owner.0.store(true, Ordering::SeqCst);
-    let result = begin(&f, &parent.connection_id, &events)
-        .await
-        .wait(Duration::from_secs(5))
-        .await;
+    if opencode {
+        std::fs::write(f.cwd.join("hold-source-load"), "").unwrap();
+    }
+    let pending = begin(&f, &parent.connection_id, &events).await;
+    if opencode {
+        until(|| count(&f, "session/load") == 1).await;
+        let prompts = count(&f, "session/prompt");
+        let refused = f
+            .manager
+            .session_prompt(
+                &f.row.id,
+                &f.cwd,
+                "child",
+                serde_json::from_value(
+                    json!([{"type":"text","text":"must not reach source preview"}]),
+                )
+                .unwrap(),
+            )
+            .await;
+        assert!(refused.is_err());
+        assert_eq!(count(&f, "session/prompt"), prompts);
+        std::fs::remove_file(f.cwd.join("hold-source-load")).unwrap();
+    }
+    let result = pending.wait(Duration::from_secs(5)).await;
     assert_eq!(result.status, "ready");
     assert_eq!(count(&f, "session/fork"), 1);
     let records = trace(&f);
@@ -844,6 +889,42 @@ async fn fork_mcp_checks_actual_owner_admission_without_copying_offer() {
             .iter()
             .filter(|e| matches!(e["method"].as_str(), Some("session/fork" | "session/load")))
             .all(|e| e["params"]["mcpServers"] == json!([]))
+    );
+    assert!(result.source_released);
+    assert_ne!(
+        result.session.as_ref().unwrap().connection_id,
+        parent.connection_id
+    );
+    let source_pid = records
+        .iter()
+        .find(|e| e["method"] == "session/new")
+        .unwrap()["pid"]
+        .clone();
+    let loads: Vec<_> = records
+        .iter()
+        .filter(|e| e["method"] == "session/load")
+        .collect();
+    assert_eq!(loads.len(), 2);
+    assert_eq!(loads[0]["pid"], source_pid);
+    assert_ne!(loads[1]["pid"], source_pid);
+    let source_closed = records
+        .iter()
+        .position(|e| {
+            e["method"] == "session/close"
+                && e["pid"] == source_pid
+                && e["params"]["sessionId"] == "child"
+        })
+        .unwrap();
+    let target_loaded = records
+        .iter()
+        .position(|e| e["method"] == "session/load" && e["pid"] != source_pid)
+        .unwrap();
+    assert!(source_closed < target_loaded);
+    assert!(
+        records
+            .iter()
+            .filter(|e| e["method"] == "session/prompt")
+            .all(|e| e["params"]["sessionId"] == "parent")
     );
 }
 

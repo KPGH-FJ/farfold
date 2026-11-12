@@ -1,4 +1,4 @@
-//! Narrow provenance for the reviewed official Codex ACP launch shapes.
+//! Narrow provenance for reviewed official stdio MCP launch shapes.
 //! This is not cryptographic process authentication or MCP readiness. The actual
 //! connection must separately permit temporary credentials before delivery.
 use crate::meta_store::AgentRow;
@@ -16,12 +16,34 @@ const MAX_MANIFEST_BYTES: u64 = 64 * 1024;
 pub(crate) enum LaunchKind {
     Binary,
     Node,
+    OpenCode,
 }
 
 pub(crate) fn reviewed_launch(agent: &AgentRow) -> Option<LaunchKind> {
-    // Registry installation assigns this source; self-chosen names or handshake
-    // claims alone do not establish a reviewed launch. Versions are not pinned.
+    // Catalog discovery/installation assigns these sources; self-chosen names
+    // or handshake claims alone do not establish a reviewed launch. This is a
+    // command-shape review, not executable attestation. Versions are not pinned.
     let command = Path::new(&agent.command);
+    if command.is_absolute()
+        && agent.source == "discovered"
+        && agent.id == "opencode"
+        && agent.args == ["acp"]
+        && matches!(
+            command.file_name().and_then(|name| name.to_str()),
+            Some("opencode")
+        )
+    {
+        return Some(LaunchKind::OpenCode);
+    }
+    #[cfg(windows)]
+    if command.is_absolute()
+        && agent.source == "discovered"
+        && agent.id == "opencode"
+        && agent.args == ["acp"]
+        && command.file_name().and_then(|name| name.to_str()) == Some("opencode.exe")
+    {
+        return Some(LaunchKind::OpenCode);
+    }
     if agent.source != "registry"
         || !matches!(agent.id.as_str(), "codex" | "registry:codex-acp")
         || !command.is_absolute()

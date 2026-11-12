@@ -34,6 +34,7 @@ mod stdio;
 /// Absence of this cell means a completed asynchronous launch has not been confirmed.
 #[derive(Clone, Copy)]
 pub(crate) struct McpSpawnFacts {
+    pub kind: super::browser_capability::LaunchKind,
     pub logs_safe: bool,
     pub inline_mcp_safe: Option<bool>,
 }
@@ -45,7 +46,7 @@ fn freeze_launch_env(
 ) -> Option<OsString> {
     let explicit = command
         .get_envs()
-        .find(|(key, _)| *key == OsStr::new(name))
+        .find(|(key, _)| launch_env_key_matches(key, name, crate::shell_env::EnvNames::current()))
         .map(|(_, value)| value.map(OsStr::to_owned));
     let effective = explicit.unwrap_or_else(inherited);
     // Preserve precisely the observed value (including empty) or its absence.
@@ -61,6 +62,10 @@ fn freeze_launch_env(
         }
     }
     effective
+}
+
+fn launch_env_key_matches(key: &OsStr, name: &str, names: crate::shell_env::EnvNames) -> bool {
+    key.to_str().is_some_and(|key| names.matches(key, name))
 }
 
 fn inline_mcp_safe(config: Option<&OsStr>) -> Option<bool> {
@@ -83,9 +88,39 @@ fn capture_mcp_spawn_facts(
     let logs = freeze_launch_env(command, "APP_SERVER_LOGS", || inherited("APP_SERVER_LOGS"));
     let config = freeze_launch_env(command, "CODEX_CONFIG", || inherited("CODEX_CONFIG"));
     McpSpawnFacts {
+        kind: super::browser_capability::LaunchKind::Node,
         logs_safe: logs.is_none_or(|value| value.is_empty()),
         inline_mcp_safe: inline_mcp_safe(config.as_deref()),
     }
+}
+
+fn capture_opencode_mcp_spawn_facts(
+    command: &mut std::process::Command,
+    inherited: impl Fn(&str) -> Option<OsString>,
+) -> Option<McpSpawnFacts> {
+    // These are existing official diagnostics, not Farfold switches. Freeze
+    // their exact effective values; never disable them on the user's behalf.
+    let heap = freeze_launch_env(command, "OPENCODE_AUTO_HEAP_SNAPSHOT", || {
+        inherited("OPENCODE_AUTO_HEAP_SNAPSHOT")
+    });
+    let telemetry = freeze_launch_env(command, "OTEL_EXPORTER_OTLP_ENDPOINT", || {
+        inherited("OTEL_EXPORTER_OTLP_ENDPOINT")
+    });
+    let heap_enabled = match heap.as_deref() {
+        None => false,
+        Some(value) => matches!(value.to_str()?.to_ascii_lowercase().as_str(), "true" | "1"),
+    };
+    let telemetry_enabled = match telemetry.as_deref() {
+        None => false,
+        Some(value) => !value.to_str()?.is_empty(),
+    };
+    Some(McpSpawnFacts {
+        kind: super::browser_capability::LaunchKind::OpenCode,
+        logs_safe: !heap_enabled && !telemetry_enabled,
+        // Dynamic ACP add merges its own entry in memory. CODEX_CONFIG has no
+        // reviewed meaning for this source and must not be inspected here.
+        inline_mcp_safe: Some(true),
+    })
 }
 
 // This proof can be constructed only from successful Child status and the
@@ -109,14 +144,14 @@ pub(crate) struct ProcessControl {
     prompt_escrow: PromptEscrow,
     diagnostics: Arc<Diagnostics>,
     pub(crate) mcp_spawn_facts: Arc<OnceLock<McpSpawnFacts>>,
-    capture_mcp_facts: bool,
+    capture_mcp_facts: Option<super::browser_capability::LaunchKind>,
 }
 impl ProcessControl {
     pub fn new(diagnostics: Arc<Diagnostics>) -> Self {
         Self {
             diagnostics,
             mcp_spawn_facts: Arc::new(OnceLock::new()),
-            capture_mcp_facts: false,
+            capture_mcp_facts: None,
             pid: Arc::new(AtomicU32::new(0)),
             identity: Arc::new(OnceLock::new()),
             started: Arc::new(AtomicBool::new(false)),
@@ -126,7 +161,10 @@ impl ProcessControl {
             prompt_escrow: PromptEscrow::default(),
         }
     }
-    pub(crate) fn review_mcp_launch(mut self, reviewed: bool) -> Self {
+    pub(crate) fn review_mcp_launch(
+        mut self,
+        reviewed: Option<super::browser_capability::LaunchKind>,
+    ) -> Self {
         self.capture_mcp_facts = reviewed;
         self
     }
@@ -247,9 +285,16 @@ fn spawn_process_in(
         .args(config.arguments())
         .envs(config.environment())
         .current_dir(cwd);
-    let mcp_spawn_facts = control
-        .capture_mcp_facts
-        .then(|| capture_mcp_spawn_facts(&mut command, |name| std::env::var_os(name)));
+    use super::browser_capability::LaunchKind;
+    let mcp_spawn_facts = match control.capture_mcp_facts {
+        Some(LaunchKind::Node) => Some(capture_mcp_spawn_facts(&mut command, |name| {
+            std::env::var_os(name)
+        })),
+        Some(LaunchKind::OpenCode) => {
+            capture_opencode_mcp_spawn_facts(&mut command, |name| std::env::var_os(name))
+        }
+        _ => None,
+    };
     let pending_group = crate::process_platform::prepare_command(&mut command)
         .map_err(agent_client_protocol::Error::into_internal_error)?;
     let command = async_process::Command::from(command);
