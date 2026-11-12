@@ -1,0 +1,198 @@
+{
+  "cycle5Complete": false,
+  "sourceCommit": "95a5e6cc368e7a32e864c52fd5dea1854aad5e77",
+  "installed": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "88673fbeb1a37e983348ce3256eaa6e24e17e54f"
+  },
+  "realAgent": {
+    "name": "Goose",
+    "version": "1.52.0",
+    "provider": "OpenRouter",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "effort": "off",
+    "mode": "auto",
+    "nativeSession": "20261112_5",
+    "userRequests": 3
+  },
+  "changes": [
+    "PPTX translated/scaled/nested groups with text and image geometry preserved",
+    "DOCX HSL theme tint/shade and clear/solid/nil shading",
+    "Synchronous unmount guard for late file delivery dialogs and captures",
+    "Nested shared configuration picker leaves the parent scroll layer while retaining focus/dismissal ownership"
+  ],
+  "observed": [
+    "Real audio Resource WAV played to end and replayed after cold open; exact source hash matched; MCP removed with no cold reconnect",
+    "PPTX ordinary/scaled groups and image plus DOCX theme colors/table fill shown in installed app",
+    "ENOSPC after65470464B leaves no target/temp, source/opinion kept;268435456B successful recovery exacthash",
+    "Real rework request stopped during thinking; original65B and sent versioned opinion kept;3unsent opinions saved",
+    "Stopped request cold replay restores sent original-version opinion and3unsent opinions; all265native message rows unchanged; idle composer/no auto resend",
+    "Installed95a5 four modes visible; keyboard/two Escape levels/outside dismissal passed; one actual approve-mode edit request rejected, tool unsuccessful and original65B unchanged; auto restored",
+    "Refusal cold replay keeps failed tool/declined result and3versioned unsent opinions, original65B and270native message rows unchanged; no resend;62other native sessions unchanged"
+  ],
+  "unverified": [
+    "Workbook in-flight cancellation: both legitimate inputs finished before actionable cancel",
+    "File copy in-flight cancellation: local and HFS targets completed before cancellation took effect",
+    "Full P13/P16/P18/P20/P21/P22 and29x8 remain open; not all codecs/Office features/Agents/platforms verified"
+  ],
+  "pendingAtWrite": [],
+  "evidence": [
+    {
+      "path": "output/2026-11-12-cycle5-completion/engineering/result.json",
+      "sha256": "ff744b6012ae85a544974020bdab5ed0fd42e539036b88d90f86368967231c1d"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/review/integration-closeout.json",
+      "sha256": "0cfc7aeb2db22111bbc4447eecd055a2c220868c7166cab9e9b1ae231776757d"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/review/office-independent-review.json",
+      "sha256": "65dd1a5aafdf1a8fd73c1711f273d56150b554ae3ef5b5202a3ad58116ddc5d2"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/delivery/independent-review.json",
+      "sha256": "28d64a9bf6b049dd53d9abd3461725081ee9f5a6c2cc7ef4154053b67d7b7d25"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal/source-freeze.json",
+      "sha256": "0cbdf33cfb5b8fde11df88ad3bde06333599b6411cfff982e68d8c59ee0f8cf8"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal/install.json",
+      "sha256": "4d084119afaaa373057f97f0805d1abd77a9ea6b679218330d8e462ef7e93e32"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal/duplicate-cleanup.json",
+      "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal/copy-write-failure-and-recovery.json",
+      "sha256": "bb125e63ccd4a49ee5216f1d209575c0ea6c54770834a9368c8d8a758c17e3f3"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal/independent-native-final.json",
+      "sha256": "212ec34f098862840215610a541ff7a7431f981fb5359cc9ed85f786633bec22"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal/independent-stop-final.json",
+      "sha256": "e4c4b1d56f273dfe3da4f0e0435ae11a8b3668a28b234c780ec01dca859d1be5"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal/final-disk-proof.json",
+      "sha256": "929020a7766c1ceb02fef49faec833ed48d267a552439df4ec9e1d5ca3ac355e"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal/owned-small-target-detach.json",
+      "sha256": "44c8b76c530cc449fe1ac89ce4b52dea057989d80c394ff603be0f81847d06fe"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal/copy-cancel-volume-detach.json",
+      "sha256": "b218646fa28ed5c7b415f64de4a8fcb5f3617677ab9bde6ebe4bdbd1a68c76ef"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/p18-mode-conclusion.json",
+      "sha256": "8bab754fff4cbda4208651d7d9ba03c92767873fbc7cd1f02b03079c0da8550c"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/review/formal-office-review.json",
+      "sha256": "13a4a18bc675a1a3b9c6f9830ca295c5bf7a5b32d4d0917fc527ee6377e2bf07"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal/stop-cold-summary.json",
+      "sha256": "a3973eee04679d950f95a174f5ad99e4029d49c28432dcd176e6cbfc35bc6430"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/engineering-mode/result.json",
+      "sha256": "8451ecba567b7d12c043a68d5fd7130a8e615083c98f4f1295b13fa590407813"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/review/mode-ui-independent-review.json",
+      "sha256": "b7f65bc2cd413c824ff1e6ea6a0ef6a765ad239cb892fffd0d1467a75aaf4ce3"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/review/mode-integration-closeout.json",
+      "sha256": "fbd3128130204a13ec0edfb9ae15c75c68d2e748d663f4a77401cae2cc2d05e0"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal-mode/install.json",
+      "sha256": "fb05630016a21fc35d7f67494899fe72f01bb8e2822fa8b8581abff34e979e0a"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal-mode/duplicate-cleanup.json",
+      "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal-mode/denial-disk-proof.json",
+      "sha256": "c0beafc973cdccb58ef7f0222eca49dfe0f1f2b1aa12ccee0f7e488dc80076cf"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal-mode/reject-decision.json",
+      "sha256": "74f036da8e09fce4f17ac09f28b236a5c5c344fc0d968658ec784025465c3faa"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/review/mode-formal-independent-review.json",
+      "sha256": "f341c53003886874b103f14f0a3aadc4df5eb3737b2028cb17956873fb839216"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal-mode/denial-observation-v2.json",
+      "sha256": "9f8603cf8229911212fc1de50b50bcab3486c3b7e59ebcfab090b91474ed6090"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal-mode/denial-cold-summary.json",
+      "sha256": "00b6f8f455c03948322d47c4f7d19dd3ecc550b4dfd15663245d0d4ec98c7a0f"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal-mode/denial-shape-observation.json",
+      "sha256": "8441ed43baec4b975a8145a107609aa79fc6d4895e863e0ae1952f1f984009ef"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal-mode/inspect-denial-v2-preparation.json",
+      "sha256": "7723cb9f52c82e503f597aa0c6a8a059d69d51c556a468035ad64de332275fbe"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/formal-mode/cold-disk-proof.json",
+      "sha256": "48987a06a77cbc0f55fa0bcaac421dbefb9431530d7df31f67bf591d6fb0149e"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/review/denial-native-independent-review.json",
+      "sha256": "9b57a886ecce5a8b252f4ed407a115143de75095975f1fcba8c6223fadcbed27"
+    }
+  ],
+  "reviewScope": {
+    "sourceOffice": "Independent product_process review",
+    "delivery": "Independent backend_arch review",
+    "formalOffice": "Office author checked root UI evidence against own frozen author oracle; not claimed independent source review",
+    "formalMode": "Independent backend_arch review of root formal UI/installation evidence",
+    "nativeDenialAndCold": "Independent product_process review of generated owned native data, cold UI and disk evidence"
+  },
+  "screenshotFormat": "CUA screenshot bytes preserved exactly; .png named files were returned as ICC-tagged JPEG; not used as exact small-text RGB proof.",
+  "sourceCommits": [
+    "8c13dc6e9b2477868063e203da0e447983247dd4",
+    "95a5e6cc368e7a32e864c52fd5dea1854aad5e77"
+  ],
+  "nativeDenial": {
+    "newVisibleUserText": 1,
+    "exactOwnedEditCalls": 1,
+    "matchedToolResponses": 1,
+    "newNativeRows": 5,
+    "old265MessagesKept": true,
+    "other62NativeSessionsKept": true,
+    "extensions": "Before cold replay only: raw bytes differ by exact seven-descriptor outer ordering, proved by reconstructing baseline raw SHA. Cold replay changed raw extension bytes again; no new equivalence proof is claimed.",
+    "officialUsage": {
+      "records": 2,
+      "inputTokens": 13004,
+      "outputTokens": 347,
+      "costReported": 0.0
+    },
+    "initialCollectorFailure": "Unknown official timing/resultType fields and empty-text classification were corrected in a separate collector; old nonzero receipt retained; no model retry"
+  },
+  "remainingCycle5": [
+    "Actual workbook reading cancellation success",
+    "Actual whole-file writing cancellation success; approval rejection and thinking-period Stop do not prove this"
+  ],
+  "nextCondition": "A relevant real input/filesystem/interface condition that makes ongoing read/write cancellation observable; current two workbook inputs and local/HFS write attempts naturally completed. No unchanged retry or artificial delay.",
+  "coldNoResendScope": "Observed idle UI plus unchanged270native messages, no new persisted tools or official usage; not a claim about all unobservable network activity."
+}
