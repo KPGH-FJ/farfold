@@ -360,5 +360,7 @@ impl FileCopyJobs {
 #[path = "file_copy_jobs_independent_tests.rs"]
 mod independent_tests;
 #[cfg(test)]
+mod manual_io_tests;
+#[cfg(test)]
 #[path = "file_copy_jobs_tests.rs"]
 mod tests;

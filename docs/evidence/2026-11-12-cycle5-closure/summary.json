@@ -1,0 +1,100 @@
+{
+  "updatedAtUtc": "2026-11-12T10:51:49.164148+00:00",
+  "cycle": 5,
+  "cycle5ClosedAtOriginalScope": true,
+  "phase2Complete": false,
+  "full151RequirementsAccepted": false,
+  "agent29x8Accepted": false,
+  "installedSource": "95a5e6cc368e7a32e864c52fd5dea1854aad5e77",
+  "productBehaviorChangedThisBatch": false,
+  "scope": "Close the original six-result common-capability development cycle using actual formal journeys plus risk-based evidence; not every Agent/platform/item or every timing combination accepted.",
+  "originalConditionBasis": "P22 requires a real versioned Agent rework/export journey and preservation on cancellation/failure; common conditions require risk-based coverage. No original requirement says each timing must independently reach cancelled inside the installed app.",
+  "priorReportingCorrection": "The earlier assertion that these two particular formal timing combinations alone must block the entire cycle added an unsupported gate. The combinations remain unverified; no prior failure or original condition is removed.",
+  "newEvidence": {
+    "nativeCopy": {
+      "actualIoExercises": 1,
+      "sourceBytes": 268435456,
+      "observedAndCancelledBytes": 65536,
+      "finalState": "cancelled",
+      "sourceUnchanged": true,
+      "targetAndTemporaryAbsent": true,
+      "explicitNewOperationCompleted": true,
+      "lateCancelKeptCompleted": true,
+      "actualSuccessSourceSha256": "1877d7f2c82aa86b52f81751c154aeb40361aa51ecb7207782535225f182ba11",
+      "finalTestSourceSha256": "f0deb706de1de0217e4960355fcab8ec12edb37859f0f7567aeebfe01f51e16a",
+      "postSuccessDelta": "Only observation classifier corrected with pure counterexamples; actual copy path unchanged, no IO rerun",
+      "checks": "One real ignored manual exercise passed; affected module24passed/1manualignored; cargo fmt passed",
+      "boundary": "Production background manager and OS IO, not installed UI/IPC timing"
+    },
+    "workbook": {
+      "runs": 1,
+      "checks": 18,
+      "engine": "WebKit with real production React and Worker",
+      "workerCancellation": "Received real directory, actual visible button cancellation terminated Worker before ready",
+      "opinion": "Same version identity/content preserved; small sheet content restored only after explicit reselection",
+      "recovery": "Explicit same large sheet completed80008cells",
+      "refresh": "Fixture parent active=false drives real preparation Worker cleanup; reshow retains same version/opinion",
+      "inputsStable": true,
+      "externalRequests": 0,
+      "boundary": "Native inspect/version/capture replies and persistence are controlled; not installed app or actual OS-read cancellation"
+    }
+  },
+  "formalSpecificCombinationsStillUnverified": [
+    "Installed workbook in-flight read cancellation success",
+    "Installed whole-file-copy in-flight cancellation success"
+  ],
+  "remainingPolicy": "Keep these as unverified combinations; revisit on relevant changed risk/code/real conditions, not automatically promote them to new later acceptance gates. All original151 and29x8 conditions remain.",
+  "newModelRequests": 0,
+  "formalAppLaunchesThisBatch": 0,
+  "temporaryResources": "Native test fixture removed only after real jobs settled/released; browser/server normal cleanup by author",
+  "evidence": [
+    {
+      "path": "output/2026-11-12-cycle5-cancellation-closure/original-exit-audit.json",
+      "sha256": "a4b56021859c3e8c7e0ecd9ac710afa6a85b6456f12d562fbd915fda8a6c8c2e"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-cancellation-closure/unchanged-product.json",
+      "sha256": "a6c31f99da912d78db8ec419c2cc414f11f6c938ecd2be632f0278dc7807b3fe"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-cancellation-closure/native-review.json",
+      "sha256": "43a76af98c5a46e7bf5e9ed575fe51de145ec4ac068ea3832a798003d1efa6db"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/manual-copy-io/observation.json",
+      "sha256": "24dd1e8532c5756e06c546cb7cc9c03686c064f9f134e2cf1c72f8721ccc8c52"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/manual-copy-io/source-freeze.json",
+      "sha256": "f483715ec8e1c8b72a5877deaeb000bc3919be4ba154f2606272615ec27126d2"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/workbook-cancel-investigation/summary.json",
+      "sha256": "0a2a4679d943deca69306531b0b01e3656b6f4bd66ca9c0ed873e1af38619278"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/workbook-cancel-investigation/source-freeze.json",
+      "sha256": "b9284201472a50ffcca8833a510fb0a737197144e3c42e28129526d6257ead30"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-completion/workbook-cancel-investigation/webkit-run1-result.json",
+      "sha256": "176b2b69907d631254008cd4e9e6acefa40ff9acfa0d2fa3025418bcd7f4ad49"
+    },
+    {
+      "path": "docs/evidence/2026-11-12-cycle5-completion/summary.json",
+      "sha256": "99167d7e3fc2bda9bccbb8fed479db218fb6373256dc0ecb46c66785baffe9b5"
+    },
+    {
+      "path": "docs/evidence/2026-11-12-cycle5/formal-summary.json",
+      "sha256": "570a9597afe44b4f3ce56890e7735830c55418fa75d862ce4b03cfffed296044"
+    },
+    {
+      "path": "output/2026-11-12-cycle5-cancellation-closure/workbook-review.json",
+      "sha256": "710f1fd67f3d84a70e1e7c9135835b55a8d593363e4dae641ea2e51226874e02"
+    }
+  ],
+  "independentReviews": {
+    "native": "native-review.json;43a76af98c5a46e7bf5e9ed575fe51de145ec4ac068ea3832a798003d1efa6db",
+    "workbook": "workbook-review.json;710f1fd67f3d84a70e1e7c9135835b55a8d593363e4dae641ea2e51226874e02"
+  }
+}
