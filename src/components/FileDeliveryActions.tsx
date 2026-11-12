@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { open, save } from "@tauri-apps/plugin-dialog";
 import type { FileArtifact } from "../runtime/artifact_view";
 import {
@@ -69,7 +69,7 @@ export function FileDeliveryControls({
   const mounted = useRef(true);
   const activeRef = useRef(active);
   activeRef.current = active;
-  useEffect(() => {
+  useLayoutEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;

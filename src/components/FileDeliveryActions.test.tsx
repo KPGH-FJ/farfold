@@ -7,7 +7,13 @@ import {
 import { beforeEach, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => ({
-  slots: [] as { value?: unknown; deps?: unknown[]; cleanup?: () => void }[],
+  slots: [] as {
+    value?: unknown;
+    deps?: unknown[];
+    cleanup?: () => void;
+    phase?: "layout" | "passive";
+  }[],
+  layoutEffects: [] as (() => void)[],
   cursor: 0,
   effects: [] as (() => void)[],
   active: true,
@@ -43,36 +49,44 @@ vi.mock("../runtime/file_delivery", () => ({
     reveal: h.reveal,
   },
 }));
-vi.mock("react", async (original) => ({
-  ...(await original<typeof import("react")>()),
-  useState: (initial: unknown) => {
-    const slot = (h.slots[h.cursor++] ??= {
-      value:
-        typeof initial === "function" ? (initial as () => unknown)() : initial,
-    });
-    return [
-      slot.value,
-      (next: unknown) => {
-        slot.value =
-          typeof next === "function"
-            ? (next as (value: unknown) => unknown)(slot.value)
-            : next;
-      },
-    ];
-  },
-  useRef: (initial: unknown) =>
-    (h.slots[h.cursor++] ??= { value: { current: initial } }).value,
-  useEffect: (effect: () => void | (() => void), deps: unknown[]) => {
-    const index = h.cursor++;
-    const slot = h.slots[index];
-    if (!slot || deps.some((value, i) => !Object.is(value, slot.deps?.[i])))
-      h.effects.push(() => {
-        slot?.cleanup?.();
-        h.slots[index].cleanup = effect() || undefined;
+vi.mock("react", async (original) => {
+  const effectFor =
+    (phase: "layout" | "passive") =>
+    (effect: () => void | (() => void), deps: unknown[]) => {
+      const index = h.cursor++;
+      const slot = h.slots[index];
+      if (!slot || deps.some((value, i) => !Object.is(value, slot.deps?.[i])))
+        (phase === "layout" ? h.layoutEffects : h.effects).push(() => {
+          slot?.cleanup?.();
+          h.slots[index].cleanup = effect() || undefined;
+        });
+      h.slots[index] = { deps, cleanup: slot?.cleanup, phase };
+    };
+  return {
+    ...(await original<typeof import("react")>()),
+    useState: (initial: unknown) => {
+      const slot = (h.slots[h.cursor++] ??= {
+        value:
+          typeof initial === "function"
+            ? (initial as () => unknown)()
+            : initial,
       });
-    h.slots[index] = { deps, cleanup: slot?.cleanup };
-  },
-}));
+      return [
+        slot.value,
+        (next: unknown) => {
+          slot.value =
+            typeof next === "function"
+              ? (next as (value: unknown) => unknown)(slot.value)
+              : next;
+        },
+      ];
+    },
+    useRef: (initial: unknown) =>
+      (h.slots[h.cursor++] ??= { value: { current: initial } }).value,
+    useEffect: effectFor("passive"),
+    useLayoutEffect: effectFor("layout"),
+  };
+});
 
 import {
   FileDeliveryActions,
@@ -121,6 +135,7 @@ function render(value = card) {
     onOpenHtml: h.onOpenHtml,
     onOpenFile: h.onOpenFile,
   });
+  for (const effect of h.layoutEffects.splice(0)) effect();
   for (const effect of h.effects.splice(0)) effect();
   return elements(tree);
 }
@@ -161,6 +176,7 @@ async function checkFile(value = card) {
 beforeEach(() => {
   h.slots.length = 0;
   h.effects.length = 0;
+  h.layoutEffects.length = 0;
   h.cursor = 0;
   h.active = true;
   h.cwd = "/work";
@@ -704,3 +720,29 @@ it("opens a reported file directly but never falls back to it after a chosen fil
   expect(button(S.open)).toBeUndefined();
   expect(open).toHaveBeenCalledTimes(1);
 });
+
+// React commits an unmount before flushing its passive effect cleanup. A dialog
+// may settle in that interval; the removed report must no longer authorize I/O.
+it.each(["choose", "copy", "snapshot"] as const)(
+  "does not dispatch %s after unmount commit before passive cleanup",
+  async (action) => {
+    if (action === "copy") await checkFile();
+    const dialog = deferred<string>();
+    if (action === "choose") h.open.mockReturnValue(dialog.promise);
+    else h.save.mockReturnValue(dialog.promise);
+    click(
+      action === "choose" ? S.choose : action === "copy" ? T.save : S.snapshot,
+    );
+    for (const slot of h.slots) if (slot.phase === "layout") slot.cleanup?.();
+    dialog.resolve("/delivery/late-result.md");
+    for (let tick = 0; tick < 12; tick++) await Promise.resolve();
+    try {
+      expect(h.inspectSelected).not.toHaveBeenCalled();
+      expect(h.copy).not.toHaveBeenCalled();
+      expect(h.exportText).not.toHaveBeenCalled();
+    } finally {
+      for (const slot of h.slots)
+        if (slot.phase === "passive") slot.cleanup?.();
+    }
+  },
+);

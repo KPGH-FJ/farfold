@@ -76,6 +76,14 @@ export interface PptxBox {
   width: number;
   height: number;
 }
+/** Composed group coordinate mapping; local text, paint and bitmap dimensions
+ * remain together, including under nonuniform scaling. No rotation or script. */
+export interface PptxGroupTransform {
+  x: number;
+  y: number;
+  scaleX: number;
+  scaleY: number;
+}
 export type PptxShape = (
   | {
       kind: "shape";
@@ -85,7 +93,12 @@ export type PptxShape = (
       text: PptxText | null;
     }
   | { kind: "image"; imageId: string }
-) & { id: string; source: PptxSource; box: PptxBox };
+) & {
+  id: string;
+  source: PptxSource;
+  box: PptxBox;
+  groupTransform?: PptxGroupTransform;
+};
 export interface PptxText {
   inset: { top: number; right: number; bottom: number; left: number };
   wrap: "none" | "square";
