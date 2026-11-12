@@ -40,7 +40,8 @@ export const SESSION_TOOL_CHANGE_STRINGS = {
   removed: "已核对：所选项目已从当前对话保存的设置与活动工具中撤回。",
   removedSavedOnly:
     "所选项目已从当前对话保存的设置中撤回；活动工具情况仍未确认。",
-  recovered: "未确认的变更已完成核对。请重新核对可管理项目。",
+  recovered:
+    "核查已确认。请先关闭此面板，在对话中点击“重连”，再核对可管理项目。原消息、草稿和待发内容会保留。",
   saved: "保存的设置已确认",
   saveUnknown: "保存结果尚未确认",
   tools: "已读取活动工具报告",

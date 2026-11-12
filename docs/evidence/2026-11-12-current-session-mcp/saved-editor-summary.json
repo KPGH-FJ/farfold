@@ -1,5 +1,5 @@
 {
-  "updatedAtUtc": "2026-11-12T03:30:51.459002+00:00",
+  "updatedAtUtc": "2026-11-12T03:43:51.636516+00:00",
   "change": "Promote the exact saved prepared conversation to its normal editor with one atomic draft transfer; retain selected configuration and never send automatically.",
   "sourceManifest": {
     "path": "output/2026-11-12-four-hour-mcp/saved-editor/source-manifest-final.json",
@@ -31,5 +31,129 @@
   "browserScope": "Production EmptyState/ThreadView/store/guards with synthetic IPC and minimal route shell; actual App callback separately unit tested; no model/native/browser/file operation.",
   "fixtureCorrections": "run1–5 preserved. Fixed missing callback, confirmation category/delivery queue and no-page share-status stubs; production sources unchanged during browser runs.",
   "visualInspection": "1280x820 and900x620 saved composer and pending dialog readable; inputs/buttons visible.",
-  "formal": "Not installed yet; currently728d4 normally closed, owned item withdrawn, original native rows/configuration preserved."
+  "formal": {
+    "sourceCommit": "8f80f469fb104bdd4f8c3432115fa38b39754fa2",
+    "installation": {
+      "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/install.json",
+      "sha256": "cc0c5d2558910e56cc3a7eb96a40e1f1f14988302f3eee49ec99b8ea9ad8a631"
+    },
+    "candidateReview": {
+      "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/candidate-review.json",
+      "sha256": "fbf2417a7eba7238ba6ed4db04b2b8f022342dfbd823b535b948f7e6834a8fd3"
+    },
+    "dataEntriesPreserved": 206420,
+    "nativeSessionId": "20261112_1",
+    "selected": "Existing OpenRouter / nvidia/nemotron-3-ultra-550b-a55b:free / off / auto",
+    "emptyIndexBeforeAdd": true,
+    "indexSavedAfterAdd": true,
+    "inputRetainedAndSendEnabled": true,
+    "actualPromptRequests": 1,
+    "ownedToolsCall": 1,
+    "emptyToolArguments": true,
+    "exactReturnedTextShown": true,
+    "remove": "saved configuration and active report verified absent by official management response",
+    "coldReopen": "same saved conversation read back exact prompt/reply; explicit management recheck empty; general report17 vs prior18; endpoint remained listening and TCP/RPC/call counters unchanged after withdrawal",
+    "priorNativeRowsPreserved": true,
+    "selectedAndProtectedConfigurationUnchanged": true,
+    "pendingMarkers": 0,
+    "appNormallyClosed": true,
+    "evidence": [
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/inspect-owned-index-before-add.json",
+        "sha256": "d35188bce54a0ce94cb02d923a84d6658f117160bc4caa3c01200ae655cfcfaa"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/inspect-owned-index-after-add.json",
+        "sha256": "f01d0c8816bf18d42a04ab267461c448651f5eda494082d7a34a636a9d01bfe3"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/inspect-owned-index-after-remove.json",
+        "sha256": "3b30b6b7aa60d3f710c5069b382f7541e42531e2b7246e7a8556a2d2f086fda2"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/inspect-owned-index-after-cold.json",
+        "sha256": "3e8e4ea95cecf96e194d075309eb22f4d6b761f5028c1af18cd7078c52542eb5"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/server-after-remove.json",
+        "sha256": "e814e03ed695cf30bac1ed7f86ab65db7ee9f4bbb92880e180ff2b33584f8ee0"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/server-after-cold.json",
+        "sha256": "e814e03ed695cf30bac1ed7f86ab65db7ee9f4bbb92880e180ff2b33584f8ee0"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/stores-after-cold.json",
+        "sha256": "622ddf3864250dff4547b0285570fa9d02e536f6acc4dcd346dd72964ff55f18"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/ui/01-model.txt",
+        "sha256": "c097df351ce2155621e42b0158089c2229f9c5f4110472147003b8617e0e8196"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/ui/03-ready-to-send.txt",
+        "sha256": "0ce2ef7cd01ab72addfa2eb56fa07fe60e16ea2474ffb099d385e3bf30d5708a"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/ui/04-real-call.txt",
+        "sha256": "448c6eb74fa32a208a5cc2f414d5e85d203a4ee1e7ad64c3fdde4905b74fc126"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/ui/05-withdrawn.txt",
+        "sha256": "10002da937cc46d5ebece00e7fca19556695d40077274411f0dcf0b31d19952b"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/ui/06-cold-report.txt",
+        "sha256": "389b7a1eb91043d5f3f695fa59fd01629de1382878a663a08276153a69d34b4d"
+      }
+    ]
+  },
+  "remaining": "Unknown response, timeout, pending-on-cold-start, externally changed settings and other Agents/platforms still need formal coverage; original P41/29x8 unchanged.",
+  "failureRecovery": {
+    "installedSource": "8f80f469fb104bdd4f8c3432115fa38b39754fa2",
+    "injection": "Owned loopback server rejects initialize once with HTTP503/RPC error",
+    "result": "Unconfirmed change blocks use; explicit inspect reports saved settings unchanged; explicit confirm clears exact marker and requires reopen; explicit reconnect restores same history and unsent draft; no replay or model prompt",
+    "initializationAttempts": 1,
+    "toolsCalls": 0,
+    "newMessages": 0,
+    "draft": "FF_MCP_FAILURE_20261112 retained and unsent",
+    "selectedUnchanged": true,
+    "originalNativeRowsPreserved": true,
+    "pendingMarkersAfterExplicitRecovery": 0,
+    "evidence": [
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/failure_mcp.py",
+        "sha256": "3235932685a842275882024397c35742559f268892ad28b808eb75d70c6d4277"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/failure-server-eeb342aec0528c0e.json",
+        "sha256": "6899733a164512afa3b3ea63805a6de4e7911eee6fe3b6d1cf51e5c3abd925f4"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/ui/07-failed-checked.txt",
+        "sha256": "9c9bea28fc9b9de4d580658a3cd0bb5fe3819c792e39291f7c7409496bc44fc0"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/ui/08-confirmed-preserved-draft.txt",
+        "sha256": "ed8b610a7adb0a1bee24edadb3df2c0d14f775db5fd9a5e04ab64484f68de33b"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/ui/09-reconnected-preserved-draft.txt",
+        "sha256": "d53c4becac085e6dfde54cd98249b1525b568a15e53ed3bcf652aac64d8b6859"
+      },
+      {
+        "path": "output/2026-11-12-four-hour-mcp/formal-saved-editor/stores-after-failure.json",
+        "sha256": "df80d5b48905ea2b8110d5ea856c0774c953d59a46b1c625d0afe99832477509"
+      }
+    ],
+    "finding": "After confirmation tool panel said recheck while controls were disabled; closing panel exposed required reconnect. One guidance string corrected; control/admission/queue logic unchanged."
+  },
+  "guidanceCorrection": {
+    "sourceFile": "src/runtime/session_tool_change_strings.ts",
+    "sourceSha256": "6ea77045b14e97bd6daafca107fc5c045ab691745a77ea9425085865240b5f37",
+    "independentReview": "output/2026-11-12-four-hour-mcp/review/recovery-copy-independent.json",
+    "engineering": "output/2026-11-12-four-hour-mcp/engineering-recovery-copy-final/result.json",
+    "checks": "760 frontend files /10515 tests, typecheck/build passed; only docs whitespace format failure rerun and passed; unchanged native checks reused",
+    "scope": "One instruction string; no changes to controls, storage, session recovery, queue or send behavior. Formal functional evidence remains8f80; no second model request for this correction."
+  }
 }
