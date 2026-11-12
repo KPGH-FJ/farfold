@@ -1,0 +1,35 @@
+{
+  "updatedAtUtc": "2026-11-12T03:30:51.459002+00:00",
+  "change": "Promote the exact saved prepared conversation to its normal editor with one atomic draft transfer; retain selected configuration and never send automatically.",
+  "sourceManifest": {
+    "path": "output/2026-11-12-four-hour-mcp/saved-editor/source-manifest-final.json",
+    "sha256": "4e3157958cb193765a08fab24f888744dc26b5160abab8a22fada7472793c7ae"
+  },
+  "independentReview": {
+    "path": "output/2026-11-12-four-hour-mcp/review/saved-editor-independent-final.json",
+    "sha256": "ce030c8bbe459e834ddc1f8db55eb33911a7c5938197977366a6651d98bdbbd3"
+  },
+  "engineering": {
+    "path": "output/2026-11-12-four-hour-mcp/engineering-saved-editor/result.json",
+    "sha256": "76e854cef792bf09cd0ebcd44a695ff2d5c896ee4697d1b661e49555d8ae6eb3"
+  },
+  "frontend": {
+    "files": 760,
+    "passed": 10515
+  },
+  "native": "Reused three successful checks after exact native input/log verification; not rerun",
+  "browser": [
+    {
+      "path": "output/2026-11-12-four-hour-mcp/saved-editor-render/webkit-run6-result.json",
+      "sha256": "9f44f8cf9a58036d9870a5aabae85b7ba82faa87b12958fd4d83b89e0064df36"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/saved-editor-render/chromium-run6-result.json",
+      "sha256": "d545b6ab1b4d3b2985f03c038b9db8c65554b6da82349708bf4ddb28813b0ff5"
+    }
+  ],
+  "browserScope": "Production EmptyState/ThreadView/store/guards with synthetic IPC and minimal route shell; actual App callback separately unit tested; no model/native/browser/file operation.",
+  "fixtureCorrections": "run1–5 preserved. Fixed missing callback, confirmation category/delivery queue and no-page share-status stubs; production sources unchanged during browser runs.",
+  "visualInspection": "1280x820 and900x620 saved composer and pending dialog readable; inputs/buttons visible.",
+  "formal": "Not installed yet; currently728d4 normally closed, owned item withdrawn, original native rows/configuration preserved."
+}

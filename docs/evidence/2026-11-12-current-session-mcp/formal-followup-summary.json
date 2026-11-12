@@ -1,0 +1,136 @@
+{
+  "recordedAtUtc": "2026-11-12T03:30:51.458344+00:00",
+  "sourceCommit": "728d4ba00155eb052d4ca6cdc075aed7d8379805",
+  "installedExecutableMatchesReceipt": true,
+  "installation": {
+    "path": "output/2026-11-12-four-hour-mcp/formal-followup/install.json",
+    "sha256": "4839bcd0b66d85189d5f810e084d1781f00105dee18d1e299a738e348ebe8dd4"
+  },
+  "installationProtectedDataEntriesUnchanged": 206420,
+  "toolManagement": {
+    "emptyInspect": "passed before first message with no index row",
+    "reviewReturn": "no endpoint connection or call",
+    "add": "passed; exact owned row20261111_7 saved with config and no pending",
+    "report": "18 tools including the exact owned read-only tool",
+    "actualModelRequestsByThisTest": 0,
+    "actualOwnedToolCalls": 0,
+    "send": "blocked: prepared new-conversation page retained draft-only identity gate after conversation became established",
+    "remove": "passed before next update: UI confirmed exact item absent from saved configuration and active report; exact index and pending marker inspected",
+    "coldReopen": "not performed"
+  },
+  "fileDelivery": {
+    "collision": "reported existing target, preserved source and31-byte original target and unsent opinion",
+    "metadataOnlyChange": "own source xattr changed ctime with identity/content/mtime unchanged; saved without pane reread",
+    "newCopyBytes": 59,
+    "newCopySha256": "fb17007a87f7ba133d02b55b71b6d70fb7e673e537b44aed6afbcf38b8537cbb",
+    "open": "TextEdit displayed exact destination URL and source text",
+    "reveal": "Finder selected exact destination URL, observed in CUA tool return; no screenshot saved for that observation",
+    "notClaimed": "No new Agent file rework or human usability/timing acceptance"
+  },
+  "uninstalledRepair": {
+    "files": 7,
+    "manifest": {
+      "path": "output/2026-11-12-four-hour-mcp/saved-editor/source-manifest-final.json",
+      "sha256": "4e3157958cb193765a08fab24f888744dc26b5160abab8a22fada7472793c7ae"
+    },
+    "verification": {
+      "path": "output/2026-11-12-four-hour-mcp/saved-editor/verification.json",
+      "sha256": "9de55d897c13a45548efccb4021d2e2e0c43cdc144a855d0e90093b8d25061a7"
+    },
+    "independentReview": {
+      "path": "output/2026-11-12-four-hour-mcp/review/saved-editor-independent-final.json",
+      "sha256": "ce030c8bbe459e834ddc1f8db55eb33911a7c5938197977366a6651d98bdbbd3"
+    },
+    "targetedFiles": 29,
+    "targetedPassed": 364,
+    "browser": "WebKit and Chromium run6:22 checks each; synthetic IPC, narrow route shell; not formal acceptance",
+    "fullEngineering": "All four frontend checks rerun:760 files10515 tests; unchanged native inputs/logs verified and three prior Rust checks reused",
+    "committed": false,
+    "installed": false
+  },
+  "toolDelay": {
+    "textEditGetAppSeconds": 708.5185,
+    "finderGetAppSeconds": 25538.4277,
+    "requestedFinderTimeoutMs": 10000,
+    "deadlineUtc": "2026-11-11T21:19:57Z",
+    "deadlineMissed": true,
+    "notProductLatencyClaim": true
+  },
+  "limitations": [
+    "Formal repaired send, real tool call and cold reopen remain untested.",
+    "Full P21/P22/P41, other Agents/platforms and29x8 unchanged."
+  ],
+  "evidence": [
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/inspect-owned-index-before-add.json",
+      "sha256": "24008f19ca4c6e51d266c3b7e62f43204627be0da5ceaad420cf321896e39c32"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/inspect-owned-index-after-add.json",
+      "sha256": "3d71ddae188bac86ce8efe6ff94304868cb18a88ef13c16c09bb5f5bf9f8bba4"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/server-after-review-return.json",
+      "sha256": "884af34f3555259f2d96054c286a3c7a574094901ed9b71b2a66af5feaab29f1"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/server-after-add.json",
+      "sha256": "4c2c0c66623521ccb1e87378bc0903ba52e57a66993dbdedc1df27df9941502c"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/file-delivery/after-collision.json",
+      "sha256": "9f258b1cc315a8caffc1a026dc5834627d069b0e70b877f24a71c58d10306f9d"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/file-delivery/metadata-only-change.json",
+      "sha256": "6b9c526f358ef288d23f57084b2eca92f9aeddc6fca1af77654003920b4c323a"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/file-delivery/successful-copy.json",
+      "sha256": "397f640e06493dd2807b1206a4197dbb312725c8ba80d10f62f2186fd5c6f550"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/ui/02-empty-inspect-success.ax.txt",
+      "sha256": "838e9458be703b3812b78c833cd95539fc4b91ca80bbcf1574f8a3461cd2a233"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/ui/04-added-and-reported.ax.txt",
+      "sha256": "4063b00a1182e8f8d08d9732710498e5fce1d3af34a3b6d5571c8f68a2d7f108"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/ui/05-before-send.ax.txt",
+      "sha256": "3406458abda779423edd5df78f7dfcf3278a97f913e4342be9d44eec45354eb4"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/ui/06-existing-target-result.ax.txt",
+      "sha256": "14ace8faceef412bc95f865c7362518a8301939b5c8461659922cda11b6563ab"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/ui/07-new-copy-saved.ax.txt",
+      "sha256": "5092a9276bcc5673b8867d5bcf7c88d0b81a70c9afda007f817a8a65cf916e21"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/ui/08-copy-opened-textedit.ax.txt",
+      "sha256": "2c9dabcc0ffde45318dfaed73d7d12053d8e40a07344c9b18f65fe730abc64ec"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/inspect-owned-index-after-remove.json",
+      "sha256": "fff631d1fafa6283507d3085013ad74a1b5ac7f573a3e3c5022ff6d600e6ab13"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal-followup/ui/09-withdraw-before-update.txt",
+      "sha256": "6f66da28ee34d73a9f87b84c187ed53450b5554ac4ad1a6b5b2cd9b23171072e"
+    }
+  ],
+  "closedState": {
+    "normalSaveAndExit": true,
+    "evidence": {
+      "path": "output/2026-11-12-four-hour-mcp/formal/stores-after.json",
+      "sha256": "6c037e024278e3ae8d8ba4e512c972c88f301f621173039be5f0aa5b726b0732"
+    },
+    "priorNativeRowsPreserved": true,
+    "selectedUnchanged": true,
+    "configurationUnchanged": true,
+    "pendingMarkerCount": 0
+  }
+}

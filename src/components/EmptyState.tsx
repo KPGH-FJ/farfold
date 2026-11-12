@@ -9,7 +9,12 @@ import {
 import { PreservedDrafts } from "./PreservedDrafts";
 import { NewConversationLocationBar } from "./NewConversationLocationBar";
 import { useDraftPreparation } from "./useDraftPreparation";
-import { usePreparedComposerOwner } from "./usePreparedComposerOwner";
+import {
+  usePreparedComposerOwner,
+  usePreparedComposerPortal,
+  useSavedPreparedConversation,
+  type PreparedConversationTransition,
+} from "./usePreparedComposerOwner";
 import { useDraftWorkLocation } from "./useDraftWorkLocation";
 import { useDraftSendIntent, type DraftSendIntent } from "./useDraftSendIntent";
 import {
@@ -113,7 +118,6 @@ import {
   PencilLineIcon,
   SlidersHorizontalIcon,
 } from "@phosphor-icons/react";
-
 const suggestionIcons = [AirplaneTiltIcon, PencilLineIcon, BookOpenIcon];
 const NO_HISTORY: ReadonlySet<string> = new Set();
 export function EmptyState({
@@ -130,6 +134,7 @@ export function EmptyState({
   active = true,
   onPreparedKey,
   onPreparedComposerOwner,
+  onPreparedSaved,
   composerTarget,
   onRestoreDraft,
   availableFeedbackOwners,
@@ -138,6 +143,7 @@ export function EmptyState({
   availableFeedbackOwners?: ReadonlySet<string>;
   onPreparedKey?: (key: string | null) => void;
   onPreparedComposerOwner?: (current: (() => boolean) | null) => void;
+  onPreparedSaved?: PreparedConversationTransition;
   composerTarget?: HTMLElement | null;
   header?: ReactNode;
   active?: boolean;
@@ -311,7 +317,6 @@ export function EmptyState({
       needsAuthentication,
       sourceContext,
     });
-
   // Explicit selection prepares a draft; failed combinations are not retried automatically.
   const failedPairRef = useRef<string | null>(null);
   const pendingInquiryAbort = useRef<AbortController | null>(null);
@@ -613,7 +618,7 @@ export function EmptyState({
             },
           );
           if (!restored || rejectOpened()) return;
-          preparedComposerOwner.open(state.key);
+          preparedComposerOwner.open(state.key, state);
           setDraftKey(state.key);
         })
         .catch((error) => {
@@ -661,7 +666,6 @@ export function EmptyState({
     agentId ? work.enabled(agentId) : false,
     unsent.pendingConversation,
   ]);
-
   const modelOption = draft ? modelConfigOption(draft.configOptions) : null;
   const applyingModel = useRef<string | null>(null);
   const caps = promptCapabilities(agents.find((a) => a.id === agentId) ?? null);
@@ -700,7 +704,6 @@ export function EmptyState({
     draft?.configError,
     draftError,
   ]);
-
   const pickProject = async (): Promise<boolean> => {
     if (
       picking ||
@@ -739,7 +742,6 @@ export function EmptyState({
       setPicking(false);
     }
   };
-
   const requireSendSelection = () => {
     if (!mounted.current || !activeRef.current || currentPair.current !== pair)
       throw new Error(STRINGS.repair.sendFailed);
@@ -925,22 +927,10 @@ export function EmptyState({
     requestSend: () => setSendRequest((value) => value + 1),
     folderCancelled: setFolderCancelled,
   });
-  // Move only the editor's DOM host; preserve its pending work and `new` draft.
-  const [editorRoot] = useState(() =>
-    typeof document === "undefined" ? null : document.createElement("div"),
+  const { editorRoot, editorHome } = usePreparedComposerPortal(
+    composerTarget,
+    active,
   );
-  const editorHome = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const destination = composerTarget ?? editorHome.current;
-    if (!editorRoot || !destination) return;
-    const focused = editorRoot.contains(document.activeElement)
-      ? (document.activeElement as HTMLElement)
-      : null;
-    editorRoot.className = "empty-col";
-    destination.appendChild(editorRoot);
-    if (activeRef.current) focused?.focus({ preventScroll: true });
-  }, [editorRoot, composerTarget]);
-  useEffect(() => () => editorRoot?.remove(), [editorRoot]);
   const presentedDraft = useRef<string | null>(null);
   const workspaceKey =
     draft?.key === draftKey &&
@@ -950,6 +940,17 @@ export function EmptyState({
       ? draftKey
       : null;
   const composerOwner = preparedComposerOwner.current(workspaceKey);
+  useSavedPreparedConversation(
+    draft,
+    composerOwner,
+    preparedComposerOwner,
+    onPreparedSaved,
+    (key) => {
+      handedOffKeys.current.add(key);
+      preparationIntent.current = null;
+      setDraftKey(null);
+    },
+  );
   useEffect(() => {
     presentedDraft.current = workspaceKey;
     onPreparedKey?.(workspaceKey);
@@ -984,7 +985,6 @@ export function EmptyState({
           ? STRINGS.empty.opening
           : modelReadError);
 
-  // Sending policy never changes whether the selected program is prepared.
   const needsPreparation =
     needsAuthentication ||
     !(preparationComplete && currentAgent && candidateSelected);

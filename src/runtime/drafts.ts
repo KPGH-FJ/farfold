@@ -300,6 +300,28 @@ export const composerDrafts = {
   read(key: string): ComposerDraft {
     return values.get(key) ?? empty;
   },
+  /** Adopt only the current prepared input; never merge into another editor.
+   * Both keys change in one save snapshot, and late imports lose the old key. */
+  movePreparedToSession(threadKey: string, expected: ComposerDraft): boolean {
+    const destination = `session:${threadKey}`;
+    if (
+      !threadKey ||
+      this.read("new") !== expected ||
+      values.has(destination) ||
+      expected.sendPending ||
+      expected.pendingConversation ||
+      expected.queueEdit ||
+      expected.attachments.some((item) => item.loading) ||
+      draftPersistence.snapshot().interactionLocked
+    )
+      return false;
+    if (values.has("new")) values.set(destination, expected);
+    values.delete("new");
+    generations.set("new", this.generation("new") + 1);
+    generations.set(destination, this.generation(destination) + 1);
+    changed(threadKey);
+    return true;
+  },
   /** Keep the editor visible while the same snapshot gives the queue ownership. */
   holdForQueue(key: string, draft: ComposerDraft): () => void {
     queueHandoffDrafts.set(draft, key);

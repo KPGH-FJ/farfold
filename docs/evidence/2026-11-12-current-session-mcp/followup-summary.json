@@ -1,8 +1,8 @@
 {
   "scope": "Followup repair after first formal pass",
   "implementationBaseCommit": "f44c42248b441516272713d98cd5047110c12f36",
-  "formalAtThisRecord": "f44c42248b441516272713d98cd5047110c12f36",
-  "followupInstalled": false,
+  "formalAtThisRecord": "728d4ba00155eb052d4ca6cdc075aed7d8379805",
+  "followupInstalled": true,
   "actualModelRequests": 0,
   "actualToolCalls": 0,
   "sourceSha256": {
@@ -108,8 +108,13 @@
     "Three test-only PID producers publish atomically; deterministic original 3 failures become 4 passes including control."
   ],
   "limitations": [
-    "Not yet installed or tested against real Agent in formal app; current installed version is f44.",
-    "Controlled browser receipt and protocol peers are synthetic; no real model request or tools/call in this task yet.",
-    "Full P21/P22/P41, other Agents/platforms and 29x8 remain open."
-  ]
+    "Installed728d4: empty inspect/add/save/list and saved-copy open/reveal observed; prepared editor remains disabled after first save.",
+    "Seven-file editor handoff repair is uncommitted/uninstalled; real selected-model call, withdrawal and cold reopen remain unverified.",
+    "Full P21/P22/P41, other Agents/platforms and29x8 remain open."
+  ],
+  "implementationCommit": "728d4ba00155eb052d4ca6cdc075aed7d8379805",
+  "formalFollowup": {
+    "path": "docs/evidence/2026-11-12-current-session-mcp/formal-followup-summary.json",
+    "sha256": "13cf8bd5f55cbb371501ac668590a4421ae4f4940ceb54aacdda71ac6e91600e"
+  }
 }

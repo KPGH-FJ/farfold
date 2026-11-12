@@ -996,6 +996,21 @@ export default function App() {
               active={view.kind === "start" && !paletteOpen && !importOpen}
               onPreparedKey={setPreparedDraftKey}
               onPreparedComposerOwner={observePreparedComposerOwner}
+              onPreparedSaved={(state, move) => {
+                if (
+                  currentView.current.kind !== "start" ||
+                  currentPreparedDraftKey.current !== state.key ||
+                  threads.thread(state.key) !== state ||
+                  state.identity !== "established" ||
+                  browserSurfaceGuard.hasPendingNavigation ||
+                  !move()
+                )
+                  return false;
+                // The displayed workspace stays the same; keep its page and permission.
+                setThreadKey(state.key);
+                setView({ kind: "thread", key: state.key });
+                return true;
+              }}
               composerTarget={draftComposerTarget}
               header={
                 <header className="workspace-topbar start-context">
