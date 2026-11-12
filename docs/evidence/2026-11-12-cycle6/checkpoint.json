@@ -1,7 +1,7 @@
 {
-  "phase": "in-progress: common browser delivered; original five admission review continues",
-  "completedCommit": "ab54053183ae7899c2b5c5d8cf3b2359b244525e",
-  "formalInstalledSource": "ab54053183ae7899c2b5c5d8cf3b2359b244525e",
+  "phase": "cycle6 executable scope complete; original five outcomes retained; full151 and29x8 remain open",
+  "completedCommit": "a5a5f0e93a2203d8caed8fec9eb93490c80f9070",
+  "formalInstalledSource": "a5a5f0e93a2203d8caed8fec9eb93490c80f9070",
   "modelRequests": 3,
   "evidence": [
     {
@@ -79,6 +79,42 @@
     {
       "path": "output/2026-11-12-cycle6/formal/screenshot-300-0.png",
       "sha256": "8d21be7cf8550a9b422c5e613c38dcd98f0fe85fb951a17e4505d6f641d41d79"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-opencode/result.json",
+      "sha256": "5e96810877cb45626cd27de7ea800c41ef303facf5cb5161957d1c773020abe0"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/opencode-integration.json",
+      "sha256": "7e2d8827aa849fe888a4bbe94f25d224abdcfd76d4910b1a5b76f2b0d4410d4a"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/receipt.json",
+      "sha256": "ed6136dbb73b82e7a840bea0593212d5b656dd43fe49f7c08532d57cc10a0214"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/attempt-2-load/receipt.json",
+      "sha256": "b3a9809b82b3160bb685fbeb4be4262a81afcca345f040a14ff01970a228b07e"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal-opencode/install.json",
+      "sha256": "cb611fa95093e976c30ac52bbb03df0bf19cf8a90d5edaa2f2554e9e5f68a34f"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal-opencode/ui-observations.json",
+      "sha256": "b5a721bf961a9c05fc25b3a2a85264fcce99eb51ea946b05d970635d66d40282"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal-opencode/native-protection.json",
+      "sha256": "afcded1a54f4d59abef82e9464fb0531f8fc6a6a0d54cdd018fdb2968fa83bef"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal-opencode/meta-protection.json",
+      "sha256": "6af7ad225075c138e8843db3877d49439dac55d85237a3c60e58763177cca7b7"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/cycle-exit-final.json",
+      "sha256": "e6c9c1ebc382628dc55f89da40f4e3de7b3986db6bf04ba14508db642aca297d"
     }
   ],
   "limits": [
@@ -86,6 +122,31 @@
     "No-model official probe evidence remains distinct from later three formal UI prompts",
     "Missing-socket observation was normal close, not crash",
     "Goose native PNG receipt proves same-request delivery, not model image comprehension",
-    "Original five unchanged; their source admission, selected-model and authorization gaps are not full-Agent acceptance"
-  ]
+    "Original five unchanged; their source admission, selected-model and authorization gaps are not full-Agent acceptance",
+    "OpenCode formal result is zero-model new draft/connection/permission only, not same-native saved history, real page tool output or model comprehension. Fast-agent/Mistral safety/lifecycle integration remains product development, not an account-only dependency."
+  ],
+  "opencodeAdditionalModelRequests": 0,
+  "closure": {
+    "atUtc": "2026-11-12T17:16:07.622746+00:00",
+    "currentCycleExecutableScopeComplete": true,
+    "nextCycle": 7,
+    "fullProductAcceptance": false,
+    "taskEntryCheck": {
+      "path": "output/2026-11-12-cycle6/task-entry-closure.txt",
+      "sha256": "af994868e8743021f4a737c5580d256dc3a91d541f8990c469974928e930c3b7",
+      "ids": ["P23", "P25", "P27", "P28", "P30", "H07"],
+      "actualOutputCheckedAgainstStatus": true
+    },
+    "docsCheck": {
+      "path": "output/2026-11-12-cycle6/docs-check-closure-final-r2.txt",
+      "sha256": "c0bce3977c905f163bb080992d764b49b13070eebabd03b1435e080610c2be5f",
+      "originalConditions": 151,
+      "activePlans": 1
+    },
+    "retainedDocumentCheckFailures": [
+      "docs-check-closure.txt",
+      "docs-check-closure-final.txt"
+    ],
+    "postReviewDocsOnly": "Plan shortened to5KiB by removing duplicate text; original cycle outline/requirements unchanged. Closure references added after independent review."
+  }
 }
