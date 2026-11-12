@@ -1,5 +1,5 @@
 {
-  "updatedAtUtc": "2026-11-12T03:43:51.636516+00:00",
+  "updatedAtUtc": "2026-11-12T03:59:18.260338+00:00",
   "change": "Promote the exact saved prepared conversation to its normal editor with one atomic draft transfer; retain selected configuration and never send automatically.",
   "sourceManifest": {
     "path": "output/2026-11-12-four-hour-mcp/saved-editor/source-manifest-final.json",
@@ -154,6 +154,15 @@
     "independentReview": "output/2026-11-12-four-hour-mcp/review/recovery-copy-independent.json",
     "engineering": "output/2026-11-12-four-hour-mcp/engineering-recovery-copy-final/result.json",
     "checks": "760 frontend files /10515 tests, typecheck/build passed; only docs whitespace format failure rerun and passed; unchanged native checks reused",
-    "scope": "One instruction string; no changes to controls, storage, session recovery, queue or send behavior. Formal functional evidence remains8f80; no second model request for this correction."
+    "scope": "One instruction string; no changes to controls, storage, session recovery, queue or send behavior. Formal functional evidence remains8f80; no second model request for this correction.",
+    "installation": {
+      "sourceCommit": "f537cd2a402a4ec8beb5f19de2521a3d83b5dc16",
+      "path": "output/2026-11-12-four-hour-mcp/formal-recovery-copy/install.json",
+      "sha256": "c2a938f9d818b4492de57123ee3622894eaffa3913d523d3d5d627d1767bb281",
+      "dataEntriesPreserved": 206420,
+      "onlyFormalApplication": "/Applications/Farfold.app",
+      "duplicateCandidateRemoved": true,
+      "formalFunctionalRetest": "Not repeated for the single instruction string; actual execution evidence remains installed8f80, behavior source unchanged."
+    }
   }
 }
