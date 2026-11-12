@@ -1,0 +1,329 @@
+{
+  "kind": "Cycle5OwnedDocxReworkAndDeliveryCloseout",
+  "recordedAtUtc": "2026-11-12T08:05:16.265960+00:00",
+  "scope": "第5周期本轮交付波次：真实DOCX版本意见返工/交付、已保存副本外部替换保护、文件选择入口迟到回执修复。151原条件和29家八项不变，未声称整项全通过。",
+  "phases": {
+    "realReworkAndDelivery": "installed699b4efd1 macOSarm64",
+    "fixedPickerAndColdReadback": "installed4ef6f51bb85f91dd8559c8399e2ce14566fabb56 macOSarm64",
+    "cdhash": "8cf53860116e1eec4e9e4a2bd45bec55227fda7d",
+    "application": "/Applications/Farfold.app"
+  },
+  "agent": {
+    "name": "Goose",
+    "provider": "openrouter",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "reasoning": "off",
+    "nativeSession": "20261112_4",
+    "explicitUserAcpSends": 1,
+    "toolRequests": 6,
+    "toolSuccesses": 6,
+    "assistantUsageRecords": 7,
+    "cumulativeInputTokens": 49034,
+    "cumulativeOutputTokens": 1400,
+    "boundary": "一次用户/ACP发送，不是一次LLM调用；7条官方usage实际合计，未据此推算整个开发的token消耗、节省或费用。"
+  },
+  "docx": {
+    "originalSha256": "3eaf9c43c7f250ddc9737e0f97dc4902697c41237af40d169b3db21f066d89e4",
+    "resultSha256": "30d049db567ab598ff1b161886bf61611adefa2c3a7f77db8d696d6ef674f8bb",
+    "resultBytes": 1244,
+    "zipMembers": 3,
+    "change": "唯一日期段落2026-11-18→2026-11-20",
+    "passed": [
+      "正式预览段落及表格，选择原段落提出意见，原文件SHA/位置进入明确发送内容",
+      "实际官方6个shell调用均成功；前后XML输出与原/成品成员一致，最终工具sha与实际成品一致",
+      "独立完整DOM比较仅指定text节点变化；加粗、斜体、表格、负责人、页面设置保持，其他ZIP成员解压字节一致",
+      "打开中的旧预览自动提示文件变化，保留旧日期；明确重读后显示11月20日",
+      "实际另存1244字节逐字节一致；文本编辑实际打开准确副本且内容匹配",
+      "新版冷开原意见仍带原SHA，未发送核对意见带修改后SHA；重新选择源DOCX显示新日期"
+    ],
+    "boundary": "仅本合成DOCX的有限预览和实际返工，不证明完整Word排版/所有Office格式。首条shell为自有cwd的ls目录元数据列表，其余为目标DOCX；不能声称所有访问只有源文件，也不把进程回执当系统级全访问审计。未制造细粒度工具差异证明。"
+  },
+  "copyProtection": {
+    "positive": "第一副本打开并实际读出；最终恢复副本在访达准确选中，源及最终副本字节相同",
+    "negative": "精确自有第一副本被外部替换（文件身份与内容均变化）后，打开副本明确显示已变化且未继续；原源文件/未发送意见保留；随后明确新另存恢复交付。",
+    "negativeBoundary": "不是同inode内容改写或所有重定向情形；后续显示位置点击只沿用同一警告，未计为第二个独立拒绝证明。旧成功记录保留为当时成功。"
+  },
+  "pickerFix": {
+    "change": "useLayoutEffect清理及时使已卸载picker失效；实际系统对话框/检查未结束仍保留全局等待名额。",
+    "controlled": "2个永久真红转绿、29定向通过；同真实React/WebKit旧例红新例绿；独立StrictMode正常选择及两类挂起重挂通过。",
+    "formal": "新安装版原生对话框取消后原对话和意见保持，可以重新选择并正确预览DOCX。",
+    "boundary": "受控迟到回执使用合成IPC；正式只验正常取消/重开，不声称在真实系统对话框中重现窄提交时序。"
+  },
+  "protection": {
+    "allOldMessageRowsPreserved": true,
+    "allMessageRowsUnchangedAcrossLatestColdReadback": true,
+    "savedChoicesAndProtectedConfigUnchanged": true,
+    "pendingMarkers": 0,
+    "installSnapshotEntriesUnchanged": 206420,
+    "emptyPreparationSession": "20261112_3在先前自有owned-saved-editor准备位置产生，0消息保留；不能宣称只有一个新native记录。",
+    "normalApplicationExit": true,
+    "duplicateApplicationRemoved": true
+  },
+  "engineering": {
+    "allSevenPassed": true,
+    "productInputsUnchanged": true,
+    "frontendFiles": 765,
+    "frontendPassed": 10596,
+    "rustPassed": 2626,
+    "rustIgnored": 8,
+    "checks": [
+      {
+        "name": "format",
+        "command": ["corepack", "pnpm", "format:check"],
+        "exitCode": 0,
+        "seconds": 33.095,
+        "finishedAtUtc": "2026-11-12T07:51:06.404605+00:00",
+        "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      {
+        "name": "typecheck",
+        "command": ["corepack", "pnpm", "typecheck"],
+        "exitCode": 0,
+        "seconds": 9.738,
+        "finishedAtUtc": "2026-11-12T07:51:16.143170+00:00",
+        "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      {
+        "name": "test",
+        "command": ["corepack", "pnpm", "test"],
+        "exitCode": 0,
+        "seconds": 45.022,
+        "finishedAtUtc": "2026-11-12T07:52:01.165458+00:00",
+        "logSha256": "4b211f0dbb218b39dee117e0c1336ae97a4db934bb644cd07e2d07f3ef30e0e2"
+      },
+      {
+        "name": "build",
+        "command": ["corepack", "pnpm", "build"],
+        "exitCode": 0,
+        "seconds": 9.241,
+        "finishedAtUtc": "2026-11-12T07:52:10.406680+00:00",
+        "logSha256": "8ad8dcbd8e60b9205672e04f9f4e71475f530365f098e8901422a16418192635"
+      },
+      {
+        "name": "cargo-fmt",
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0,
+        "seconds": 1.667,
+        "finishedAtUtc": "2026-11-12T07:50:34.976509+00:00",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "clippy",
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "seconds": 0.59,
+        "finishedAtUtc": "2026-11-12T07:50:35.567619+00:00",
+        "logSha256": "c54bca416b8a09e3c2018b0ada16771065b3b9b5469242539af42bc53077e2cf"
+      },
+      {
+        "name": "cargo-test",
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "exitCode": 0,
+        "seconds": 134.372,
+        "finishedAtUtc": "2026-11-12T07:52:49.940649+00:00",
+        "logSha256": "c18616c4a42b77c05a780610f3e79bbc7df72d0351dbb6aeb0650199a1599dd2"
+      }
+    ]
+  },
+  "remaining": [
+    "真实Agent返回音频缺合格样本；不以本地生成音频或协议声明替代。",
+    "实际工作表在途取消、其他失败/重启/并发组合、更多格式和完整视觉保真仍未覆盖。",
+    "其他Agent、Windows正式用户流程与29家八项仍开放；原模型/账号/NEW-24/Mistral等具体边界保持。",
+    "本轮属于技术实测，没有真人操作者用时/满意度结论。"
+  ],
+  "evidence": [
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/fixture.json",
+      "sha256": "ab7a47525ad705e09b0793fb4bb67700a0f77f1c8f3f22c0bfa1aebeaa9e677a"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/baseline.json",
+      "sha256": "617b4ed4a993e3539ff6a834200128ebd8ad0b65c7f21deea42830caa56d3f5c"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/final.json",
+      "sha256": "28b20c4a9580a15ab85246b851f70a21417e8b39f27ac330d929d2c8743597fc"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/cold-final.json",
+      "sha256": "45f1ba9b21a2582e35114ece1b507e678b53185d31421f02fc2459813c857faf"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/closed-verification.json",
+      "sha256": "ff0d261e80e952edad2e7329129623fadebe271b4c0fd44db8b5eb979130902e"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/independent-result.json",
+      "sha256": "379e2f3c2f8cb8efc43c4505a30e8a2b9c8ac5679baf5b40ef61ef329b60ced1"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/independent-native-final.json",
+      "sha256": "24e9e52d2d2812547a4844a829543693f955362c5349f71349d044b7c9333242"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/prompt-attempt.json",
+      "sha256": "49bfa62d1d827d4a2efa34a62c3eb9ff28ba78ca20b2e92bc63f74555157fe10"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui04-preview.txt",
+      "sha256": "7b39c2525dc4760b122a5847d1f828c7f077cfb652beb68f0947585978bed96c"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui04-preview.png",
+      "sha256": "bb839ffa43f0457c1ba1398b2f8eedb8bba700956f31b31805298b9171992128"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui06-presend.txt",
+      "sha256": "2ee6a49878183802b6264cb5ed800d93bac5440da0e8feae369e4c6c15e17e03"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui07-sent.txt",
+      "sha256": "30b1a2cc1aa1b04c30a5fc550c2b371b6f2ed3325d0e0ab005695731236fa1f7"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui08-progress.txt",
+      "sha256": "8d4993bb403a00f28f44daa2fc7a951112ce6d4d60c43ac34fce7ada74d5889d"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui08-auto-change.png",
+      "sha256": "4e4ef430b0b7044f13dbd53f60d5bb9b13972aded9c0c810ba3eaa184653960f"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui09-refreshed.txt",
+      "sha256": "6386d4ec20bfe1d62531f87691b8da1a00b320fbe50a7e3dd99331aa0871afb0"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui10-unsent-delivery-opinion.txt",
+      "sha256": "2014b1e74ace5223dbc7b68901ac7a8efbc1d15edbd1e1896b3510a6ccf2d04d"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui12-copy-complete.txt",
+      "sha256": "03a9f6e22c64c24defc9b343c09f39d6be269d9be59af44eeca2eec23b40df4b"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui14-textedit-copy.txt",
+      "sha256": "76d73afb522174741d32340e09fd6d0928c38e9062ccd515d81e9e329ab46806"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui14-textedit-copy.png",
+      "sha256": "a9ebdd87b330794cc9e840e3b92b61bb981a3264c24cfe2d6b930febb1c6132c"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/copy-external-replacement.json",
+      "sha256": "3e4151d8d5a7417667c0a6f10679be1db3e31feb5219fd09daf4a1a955a11737"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui15-changed-copy-open-rejected.txt",
+      "sha256": "003a76550523b223e2b3d11b79067b963749bd3cac466c44e2d211f5c4bdb5c8"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui16-changed-copy-reveal-rejected.txt",
+      "sha256": "712ab2d68452b94e273fd269052dc527deb8ac5dd54f2f00c7b89cbc1cc61e0c"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/first-copy.json",
+      "sha256": "514bd8c1af997038813c2ce85b1c57d9dbf52370c47604895b9295d88f0ebc85"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/final-copy.json",
+      "sha256": "b9c7f1bbcd37ee107c82d212c857eee7657baf41731ebee12191efaf51d89ee2"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui18-recovery-save-complete.txt",
+      "sha256": "518f927bef163fc456b1bae1dc407fbe636d63b62c7ca03c83215c06a45b22a4"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui20-final-copy-selected.txt",
+      "sha256": "1f0f5427bd2b459fc0dc7e7a0a4ef0aa3d00ab786dac1b75fca5b731eacf5a99"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal-docx/ui22-exited.json",
+      "sha256": "fb77012f597923d1db4a06e21a35969a5f5280eb47672752bba89dcc6dfc78d4"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal/install.json",
+      "sha256": "5180754fd57b888cf24478de41017706b8bd7d20ff87973bf083973ab440572d"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal/candidate-review.json",
+      "sha256": "f43489387c31c3ab4d8986fe30f686a60aa5b6e538e36609507158f3884a046d"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal/launch-review.json",
+      "sha256": "b23a067b2a8d17f0df6e5f96a5904bf3ca37a45edf46fbb953bfdd2bdcdef4cf"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal/cold02-owned-history.txt",
+      "sha256": "76f1c70cb5ba64ea89c651cfce442af9af778dc2056b781c59173cffe8be0a6f"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal/cold03-unsent-opinion.txt",
+      "sha256": "25cd9330835bf2de2f8a6ed88f80a237463d68b1a154efdcad8b9552a1d9112f"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal/cold04-picker-cancel.txt",
+      "sha256": "02dda590fbb6cc232a388ae44e705a8f7a8fdda7f303f516d39c4c483a758bbe"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal/cold05-docx-opened.txt",
+      "sha256": "5cbd0fab7c6967a509d325b53501170caaa8af9cb5dd42c3a6f06d4778dd5b1f"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal/cold05-docx-opened.png",
+      "sha256": "43d10055c94a94546529225eeb9876b8f9bb52d5a40bd29bb826a8f487d0285f"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal/cold06-exited.json",
+      "sha256": "ded166357197bfcb12dc902e7831c5c5cbc8bcd7b7585b978d77e0738b33b3f1"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/formal/duplicate-cleanup.json",
+      "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/scope-evidence.json",
+      "sha256": "070aa041d693fcf00c9c377c9e2a2e56a30cb5604a7a225fb49058158f866ce7"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/fixture-independent-corrected.json",
+      "sha256": "e13be2bfaa205a02f27d0afc432f23932e5406eea9ed871fcfa8de128cc50c74"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/engineering/result.json",
+      "sha256": "09e7039f587ef345ac81296b4e2ac3d62522d71457fac29c515b92825b6eb81c"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/file-picker-review/independent-review.json",
+      "sha256": "e4bcd8f3eac50a4581ae63ad4b07d02bbb2342fd335717cf0ef7848d151fc146"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/review/final-evidence-review.json",
+      "sha256": "aafd461054d5c592457e8e0e2d4789baa641509eee66a34beb803e196479bbf5"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/review/final-source-unchanged.json",
+      "sha256": "4cad9dc6133e87372c45a3f54b305988710120060e870d1bdb1553dc072763f3"
+    }
+  ]
+}
