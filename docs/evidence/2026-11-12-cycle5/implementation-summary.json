@@ -1,0 +1,120 @@
+{
+  "kind": "Cycle5FilePickerRetirementFix",
+  "problem": "Closing/unmounting a file preview picker can commit before its passive cleanup. A late dialog or inspection Promise could still read/open a file for the departed view.",
+  "change": "Retire the picker lifetime in layout cleanup. The actual pending dialog/inspection remains globally reserved until its original Promise settles; no automatic retry or shared-owner rewrite.",
+  "controlledEvidence": "Two permanent cases red(27pass/2fail) to29pass; actualReact WebKit same scenarios reject post-unmount results; independent StrictMode normal/remount cases passed. Synthetic IPC only, not a native timing reproduction.",
+  "engineering": {
+    "allSevenPassed": true,
+    "productInputsUnchanged": true,
+    "frontendFiles": 765,
+    "frontendPassed": 10596,
+    "rustPassed": 2626,
+    "rustIgnored": 8,
+    "checks": [
+      {
+        "name": "format",
+        "command": ["corepack", "pnpm", "format:check"],
+        "exitCode": 0,
+        "seconds": 33.095,
+        "finishedAtUtc": "2026-11-12T07:51:06.404605+00:00",
+        "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      {
+        "name": "typecheck",
+        "command": ["corepack", "pnpm", "typecheck"],
+        "exitCode": 0,
+        "seconds": 9.738,
+        "finishedAtUtc": "2026-11-12T07:51:16.143170+00:00",
+        "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      {
+        "name": "test",
+        "command": ["corepack", "pnpm", "test"],
+        "exitCode": 0,
+        "seconds": 45.022,
+        "finishedAtUtc": "2026-11-12T07:52:01.165458+00:00",
+        "logSha256": "4b211f0dbb218b39dee117e0c1336ae97a4db934bb644cd07e2d07f3ef30e0e2"
+      },
+      {
+        "name": "build",
+        "command": ["corepack", "pnpm", "build"],
+        "exitCode": 0,
+        "seconds": 9.241,
+        "finishedAtUtc": "2026-11-12T07:52:10.406680+00:00",
+        "logSha256": "8ad8dcbd8e60b9205672e04f9f4e71475f530365f098e8901422a16418192635"
+      },
+      {
+        "name": "cargo-fmt",
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0,
+        "seconds": 1.667,
+        "finishedAtUtc": "2026-11-12T07:50:34.976509+00:00",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "clippy",
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "seconds": 0.59,
+        "finishedAtUtc": "2026-11-12T07:50:35.567619+00:00",
+        "logSha256": "c54bca416b8a09e3c2018b0ada16771065b3b9b5469242539af42bc53077e2cf"
+      },
+      {
+        "name": "cargo-test",
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "exitCode": 0,
+        "seconds": 134.372,
+        "finishedAtUtc": "2026-11-12T07:52:49.940649+00:00",
+        "logSha256": "c18616c4a42b77c05a780610f3e79bbc7df72d0351dbb6aeb0650199a1599dd2"
+      }
+    ]
+  },
+  "formalStatus": "Existing699formal completed one DOCX feedback send and actual copy, external replacement rejection and recovery copy. New fix installation and cold readback pending; later final summary will record actual outcomes.",
+  "evidence": [
+    {
+      "path": "output/2026-11-12-cycle5/file-picker-review/source-freeze.json",
+      "sha256": "6a5f268865642b13afc5e58167fa1571c46ae3325fcdd966a484810febc0674f"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/file-picker-review/independent-review.json",
+      "sha256": "e4bcd8f3eac50a4581ae63ad4b07d02bbb2342fd335717cf0ef7848d151fc146"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/file-picker-review/webkit-run2-result.json",
+      "sha256": "c974348c4de38888fd7867006263cd27a46843ffe72476e9640703dcd2aa4d44"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/file-picker-review/webkit-run3-result.json",
+      "sha256": "e59470805c7ae0ae9913d670435c60c0fdab5cf9d2240b48870f55996fb5f81e"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/engineering/result.json",
+      "sha256": "09e7039f587ef345ac81296b4e2ac3d62522d71457fac29c515b92825b6eb81c"
+    },
+    {
+      "path": "output/2026-11-12-cycle5/review/integration-closeout.json",
+      "sha256": "90591d779485bf8054e1f5610edecb1d9fa06243d6bbcadf803a908f7a0f1880"
+    }
+  ]
+}
