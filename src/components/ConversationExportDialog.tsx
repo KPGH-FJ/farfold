@@ -1,4 +1,10 @@
-import { useRef, useState, type ReactNode, type RefObject } from "react";
+import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { save } from "@tauri-apps/plugin-dialog";
 import { fileDelivery } from "../runtime/file_delivery";
 import { EXPORT_STRINGS as E } from "../runtime/export_strings";
@@ -26,13 +32,39 @@ export function ConversationExportDialog({
   const [saved, setSaved] = useState<string | null>(null);
   const [cancelled, setCancelled] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const writing = useRef(false);
+  const writing = useRef<object | null>(null);
+  const live = useRef({ active: false, text, name, includeLoadedToolDetails });
+  useLayoutEffect(() => {
+    const owner = { active: true, text, name, includeLoadedToolDetails };
+    live.current = owner;
+    setSaved(null);
+    setCancelled(false);
+    setError(null);
+    setSaving(writing.current !== null);
+    return () => {
+      owner.active = false;
+    };
+  }, [text, name, includeLoadedToolDetails]);
   const close = () => {
-    if (!writing.current) onClose();
+    if (!writing.current) {
+      live.current.active = false;
+      onClose();
+    }
   };
   const exportText = async () => {
-    if (writing.current || unavailable) return;
-    writing.current = true;
+    const owner = live.current;
+    const current = () => owner.active && live.current === owner;
+    if (
+      writing.current ||
+      unavailable ||
+      !current() ||
+      owner.text !== text ||
+      owner.name !== name ||
+      owner.includeLoadedToolDetails !== includeLoadedToolDetails
+    )
+      return;
+    const attempt = {};
+    writing.current = attempt;
     setSaving(true);
     setError(null);
     setSaved(null);
@@ -42,17 +74,21 @@ export function ConversationExportDialog({
         defaultPath: name,
         filters: [{ name: "Markdown", extensions: ["md"] }],
       });
+      if (!current()) return;
       if (destination) {
         await fileDelivery.exportText(text, destination);
-        setSaved(destination);
+        if (current()) setSaved(destination);
       } else {
         setCancelled(true);
       }
     } catch {
-      setError(E.failed);
+      if (current()) setError(E.failed);
     } finally {
-      writing.current = false;
-      setSaving(false);
+      // A dispatched write still owns its wait; hiding cannot cancel OS work.
+      if (writing.current === attempt) {
+        writing.current = null;
+        if (live.current.active) setSaving(false);
+      }
     }
   };
   return (

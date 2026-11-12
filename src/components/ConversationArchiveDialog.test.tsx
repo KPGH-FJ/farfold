@@ -10,6 +10,8 @@ const h = vi.hoisted(() => ({
   cursor: 0,
   ref: 0,
   effect: 0,
+  memo: 0,
+  memos: [] as { deps: unknown[]; value: unknown }[],
   pick: vi.fn(),
   open: vi.fn(),
   begin: vi.fn(),
@@ -28,12 +30,18 @@ vi.mock("react", async (original) => ({
     ];
   },
   useRef: (current: unknown) => (h.refs[h.ref++] ??= { current }),
-  useEffect: (fn: () => void | (() => void), deps: unknown[]) => {
+  useLayoutEffect: (fn: () => void | (() => void), deps: unknown[]) => {
     const i = h.effect++;
     if (!h.effects[i] || deps.some((x, j) => x !== h.effects[i].deps[j])) {
       h.effects[i]?.close?.();
       h.effects[i] = { deps, close: fn() || undefined };
     }
+  },
+  useMemo: (fn: () => unknown, deps: unknown[]) => {
+    const i = h.memo++;
+    if (!h.memos[i] || deps.some((x, j) => x !== h.memos[i].deps[j]))
+      h.memos[i] = { deps, value: fn() };
+    return h.memos[i].value;
   },
   useSyncExternalStore: (_subscribe: unknown, get: () => unknown) => get(),
 }));
@@ -71,12 +79,12 @@ const capture = (attachmentCount = 0) =>
 let c = capture();
 const close = vi.fn();
 const registered = vi.fn();
+let form = { name: "conversation.md", includeDetails: false };
 const render = () => {
-  h.cursor = h.ref = h.effect = 0;
+  h.cursor = h.ref = h.effect = h.memo = 0;
   return ConversationArchiveDialog({
     capture: c,
-    name: "conversation.md",
-    includeDetails: false,
+    ...form,
     onClose: close,
     returnFocusRef: { current: null },
     formatControls: () => null,
@@ -108,6 +116,7 @@ const flush = async () => {
   await new Promise((r) => setTimeout(r, 0));
 };
 beforeEach(() => {
+  h.memos = [];
   h.states = [];
   h.refs = [];
   h.effects = [];
@@ -115,6 +124,7 @@ beforeEach(() => {
   h.open.mockReset();
   h.begin.mockReset().mockReturnValue("job");
   c = capture();
+  form = { name: "conversation.md", includeDetails: false };
   close.mockReset();
   registered.mockReset();
 });
@@ -151,6 +161,27 @@ it("unmount while input hashing is pending retires the exact view even if reopen
   await flush();
   expect(h.begin).not.toHaveBeenCalled();
 });
+it("replacing the snapshot retires its picker and prepares only the newly selected capture", async () => {
+  let reply!: (path: string) => void;
+  h.pick.mockImplementationOnce(
+    () => new Promise((resolve) => (reply = resolve)),
+  );
+  click(S.save);
+  const old = c;
+  c = capture();
+  render();
+  reply("/owned/old.zip");
+  await flush();
+  expect(h.begin).not.toHaveBeenCalled();
+  expect(old.snapshotId).not.toBe(c.snapshotId);
+  h.pick.mockResolvedValueOnce("/owned/new.zip");
+  click(S.save);
+  await vi.waitFor(() => expect(h.begin).toHaveBeenCalledOnce());
+  expect(h.begin.mock.calls[0][0]).toMatchObject({
+    snapshotId: c.snapshotId,
+    destination: "/owned/new.zip",
+  });
+});
 it("after synchronous intent registration close only hides and retains the saving activity", async () => {
   h.pick.mockResolvedValue("/owned/out.zip");
   const nativeDigest = crypto.subtle.digest.bind(crypto.subtle);
@@ -184,7 +215,7 @@ it("after synchronous intent registration close only hides and retains the savin
     expect(h.begin).toHaveBeenCalledOnce();
     expect(registered).toHaveBeenCalledOnce();
     expect(
-      (h.states[0] as { getSnapshot: () => unknown[] }).getSnapshot(),
+      (h.memos[0].value as { getSnapshot: () => unknown[] }).getSnapshot(),
     ).toEqual([]);
     expect(h.begin.mock.calls[0][0]).toMatchObject({
       destination: "/owned/out.zip",
@@ -249,3 +280,75 @@ it("reports an attachment inspection limit before any save has started", async (
     await flush();
   }
 });
+
+it.each(["includeDetails", "name"] as const)(
+  "keeps an attachment inspection live when only %s changes",
+  async (field) => {
+    c = capture(1);
+    let reply!: (
+      file: Awaited<ReturnType<typeof fileDelivery.inspectLink>>,
+    ) => void;
+    const inspect = vi
+      .spyOn(fileDelivery, "inspectLink")
+      .mockImplementation(() => new Promise((resolve) => (reply = resolve)));
+    const checkbox = nodes().find(
+      (n) => n.type === "input" && n.props.type === "checkbox",
+    )!;
+    (checkbox.props.onChange as (e: { target: { checked: boolean } }) => void)({
+      target: { checked: true },
+    });
+    expect(inspect).toHaveBeenCalledOnce();
+    expect(nodes().some((n) => n.props.children === S.checking)).toBe(true);
+    expect(nodes().find((n) => n.type === "fieldset")?.props.disabled).toBe(
+      false,
+    );
+    if (field === "name") form = { ...form, name: "renamed.md" };
+    else form = { ...form, includeDetails: true };
+    render();
+    reply({
+      root: "/owned",
+      path: "/owned/source-0.txt",
+      resolvedPath: "/owned/source-0.txt",
+      name: "source-0.txt",
+      size: 3,
+      version: "checked-source-version",
+      sha256: "a".repeat(64),
+    });
+    await flush();
+    expect(nodes().some((n) => n.props.children === S.checking)).toBe(false);
+    expect(
+      nodes().some((n) => n.props.children === `${S.selected} · 3 字节`),
+    ).toBe(true);
+    expect(
+      nodes().find((n) => n.props.children === S.save)?.props.disabled,
+    ).toBe(false);
+    expect(h.begin).not.toHaveBeenCalled();
+  },
+);
+
+it.each(["includeDetails", "name"] as const)(
+  "retires the old save chooser when %s changes without preventing a fresh save",
+  async (field) => {
+    let reply!: (path: string) => void;
+    h.pick.mockImplementationOnce(
+      () => new Promise((resolve) => (reply = resolve)),
+    );
+    click(S.save);
+    if (field === "name") form = { ...form, name: "renamed.md" };
+    else form = { ...form, includeDetails: true };
+    render();
+    reply("/owned/old.zip");
+    await flush();
+    expect(h.begin).not.toHaveBeenCalled();
+    expect(
+      nodes().find((n) => n.props.children === S.save)?.props.disabled,
+    ).toBe(false);
+    h.pick.mockResolvedValueOnce("/owned/new.zip");
+    click(S.save);
+    await vi.waitFor(() => expect(h.begin).toHaveBeenCalledOnce());
+    expect(h.begin.mock.calls[0][0]).toMatchObject({
+      snapshotId: c.snapshotId,
+      destination: "/owned/new.zip",
+    });
+  },
+);

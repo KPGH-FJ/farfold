@@ -1,5 +1,6 @@
 import {
-  useEffect,
+  useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   useSyncExternalStore,
@@ -36,7 +37,10 @@ export function ConversationArchiveDialog({
   includeDetails: boolean;
   onRegistered: () => void;
 }) {
-  const [selection] = useState(() => new ArchiveSelection(capture));
+  const selection = useMemo(
+    () => new ArchiveSelection(capture),
+    [capture.snapshotId],
+  );
   const rows = useSyncExternalStore(
     selection.subscribe,
     selection.getSnapshot,
@@ -46,17 +50,22 @@ export function ConversationArchiveDialog({
   const [error, setError] = useState<ArchiveCode | null>(null);
   const [cancelled, setCancelled] = useState(false);
   const [jobId, setJobId] = useState<string | null>(null);
-  const writing = useRef(false);
-  const live = useRef({ active: true });
-  useEffect(() => {
-    const owner = { active: true };
-    live.current = owner;
+  const writing = useRef<object | null>(null);
+  const live = useRef({ active: false, selection, name, includeDetails });
+  useLayoutEffect(() => {
     selection.activate();
+    return () => selection.retire();
+  }, [selection]);
+  useLayoutEffect(() => {
+    const owner = { active: true, selection, name, includeDetails };
+    live.current = owner;
+    setBusy(writing.current !== null);
+    setError(null);
+    setCancelled(false);
     return () => {
       owner.active = false;
-      selection.retire();
     };
-  }, [selection]);
+  }, [selection, name, includeDetails]);
   const close = () => {
     live.current.active = false;
     selection.retire();
@@ -65,6 +74,7 @@ export function ConversationArchiveDialog({
   const replace = async (id: string) => {
     const owner = live.current,
       revision = selection.version();
+    if (!owner.active || owner.selection !== selection) return;
     setError(null);
     try {
       const path = await open({ directory: false, multiple: false });
@@ -80,13 +90,22 @@ export function ConversationArchiveDialog({
     }
   };
   const submit = async () => {
-    if (writing.current || jobId) return;
-    writing.current = true;
+    const owner = live.current;
+    const current = () => owner.active && live.current === owner;
+    if (
+      writing.current ||
+      jobId ||
+      !current() ||
+      owner.selection !== selection ||
+      owner.name !== name ||
+      owner.includeDetails !== includeDetails
+    )
+      return;
+    const attempt = {};
+    writing.current = attempt;
     setBusy(true);
     setError(null);
     setCancelled(false);
-    const owner = live.current;
-    const current = () => owner.active && live.current === owner;
     try {
       const destination = await save({
         defaultPath: name.replace(/\.md$/i, "") + ".zip",
@@ -111,8 +130,10 @@ export function ConversationArchiveDialog({
     } catch (e) {
       if (current()) setError(archiveCode(e));
     } finally {
-      writing.current = false;
-      if (current()) setBusy(false);
+      if (writing.current === attempt) {
+        writing.current = null;
+        if (live.current.active) setBusy(false);
+      }
     }
   };
   const selected = rows.filter((r) => r.state === "selected");

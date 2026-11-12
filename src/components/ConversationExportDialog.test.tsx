@@ -5,6 +5,12 @@ const h = vi.hoisted(() => ({
   refs: [] as { current: unknown }[],
   cursor: 0,
   ref: 0,
+  effect: 0,
+  effects: [] as {
+    deps: unknown[];
+    setup: () => void | (() => void);
+    close?: () => void;
+  }[],
   pick: vi.fn(),
   write: vi.fn(),
 }));
@@ -20,6 +26,13 @@ vi.mock("react", async (original) => ({
     ];
   },
   useRef: (current: unknown) => (h.refs[h.ref++] ??= { current }),
+  useLayoutEffect: (setup: () => void | (() => void), deps: unknown[]) => {
+    const i = h.effect++;
+    if (!h.effects[i] || deps.some((x, j) => x !== h.effects[i].deps[j])) {
+      h.effects[i]?.close?.();
+      h.effects[i] = { deps, setup, close: setup() || undefined };
+    }
+  },
 }));
 vi.mock("@tauri-apps/plugin-dialog", () => ({ save: h.pick }));
 vi.mock("../runtime/file_delivery", () => ({
@@ -33,6 +46,7 @@ let text = "最初已载入的内容";
 function render() {
   h.cursor = 0;
   h.ref = 0;
+  h.effect = 0;
   return ConversationExportDialog({
     text,
     name: "conversation.md",
@@ -62,6 +76,8 @@ function save() {
   )();
 }
 beforeEach(() => {
+  h.effects.forEach((effect) => effect.close?.());
+  h.effects = [];
   h.states = [];
   h.refs = [];
   h.pick.mockReset();
@@ -124,7 +140,7 @@ it("keeps one in-flight write, blocks close and preserves the chosen snapshot wh
   click();
   click();
   expect(h.pick).toHaveBeenCalledOnce();
-  text = "后续新消息";
+  // Incoming events cannot change the host's already captured export snapshot.
   render();
   resolvePicker("/snapshot.md");
   await flush();
@@ -136,6 +152,68 @@ it("keeps one in-flight write, blocks close and preserves the chosen snapshot wh
   resolveWrite();
   await flush();
   expect(visible(R.exportSaved)).toBe(true);
+});
+
+it("retires an unmounted picker before it can dispatch a text write", async () => {
+  let reply!: (path: string) => void;
+  h.pick.mockImplementationOnce(
+    () => new Promise((resolve) => (reply = resolve)),
+  );
+  save();
+  h.effects.forEach((effect) => effect.close?.());
+  reply("/retired.md");
+  await flush();
+  expect(h.write).not.toHaveBeenCalled();
+});
+
+it("changed input retires the old picker, then permits a fresh explicit save", async () => {
+  let reply!: (path: string) => void;
+  h.pick.mockImplementationOnce(
+    () => new Promise((resolve) => (reply = resolve)),
+  );
+  save();
+  text = "另一次明确选择的内容";
+  render();
+  reply("/old.md");
+  await flush();
+  expect(h.write).not.toHaveBeenCalled();
+  h.pick.mockResolvedValueOnce("/new.md");
+  h.write.mockResolvedValueOnce(undefined);
+  save();
+  await flush();
+  expect(h.write).toHaveBeenCalledExactlyOnceWith(text, "/new.md");
+});
+
+it("an already dispatched write stays pending and its stale receipt cannot label new input saved", async () => {
+  let finish!: () => void;
+  h.pick.mockResolvedValueOnce("/old.md");
+  h.write.mockImplementationOnce(
+    () => new Promise<void>((resolve) => (finish = resolve)),
+  );
+  save();
+  await flush();
+  text = "新的导出内容";
+  render();
+  save();
+  expect(h.pick).toHaveBeenCalledOnce();
+  finish();
+  await flush();
+  expect(visible(R.exportSaved)).toBe(false);
+  expect(visible(R.exportSaving)).toBe(false);
+  expect(h.write).toHaveBeenCalledOnce();
+});
+
+it("a new lifecycle setup remains usable after the previous setup was retired", async () => {
+  render();
+  h.effects.forEach((effect) => {
+    effect.close?.();
+    effect.close = effect.setup() || undefined;
+  });
+  h.pick.mockResolvedValueOnce("/fresh.md");
+  h.write.mockResolvedValueOnce(undefined);
+  save();
+  await flush();
+  expect(h.write).toHaveBeenCalledExactlyOnceWith(text, "/fresh.md");
 });
 
 it("shows the exact included and excluded content categories before saving", () => {
