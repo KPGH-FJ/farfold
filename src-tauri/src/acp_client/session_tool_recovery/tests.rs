@@ -133,6 +133,7 @@ impl Fixture {
                 inspection.target.clone(),
                 inspection.review_id.clone().unwrap(),
                 inspection.connection_id.clone().unwrap(),
+                inspection.resolution.unwrap(),
             )
             .await
     }
@@ -214,7 +215,8 @@ async fn session_tool_recovery_requires_exact_confirmation_rechecks_and_replays_
                 &f.store,
                 review.target.clone(),
                 review.review_id.clone().unwrap(),
-                "wrong-process".into()
+                "wrong-process".into(),
+                Resolution::ConfirmResult,
             )
             .await
             .unwrap_err(),
@@ -265,6 +267,106 @@ async fn session_tool_recovery_external_change_and_local_save_failure_keep_pendi
         .unwrap();
     let next = f.inspect("first").await;
     assert!(f.confirm(&next).await.unwrap().resolved);
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn session_tool_recovery_external_current_settings_can_be_explicitly_adopted() {
+    let f = Fixture::new();
+    let row = f.save("external-review");
+    let pending = f.pending(&row, "external-op");
+    let mut current = applied();
+    current["extensions"][1]["extension"]["server"]["url"] = json!("http://127.0.0.1:8910/mcp");
+    current["extensions"]
+        .as_array_mut()
+        .unwrap()
+        .push(json!({"extensionKey":"other","extension":{"type":"platform","name":"Other"}}));
+    f.inventory("external-review", current);
+    let review = f.inspect("external-review").await;
+    assert_eq!(review.outcome, "changed");
+    assert!(
+        review.can_confirm,
+        "an exact safe current inventory needs an explicit recovery exit"
+    );
+    let public = serde_json::to_value(&review).unwrap();
+    assert_eq!(public["resolution"], "acceptCurrent");
+    assert_eq!(public["configuration"]["complete"], true);
+    assert_eq!(
+        public["configuration"]["items"].as_array().unwrap().len(),
+        3
+    );
+    assert!(!public.to_string().contains("PRIVATE_TEST_URL"));
+    assert_eq!(f.store.mcp_pending(&row.id).unwrap(), Some(pending));
+    assert_eq!(f.store.get_session(&row.id).unwrap(), Some(row.clone()));
+    assert!(f.trace().iter().all(|v| matches!(
+        v["method"].as_str(),
+        Some("initialize" | "_goose/unstable/session/extensions/list")
+    )));
+    assert_eq!(
+        f.manager
+            .confirm_tool_recovery(
+                &f.store,
+                review.target.clone(),
+                review.review_id.clone().unwrap(),
+                review.connection_id.clone().unwrap(),
+                Resolution::ConfirmResult,
+            )
+            .await
+            .unwrap_err(),
+        CHANGED
+    );
+    assert!(f.store.mcp_pending(&row.id).unwrap().is_some());
+    assert_eq!(f.queries("external-review"), 1);
+    assert_eq!(
+        f.inspect("external-review").await.review_id,
+        review.review_id
+    );
+    let confirmed = f.confirm(&review).await.unwrap();
+    assert!(confirmed.resolved && confirmed.requires_reopen);
+    assert_eq!(confirmed.resolution, Resolution::AcceptCurrent);
+    assert!(f.store.mcp_pending(&row.id).unwrap().is_none());
+    assert_eq!(f.store.get_session(&row.id).unwrap(), Some(row));
+    assert_eq!(f.queries("external-review"), 2);
+    assert_eq!(
+        f.confirm(&review).await.unwrap().review_id,
+        confirmed.review_id
+    );
+    assert_eq!(f.queries("external-review"), 2);
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn session_tool_recovery_current_acceptance_rejects_drift_then_hides_unsafe_values() {
+    let f = Fixture::new();
+    let row = f.save("external-drift");
+    let pending = f.pending(&row, "drift-op");
+    let mut current = applied();
+    current["extensions"][1]["extension"]["server"]["url"] = json!("http://127.0.0.1:8910/mcp");
+    f.inventory("external-drift", current.clone());
+    let review = f.inspect("external-drift").await;
+    assert_eq!(review.resolution, Some(Resolution::AcceptCurrent));
+    current["extensions"][1]["extension"]["server"]["url"] = json!("http://127.0.0.1:8910/");
+    f.inventory("external-drift", current.clone());
+    assert_eq!(f.confirm(&review).await.unwrap_err(), CHANGED);
+    assert_eq!(f.store.mcp_pending(&row.id).unwrap(), Some(pending.clone()));
+    assert_eq!(f.queries("external-drift"), 2);
+    current["extensions"][1]["extension"]["server"]["headers"] =
+        json!([{"name":"Authorization","value":"PRIVATE-DO-NOT-EXPOSE"}]);
+    f.inventory("external-drift", current.clone());
+    let unsafe_review = f.inspect("external-drift").await;
+    assert_eq!(unsafe_review.outcome, "changed");
+    assert!(!unsafe_review.can_confirm);
+    assert!(unsafe_review.review_id.is_none() && unsafe_review.configuration.is_none());
+    assert!(
+        !serde_json::to_string(&unsafe_review)
+            .unwrap()
+            .contains("PRIVATE")
+    );
+    assert_eq!(f.store.mcp_pending(&row.id).unwrap(), Some(pending));
+    current["extensions"][1]["extension"]["server"]["headers"] = json!([]);
+    f.inventory("external-drift", current);
+    let fresh = f.inspect("external-drift").await;
+    assert_ne!(fresh.review_id, review.review_id);
+    assert!(f.confirm(&fresh).await.unwrap().requires_reopen);
+    assert_eq!(f.store.get_session(&row.id).unwrap(), Some(row));
 }
 
 #[tokio::test(flavor = "multi_thread")]

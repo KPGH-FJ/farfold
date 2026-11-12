@@ -86,11 +86,44 @@ it("rechecks a failed open without loading or sending, then requires explicit ex
     target,
     "review",
     "recovery-connection",
+    "confirmResult",
   );
   h.confirm.resolve(confirmation());
   await flush();
   expect(h.resolved).toHaveBeenCalledExactlyOnceWith("operation");
   expect(h.controller.getSnapshot().phase).toBe("resolved");
+});
+
+it("reviews a complete changed configuration before explicitly accepting it, without declaring old work successful", async () => {
+  const h = fixture();
+  h.controller.inspect();
+  h.read.resolve({
+    ...inspection(),
+    outcome: "changed",
+    resolution: "acceptCurrent",
+    configuration: {
+      complete: true,
+      items: [
+        { name: "Developer", kind: "platform", address: null },
+        { name: "Owned", kind: "http", address: "http://127.0.0.1:8910/mcp" },
+      ],
+    },
+  });
+  await flush();
+  expect(h.controller.getSnapshot().phase).toBe("review");
+  expect(h.resolved).not.toHaveBeenCalled();
+  expect(h.controller.confirm()).toBe(true);
+  expect(h.port.confirm).toHaveBeenCalledExactlyOnceWith(
+    target,
+    "review",
+    "recovery-connection",
+    "acceptCurrent",
+  );
+  h.confirm.resolve({ ...confirmation(), resolution: "acceptCurrent" });
+  await flush();
+  expect(h.controller.getSnapshot().phase).toBe("resolved");
+  expect(h.owner.running).toBe(false);
+  expect(h.owner.items).toEqual([]);
 });
 
 it.each(["operationId", "reviewId", "connectionId"])(
@@ -108,7 +141,7 @@ it.each(["operationId", "reviewId", "connectionId"])(
   },
 );
 
-it("keeps missing pending records inconclusive, and never confirms external changes", async () => {
+it("keeps missing pending records inconclusive, and never adopts incomplete external changes", async () => {
   for (const raw of [
     {
       target,
@@ -206,8 +239,8 @@ it("rechecks a lost confirmation with the same review instead of losing its rece
   await flush();
   expect(h.resolved).toHaveBeenCalledExactlyOnceWith("operation");
   expect(vi.mocked(h.port.confirm).mock.calls).toEqual([
-    [target, "review", "recovery-connection"],
-    [target, "review", "recovery-connection"],
+    [target, "review", "recovery-connection", "confirmResult"],
+    [target, "review", "recovery-connection", "confirmResult"],
   ]);
 });
 

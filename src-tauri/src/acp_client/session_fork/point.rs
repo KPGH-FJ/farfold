@@ -45,7 +45,6 @@ fn exported(value: Value, id: &str, cwd: &Path) -> Result<Value, &'static str> {
         .ok_or("point_read_failed")?;
     if data["id"].as_str() != Some(id)
         || data["working_dir"].as_str() != cwd.to_str()
-        || data["message_count"].as_u64() != Some(messages.len() as u64)
         || !data["extension_data"].is_object()
     {
         return Err("point_read_failed");
@@ -75,6 +74,16 @@ fn exported(value: Value, id: &str, cwd: &Path) -> Result<Value, &'static str> {
             Some(Value::String(id)) if valid_id(id) && ids.insert(id.clone()) => {}
             _ => return Err("point_ambiguous"),
         }
+    }
+    // Official get_session(id, true) exports every message but counts only
+    // is_user_visible(). Hidden context must remain in the verified prefix.
+    // Count after validating every record; malformed visibility is not false.
+    let visible = messages
+        .iter()
+        .filter(|message| message["metadata"]["userVisible"] == true)
+        .count();
+    if data["message_count"].as_u64() != Some(visible as u64) {
+        return Err("point_read_failed");
     }
     Ok(data)
 }

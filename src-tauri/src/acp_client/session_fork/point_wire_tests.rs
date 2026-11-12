@@ -129,7 +129,7 @@ async fn historical_point_official_supplement_uses_exact_cutoff_and_retains_orig
 async fn historical_point_unavailable_ambiguous_and_config_drift_never_dispatch_fork() {
     for (mode, id, reason) in [
         ("normal", "missing", "point_unavailable"),
-        ("normal", "later", "point_unavailable"),
+        ("normal", "later-20", "point_unavailable"),
         ("normal", "a", "point_ambiguous"),
         ("read-error", "b", "point_read_failed"),
         ("config-drift", "b", "configuration"),

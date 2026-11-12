@@ -1,7 +1,7 @@
 {
   "kind": "Cycle4HistoricalPointAndUsageCandidate",
   "requirements": ["P11", "ARCH-35", "P39", "P40", "ARCH-36", "NEW-29"],
-  "implementationStatus": "implemented-reviewed-engineering-passed; installed validation pending",
+  "implementationStatus": "Initial9a candidate installed; cumulative usage and pre-confirm cancel observed; historical fork rejected before creation. Visible-message count fix independently reviewed; formal retest recorded separately.",
   "baseCommit": "f7caed4212a3219f5a415c2b757421d6565c0a5a",
   "changes": [
     "Official historical message identity reaches the common message menu and inclusive branch review; local UI IDs and raw unqualified metadata grant no branch authority.",
@@ -29,7 +29,17 @@
     "purpose": "API/data semantics, not a version pin or binary compatibility gate"
   },
   "installedSkillEvidence": "skill-recovery-summary.json",
-  "formalForkAndUsage": "pending; prepared existing owned session 20261109_3 with an exact earlier reply, 3-message prefix versus 21 current messages; no model prompt planned",
+  "formalForkAndUsage": {
+    "result": "failure before fork; cancellation and usage presentation observed separately",
+    "selectedParent": "20261109_3",
+    "cumulativeInput": 49537,
+    "cumulativeOutput": 1369,
+    "modelRequests": 0,
+    "messagesUnchanged": true,
+    "newSessions": 0,
+    "reason": "Official message_count counts userVisible records; initial parser compared all records.21total/16visible legitimate parent was refused. Product and fixture bug, not missing official capability.",
+    "reviewCorrection": "Original independent review missed the count semantics. Kept original report; correction and14green affected tests independently reviewed."
+  },
   "compactionBoundary": "No new grounded shared-code defect. Goose actual compact/recall remains narrow; Mistral single request used, Codex NEW-24 sends paused and Claude actual account/model conditions not confirmed. Do not label full lifecycle passed.",
   "limits": [
     "Only reviewed Goose historical supplement enabled; other official interfaces remain open.",
@@ -69,6 +79,19 @@
     {
       "path": "output/2026-11-12-cycle4/review/integration.json",
       "sha256": "9942b29adac6b029be786e963d2aaac183db4233ba822c52f1254a551cc2c19d"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal/first-result.json",
+      "sha256": "f6a14e7f046d6889fe3ae66e183544ed6a8dc92b74242e16aae259975a1a185d"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/visible-count-fix/source-freeze.json",
+      "sha256": "055b3cb3f29c0b3310e498ce5b3d7a8ef78376cd3f322d3978d8eec3a3a0cdb6"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/visible-count-fix/independent-review.json",
+      "sha256": "84c3d34ec4883414f1abc1c65b07df5ca7f5ee37cde2b262b7530c1b7f84807e"
     }
-  ]
+  ],
+  "candidateCommit": "9a75623e8b977f9269755ab0a26699826247e532"
 }

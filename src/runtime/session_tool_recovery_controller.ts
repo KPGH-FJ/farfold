@@ -8,6 +8,7 @@ import {
   parseToolRecoveryInspection,
   type ToolRecoveryInspection,
   type ToolRecoveryTarget,
+  type ToolRecoveryResolution,
 } from "./session_tool_recovery_types";
 
 export interface ToolRecoveryPort {
@@ -16,12 +17,18 @@ export interface ToolRecoveryPort {
     target: ToolRecoveryTarget,
     reviewId: string,
     connectionId: string,
+    resolution: ToolRecoveryResolution,
   ): Promise<unknown>;
 }
 const port: ToolRecoveryPort = {
   inspect: (target) => invoke("session_tool_recovery_inspect", { target }),
-  confirm: (target, reviewId, connectionId) =>
-    invoke("session_tool_recovery_confirm", { target, reviewId, connectionId }),
+  confirm: (target, reviewId, connectionId, resolution) =>
+    invoke("session_tool_recovery_confirm", {
+      target,
+      reviewId,
+      connectionId,
+      resolution,
+    }),
 };
 export interface ToolRecoverySnapshot {
   phase: "idle" | "inspecting" | "review" | "confirming" | "resolved" | "error";
@@ -154,7 +161,8 @@ export class SessionToolRecoveryController {
       ) ||
       !reviewed?.canConfirm ||
       !reviewed.reviewId ||
-      !reviewed.connectionId
+      !reviewed.connectionId ||
+      !reviewed.resolution
     )
       return false;
     this.publish({
@@ -168,6 +176,7 @@ export class SessionToolRecoveryController {
           this.target,
           reviewed.reviewId!,
           reviewed.connectionId!,
+          reviewed.resolution!,
         ),
         reviewed,
       );

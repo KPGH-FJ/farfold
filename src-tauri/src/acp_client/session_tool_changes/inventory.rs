@@ -14,6 +14,9 @@ pub(crate) struct Inventory {
     entries: BTreeMap<String, Value>,
 }
 impl Inventory {
+    pub(crate) fn recovery_entries(&self) -> impl Iterator<Item = &Value> {
+        self.entries.values()
+    }
     pub(super) fn reviewed(&self) -> Result<Vec<super::slot::Reviewed>, ChangeError> {
         let digest = self.digest();
         self.entries

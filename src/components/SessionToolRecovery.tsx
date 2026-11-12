@@ -49,12 +49,35 @@ export function SessionToolRecovery({
         : view.inspection
           ? S.outcomes[view.inspection.outcome]
           : S.hint;
+  const accepting = view.inspection?.resolution === "acceptCurrent";
+  const configuration = view.inspection?.configuration;
   return (
     <section className="session-tools-report" aria-label={S.title}>
       <h3>{S.title}</h3>
       <p role="status" aria-live="polite" aria-atomic="true">
-        {message}
+        {view.phase === "resolved" && accepting ? S.acceptedCurrent : message}
       </p>
+      {view.inspection?.outcome === "changed" && !configuration && (
+        <p>{S.limitedReview}</p>
+      )}
+      {configuration && view.phase !== "resolved" && (
+        <section aria-label={S.currentConfiguration}>
+          <h4>{S.currentConfiguration}</h4>
+          <p>{S.currentSettings}</p>
+          {configuration.items.length === 0 && <p>{S.emptyConfiguration}</p>}
+          <ul className="session-tools-items">
+            {configuration.items.map((item, index) => (
+              <li key={index}>
+                <strong>{item.name}</strong>
+                <p>{S.configurationKinds[item.kind]}</p>
+                {item.address && (
+                  <p style={{ overflowWrap: "anywhere" }}>{item.address}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       {view.phase !== "resolved" && (
         <div className="b-act">
           <button
@@ -92,7 +115,9 @@ export function SessionToolRecovery({
                 ? S.confirming
                 : view.confirmationUnresolved
                   ? S.checkConfirmation
-                  : S.confirm}
+                  : accepting
+                    ? S.acceptCurrent
+                    : S.confirm}
             </button>
           )}
         </div>

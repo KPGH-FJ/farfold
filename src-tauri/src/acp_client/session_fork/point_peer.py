@@ -6,9 +6,15 @@ options = [dict(id='model', name='Model', category='model', type='select', curre
 def body(id, created):
     return dict(id=id, created=created, role='assistant', content=[dict(type='text',text=id)], metadata=dict(agentVisible=True,userVisible=id!='hidden'))
 original = [body('a',1),body('hidden',1),body('b',2),body('later',3)]
+original[0]['role']='user'
+original[1]['role']='user';original[1]['metadata']['turnContext']=True
+for index in range(4,21):
+    item=body(f'later-{index}',index+1)
+    if index in (5,9,13,17):item['metadata']['userVisible']=False
+    original.append(item)
 if mode=='compacted':
     for item in original[:3]:item['metadata']['agentVisible']=False
-    summary=body('summary-after-cutoff',4);summary['metadata']['userVisible']=False
+    summary=body('summary-after-cutoff',original[-1]['created']+1);summary['metadata']['userVisible']=False
     original.append(summary)
 child = None
 def send(value): print(json.dumps(dict(jsonrpc='2.0', **value)), flush=True)
@@ -41,5 +47,5 @@ for line in sys.stdin:
             changed=json.loads(json.dumps(options));changed[0]['currentValue']='other'
             send(dict(method='session/update',params=dict(sessionId='parent',update=dict(sessionUpdate='config_option_update',configOptions=changed))))
         messages=original if p['sessionId']=='parent' else child
-        data=dict(id=p['sessionId'],working_dir=str(root),message_count=len(messages),conversation=messages,extension_data={},provider_name='selected',model_config=dict(model_name='m'),goose_mode='approve',recipe=None,user_recipe_values=None)
+        data=dict(id=p['sessionId'],working_dir=str(root),message_count=sum(item['metadata']['userVisible'] for item in messages),conversation=messages,extension_data={},provider_name='selected',model_config=dict(model_name='m'),goose_mode='approve',recipe=None,user_recipe_values=None)
         reply(message,dict(data=json.dumps(data)))

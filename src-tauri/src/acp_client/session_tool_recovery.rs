@@ -19,8 +19,9 @@ use std::{
 };
 use tokio::sync::{oneshot, watch};
 
+mod review;
 mod types;
-pub use types::{Confirmation, Inspection, Target};
+pub use types::{Confirmation, Inspection, Resolution, Target};
 const FAILED: &str = "SESSION_TOOL_RECOVERY_UNAVAILABLE";
 const CHANGED: &str = "SESSION_TOOL_RECOVERY_REVIEW_CHANGED";
 const STILL_PENDING: &str = "SESSION_TOOL_RECOVERY_PENDING";
@@ -55,6 +56,7 @@ struct ConfirmKey {
     target: Target,
     review_id: String,
     connection_id: String,
+    resolution: Resolution,
 }
 #[derive(Default)]
 pub(crate) struct Reviews {
@@ -78,6 +80,8 @@ fn blank(target: Target, pending: Option<&Pending>, outcome: &'static str) -> In
         can_confirm: false,
         review_id: None,
         connection_id: None,
+        resolution: None,
+        configuration: None,
     }
 }
 fn nonce() -> Result<String, String> {
@@ -269,9 +273,16 @@ impl AcpManager {
         };
         let mut inspection = blank(target, Some(&pending), outcome);
         inspection.connection_id = Some(connection.connection_id.clone());
-        if outcome == "changed" {
-            return Ok(inspection);
-        }
+        let resolution = if outcome == "changed" {
+            let Some(configuration) = review::configuration(&inventory) else {
+                return Ok(inspection);
+            };
+            inspection.configuration = Some(configuration);
+            Resolution::AcceptCurrent
+        } else {
+            Resolution::ConfirmResult
+        };
+        inspection.resolution = Some(resolution);
         let id = nonce()?;
         inspection.review_id = Some(id.clone());
         inspection.can_confirm = true;
@@ -335,11 +346,13 @@ impl AcpManager {
         target: Target,
         review_id: String,
         connection_id: String,
+        resolution: Resolution,
     ) -> Result<Confirmation, String> {
         let key = ConfirmKey {
             target: target.clone(),
             review_id: review_id.clone(),
             connection_id: connection_id.clone(),
+            resolution,
         };
         let job = {
             let mut jobs = self.tool_recovery.confirming.lock().map_err(|_| FAILED)?;
@@ -373,6 +386,7 @@ impl AcpManager {
                             task.target.clone(),
                             review_id,
                             connection_id,
+                            resolution,
                         )
                         .await;
                     task.result.send_replace(Some(value));
@@ -389,6 +403,7 @@ impl AcpManager {
         target: Target,
         review_id: String,
         connection_id: String,
+        resolution: Resolution,
     ) -> Result<Confirmation, String> {
         let mut review = {
             let mut current = self.tool_recovery.review.lock().map_err(|_| CHANGED)?;
@@ -396,6 +411,7 @@ impl AcpManager {
                 r.inspection.target != target
                     || r.inspection.review_id.as_deref() != Some(&review_id)
                     || r.connection.connection_id != connection_id
+                    || r.inspection.resolution != Some(resolution)
                     || (!r.clear_attempted && r.expires <= tokio::time::Instant::now())
             }) {
                 return Err(CHANGED.into());
@@ -451,6 +467,7 @@ impl AcpManager {
             review_id,
             connection_id,
             requires_reopen: true,
+            resolution,
         };
         Ok(reply)
     }
@@ -470,6 +487,7 @@ impl AcpManager {
                 review_id,
                 connection_id,
                 requires_reopen: true,
+                resolution: review.inspection.resolution.ok_or(CHANGED)?,
             }),
             Ok((row, Some(pending)))
                 if row.created_at == review.row.created_at && pending == review.pending =>
@@ -544,6 +562,7 @@ pub async fn session_tool_recovery_confirm(
     target: Target,
     review_id: String,
     connection_id: String,
+    resolution: Option<Resolution>,
 ) -> Result<Confirmation, String> {
     use tauri::Manager;
     app.state::<AcpManager>()
@@ -552,6 +571,7 @@ pub async fn session_tool_recovery_confirm(
             validate_target(target).await?,
             review_id,
             connection_id,
+            resolution.unwrap_or_default(),
         )
         .await
 }

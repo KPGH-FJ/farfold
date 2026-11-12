@@ -4,6 +4,20 @@ export const TOOL_RECOVERY = {
   inspect: "检查工具设置",
   checking: "正在核查工具设置…",
   confirm: "确认核查结果",
+  acceptCurrent: "接纳当前设置",
+  currentConfiguration: "当前保存的工具清单",
+  currentSettings:
+    "以下列出本次读取的全部工具和可核对的连接地址。接纳后可重新打开对话，不代表此前修改成功或工具已经可用。",
+  limitedReview:
+    "部分设置无法安全、完整地展示，暂时不能接纳。原记录保留，请核对后重新检查。",
+  acceptedCurrent:
+    "已接纳目前保存的工具设置。此前修改结果仍无法单独确认；请重新打开对话，再检查实际可用工具。原消息、草稿和待发内容保留。",
+  emptyConfiguration: "当前保存的工具清单为空。",
+  configurationKinds: {
+    builtin: "内置工具",
+    platform: "平台工具",
+    http: "网络工具",
+  },
   checkConfirmation: "检查确认结果",
   confirming: "正在确认…",
   resolved: "核查已确认。请重新打开这段对话；原消息、草稿和待发内容保留。",
@@ -19,6 +33,6 @@ export const TOOL_RECOVERY = {
     applied:
       "已保存的工具设置与这次修改的目标一致。确认后可重新打开对话；实际调用仍需验证。",
     changed:
-      "工具设置还存在其他变化，暂时无法确认这次修改。原记录保留，请核对这些变化后再检查。",
+      "工具设置还存在其他变化，无法据此确认之前的修改结果。请审阅当前设置后再决定。",
   },
 } as const;

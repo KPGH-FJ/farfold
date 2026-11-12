@@ -1,10 +1,14 @@
 use super::*;
 
 fn body(id: &str, time: i64) -> Value {
-    json!({"id":id,"created":time,"role":"assistant","content":[{"type":"text","text":id}],"metadata":{"agentVisible":true,"userVisible":true}})
+    json!({"id":id,"created":time,"role":"assistant","content":[{"type":"text","text":id}],"metadata":{"agentVisible":true,"userVisible":id!="hidden"}})
 }
 fn session(id: &str, messages: Vec<Value>) -> Value {
-    json!({"id":id,"working_dir":"/owned","message_count":messages.len(),"conversation":messages,
+    let visible = messages
+        .iter()
+        .filter(|message| message["metadata"]["userVisible"] == true)
+        .count();
+    json!({"id":id,"working_dir":"/owned","message_count":visible,"conversation":messages,
         "extension_data":{},
         "provider_name":"selected","model_config":{"model_name":"unchanged"},"goose_mode":"approve","recipe":null,"user_recipe_values":null})
 }
@@ -73,6 +77,60 @@ fn official_export_selects_exact_complete_prefix_including_hidden_messages() {
                 Path::new("/owned")
             )
             .is_ok()
+    );
+}
+
+#[test]
+fn official_visible_count_accepts_twenty_one_total_sixteen_visible_and_three_total_two_visible() {
+    let mut messages = vec![body("a", 1), body("hidden", 1), body("b", 2)];
+    messages[0]["role"] = json!("user");
+    messages[1]["role"] = json!("user");
+    messages[1]["metadata"]["turnContext"] = json!(true);
+    for index in 3..21 {
+        let mut message = body(&format!("later-{index}"), index + 1);
+        if [4, 8, 12, 16].contains(&index) {
+            message["metadata"]["userVisible"] = json!(false);
+        }
+        messages.push(message);
+    }
+    let original = session("parent", messages.clone());
+    let child = session("child", messages[..3].to_vec());
+    assert_eq!(original["conversation"].as_array().unwrap().len(), 21);
+    assert_eq!(original["message_count"], 16);
+    assert_eq!(child["conversation"].as_array().unwrap().len(), 3);
+    assert_eq!(child["message_count"], 2);
+    let prepared = prepare(&original)
+        .expect("official count covers visible records, not the entire exported context");
+    assert!(
+        prepared
+            .verify(
+                wire(&original),
+                wire(&child),
+                "parent",
+                "child",
+                Path::new("/owned")
+            )
+            .is_ok()
+    );
+    let mut dropped_hidden = child.clone();
+    dropped_hidden["conversation"]
+        .as_array_mut()
+        .unwrap()
+        .remove(1);
+    assert_eq!(
+        dropped_hidden["message_count"], 2,
+        "dropping hidden context does not change the visible count"
+    );
+    assert!(
+        prepared
+            .verify(
+                wire(&original),
+                wire(&dropped_hidden),
+                "parent",
+                "child",
+                Path::new("/owned")
+            )
+            .is_err()
     );
 }
 
@@ -153,9 +211,11 @@ fn export_identity_completeness_and_structure_are_mandatory() {
         value.as_object_mut().unwrap().remove(key);
         assert!(prepare(&value).is_err());
     }
-    let mut value = sample();
-    value["message_count"] = json!(3);
-    assert!(prepare(&value).is_err());
+    for count in [json!(4), json!(2), json!(-1), json!("3"), Value::Null] {
+        let mut value = sample();
+        value["message_count"] = count;
+        assert!(prepare(&value).is_err());
+    }
     let mut value = sample();
     value["conversation"][1] = Value::Null;
     assert!(prepare(&value).is_err());
