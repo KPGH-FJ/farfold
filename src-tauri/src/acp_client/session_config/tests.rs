@@ -341,3 +341,57 @@ fn valid_empty_configuration_notification_can_remove_reasoning_options() {
     assert_eq!(options[0]["id"], LEGACY_MODEL_ID);
     assert_eq!(options[0]["currentValue"], "b");
 }
+
+// Public mode declarations captured from one official owned session/load on
+// 2026-11-12 (cycle5-completion/formal/mode-r2-declarations.json). This is a
+// controlled configuration-path check, not another official Agent execution.
+#[test]
+fn official_reported_modes_survive_standard_configuration_boundaries() {
+    let mode = json!({
+        "id":"mode", "name":"Mode", "category":"mode", "type":"select", "currentValue":"auto",
+        "options":[
+            {"value":"auto","name":"auto","description":"Automatically approve tool calls"},
+            {"value":"approve","name":"approve","description":"Ask before every tool call"},
+            {"value":"smart_approve","name":"smart_approve","description":"Ask only for sensitive tool calls"},
+            {"value":"chat","name":"chat","description":"Chat only, no tool calls"}
+        ]
+    });
+    let options = json!([
+        {"id":"provider","name":"Provider","type":"select","currentValue":"existing","options":[{"value":"existing","name":"Existing source"}]},
+        mode,
+        {"id":"model","name":"Model","category":"model","type":"select","currentValue":"fixture-model","options":[{"value":"fixture-model","name":"Fixture model"}]},
+        {"id":"thinking_effort","name":"Thinking effort","category":"thought_level","type":"select","currentValue":"off","options":[{"value":"off","name":"Off"}]}
+    ]);
+    let response = json!({"configOptions":options});
+    let mut configuration = SessionConfig::from_connection(&response, Dialect::Standard);
+    assert_eq!(configuration.options().unwrap(), options);
+    assert_eq!(configuration.modern_options(), Some(&options));
+    assert_eq!(
+        projection(configuration.options().unwrap(), true)["options"][1],
+        mode
+    );
+
+    let notification =
+        update(json!({"sessionUpdate":"config_option_update","configOptions":options}));
+    assert_eq!(configuration.observe(&notification).unwrap()[1], mode);
+    assert_eq!(
+        SessionConfig::configuration_update(&notification).unwrap()["configOptions"][1],
+        mode
+    );
+
+    // The real modern setter decodes through the official SDK before putting
+    // its full configuration list back through this same state.
+    let request = configuration.prepare("mode", &json!("approve")).unwrap();
+    let mut changed = options.clone();
+    changed[1]["currentValue"] = json!("approve");
+    let reply: agent_client_protocol::schema::v1::SetSessionConfigOptionResponse =
+        serde_json::from_value(json!({"configOptions":changed})).unwrap();
+    let decoded = serde_json::to_value(reply.config_options).unwrap();
+    let completed = configuration.complete(&request, decoded).unwrap();
+    assert_eq!(completed[1]["currentValue"], "approve");
+    assert_eq!(completed[1]["options"], mode["options"]);
+    assert_eq!(
+        response["configOptions"], options,
+        "original declaration is retained"
+    );
+}

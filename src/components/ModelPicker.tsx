@@ -2,9 +2,19 @@
  * 可搜索模型选择器（替代原生 <select>）：
  * 分组显示（option.group 优先，否则按 name 的 `provider/` 前缀分组），
  * 搜索框过滤 name/value/group，↑↓/Enter/Esc 键盘操作。
- * 面板用 fixed 定位 + 按钮矩形计算，不被 overflow 容器（sw-panel）裁剪。
+ * 面板按按钮矩形定位；共用工具栏内的子菜单移出滚动层，保留父层关闭归属。
  */
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { createPortal } from "react-dom";
+import { WorkspacePopoverScope } from "./WorkspacePopoverScope";
 import type { ConfigChoice, ConfigOptionView } from "../runtime/sessions";
 import { STRINGS } from "../runtime/strings";
 import {
@@ -40,6 +50,8 @@ export function ModelPicker({
     width: 280,
   });
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const scope = useContext(WorkspacePopoverScope);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
@@ -78,17 +90,25 @@ export function ModelPicker({
     return out;
   }, [filtered]);
 
+  useLayoutEffect(() => {
+    if (open && panelRef.current && scope)
+      return scope.register(panelRef.current);
+  }, [open, scope]);
+
   useEffect(() => {
     if (!open) return;
+    const contains = (target: EventTarget | null) =>
+      rootRef.current?.contains(target as Node) ||
+      panelRef.current?.contains(target as Node);
     const onDown = (e: MouseEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+      if (!contains(e.target)) setOpen(false);
     };
     // Same outside/focus/scroll dismissal the shared popover uses.
     const onFocus = (e: FocusEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+      if (!contains(e.target)) setOpen(false);
     };
     const onScroll = (e: Event) => {
-      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+      if (!contains(e.target)) setOpen(false);
     };
     const onResize = () => setOpen(false);
     window.addEventListener("mousedown", onDown);
@@ -104,7 +124,7 @@ export function ModelPicker({
   }, [open]);
 
   useEffect(() => {
-    if (open) inputRef.current?.focus();
+    if (open) inputRef.current?.focus({ preventScroll: true });
   }, [open]);
 
   if (!option || option.type !== "select" || options.length === 0) {
@@ -167,6 +187,79 @@ export function ModelPicker({
       : STRINGS.switcher.optionSearch;
   const accessibleLabel = label ?? option.name;
 
+  const menu = (
+    <div
+      ref={panelRef}
+      className={`mp-panel${scope ? " workspace-control-picker" : ""}`}
+      style={{ top: pos.top, left: pos.left, width: pos.width }}
+    >
+      <input
+        ref={inputRef}
+        className="mp-search"
+        role="combobox"
+        aria-label={searchLabel}
+        aria-autocomplete="list"
+        aria-expanded={open}
+        aria-controls={listId}
+        aria-activedescendant={flat[hi] ? `${listId}-option-${hi}` : undefined}
+        value={query}
+        placeholder={searchLabel}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          setHi(0);
+        }}
+        onKeyDown={onKey}
+      />
+      <div
+        className="mp-list"
+        ref={listRef}
+        id={listId}
+        role="listbox"
+        aria-label={accessibleLabel}
+      >
+        {flat.length === 0 && (
+          <div className="mp-empty">{STRINGS.palette.empty}</div>
+        )}
+        {flat.map((entry, idx) => (
+          <div key={entry.choice.key}>
+            {entry.first && entry.group && (
+              <div className="mp-group">{entry.group}</div>
+            )}
+            <div
+              id={`${listId}-option-${idx}`}
+              role="option"
+              aria-label={[entry.choice.name, entry.choice.detail]
+                .filter(Boolean)
+                .join(" · ")}
+              aria-selected={entry.choice.value === current}
+              aria-disabled={disabled === true}
+              data-idx={idx}
+              className={`mp-opt${idx === hi ? " hi" : ""}${entry.choice.value === current ? " cur" : ""}`}
+              onMouseEnter={() => setHi(idx)}
+              onMouseDown={(event) => {
+                if (event.button === 0) event.preventDefault();
+              }}
+              onClick={() => pick(entry.choice.value)}
+            >
+              <span
+                className="mp-name"
+                title={[entry.choice.name, entry.choice.detail]
+                  .filter(Boolean)
+                  .join(" · ")}
+              >
+                {entry.choice.name}
+                {entry.choice.detail && <small> · {entry.choice.detail}</small>}
+              </span>
+              {entry.choice.value === current && (
+                <span className="mp-check">✓</span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className={`mp${className ? ` ${className}` : ""}`} ref={rootRef}>
       <button
@@ -184,81 +277,7 @@ export function ModelPicker({
         <span className="mp-label">{currentName}</span>
         <span className="chev">▾</span>
       </button>
-      {open && (
-        <div
-          className="mp-panel"
-          style={{ top: pos.top, left: pos.left, width: pos.width }}
-        >
-          <input
-            ref={inputRef}
-            className="mp-search"
-            role="combobox"
-            aria-label={searchLabel}
-            aria-autocomplete="list"
-            aria-expanded={open}
-            aria-controls={listId}
-            aria-activedescendant={
-              flat[hi] ? `${listId}-option-${hi}` : undefined
-            }
-            value={query}
-            placeholder={searchLabel}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setHi(0);
-            }}
-            onKeyDown={onKey}
-          />
-          <div
-            className="mp-list"
-            ref={listRef}
-            id={listId}
-            role="listbox"
-            aria-label={accessibleLabel}
-          >
-            {flat.length === 0 && (
-              <div className="mp-empty">{STRINGS.palette.empty}</div>
-            )}
-            {flat.map((entry, idx) => (
-              <div key={entry.choice.key}>
-                {entry.first && entry.group && (
-                  <div className="mp-group">{entry.group}</div>
-                )}
-                <div
-                  id={`${listId}-option-${idx}`}
-                  role="option"
-                  aria-label={[entry.choice.name, entry.choice.detail]
-                    .filter(Boolean)
-                    .join(" · ")}
-                  aria-selected={entry.choice.value === current}
-                  aria-disabled={disabled === true}
-                  data-idx={idx}
-                  className={`mp-opt${idx === hi ? " hi" : ""}${entry.choice.value === current ? " cur" : ""}`}
-                  onMouseEnter={() => setHi(idx)}
-                  onMouseDown={(event) => {
-                    if (event.button === 0) event.preventDefault();
-                  }}
-                  onClick={() => pick(entry.choice.value)}
-                >
-                  <span
-                    className="mp-name"
-                    title={[entry.choice.name, entry.choice.detail]
-                      .filter(Boolean)
-                      .join(" · ")}
-                  >
-                    {entry.choice.name}
-                    {entry.choice.detail && (
-                      <small> · {entry.choice.detail}</small>
-                    )}
-                  </span>
-                  {entry.choice.value === current && (
-                    <span className="mp-check">✓</span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {open && (scope ? createPortal(menu, scope.host) : menu)}
     </div>
   );
 }

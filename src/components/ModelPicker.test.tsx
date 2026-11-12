@@ -16,6 +16,10 @@ const h = vi.hoisted(() => ({
   cursor: 0,
   nextId: 0,
   effects: [] as (() => void)[],
+  scope: null as {
+    host: HTMLElement;
+    register: (panel: HTMLElement) => () => void;
+  } | null,
 }));
 vi.mock("react", async (original) => {
   const effect = (run: () => void | (() => void), deps: unknown[]) => {
@@ -50,6 +54,7 @@ vi.mock("react", async (original) => {
     useId: () =>
       (h.slots[h.cursor++] ??= { value: `picker-${++h.nextId}` }).value,
     useMemo: (read: () => unknown) => read(),
+    useContext: () => h.scope,
     useEffect: effect,
     useLayoutEffect: effect,
   };
@@ -109,7 +114,17 @@ function mount<P>(component: (props: P) => ReactNode, props: P) {
           String(node.props.className),
         );
     }
-    host("mp").children = [host("mp-btn"), host("mp-search"), host("mp-list")];
+    host("mp").children = h.scope
+      ? [host("mp-btn")]
+      : [host("mp-btn"), host("mp-search"), host("mp-list")];
+    const menu = tree.find((node) =>
+      String(node.props.className ?? "").startsWith("mp-panel"),
+    );
+    if (menu)
+      host(String(menu.props.className)).children = [
+        host("mp-search"),
+        host("mp-list"),
+      ];
     host("mp-list").children = [host("option")];
     for (const run of h.effects.splice(0)) run();
     return tree;
@@ -174,6 +189,7 @@ function picker() {
 }
 beforeEach(() => {
   active = null;
+  h.scope = null;
   listeners.clear();
   h.effects.length = 0;
   // Preserve asynchronous, cancellable frames in this minimal browser host.
@@ -418,4 +434,35 @@ it("leaves composition Enter and Escape to text input without choosing or closin
     expect(view.props.onPick).not.toHaveBeenCalled();
     expect(search(view.render())).toBeDefined();
   }
+});
+
+it("keeps portalled child focus and scrolling inside its owner, then unregisters on close", () => {
+  const unregister = vi.fn();
+  const register = vi.fn(() => unregister);
+  h.scope = { host: document.body, register };
+  const view = picker();
+  expect(register).toHaveBeenCalledWith(
+    view.host("mp-panel workspace-control-picker"),
+  );
+  expect(view.host("mp").contains(view.host("mp-search"))).toBe(false);
+  for (const name of ["focusin", "mousedown", "scroll"])
+    for (const listener of listeners.get(name) ?? [])
+      listener({ target: view.host("mp-search") });
+  expect(options(view.render())).toHaveLength(3);
+  call(options(view.render())[1], "onClick");
+  expect(view.props.onPick).toHaveBeenCalledExactlyOnceWith("second");
+  expect(active).toBe(view.host("mp-btn"));
+  expect(options(view.render())).toHaveLength(0);
+  expect(unregister).toHaveBeenCalledOnce();
+  view.unmount();
+});
+
+it("dismisses a portalled child on genuine outside focus without selecting", () => {
+  h.scope = { host: document.body, register: () => () => {} };
+  const view = picker();
+  for (const listener of listeners.get("focusin") ?? [])
+    listener({ target: new Host() });
+  expect(options(view.render())).toHaveLength(0);
+  expect(view.props.onPick).not.toHaveBeenCalled();
+  view.unmount();
 });

@@ -2,11 +2,13 @@ import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
 import {
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
+import { WorkspacePopoverScope } from "./WorkspacePopoverScope";
 import { CaretDownIcon } from "@phosphor-icons/react";
 
 /** Compact controls share one dismissable, keyboard-accessible popup. */
@@ -34,6 +36,22 @@ export function WorkspacePopover({
   });
   const button = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
+  const childPanels = useRef(new Set<HTMLElement>());
+  const scope = useMemo(
+    () => ({
+      register: (element: HTMLElement) => {
+        childPanels.current.add(element);
+        return () => {
+          childPanels.current.delete(element);
+        };
+      },
+    }),
+    [],
+  );
+  const containsChild = (target: EventTarget | null) =>
+    [...childPanels.current].some((element) =>
+      element.contains(target as Node),
+    );
   useLayoutEffect(() => {
     if (!open || !browserReady) return;
     const anchor = button.current;
@@ -114,7 +132,8 @@ export function WorkspacePopover({
     const close = (event: Event) => {
       if (
         !panel.current?.contains(event.target as Node) &&
-        !button.current?.contains(event.target as Node)
+        !button.current?.contains(event.target as Node) &&
+        !containsChild(event.target)
       )
         setOpen(false);
     };
@@ -128,7 +147,11 @@ export function WorkspacePopover({
     };
     const resize = () => setOpen(false);
     const scroll = (event: Event) => {
-      if (!panel.current?.contains(event.target as Node)) setOpen(false);
+      if (
+        !panel.current?.contains(event.target as Node) &&
+        !containsChild(event.target)
+      )
+        setOpen(false);
     };
     window.addEventListener("resize", resize);
     window.addEventListener("mousedown", close);
@@ -174,14 +197,18 @@ export function WorkspacePopover({
             aria-label={title}
           >
             <div className="workspace-control-title">{title}</div>
-            {typeof children === "function"
-              ? children(() => {
-                  // Preserve a stable return target before this option unmounts
-                  // and a following dialog captures the active element.
-                  button.current?.focus();
-                  setOpen(false);
-                })
-              : children}
+            <WorkspacePopoverScope.Provider
+              value={{ ...scope, host: document.body }}
+            >
+              {typeof children === "function"
+                ? children(() => {
+                    // Preserve a stable return target before this option unmounts
+                    // and a following dialog captures the active element.
+                    button.current?.focus();
+                    setOpen(false);
+                  })
+                : children}
+            </WorkspacePopoverScope.Provider>
           </div>,
           document.body,
         )}
