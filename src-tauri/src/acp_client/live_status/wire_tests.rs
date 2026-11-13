@@ -153,6 +153,8 @@ impl Fixture {
     }
 }
 
+#[path = "media_owner_tests.rs"]
+mod media_owner_tests;
 #[path = "message_usage_wire_tests.rs"]
 mod message_usage_tests;
 

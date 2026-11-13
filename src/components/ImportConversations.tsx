@@ -24,6 +24,7 @@ import "../settings-library-redesign.css";
 import { IMPORT_STRINGS as S } from "../runtime/import_strings";
 import { LIBRARY } from "../runtime/library_strings";
 import { MessageContent } from "./MessageContent";
+import { ToolStep } from "./thread-items";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { HistoryReadStatus } from "./HistoryReadStatus";
 import { AgentLogo } from "./AgentLogo";
@@ -1262,6 +1263,18 @@ export function ImportConversations({
                                     item.kind === "agent"
                                       ? item.contentOrder
                                       : undefined
+                                  }
+                                />
+                              </div>
+                            ) : item.kind === "tool" ? (
+                              <div className="history-message" key={item.id}>
+                                <ToolStep
+                                  call={item.call}
+                                  activity={
+                                    item.call.status === "completed" ||
+                                    item.call.status === "failed"
+                                      ? "finished"
+                                      : "unknown"
                                   }
                                 />
                               </div>

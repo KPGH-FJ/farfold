@@ -1,3 +1,7 @@
+import {
+  receiveToolMedia,
+  rememberToolMediaSource,
+} from "./session_tool_media";
 import { SessionDeliveryObserver } from "./session_delivery_observer";
 import { Channel, invoke } from "@tauri-apps/api/core";
 import {
@@ -131,6 +135,27 @@ async function loadHistoryPreview(
   let completeReplay: ((complete: boolean) => void) | undefined;
   let receiving = true;
   let deliveryFailed = false;
+  type MediaOpening = Pick<
+    OpenResult,
+    "cwd" | "nativeSessionId" | "connectionId"
+  >;
+  let mediaOpening: MediaOpening | undefined;
+  let resultOwner: MediaOpening | undefined;
+  let mediaOwnerConflict = false;
+  const sameMediaOwner = (owner: MediaOpening) =>
+    !mediaOpening ||
+    (mediaOpening.cwd === owner.cwd &&
+      mediaOpening.nativeSessionId === owner.nativeSessionId &&
+      mediaOpening.connectionId === owner.connectionId);
+  // This is only the current private preview, never an installed live view.
+  const mediaCurrent = () =>
+    receiving &&
+    current() &&
+    !projected.complete &&
+    !deliveryFailed &&
+    !!mediaOpening &&
+    !mediaOwnerConflict;
+
   const retire = () => {
     interested = false;
     completeReplay?.(false);
@@ -159,7 +184,20 @@ async function loadHistoryPreview(
             ?.sessionUpdate === "config_option_update"
         )
           pushRaw(target, event.update, "config_option_update");
-        else applyUpdate(target, event.update, event);
+        else {
+          const call = applyUpdate(target, event.update, event);
+          if (mediaCurrent())
+            rememberToolMediaSource(
+              target,
+              event as Record<string, unknown>,
+              call,
+              mediaCurrent,
+              mediaOpening?.connectionId,
+            );
+        }
+      } else if ("kind" in event && event.kind === "toolMedia") {
+        // A rejected supplement stays inspectable, without adding an attachment.
+        pushRaw(target, event);
       }
     },
     () => receiving && current(),
@@ -173,7 +211,16 @@ async function loadHistoryPreview(
   });
   channel.onmessage = (input) =>
     delivery.receive(input, (event) => {
+      // Controls intercepted below also break adjacency. No source body is
+      // retained and no late marker/permission event can leave a reusable slot.
+      const mediaReceived = receiveToolMedia(
+        state,
+        event,
+        mediaCurrent,
+        mediaOpening?.connectionId,
+      );
       if (!receiving || !event || typeof event !== "object") return "discarded";
+      if (mediaReceived) return "consumed";
       // Control-shaped fields inside a raw Agent update are not client control.
       const control = !Object.hasOwn(event, "update");
       if (control && inquiry.receive(event)) return "consumed";
@@ -182,9 +229,11 @@ async function loadHistoryPreview(
         return "discarded";
       }
       if (control && "kind" in event && event.kind === "sessionOpening") {
+        if (projected.complete) return "discarded";
         // This request already knows its history ID. The native opening header
         // is local coordination only, never body/configuration or another owner.
-        return Object.keys(event).length === 5 &&
+        if (!(
+          Object.keys(event).length === 5 &&
           "openToken" in event &&
           event.openToken === openToken &&
           "sessionId" in event &&
@@ -195,8 +244,24 @@ async function loadHistoryPreview(
           "cwd" in event &&
           typeof event.cwd === "string" &&
           !!event.cwd
-          ? "consumed"
-          : "discarded";
+        ))
+          return "discarded";
+        const owner = {
+          cwd: event.cwd,
+          nativeSessionId: event.sessionId,
+          connectionId: event.connectionId,
+        };
+        if (!sameMediaOwner(owner)) mediaOwnerConflict = true;
+        if (!mediaOpening) {
+          mediaOpening = owner;
+          if (resultOwner && !sameMediaOwner(resultOwner))
+            mediaOwnerConflict = true;
+          if (!mediaOwnerConflict) {
+            state.cwd = owner.cwd;
+            state.connectionId = owner.connectionId;
+          }
+        }
+        return "consumed";
       }
       if (control && "kind" in event && event.kind === "deliveryUnavailable") {
         deliveryFailed = true;
@@ -271,7 +336,14 @@ async function loadHistoryPreview(
       return { ...owned, state: unavailable };
     };
     previewToken = result.previewToken;
-    if (owned.purpose !== purpose || !current()) return failed();
+    resultOwner = result;
+    if (
+      owned.purpose !== purpose ||
+      !current() ||
+      mediaOwnerConflict ||
+      !sameMediaOwner(result)
+    )
+      return failed();
     try {
       forgetSessionIdentity(state);
       state.cwd = result.cwd;
@@ -308,7 +380,13 @@ async function loadHistoryPreview(
     // A preview is a read-only snapshot of the acknowledged load prefix.
     // Traffic received after that boundary cannot make empty history readable.
     try {
-      if (!current() || !replayComplete || markedPreviewToken !== previewToken)
+      if (
+        !current() ||
+        !replayComplete ||
+        markedPreviewToken !== previewToken ||
+        mediaOwnerConflict ||
+        !sameMediaOwner(result)
+      )
         return failed();
       projected.requireComplete(agentId, result, deliveryFailed);
       projected.take();

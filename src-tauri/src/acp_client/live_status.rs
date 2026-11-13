@@ -79,6 +79,8 @@ pub(crate) struct Owner {
     routes: Weak<Mutex<std::collections::HashMap<String, super::pump::SessionEntry>>>,
     control: Option<tokio::sync::mpsc::WeakUnboundedSender<SessionControl>>,
     opening: Option<super::operations::Operation>,
+    media_scope: Option<(super::open_purpose::OpenPurpose, Option<String>)>,
+    media_opening: Option<super::operations::Operation>,
 }
 impl Owner {
     /// Opening/replay retains the source's live-only classification, but has
@@ -94,6 +96,8 @@ impl Owner {
             routes: Weak::new(),
             control: None,
             opening: None,
+            media_scope: None,
+            media_opening: None,
         }
     }
     /// The original registered load route and interested public opening own
@@ -108,6 +112,12 @@ impl Owner {
         let mut owner = Self::inactive(ops, session);
         if purpose == super::open_purpose::OpenPurpose::Conversation && preview.is_none() {
             owner.opening = Some(operation.observer());
+        } else if purpose.preview_name().is_some() && preview.is_some_and(|token| !token.is_empty())
+        {
+            // This only owns replayable media. Preview loading never acquires
+            // the conversation metadata/live-status/fork predicates below.
+            owner.media_scope = Some((purpose, preview.map(str::to_owned)));
+            owner.media_opening = Some(operation.observer());
         }
         owner
     }
@@ -129,10 +139,15 @@ impl Owner {
         session: &str,
         sessions: &SessionMap,
     ) -> Self {
-        let control = sessions
-            .lock()
-            .ok()
-            .and_then(|entries| entries.get(session).map(|e| e.control.downgrade()));
+        let bound = sessions.lock().ok().and_then(|entries| {
+            entries
+                .get(session)
+                .map(|e| (e.control.downgrade(), (e.purpose, e.preview_token.clone())))
+        });
+        let (control, media_scope) = match bound {
+            Some((control, scope)) => (Some(control), Some(scope)),
+            None => (None, None),
+        };
         Self {
             enabled,
             tool_media_enabled: false,
@@ -143,6 +158,8 @@ impl Owner {
             routes: Arc::downgrade(sessions),
             control,
             opening: None,
+            media_scope,
+            media_opening: None,
         }
     }
     pub(crate) fn set_display_allowed(&self, allowed: bool) {
@@ -153,6 +170,42 @@ impl Owner {
     }
     fn metadata_owner(&self) -> bool {
         self.enabled && self.route_owner()
+    }
+    fn media_owner(&self) -> bool {
+        if self.opening.is_some() {
+            return self.route_owner();
+        }
+        let Some((purpose, preview)) = &self.media_scope else {
+            return false;
+        };
+        if *purpose == super::open_purpose::OpenPurpose::Conversation && preview.is_none() {
+            return self.route_owner();
+        }
+        if purpose.preview_name().is_none()
+            || preview.as_deref().is_none_or(str::is_empty)
+            || self.state.load(Ordering::SeqCst) != STATE_READY
+        {
+            return false;
+        }
+        if let Some(opening) = &self.media_opening {
+            return opening.interested();
+        }
+        self.routes.upgrade().is_some_and(|sessions| {
+            sessions.lock().is_ok_and(|entries| {
+                entries.get(&self.session).is_some_and(|entry| {
+                    entry.connection_is(&self.connection)
+                        && entry.purpose == *purpose
+                        && entry.preview_token == *preview
+                        && self
+                            .control
+                            .as_ref()
+                            .and_then(|c| c.upgrade())
+                            .is_some_and(|original| {
+                                !original.is_closed() && original.same_channel(&entry.control)
+                            })
+                })
+            })
+        })
     }
     fn route_owner(&self) -> bool {
         self.state.load(std::sync::atomic::Ordering::SeqCst) == STATE_READY
@@ -213,7 +266,7 @@ pub(crate) fn tool_media(params: &Value, owner: &Owner) -> Option<Value> {
         params,
         &owner.connection,
         &owner.session,
-        owner.tool_media_enabled && owner.route_owner(),
+        owner.tool_media_enabled && owner.media_owner(),
     )
 }
 
@@ -223,7 +276,7 @@ pub(crate) fn forward_update(params: Value, owner: &Owner, events: &super::pump:
     (events)(history_point(params, owner));
     // The raw callback may synchronously retire its route. Recheck before the
     // adjacent local-only event; it is never an Agent-supplied presentation.
-    if owner.route_owner()
+    if owner.media_owner()
         && let Some(media) = media
     {
         (events)(media);
