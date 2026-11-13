@@ -118,3 +118,78 @@ it("does not retry a failed read without another explicit activation", async () 
   expect(select).not.toHaveBeenCalled();
   stop();
 });
+
+it("routes an explicit test reminder to settings without selecting a conversation", async () => {
+  const select = vi.fn();
+  const settings = vi.fn();
+  const close = await notificationNavigation(
+    select,
+    {
+      listen: async () => () => {},
+      take: async () => [{ kind: "settings", section: "notifications" }],
+    },
+    settings,
+  );
+  await settle();
+  expect(settings).toHaveBeenCalledOnce();
+  expect(select).not.toHaveBeenCalled();
+  close();
+});
+
+it.each([
+  { kind: "settings", section: "privacy" },
+  { kind: "settings", section: "notifications", key: "fake-thread" },
+  { kind: "notification", section: "notifications" },
+  ["settings", "notifications"],
+])(
+  "rejects malformed settings targets without falling back to a thread",
+  async (target) => {
+    const select = vi.fn(),
+      settings = vi.fn();
+    const close = await notificationNavigation(
+      select,
+      {
+        listen: async () => () => {},
+        take: async () => [target],
+      },
+      settings,
+    );
+    await settle();
+    close();
+    expect(select).not.toHaveBeenCalled();
+    expect(settings).not.toHaveBeenCalled();
+  },
+);
+
+it("keeps only the most recent mixed activation and ignores late settings after disposal", async () => {
+  const select = vi.fn(),
+    settings = vi.fn();
+  const close = await notificationNavigation(
+    select,
+    {
+      listen: async () => () => {},
+      take: async () => [
+        { kind: "settings", section: "notifications" },
+        "thread",
+      ],
+    },
+    settings,
+  );
+  await settle();
+  close();
+  expect(select).toHaveBeenCalledExactlyOnceWith("thread");
+  expect(settings).not.toHaveBeenCalled();
+  const pending = deferred<unknown>();
+  const stop = await notificationNavigation(
+    select,
+    {
+      listen: async () => () => {},
+      take: () => pending.promise,
+    },
+    settings,
+  );
+  stop();
+  pending.resolve([{ kind: "settings", section: "notifications" }]);
+  await settle();
+  expect(settings).not.toHaveBeenCalled();
+});

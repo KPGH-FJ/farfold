@@ -281,11 +281,12 @@ export default function App() {
   const [settingsTab, setSettingsTab] = useState<SettingsTab>("general");
   const generalRequestId = useRef(0);
   const [generalRequest, setGeneralRequest] = useState<{
-    kind: "update" | "shortcuts" | "privacy";
+    kind: "update" | "shortcuts" | "privacy" | "notifications";
     request: number;
   } | null>(null);
-  const requestGeneralPanel = (kind: "update" | "shortcuts" | "privacy") =>
-    setGeneralRequest({ kind, request: ++generalRequestId.current });
+  const requestGeneralPanel = (
+    kind: "update" | "shortcuts" | "privacy" | "notifications",
+  ) => setGeneralRequest({ kind, request: ++generalRequestId.current });
   const [settingsMounted, setSettingsMounted] = useState(
     view.kind === "settings",
   );
@@ -421,12 +422,15 @@ export default function App() {
     setView(previous);
     if (historyImport) setImportOpen(true);
   });
-  const openSettings = afterBrowserClose((tab: SettingsTab = "general") => {
-    if (view.kind !== "settings") rememberOrigin();
-    setSettingsTab(tab);
-    setSettingsMounted(true);
-    setView({ kind: "settings" });
-  });
+  const openSettings = afterBrowserClose(
+    (tab: SettingsTab = "general", reminder = false) => {
+      if (view.kind !== "settings") rememberOrigin();
+      setSettingsTab(tab);
+      setSettingsMounted(true);
+      setView({ kind: "settings" });
+      if (reminder) requestGeneralPanel("notifications");
+    },
+  );
   const openAgents = afterBrowserClose(
     (
       agentId?: string,
@@ -672,6 +676,8 @@ export default function App() {
     },
   );
   const notificationSelection = useRef<(key: string) => void>(() => {});
+  const notificationSettings = useRef<() => void>(() => {});
+  notificationSettings.current = () => openSettings("general", true);
   notificationSelection.current = (key) => {
     // A click is a navigation request, never permission to recover or send.
     if (!threads.getSnapshot().index.some((row) => row.id === key)) return;
@@ -687,10 +693,16 @@ export default function App() {
   useEffect(() => {
     let disposed = false;
     let stop: (() => void) | undefined;
-    void notificationNavigation(async (key) => {
-      await threads.refreshIndex();
-      if (!disposed) notificationSelection.current(key);
-    })
+    void notificationNavigation(
+      async (key) => {
+        await threads.refreshIndex();
+        if (!disposed) notificationSelection.current(key);
+      },
+      undefined,
+      () => {
+        if (!disposed) notificationSettings.current();
+      },
+    )
       .then((off) => {
         if (disposed) off();
         else stop = off;

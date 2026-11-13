@@ -521,6 +521,7 @@ async fn session_tool_recovery_pending_live_route_blocks_config_mode_confirmatio
     let (send, receive) = tokio::sync::oneshot::channel();
     control
         .send(super::super::pump::SessionControl::Delete {
+            opening: None,
             deadline: tokio::time::Instant::now() + Duration::from_secs(2),
             result: send,
         })

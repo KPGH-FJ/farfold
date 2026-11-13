@@ -21,8 +21,13 @@ const identity = (s: ThreadState) =>
 interface Source {
   call: ToolCallView;
   content: ToolContent[];
+  priorReadableContent: readonly ToolContent[];
   identity: string;
   owns?: () => boolean;
+}
+export interface ToolMediaReceipt {
+  call: ToolCallView;
+  priorReadableContent: readonly ToolContent[];
 }
 // Only the immediately preceding actual tool projection can receive the local
 // supplement. No body copy, transcript, or persistent event history is kept.
@@ -42,6 +47,7 @@ export function rememberToolMediaSource(
   call: ToolCallView | undefined,
   owns?: () => boolean,
   deliveryConnectionId?: string,
+  previousContent: readonly ToolContent[] = [],
 ): void {
   const update = event.update;
   if (
@@ -61,7 +67,16 @@ export function rememberToolMediaSource(
       deliveryConnectionId !== s.connectionId)
   )
     return;
-  next.set(s, { call, content: call.content, identity: identity(s), owns });
+  next.set(s, {
+    call,
+    content: call.content,
+    // A repeated raw completion may remove our earlier supplement. Preserve
+    // its comparison until this one adjacent hint, together with media already
+    // delivered by the raw update. Neither is a new reply when repeated here.
+    priorReadableContent: [...previousContent, ...call.content],
+    identity: identity(s),
+    owns,
+  });
 }
 
 /** The backend emits this local event directly after the unchanged source
@@ -72,7 +87,7 @@ export function receiveToolMedia(
   event: unknown,
   owns?: () => boolean,
   deliveryConnectionId?: string,
-): boolean {
+): ToolMediaReceipt | false {
   const source = next.get(s);
   next.delete(s);
   if (
@@ -152,5 +167,8 @@ export function receiveToolMedia(
     content.push(block);
   }
   source.call.content = content;
-  return true;
+  return {
+    call: source.call,
+    priorReadableContent: source.priorReadableContent,
+  };
 }

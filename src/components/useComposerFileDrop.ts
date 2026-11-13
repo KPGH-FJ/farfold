@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { composerDrafts } from "../runtime/drafts";
 import { draftPersistence } from "../runtime/draft_storage";
+import { getAppliedInterfaceScale } from "../runtime/interface_scale_geometry";
 import {
   createFileDropHandler,
   FILE_DROP_STRINGS,
@@ -43,9 +44,10 @@ export function useComposerFileDrop({
       }),
       accepts: ({ x, y }) => {
         const element = box.current;
-        // The pinned macOS drag handler forwards AppKit points as-is.
+        // AppKit supplies points, independent of Retina and main-page zoom.
+        // Windows supplies physical pixels; its DPR already includes page zoom.
         const scale = navigator.platform.startsWith("Mac")
-          ? 1
+          ? getAppliedInterfaceScale()
           : window.devicePixelRatio;
         if (
           !element ||

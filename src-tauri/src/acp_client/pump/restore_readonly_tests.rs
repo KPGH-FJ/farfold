@@ -240,7 +240,11 @@ async fn search_read_preview_direct_actor_mode_and_delete_do_not_dispatch() {
         } else {
             let (result, receive) = tokio::sync::oneshot::channel();
             control
-                .send(SessionControl::Delete { deadline, result })
+                .send(SessionControl::Delete {
+                    deadline,
+                    result,
+                    opening: None,
+                })
                 .unwrap();
             let result = tokio::time::timeout(Duration::from_secs(5), receive)
                 .await

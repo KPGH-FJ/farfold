@@ -21,7 +21,7 @@ import { pauseQueue, removeQueued } from "./queue";
 import { STRINGS } from "./strings";
 import { forgetSessionIdentity } from "./session_identity_types";
 import { receiveSessionUsage } from "./session_usage_notification";
-import type { ThreadState } from "./session_types";
+import type { ThreadState, ToolContent } from "./session_types";
 import type { PromptRequestOwner } from "./prompt_admission";
 import {
   applyUpdate,
@@ -65,8 +65,16 @@ export function applySessionEvent(
   effects?: SessionEventEffects,
   activityConnectionId?: string,
 ): void {
-  if (receiveToolMedia(s, event, effects?.owns, activityConnectionId)) {
-    if (live && effects?.owns()) effects.emit();
+  const media = receiveToolMedia(s, event, effects?.owns, activityConnectionId);
+  if (media) {
+    if (live && effects?.owns()) {
+      conversationReadState.receiveToolMedia(
+        s.key,
+        media.priorReadableContent,
+        media.call.content,
+      );
+      effects.emit();
+    }
     return;
   }
   if (!event || typeof event !== "object") return;
@@ -273,9 +281,41 @@ export function applySessionEvent(
       effects?.emit();
       return;
     }
+    const updateCallId = (e.update as { toolCallId?: unknown } | null)
+      ?.toolCallId;
+    const previousTool =
+      typeof updateCallId === "string"
+        ? s.items.find(
+            (item) =>
+              item.kind === "tool" && item.call.toolCallId === updateCallId,
+          )
+        : undefined;
+    const previousContent: readonly ToolContent[] =
+      previousTool?.kind === "tool" ? previousTool.call.content : [];
     try {
       const call = applyUpdate(s, e.update, e);
-      rememberToolMediaSource(s, e, call, effects?.owns, activityConnectionId);
+      rememberToolMediaSource(
+        s,
+        e,
+        call,
+        effects?.owns,
+        activityConnectionId,
+        previousContent,
+      );
+      if (
+        call &&
+        live &&
+        effects?.owns() &&
+        e.sessionId === s.nativeSessionId &&
+        !s.connectionLost &&
+        (activityConnectionId === undefined ||
+          activityConnectionId === s.connectionId)
+      )
+        conversationReadState.receiveToolMedia(
+          s.key,
+          previousContent,
+          call.content,
+        );
     } catch (error) {
       // A local conversion of ordinary Agent JSON must not strand Tauri's
       // ordered Channel index. Keep the entire envelope as opaque data.

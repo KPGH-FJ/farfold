@@ -4,6 +4,10 @@ import type { FileDropEvent } from "../runtime/composer_file_drop";
 const h = vi.hoisted(() => ({
   effects: [] as (() => (() => void) | void)[],
   subscribe: vi.fn(),
+  appliedScale: 1,
+}));
+vi.mock("../runtime/interface_scale_geometry", () => ({
+  getAppliedInterfaceScale: () => h.appliedScale,
 }));
 vi.mock("react", async () => ({
   ...(await vi.importActual("react")),
@@ -75,6 +79,7 @@ function mount(enabled = true, platform = "Win32") {
 afterEach(() => {
   h.effects.length = 0;
   h.subscribe.mockReset();
+  h.appliedScale = 1;
   composerDrafts.clear(key);
   draftPersistence.lockInteraction(false);
   vi.unstubAllGlobals();
@@ -113,6 +118,43 @@ it("rejects a macOS drop outside the input even when its half coordinates would 
     .soft(s.element.ownerDocument.elementFromPoint)
     .toHaveBeenCalledExactlyOnceWith(220, 320);
   expect(s.add).not.toHaveBeenCalled();
+});
+it("converts AppKit points by the applied main-page zoom without applying Retina twice", () => {
+  h.appliedScale = 1.5;
+  const s = mount(true, "MacIntel");
+  s.send("enter", { x: 330, y: 480 });
+  s.send("drop", { x: 330, y: 480 });
+  expect(s.element.ownerDocument.elementFromPoint).toHaveBeenLastCalledWith(
+    220,
+    320,
+  );
+  expect(s.add).toHaveBeenCalledExactlyOnceWith(key, ["/file.txt"]);
+  s.cleanup();
+});
+it("rechecks the current applied zoom at drop after the layout changes", () => {
+  const s = mount(true, "MacIntel");
+  s.send("enter", { x: 220, y: 320 });
+  h.appliedScale = 1.5;
+  s.send("drop", { x: 330, y: 480 });
+  expect(s.element.ownerDocument.elementFromPoint).toHaveBeenLastCalledWith(
+    220,
+    320,
+  );
+  expect(s.add).toHaveBeenCalledExactlyOnceWith(key, ["/file.txt"]);
+  s.cleanup();
+});
+it("does not multiply Windows page zoom a second time when DPR includes it", () => {
+  h.appliedScale = 1.5;
+  const s = mount(true, "Win32");
+  vi.stubGlobal("window", { devicePixelRatio: 3 });
+  s.send("enter", { x: 660, y: 960 });
+  s.send("drop", { x: 660, y: 960 });
+  expect(s.element.ownerDocument.elementFromPoint).toHaveBeenLastCalledWith(
+    220,
+    320,
+  );
+  expect(s.add).toHaveBeenCalledExactlyOnceWith(key, ["/file.txt"]);
+  s.cleanup();
 });
 it.each(["hidden", "covered", "inert", "pending", "exit", "preparing"])(
   "does not add files through %s input",

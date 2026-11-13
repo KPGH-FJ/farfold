@@ -7,6 +7,7 @@ import {
   KeyIcon,
   SparkleIcon,
 } from "@phosphor-icons/react";
+import { INTERFACE_SCALE_STRINGS as SCALE } from "../runtime/interface_scale";
 import { STRINGS } from "../runtime/strings";
 import { SETTINGS_PRESENTATION as P } from "../runtime/settings_presentation_strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
@@ -41,6 +42,9 @@ export const generalShortcuts = [
   [P.openSettings, shortcutLabel(",")],
   [P.searchAlias, shortcutLabel("P", true)],
   [P.closeDialog, "Esc"],
+  [SCALE.larger, shortcutLabel("+")],
+  [SCALE.smaller, shortcutLabel("-")],
+  [SCALE.reset, shortcutLabel("0")],
   [STRINGS.general.shortcutSend, "Enter"],
   [
     STRINGS.general.shortcutNewline,

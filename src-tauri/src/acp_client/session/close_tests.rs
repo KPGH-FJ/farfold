@@ -118,8 +118,9 @@ async fn failed_route_lookup_is_not_confirmed_absence() {
     );
     assert!(
         manager
-            .delete_session("close-retry-fixture", dir.path(), "gone")
+            .close_and_delete_session("close-retry-fixture", dir.path(), "gone")
             .await
+            .result
             .is_err(),
         "a failed owner lookup must not fall through to preparation deletion"
     );

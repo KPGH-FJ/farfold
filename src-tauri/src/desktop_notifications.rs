@@ -1,9 +1,11 @@
 //! Optional, content-free desktop reminders. Submission is not proof of delivery.
 //! The system receives only a digest of an existing index row, never its path.
 mod diagnostic;
+mod test_notification;
 mod tickets;
 pub(crate) use diagnostic::DiagnosticSnapshot;
 use diagnostic::{Attempt, DiagnosticStore, Reason, Stage};
+pub use test_notification::*;
 pub use tickets::Withdrawal;
 use tickets::{Rejection, Ticket, Tickets};
 #[cfg(target_os = "macos")]
@@ -207,13 +209,16 @@ pub fn handle_run_event(_event: &tauri::RunEvent) {
     }
 }
 
-#[derive(Deserialize, Clone, Copy)]
+#[derive(Deserialize, Clone, Copy, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum NoticeKind {
     Approval,
     Question,
     Interrupted,
     Success,
+    // Only the dedicated main-window command can construct this kind.
+    #[serde(skip_deserializing)]
+    Test,
 }
 impl NoticeKind {
     fn body(self) -> &'static str {
@@ -222,6 +227,7 @@ impl NoticeKind {
             Self::Question => "有一个问题需要你回答。请回到 Farfold 查看。",
             Self::Interrupted => "有一项工作需要你检查。请回到 Farfold 查看。",
             Self::Success => "有一项工作已完成。请回到 Farfold 查看。",
+            Self::Test => "这是一条测试提醒。点击返回提醒设置。",
         }
     }
 }
@@ -230,6 +236,7 @@ impl Preference {
         match kind {
             NoticeKind::Success => self.success_enabled,
             NoticeKind::Approval | NoticeKind::Question | NoticeKind::Interrupted => self.enabled,
+            NoticeKind::Test => true,
         }
     }
 }
@@ -310,6 +317,41 @@ fn resolve_target(store: &MetaStore, digest: &str) -> Option<String> {
     }
     Some(row.id)
 }
+#[derive(Serialize)]
+#[serde(untagged)]
+pub enum Activation {
+    Conversation(String),
+    Settings {
+        kind: &'static str,
+        section: &'static str,
+    },
+}
+fn resolve_activation(store: &MetaStore, digest: &str) -> Option<Activation> {
+    if digest == test_notification::target() {
+        return Some(Activation::Settings {
+            kind: "settings",
+            section: "notifications",
+        });
+    }
+    resolve_target(store, digest).map(Activation::Conversation)
+}
+fn target_current(store: &MetaStore, digest: &str, kind: NoticeKind) -> bool {
+    if kind == NoticeKind::Test {
+        digest == test_notification::target()
+    } else {
+        resolve_target(store, digest).is_some()
+    }
+}
+fn presentation_gate(
+    kind: NoticeKind,
+    visible: Option<bool>,
+    focused: Option<bool>,
+) -> Result<(), Reason> {
+    match diagnostic::window_gate(visible, focused) {
+        Err(Reason::WindowFocused) if kind == NoticeKind::Test => Ok(()),
+        result => result,
+    }
+}
 // Shared by the initial gate and both platforms' final submission gates.
 fn preference_gate(
     store: &MetaStore,
@@ -371,7 +413,7 @@ fn may_submit_locked(
     // Capture the same queries used by the gate, never a later diagnostic read.
     let visible = window.is_visible().ok();
     let focused = window.is_focused().ok();
-    let gate = diagnostic::window_gate(visible, focused);
+    let gate = presentation_gate(kind, visible, focused);
     state.diagnostic.update(attempt, |d| {
         d.window_visible = visible;
         d.window_focused = focused;
@@ -479,7 +521,7 @@ fn queue_activation(pending: &mut VecDeque<String>, digest: &str) {
 }
 
 fn activate(app: &AppHandle, digest: &str) {
-    if resolve_target(app.state::<MetaStore>().inner(), digest).is_none() {
+    if resolve_activation(app.state::<MetaStore>().inner(), digest).is_none() {
         return;
     }
     let state = app.state::<DesktopNotifications>();
@@ -497,12 +539,12 @@ fn activate(app: &AppHandle, digest: &str) {
     crate::ui_transport::emit_event(app, "desktop-notification:activate", ());
 }
 #[tauri::command]
-pub fn desktop_notification_take_pending(app: AppHandle) -> Result<Vec<String>, String> {
+pub fn desktop_notification_take_pending(app: AppHandle) -> Result<Vec<Activation>, String> {
     let state = app.state::<DesktopNotifications>();
     let mut pending = state.pending.lock().map_err(|_| "提醒对应的对话尚未确认")?;
     Ok(pending
         .drain(..)
-        .filter_map(|digest| resolve_target(app.state::<MetaStore>().inner(), &digest))
+        .filter_map(|digest| resolve_activation(app.state::<MetaStore>().inner(), &digest))
         .collect())
 }
 

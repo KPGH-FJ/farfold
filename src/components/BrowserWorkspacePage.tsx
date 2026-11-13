@@ -2,6 +2,7 @@ import { open as chooseFile } from "@tauri-apps/plugin-dialog";
 import { fileDelivery, type VerifiedFile } from "../runtime/file_delivery";
 import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
 import { browserSurfaceGuard } from "../runtime/browser_surface";
+import { getAppliedInterfaceScale } from "../runtime/interface_scale_geometry";
 import type {
   BrowserSurfaceGuard,
   BrowserSurfaceRegistration,
@@ -925,6 +926,7 @@ export function BrowserWorkspacePage({
     let cancelled = false;
     let frame = 0;
     let last: BrowserWorkspaceBounds | null = null;
+    let lastScale: number | null = null;
     let resizing = false;
     // A commit can hide/remove the surface before this passive effect cleans
     // up. Neither its old frame nor an old resize rejection owns that new
@@ -962,13 +964,18 @@ export function BrowserWorkspacePage({
         );
         return;
       }
-      if (!resizing && (!last || !sameBounds(last, bounds))) {
+      const scale = getAppliedInterfaceScale();
+      if (
+        !resizing &&
+        (!last || !sameBounds(last, bounds) || lastScale !== scale)
+      ) {
         resizing = true;
         void owner
           .resize(bounds)
           .then(
             () => {
               last = bounds;
+              lastScale = scale;
             },
             () => {
               if (!isCurrentPresentation()) return;

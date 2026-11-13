@@ -827,10 +827,24 @@ pub enum SessionDeleteAgentResult {
 pub enum SessionDeleteFailure {
     LocalNotRemoved {
         agent: Option<SessionDeleteAgentResult>,
+        #[serde(
+            rename = "connectionClosed",
+            skip_serializing_if = "delete_connection_open"
+        )]
+        connection_closed: bool,
     },
     LocalRemovalUnknown {
         agent: SessionDeleteAgentResult,
+        #[serde(
+            rename = "connectionClosed",
+            skip_serializing_if = "delete_connection_open"
+        )]
+        connection_closed: bool,
     },
+}
+
+fn delete_connection_open(value: &bool) -> bool {
+    !*value
 }
 
 #[cfg(test)]
@@ -845,18 +859,37 @@ fn session_delete_reports_the_agent_result_separately_from_local_failure() {
     ] {
         assert_eq!(serde_json::to_value(agent).unwrap(), json!(wire));
         assert_eq!(
-            serde_json::to_value(SessionDeleteFailure::LocalNotRemoved { agent: Some(agent) })
-                .unwrap(),
+            serde_json::to_value(SessionDeleteFailure::LocalNotRemoved {
+                agent: Some(agent),
+                connection_closed: false
+            })
+            .unwrap(),
             json!({"code":"localNotRemoved","agent":wire})
         );
         assert_eq!(
-            serde_json::to_value(SessionDeleteFailure::LocalRemovalUnknown { agent }).unwrap(),
+            serde_json::to_value(SessionDeleteFailure::LocalRemovalUnknown {
+                agent,
+                connection_closed: false
+            })
+            .unwrap(),
             json!({"code":"localRemovalUnknown","agent":wire})
         );
     }
     assert_eq!(
-        serde_json::to_value(SessionDeleteFailure::LocalNotRemoved { agent: None }).unwrap(),
+        serde_json::to_value(SessionDeleteFailure::LocalNotRemoved {
+            agent: None,
+            connection_closed: false
+        })
+        .unwrap(),
         json!({"code":"localNotRemoved","agent":null})
+    );
+    assert_eq!(
+        serde_json::to_value(SessionDeleteFailure::LocalNotRemoved {
+            agent: Some(SessionDeleteAgentResult::Deleted),
+            connection_closed: true,
+        })
+        .unwrap(),
+        json!({"code":"localNotRemoved","agent":"deleted","connectionClosed":true})
     );
 }
 
@@ -875,9 +908,13 @@ pub async fn session_delete(
     cwd: String,
     native_session_id: String,
 ) -> Result<SessionDeleteAgentResult, SessionDeleteFailure> {
-    let cwd = validate_cwd_async(&cwd)
-        .await
-        .map_err(|_| SessionDeleteFailure::LocalNotRemoved { agent: None })?;
+    let cwd =
+        validate_cwd_async(&cwd)
+            .await
+            .map_err(|_| SessionDeleteFailure::LocalNotRemoved {
+                agent: None,
+                connection_closed: false,
+            })?;
     delete_session_in_scope(
         &app.state::<AcpManager>(),
         &app.state::<MetaStore>(),
@@ -903,28 +940,35 @@ pub(super) async fn delete_session_in_scope(
         .await
         .is_err()
     {
-        return Err(SessionDeleteFailure::LocalNotRemoved { agent: None });
+        return Err(SessionDeleteFailure::LocalNotRemoved {
+            agent: None,
+            connection_closed: false,
+        });
     }
-    let remote = match manager
-        .delete_session(agent_id, cwd, native_session_id)
-        .await
-    {
+    let attempt = manager
+        .close_and_delete_session(agent_id, cwd, native_session_id)
+        .await;
+    let connection_closed = attempt.connection_closed;
+    let remote = match attempt.result {
         Ok(true) => SessionDeleteAgentResult::Deleted,
-        Ok(false) => {
-            logging::info(
-                "acp_client",
-                format_args!("session_delete: no Agent deletion requested for {row_id}"),
-            );
-            SessionDeleteAgentResult::Unsupported
-        }
+        Ok(false) => SessionDeleteAgentResult::Unsupported,
         Err(DeleteFailure::NotDispatched) => {
-            return Err(SessionDeleteFailure::LocalNotRemoved { agent: None });
+            return Err(SessionDeleteFailure::LocalNotRemoved {
+                agent: None,
+                connection_closed,
+            });
         }
         Err(DeleteFailure::Unconfirmed(error)) => {
             logging::warn(
                 "acp_client",
                 format_args!("session_delete remote failed ({row_id}): {error}"),
             );
+            if !connection_closed {
+                return Err(SessionDeleteFailure::LocalNotRemoved {
+                    agent: Some(SessionDeleteAgentResult::Unconfirmed),
+                    connection_closed,
+                });
+            }
             SessionDeleteAgentResult::Unconfirmed
         }
     };
@@ -936,10 +980,14 @@ pub(super) async fn delete_session_in_scope(
         Ok(Err(LocalSessionDeleteError::NotRemoved)) => {
             Err(SessionDeleteFailure::LocalNotRemoved {
                 agent: Some(remote),
+                connection_closed,
             })
         }
         Ok(Err(LocalSessionDeleteError::Unknown)) | Err(_) => {
-            Err(SessionDeleteFailure::LocalRemovalUnknown { agent: remote })
+            Err(SessionDeleteFailure::LocalRemovalUnknown {
+                agent: remote,
+                connection_closed,
+            })
         }
     }
 }

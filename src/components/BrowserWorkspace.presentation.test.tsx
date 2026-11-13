@@ -11,9 +11,13 @@ const h = vi.hoisted(() => ({
   refs: [] as { current: unknown }[],
   effects: [] as { deps: unknown[]; cleanup?: () => void }[],
   pending: [] as (() => void)[],
+  appliedScale: 1,
   host: {
     getBoundingClientRect: () => ({ x: 600, y: 200, width: 400, height: 500 }),
   },
+}));
+vi.mock("../runtime/interface_scale_geometry", () => ({
+  getAppliedInterfaceScale: () => h.appliedScale,
 }));
 
 vi.mock("react", async (original) => {
@@ -116,6 +120,7 @@ beforeEach(() => {
   h.refs = [];
   h.effects = [];
   h.pending = [];
+  h.appliedScale = 1;
   vi.stubGlobal(
     "requestAnimationFrame",
     vi.fn(() => 1),
@@ -201,5 +206,51 @@ it("restarts bounds synchronization after batched hold and release notifications
   );
   frame();
   await vi.waitFor(() => expect(client.resize).toHaveBeenCalledOnce());
+  expect(client.close).not.toHaveBeenCalled();
+});
+
+it("resends unchanged CSS bounds once when the applied main-page zoom changes", async () => {
+  const { client } = await mounted();
+  frame();
+  await new Promise<void>((resolve) => setTimeout(resolve, 0));
+  expect(client.resize).toHaveBeenCalledOnce();
+  frame();
+  await Promise.resolve();
+  expect(client.resize).toHaveBeenCalledOnce();
+  h.appliedScale = 1.5;
+  frame();
+  await new Promise<void>((resolve) => setTimeout(resolve, 0));
+  expect(client.resize).toHaveBeenCalledTimes(2);
+  expect(client.resize).toHaveBeenLastCalledWith({
+    taskKey: page.taskKey,
+    label: page.label,
+    bounds: { x: 600, y: 200, width: 400, height: 500 },
+  });
+  frame();
+  await Promise.resolve();
+  expect(client.resize).toHaveBeenCalledTimes(2);
+  expect(client.open).not.toHaveBeenCalled();
+  expect(client.close).not.toHaveBeenCalled();
+});
+
+it("keeps the page hidden across a scale hold and reveals with fresh unscaled bounds", async () => {
+  const { props, client } = await mounted();
+  const hold = props.guard!.hold();
+  await vi.waitFor(() => expect(hold.ready).toBe(true));
+  expect(client.setVisible).toHaveBeenLastCalledWith(
+    expect.objectContaining({ visible: false }),
+  );
+  h.appliedScale = 1.5;
+  hold.release();
+  render(props);
+  await vi.waitFor(() =>
+    expect(client.setVisible).toHaveBeenLastCalledWith({
+      taskKey: page.taskKey,
+      label: page.label,
+      visible: true,
+      bounds: { x: 600, y: 200, width: 400, height: 500 },
+    }),
+  );
+  expect(client.open).not.toHaveBeenCalled();
   expect(client.close).not.toHaveBeenCalled();
 });

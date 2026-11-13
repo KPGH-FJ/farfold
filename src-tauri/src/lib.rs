@@ -29,6 +29,7 @@ mod file_delivery_commands;
 mod file_read_check;
 mod install_job;
 mod installations;
+mod interface_scale;
 mod lifemodel;
 mod logging;
 #[cfg(target_os = "macos")]
@@ -355,6 +356,8 @@ pub fn run() {
                 desktop_notifications::desktop_notifications_get,
                 desktop_notifications::desktop_notifications_set,
                 desktop_notifications::desktop_notification_submit,
+                desktop_notifications::desktop_notification_test,
+                interface_scale::interface_scale_apply,
                 desktop_notifications::desktop_notification_withdraw,
                 desktop_notifications::desktop_notification_take_pending,
                 pty::pty_spawn,

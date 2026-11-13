@@ -1384,10 +1384,11 @@ async fn session_pump(
                 }
                 command @ (SessionControl::SetMode { .. } | SessionControl::Close { .. } | SessionControl::ForkClose { .. } | SessionControl::Delete { .. }) => {
                     let actual_reply = matches!(&command,SessionControl::ForkClose { .. });
-                    let command = match command {
+                    let mut command = match command {
                         SessionControl::ForkClose {result} => SessionControl::Close {result,require_idle_interactions:true,deadline:tokio::time::Instant::now()},
                         other=>other,
                     };
+                    let opening = match &mut command { SessionControl::Delete {opening,..}=>opening.take(), _=>None };
                     let (kind, result, deadline, method, params) = match command {
                         SessionControl::SetMode { result, .. } if configuration.modern_options().is_some() => {
                             let _ = result.send(Err("请通过当前设置选项重新选择并确认".into())); continue;
@@ -1412,7 +1413,7 @@ async fn session_pump(
                             }
                             (MutationKind::Close, MutationReply::Unit(result), deadline, "session/close", serde_json::json!({"sessionId":session_id}))
                         }
-                        SessionControl::Delete { result, deadline } => (MutationKind::Delete, MutationReply::Delete(result), deadline,
+                        SessionControl::Delete { result, deadline, .. } => (MutationKind::Delete, MutationReply::Delete(result), deadline,
                             "session/delete", serde_json::json!({"sessionId":session_id})),
                         _ => unreachable!(),
                     };
@@ -1421,7 +1422,7 @@ async fn session_pump(
                         continue;
                     }
                     let lease = match ops.life.operation(format!("open:{session_id}")) {
-                        Ok(lease) => lease,
+                        Ok(lease) => lease.with_opening(opening),
                         Err(error) => { result.reject_before_dispatch(error); continue; }
                     };
                     let operation = Operation::new();
@@ -1446,7 +1447,6 @@ async fn session_pump(
         detach.finish(&sessions, &session_id);
     }
 }
-
 /// Push `{kind:"connectionLost"}` to every session on the connection and drop
 /// the registrations (pumps exit as their channels close).
 pub(crate) fn notify_connection_lost(sessions: &SessionMap, reason: super::lifecycle::CloseReason) {

@@ -143,6 +143,13 @@ beforeEach(() => {
     if (command === "settings_get" && args.key === "autoArchiveDays")
       return null;
     if (command === "session_delete") {
+      if (h.refuseClose) throw { code: "localNotRemoved", agent: null };
+      if (
+        !h.deleteRefusal ||
+        (h.deleteRefusal as { connectionClosed?: boolean }).connectionClosed ===
+          true
+      )
+        h.closedRoutes.add(args.nativeSessionId);
       if (h.deleteRefusal) throw h.deleteRefusal;
       if (h.holdDelete)
         return new Promise((resolve) => {
@@ -255,7 +262,7 @@ it("retires an explicitly deleted conversation's permission key", async () => {
 
 it.each([
   [
-    { code: "localNotRemoved", agent: "deleted" },
+    { code: "localNotRemoved", agent: "deleted", connectionClosed: true },
     /未从对话列表移除.*确认已删除/,
   ],
   [{ code: "localNotRemoved", agent: null }, /未从对话列表移除.*未向 Agent/],
@@ -290,7 +297,14 @@ it.each([
     expect(threads.thread(state.key)).toBe(state);
     expect(state.items.at(-1)).toMatchObject({ text: "Retained history" });
     expect(store.permissionRevisions.get(state.key)).toBe(revision);
-    expect(state.connectionLost).toBe(true);
+    expect(state.connectionLost).toBe(
+      !(
+        refusal &&
+        typeof refusal === "object" &&
+        "agent" in refusal &&
+        refusal.agent === null
+      ),
+    );
   },
 );
 
@@ -314,7 +328,7 @@ it("retains a deleting owner but fences new sends until the exact local receipt"
   expect(threads.thread(state.key)).toBeUndefined();
 });
 
-it("never dispatches deletion if the exact loaded connection did not close", async () => {
+it("retains the loaded view when the combined deletion reports a close refusal", async () => {
   const state = await idleDraft();
   state.identity = "established";
   h.refuseClose = true;
@@ -323,7 +337,7 @@ it("never dispatches deletion if the exact loaded connection did not close", asy
   );
   expect(
     h.invoke.mock.calls.some(([command]) => command === "session_delete"),
-  ).toBe(false);
+  ).toBe(true);
   expect(threads.thread(state.key)).toBe(state);
 });
 
@@ -331,7 +345,11 @@ it("a second explicit attempt can use exact confirmed absence after a local refu
   const state = await idleDraft();
   state.identity = "established";
   const row = { id: state.key, ...state };
-  h.deleteRefusal = { code: "localNotRemoved", agent: "unsupported" };
+  h.deleteRefusal = {
+    code: "localNotRemoved",
+    agent: "unsupported",
+    connectionClosed: true,
+  };
   await expect(threads.delete(row)).rejects.toThrow(/未从对话列表移除/);
   expect(h.closedRoutes.has(state.nativeSessionId)).toBe(true);
   expect(threads.thread(state.key)).toBe(state);

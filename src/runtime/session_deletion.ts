@@ -44,28 +44,43 @@ function localFailure(reason: unknown): Error {
 export async function requestSessionDeletion(
   target: DeletionTarget,
   existing?: DeletionTarget,
-  didClose?: () => void,
+  retireView?: (uncertain?: boolean) => void,
 ): Promise<AgentDeletion> {
-  if (existing) {
-    try {
-      await invoke("session_close", {
-        agentId: existing.agentId,
-        cwd: existing.cwd,
-        sessionId: existing.nativeSessionId,
-        allowAlreadyClosed: true,
-      });
-    } catch {
-      throw new Error(
-        `${LIBRARY.deleteLocalNotRemoved}${LIBRARY.deleteConnectionNotClosed}`,
-      );
-    }
-    didClose?.();
-  }
+  if (
+    existing &&
+    (existing.agentId !== target.agentId ||
+      existing.cwd !== target.cwd ||
+      existing.nativeSessionId !== target.nativeSessionId)
+  )
+    throw new Error(LIBRARY.deleteLocalNotRemoved);
   try {
     const receipt = agentOutcome(await invoke("session_delete", target));
-    if (receipt) return receipt;
+    if (receipt) {
+      retireView?.();
+      return receipt;
+    }
     throw new Error();
   } catch (reason) {
+    // The backend owns close + delete on one captured connection. Do not infer
+    // a close from a refusal; ambiguous delivery still retires the sending view.
+    const known =
+      reason &&
+      typeof reason === "object" &&
+      "code" in reason &&
+      (reason.code === "localNotRemoved" ||
+        reason.code === "localRemovalUnknown") &&
+      "agent" in reason;
+    if (known) {
+      const remote = agentOutcome(reason.agent);
+      if (
+        ("connectionClosed" in reason &&
+          reason.connectionClosed === true &&
+          (remote || reason.agent === null)) ||
+        remote === "deleted"
+      )
+        retireView?.();
+      else if (remote === "unconfirmed") retireView?.(true);
+    } else retireView?.(true);
     throw localFailure(reason);
   }
 }

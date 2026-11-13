@@ -71,7 +71,9 @@ it.each(["MacIntel", "Win32"])(
     expect(html).toContain('aria-checked="false"');
     expect(html).toContain("系统通知许可尚未确认");
     expect(html).toContain("仅在系统允许声音时播放");
-    expect(html).not.toContain("自定义");
+    expect(html).toContain("自定义");
+    expect(html).toContain("界面大小");
+    expect(html).toContain("测试提醒");
     expect(html).toContain(mac ? "⌘ ," : "Ctrl+,");
     expect(html).not.toContain("零配置");
     expect(html).toContain(mac ? "⌘ N" : "Ctrl+N");

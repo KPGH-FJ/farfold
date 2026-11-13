@@ -3,6 +3,7 @@
 #import <UserNotifications/UserNotifications.h>
 
 static NSString *const FFNotificationCategory = @"farfold-work-attention";
+static NSString *const FFNotificationTestCategory = @"farfold-settings-test";
 static FFNotificationClick ffClick;
 static UNUserNotificationCenter *ffCenter;
 static FFNotificationDiagnostic ffDiagnostic;
@@ -19,7 +20,8 @@ static void ffObserve(NSString *identifier, int32_t event, int32_t domain, int64
     // A minimized main window can leave NSApp active. Query the same window
     // used by the submission gate again when the system asks to present.
     int32_t foreground = ffForeground ? ffForeground() : 2;
-    if (foreground != 0) {
+    bool explicitTest = [notification.request.content.categoryIdentifier isEqualToString:FFNotificationTestCategory];
+    if (foreground == 2 || (foreground == 1 && !explicitTest)) {
       ffObserve(notification.request.identifier, foreground == 1 ? 3 : 8, 0, 0);
       completion(UNNotificationPresentationOptionNone); return;
     }
@@ -33,7 +35,8 @@ static void ffObserve(NSString *identifier, int32_t event, int32_t domain, int64
  didReceiveNotificationResponse:(UNNotificationResponse *)response
          withCompletionHandler:(void (^)(void))completion {
   if ([response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier] &&
-      [response.notification.request.content.categoryIdentifier isEqualToString:FFNotificationCategory]) {
+      ([response.notification.request.content.categoryIdentifier isEqualToString:FFNotificationCategory] ||
+       [response.notification.request.content.categoryIdentifier isEqualToString:FFNotificationTestCategory])) {
     id target = response.notification.request.content.userInfo[@"target"];
     if ([target isKindOfClass:NSString.class] && [target length] == 64) {
       ffObserve(response.notification.request.identifier, 5, 0, 0);
@@ -112,7 +115,7 @@ bool ff_notifications_settings(bool request, void *context, FFNotificationSettin
 }
 
 bool ff_notifications_submit(const char *identifier, const char *target,
-                             const char *body, bool sound, void *context,
+                             const char *body, bool sound, bool explicitTest, void *context,
                              FFNotificationSubmitted reply) {
   if (!NSThread.isMainThread) return false;
   NSString *observedId = [NSString stringWithUTF8String:identifier];
@@ -127,7 +130,7 @@ bool ff_notifications_submit(const char *identifier, const char *target,
   UNMutableNotificationContent *content = [UNMutableNotificationContent new];
   content.title = @"Farfold";
   content.body = message;
-  content.categoryIdentifier = FFNotificationCategory;
+  content.categoryIdentifier = explicitTest ? FFNotificationTestCategory : FFNotificationCategory;
   content.userInfo = @{@"target":targetId};
   if (sound) content.sound = UNNotificationSound.defaultSound;
   UNNotificationRequest *notice = [UNNotificationRequest requestWithIdentifier:requestId content:content trigger:nil];

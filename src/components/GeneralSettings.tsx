@@ -15,18 +15,15 @@ import {
 } from "@phosphor-icons/react";
 import { uiError } from "../runtime/ui_error";
 import { STRINGS } from "../runtime/strings";
-import { threads } from "../runtime/sessions";
 import type { ThemeMode, ThemeStatus } from "../runtime/theme";
+import { InterfaceScaleControl } from "./InterfaceScale";
+import { NotificationTestControl } from "./NotificationTestControl";
 import { UpdateDialog } from "./UpdateDialog";
 import { SendingSettings } from "./SendingSettings";
 import { DiagnosticsDialog } from "./DiagnosticsDialog";
 import { useDiagnosticsReview } from "../runtime/diagnostics";
 import type { AgentCardModel } from "../runtime/agents";
-import {
-  ARCHIVE_STRINGS,
-  retryAutoArchive,
-  useAutoArchive,
-} from "../runtime/auto_archive";
+import { AutoArchiveSettings } from "./AutoArchiveSettings";
 import "../general-settings.css";
 import "../settings-library-redesign.css";
 import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
@@ -44,7 +41,7 @@ import {
 } from "../runtime/desktop_notifications";
 
 export interface GeneralSettingsRequest {
-  kind: "update" | "shortcuts" | "privacy";
+  kind: "update" | "shortcuts" | "privacy" | "notifications";
   request: number;
 }
 
@@ -79,17 +76,17 @@ export function GeneralSettings({
   const [panel, setPanel] = useState<
     "shortcuts" | "privacy" | "sending" | null
   >(null);
-  const [archiveDays, setArchiveDays] = useState<number | null>(null);
-  const [archiveError, setArchiveError] = useState<string | null>(null);
-  const [archiveSaving, setArchiveSaving] = useState(false);
-  const [archiveLoading, setArchiveLoading] = useState(true);
-  const archiveInFlight = useRef(false);
-  const archiveReading = useRef(true);
-  const [archiveRead, setArchiveRead] = useState(0);
   const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
   const diagnostics = useDiagnosticsReview();
-  const autoArchive = useAutoArchive();
   const notifications = useDesktopNotifications();
+  const notificationHeading = useRef<HTMLHeadingElement | null>(null);
+  const [notificationFocus, setNotificationFocus] = useState(0);
+  // Run after a dismissed dialog's passive focus cleanup has restored its opener.
+  useEffect(() => {
+    if (!notificationFocus) return;
+    notificationHeading.current?.scrollIntoView({ block: "start" });
+    notificationHeading.current?.focus({ preventScroll: true });
+  }, [notificationFocus]);
 
   // Menu-driven requests (检查更新/键盘快捷键/数据与隐私) open the matching
   // panel once, then the request is handed back to be cleared.
@@ -97,7 +94,12 @@ export function GeneralSettings({
   useEffect(() => {
     if (!request || handledRequest.current === request.request) return;
     handledRequest.current = request.request;
-    if (request.kind === "update") setUpdateOpen(true);
+    if (request.kind === "notifications") {
+      setPanel(null);
+      setUpdateOpen(false);
+      setDiagnosticsOpen(false);
+      setNotificationFocus(request.request);
+    } else if (request.kind === "update") setUpdateOpen(true);
     else setPanel(request.kind);
     onRequestHandled?.();
   }, [request, onRequestHandled]);
@@ -115,58 +117,6 @@ export function GeneralSettings({
       cancelled = true;
     };
   }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    archiveReading.current = true;
-    setArchiveLoading(true);
-    setArchiveError(null);
-    void threads
-      .readAutoArchiveDays()
-      .then((saved) => {
-        if (!cancelled) {
-          setArchiveDays(saved);
-        }
-      })
-      .catch((reason) => {
-        if (!cancelled)
-          setArchiveError(uiError(reason, STRINGS.general.settingsLoadFailed));
-      })
-      .finally(() => {
-        if (!cancelled) {
-          archiveReading.current = false;
-          setArchiveLoading(false);
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [archiveRead]);
-
-  const setDays = async (requested: string) => {
-    if (
-      archiveDays === null ||
-      archiveInFlight.current ||
-      archiveReading.current ||
-      requested.trim() === ""
-    )
-      return;
-    const days = Number(requested);
-    if (!Number.isFinite(days) || days < 0) return;
-    const clean = Math.floor(days);
-    archiveInFlight.current = true;
-    setArchiveSaving(true);
-    setArchiveError(null);
-    try {
-      await threads.setAutoArchiveDays(clean);
-      setArchiveDays(clean);
-    } catch (reason) {
-      setArchiveError(uiError(reason, STRINGS.general.settingsSaveFailed));
-    } finally {
-      archiveInFlight.current = false;
-      setArchiveSaving(false);
-    }
-  };
 
   return (
     <div className="general-page settings-redesign">
@@ -253,6 +203,7 @@ export function GeneralSettings({
           ))}
         </div>
 
+        <InterfaceScaleControl />
         {themeStatus.saving && (
           <div role="status">{STRINGS.general.settingsSaving}</div>
         )}
@@ -271,104 +222,12 @@ export function GeneralSettings({
           </div>
         )}
       </section>
-      <section
-        className="general-section"
-        aria-labelledby="general-organization"
-      >
-        <h2 id="general-organization" tabIndex={-1}>
-          {STRINGS.general.organization}
-        </h2>
-        <div className="general-setting-row">
-          <div>
-            <strong>{STRINGS.general.autoArchive}</strong>
-            <p>{ARCHIVE_STRINGS.description}</p>
-          </div>
-          <select
-            aria-label={STRINGS.general.autoArchive}
-            disabled={archiveDays === null || archiveSaving || archiveLoading}
-            value={archiveDays ?? ""}
-            onChange={(event) => void setDays(event.target.value)}
-          >
-            {archiveDays === null && (
-              <option value="">{STRINGS.common.loading}</option>
-            )}
-            {[0, 7, 30, 90].map((days) => (
-              <option key={days} value={days}>
-                {days === 0
-                  ? STRINGS.general.archiveOff
-                  : STRINGS.general.archiveAfter(days)}
-              </option>
-            ))}
-            {archiveDays !== null && ![0, 7, 30, 90].includes(archiveDays) && (
-              <option value={archiveDays}>
-                {STRINGS.general.archiveAfter(archiveDays)}
-              </option>
-            )}
-          </select>
-        </div>
-        <details className="general-archive-rules">
-          <summary>{ARCHIVE_STRINGS.rules}</summary>
-          <ul>
-            <li>{ARCHIVE_STRINGS.known}</li>
-            <li>{ARCHIVE_STRINGS.protected}</li>
-            <li>{ARCHIVE_STRINGS.restored}</li>
-          </ul>
-        </details>
-        <div className="general-archive-actions">
-          <p role={autoArchive.error ? "alert" : "status"}>
-            {autoArchive.error ??
-              (!autoArchive.ready || autoArchive.running
-                ? ARCHIVE_STRINGS.checking
-                : archiveDays === 0
-                  ? ARCHIVE_STRINGS.off
-                  : ARCHIVE_STRINGS.candidates(autoArchive.count))}
-          </p>
-          <button
-            type="button"
-            className="btn btn-text"
-            disabled={autoArchive.running || !archiveDays}
-            onClick={() => void retryAutoArchive()}
-          >
-            {ARCHIVE_STRINGS.retry}
-          </button>
-          {onOpenArchived && (
-            <button
-              type="button"
-              className="btn btn-text"
-              onClick={onOpenArchived}
-            >
-              {ARCHIVE_STRINGS.view}
-            </button>
-          )}
-        </div>
-        {archiveSaving && (
-          <div className="general-feedback" role="status">
-            {STRINGS.general.settingsSaving}
-          </div>
-        )}
-        {archiveError && (
-          <div className="ac-error" role="alert">
-            {archiveError}
-            <button
-              type="button"
-              className="btn btn-text"
-              disabled={archiveSaving || archiveLoading}
-              onClick={() => {
-                archiveReading.current = true;
-                setArchiveLoading(true);
-                setArchiveRead((n) => n + 1);
-              }}
-            >
-              {STRINGS.common.retry}
-            </button>
-          </div>
-        )}
-      </section>
+      <AutoArchiveSettings onOpenArchived={onOpenArchived} />
       <section
         className="general-section"
         aria-labelledby="general-notifications"
       >
-        <h2 id="general-notifications" tabIndex={-1}>
+        <h2 id="general-notifications" tabIndex={-1} ref={notificationHeading}>
           {R.notifications}
         </h2>
         <div className="general-setting-row">
@@ -484,6 +343,12 @@ export function GeneralSettings({
         {notifications.sound && notifications.systemSound === false && (
           <p className="auth-note">{N.systemSoundDisabled}</p>
         )}
+        <NotificationTestControl
+          ready={notifications.ready}
+          saving={notifications.saving}
+          error={notifications.error}
+          sound={notifications.sound}
+        />
       </section>
       <section className="general-section" aria-labelledby="general-shortcuts">
         <div className="general-section-title">

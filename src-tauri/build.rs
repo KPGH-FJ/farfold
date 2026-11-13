@@ -41,6 +41,7 @@ fn compile_macos() {
         "DesktopNotifications",
         "AppQuit",
         "AudioPreview",
+        "InterfaceScale",
     ] {
         let source = root.join(format!("native/{name}.m"));
         let object = output.join(format!("{name}.o"));
@@ -75,6 +76,7 @@ fn compile_macos() {
             output.join("DesktopNotifications.o").as_os_str(),
             output.join("AppQuit.o").as_os_str(),
             output.join("AudioPreview.o").as_os_str(),
+            output.join("InterfaceScale.o").as_os_str(),
         ],
     );
     println!("cargo:rustc-link-search=native={}", output.display());
@@ -162,6 +164,7 @@ fn main() {
     println!("cargo:rerun-if-changed=native/AppQuit.m");
     println!("cargo:rerun-if-changed=native/AudioPreview.h");
     println!("cargo:rerun-if-changed=native/AudioPreview.m");
+    println!("cargo:rerun-if-changed=native/InterfaceScale.m");
     match env::var("CARGO_CFG_TARGET_OS")
         .expect("Cargo target OS")
         .as_str()

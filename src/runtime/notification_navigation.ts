@@ -15,6 +15,7 @@ const nativePort: NavigationPort = {
 export async function notificationNavigation(
   select: (key: string) => void | Promise<void>,
   port: NavigationPort = nativePort,
+  openSettings?: () => void | Promise<void>,
 ): Promise<() => void> {
   let closed = false;
   let draining = false;
@@ -36,6 +37,15 @@ export async function notificationNavigation(
               key.length <= 16384
             )
               await select(key);
+            else if (
+              key !== null &&
+              typeof key === "object" &&
+              !Array.isArray(key) &&
+              Object.keys(key).length === 2 &&
+              key.kind === "settings" &&
+              key.section === "notifications"
+            )
+              await openSettings?.();
           }
         } catch {
           // Only a new activation during this attempt can drive another drain.

@@ -131,7 +131,11 @@ async fn configuration_change_tool_tail_retains_work_after_stop_without_blocking
         if variant == 2 {
             let (result, receive) = tokio::sync::oneshot::channel();
             control
-                .send(SessionControl::Delete { deadline, result })
+                .send(SessionControl::Delete {
+                    deadline,
+                    result,
+                    opening: None,
+                })
                 .unwrap();
             assert_eq!(
                 receive.await.unwrap(),

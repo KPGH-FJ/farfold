@@ -1,6 +1,7 @@
 //! Independent WebView2 controller. It is never registered as a Tauri webview.
 //! Only fixed internal observation programs reach CDP; no page/App command bridge.
 mod events;
+mod geometry;
 mod observation;
 mod preview;
 #[cfg(test)]
@@ -76,6 +77,7 @@ struct View {
     state: BrowserWorkspace,
     id: u64,
     controller: ICoreWebView2Controller,
+    main_controller: ICoreWebView2Controller,
     core: ICoreWebView2,
     environment: ICoreWebView2Environment,
     content: Content,
@@ -152,30 +154,32 @@ impl View {
         unsafe { self.core.Navigate(&HSTRING::from(url)) }.map_err(|_| "无法打开网页".into())
     }
     fn resize(&self, bounds: Bounds) -> Result<(), String> {
-        let factor = self
+        let dpi = self
             .app
             .get_webview_window("main")
             .and_then(|w| w.scale_factor().ok())
             .unwrap_or(self.scale.get());
-        self.scale.set(factor);
+        self.scale.set(dpi);
+        // DOM bounds are main-page CSS pixels. Read the exact parent controller;
+        // neither the saved preference nor the child page's zoom is authoritative.
+        let mut zoom = 0.0;
+        unsafe { self.main_controller.ZoomFactor(&mut zoom) }.map_err(|_| "无法调整网页位置")?;
         let mut client = RECT::default();
         unsafe { windows::Win32::UI::WindowsAndMessaging::GetClientRect(self.parent, &mut client) }
             .map_err(|_| "无法调整网页位置")?;
+        let [left, top, right, bottom] = geometry::physical_bounds(
+            [bounds.x, bounds.y, bounds.width, bounds.height],
+            dpi,
+            zoom,
+            [client.right, client.bottom],
+        )
+        .ok_or("网页显示区域已变化，请重新打开内容栏")?;
         let rect = RECT {
-            left: (bounds.x * factor).round() as i32,
-            top: (bounds.y * factor).round() as i32,
-            right: ((bounds.x + bounds.width) * factor).round() as i32,
-            bottom: ((bounds.y + bounds.height) * factor).round() as i32,
+            left,
+            top,
+            right,
+            bottom,
         };
-        if rect.left < 0
-            || rect.top < 0
-            || rect.right > client.right
-            || rect.bottom > client.bottom
-            || rect.right <= rect.left
-            || rect.bottom <= rect.top
-        {
-            return Err("网页显示区域已变化，请重新打开内容栏".into());
-        }
         unsafe { self.controller.SetBounds(rect) }.map_err(|_| "无法调整网页位置")?;
         self.bounds.set(bounds);
         Ok(())
@@ -320,8 +324,8 @@ async fn create_content(
                     return Err("网页进度正在清除，请稍后再打开".into());
                 }
                 let mut hwnd = HWND::default();
-                unsafe { platform.controller().ParentWindow(&mut hwnd) }
-                    .map_err(|_| "找不到应用窗口")?;
+                let main_controller = platform.controller();
+                unsafe { main_controller.ParentWindow(&mut hwnd) }.map_err(|_| "找不到应用窗口")?;
                 let (temporary, path) = if let Some(storage) = content.storage() {
                     let path = profile_path(&app, storage)?;
                     std::fs::create_dir_all(&path).map_err(|_| "无法准备网页存储")?;
@@ -393,6 +397,7 @@ async fn create_content(
                                             state,
                                             id,
                                             controller,
+                                            main_controller,
                                             core,
                                             environment: retained_environment,
                                             content,

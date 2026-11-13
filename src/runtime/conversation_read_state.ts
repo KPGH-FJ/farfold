@@ -2,10 +2,12 @@ import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useSyncExternalStore } from "react";
 import { LIBRARY } from "./library_strings";
 import {
+  attachmentMediaPreviewEligibility,
   hasReadableMessages,
   normalizeMessageAttachment,
+  sameOfficialAttachment,
 } from "./message_attachments";
-import type { ThreadState } from "./session_types";
+import type { Attachment, ThreadState, ToolContent } from "./session_types";
 
 const SETTINGS_KEY = "conversationReadState.v1";
 interface ReadState {
@@ -105,6 +107,18 @@ function change(key: string, unread: boolean) {
   void flush().catch(() => undefined);
 }
 
+/** Only the common, bounded inline-media presentation can make a tool result
+ * readable. Progress, raw output, text, URLs and rejected media stay separate. */
+function readableToolMedia(content: readonly ToolContent[]): Attachment[] {
+  return content.flatMap((block) =>
+    block.type === "attachment" &&
+    (block.attachment.kind === "image" || block.attachment.kind === "audio") &&
+    attachmentMediaPreviewEligibility(block.attachment).status === "eligible"
+      ? [block.attachment]
+      : [],
+  );
+}
+
 export const conversationReadState = {
   snapshot: () => state,
   subscribe(listener: () => void) {
@@ -135,6 +149,23 @@ export const conversationReadState = {
       !!normalizeMessageAttachment(content);
     if (readable) change(key, key !== visibleKey);
   },
+  receiveToolMedia(
+    key: string,
+    previous: readonly ToolContent[],
+    current: readonly ToolContent[],
+  ) {
+    const before = readableToolMedia(previous);
+    if (
+      readableToolMedia(current).some(
+        (attachment) =>
+          !before.some(
+            (old) =>
+              old === attachment || sameOfficialAttachment(old, attachment),
+          ),
+      )
+    )
+      change(key, key !== visibleKey);
+  },
 };
 
 export function canMarkConversationRead(
@@ -151,7 +182,14 @@ export function canMarkConversationRead(
     !thread.openError &&
     !thread.reconnecting &&
     !thread.unrecoverable &&
-    hasReadableMessages(thread.items.filter((item) => item.kind === "agent"))
+    (hasReadableMessages(
+      thread.items.filter((item) => item.kind === "agent"),
+    ) ||
+      thread.items.some(
+        (item) =>
+          item.kind === "tool" &&
+          readableToolMedia(item.call.content).length > 0,
+      ))
   );
 }
 

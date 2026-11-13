@@ -72,6 +72,7 @@ mod service_delivery;
 pub mod session;
 pub mod session_commands;
 mod session_config;
+mod session_delete;
 pub mod session_discovery;
 pub mod session_fork;
 pub(crate) mod session_index;

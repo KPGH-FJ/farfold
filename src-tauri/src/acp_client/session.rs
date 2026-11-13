@@ -19,7 +19,6 @@ use crate::acp_client::handshake::Handshake;
 use crate::acp_client::manager::{
     AcpManager, ConnectionKey, ManagedConnection, ManagerCommand, STATE_READY,
 };
-use crate::acp_client::mutation::DeleteFailure;
 use crate::acp_client::pump::{OpenedSession, SessionControl, SessionSink};
 use crate::meta_store::{AgentRow, MetaStore};
 
@@ -1201,85 +1200,6 @@ impl AcpManager {
             }
         }
         Ok(())
-    }
-
-    /// `session/delete` agent-side. Returns `Ok(false)` when the agent does
-    /// not advertise `sessionCapabilities.delete` or the session/connection
-    /// is gone — callers tombstone in either case. `Ok(true)` = remote
-    /// delete confirmed.
-    pub(crate) async fn delete_session(
-        &self,
-        agent_id: &str,
-        cwd: &Path,
-        session_id: &str,
-    ) -> Result<bool, DeleteFailure> {
-        let (connection, has_owner) = match self
-            .session_owner(agent_id, cwd, session_id)
-            .map_err(|_| DeleteFailure::NotDispatched)?
-        {
-            Some(owner) if owner.state.load(Ordering::SeqCst) == STATE_READY => (owner, true),
-            Some(_) => return Err(DeleteFailure::NotDispatched),
-            None => match self.live_connection(agent_id, cwd) {
-                Ok(connection) => (connection, false),
-                Err(_) => return Ok(false),
-            },
-        };
-        let supports_delete = connection.handshake.get().is_some_and(|handshake| {
-            handshake
-                .typed
-                .agent_capabilities
-                .session_capabilities
-                .delete
-                .is_some()
-        });
-        if !supports_delete {
-            return Ok(false);
-        }
-        let control = {
-            let sessions = connection
-                .sessions
-                .lock()
-                .map_err(|_| DeleteFailure::NotDispatched)?;
-            sessions.get(session_id).map(|entry| entry.control.clone())
-        };
-        let wait = std::time::Duration::from_secs(30);
-        match control {
-            // Open session: delete through its pump (which then exits).
-            Some(control) => {
-                let (result, receive) = oneshot::channel();
-                control
-                    .send(SessionControl::Delete {
-                        result,
-                        deadline: tokio::time::Instant::now() + wait,
-                    })
-                    .map_err(|_| DeleteFailure::NotDispatched)?;
-                super::wait::reply(receive, wait, "session delete")
-                    .await
-                    .map_err(DeleteFailure::Unconfirmed)??;
-            }
-            // Do not fall through to a connection-level delete after losing the pump.
-            None if has_owner => return Err(DeleteFailure::NotDispatched),
-            // Agent-side session never opened here: connection-level delete.
-            None => {
-                let (result, receive) = oneshot::channel();
-                connection
-                    .send(ManagerCommand::DeleteSession {
-                        session_id: session_id.to_string(),
-                        result,
-                    })
-                    .map_err(|_| DeleteFailure::NotDispatched)?;
-                super::wait::reply(receive, wait, "session delete")
-                    .await
-                    .and_then(|outcome| outcome)
-                    .map_err(DeleteFailure::Unconfirmed)?;
-            }
-        }
-        connection
-            .sessions
-            .lock()
-            .map_err(|_| DeleteFailure::Unconfirmed("session map lock poisoned".into()))?
-            .remove(session_id);
-        Ok(true)
     }
 
     /// Validate before consuming the single-use SDK responder. Failed delivery

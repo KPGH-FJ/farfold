@@ -1455,7 +1455,6 @@ class ThreadsStore {
     });
   }
 
-  /** Retire loaded state only after local deletion is confirmed. */
   async delete(row: SessionDeletionInput) {
     const native = row.nativeSessionId;
     if (!native) throw new Error(LIBRARY.deleteLocalNotRemoved);
@@ -1470,8 +1469,11 @@ class ThreadsStore {
         const remote = await requestSessionDeletion(
           { agentId: row.agentId, cwd: row.cwd, nativeSessionId: native },
           s,
-          () => {
-            if (s && this.threads.get(key) === s) applyConnectionLost(s);
+          (uncertain) => {
+            if (s && this.threads.get(key) === s) {
+              if (uncertain) s.connectionOutcomeUnknown = true;
+              applyConnectionLost(s);
+            }
           },
         );
         if (this.threads.get(key) === s) {
@@ -1487,9 +1489,7 @@ class ThreadsStore {
     );
   }
 }
-
 export const threads = new ThreadsStore();
-
 // React bindings live in `session_hooks.ts`; re-exported for existing
 // `../runtime/sessions` imports.
 export { useThread, useThreadsSnapshot } from "./session_hooks";

@@ -50,6 +50,7 @@ const h = vi.hoisted(() => ({
     "getSnapshot" | "refreshIndex"
   > | null,
   notification: null as ((key: string) => void | Promise<void>) | null,
+  notificationSettings: null as (() => void | Promise<void>) | null,
   prepared: new Set(["A", "B"]),
   selections: new Map<
     string,
@@ -126,10 +127,14 @@ vi.mock("./runtime/auto_archive", () => ({ startAutoArchive: () => () => {} }));
 vi.mock("./runtime/notification_navigation", () => ({
   notificationNavigation: async (
     select: (key: string) => void | Promise<void>,
+    _port: unknown,
+    settings?: () => void | Promise<void>,
   ) => {
     h.notification = select;
+    h.notificationSettings = settings ?? null;
     return () => {
       h.notification = null;
+      h.notificationSettings = null;
     };
   },
 }));
@@ -293,6 +298,7 @@ export async function resetHarness() {
   h.index = [];
   h.indexSource = null;
   h.notification = null;
+  h.notificationSettings = null;
   h.threads.clear();
   h.draft = { text: "OWN-ORIGINAL-DRAFT", attachments: [] };
   Object.assign(h.choice, {

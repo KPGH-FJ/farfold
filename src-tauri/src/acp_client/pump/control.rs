@@ -121,6 +121,7 @@ pub(crate) enum SessionControl {
     },
     /// `session/delete` — removes the session agent-side, then ends the pump.
     Delete {
+        opening: Option<super::super::lifecycle::OpenReservation>,
         deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<(), super::super::mutation::DeleteFailure>>,
     },
@@ -292,7 +293,9 @@ impl SessionControl {
                 deadline, result, ..
             }
             | Self::Detach { deadline, result } => (*deadline, result.is_closed()),
-            Self::Delete { deadline, result } => (*deadline, result.is_closed()),
+            Self::Delete {
+                deadline, result, ..
+            } => (*deadline, result.is_closed()),
             Self::StopTask {
                 deadline, result, ..
             }
