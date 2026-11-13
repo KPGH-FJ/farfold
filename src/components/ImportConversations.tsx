@@ -13,7 +13,6 @@ import {
   commitHistoryPreview,
   discoverHistory,
   hasPreviewContent,
-  historyContinuation,
   previewHistory,
   readHistoryPreview,
   type DiscoveredConversation,
@@ -23,8 +22,6 @@ import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
 import "../settings-library-redesign.css";
 import { IMPORT_STRINGS as S } from "../runtime/import_strings";
 import { LIBRARY } from "../runtime/library_strings";
-import { MessageContent } from "./MessageContent";
-import { ToolStep } from "./thread-items";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { HistoryReadStatus } from "./HistoryReadStatus";
 import { AgentLogo } from "./AgentLogo";
@@ -39,10 +36,9 @@ import {
   historyPreviewAssociationKey,
   historyPreviewRowKey,
 } from "../runtime/history_preview_scope";
-import {
-  configValueLabel,
-  modelConfigOption,
-} from "../runtime/session_projection";
+import { renderHistoryPreviewBody } from "./HistoryPreviewBody";
+import { KnownHistoryImport } from "./KnownHistoryImport";
+import { KnownHistoryReader } from "../runtime/known_history_import";
 
 interface AddedConversation {
   saved: IndexRow;
@@ -176,6 +172,7 @@ export function ImportConversations({
   const [searched, setSearched] = useState(false);
   const [choosing, setChoosing] = useState(true);
   const [unsupported, setUnsupported] = useState(false);
+  const [manualLoadSupport, setManualLoadSupport] = useState(false);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [receivedPreview, setPreview] = useState<HistoryPreview | null>(null);
@@ -187,6 +184,13 @@ export function ImportConversations({
   const [listing, setListing] = useState(false);
   const inFlight = useRef(false);
   const mounted = useRef(true);
+  const [, refreshKnown] = useState(0);
+  const knownReader = useRef<KnownHistoryReader | null>(null);
+  if (!knownReader.current)
+    knownReader.current = new KnownHistoryReader(() => {
+      if (mounted.current) refreshKnown((value) => value + 1);
+    });
+  const known = knownReader.current;
   const openRef = useRef(open);
   openRef.current = open;
   const [error, setError] = useState<string | null>(null);
@@ -228,6 +232,7 @@ export function ImportConversations({
   ]);
   const restoreDiscovery = (nextAgent: string, nextCwd: string | null) => {
     lookupRevision.current++;
+    known.reset();
     const saved = lookupDrafts.current.get(
       JSON.stringify([nextAgent, nextCwd]),
     );
@@ -237,6 +242,7 @@ export function ImportConversations({
     setSearched(saved?.searched ?? false);
     setChoosing(!saved?.searched);
     setUnsupported(saved?.unsupported ?? false);
+    setManualLoadSupport(false);
     setQuery(saved?.query ?? "");
     setCursor(saved?.cursor ?? null);
     setPreviewId(saved?.previewId ?? null);
@@ -322,6 +328,7 @@ export function ImportConversations({
   }, [viewKey, rows, index]);
   useEffect(() => {
     const retire = (agent?: string) => {
+      known.retire();
       const owner = previewInterest.current;
       if (owner && (!agent || owner.agentId === agent)) {
         owner.retire();
@@ -357,6 +364,7 @@ export function ImportConversations({
     mounted.current = true;
     return () => {
       mounted.current = false;
+      void known.release().catch(() => undefined);
       const p = previewRef.current;
       if (p) void closeHistoryPreview(p).catch(() => undefined);
     };
@@ -387,6 +395,7 @@ export function ImportConversations({
     (row) => !visible.includes(row),
   ).length;
   const release = async () => {
+    await known.release();
     const owner = previewInterest.current;
     owner?.retire();
     const p = previewRef.current;
@@ -508,6 +517,7 @@ export function ImportConversations({
       )
         return;
       setPreviewId(null);
+      setManualLoadSupport(false);
       setListing(true);
       const page = await discoverHistory(
         agentId,
@@ -552,6 +562,7 @@ export function ImportConversations({
       setSearched(true);
       setChoosing(false);
       setUnsupported(page.status === "unsupported");
+      setManualLoadSupport(page.canLoad === true);
     });
   const view = (row: DiscoveredConversation) =>
     work(async () => {
@@ -732,6 +743,45 @@ export function ImportConversations({
       close();
       onOpen(found);
     });
+  const knownScope = viewScope.current;
+  const knownContext = requestedContextRef.current;
+  const knownRevision = lookupRevision.current;
+  const knownCurrent = () =>
+    openRef.current &&
+    currentLookup(knownRevision, knownContext) &&
+    viewScope.current === knownScope;
+  const readKnown = async (
+    id: string,
+    cwd: string,
+    interested: () => boolean,
+  ) => {
+    if (!manualLoadSupport || !knownCurrent() || !interested()) return;
+    const association = historyPreviewAssociationKey(
+      threads.getSnapshot().index,
+      agentId,
+      id,
+    );
+    if (
+      threads
+        .getSnapshot()
+        .index.some(
+          (row) => row.agentId === agentId && row.nativeSessionId === id,
+        )
+    )
+      throw new Error(S.knownAlreadyAdded);
+    await known.read(
+      agentId,
+      { nativeSessionId: id, cwd },
+      () =>
+        interested() &&
+        knownCurrent() &&
+        historyPreviewAssociationKey(
+          threads.getSnapshot().index,
+          agentId,
+          id,
+        ) === association,
+    );
+  };
   const previewRow = visible.find((r) => r.nativeSessionId === previewId);
   // Exactly three user-visible results: joined, nothing to join, or an
   // incomplete/uncertain outcome whose technical detail stays collapsed.
@@ -954,6 +1004,22 @@ export function ImportConversations({
               </button>
             )}
           </div>
+        )}
+        {!choosing && !listing && manualLoadSupport && (
+          <details className="history-location history-hint">
+            <summary>{S.knownTitle}</summary>
+            <KnownHistoryImport
+              key={JSON.stringify([agentId, lookupCwd, requestRevision])}
+              reader={known}
+              busy={busy}
+              initialCwd={lookupCwd}
+              current={knownCurrent}
+              run={work}
+              release={release}
+              read={readKnown}
+              add={() => known.add(() => threads.refreshIndex())}
+            />
+          </details>
         )}
         {outcome === "incomplete" && (
           <div className="history-outcome partial" role="alert">
@@ -1216,71 +1282,7 @@ export function ImportConversations({
                     ) : preview &&
                       preview.nativeSessionId === previewRow.nativeSessionId ? (
                       preview.replayComplete ? (
-                        <>
-                          <div className="history-continuation" role="note">
-                            <strong>
-                              {historyContinuation(preview).title}
-                            </strong>
-                            <p>{historyContinuation(preview).detail}</p>
-                            <dl>
-                              <dt>{S.currentModel}</dt>
-                              <dd>
-                                {configValueLabel(
-                                  modelConfigOption(
-                                    preview.state.configOptions,
-                                  ),
-                                ) || S.notProvided}
-                              </dd>
-                              <dt>{S.source}</dt>
-                              <dd>
-                                {preview.state.service
-                                  ? S.savedService
-                                  : S.agentSettings}
-                              </dd>
-                              <dt>{S.conversationLocation}</dt>
-                              <dd>
-                                {preview.cwd === defaultCwd
-                                  ? LIBRARY.ordinary
-                                  : preview.cwd}
-                              </dd>
-                            </dl>
-                          </div>
-                          {!hasPreviewContent(preview) && <p>{S.noContent}</p>}
-                          {preview.state.items.map((item) =>
-                            item.kind === "user" || item.kind === "agent" ? (
-                              <div
-                                className={`history-message ${item.kind}`}
-                                key={item.id}
-                              >
-                                <small>
-                                  {item.kind === "user" ? S.you : S.agentRole}
-                                </small>
-                                <MessageContent
-                                  source={item}
-                                  text={item.text}
-                                  attachments={item.attachments}
-                                  contentOrder={
-                                    item.kind === "agent"
-                                      ? item.contentOrder
-                                      : undefined
-                                  }
-                                />
-                              </div>
-                            ) : item.kind === "tool" ? (
-                              <div className="history-message" key={item.id}>
-                                <ToolStep
-                                  call={item.call}
-                                  activity={
-                                    item.call.status === "completed" ||
-                                    item.call.status === "failed"
-                                      ? "finished"
-                                      : "unknown"
-                                  }
-                                />
-                              </div>
-                            ) : null,
-                          )}
-                        </>
+                        <>{renderHistoryPreviewBody(preview, defaultCwd)}</>
                       ) : (
                         <p>{S.loadFailed}</p>
                       )

@@ -45,6 +45,8 @@ export type HistoryPreviewCleanup = Pick<
 >;
 export interface DiscoveryPage {
   status: "supported" | "unsupported";
+  /** Fresh connection declaration, independent of session/list. Missing denies manual reads. */
+  canLoad?: boolean;
   sessions: DiscoveredConversation[];
   nextCursor: string | null;
 }
@@ -76,7 +78,7 @@ export async function discoverHistory(
 }
 export async function previewHistory(
   agentId: string,
-  row: DiscoveredConversation,
+  row: HistoryPreviewTarget | DiscoveredConversation,
   interest?: HistoryPreviewInterest,
 ): Promise<HistoryPreview> {
   return loadHistoryPreview(agentId, row, "importPreview", interest);

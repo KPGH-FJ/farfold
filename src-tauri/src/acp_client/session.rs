@@ -974,9 +974,10 @@ impl AcpManager {
         connection_cwd: &Path,
         cwd: Option<&Path>,
         cursor: Option<String>,
-    ) -> Result<Option<(Value, bool)>, String> {
+    ) -> Result<(Option<Value>, bool), String> {
         let connection = self.live_connection(agent_id, connection_cwd)?;
         let handshake = connection.handshake.get().ok_or("Agent 尚未连接，请重试")?;
+        let can_load = handshake.typed.agent_capabilities.load_session;
         if handshake
             .typed
             .agent_capabilities
@@ -984,9 +985,8 @@ impl AcpManager {
             .list
             .is_none()
         {
-            return Ok(None);
+            return Ok((None, can_load));
         }
-        let can_load = handshake.typed.agent_capabilities.load_session;
         let (send, receive) = oneshot::channel();
         connection.send(ManagerCommand::ListSessions {
             cwd: cwd.map(Path::to_path_buf),
@@ -1000,7 +1000,7 @@ impl AcpManager {
             "session discovery",
         )
         .await??;
-        Ok(Some((response, can_load)))
+        Ok((Some(response), can_load))
     }
 
     /// `session/close` when supported, then unregister the session locally.

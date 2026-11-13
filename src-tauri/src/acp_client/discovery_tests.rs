@@ -416,17 +416,18 @@ async fn explicit_discovery_sends_global_cursor_and_preserves_remote_failure() {
         .manager
         .discover_session_page(&f.agent.id, &f.cwd, None, None)
         .await
-        .unwrap()
         .unwrap();
     assert!(can_load);
-    assert_eq!(first["sessions"][0]["sessionId"], "first");
+    assert_eq!(first.unwrap()["sessions"][0]["sessionId"], "first");
     let (next, _) = f
         .manager
         .discover_session_page(&f.agent.id, &f.cwd, None, Some("next".into()))
         .await
-        .unwrap()
         .unwrap();
-    assert_eq!(next["sessions"][0]["cwd"], "/missing/history-location");
+    assert_eq!(
+        next.unwrap()["sessions"][0]["cwd"],
+        "/missing/history-location"
+    );
     assert!(
         f.manager
             .discover_session_page(&f.agent.id, &f.cwd, None, Some("failure".into()))
@@ -449,13 +450,15 @@ async fn explicit_discovery_sends_global_cursor_and_preserves_remote_failure() {
         .connect(&unsupported.agent, &unsupported.cwd, &unsupported.store)
         .await
         .unwrap();
+    let (page, can_load) = unsupported
+        .manager
+        .discover_session_page(&unsupported.agent.id, &unsupported.cwd, None, None)
+        .await
+        .unwrap();
+    assert!(page.is_none());
     assert!(
-        unsupported
-            .manager
-            .discover_session_page(&unsupported.agent.id, &unsupported.cwd, None, None)
-            .await
-            .unwrap()
-            .is_none()
+        can_load,
+        "a missing list declaration must not hide explicit load support"
     );
     assert!(!unsupported.cwd.join("list-requests").exists());
     unsupported

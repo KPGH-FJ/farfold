@@ -343,3 +343,45 @@ it("keeps already-added rows on their existing open path without a new preview",
   click(button(S.open));
   await vi.waitFor(() => expect(props.onOpen).toHaveBeenCalledWith(local));
 });
+
+it("offers explicit known-ID reading after an unsupported list with a current load declaration", async () => {
+  h.discover.mockResolvedValueOnce({
+    status: "unsupported",
+    canLoad: true,
+    sessions: [],
+    nextCursor: null,
+  });
+  click(button(S.search));
+  await idle();
+  expect(
+    render().some(
+      (node) =>
+        node.type === "summary" &&
+        text(node.props.children as ReactNode) === "按对话标识读取",
+    ),
+  ).toBe(true);
+  expect(h.preview).not.toHaveBeenCalled();
+  expect(h.commit).not.toHaveBeenCalled();
+});
+
+it.each([undefined, false, 1])(
+  "does not infer manual-load authority from a missing or non-true declaration: %s",
+  async (canLoad) => {
+    h.discover.mockResolvedValueOnce({
+      status: "unsupported",
+      canLoad,
+      sessions: [],
+      nextCursor: null,
+    });
+    click(button(S.search));
+    await idle();
+    expect(
+      render().some(
+        (node) =>
+          node.type === "summary" &&
+          text(node.props.children as ReactNode) === S.knownTitle,
+      ),
+    ).toBe(false);
+    expect(h.preview).not.toHaveBeenCalled();
+  },
+);

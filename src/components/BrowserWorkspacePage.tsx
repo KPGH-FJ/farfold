@@ -108,6 +108,21 @@ function htmlFailure(error: unknown): string {
     : S.htmlFailed;
 }
 
+function snapshotFailure(error: unknown): string {
+  if (error instanceof BrowserWorkspaceRetiredError) return S.readChanged;
+  // Only this fixed app-authored refusal is safe to explain. Never expose
+  // arbitrary page text, native diagnostics, or an object's string conversion.
+  const message =
+    typeof error === "string"
+      ? error
+      : error instanceof Error && error.name === "Error"
+        ? error.message
+        : undefined;
+  return message === "页面含登录输入，已停止读取；请关闭并改用公开网页"
+    ? S.readProtected
+    : S.readFailed;
+}
+
 function sameBounds(a: BrowserWorkspaceBounds, b: BrowserWorkspaceBounds) {
   return (
     Math.abs(a.x - b.x) < 0.25 &&
@@ -792,11 +807,7 @@ export function BrowserWorkspacePage({
       }
     } catch (failure) {
       if (request === sequence.current) {
-        setError(
-          failure instanceof BrowserWorkspaceRetiredError
-            ? S.readChanged
-            : S.readFailed,
-        );
+        setError(snapshotFailure(failure));
       }
     } finally {
       if (request === sequence.current) {

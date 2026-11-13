@@ -352,6 +352,7 @@ pub struct DiscoveredSession {
 #[serde(rename_all = "camelCase")]
 pub struct DiscoveryPage {
     pub status: &'static str,
+    pub can_load: bool,
     pub sessions: Vec<DiscoveredSession>,
     pub next_cursor: Option<String>,
 }
@@ -414,6 +415,7 @@ fn decode_page(
     }
     Ok(DiscoveryPage {
         status: "supported",
+        can_load,
         sessions,
         next_cursor,
     })
@@ -440,7 +442,7 @@ pub async fn session_discover(
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
     manager.connect(&row, &connection_cwd, &store).await?;
-    let response = manager
+    let (response, can_load) = manager
         .discover_session_page(
             &agent_id,
             &connection_cwd,
@@ -448,9 +450,10 @@ pub async fn session_discover(
             cursor.clone(),
         )
         .await?;
-    let Some((response, can_load)) = response else {
+    let Some(response) = response else {
         return Ok(DiscoveryPage {
             status: "unsupported",
+            can_load,
             sessions: vec![],
             next_cursor: None,
         });
@@ -558,6 +561,12 @@ pub(super) async fn commit_preview(
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn discovery_retains_load_declaration_when_the_list_is_empty() {
+        let page = decode_page(json!({"sessions": []}), true, None).unwrap();
+        assert_eq!(serde_json::to_value(page).unwrap()["canLoad"], true);
+    }
 
     #[test]
     fn discovery_keeps_missing_locations_and_original_identity() {
