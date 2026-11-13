@@ -44,6 +44,12 @@ pub(crate) fn launch_rejection(
     let Some(launch) = launch else {
         return Some(McpUnavailable::SourceNotReviewed);
     };
+    // This transport carries only a public rendezvous name and broker PID.
+    // No bearer enters an Agent config/log object. The open admission must
+    // separately match the actual launch, transport and deferred Child owner.
+    if launch.authenticated_channel() {
+        return None;
+    }
     // APP_SERVER_LOGS and CODEX_CONFIG are reviewed Node behaviors.
     // The already supported binary keeps its existing provenance boundary.
     if matches!(launch, LaunchKind::Binary) {
@@ -110,6 +116,8 @@ pub(crate) struct TransientMcpOpen {
     state: Arc<OwnerState>,
     attached: bool,
     opening_armed: bool,
+    #[cfg(target_os = "macos")]
+    process_owner: Option<super::browser_process::PendingOwner>,
 }
 
 impl fmt::Debug for TransientMcpOpen {
@@ -128,7 +136,35 @@ impl TransientMcpOpen {
             }),
             attached: false,
             opening_armed: true,
+            #[cfg(target_os = "macos")]
+            process_owner: None,
         }
+    }
+
+    #[cfg(target_os = "macos")]
+    pub(crate) fn with_process_owner(
+        mut self,
+        owner: super::browser_process::PendingOwner,
+    ) -> Self {
+        self.process_owner = Some(owner);
+        self
+    }
+
+    pub(crate) fn bind_process(&self, connection: &super::manager::ManagedConnection) -> bool {
+        #[cfg(target_os = "macos")]
+        if let Some(owner) = &self.process_owner {
+            return self.server.env.is_empty() && owner.bind(connection);
+        }
+        let _ = connection;
+        true
+    }
+
+    pub(crate) fn authenticated_channel(&self) -> bool {
+        #[cfg(target_os = "macos")]
+        if self.process_owner.is_some() {
+            return true;
+        }
+        false
     }
 
     /// Only the protocol-request builder consumes this ephemeral representation.

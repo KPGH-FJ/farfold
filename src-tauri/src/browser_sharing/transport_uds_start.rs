@@ -41,13 +41,14 @@ pub(crate) fn start_uds(
         completed,
         initialized: initialized.clone(),
         listed: listed.clone(),
+        multi: None,
     }));
     std::thread::Builder::new()
         .name("farfold-page-http".into())
         .spawn(move || {
             let _directory = directory;
             let mut worker = Worker {
-                app,
+                execution: Execution::native(app),
                 page,
                 shutdown,
                 controls: control_rx,

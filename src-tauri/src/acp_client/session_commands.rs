@@ -93,10 +93,12 @@ pub async fn session_open(
                     preparation.ready();
                 }
                 if super::browser_capability::eligible(&row) {
-                    match app
-                        .state::<crate::browser_sharing::BrowserSharing>()
-                        .prepare(&app, &agent_id, &cwd)
-                    {
+                    match super::browser_capability::prepare(
+                        &app,
+                        &app.state::<crate::browser_sharing::BrowserSharing>(),
+                        &row,
+                        &cwd,
+                    ) {
                         Ok(mcp) => (Some(mcp), None),
                         Err(_) => {
                             logging::warn(

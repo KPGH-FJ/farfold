@@ -637,21 +637,7 @@ impl AcpManager {
         // The current AgentRow/environment cannot endorse a reused process.
         // Only the exact connected process's immutable spawn facts may admit an
         // offer. Dropping a rejected offer revokes it before request serialization.
-        let mut rejection = super::transient_mcp::launch_rejection(
-            command_tx.browser_launch,
-            command_tx.mcp_spawn_facts.get().copied(),
-        );
-        // This offer was prepared for the caller's selected entrypoint. A
-        // refreshed row can name another otherwise-reviewed OpenCode program;
-        // its new process cannot inherit the old offer's endorsement.
-        if rejection.is_none()
-            && command_tx.browser_launch == Some(super::browser_capability::LaunchKind::OpenCode)
-            && (command_tx.launch_identity.is_none()
-                || command_tx.launch_identity
-                    != super::manager::LaunchIdentity::from_launch(&agent.command, &agent.args))
-        {
-            rejection = Some(super::transient_mcp::McpUnavailable::LaunchUnconfirmed);
-        }
+        let rejection = super::browser_capability::rejection(agent, &command_tx, mcp.as_ref());
         let (mcp, browser_unavailable) = if mcp.is_some() {
             match rejection {
                 Some(reason) => {

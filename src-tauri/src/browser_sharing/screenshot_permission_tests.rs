@@ -345,6 +345,8 @@ async fn p27_implicit_page_change_stops_first_screenshot_after_broker_write() {
                 initialized: Arc::new(AtomicBool::new(false)),
                 #[cfg(target_os = "macos")]
                 listed: Arc::new(AtomicBool::new(false)),
+                #[cfg(target_os = "macos")]
+                multi: None,
                 page: owner.page.clone(),
                 controls,
                 shutdown: Arc::new(AtomicBool::new(false)),

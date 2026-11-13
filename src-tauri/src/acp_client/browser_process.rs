@@ -37,6 +37,32 @@ impl Identity {
             micros: info.pbi_start_tvusec,
         })
     }
+    #[cfg(target_os = "macos")]
+    pub(crate) fn alive(&self) -> bool {
+        Self::capture(self.pid).as_ref() == Some(self)
+    }
+
+    /// An authenticated Farfold helper must be the direct child of this exact
+    /// still-live Agent process. Code identity is checked by the Mach primitive.
+    #[cfg(target_os = "macos")]
+    pub(crate) fn helper(&self, pid: u32, uid: u32) -> bool {
+        if pid == 0 || uid != self.uid || Self::capture(self.pid).as_ref() != Some(self) {
+            return false;
+        }
+        let mut info: libc::proc_bsdinfo = unsafe { std::mem::zeroed() };
+        let size = std::mem::size_of_val(&info) as i32;
+        let count = unsafe {
+            libc::proc_pidinfo(
+                pid as i32,
+                libc::PROC_PIDTBSDINFO,
+                0,
+                (&mut info as *mut libc::proc_bsdinfo).cast(),
+                size,
+            )
+        };
+        count == size && info.pbi_uid == uid && info.pbi_ppid == self.pid
+    }
+
     #[cfg(not(target_os = "macos"))]
     pub(crate) fn capture(_: u32) -> Option<Self> {
         None
@@ -72,3 +98,9 @@ impl Identity {
 #[cfg(all(test, target_os = "macos"))]
 #[path = "browser_process_tests.rs"]
 mod tests;
+
+#[cfg(target_os = "macos")]
+#[path = "browser_helper_owner.rs"]
+mod helper_owner;
+#[cfg(target_os = "macos")]
+pub(crate) use helper_owner::{PendingOwner, prepare};

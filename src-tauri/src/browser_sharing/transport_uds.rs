@@ -166,9 +166,7 @@ impl Worker {
     }
 
     pub(super) fn serve_uds(&mut self, listener: Listener, verify: PeerCheck) -> bool {
-        let mut protocol = protocol::Protocol::new(
-            crate::browser_workspace::screenshot_capability::for_mcp_worker(&self.app),
-        );
+        let mut protocol = protocol::Protocol::new(self.execution.screenshots);
         let mut wire = Wire::default();
         let mut clients: Vec<Client> = Vec::new();
         let mut active = None;

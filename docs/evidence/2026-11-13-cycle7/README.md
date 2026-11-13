@@ -28,6 +28,6 @@
 
 Devin、Factory Droid、Codebuddy Code、Dirac、Cline本轮完成官方路径及既有证据复核，未新启动它们、未增加正式读回或整家通过数。本轮未取得这五家的可用自有样本；不恢复旧未知请求、不代填配置。具体接口范围和各自限制见[五家调查](wave7-review.json)。
 
-fast-agent/Mistral的无秘密多辅助连接候选正在独立复核及官方无模型接入验证前准备，尚未开放到产品入口或安装。Pi官方路由、NEW-24、Mistral已用单次模型授权、Windows具体条件等保持原边界。原151条要求及29家八项不变。
+fast-agent/Mistral的无秘密多辅助连接及正常ACP入口接线已完成，独立复核和完整工程通过；Rust全套计数2,718项通过/11项忽略。尚未更新正式应用或验证真实官方生命周期，[源码与检查摘要](mach-source-summary.json)单独记录，不算正式接入通过。Pi官方路由、NEW-24、Mistral已用单次模型授权、Windows具体条件等保持原边界。原151条要求及29家八项不变。
 
 本批把P12/P31/P32/P35/P47的最新结论归并至[状态页](../../status.md)，原参考进度完整留在[迁移前记录](previous-progress.json)。结构检查不替代上述实际验证。

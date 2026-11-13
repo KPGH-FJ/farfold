@@ -42,3 +42,24 @@ fn exact_owned_process_accepts_but_sibling_stale_birth_and_exited_owner_do_not()
     assert!(child.wait().unwrap().success());
     assert!(!identity.peer(&stream));
 }
+
+#[test]
+fn helper_parent_birth_and_uid_are_checked_against_the_actual_live_owner() {
+    let owner = Identity::capture(std::process::id()).unwrap();
+    let mut child = Command::new(crate::platform_tests::python())
+        .args(["-c", "import sys;sys.stdin.buffer.read()"])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+        .unwrap();
+    assert!(owner.helper(child.id(), unsafe { libc::getuid() }));
+    assert!(!owner.helper(std::process::id(), unsafe { libc::getuid() }));
+    assert!(!owner.helper(child.id(), unsafe { libc::getuid() }.wrapping_add(1)));
+    let mut stale = owner;
+    stale.micros = stale.micros.wrapping_add(1);
+    assert!(!stale.helper(child.id(), unsafe { libc::getuid() }));
+    drop(child.stdin.take());
+    assert!(child.wait().unwrap().success());
+    assert!(!owner.helper(child.id(), unsafe { libc::getuid() }));
+}

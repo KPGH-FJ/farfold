@@ -27,6 +27,14 @@ impl Protocol {
         self.listed = true;
         first
     }
+    /// A reconstructed helper may use the catalog already fully delivered by
+    /// this exact controller. Its own initialization is still mandatory. This
+    /// does not produce a list-delivered callback or a page permission.
+    pub(super) fn inherit_delivered_catalog(&mut self) {
+        if self.initialized && self.notified {
+            self.listed = true;
+        }
+    }
     pub(super) fn receive(&mut self, request: Value) -> Action {
         let Some(object) = request.as_object() else {
             return reply(error(Value::Null, -32600, "Invalid request"));

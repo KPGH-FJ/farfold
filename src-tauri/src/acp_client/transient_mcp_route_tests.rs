@@ -19,6 +19,10 @@ const SYNTHETIC_CAP: &str = "synthetic-transient-acp-fixture-permission";
 #[path = "transient_mcp_opencode_tests.rs"]
 mod opencode_tests;
 
+#[cfg(target_os = "macos")]
+#[path = "transient_mcp_mach_tests.rs"]
+mod mach_tests;
+
 // The peer emits only sanitized request-shape receipts. Error mode intentionally
 // echoes the synthetic credential on the ACP wire to exercise host redaction;
 // assertions must never print that credential or a full request/error value.

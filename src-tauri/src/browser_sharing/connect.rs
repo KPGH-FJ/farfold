@@ -26,11 +26,15 @@ pub(super) enum Transport {
     Stdio,
     #[cfg(target_os = "macos")]
     Local(transport::PeerCheck),
+    #[cfg(target_os = "macos")]
+    Mach(transport::OwnerCheck),
 }
 pub(super) enum Launch {
     Stdio(transport::HelperLaunch),
     #[cfg(target_os = "macos")]
     Local(transport::LocalEndpoint),
+    #[cfg(target_os = "macos")]
+    Mach(transport::MachLaunch),
 }
 #[allow(clippy::too_many_arguments)]
 pub(super) fn start_transport(
@@ -45,6 +49,11 @@ pub(super) fn start_transport(
     match source {
         Transport::Stdio => transport::start(app, page, ready, closed, permission, invalidated)
             .map(|(h, l)| (h, Launch::Stdio(l))),
+        #[cfg(target_os = "macos")]
+        Transport::Mach(owner) => {
+            transport::start_mach(app, page, ready, closed, permission, invalidated, owner)
+                .map(|(h, l)| (h, Launch::Mach(l)))
+        }
         #[cfg(target_os = "macos")]
         Transport::Local(peer) => {
             transport::start_uds(app, page, ready, closed, permission, invalidated, peer)

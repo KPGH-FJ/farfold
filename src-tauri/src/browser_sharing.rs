@@ -2,6 +2,8 @@
 //! Agent-specific eligibility lives in acp_client; no page bodies are retained here.
 mod channel;
 mod connect;
+#[cfg(target_os = "macos")]
+mod mach_channel;
 pub(crate) use connect::*;
 mod helper;
 mod helper_io;
@@ -25,6 +27,8 @@ use tauri::{AppHandle, Emitter, EventTarget, Manager, State, Webview};
 use crate::acp_client::transient_mcp::{SessionMcpOwner, TransientMcpOpen};
 use crate::browser_workspace::{BrowserInfo, BrowserWorkspace, FixedPageReadScope, PageReadLease};
 use permission::{PendingPermission, PendingRequestInfo};
+#[cfg(target_os = "macos")]
+pub(crate) use transport::OwnerCheck as HelperOwnerCheck;
 use transport::{SharedPage, TransportHandle};
 
 const CONNECTING: u8 = 0;
@@ -521,7 +525,27 @@ impl BrowserSharing {
                 Ok(TransientMcpOpen::new(launch.into_server(), session))
             }
             #[cfg(target_os = "macos")]
-            connect::Launch::Local(_) => unreachable!("requested stdio"),
+            connect::Launch::Local(_) | connect::Launch::Mach(_) => unreachable!("requested stdio"),
+        }
+    }
+
+    // Only the reviewed ACP launch factory can select this public-route channel;
+    // no user configuration switches an old bearer offer into this transport.
+    #[cfg(target_os = "macos")]
+    pub(crate) fn prepare_mach(
+        &self,
+        app: &AppHandle,
+        agent_id: &str,
+        cwd: &Path,
+        owner: transport::OwnerCheck,
+    ) -> Result<TransientMcpOpen, String> {
+        let (session, launch) =
+            self.prepare_inner(app, agent_id, cwd, None, connect::Transport::Mach(owner))?;
+        match launch {
+            connect::Launch::Mach(launch) => {
+                Ok(TransientMcpOpen::new(launch.into_server(), session))
+            }
+            _ => unreachable!("requested authenticated channel"),
         }
     }
 
