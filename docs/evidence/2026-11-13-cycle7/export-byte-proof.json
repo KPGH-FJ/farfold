@@ -1,0 +1,68 @@
+{
+  "atUtc": "2026-11-13T00:41:41.548976+00:00",
+  "standaloneMarkdown": {
+    "path": "output/2026-11-13-cycle7/formal/exports/cycle7-20261112_5.md",
+    "bytes": 4687,
+    "sha256": "e0060177cc42a6d39ccbdfb608b8f3fea67323e7cf2e04981d82c3658b1368b5",
+    "utf8Valid": true,
+    "knownSearchNeedles": {
+      "撤回后的独立只读验证": true,
+      "WorldWideWeb": false
+    },
+    "claimedFullNativeHistory": false
+  },
+  "archive": {
+    "path": "output/2026-11-13-cycle7/formal/exports/cycle7-20261112_5.zip",
+    "bytes": 96736,
+    "sha256": "1f7f40a00f06ca35869f9f0dbb543d7e5c6332b87bf612c2a4d9ea942ea4e4de",
+    "crcAllMembersPassed": true,
+    "members": [
+      {
+        "name": "conversation.md",
+        "bytes": 4419,
+        "sha256": "bb55ab4815cea850fcafbae2fd4ce15cf1c7cba01a04f465a925c3fbfcc88478"
+      },
+      {
+        "name": "attachments/0001.bin",
+        "bytes": 90330,
+        "sha256": "8d21be7cf8550a9b422c5e613c38dcd98f0fe85fb951a17e4505d6f641d41d79"
+      },
+      {
+        "name": "manifest.json",
+        "bytes": 1593,
+        "sha256": "193395a7de0f45531fd19660d31016dd254aca19d1f88748ccbc8f090dd0f337"
+      }
+    ],
+    "format": "farfoldReadableArchive",
+    "scope": "selectedLoadedSnapshot",
+    "resumableAgentSession": false,
+    "manifestCountsAndMemberHashesMatch": true,
+    "selectedPng": {
+      "bytes": 90330,
+      "sha256": "8d21be7cf8550a9b422c5e613c38dcd98f0fe85fb951a17e4505d6f641d41d79",
+      "width": 509,
+      "height": 518,
+      "exactlyMatchesPreviouslyReturnedSameOwnedPublicScreenshot": true,
+      "priorPath": "output/2026-11-12-cycle6/formal/screenshot-300-0.png"
+    },
+    "omitted": [
+      {
+        "representation": "receivedBytes",
+        "declaredMimeType": "audio/wav",
+        "reason": "notSelected"
+      },
+      {
+        "representation": "referenceOnly",
+        "declaredMimeType": "audio/wav",
+        "reason": "unsupportedSource"
+      }
+    ],
+    "standaloneAndArchiveMarkdownIdentical": false
+  },
+  "limitations": [
+    "Picker cancellation is established by root UI observations; post-state absence alone cannot prove cancellation timing.",
+    "Both outputs represent their chosen loaded snapshot, not an independently resumable Agent history.",
+    "The archive contains one selected PNG; the two audio candidates are respectively notSelected and unsupportedSource, not both simply unselected.",
+    "No UI, Agent/model or product source operation executed by this read-only verification."
+  ]
+}

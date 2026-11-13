@@ -1,0 +1,53 @@
+{
+  "atUtc": "2026-11-12T17:50:19.435120+00:00",
+  "tombstones": {
+    "originalRowsPreserved": true,
+    "originalCount": 379,
+    "afterCount": 380,
+    "added": [
+      {
+        "compositeIdSha256": "0d571dcf9e37a6547dcaa96e41f5412fa52abfb9436637ef303007dea5d979a1",
+        "nativeSessionId": "ses_e2f2b8669ffeWBs1rxDrx0iQs7",
+        "exactObservedOwnedEmptySession": true
+      }
+    ],
+    "schema": ["id", "created_at"]
+  },
+  "protectionChecksPassedWithObservedUiChanges": true,
+  "logs": {
+    "scope": "Exact current official opencode.log only, last <=8MiB, only lines containing the exact request SID. No unrelated error attribution, body/header/prompt/config export.",
+    "matchedLines": 8,
+    "explicitErrorCategories": [],
+    "cause": "unknown",
+    "sourceSha256": "dfd46759685c12a0100adf0e27261281a47fb6a4236a4bd81e80431b8d44244b",
+    "sourceBytes": 2052266,
+    "examinedTailBytes": 2052266
+  },
+  "previousFormalGooseConversationConfigExactlyPreserved": true,
+  "productionBytesUnchangedDuringObservation": true,
+  "privateCopiesRemoved": true,
+  "firstReceiptsRetained": true,
+  "explainedAggregateFalse": "Original collector compared all agentSetup bytes; UI added one exact cwd preparation progress. First supplement incorrectly expected structured tombstone columns; actual schema is composite id+created_at, now matched by exact full expected id, with old379 rows intact.",
+  "newHistory": "Two new empty native preparation conversations plus one requested conversation remain; only the exact first empty preparation draft has a new Farfold dismissal marker. No native history deleted.",
+  "requestOutcome": "One exact user instruction, assistant record with completed time but no text/tool/finish/error. No native tool part or screenshot. Zero counters equal official initial defaults; no inference of successful service use or actual zero billing.",
+  "officialInitialUsageSource": {
+    "path": "output/2026-11-13-cycle7/opencode/official/prompt.ts",
+    "sha256": "f0c5bc64c0f0e966693d4a57f7ede1e9d6e188b396152f04b55303dc75b9b768",
+    "lines": "1185-1200"
+  },
+  "existingGooseChoiceBoundary": "New-draft saved setup is Super VL free; previously tested saved conversation20261112_5 remains Ultra free. No setter invoked and no choice substitution authorized by this observation.",
+  "inputs": [
+    {
+      "path": "output/2026-11-13-cycle7/opencode/native-web-result.json",
+      "sha256": "f01a25c756aafb1a55b328ed3b41a7bacbe8e0ed30272dd0bf4558c3cd35c750"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/opencode/setup-change-review.json",
+      "sha256": "bd25a69838da1c32a35db876f18a9dba50ebebd7a74e8045f9c714dca2ed0ad6"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/opencode/closed-supplement.json",
+      "sha256": "4e846a4b31be6d33da90fb6db3d0cce5fa1c94f4a80b84d987eac9885befcf54"
+    }
+  ]
+}

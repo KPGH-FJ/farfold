@@ -1,0 +1,173 @@
+{
+  "kind": "Cycle7FiveAgentReadOnlyCapabilityReview",
+  "atUtc": "2026-11-12T17:52:05.396022+00:00",
+  "repositoryHead": "6dd5410c1e4dc3fb7c731527bd2cb41cb2954e5c",
+  "scope": ["Devin", "Factory Droid", "Codebuddy Code", "Dirac", "Cline"],
+  "requirementIds": ["P12", "P31", "P32", "P35", "P47", "P48"],
+  "decision": "Use the existing common selected-history read, local metadata organization and loaded-conversation export paths first. No new reproducible Farfold defect was established in this read-only pass. Do not make new model sends or all-five authentication a prerequisite for common export/search lifecycle fixes.",
+  "freshness": "Listed versions and installed-auth observations are dated evidence, not newly checked installed state. No current production DB, credentials or Agent was opened. Public-source versions identify reviewed semantics, not compatibility gates.",
+  "commonPaths": {
+    "search": "history_search_read uses official session/load only for the explicitly selected rows, seals the acknowledged prefix, searches returned user/assistant text and reports exclusions. Existing tests already cover late updates, incomplete markers and cancellation; do not repeat them just for five new labels.",
+    "organization": "session_meta_rename/pin/archive operate Farfold-owned index metadata. Lack of official native rename/export is not a blocker for these controls; deletion and native archival remain separate.",
+    "export": "P35 means a clearly scoped archive of loaded content and explicitly selected attachments, not a native resumable Agent session. Upstream display filtering must not be hidden by a claim of full native history.",
+    "notifications": "success_notification registers a live request on its actual thread and requires end_turn plus no failed/in-flight tool or unresolved state. History replay is not new completion. Official declaration and local code do not establish macOS delivery/sound/click; P47/P48 actual system checks remain separate."
+  },
+  "agents": [
+    {
+      "id": "devin",
+      "reviewedEvidence": "Historical initialize declares load/list/delete. Official CLI docs expose resume/continue and ATIF --export, but --export runs with the CLI session and is not established as a bounded read-only existing-history API.",
+      "actualPrior": "2026-10-06 installed c42 evidence includes load and one prompt with non-error ordered responses and root-observed complete expected message; content-free metadata does not prove all transcript fields or current account/model.",
+      "next": "Use an already owned indexed conversation only after root confirms current owner/config and idle state; selected load/search/export can be checked with zero new prompt. Do not repeat old auth_required as the current fact.",
+      "gap": "Complete replay and official export field coverage; actual system notification routing for this Agent remain unverified."
+    },
+    {
+      "id": "factory-droid",
+      "reviewedEvidence": "Historical official daemon declares load/list/resume. New primary documentation exposes droid search --json with kind/session-count/hit-count/context limits. The documented search scope is across local sessions; no precise session selector or JSON source-location contract was established.",
+      "actualPrior": "2026-10-24 installed one-request sample showed UI 401 and unknown outcome with sending paused; it did not establish a terminal or account diagnosis. Do not resume or retry that request.",
+      "next": "Keep selected session/load as the existing limited path. A separate narrow official-CLI search audit can check installed command shape, exact selected scope, cache side effects and stable JSON identities before any implementation; no --reindex or model exec is proposed.",
+      "gap": "Do not scan all local history then filter it as a substitute for the user-selected scope; no official CLI call was run here."
+    },
+    {
+      "id": "codebuddy-code",
+      "reviewedEvidence": "Historical load/replay implementation exists; list was undeclared/method_not_found. Official /export and /resume CLI commands are not automatically ACP methods. authenticate may first log out, so it is not a read-only availability probe.",
+      "actualPrior": "2026-10-24 exact-reply formal sample completed and was visibly idle. It proves neither current account nor backend model. The 2026-11-07 queue-edit/cold-continue record reviewed here is Goose, not CodeBuddy, and is not used to promote CodeBuddy coverage.",
+      "next": "Prefer the already owned successful indexed sample for zero-send selected read and loaded export once present/current ownership is verified. Local rename/pin/archive does not require session/list.",
+      "gap": "No new current-state, cold-full-transcript or system notification evidence in this pass."
+    },
+    {
+      "id": "dirac",
+      "reviewedEvidence": "Official v0.5.21 source declares load/resume/close/delete but not list despite an unstable_listSessions implementation. load requires persisted task runtime config and existing owned worktree, restores settings and writes session runtime metadata. ACP load replays after subscribing.",
+      "actualPrior": "2026-10-24 formal sample did produce expected reply/completion/idle; the declared zero-tool expectation failed because one Task Completed step was visible. This was not a no-reply/auth failure.",
+      "sourceRisks": "replayLoadedSessionHistory can catch a saved-message read failure and return, and catches per-message translation errors; the event forwarder does not await connection.sessionUpdate. These are source-level limits, not a new reproduced Farfold failure. Keep acknowledged-prefix/returned-field scope and failed/empty guards.",
+      "next": "Use a known indexed owned sample whose cwd/runtime still exist; do not fabricate list capability or overwrite missing settings. Validate late/incomplete replay via existing common tests; new formal read requires root to check the exact sample first.",
+      "gap": "No zero-message completeness proof or current official list availability was established."
+    },
+    {
+      "id": "cline",
+      "reviewedEvidence": "Official cli-v3.0.65 load replay awaits each sessionUpdate, but first projects display messages, removes display-only errors and synthetic user continuation, converts some nonimage media to a text description and flattens tool outputs. Historical initialize exposes load, not list.",
+      "actualPrior": "2026-10-06 initial formal sample accepted new/config then first prompt returned internal error; no expected reply. This is more specific than a generic missing-account claim, and is not retried.",
+      "next": "Keep saved-selection restore guards and scoped loaded exports. The complete official replay source is now cached for a controlled fixture if a changed common path needs verification; no synthetic fixture would count as official acceptance.",
+      "gap": "Current provider/model selection and an owned readable real history were not rechecked; no full-fidelity media/native-session export claim."
+    }
+  ],
+  "priorityNextAction": [
+    "Finish the already delegated common export-dialog/host lifecycle repair and its bounded tests; it applies to the five Agents without new per-Agent UI or model calls.",
+    "For real selected-history/search/export, choose one currently present, owned, previously successful CodeBuddy or Dirac sample after closed-state/current-owner checks. One bounded session/load, no prompt/set/auth; compare acknowledged returned body with exported scope; metadata edits remain local. Missing/corrupt history or config drift stays explicit and does not cause newSession or retry.",
+    "Only if native search beyond selected-load is needed, narrow-audit Factory droid search JSON and scope/cache contract. Documentation alone is not enough to add its launch route."
+  ],
+  "stopConditions": [
+    "Unexpected authentication/config rewrite or model selection mismatch: do not continue/retry.",
+    "Unsupported official list does not trigger guessed private database reads.",
+    "Load errors/late prefixes or absent scope evidence never become complete-history claims.",
+    "No new app/Agent/model/OS experiments are authorized by this report."
+  ],
+  "sourceCorrection": "The older cached Cline session-load.ts was truncated at 45 lines. This pass fetched the complete 189-line official tag file into wave7-source; it is the basis for replay statements. Dirac source was narrowly refreshed to the already relevant v0.5.21 tag.",
+  "primaryLinks": [
+    "https://docs.devin.ai/cli/reference/commands",
+    "https://github.com/Factory-AI/factory/blob/main/docs/reference/cli-reference.mdx",
+    "https://www.codebuddy.ai/docs/cli/slash-commands",
+    "https://github.com/dirac-run/dirac/blob/v0.5.21/cli/src/acp/AcpAgent.ts",
+    "https://github.com/dirac-run/dirac/blob/v0.5.21/cli/src/agent/DiracAgent.ts",
+    "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/session-load.ts"
+  ],
+  "references": [
+    {
+      "path": "output/acp-first-batch-research-2026-10-05/group-commercial.json",
+      "sha256": "22c53e3bb6fff4a57ea0bf4093e0954777b7111662128554df7c5579bafaee93"
+    },
+    {
+      "path": "output/acp-first-batch-research-2026-10-05/group-core.json",
+      "sha256": "fb44071409e8a5fa2ed4467dcbf82a5986fcfa1d004b7fe84b8393a50b18bbc4"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/task-scope.txt",
+      "sha256": "43e72a6e34001bbc872b3c61cb02e12f0e26539194ce49af5a24d9c1c869a6fd"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/wave7-source/manifest.json",
+      "sha256": "ff45d5f467d8878837bca153bc3c839361650c26345ac16efbc8e66f863e3232"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/wave7-source/cline-session-load.ts",
+      "sha256": "60ce949bc0bb61da5476a29485143461c93524d415fbb552d13f44456deb68dd",
+      "lines": "18–49,56–160"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/wave7-source/dirac-AcpAgent.ts",
+      "sha256": "830d74685ea1fd85b67c6ac757835c526c4209aebe35ea87c1c25be546ef3f1e",
+      "lines": "133–154,357–377"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/wave7-source/dirac-DiracAgent.ts",
+      "sha256": "47ecd9da3be0a230845a128b442062daf1d6369a863e237d7cba078dda744440",
+      "lines": "1166–1207,1345–1452,2134–2206,2322–2348"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/wave7-source/factory-cli-reference.mdx",
+      "sha256": "6a4bf544c4566a3a9b07eb8f57cf3fa2523731df5d2bb95d68ac6d898c58cd7a",
+      "lines": "104,404–413"
+    },
+    {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
+      "sha256": "ebef8e73ebcf6b3b3835bf589208c6228a0902c5bbcd44defa17dd8beff450bc"
+    },
+    {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/dirac-formal-c876-ack-summary.json",
+      "sha256": "ee9dd4b358f50b32a70ed52cc9415601c0ba16e9c71d2c91be5f5cc56e02ed88"
+    },
+    {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
+      "sha256": "f01088a51face9bb556c233d23d8fc376dd7e3a4a8596221fcf667032b9bd8b7"
+    },
+    {
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-installed-c42-devin-reply.json",
+      "sha256": "231d7e800418153ca00ce68e165dd52af4fd88e1ce77e3c118438d932db16081"
+    },
+    {
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-cline-initial.json",
+      "sha256": "f6c719e32a4fb69de9e5ee6018ed7474935b5ae2f2cdac811a8024ddcce55c2e"
+    },
+    {
+      "path": "src/runtime/history_search_read.ts",
+      "sha256": "b95f3c0ad1fad3873ef9bb43ae781eb364054039a8aa0c57c1773e93f13dd2cc",
+      "lines": "104–111,290,341"
+    },
+    {
+      "path": "src/runtime/history_import.ts",
+      "sha256": "c43ff1c985c680c040c710c0b7401a5c29f902284eefaecb1bd1b8ac01ab5f1c"
+    },
+    {
+      "path": "src/runtime/history_import.test.ts",
+      "sha256": "f9147b05f7f66d500d5d0393e86809c058c07980ff53bafccc12ffa56343e55b",
+      "lines": "421–477"
+    },
+    {
+      "path": "src/runtime/history_search_read.wire.test.ts",
+      "sha256": "6620688edab3dba75d784f5e7160c67676b228c1f4a4dd98accce2001383b0de",
+      "lines": "110–145,191–198,256–293"
+    },
+    {
+      "path": "src/runtime/success_notification.ts",
+      "sha256": "a37d29ae75960c0da44a3e7d21b5515dc95534a57effbfe6118b51f88d6a2c92",
+      "lines": "24–25,137–157"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "de55637ba3a14041ec52b4d7d3f0f72ccdd3916412c9bdc0d6c7cdbe6a34d8a0",
+      "lines": "777–813"
+    }
+  ],
+  "performed": {
+    "agentLaunches": 0,
+    "modelRequests": 0,
+    "appLaunches": 0,
+    "cargoOrFeatureTests": 0,
+    "productionDatabaseOrCredentialReads": 0,
+    "productEdits": 0,
+    "docsTaskReadOnlyExitCode": 0
+  },
+  "protectedDirty": {
+    "path": "docs/evidence/2026-11-04-create-eof-recovery/debugger-system-native.json",
+    "sha256": "90117ac99ab7c58b3091eababce0ea3771fdae277542118d71547298ff567166"
+  }
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "path": "output/2026-11-13-cycle7/engineering-final/result.json",
+    "sha256": "19e46a722221ab0e304fe56ba1e40ade5acc44f34e8b54a1d4d475c3b5a61da0"
+  },
+  {
+    "path": "output/2026-11-13-cycle7/formal/no-prompt-formal-summary.json",
+    "sha256": "fb65fdcb147a715b15fa12232df86ae8436b8c140e29a4bd6d4e6f8096ed7011"
+  },
+  {
+    "path": "output/2026-11-13-cycle7/formal/export-byte-proof.json",
+    "sha256": "534c8e6fc16087c509ddb3cb59c3f29e260d7c627272ab3ab519722be48bf7f3"
+  },
+  {
+    "path": "output/2026-11-13-cycle7/opencode/final-closed-review.json",
+    "sha256": "80abe432f87faa1e3ddf70175a14e16a285f8fbc5ce4cc9a00fe9a430be5a431"
+  },
+  {
+    "path": "output/2026-11-13-cycle7/integration/wave7-review.json",
+    "sha256": "6f562989ba9a819a47bc9ad421b383161fe0147d4fec0a2cf80672d71f739764"
+  },
+  {
+    "path": "output/2026-11-13-cycle7/formal/install.json",
+    "sha256": "eaf0b2a3330119327d4ec8a89e3b05507fd0f777039a68921151f41aa665373a"
+  },
+  {
+    "path": "output/2026-11-13-cycle7/search-export/independent-final-review.json",
+    "sha256": "d3eb5edeee600c45e3dc5d1fce31139c4cb5eacf17452307ad524bceb0ac8301"
+  },
+  {
+    "path": "output/2026-11-13-cycle7/search-export/root-review-r2.json",
+    "sha256": "cc63742bc68f262ef8139405fea50bfd7355ea739df72fcae4881460eced6466"
+  },
+  {
+    "path": "output/2026-11-13-cycle7/search-navigation-review/review-and-formal-route.json",
+    "sha256": "78da53e6fe0581a9b29264024d06b3500ab7f249ce9f3e495ee9023db884a673"
+  },
+  {
+    "path": "output/2026-11-13-cycle7/formal/ui-observations.json",
+    "sha256": "9152cbad9eeccf7dffcae21610f664dd793f7fb9b643f0a45a2c788591c5e41e"
+  }
+]

@@ -1,0 +1,71 @@
+{
+  "atUtc": "2026-11-13T00:41:41.550170+00:00",
+  "scope": "Formal24e92 installed UI search/favorite/export phase and closed-state preservation; planned notification request not sent.",
+  "observationsReportedByRoot": {
+    "modelRequestsSent": 0,
+    "notificationPromptNotSent": true,
+    "systemMenuAutomationBlockedSecondsApprox": 23291,
+    "blockingWasUnexpectedToolTimeoutNotIntentionalWait": true,
+    "normalQuitObserved": true,
+    "loadedOtherOwnedDocxOnce": true,
+    "globalSearchLoadedUnloadedUnknown": [2, 8, 0],
+    "favoriteRoundTrip": [0, 1, 0],
+    "threeUnsentOpinionsRetained": true,
+    "markdownPickerCancelledBeforeNewExplicitSave": true
+  },
+  "independentlyObserved": {
+    "all285NativeMessagesExactlyPreserved": true,
+    "owned28MessagesExactlyPreserved": true,
+    "originalNativeSessionIdsSame": true,
+    "onlyTwoObservedLoadedNativeSessionRowsDiffer": true,
+    "targetProviderModelModeAndModelConfigSame": true,
+    "targetCompleteDescriptorMultisetSame": true,
+    "targetCumulativeCountersSame": true,
+    "allSettingsAndDismissalsExactlySame": true,
+    "draftFeedbackQueueActivityExactlySame": true,
+    "farfoldMetadataOnlyTwoTimestampsChanged": true,
+    "targetPinnedArchivedRestored": true,
+    "allThreeNotificationFlagsRestoredFalse": true,
+    "pending0": true,
+    "allSevenOwnedFilesSame": true,
+    "protectedConfigurationMetadataSame": true
+  },
+  "allListedChecksPassed": true,
+  "nativeCounts": {
+    "sessions": 66,
+    "messages": 285,
+    "ownedMessages": 28
+  },
+  "limits": [
+    "All original message rows and64 untouched session rows are exactly equal. The two loaded session rows changed; target configuration/descriptor multiset/counters were checked, but original per-field snapshots were not retained, so do not claim every other field of those two native rows is byte-identical or attribute all changed fields to a timestamp.",
+    "No new persisted message/tool/usage row is evidence consistent with root zero-send observation; it alone cannot prove no possible network request.",
+    "Notification display/click was not exercised because no request was sent; restored disabled preference is confirmed.",
+    "Existing native-history, partial search/export and cancellation observations do not imply whole P35/P47/P48 or29-Agent acceptance."
+  ],
+  "records": [
+    {
+      "path": "output/2026-11-13-cycle7/formal/baseline.json",
+      "sha256": "eb43c4d04a0f13cc852e31c8ab4d1abc44f7f91dbdc2840856b25236f031e81a"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal/after-no-prompt.json",
+      "sha256": "9c422de68c449c77ead4b43bd203bee976e072e5864bb2d35710c7394f981e26"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal/ui-metadata-review.json",
+      "sha256": "97eb29d15980cf5975a128be5b6e171cf8895d7dfc07037d4b9b2816e1c973d8"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal/export-byte-proof.json",
+      "sha256": "534c8e6fc16087c509ddb3cb59c3f29e260d7c627272ab3ab519722be48bf7f3"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal/install.json",
+      "sha256": "eaf0b2a3330119327d4ec8a89e3b05507fd0f777039a68921151f41aa665373a"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal/duplicate-cleanup.json",
+      "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+    }
+  ]
+}

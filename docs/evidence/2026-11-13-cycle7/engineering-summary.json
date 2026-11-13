@@ -1,0 +1,113 @@
+{
+  "allSevenPassed": true,
+  "productInputsUnchanged": true,
+  "productInputCount": 2546,
+  "checks": [
+    {
+      "name": "format",
+      "command": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 62.566,
+      "finishedAtUtc": "2026-11-12T17:53:22.000314+00:00",
+      "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "logPath": "output/2026-11-13-cycle7/engineering-final/format.log"
+    },
+    {
+      "name": "typecheck",
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 18.094,
+      "finishedAtUtc": "2026-11-12T17:52:37.528574+00:00",
+      "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "logPath": "output/2026-11-13-cycle7/engineering-final/typecheck.log"
+    },
+    {
+      "name": "test",
+      "command": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 47.221,
+      "finishedAtUtc": "2026-11-12T17:53:06.654246+00:00",
+      "logSha256": "41d156ca5a85e91efd29646ed2462fa83626cc5bbafca10094f1e2a45cffe5c4",
+      "logPath": "output/2026-11-13-cycle7/engineering-final/test.log"
+    },
+    {
+      "name": "build",
+      "command": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 24.521,
+      "finishedAtUtc": "2026-11-12T17:50:42.076220+00:00",
+      "logSha256": "772fd67f2680e7696e880fe9a50bc36d1896170b6816aeb94c8d9f6a1d62eeaf",
+      "logPath": "output/2026-11-13-cycle7/engineering/build.log",
+      "reusedFrom": "output/2026-11-13-cycle7/engineering/build.json",
+      "reuseBasis": "Only review test harness changed after successful build; all production and build/config inputs unchanged; final typecheck covers test edit."
+    },
+    {
+      "name": "cargo-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.306,
+      "finishedAtUtc": "2026-11-12T16:57:35.477837+00:00",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "logPath": "output/2026-11-12-cycle6/engineering-opencode/cargo-fmt.log",
+      "reusedFrom": "output/2026-11-12-cycle6/engineering-opencode/cargo-fmt.json",
+      "reuseBasis": "Every native/build/dependency input unchanged; seven React component/test changes only."
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 6.921,
+      "finishedAtUtc": "2026-11-12T16:57:42.398998+00:00",
+      "logSha256": "36d9a282e7fc66b78115e231ef86356084d145212423709dbebfac3773b89eb6",
+      "logPath": "output/2026-11-12-cycle6/engineering-opencode/clippy.log",
+      "reusedFrom": "output/2026-11-12-cycle6/engineering-opencode/clippy.json",
+      "reuseBasis": "Every native/build/dependency input unchanged; seven React component/test changes only."
+    },
+    {
+      "name": "cargo-test",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "--test-threads=4"
+      ],
+      "exitCode": 0,
+      "seconds": 294.364,
+      "finishedAtUtc": "2026-11-12T17:02:48.788310+00:00",
+      "logSha256": "304e391fba4613d8a7c8833b23c5916b76ccb2a257821d4f335245f96db8aa2f",
+      "boundary": "Same full suite; cap parallel test processes after one 5-second fixture wait expired at default concurrency. Original failures retained; no source/timeout/assertion changes.",
+      "logPath": "output/2026-11-12-cycle6/engineering-opencode/cargo-test.log",
+      "reusedFrom": "output/2026-11-12-cycle6/engineering-opencode/cargo-test.json",
+      "reuseBasis": "Every native/build/dependency input unchanged; seven React component/test changes only."
+    }
+  ],
+  "allInputChangesSincePriorNativeChecks": [
+    "src/components/ConversationArchiveDialog.test.tsx",
+    "src/components/ConversationArchiveDialog.tsx",
+    "src/components/ConversationExportDialog.test.tsx",
+    "src/components/ConversationExportDialog.tsx",
+    "src/components/ConversationExportHost.test.tsx",
+    "src/components/ConversationExportHost.tsx",
+    "src/components/ConversationInteractions.review.test.tsx"
+  ],
+  "unchangedPriorInputs": 2539,
+  "scope": "Final frontend full suite and type/format pass; successful production build reused from this batch; native checks reused after complete input/log verification. Not installed-app acceptance."
+}
