@@ -51,6 +51,41 @@ function nodes(node: ReactNode): any[] {
   });
   return result;
 }
+it("keeps the read focus anchor while busy without allowing another action", async () => {
+  h.cursor = 0;
+  h.slots = ["owned-id", "/owned"];
+  h.cleanup = [];
+  const run = vi.fn(),
+    read = vi.fn(),
+    release = vi.fn();
+  const tree = KnownHistoryImport({
+    reader: {
+      preview: null,
+      state: { saved: null, error: null },
+      retire: vi.fn(),
+    } as any,
+    busy: true,
+    initialCwd: "/owned",
+    current: () => true,
+    run,
+    read,
+    release,
+    add: vi.fn(),
+  });
+  const button = nodes(tree).find(
+    (n) => n.type === "button" && n.props.children === S.knownRead,
+  );
+  expect(button.props.disabled).toBe(false);
+  expect(button.props["aria-disabled"]).toBe(true);
+  const preventDefault = vi.fn();
+  button.props.onMouseDown({ preventDefault });
+  expect(preventDefault).toHaveBeenCalledOnce();
+  button.props.onClick();
+  button.props.onClick();
+  expect(run).not.toHaveBeenCalled();
+  expect(read).not.toHaveBeenCalled();
+  expect(release).not.toHaveBeenCalled();
+});
 it.each(["read-after-release", "directory-after-modal"])(
   "rejects %s after child layout cleanup before parent passive cleanup",
   async (which) => {

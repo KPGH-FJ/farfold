@@ -80,8 +80,16 @@ export function KnownHistoryImport({
         <button
           type="button"
           className="btn btn-ghost"
-          disabled={busy || !id.trim() || !cwd}
+          // Native disabling drops the initiating keyboard focus in WebKit.
+          // Retain this anchor while busy; the action remains guarded below.
+          disabled={!id.trim() || !cwd}
+          aria-disabled={busy || undefined}
+          style={busy ? { opacity: 0.55, cursor: "default" } : undefined}
+          onMouseDown={(event) => {
+            if (busy) event.preventDefault();
+          }}
           onClick={() => {
+            if (busy) return;
             const interested = interest();
             if (cwd)
               void run(async () => {
