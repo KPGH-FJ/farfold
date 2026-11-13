@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "kind": "Cycle7FiveAgentSpecificConditionFollowup",
+  "recordedAtUtc": "2026-11-13T02:09:38.441971+00:00",
+  "scope": "Follow-up to the dated five-Agent read-only review and the single installed Devin scoped history query. No whole Agent, requirement, stage or cycle acceptance is established. Earlier evidence is preserved.",
+  "formalDevin": {
+    "sourceCommit": "cce3f5b805db9011d862c84f66b528b789bb84bf",
+    "agentId": "registry:devin",
+    "cwd": "/Users/tw/Desktop/farfold/output/2026-10-06-real-use",
+    "knownOwnedCandidateIds": ["hurricane-minnow", "incredible-need"],
+    "route": "All conversations > Bring existing conversations > Devin > exact original folder > Find conversations",
+    "queryAttempts": 1,
+    "queryScopeExplicit": true,
+    "uiResult": "没有找到对话",
+    "resultRows": 0,
+    "loadAttempts": 0,
+    "importedRows": 0,
+    "userModelRequests": 0,
+    "authOrModelChanged": false,
+    "globalListAttempt": false,
+    "retry": false,
+    "normalQuitObserved": true,
+    "oldWorkLocationUnknownWarningPreserved": true,
+    "rawListResponseCaptured": false,
+    "meaning": "The normal installed UI returned no rows for this one explicitly selected directory query. Neither known candidate was recovered. This does not prove native history deletion, invalid credentials, an empty raw official response or whole-Agent failure."
+  },
+  "queryScopeSourceCheck": {
+    "selectedCwdForwardedToOfficialSessionList": true,
+    "oneExplicitPageNotGlobalListThenFilter": true,
+    "flow": "discoverHistory supplies connectionCwd and cwd; session_discover forwards cwd; discover_session_page uses all_pages=false; list_sessions_on_connection serializes the selected cwd in session/list params.",
+    "limit": "Source-level request construction plus observed explicit UI scope; no raw official list response was captured and upstream enforcement is not independently established."
+  },
+  "agents": [
+    {
+      "agentId": "codebuddy-code",
+      "oldPositive": "2026-10-24 exact reply/completion/current idle observed; saved labels preserved, effective backend/account not verified.",
+      "specificCurrentCondition": "The exact successful sample original temporary cwd is now absent. Historical list capability was undeclared/method_not_found. Current UI has no manual native-ID import; if that declaration remains unchanged, a cleared-index sample cannot be rediscovered through this UI.",
+      "whatCanContinue": "A distinct current owned sample with an existing cwd and supported normal discovery/index route could be assessed; no current availability of such a route was established here. Do not recreate the missing cwd/index or use authenticate as a read-only check.",
+      "newFormalAttempt": false
+    },
+    {
+      "agentId": "devin",
+      "oldPositive": "Earlier installed load/reply and later cold restore were observed, but the successful c42 reply was not uniquely bound to either of the two retained candidate IDs.",
+      "specificCurrentCondition": "The owned original directory exists. One authorized normal scoped import query returned no visible rows; neither known candidate was recovered.",
+      "whatCanContinue": "A later concrete change in official discovery/history availability can be assessed; do not retry or broaden this unchanged failed-to-find condition merely to get a sample.",
+      "newFormalAttempt": true
+    },
+    {
+      "agentId": "dirac",
+      "oldPositive": "2026-10-24 expected reply/completion/idle observed; its zero-visible-tool expectation alone failed due to a Task Completed step.",
+      "specificCurrentCondition": "The exact successful sample original temporary cwd is now absent. Official reviewed load also needs its saved runtime/worktree; historical list was undeclared. Manual native-ID import is absent from the current UI.",
+      "whatCanContinue": "Another known owned sample whose original cwd/runtime still exist may be assessed through a supported normal route. Do not recreate worktree/settings or treat the old tool-count mismatch as an auth/no-reply failure.",
+      "newFormalAttempt": false
+    },
+    {
+      "agentId": "factory-droid",
+      "specificCurrentCondition": "The 2026-10-24 401 UI sample has an unknown request outcome and no confirmed terminal/idle. That exact request is not retried.",
+      "whatCanContinue": "A separately established owned and idle sample could support selected history reading; this review did not establish one. The old 401 does not prove the current account or every history is unavailable. Cross-history CLI search is not substituted for the selected scope.",
+      "newFormalAttempt": false
+    },
+    {
+      "agentId": "cline",
+      "specificCurrentCondition": "The 2026-10-06 first prompt failed with internal_error after new/config succeeded; its cause is not established. The old Existing Cline settings / Space Bunny Alpha labels are dated, not a fresh readiness check.",
+      "whatCanContinue": "A concrete owned readable history or current explicit saved-choice preparation can be checked when available; no new prompt or automatic retry was made. Do not replace the known old internal error with an unsupported missing-account diagnosis.",
+      "newFormalAttempt": false
+    }
+  ],
+  "preservedLimits": [
+    "Not all five are proven blocked by accounts or missing models. Missing a sample in this pass is not a permanent blocker.",
+    "Concrete missing directories, absent manual-ID UI route under the old no-list declarations, this one no-row query and the protected unknown Droid request are separately recorded.",
+    "No history read/search/export coverage is added by the Devin list-only attempt; notifications remain separate.",
+    "Original 151 conditions and 29-Agent eight-standard requirements are unchanged; no new mandatory test combination is introduced."
+  ],
+  "references": [
+    {
+      "path": "output/2026-11-13-cycle7/formal-devin-history/scope.json",
+      "sha256": "4d6ec403ae6a592a6717b7ec7b08ee19af08f40ad34286fd2b66942a1e56fffe"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-devin-history/ui-observations.json",
+      "sha256": "c4aaedfec8287719ddc03c174e3f90b13453e03ed45de173a9f3308bfd68a0de"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-devin-history/wave7-followup-locators.json",
+      "sha256": "8d7ecee2f74ed302100ceaf2cb3aae2c518fc344333a9bb46baf39bc5a0e995c"
+    },
+    {
+      "path": "docs/evidence/2026-11-13-cycle7/wave7-review.json",
+      "sha256": "bec497885c53af87303f4634a7236ee6c4183a5ff1cf1f53be8f151dd9a127d0"
+    },
+    {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
+      "sha256": "ebef8e73ebcf6b3b3835bf589208c6228a0902c5bbcd44defa17dd8beff450bc"
+    },
+    {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/dirac-formal-c876-ack-summary.json",
+      "sha256": "ee9dd4b358f50b32a70ed52cc9415601c0ba16e9c71d2c91be5f5cc56e02ed88"
+    },
+    {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
+      "sha256": "f01088a51face9bb556c233d23d8fc376dd7e3a4a8596221fcf667032b9bd8b7"
+    },
+    {
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-cline-initial.json",
+      "sha256": "f6c719e32a4fb69de9e5ee6018ed7474935b5ae2f2cdac811a8024ddcce55c2e"
+    },
+    {
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-installed-c42-devin-reply.json",
+      "sha256": "231d7e800418153ca00ce68e165dd52af4fd88e1ce77e3c118438d932db16081"
+    }
+  ]
+}

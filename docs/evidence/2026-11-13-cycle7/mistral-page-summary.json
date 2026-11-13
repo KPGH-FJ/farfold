@@ -1,0 +1,155 @@
+{
+  "scope": "Initial cce3 formal Mistral result and cold replay before a later rendering repair. User explicitly allowed exactly one additional real request; that budget is now consumed.",
+  "sourceCommit": "cce3f5b805db9011d862c84f66b528b789bb84bf",
+  "nativeSessionId": "d1cabd9a-5fde-e0a8-35d0-608eb87e2f25",
+  "userRequestCount": 1,
+  "rootRetries": 0,
+  "selection": {
+    "present": true,
+    "selectionSha256": "5b6b80acfe2b67e14d824f6e0ec2b8957ecfc3289386bbf8d17b2a0810ac0b2b",
+    "serviceKind": "existing",
+    "serviceIdentitySha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "publicChoices": {
+      "thinking": "high",
+      "model": "mistral-medium-3.5",
+      "mode": "accept-edits"
+    }
+  },
+  "selectionMatchesBaseline": true,
+  "userAndSessionChoiceUnchanged": true,
+  "officialToolDiscoverySteps": [
+    {
+      "callId": "4TM7u10tg",
+      "effectId": "effect-tool-discovery-4TM7u10tg",
+      "mode": "best_match",
+      "reportedToolCount": 4,
+      "status": "completed"
+    },
+    {
+      "callId": "rx2ONEvOn",
+      "effectId": "effect-tool-discovery-rx2ONEvOn",
+      "mode": "details",
+      "reportedToolCount": 1,
+      "status": "completed"
+    }
+  ],
+  "observePage": {
+    "count": 1,
+    "effectId": "effect-13fcf413-40c8-531f-abeb-011a66c29872",
+    "toolName": "mcp_farfold_page_8dc81d46f582c9a22772e1a704743633.observe_page",
+    "input": {
+      "screenshot": true
+    },
+    "runnerModelToolCallId": "LEhorhmbl",
+    "runnerCodeSha256": "bb40a017426404be13e02788c9fe91e0bec0aade2a241a3634327cd5dbccfc58",
+    "runnerExactlyReturnsOneObservePageCall": true,
+    "status": "completed",
+    "outputType": "success",
+    "outputContentTypes": ["text", "image"],
+    "url": "https://www.w3.org/History/19921103-hypertext/hypertext/WWW/TheProject.html",
+    "title": "The World Wide Web project",
+    "truncated": false,
+    "screenshot": {
+      "height": 692,
+      "mimeType": "image/png",
+      "status": "captured",
+      "width": 509
+    },
+    "textJsonAndStructuredContentEqual": true,
+    "toolExportContainsSamePng": true,
+    "approval": {
+      "approvalSource": "user",
+      "approvalType": "ask",
+      "decision": "execute"
+    },
+    "actualMcpJsonRpcRequestId": "not captured; effectId and runner callId are distinct recorded identities"
+  },
+  "png": {
+    "sha256": "6da80ae5128560e1f89836bed1c19aa844054165e3c6d6da48392d65621082c1",
+    "bytes": 103113,
+    "width": 509,
+    "height": 692,
+    "signatureAndAllChunkCrcValid": true,
+    "dimensionsMatchReport": true
+  },
+  "finalReply": {
+    "text": "https://www.w3.org/History/19921103-hypertext/hypertext/WWW/TheProject.html\nThe World Wide Web project",
+    "urlAndTitleMatchTool": true,
+    "checkpointOutcome": "completed"
+  },
+  "formalUi": {
+    "nativeApproval": "Allow once after root checked exact active tool details",
+    "farfoldApproval": "single screenshot permission",
+    "pageBeforeAndAfter": "unshared",
+    "finalReplyCorrect": true,
+    "typedImageDisplayed": false,
+    "toolResultShownAs": "text and JSON wrapper",
+    "normalQuitObserved": true
+  },
+  "coldUi": {
+    "additionalPrompts": 0,
+    "userAndFinalReplyRestored": true,
+    "toolStepsRestored": 3,
+    "typedImageDisplayed": false,
+    "samePageReopenedUnshared": true,
+    "permissionButtonReady": true,
+    "normalQuitObserved": true
+  },
+  "openRenderingDefect": "Typed PNG exists in official result rawOutput but is not normalized into the common image UI. Source and controlled repair evidence will be separate.",
+  "permissionBoundary": "Official permission contains only toolCallId; prior tool notification has title/input. Historical same-ID details cannot safely replace current-request evidence, so no guessed approval input will be introduced.",
+  "limits": [
+    "Native PNG exists; this does not say formal UI displayed a typed image or prove an ACP image event was sent.",
+    "Two official tool-discovery calls and one runner are preserved; do not describe this as one total model tool invocation.",
+    "One user request can contain multiple provider model completions; provider HTTP request count not measured.",
+    "Initial cce3 picture rendering failed; no complete cycle6/7 or whole-Agent acceptance",
+    "No extra model request remains authorized",
+    "Actual image understanding, provider HTTP count and all failure/stop combinations not established"
+  ],
+  "records": [
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-page/scope.json",
+      "sha256": "4dbde761fbde242e610558126d0b4fef7f48c98308e851ce03042d5baf729968"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-page/single-send.json",
+      "sha256": "3bc2e9312225376b345c7a590188e29aa452494c4f7b95b40e25a2c3adbe4677"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-page/ui-observations.json",
+      "sha256": "69b80cca0c204758592b4b09347a9c427e4c7c45f936653aca7d5e7ee7a7882a"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-page/closed-result.json",
+      "sha256": "1107c0a1a8a8ad8dcf3c91e3bae6ed1bf7bd22bb80669e11569a7f9006c4706d"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-page/native-result.json",
+      "sha256": "57471b687cfdc6e4002fa374822a6560620ab58a4b55d8066d4a0af1f438c8e6"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-page/native-output-shape.json",
+      "sha256": "211e1f884dbf0c169f598eb527c0e16c653b81d1d3eaf9e483f9ecda53e01401"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-page/cold-ui-observations.json",
+      "sha256": "65fa8799799e52fc31911c58c39aceecd4a15807504cc5333f1063311ce09071"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-page/native-cold-comparison.json",
+      "sha256": "2b42b7247182c41e8376c92a4a61a528030c1dbc6ea0ef7b1cdf5e9ef361e644"
+    }
+  ],
+  "nativeColdPreservation": {
+    "generationBefore": 39,
+    "generationAfter": 51,
+    "contextMessages": 8,
+    "projectionHistoryEntries": 9,
+    "bothStructuresUnchanged": true,
+    "typedPngBytesUnchanged": true,
+    "originalFilesByteSame": 6,
+    "originalFilesChanged": 3,
+    "originalGenerationFilesNoLongerRetained": 10,
+    "newFiles": 10,
+    "boundary": "Official generation/journal turnover is distinct from preserved logical history; exact original and after files retained in private evidence."
+  }
+}

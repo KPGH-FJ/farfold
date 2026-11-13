@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "scope": "Installed cce3 zero-prompt phase only, ending with both normal quits and the2026-11-13T01:28:41Z closed capture. Later real requests, if any, must be recorded separately.",
+  "sourceCommit": "cce3f5b805db9011d862c84f66b528b789bb84bf",
+  "installed": {
+    "path": "/Applications/Farfold.app",
+    "identity": {
+      "bundleId": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "arm64": true,
+      "signature": "adhoc",
+      "cdhash": "03981803eeb8d4b83427e59788767ceb1dcc2d2a"
+    },
+    "executableSha256": "d5acd9f513d9e6ccd2853a2eaa7dc544206767af523c1b02d843f36d5880c469",
+    "candidateFiveFilesVerified": true,
+    "dataEntriesBeforeAndAfter": 206425,
+    "installationSnapshotHashesEqual": true,
+    "duplicateCandidatePreciselyRemoved": true
+  },
+  "engineering": {
+    "productInputs": 2566,
+    "allSevenChecksPassedOrInputVerifiedReuse": true,
+    "freshRust": {
+      "passed": 2718,
+      "failed": 0,
+      "ignored": 11
+    },
+    "freshFormatAndRustFmtClippy": true,
+    "reusedFrontend": "769 files/10667 tests, typecheck and build after exact unchanged input/log verification",
+    "admissionTargetedPassingTests": 69,
+    "independentControllerAndAdmissionReviewPassed": true,
+    "notEquivalentToOfficialAcceptance": true
+  },
+  "formalScope": {
+    "ownedEmptyConversationsCreated": {
+      "fastAgent": 1,
+      "mistral": 1
+    },
+    "userPrompts": 0,
+    "modelPrompts": 0,
+    "coldLoads": 0,
+    "manualConfigurationOrAuthenticationCalls": 0,
+    "bothNormalQuitsObserved": true,
+    "normalRestoreMayUseOfficialSettingsToPreserveExistingChoices": true,
+    "doesNotClaimZeroPossibleNetworkActivity": true
+  },
+  "observations": {
+    "common": "Both public W3C page permission entries became enabled; the user-facing read permission disclosure was opened then cancelled. Pages remained unshared; no page reading, screenshot or business tool result was obtained.",
+    "fastAgent": {
+      "actualAppAgentHelperDirectParentChainObserved": true,
+      "publicServiceLookupAfterQuit": 1102,
+      "portReturnedAfterQuit": false,
+      "noNewRestorableTranscriptOrIndexObservedInNamedScope": true
+    },
+    "mistral": {
+      "actualHelperPidObserved": false,
+      "processSamplingSeconds": 20.105,
+      "processSnapshots": 141,
+      "readinessEvidence": "Enabled permission UI plus reviewed production tools/list ACK path; indirect helper evidence, not a captured helper PID.",
+      "newOfficialLeaseMatchesObservedAgentProcess": true,
+      "newFiles": 2,
+      "newBytes": 132,
+      "newFileKinds": ["lease metadata", "empty lock"],
+      "restorableTranscriptEstablished": false
+    }
+  },
+  "preservation": {
+    "originalSessionIndexRowsUnchanged": 10,
+    "originalDismissalRowsUnchanged": 380,
+    "originalMistralNamedHistoryFilesUnchanged": 197,
+    "originalFastDefaultHistoryFilesUnchanged": 3,
+    "exactConfigCandidateObservationsUnchanged": 22,
+    "existingConfigCandidateFiles": 1,
+    "pendingMarkers": 0,
+    "agentSetupWholeRowUnchanged": true,
+    "capturedServiceModelThinkingSelectionsUnchanged": true,
+    "unsentWorkChangedSubitem": "choice",
+    "unsentComposersFeedbackQueuesActivityVersionUnchanged": true,
+    "changedAgentRows": ["registry:fast-agent", "registry:mistral-vibe"],
+    "capturedAgentSourceCommandArgsAndEnvKeyNamesUnchanged": true,
+    "remainingChangedAgentFieldsNotResolved": true
+  },
+  "selectedChoiceAsCaptured": {
+    "fastAgent": {
+      "service": "existing",
+      "confirmedPublicChoice": {
+        "mode": "agent"
+      },
+      "modelAndThinkingIdentity": "Not exposed in this captured selection; no inference from empty/no-model success."
+    },
+    "mistral": {
+      "service": "existing",
+      "model": "mistral-medium-3.5",
+      "thinking": "high",
+      "mode": "accept-edits"
+    }
+  },
+  "limits": [
+    "This phase does not verify either Agent business-tool invocation, model response, screenshot or result/cancel round trip.",
+    "Neither new empty conversation was cold-loaded. Two Mistral lease files do not establish saved conversation content or safe cold recovery.",
+    "Mistral helper PID/parentage was not directly captured. The enabled UI and production ACK path must not be rewritten as direct process observation.",
+    "The only changed settings row is unsentWork.v1, specifically its choice subitem; agentSetup.v1 is unchanged. Do not claim all settings or all draft state is identical.",
+    "The two Agent registration rows changed. Only their captured safe launch fields and environment key names were compared; remaining fields and secret values were not independently resolved.",
+    "Protection after UI covers the named native roots/config candidates and metadata comparison. It is not an exhaustive effective-config/plugin/environment merge inventory or a fresh global-history check.",
+    "Original work-location unknown state was retained, not repaired or reclassified as stopped.",
+    "No complete cycle6/cycle7, P28 or29-Agent eight-standard acceptance. Earlier24e92 formal results and the source-only mach-source-summary remain evidence of their own stages."
+  ],
+  "records": [
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/independent-final-review.json",
+      "sha256": "7608423e22b591790e07c901957cc8760432de1155261bee662110817bc53ad9"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/baseline.json",
+      "sha256": "3cf8601bb1e99bb725b91e4ed7425a0525683a38623c79fef2af02ff7bc9173a"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/after-fast.json",
+      "sha256": "aff1f3d18cbd7546a7caf0b439e438eb611f17cb191e3019f5bd2ecfb0085a8b"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/after-mistral.json",
+      "sha256": "f713a0448b429f8b816a0ac01d3def473cf856b220d108661c8b973a2961a376"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/fast-live-processes.json",
+      "sha256": "f6261f5e14d3678f647803d009855f3367713567d61d77b85e3873b6c4517fc4"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/fast-closed-endpoint.json",
+      "sha256": "a4459205c64f331979a5d92fd1500219c7d0fc8f0d247b6d25ca7892c970e6cf"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/mistral-process-observation.json",
+      "sha256": "e1a81ac17bcbae7e8820f843ea03c170709f918d2e9c1ecb528e5ab87133a061"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/mistral-owned-files.json",
+      "sha256": "bf4b06c38ca435ec38a4407f93c567a4d54d8b73fec725f83927998cdc7a8a7c"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/mistral-lease-match.json",
+      "sha256": "319fe71ebb77be8770ffabc1629a60f6f42ed3b66605a8ee2a027f4f21d67916"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/ui-observations.json",
+      "sha256": "5f579fec896412a31a9499eacf02f2358bb4e047d964af9a86582a413ef8cec2"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/install.json",
+      "sha256": "3466dbd639e5c2502111fb7305c7ab2365bf0bc891c435d75275613a90cc7706"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/duplicate-cleanup.json",
+      "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/candidate-review.json",
+      "sha256": "de0ab621f19478a27e977c1ed682d669c2f1cdf7dd5df44b489cf298ea41559b"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/engineering-mach/result.json",
+      "sha256": "1a47c83d097c42ebf6dcc8f1f9e3286ed4d4fa6b96b0706cf6e94aa3b14e9606"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/mach-admission/independent-review.json",
+      "sha256": "ff984327f13c794756b15155a52c12bedb29e4e7a5a1f8cb113a4945dd4a3701"
+    }
+  ]
+}
