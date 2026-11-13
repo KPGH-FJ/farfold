@@ -59,7 +59,8 @@
   box-shadow: 0 0 0 2px var(--accent-soft);
   color: var(--accent);
 }
-.general-theme-card:disabled {
+.general-theme-card:disabled,
+.general-theme-card[aria-disabled="true"] {
   opacity: 0.6;
   cursor: default;
 }

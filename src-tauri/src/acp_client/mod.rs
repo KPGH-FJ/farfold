@@ -42,6 +42,7 @@ mod history_empty;
 #[cfg(all(test, unix))]
 mod history_empty_tests;
 pub mod history_search;
+mod history_supplement;
 pub mod identity_read;
 mod initialization;
 pub(crate) mod installation_parameters;

@@ -10,6 +10,11 @@ import type { ThreadState } from "./session_types";
 import { isProgramStatusNotification } from "./program_status";
 import { isMessageUsageNotification } from "./message_usage";
 import { STRINGS } from "./strings";
+import {
+  applyHistoryToolSupplement,
+  boundedHistoryToolSupplement,
+  isOwnedHistoryToolSupplement,
+} from "./history_tool_supplement";
 
 export type HistoryProjectionPhase = "history" | "following";
 type ProjectionOutcome = "consumed" | "discarded";
@@ -31,6 +36,8 @@ export class HistoryReplayProjection {
   private hasHistoryContent = false;
   private failed = false;
   private failure: unknown;
+  private supplemented = false;
+  private supplementData: unknown;
 
   constructor(
     state: ThreadState,
@@ -57,6 +64,25 @@ export class HistoryReplayProjection {
 
   get phase(): HistoryProjectionPhase {
     return this.marked ? "following" : "history";
+  }
+
+  /** Only the cold-open owner calls this; preview/search retain their scope. */
+  supplement(event: unknown): boolean {
+    const state = this.owned;
+    if (
+      !state ||
+      !this.current() ||
+      this.marked ||
+      this.failed ||
+      this.supplemented
+    )
+      return false;
+    if (!isOwnedHistoryToolSupplement(state, event, this.token)) return false;
+    // One bounded local result is consumed at the original prefix barrier, so
+    // intervening official updates participate in exact text/tool matching.
+    this.supplementData = boundedHistoryToolSupplement(event);
+    this.supplemented = true;
+    return true;
   }
 
   push(event: unknown): ProjectionOutcome {
@@ -90,6 +116,9 @@ export class HistoryReplayProjection {
     const state = this.owned;
     if (!state || !this.current() || token !== this.token) return false;
     if (!this.marked) {
+      if (!this.failed && this.supplementData !== undefined)
+        applyHistoryToolSupplement(state, this.supplementData, this.token);
+      this.supplementData = undefined;
       this.readable = hasReadableMessages(state.items);
       this.hasHistoryContent = Boolean(
         state.items.length ||
@@ -155,6 +184,7 @@ export class HistoryReplayProjection {
 
   clear(): void {
     this.owned = undefined;
+    this.supplementData = undefined;
     this.failure = undefined;
     this.failed = false;
   }

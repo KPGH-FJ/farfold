@@ -662,3 +662,24 @@ pub(crate) mod tests {
         assert!(declared_for(&row).is_empty());
     }
 }
+
+/// User-authorized official read-only companion, 2026-11-13. This declaration
+/// grants only export of the already-selected history, not an arbitrary sibling.
+/// Public console_scripts metadata and the managed installation receipt must
+/// independently bind both entries. No version or binary digest admission.
+pub(crate) struct HistoryExportDeclaration {
+    pub registry_id: &'static str,
+    pub acp_entry: &'static str,
+    pub companion_entry: &'static str,
+    pub distribution: &'static str,
+    pub acp_import: &'static str,
+    pub companion_import: &'static str,
+}
+pub(crate) const FAST_HISTORY_EXPORT: HistoryExportDeclaration = HistoryExportDeclaration {
+    registry_id: "registry:fast-agent",
+    acp_entry: "fast-agent-acp",
+    companion_entry: "fast-agent",
+    distribution: "fast-agent-mcp",
+    acp_import: "fast_agent.cli.commands.acp",
+    companion_import: "fast_agent.cli.__main__",
+};

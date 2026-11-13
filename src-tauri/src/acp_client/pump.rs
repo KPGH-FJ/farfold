@@ -118,6 +118,7 @@ pub(crate) struct SessionOps {
     pub(crate) configuration_dialect: super::session_config::Dialect,
     pub(crate) live_status_enabled: bool,
     pub(crate) tool_media_enabled: bool,
+    pub(crate) history_supplement_source: Option<super::history_supplement::Source>,
     pub(crate) session_tools: Arc<super::session_tools::Availability>,
     pub(crate) workspace_access: Arc<super::workspace_access::Availability>,
     pub(crate) async_tasks_supported: Arc<AtomicBool>,
@@ -126,7 +127,6 @@ pub(crate) struct SessionOps {
     pub(crate) verify_identity: super::manager::SessionIdentityCheck,
     pub elicitations: PendingElicitations,
     pub(crate) inquiries: super::elicitation::ConnectionElicitations,
-    /// Owns outstanding work until actual completion or process termination.
     pub life: Arc<ConnectionLife>,
     pub(super) prompt_escrow: super::process::PromptEscrow,
 }

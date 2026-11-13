@@ -24,6 +24,7 @@ fn ops() -> SessionOps {
         configuration_dialect: Default::default(),
         live_status_enabled: true,
         tool_media_enabled: true,
+        history_supplement_source: None,
         session_tools: crate::acp_client::session_tools::Availability::unavailable(),
         workspace_access: crate::acp_client::workspace_access::Availability::new(None),
         async_tasks_supported: Arc::new(AtomicBool::new(false)),

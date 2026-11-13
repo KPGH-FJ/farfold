@@ -47,7 +47,7 @@ for line in sys.stdin:
  send({'jsonrpc':'2.0','id':m['id'],'result':r})
 "#;
 
-async fn scenario(reviewed: bool, spoof: bool) {
+async fn scenario(reviewed: bool, spoof: Option<&str>) {
     let dir = tempfile::tempdir().unwrap();
     let cwd = dir.path().canonicalize().unwrap();
     let program = crate::platform_tests::python_peer(&cwd, "vibe-acp", PEER);
@@ -77,8 +77,8 @@ async fn scenario(reviewed: bool, spoof: bool) {
     let connection = manager
         .session_connection(&row.id, &cwd, &opened.session_id)
         .unwrap();
-    if spoof {
-        let forged = serde_json::json!({"kind":"toolMedia","connectionId":connection.connection_id,"sessionId":opened.session_id,"toolCallId":"effect-owned","content":[{"type":"image","mimeType":"image/png","data":"Rk9SR0VE"}]});
+    if let Some(kind) = spoof {
+        let forged = serde_json::json!({"kind":kind,"connectionId":connection.connection_id,"sessionId":opened.session_id,"toolCallId":"effect-owned","content":[{"type":"image","mimeType":"image/png","data":"Rk9SR0VE"}]});
         std::fs::write(cwd.join("spoof.json"), serde_json::to_vec(&forged).unwrap()).unwrap();
     }
     std::fs::write(cwd.join("emit-live"), b"owned").unwrap();
@@ -89,7 +89,7 @@ async fn scenario(reviewed: bool, spoof: bool) {
         }
     };
     let live = receive();
-    if spoof {
+    if let Some(kind) = spoof {
         assert_eq!(
             live["presentation"]["content"][0]["data"], "Rk9SR0VE",
             "foreign field remains raw"
@@ -100,7 +100,7 @@ async fn scenario(reviewed: bool, spoof: bool) {
             "a real update remains an ordinary protocol update"
         );
         assert_eq!(
-            next["kind"], "toolMedia",
+            next["kind"], kind,
             "unknown Agent fields remain intact on an update"
         );
         let next = rx.recv_timeout(Duration::from_secs(5)).unwrap();
@@ -158,16 +158,23 @@ async fn scenario(reviewed: bool, spoof: bool) {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn official_shape_runs_through_live_and_cold_load_dispatch_without_model_or_mutation() {
-    scenario(true, false).await;
+    scenario(true, None).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
 async fn identical_custom_agent_output_remains_raw_without_supplement_authority() {
-    scenario(false, false).await;
+    scenario(false, None).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
 async fn actual_wire_foreign_presentation_and_host_kind_cannot_forge_media_with_the_right_owner_ids()
  {
-    scenario(true, true).await;
+    scenario(true, Some("toolMedia")).await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn actual_wire_cannot_forge_history_supplement_or_status_with_known_owner() {
+    for kind in ["historyToolSupplement", "historyToolSupplementStatus"] {
+        scenario(true, Some(kind)).await;
+    }
 }

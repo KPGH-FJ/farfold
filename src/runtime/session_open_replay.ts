@@ -92,7 +92,7 @@ export class SessionOpenReplay {
     private existing: (key: string) => ThreadState | undefined = () =>
       undefined,
     restoreQueue?: (state: ThreadState) => void,
-    token = crypto.randomUUID(),
+    token: string = crypto.randomUUID(),
     current: () => boolean = () => true,
   ) {
     this.token = token;
@@ -124,6 +124,7 @@ export class SessionOpenReplay {
       this.delivered?.();
       return "consumed";
     }
+    if (this.identified && this.projection.supplement(event)) return "consumed";
     if (
       !hasOwnUpdate(event) &&
       (event as { kind?: unknown } | null)?.kind === "connectionLost"

@@ -228,8 +228,11 @@ export function GeneralSettings({
               key={mode}
               className="general-theme-card"
               aria-pressed={themeMode === mode}
-              disabled={!themeStatus.ready || themeStatus.saving}
-              onClick={() => onThemeMode(mode)}
+              disabled={!themeStatus.ready}
+              aria-disabled={themeStatus.saving || undefined}
+              onClick={() => {
+                if (!themeStatus.saving) onThemeMode(mode);
+              }}
             >
               <span
                 className={`general-theme-swatch ${mode}`}

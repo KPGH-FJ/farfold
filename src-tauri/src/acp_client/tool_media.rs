@@ -101,7 +101,8 @@ pub(super) fn event(
 /// The Agent may report any unknown fields, including host-like names. Keep
 /// the full original body as a notification; never grant it a local event kind.
 pub(super) fn guard_notification(value: Value) -> Value {
-    if value.get("kind").and_then(Value::as_str) == Some("toolMedia")
+    if (value.get("kind").and_then(Value::as_str) == Some("toolMedia")
+        || super::history_supplement::reserved_kind(&value))
         && value.get("update").is_none()
     {
         json!({"kind":"notification","method":"session/update","params":value})

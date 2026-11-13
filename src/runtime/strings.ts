@@ -3,6 +3,12 @@
  * 新增文案一律加进本文件；禁用词由 strings.test.ts 保证。
  */
 export const STRINGS = {
+  historySupplement: {
+    tool: "历史工具结果",
+    partial: "部分工具记录未能补齐，已保留可读取的对话内容。",
+    snapshot:
+      "工具记录来自这段历史的单独读取；如果同时在其他窗口修改，内容可能不同步。",
+  },
   storageRecovery: {
     title: "本机资料暂时无法使用",
     loading: "正在检查本机资料…",

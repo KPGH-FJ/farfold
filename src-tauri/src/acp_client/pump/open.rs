@@ -247,6 +247,61 @@ pub(crate) async fn open_session_on_connection(
         }
     }
 
+    // Supplement only an ordinary restored conversation, within this exact
+    // opening and before the existing actor/complete-marker handoff.
+    if resumed
+        && purpose == super::super::open_purpose::OpenPurpose::Conversation
+        && preview_token.is_none()
+        && let (Some(source), Some(token)) = (&ops.history_supplement_source, &opening_token)
+    {
+        let presentation =
+            super::super::live_status::Owner::loading(&ops, &session_id, purpose, None, &operation);
+        let prefix = received.as_mut().expect("restored session owns its prefix");
+        prefix.drain(
+            &session_id,
+            &mut inbox_rx,
+            &events,
+            pending,
+            (&ops, &presentation),
+        );
+        let result = prefix
+            .while_loading(
+                &session_id,
+                &mut inbox_rx,
+                &events,
+                pending,
+                (&ops, &presentation),
+                super::super::history_supplement::read(
+                    source.clone(),
+                    &config_store,
+                    cwd,
+                    &session_id,
+                    &response,
+                    &operation,
+                    &ops.life,
+                ),
+            )
+            .await;
+        prefix.drain(
+            &session_id,
+            &mut inbox_rx,
+            &events,
+            pending,
+            (&ops, &presentation),
+        );
+        if operation.interested()
+            && ops.life.state.load(Ordering::SeqCst) == super::super::lifecycle::READY
+        {
+            events(super::super::history_supplement::event(
+                result,
+                token,
+                &ops.connection_id,
+                &session_id,
+                &cwd.to_string_lossy(),
+            ));
+        }
+    }
+
     if !resumed {
         let row_id = super::super::session_index::session_row_id(
             &config_store.agent_id,

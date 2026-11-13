@@ -71,7 +71,14 @@ export function applySessionEvent(
   }
   if (!event || typeof event !== "object") return;
   const e = event as Record<string, unknown>;
-  if (e.kind === "toolMedia" && !hasOwnUpdate(e)) {
+  if (
+    [
+      "toolMedia",
+      "historyToolSupplement",
+      "historyToolSupplementStatus",
+    ].includes(String(e.kind)) &&
+    !hasOwnUpdate(e)
+  ) {
     pushRaw(s, e);
     effects?.emit();
     return;

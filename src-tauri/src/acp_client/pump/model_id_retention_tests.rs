@@ -35,6 +35,7 @@ fn drain(initial: Value, snapshots: Vec<Value>) -> Observed {
         session_tools: crate::acp_client::session_tools::Availability::unavailable(),
         live_status_enabled: false,
         tool_media_enabled: false,
+        history_supplement_source: None,
         configuration_dialect: Default::default(),
         workspace_access: crate::acp_client::workspace_access::Availability::new(None),
         prompt_escrow: Default::default(),
