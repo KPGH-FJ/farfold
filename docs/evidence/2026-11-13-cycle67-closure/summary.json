@@ -1,0 +1,399 @@
+{
+  "kind": "Cycle67IncrementAndFormalResults",
+  "sourceCommits": [
+    "5cc00f43191a52893f75d69f73d2cbfe144046dd",
+    "9f08c7cfd97019e6395cc75c89959a9d68eeee39"
+  ],
+  "installed": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "40da264a4c4d91efde5f4cc0e2930d4cb0c21d58"
+  },
+  "executableSha256": "7066cc22456940f8b50080e9fc9628a99cf70c870b0f185de03e33bbfe1bd1a6",
+  "engineering": {
+    "frozenInputs": 2595,
+    "initialSevenFreshPassed": true,
+    "initialFrontendTests": 10808,
+    "finalFrontendTests": 10809,
+    "frontendFiles": 777,
+    "rustPassed": 2765,
+    "rustIgnored": 11,
+    "finalFourFrontendFresh": true,
+    "rustThreeReusedWith2593IdenticalInputs": true,
+    "limits": "Tests and installed behavior are separate evidence; no whole-cycle/29x8 acceptance inferred."
+  },
+  "formal5cc": {
+    "installed": "5cc00f43191a52893f75d69f73d2cbfe144046dd",
+    "installEntriesUnchanged": 206477,
+    "codebuddy": {
+      "originalCwd": "/Users/tw/Desktop/farfold/output/2026-10-06-real-use",
+      "nativeId": "01a11080-e8ec-7add-8aee-b36f15befc67",
+      "freshUI": "list unsupported; manual entry exposed",
+      "action": "ID filled; Tab from folder to read and Enter once",
+      "state": "正文未能读取，请重试。",
+      "newModelRequests": 0,
+      "indexCountBefore": 12,
+      "indexCountAfter": 12,
+      "added": false,
+      "retried": false,
+      "keyboardFailure": "Read triggered with Tab/Enter; busy and failure left AX focus at main HTML, independently reproducing before any fix.",
+      "dialogClosedNormally": true
+    },
+    "templates": {
+      "formalPassed": [
+        "Keyboard New focuses name",
+        "Discard new returns New",
+        "Edit exact stored template focuses name",
+        "Discard existing returns exact Edit",
+        "Delete review defaults Cancel",
+        "Cancel returns Delete",
+        "Escape returns Composer commands menu"
+      ],
+      "savedOrDeletedTemplates": 0,
+      "ordinaryTemplateTextPreservedVisibly": true,
+      "limits": [
+        "No formal storage failure injection; controlled rejection evidence separate.",
+        "1280x820 app; not OS display scaling."
+      ]
+    },
+    "manualSnapshot": {
+      "normalReadAt": "16:43:20",
+      "protectedRefusal": "页面含密码或验证码等受保护输入，本次未读取网页文字。请改用不含这些输入的公开页面。",
+      "recoveryReadAt": "16:44:22",
+      "protectedValueExposed": false,
+      "permissionGranted": false,
+      "newModelRequests": 0,
+      "tabClosed": true,
+      "scriptChecks": [
+        "main invoke: undefined",
+        "main ipc handler: undefined",
+        "main bridge handler: undefined"
+      ]
+    },
+    "openCodeCold": {
+      "sameNativeSession": true,
+      "currentNoticeMarkerRecovered": true,
+      "currentAssistantTitleRecovered": true,
+      "priorThreeUserPromptsVisible": true,
+      "modelRequestSent": false,
+      "limits": "Actual normal cold UI path; not proof of inaccessible native database row hashes."
+    }
+  },
+  "formal9f": {
+    "installed": "9f08c7cfd97019e6395cc75c89959a9d68eeee39",
+    "observer": "root CUA native AX, current formal app",
+    "devin": {
+      "nativeId": "hurricane-minnow",
+      "cwd": "/Users/tw/Desktop/farfold/output/2026-10-06-real-use",
+      "action": "one current discovery to obtain load capability, then one explicit known-ID read",
+      "result": "正文未能读取，请重试。",
+      "focusAfterFailure": "读取这条对话",
+      "indexCountBefore": 12,
+      "indexCountAfter": 12,
+      "retry": false,
+      "modelRequests": 0,
+      "configurationSetters": 0
+    },
+    "goose": {
+      "nativeId": "20261024_3",
+      "cwd": "/Users/tw/Desktop/farfold/output/2026-10-24-agent-acceptance/goose-formal-e6e1/workspace",
+      "action": "one current discovery, one known-ID read, explicit Add, then normal indexed open",
+      "preview": "Real prior user and assistant text, successful and failed tool steps present; includes GOOSE_FREE_READY_15C58_20261024, prior context answer 25 and later P18 content. Historical instructions were viewed only, never executed.",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "readOnlyReason": "Cannot confirm original Model and Thinking effort; existing settings retained, sending paused.",
+      "focusAfterRead": "读取这条对话",
+      "addedMessage": "这条对话已加入，可以从对话列表打开。",
+      "indexCountBefore": 12,
+      "indexCountAfter": 13,
+      "normalOpen": "same old content and explicit read-only sending pause; empty composer; no new send",
+      "modelRequests": 0,
+      "configurationSetters": 0,
+      "deletedHistory": 0,
+      "limits": "A real common manual preview/import positive, not success for no-list CodeBuddy/Devin, not continuation sending, not unindexed image coverage."
+    },
+    "exit": {
+      "method": "normal Save and Quit",
+      "result": "CUA App quit",
+      "oldWorkspaceUnknown": "kept explicitly unknown",
+      "modelWorkActive": false
+    },
+    "limits": [
+      "Formal Devin quick failure and Goose success retain initiating focus; long waiting and busy repeated activation are separately controlled browser evidence.",
+      "No additional VoiceOver, sound test, model request or platform scale change."
+    ]
+  },
+  "notification": {
+    "user": "没有声音，点击后回到了opencode对话，通知出现了一次",
+    "model": "xiaomi/MiMo-V2.6-Flash",
+    "oneActualPrompt": true,
+    "samePageRequestFinished": true,
+    "preferencesRestoredAllOff": true,
+    "pageClosedAndPermissionRevoked": true,
+    "soundPayloadPresent": true,
+    "soundPlayed": false,
+    "systemReason": "displayShared",
+    "sameRequestActionReceived": true,
+    "normalColdReadback": true,
+    "nativeCurrentRowsVerified": false,
+    "limits": "One approval notification only. Other notification classes and audible positive not covered; current native history location not guessed."
+  },
+  "limits": [
+    "VoiceOver explicitly deferred, not passed.",
+    "CodeBuddy and Devin attempted known-ID body reads failed without empty import or retry.",
+    "fast-agent official cancellation gap reproduced in bounded library fixture, not a full ACP stop fix or current formal stop acceptance.",
+    "Pi official route missing; Codex NEW-24 restriction; Mistral additional single request used.",
+    "Original 151 conditions and final 29x8 unchanged; controlled/native/installed/user-observed results remain separate."
+  ],
+  "records": [
+    {
+      "path": "output/2026-11-13-cycle67-closure/history/source-freeze.json",
+      "sha256": "d61a564035db44c6007211a88ae591a668e8b88e48f2213cc634cd4b3e0bb18b"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/history/summary.json",
+      "sha256": "62e8b96867275c5adf8fdae96b0637bb1987d7bb1cf327ee90e7ad4490ccbc65"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/history/independent-review.json",
+      "sha256": "381bf296b7f6e62db3ce0549cbbdfd303841cb71f972ac2f419b3448ea7e26c7"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/history/conditions-review.json",
+      "sha256": "8e77da9fc890304c11ac59a85c5e0749518d78f23db34690901e9b1ee2e62b18"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/history-focus/source-freeze.json",
+      "sha256": "996305ebc211c4f1ab56673df57dd1a45732d5081e7178f7d7fc1bdc6a0152f5"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/history-focus/summary.json",
+      "sha256": "405d82d574b198c06fcff2b0bcafaed41520520b23670537eb82f3df367b9f76"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/history-focus/independent-review.json",
+      "sha256": "24b80b8b0b9fb4aa150bdc075914fc14534f7dae8f37592f6d5990649b339e83"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/interaction/templates/summary.json",
+      "sha256": "e702cd7f3deb351b264bfc696e56a532d92c57a98e8742fe01c485f9aae537a1"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/interaction/templates/source-freeze.json",
+      "sha256": "3af10b897de27485481331688936c1eaad17a7c36e7118ae4ece377c68cbd053"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/interaction/manual-snapshot/summary.json",
+      "sha256": "0e3a0629f257589f8fe37a292c1952aac1559c0d7defc802c4307b4ce787e981"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/interaction/manual-snapshot/source-freeze.json",
+      "sha256": "c2bdb07031982d08087364d85e8cbfbdabce123d013595c10c3ac7e1a6351789"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/fast-stop/summary.json",
+      "sha256": "43b18f38e378fdd5c655963f90f282ca53dc5603ba80f7f16849b0a1e9aa0ce6"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/notifications/system-observation.json",
+      "sha256": "e665d6452f20a2ca24e337d3a01b888164f38d4cc26bff3efebf7fe01c114071"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/notifications/native-failure.json",
+      "sha256": "16e729ee36ca20bd468cf010151a046c407d9c9ad48be46e704b97ee50ba9766"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/notifications/native-directory-check.json",
+      "sha256": "31daa7c3e35f4da04969d54810785a97182d205b4dd8e472d19d77cc724c2407"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/engineering/result.json",
+      "sha256": "e13d4a2aadd7ee638c461e419cd9ef43a78e91d42c91b7308e7dc4e9323ea1ef"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/engineering-focus/result.json",
+      "sha256": "8131156ea4f1a7e0f318c1854fbc7f1bd613be5ac4eeeb665764b8f30d96cb4e"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/engineering-focus/reuse-independent-review.json",
+      "sha256": "3a45c43570381e26e44735a56b01d5ea80d65231642fb161bb6ffaa5fe471021"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/engineering-focus/result-independent-addendum.json",
+      "sha256": "88e6e3d4334839367916df97d3179c52bbd1e25d10d24091105c181528dd02ec"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/integration-review.json",
+      "sha256": "fb004c5ec30a53b1af759a97c03fdc6e95063255f0e1777a2e71a13ed42a6f2c"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/focus-integration-review.json",
+      "sha256": "338b0b4516d2745ed8e3d4ad73676211ef4df4f3201802f651974672d43f3732"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/formal/install.json",
+      "sha256": "433e4689767372a45ae3268f28f1db090c19a78f16cccefbf976fefd37867fee"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/formal/verification-progress.json",
+      "sha256": "ad475359b9e454d0aaa7af288857e3163aa20b8a30ee43dca76111d6cf616223"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/formal/protocol-events.json",
+      "sha256": "13890ab2156d87dc13390a1292521e9da58210127516f4bf68174a67f01fdf00"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/formal-focus/install.json",
+      "sha256": "95ed18f9b6b1646e2c93bec72a014454a4e52b3700c0dd3dbf58e50e6f5edd5e"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/formal-focus/verification.json",
+      "sha256": "9fd92a4622f9069ec9108ecbba3d6da9fa63fcb530b0dadececd857e719426f0"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/post-first/post-formal-review.json",
+      "sha256": "3b22dc991e2b80d77849630d29c09fee37814325d8f20d5774fbd6f57d0e913a"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/post-final/post-formal-review.json",
+      "sha256": "6a21c31b445dc06ac79b7f8eab6d762fc2f064ec5ba3f117ccc40fc47c6fbfb3"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/post-final/independent-review.json",
+      "sha256": "e55a0e6f23e628c22e66f88e4645e6dc4ff3bfbefe60d2492edd9c8929a76900"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/formal/duplicate-cleanup.json",
+      "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/formal-focus/duplicate-cleanup.json",
+      "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/notifications/question-formal.json",
+      "sha256": "6560997eb65525a62d84223411f65f77e63cff0c24e7244dc77a8836b71503f5"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/notifications/question-system/system-observation.json",
+      "sha256": "86a7ce136a1813b35708632272ba9051ada53cf8d8ea14279e7fe216d696a438"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/notifications/question-scope/scope.json",
+      "sha256": "7408b890e87c0ab2fef702c25746a240fc8837bc0dba1e1f797f442d364baaf1"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/display-formal.json",
+      "sha256": "196ff5b8d3e70fca130bde371c63eb69be7239229a44386862609b3a37ee0a87"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/public-review.json",
+      "sha256": "17dd5c08eea4a972fb4cfff1412c7e2a3321d9304a2abd071688ce617f3a751b"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/post-closure/post-formal-review.json",
+      "sha256": "f40b89a4af816ba869042fcdb306686970cb9c11fa98ea1d601024ad14db6600"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/post-closure/independent-review.json",
+      "sha256": "30cc930f4a274dbc2ba67803c9ae84b89509d95a28fbdcf22860bfa897588788"
+    },
+    {
+      "path": "output/2026-11-13-cycle67-closure/final-engineering-input-check.json",
+      "sha256": "8f620ef69cf56f57b0f7e155b20092e538ca498daa403bb79d02bab07a160b6b"
+    }
+  ],
+  "requestCountScope": "zero/new request counts refer to observed Farfold user sends and/or captured session/prompt, not counted provider API calls.",
+  "question": {
+    "source": "9f08c7cfd",
+    "nativeSessionId": "ses_e2f2759c2ffeOhh3wUk0av9OcJ",
+    "model": "xiaomi/MiMo-V2.6-Flash",
+    "mode": "Build",
+    "oneUserSend": true,
+    "marker": "FF_C67_QUESTION_20261113_ONE",
+    "actualForm": "OpenCode Questions, color Blue/Green and optional custom text; live needs-you card",
+    "userObservation": "看到了，点击回到颜色卡，只出现一次",
+    "action": "Selected Blue in native choice, submitted once",
+    "response": "你选择的颜色是：蓝色。",
+    "finished": "Stop absent; empty composer normal send; no pending form",
+    "preferencesAfter": {
+      "needs": false,
+      "success": false,
+      "sound": false
+    },
+    "exit": "normal Save and Quit; old workspace unknown retained",
+    "limits": [
+      "No interruption notification occurred.",
+      "No current provider API request count or native history row hashes were collected.",
+      "This request was only for actual question-form workflow, not filesystem/web/shell actions."
+    ]
+  },
+  "display": {
+    "source": "9f08c7cfd",
+    "method": "CUA native system settings and formal Farfold screenshot/AX",
+    "baseline": "GenericDisplay 1920 x 1080 default selected",
+    "nativeWindowMenu": "Only Minimize, Zoom, Bring All to Front; no Move & Resize/Halves exposed",
+    "sideEdgeDrag": "One distinct side-edge attempt left 1280 x 820 unchanged; stopped",
+    "systemChange": "Selected actual 1280 x 720; Settings reported scaled resolution",
+    "observedAppScreenshotPixels": [1280, 634],
+    "verified": [
+      "Home composer, model/source and folder controls visible",
+      "History import dialog search, scrollable Agent list and bottom Close/Find visible; Close returns focus to entry",
+      "General Settings theme area visible; reminder anchor reaches section with all three toggles and labels fully visible"
+    ],
+    "notVerified": [
+      "Native exact 900 x 620",
+      "Arbitrary Retina DPI ratios",
+      "Large text across all app paths",
+      "Escape in this run did not change dialog AX; used observed Close button, not a keyboard Escape pass"
+    ],
+    "restored": "System Settings 1920 x 1080 default selected again",
+    "modelRequestsDuringDisplayCheck": 0,
+    "voiceOver": "unchanged off",
+    "limits": "Selected live system resolution and three surfaces only, not full P45/P46 acceptance"
+  },
+  "preservationAfterHistoryImport": {
+    "installationEntriesUnchangedEach": 206477,
+    "finalOld12SessionRowsIdentical": true,
+    "onlyAddedOwnedGooseIndex": true,
+    "dismissals380To379OnlySameGoose": true,
+    "settings53Unchanged": true,
+    "draftsChoicesActivityTemplatesUnchanged": true,
+    "oldUnknownKept": 1,
+    "productionSqliteOpened": false,
+    "currentAppFilesUnchangedAfterFormal": true,
+    "userTerminal70406Untouched": true,
+    "preexistingDirtyDebuggerUnchanged": true,
+    "duplicateCandidatesRemoved": true
+  },
+  "preservationAfterQuestion": {
+    "sessions": {
+      "before": 13,
+      "after": 13,
+      "added": 0,
+      "removed": 0,
+      "allIdentitiesAndConfigurationsPreserved": true,
+      "changed": "Only same OpenCode updated_at"
+    },
+    "settings": {
+      "count": 53,
+      "changed": "Only same OpenCode activity lastActivityAt inside existing activity setting"
+    },
+    "drafts": {
+      "composer": 2,
+      "feedbackSets": 7,
+      "queue": 0,
+      "contentsAndChoicesPreserved": true
+    },
+    "templatesPreserved": true,
+    "dismissals": 379,
+    "oldWorkspaceUnknownKept": 1,
+    "pendingMcp": 0,
+    "formalFiveFilesMatch9f": true,
+    "preexistingDirtyDebuggerPreserved": true,
+    "userTerminalUntouched": true,
+    "collectionLimit": "Initial owner assertion used registry:opencode but existing exact row is opencode. Original failure retained; subsequent analysis read only already sealed derived copies, no production recapture. Initial terminal ps not persisted, no final process-birth proof invented."
+  },
+  "uiEvidenceScope": "display-formal and question-formal are root operator records derived from CUA original tool AX/screenshot results in this conversation; no separately persisted UI screenshot files and no independent UI replay claimed. System logs/data protection/source checks independently inspected as linked."
+}
