@@ -1,5 +1,7 @@
 # Farfold AI Coding Entrypoint
 
+2026-11-13 用户在确认 OpenCode 原请求遇到免费用量限制后，明确允许改用其他免费模型。当前按其官方可选列表选择并保存，再做有界实测；本次更新 OpenCode 的原 Big Pickle 选择限制，不扩为付费、换账号或其他 Agent 的模型变更授权。 随后用户自行更新 OpenCode 并配置小米服务，明确允许用 MiMo v2.6 Flash 测试；本次 OpenCode 以该新选择为准，其他 Agent 的模型选择不变。
+
 2026-11-13 用户明确允许将当前同安装的官方 `fast-agent export <原对话ID> --agent <原角色> --format codex --output <临时文件>` 作为 fast-agent 的只读历史补充入口。该入口与已选登记及安装对应，不发送模型请求、不修改原历史，读取结束后清理本次临时文件；不授权任意相邻程序、其他账号或模型、原历史改写及新增正文账本。原 ACP 回放与历史所有权保持，补充失败不得冒充完整恢复。
 
 当前续接只按[唯一活动计划](plans/agent-access.md)，验证基线见[当前状态](docs/status.md)。以下日期段保留授权、当时的执行顺序及条件变化。

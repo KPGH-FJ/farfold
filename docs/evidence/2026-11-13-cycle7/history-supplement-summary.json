@@ -1,6 +1,6 @@
 {
-  "updatedAtUtc": "2026-11-13T06:16:48.236754+00:00",
-  "state": "installed ee4c05b8b; owned fast zero-send cold replay passed, cycles6/7 remain incomplete",
+  "updatedAtUtc": "2026-11-13T06:58:42.890720+00:00",
+  "state": "installed ee4c05b8b; fast history repair and OpenCode Xiaomi MiMo live screenshot/Farfold restart verified in UI; cycles6/7 remain incomplete",
   "changes": [
     "Authorized same-install official fast-agent export supplements original cold-open tools and images before the original history marker. Exact ownership and full visible text anchors, no live effects or persisted transcript.",
     "Theme save failures retain keyboard focus and Enter retry; theme changes only after saved success."
@@ -109,6 +109,32 @@
     "sha256": "798f561284680fd4a516d82cf45a85f437b43298c58c9ee169044e604d80c06e",
     "result": "Same exact-SID unchanged original official log reports AI_APICallError: Free usage limit reached for build at2026-11-12T17:41:38.473Z; title AI_RetryError with3 internal attempts at17:41:44.501Z. Both precede user cancel at17:44:42.755Z. One original user ACP send; no new request.",
     "evidenceCorrection": "Original diagnostic whitelist regex missed both AI_-prefixed errors. Old artifacts preserved.",
-    "limits": "No HTTP status or reset time; current quota not probed. Original raw ACP error response/update is missing, so no finding that Farfold received and dropped these errors. Original Big Pickle/build selection retained."
+    "limits": "No HTTP status or reset time; current quota not probed. Original raw ACP error response/update is missing, so no finding that Farfold received and dropped these errors. Original Big Pickle/build selection was retained at that observation, before later user-authorized changes."
+  },
+  "opencodeFreeModelSwitch": {
+    "result": "User authorized another free model. Saved opencode/glm-5.3-flash-free with returned low; one new user send reached the selected official model but also returned Free usage limit reached. Stopped without visible reply/tool and retained that selection at the time.",
+    "evidence": {
+      "path": "output/2026-11-13-cycle7/opencode/free-model-followup/final-summary.json",
+      "sha256": "2f29d575dbb8d5a2cc97e004b176d890b3be8c120d0194970b7cc71018b6c29b"
+    },
+    "limits": "Does not prove all free models unavailable or disclose reset time; subsequently superseded by user-selected Xiaomi MiMo below."
+  },
+  "opencodeMimo": {
+    "userAuthorization": "User manually updated OpenCode and configured Xiaomi API key, then explicitly authorized MiMo v2.6 Flash test.",
+    "selectedModel": "xiaomi/mimo-v2.6-flash",
+    "actualHandshakeVersion": "2.2.7",
+    "registeredVersionField": "1.18.31 remains historical registration metadata",
+    "ui": {
+      "path": "output/2026-11-13-cycle7/opencode/mimo-followup/ui-result.json",
+      "sha256": "5d151e60f92b649234f6d629dc9eaf0ac879977d0d27116e09c4a2e0420e35c3"
+    },
+    "independentMetadataAndEvidence": {
+      "path": "output/2026-11-13-cycle7/opencode/mimo-followup/final-summary.json",
+      "sha256": "4222cd8ba41e3d2c78c594ee8195470db0b959f1f37b0a352eaac3e72fda40bc"
+    },
+    "liveResult": "One user send, one observe_page(screenshot=true) step, exact one-time permission, returned correct W3C title/URL and visible PNG. Page returned to not allowed.",
+    "farfoldRestartResult": "Zero new sends; original prompts, tool step, final answer and explicitly expanded PNG visible after normal Farfold restart. Selected Xiaomi model retained.",
+    "protection": "Saved Xiaomi model, no stale low effort; other11 indexes/original drafts and feedback retained, queues/pending0. Original legacy2 message/1part records unchanged. User Terminal not interrupted.",
+    "limits": "New OpenCode2.2.7 history location not independently identified; known legacy DB stops at two free-model attempts, so it cannot prove or disprove MiMo storage. New native record/PNG byte hashes not verified. UI results do not prove image understanding, all server-process restart or all original cycle6/7 conditions."
   }
 }
