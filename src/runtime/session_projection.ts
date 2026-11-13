@@ -1,3 +1,4 @@
+import { clearToolMedia } from "./session_tool_media";
 // In-memory projection of ordered protocol events. No persistence or transport.
 import { roundArtifactCount } from "./artifacts";
 import { hasAsyncTasks, isKnownAsyncTaskUpdate } from "./async_tasks";
@@ -383,6 +384,11 @@ function upsertToolCall(
               ? 0
               : Date.now(),
         };
+  if (
+    update.sessionUpdate === "tool_call" ||
+    (update.rawOutput !== undefined && update.rawOutput !== null)
+  )
+    clearToolMedia(call);
   if (update.title !== undefined && update.title !== null) {
     call.title = String(update.title);
   }
@@ -671,7 +677,7 @@ export function applyUpdate(
   s: ThreadState,
   update: unknown,
   envelope?: unknown,
-): void {
+): ToolCallView | undefined {
   const u = update as Record<string, unknown> | null;
   if (
     (u?.sessionUpdate === "tool_call" ||
@@ -701,6 +707,7 @@ export function applyUpdate(
       last.historyForkPoint = point;
   }
   retainReportedDetails(s, update, envelope, projectedTool);
+  return projectedTool;
 }
 
 function applyUpdateContent(

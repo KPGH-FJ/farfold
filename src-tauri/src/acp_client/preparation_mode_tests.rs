@@ -153,6 +153,7 @@ async fn read(
                 SessionOps {
                     session_tools: crate::acp_client::session_tools::Availability::unavailable(),
                     live_status_enabled: false,
+                    tool_media_enabled: false,
                     configuration_dialect: Default::default(),
                     workspace_access: super::super::workspace_access::Availability::new(None),
                     prompt_escrow: Default::default(),

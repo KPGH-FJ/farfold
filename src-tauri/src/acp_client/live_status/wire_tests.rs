@@ -157,6 +157,56 @@ impl Fixture {
 mod message_usage_tests;
 
 #[tokio::test(flavor = "multi_thread")]
+async fn tool_media_owner_rejects_foreign_preview_replaced_route_and_ended_connection() {
+    let (f, c) = Fixture::open("media-owner", true).await;
+    // The launch-source gate is covered by tool_media::wire_tests. This test
+    // isolates the shared production ownership predicate from Goose enablement.
+    let mut owner = Owner::bind(
+        false,
+        &c.connection_id,
+        c.state.clone(),
+        "media-owner",
+        &c.sessions,
+    );
+    owner.tool_media_enabled = true;
+    let raw = json!({"sessionId":"media-owner","update":{
+        "sessionUpdate":"tool_call","toolCallId":"exact","status":"completed",
+        "_meta":{"tool_name":"public-tool","effect_kind":"tool"},
+        "rawOutput":{"type":"success","content":[{"type":"image","mimeType":"image/png","data":"QUJD"}]}
+    }});
+    assert_eq!(
+        tool_media(&raw, &owner).unwrap()["connectionId"],
+        c.connection_id
+    );
+    let mut foreign = raw.clone();
+    foreign["sessionId"] = json!("another-session");
+    assert!(tool_media(&foreign, &owner).is_none());
+    c.sessions
+        .lock()
+        .unwrap()
+        .get_mut("media-owner")
+        .unwrap()
+        .preview_token = Some("owned-preview".into());
+    assert!(tool_media(&raw, &owner).is_none());
+    c.sessions
+        .lock()
+        .unwrap()
+        .get_mut("media-owner")
+        .unwrap()
+        .preview_token = None;
+    let (replacement, _receive) = tokio::sync::mpsc::unbounded_channel();
+    c.sessions
+        .lock()
+        .unwrap()
+        .get_mut("media-owner")
+        .unwrap()
+        .control = replacement;
+    assert!(tool_media(&raw, &owner).is_none());
+    f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
+    assert!(tool_media(&raw, &owner).is_none());
+}
+
+#[tokio::test(flavor = "multi_thread")]
 async fn live_status_real_initialize_and_actor_preserve_raw_fifo_without_prompt_or_configuration() {
     let (f, c) = Fixture::open("live-a", true).await;
     f.read(&c, "live-a").await;

@@ -82,6 +82,7 @@ pub(crate) mod startup_diagnostics;
 pub(crate) mod tap;
 mod terminal_output;
 mod tool_activity;
+mod tool_media;
 pub(crate) mod transient_mcp;
 pub(crate) mod versions;
 

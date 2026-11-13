@@ -71,6 +71,7 @@ fn present(
 
 pub(crate) struct Owner {
     enabled: bool,
+    tool_media_enabled: bool,
     display_allowed: AtomicBool,
     session: String,
     connection: String,
@@ -85,6 +86,7 @@ impl Owner {
     pub(crate) fn inactive(ops: &SessionOps, session: &str) -> Self {
         Self {
             enabled: ops.live_status_enabled,
+            tool_media_enabled: ops.tool_media_enabled,
             display_allowed: AtomicBool::new(false),
             session: session.into(),
             connection: ops.connection_id.clone(),
@@ -110,13 +112,15 @@ impl Owner {
         owner
     }
     pub(crate) fn new(ops: &SessionOps, session: &str, sessions: &SessionMap) -> Self {
-        Self::bind(
+        let mut owner = Self::bind(
             ops.live_status_enabled,
             &ops.connection_id,
             ops.life.state.clone(),
             session,
             sessions,
-        )
+        );
+        owner.tool_media_enabled = ops.tool_media_enabled;
+        owner
     }
     fn bind(
         enabled: bool,
@@ -131,6 +135,7 @@ impl Owner {
             .and_then(|entries| entries.get(session).map(|e| e.control.downgrade()));
         Self {
             enabled,
+            tool_media_enabled: false,
             display_allowed: AtomicBool::new(false),
             session: session.into(),
             connection: connection.into(),
@@ -147,8 +152,10 @@ impl Owner {
         self.display_allowed.load(Ordering::SeqCst) && self.metadata_owner()
     }
     fn metadata_owner(&self) -> bool {
-        self.enabled
-            && self.state.load(std::sync::atomic::Ordering::SeqCst) == STATE_READY
+        self.enabled && self.route_owner()
+    }
+    fn route_owner(&self) -> bool {
+        self.state.load(std::sync::atomic::Ordering::SeqCst) == STATE_READY
             && (self.opening.as_ref().is_some_and(|op| op.interested())
                 || self.routes.upgrade().is_some_and(|sessions| {
                     sessions.lock().is_ok_and(|entries| {
@@ -198,6 +205,28 @@ pub(crate) fn notification(message: UntypedMessage, owner: &Owner) -> Value {
         session_usage::present(value, &owner.connection, owner.metadata_owner())
     } else {
         value
+    }
+}
+
+pub(crate) fn tool_media(params: &Value, owner: &Owner) -> Option<Value> {
+    super::tool_media::event(
+        params,
+        &owner.connection,
+        &owner.session,
+        owner.tool_media_enabled && owner.route_owner(),
+    )
+}
+
+pub(crate) fn forward_update(params: Value, owner: &Owner, events: &super::pump::SessionSink) {
+    let media = tool_media(&params, owner);
+    let params = super::tool_media::guard_notification(params);
+    (events)(history_point(params, owner));
+    // The raw callback may synchronously retire its route. Recheck before the
+    // adjacent local-only event; it is never an Agent-supplied presentation.
+    if owner.route_owner()
+        && let Some(media) = media
+    {
+        (events)(media);
     }
 }
 

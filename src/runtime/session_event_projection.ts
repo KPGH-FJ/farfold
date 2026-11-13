@@ -1,3 +1,7 @@
+import {
+  receiveToolMedia,
+  rememberToolMediaSource,
+} from "./session_tool_media";
 import { invoke } from "@tauri-apps/api/core";
 import { observeAuthentication } from "./authentication";
 import { observeDesktopNotification } from "./desktop_notifications";
@@ -61,8 +65,17 @@ export function applySessionEvent(
   effects?: SessionEventEffects,
   activityConnectionId?: string,
 ): void {
+  if (receiveToolMedia(s, event, effects?.owns, activityConnectionId)) {
+    if (live && effects?.owns()) effects.emit();
+    return;
+  }
   if (!event || typeof event !== "object") return;
   const e = event as Record<string, unknown>;
+  if (e.kind === "toolMedia" && !hasOwnUpdate(e)) {
+    pushRaw(s, e);
+    effects?.emit();
+    return;
+  }
   if (receiveSessionUsage(s, e, effects?.owns, activityConnectionId)) {
     if (live && effects?.owns()) effects.emit();
     return;
@@ -254,7 +267,8 @@ export function applySessionEvent(
       return;
     }
     try {
-      applyUpdate(s, e.update, e);
+      const call = applyUpdate(s, e.update, e);
+      rememberToolMediaSource(s, e, call, effects?.owns, activityConnectionId);
     } catch (error) {
       // A local conversion of ordinary Agent JSON must not strand Tauri's
       // ordered Channel index. Keep the entire envelope as opaque data.

@@ -111,13 +111,13 @@ pub(super) fn model_ids(options: &Value) -> HashSet<String> {
 }
 
 pub(crate) use super::elicitation::{PendingElicitations, cancel as cancel_elicitations};
-
 /// Per-connection state shared by session pumps. Admission and idle recycling
 /// use one lifecycle owner; unknown operations retain their reservation.
 #[derive(Clone)]
 pub(crate) struct SessionOps {
     pub(crate) configuration_dialect: super::session_config::Dialect,
     pub(crate) live_status_enabled: bool,
+    pub(crate) tool_media_enabled: bool,
     pub(crate) session_tools: Arc<super::session_tools::Availability>,
     pub(crate) workspace_access: Arc<super::workspace_access::Availability>,
     pub(crate) async_tasks_supported: Arc<AtomicBool>,
@@ -369,7 +369,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                 let file_input = super::reported_file_input::input_event(&params);
                 // Raw passthrough moves the owned envelope after passive reads.
                 // Unknown fields and `_meta` survive untouched.
-                (ctx.events)(super::live_status::history_point(params, ctx.live_status));
+                super::live_status::forward_update(params, ctx.live_status, ctx.events);
                 if let Some(activity) = compaction_activity {
                     (ctx.events)(activity);
                 }

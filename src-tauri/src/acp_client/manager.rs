@@ -578,6 +578,7 @@ impl AcpManager {
             session_tools: session_tools.clone(),
             configuration_dialect: Default::default(),
             live_status_enabled,
+            tool_media_enabled: super::tool_media::enabled(agent),
             workspace_access: workspace_access.clone(),
             async_tasks_supported: Arc::new(AtomicBool::new(false)),
             opening: None,

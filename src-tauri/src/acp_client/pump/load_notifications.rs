@@ -184,6 +184,7 @@ mod tests {
         let ops = SessionOps {
             configuration_dialect: Default::default(),
             live_status_enabled: false,
+            tool_media_enabled: false,
             session_tools: crate::acp_client::session_tools::Availability::unavailable(),
             workspace_access: crate::acp_client::workspace_access::Availability::new(None),
             async_tasks_supported: Arc::new(AtomicBool::new(false)),

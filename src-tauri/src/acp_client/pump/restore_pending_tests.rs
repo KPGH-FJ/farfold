@@ -127,6 +127,7 @@ async fn exercise(mode: &str, expected_polls: usize) {
     let ops = super::SessionOps {
         session_tools: crate::acp_client::session_tools::Availability::unavailable(),
         live_status_enabled: false,
+        tool_media_enabled: false,
         configuration_dialect: Default::default(),
         workspace_access: crate::acp_client::workspace_access::Availability::new(None),
         prompt_escrow: Default::default(),
