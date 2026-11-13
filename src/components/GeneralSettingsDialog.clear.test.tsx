@@ -228,3 +228,53 @@ it("requires scope acknowledgement and rechecks work before a stale clear handle
   expect(h.invoke).not.toHaveBeenCalled();
   expect(button(P.clearDataConfirm)!.props.disabled).toBe(true);
 });
+
+it("hands keyboard focus to the scope and back to the entry only on explicit phase changes", () => {
+  const scopeFocus = vi.fn();
+  const entryFocus = vi.fn();
+  (button(P.clearData)!.props.onClick as () => void)();
+  const scope = () =>
+    render().find(
+      (node) => node.type === "input" && node.props.type === "checkbox",
+    )!;
+  const mountScope = () =>
+    (scope().props.ref as (node: unknown) => void)({ focus: scopeFocus });
+  mountScope();
+  expect(scopeFocus).toHaveBeenCalledOnce();
+  expect(scope().props.checked).toBe(false);
+  expect(button(P.clearDataConfirm)!.props.disabled).toBe(true);
+  // A callback ref can be attached again after a store update or StrictMode.
+  mountScope();
+  expect(scopeFocus).toHaveBeenCalledOnce();
+  (button(P.clearDataCancel)!.props.onClick as () => void)();
+  const mountEntry = () =>
+    (button(P.clearData)!.props.ref as (node: unknown) => void)({
+      disabled: false,
+      focus: entryFocus,
+    });
+  mountEntry();
+  mountEntry();
+  expect(entryFocus).toHaveBeenCalledOnce();
+  expect(h.invoke).not.toHaveBeenCalled();
+});
+
+it("returns to the dialog close control when new work disables the restored entry", () => {
+  (button(P.clearData)!.props.onClick as () => void)();
+  h.running = true;
+  (button(P.clearDataCancel)!.props.onClick as () => void)();
+  const entry = button(P.clearData)!;
+  expect(entry.props.disabled).toBe(true);
+  const entryFocus = vi.fn();
+  const closeFocus = vi.fn();
+  const querySelector = vi.fn().mockReturnValue({ focus: closeFocus });
+  const closest = vi.fn().mockReturnValue({ querySelector });
+  (entry.props.ref as (node: unknown) => void)({
+    disabled: true,
+    focus: entryFocus,
+    closest,
+  });
+  expect(entryFocus).not.toHaveBeenCalled();
+  expect(closeFocus).toHaveBeenCalledOnce();
+  expect(closest).toHaveBeenCalledWith("dialog");
+  expect(h.invoke).not.toHaveBeenCalled();
+});

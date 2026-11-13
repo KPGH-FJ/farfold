@@ -61,6 +61,9 @@ function PrivacyDataControls({
   const [error, setError] = useState<string | null>(null);
   const clearing = useRef(false);
   const [acknowledged, setAcknowledged] = useState(false);
+  // Both phase changes remove the focused control. Transfer focus only after
+  // the replacement mounts, without stealing it on unrelated store updates.
+  const pendingFocus = useRef<"entry" | "scope" | null>(null);
   useSyncExternalStore(
     threads.subscribe,
     threads.getSnapshot,
@@ -98,8 +101,23 @@ function PrivacyDataControls({
             <button
               type="button"
               className="btn btn-ghost"
+              ref={(button) => {
+                if (!button || pendingFocus.current !== "entry") return;
+                pendingFocus.current = null;
+                if (!button.disabled) button.focus();
+                else
+                  button
+                    .closest("dialog")
+                    ?.querySelector<HTMLButtonElement>(
+                      ".workspace-dialog-title button:not(:disabled)",
+                    )
+                    ?.focus();
+              }}
               disabled={workInFlight()}
-              onClick={() => setPhase("confirm")}
+              onClick={() => {
+                pendingFocus.current = "scope";
+                setPhase("confirm");
+              }}
             >
               {P.clearData}
             </button>
@@ -119,6 +137,7 @@ function PrivacyDataControls({
             onConfirm={() => void clear()}
             cancelLabel={P.clearDataCancel}
             onCancel={() => {
+              pendingFocus.current = "entry";
               setError(null);
               setPhase("idle");
               setAcknowledged(false);
@@ -140,6 +159,11 @@ function PrivacyDataControls({
               <label className="settings-clear-acknowledgement">
                 <input
                   type="checkbox"
+                  ref={(checkbox) => {
+                    if (!checkbox || pendingFocus.current !== "scope") return;
+                    pendingFocus.current = null;
+                    checkbox.focus();
+                  }}
                   checked={acknowledged}
                   disabled={phase === "working"}
                   onChange={(event) => setAcknowledged(event.target.checked)}

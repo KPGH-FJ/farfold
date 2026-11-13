@@ -1,0 +1,89 @@
+{
+  "date": "2026-11-13",
+  "userSteering": "旁白部分暂缓，继续第6、7周期；原要求保留，不记为通过。",
+  "privacyFocus": {
+    "problem": "正式ee4c键盘展开清除范围及取消均丢焦点到HTML文档；未执行清除。",
+    "fix": "仅明确展开时聚焦未勾选的范围确认，取消后回入口；入口因新增工作禁用则回同弹窗关闭按钮。",
+    "validation": "WebKit修前2处真实失败、修后9项通过；Chrome9项与独立WebKit9项通过；永久回归及相关26项通过。",
+    "installation": "pending"
+  },
+  "themeFormal": {
+    "appSource": "ee4c05b8b",
+    "passed": [
+      "深色实际显示及正常退出后重开保持",
+      "跟随系统当前显示浅色",
+      "恢复原纸白选择",
+      "快捷键弹窗Tab/Shift+Tab回绕、Escape回原入口"
+    ],
+    "notVerified": [
+      "系统主题实际变更",
+      "正式主题保存失败",
+      "本次最小尺寸拖动未成功",
+      "系统显示缩放"
+    ]
+  },
+  "mediaUnread": {
+    "result": "未复现产品缺陷，未改源码",
+    "controlled": "2个切页时序、8项事件/历史定向及WebKit/Chrome各16项通过；PNG解码、WAV控件及不自动播放、资源释放、未读归属、历史静默和重复终态通知只提交一次。",
+    "limit": "无真实Agent媒体后台请求、系统通知送达/点击/声音或真实元数据冷开新增证明。"
+  },
+  "browserIsolation": {
+    "result": "当前生产WK子页实现四阶段原生隔离负控通过，未改源码",
+    "controlled": "初始/同源导航/另一回环来源/关闭重开；12次子桥尝试0到达，合成父只读桥2次对照正常、旧页面标识拒绝。",
+    "limit": "精确回环URL仅夹具；未验真实Tauri主桥、公开HTTPS策略或新的迟到竞态，不是H07全项。"
+  },
+  "references": [
+    {
+      "path": "output/2026-11-13-cycle7/privacy-focus/formal-before.json",
+      "sha256": "ade86b531b1fb5e1233dc53dc2c741ff5c245fb641850c568a7be67aafa82cd3"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/privacy-focus/browser/webkit-red-r1.json",
+      "sha256": "39106f81bc5f5acf07b4fccad14b65f43e1bb15fb7bfd27edb9ab68ea70ad69a"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/privacy-focus/browser/webkit-green.json",
+      "sha256": "ef5e15cccd24537fc97bbc6615272462ead8587e889181648fdee5da3d8683a1"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/privacy-focus/browser/chromium-green.json",
+      "sha256": "7daf01a291db42439d281672bcc37b7d298b1dd8e4f75f5443edc5a60ecce1b9"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/privacy-focus/review/independent-review.json",
+      "sha256": "cfe711a830b3347c87e1c883a256c00a244ad6cba3030c991b2ce243c92aa6d0"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/privacy-focus/review/integration-independent.json",
+      "sha256": "8025ae2d259105c32ccce69e1399b7167c2e5a229cc1933dc40c15c9bf281456"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/p38-media-unread/summary.json",
+      "sha256": "13895ea7af465caa01e212989d1131c1d021bfb102665b4291c4696acd99d256"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/p38-media-unread/source-freeze.json",
+      "sha256": "bb5ad8ad26f7a7b455b0644cf09f502b92cc3eb78cdf83ef825dfa0138e21af2"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/browser-isolation/summary.json",
+      "sha256": "b3696265994aff5bfc4a983eeefa18614354e9168ded0c1b4084776ead044340"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/browser-isolation/source-freeze.json",
+      "sha256": "520ba3ca39d4e168dad1c6bd38b2479cd71c3e24058188897246db8190af145e"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/engineering-privacy-focus/result.json",
+      "sha256": "0ad3d2c9f37a457273d5e72f9ff50682127abf2392957bb12a91a3f7c940fc72"
+    }
+  ],
+  "cyclesComplete": false,
+  "engineering": {
+    "allSevenPassed": true,
+    "stableProductInputs": 2589,
+    "frontendTests": 10772,
+    "rustPassed": 2764,
+    "rustIgnored": 11
+  }
+}
