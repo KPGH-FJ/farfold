@@ -1,0 +1,151 @@
+{
+  "kind": "ReadonlyHistoryToolMediaDelivery",
+  "sourceCommit": "e32ac6563ef1caa1a4a73effcf80f5846dc6df3a",
+  "implementation": [
+    "Only an exact current loading/registered preview may receive reviewed structured tool media; conversation metadata/live/approval authority unchanged.",
+    "Frontend binds exact opening/result owner, preserves cancellation/prefix boundary/raw result and adjacent actual tool pairing.",
+    "Import preview now renders common ToolStep readonly, with explicit media expansion and no file/artifact action callbacks. Nonterminal historical steps show unknown."
+  ],
+  "engineering": {
+    "allSevenPassed": true,
+    "unchangedInputs": 2574,
+    "frontendFiles": 772,
+    "frontendPassed": 10735,
+    "rustPassed": 2733,
+    "rustIgnored": 11,
+    "independentReviewsApproved": true,
+    "initialFailures": "Initial format found unformatted status table; corrected. Restricted initial Rust run2705pass18fail/10ignored:8PermissionDenied,8Mach/() failures, audio Invalid and directory subprocess failure exact causes unknown. Same product source passed full normal-host rerun; no assertion or timeout changed."
+  },
+  "formalApp": {
+    "path": "/Applications/Farfold.app",
+    "identity": {
+      "bundleId": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "arm64": true,
+      "signature": "adhoc",
+      "cdhash": "cd39c9a8085ddcbb8fd1dce84a2e98f37fa29feb"
+    },
+    "executableSha256": "15303397b07e9eb520dbaae5cbf914993e659aaab118d7d336d762013ea1fc40",
+    "installationDataEntriesUnchanged": 206443,
+    "duplicateAppRemoved": true
+  },
+  "controlledVisibleEvidence": {
+    "realEngines": ["WebKit", "Chromium"],
+    "checksPerEngine": 14,
+    "pngDimensions": [509, 692],
+    "nativeTransport": "synthetic",
+    "noLiveExecutionActions": true,
+    "mediaBudgetReleasedOnClose": true
+  },
+  "formalEvidence": {
+    "nativeSessionId": "d1cabd9a-5fde-e0a8-35d0-608eb87e2f25",
+    "readsRequested": 1,
+    "newModelSends": 0,
+    "textSegments": 2,
+    "matchingSegments": 1,
+    "skippedSegments": 0,
+    "visibleMarker": "FF_MISTRAL_WEB_20261113_ONE",
+    "keyboard": "Tab to read button, Return; result modal tab wrapping; keyboard-open then Escape restores exact match button.",
+    "sourceReported": "unconfirmed; no claim returned text proves restored provider settings",
+    "windowPixels": [1280, 820],
+    "quit": "normal save-and-quit retaining existing unknown working-location warning; closed process observation verified"
+  },
+  "preservation": {
+    "metadata": {
+      "tables": {
+        "agents": {
+          "beforeCount": 40,
+          "afterCount": 40,
+          "removedIds": [],
+          "addedIds": [],
+          "changedIds": [
+            "9e5c777bb10a6e387ce5c1cd9b20c3586fceccf2572e493363ce1ebf831a4b13"
+          ]
+        },
+        "sessions": {
+          "beforeCount": 12,
+          "afterCount": 12,
+          "removedIds": [],
+          "addedIds": [],
+          "changedIds": []
+        },
+        "settings": {
+          "beforeCount": 53,
+          "afterCount": 53,
+          "removedIds": [],
+          "addedIds": [],
+          "changedIds": []
+        },
+        "dismissed_sessions": {
+          "beforeCount": 380,
+          "afterCount": 380,
+          "removedIds": [],
+          "addedIds": [],
+          "changedIds": []
+        }
+      },
+      "selectionsUnchanged": true,
+      "draftsUnchanged": true,
+      "selectedSessionRowsUnchanged": true,
+      "pendingMarkerCount": 0
+    },
+    "contextUnchanged": true,
+    "projectionUnchanged": true,
+    "pngUnchanged": true,
+    "toolResultFileUnchanged": true,
+    "changedAgentRegistration": "registry:mistral-vibe; entire row change retained; no field-reason inference"
+  },
+  "nativeStorage": {
+    "beforeGeneration": "0000000000000063",
+    "afterGeneration": "0000000000000067",
+    "beforeFiles": 19,
+    "afterFiles": 17,
+    "logicalContextMessages": 8,
+    "logicalProjectionItems": 9,
+    "note": "Generation/journal/lock changes are distinct from preserved logical history and tool/image bytes."
+  },
+  "limits": [
+    "Formal indexed sample uses selected text-only read; no formal unindexed import image-preview sample, no index deletion to manufacture one.",
+    "This does not add tool/image search, full history coverage or provider reconfiguration.",
+    "Actual VoiceOver words/sound and all supported sizes remain unverified; resize attempt did not change1280x820.",
+    "Cycle6/7 not fully accepted,29x8 and151 original conditions unchanged."
+  ],
+  "records": {
+    "output/2026-11-13-cycle7/engineering-preview-media/result.json": {
+      "sha256": "dd98844491b1f5d5ba0d044b6c1f0f49049df587e3e9cba636720fe0271da3e6"
+    },
+    "output/2026-11-13-cycle7/engineering-preview-media/independent-review.json": {
+      "sha256": "6c026447ebd6770a5a8cc538b9cbd9ae0f5b7414b2b297c8a508d895bdb85b36"
+    },
+    "output/2026-11-13-cycle7/engineering-preview-media/sandbox-cargo-test/cargo-test.json": {
+      "sha256": "1dc68005a5ad2e516cfd664c2f6cd08f7debbdee0b357ba49e4a6636ee19db1f"
+    },
+    "output/2026-11-13-cycle7/preview-tool-media/root-final-review.json": {
+      "sha256": "80d0d19e3b8e1abcc387dd53974e41aad7315f5ee9a03e3d836592c9ce297813"
+    },
+    "output/2026-11-13-cycle7/preview-tool-media/outlet/summary.json": {
+      "sha256": "814e2c8dca52f69e308231b6701d1db75b3946694bcfb62d91686a582280bc03"
+    },
+    "output/2026-11-13-cycle7/formal-preview-media/candidate-review.json": {
+      "sha256": "5171fb4f934743ffc7c77c6aa1fba39866a86018e35d79b741015075f6cebff0"
+    },
+    "output/2026-11-13-cycle7/formal-preview-media/install.json": {
+      "sha256": "fcfb59261bdf631d78aa0c10f3708098419cd0d69d3c45b21999f28b39127c25"
+    },
+    "output/2026-11-13-cycle7/formal-preview-media/duplicate-cleanup.json": {
+      "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+    },
+    "output/2026-11-13-cycle7/formal-preview-media/before.json": {
+      "sha256": "ffe531f89677314b42cf5dedbda64028e4141986cdcd181e49fd74518716d988"
+    },
+    "output/2026-11-13-cycle7/formal-preview-media/after.json": {
+      "sha256": "8b4b2014a38ac1de808cbd07e424d2c6e15f02334edfe5fc1598b60d2cd34960"
+    },
+    "output/2026-11-13-cycle7/formal-preview-media/ui-observations.json": {
+      "sha256": "339e60acc376b8c61f2c42289b22763f1ffa415e3c9f98742bb463f164fe8aeb"
+    },
+    "output/2026-11-13-cycle7/formal-preview-media/closed-final-review.json": {
+      "sha256": "8333e1b98e797d169dd347b6c3dd8bbbec8e8dd08f7f517f8910143b1c2505f1"
+    }
+  }
+}
