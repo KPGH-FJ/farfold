@@ -39,7 +39,7 @@
 
 [当前状态](../docs/status.md)维护分项证据与外部依赖。第8、10、11周期按阶段范围收口，第9周期 Windows 后置。
 
-1. **先完成 macOS。** 第12周期已对照[原28家八项](../docs/evidence/2026-11-15-cycle12-macos/acceptance-matrix.md)，现按[27家](../docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)继续。Qoder、Devin、Goose 已复验原对话。Cline 短测失败。[本轮证据](../docs/evidence/2026-11-15-cycle12-pre-send/README.md) Claude 单独核厂商原生连接或官方适配程序，其余可用 API 与原样本并行。Gemini CLI 与 Antigravity 登录暂缓。Cursor 待验组合见[续验](../docs/evidence/2026-11-15-cycle12-followup/README.md)。
+1. **先完成 macOS。** 第12周期已对照[原28家八项](../docs/evidence/2026-11-15-cycle12-macos/acceptance-matrix.md)，现按[27家](../docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)继续。Qoder、Devin、Goose 已复验原对话。Cline 短测失败。[本轮证据](../docs/evidence/2026-11-15-cycle12-pre-send/README.md) Claude 单独核厂商原生连接或官方适配程序，其余可用 API 与原样本并行。Gemini CLI 与 Antigravity 登录暂缓。Cursor 双前台已验，后台仍待。见[续验](../docs/evidence/2026-11-15-cycle12-followup/README.md)。
 2. **官方替代。** Goose 1.59.1 实测停掉 shell 及子进程，工具实时终态待证。fast-agent 双任务隔离及停止后冷续答已正式验证，工具终态仍待验。Pi 先核原身份再接 SDK；Amp 待厂商程序和原线程。依原首发条件处理范围，保留旧数据和证据。
 3. **再回到 Windows。** macOS 能力验收完成后，续第9周期及受影响的平台回归。第13–14周期仍以用户认可能力为前提。
 

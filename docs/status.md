@@ -48,9 +48,13 @@
 
 **第 11 周期按既定阶段范围收口。** Cursor、Gemini、Grok Build、Kimchi、Nova 均走正式版历史与账号入口，当前 28 家均已纳入分批验收。Cursor 新自测成功，冷开同一原对话读取原正文并准确续答，原标识和配置一致。Gemini、Grok、Nova 需认证，Gemini 当前未提供列表且旧版历史读取有上游修复，Nova 权限待官方兼容。Kimchi 新测试返回内部错误，一次停止未获确认。其原目录连接超时的同动作已在新版复验准确提示，历史文件保持。本批整家八项和真实审批仍未通过。[逐家结果](evidence/2026-11-15-cycle11-macos/README.md)
 
-**macOS 第 12 周期保持开放。** 原 28 家的 224 格已逐家对照并列缺口，当前首发 27 家的 216 格继续，整家 0/27。前序正常入口 28 家逐个点验，12 个无索引退役条目退出选择，Nova 后续移出当前首发，原登记保持。Cursor 文件交付与单次批准有正例。旧 2026.09.28 实测停止失败；升级 2026.11.13 后，已从正常入口停掉前台 Shell 及其子进程，工具终态仍未知。正常退出并冷开同一原对话后，沿用 Auto 明确续答通过，无自动重发。受监视的后台 Shell 仍缺官方精确停止入口，在途隔离未验。Copilot 与 Pi 找到并预览原正文，原配置未确认而保留只读。Dirac 冷开同原正文与配置；Qwen 单次无正文后停止已确认，Poolside 新请求内部错误未知，Devin 原对象读取失败，Cline 初始化早退。依赖涉及账号、原历史、官方能力与实测负结果。Windows 与公开交付仍按既有顺序。[续验](evidence/2026-11-15-cycle12-followup/README.md) · [本轮细节](evidence/2026-11-15-cycle12-macos/README.md) · [28 家八项](evidence/2026-11-15-cycle12-macos/acceptance-matrix.md)
+**macOS 第 12 周期保持开放。** 原 28 家的 224 格已逐家对照并列缺口，当前首发 27 家的 216 格继续，整家 0/27。前序正常入口 28 家逐个点验，12 个无索引退役条目退出选择，Nova 后续移出当前首发，原登记保持。Cursor 文件交付与单次批准有正例。旧 2026.09.28 实测停止失败；升级 2026.11.13 后，已从正常入口停掉前台 Shell 及其子进程，工具终态仍未知。正常退出并冷开同一原对话后，沿用 Auto 明确续答通过，无自动重发。受监视的后台 Shell 仍缺官方精确停止入口。双前台隔离最新复验见下。Copilot 与 Pi 找到并预览原正文，原配置未确认而保留只读。Dirac 冷开同原正文与配置；Qwen 单次无正文后停止已确认，Poolside 新请求内部错误未知，Devin 原对象读取失败，Cline 初始化早退。依赖涉及账号、原历史、官方能力与实测负结果。Windows 与公开交付仍按既有顺序。[续验](evidence/2026-11-15-cycle12-followup/README.md) · [本轮细节](evidence/2026-11-15-cycle12-macos/README.md) · [28 家八项](evidence/2026-11-15-cycle12-macos/acceptance-matrix.md)
 
 **接入账号与 API 续查。** OpenCode 选新保存的小米 `Chat Completions` 与 `mimo-v2.6-flash` 实答，并冷开同一原对话读回回复与来源，模型名称显示缺陷已在正式版修正。Autohand 0.9.11 与 Grok Build 1.0.46 分别沿原 `fantail` 与 `grok-4.7 / low` 冷开、读到原正文并准确续答。Claude 使用另存的小米 `Messages` 独立 API 测试成功，普通对话在 0.81.2 无正文，升级 0.107.0 后返回 `auth_required`。两版的合成控制均发现官方适配程序发出占位 Bearer，需确认原生 Claude 的已有设置路径或官方适配程序修复。Gemini CLI 和 Antigravity 按用户要求暂缓。[正式复验与官方限制](evidence/2026-11-15-cycle12-pre-send/README.md)
+
+**Cursor 双前台隔离通过。** 两条 Cursor 2026.11.13 对话沿用 Auto，同时在各自目录执行命令。点停止后 A 的 Shell 和子进程退出，B 继续并正常完成。A 的工具步骤仍显示结果未知，受监视的后台 Shell 仍缺官方精确停止。首次尝试中，Cline 内部错误保留了一个名额，第二条 Cursor 排队超时，未发出且草稿保留。正式退出结束 Cline 的归属进程组后，双前台复测成功。错误连接的单独回收仍待补。[双任务回执](evidence/2026-11-15-cycle12-followup/cursor-foreground-pair-2026-11-16.json)
+
+**Autohand 文件交付实测。** 正常新对话沿用 `fantail`，按一次审批整理合成纪要并另存。可从 Farfold 的本轮产物打开新文件，原稿散列一致，负责人和日期保留。[文件交付回执](evidence/2026-11-15-cycle12-continuation/autohand-file-delivery-2026-11-16.json)
 
 **发送前超时续查。** Qoder CLI 0.2.14 的旧正式失败卡在 `initialize`，同期 macOS 对归属于 Farfold 的 Git 子进程发起桌面文件夹访问提示，未记录答复。Devin 3000.11.3 的两次正式失败均在 `session/new` 等 120 秒，两个启动曾相隔约 2 秒，具体触发条件仍未知。固定非桌面目录后两家旧版均可从正式入口握手并创建对话，后续经官方更新至 Qoder 1.1.89、Devin 3000.12.57。新版已读可选配置，Qoder 当前仅报默认 Auto，Devin 当前仅报 SWE-2 Flash Medium，原模型保护保留。当时尚待用可用模型实答。[协议、厂商日志及实际界面](evidence/2026-11-15-cycle12-pre-send/README.md)
 

@@ -28,3 +28,7 @@ macOS 正式 Farfold 0.1.7。相关产品范围由唯一活动计划维护。
 新版正式 Farfold 为 0.1.7 arm64，CDHash `195969c5753ec3997f7940d8c9c2d43952da1555`。安装前后 206,936 条保护数据摘要一致，元数据副本完整性通过。已从正常入口看到 27 项，Nova 未显示，原登记与安装路径仍可读。Autohand 显示可用。 安装原件（本机 `output/2026-11-15-cycle12-continuation/install.json`）
 
 前端全量 10,942 项及构建通过。Rust Clippy 通过。Rust 初次全量有一项工具恢复夹具等待超时，单独复验通过；在构建及前端结束后重新全量检查，2,782 项单元与 10 项集成通过，共 11 项保持忽略。 前端回执（本机 `output/2026-11-15-cycle12-continuation/frontend-tests.log`） · Rust 全量复核（本机 `output/2026-11-15-cycle12-continuation/backend-sequential-recheck.log`）
+
+## 2026-11-16 Autohand 正式文件交付
+
+新对话沿用 Autohand 0.9.11 和原 `fantail` 设置，只使用自建样本目录。Farfold 对 `result.md` 写入只批准一次。正式界面显示完成，并从本轮产物打开结果。两条纪要分到各自章节，原负责人和日期保留，核对磁盘原稿散列未变。[逐项回执](autohand-file-delivery-2026-11-16.json)

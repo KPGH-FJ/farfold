@@ -7,7 +7,7 @@
     "入口有证": 27,
     "受阻": 7,
     "分项通过": 9,
-    "未测": 24,
+    "未测": 23,
     "原账号实答": 2,
     "查找冷开续答通过": 5,
     "已选模型有实答": 5,
@@ -15,13 +15,12 @@
     "正式发送认证受阻": 1,
     "可建对话": 1,
     "已知标识读取声明": 1,
-    "实测分项通过": 7,
-    "本轮未覆盖": 1,
+    "实测分项通过": 8,
     "前台停止分项通过": 1,
     "设置短测通过": 2,
     "已有设置实答": 2,
     "本轮短测失败": 6,
-    "双前台分项通过": 1,
+    "双前台分项通过": 2,
     "停止及冷续答通过": 1,
     "原正文已读": 3,
     "实测失败": 1,
@@ -220,12 +219,13 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "无本项实际验收样本",
-          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "observed": "无本项实际验收样本\n2026-11-16 正常新对话沿用 fantail，在独立目录读取 source.md；仅批准一次写入 result.md。成品在 Farfold 本轮产物中打开，负责人和日期保留，原稿散列未变。",
+          "remaining": "其他日常工具、授权组合和大文件按原条件。",
           "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-continuation/autohand-file-delivery-2026-11-16.json"
           ],
-          "status": "未测"
+          "status": "实测分项通过"
         },
         "S6": {
           "observed": "未运行双对话变更、审批或停止",
@@ -655,13 +655,14 @@
           "status": "实测分项通过"
         },
         "S6": {
-          "observed": "未运行双对话变更、审批或停止\n本轮实测：OpenCode 对照在目标停止后才发出，且独立完成，未在点击时覆盖两条均在途。",
-          "remaining": "需两条实际同时在途并留精确进程归属。",
+          "observed": "未运行双对话变更、审批或停止\n本轮实测：OpenCode 对照在目标停止后才发出，且独立完成，未在点击时覆盖两条均在途。\n2026-11-16 两条原来源 Auto 的正式前台任务同时在途。只批准各自一条命令。停止 A 后其 Shell 和子进程退出，B 继续并独立完成。",
+          "remaining": "其他权限、配置、不同工具及长负载交错仍按原条件。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-15-cycle12-followup/cursor-foreground-pair-2026-11-16.json"
           ],
-          "status": "本轮未覆盖"
+          "status": "双前台分项通过"
         },
         "S7": {
           "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n本轮实测：一次取消后 Farfold 显示已停止和步骤已结束，同一 shell 与 sleep 仍继续，约一分钟后自然写下完成标记。\n2026.11.13 Auto 前台复验，正式按钮后 380 毫秒已观察到原 Shell 与 sleep 同时退出，55 秒后没有完成标记。界面步骤结果未知。 正常退出后冷开同一对话，原服务与 Auto 保持，明确短消息正确报回首条独有记号。原请求未自动重发。",
