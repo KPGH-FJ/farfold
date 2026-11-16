@@ -52,10 +52,13 @@ import { threads, type PaneCard, type ThreadState } from "../runtime/sessions";
 import { STRINGS } from "../runtime/strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { ARTIFACT_OUTPUT as O } from "../runtime/artifact_output_strings";
+import {
+  artifactPaneWidth,
+  clampArtifactWidth,
+  MAX_ARTIFACT_WIDTH,
+  MIN_ARTIFACT_WIDTH,
+} from "../runtime/artifact_pane_width";
 
-const MIN_WIDTH = 320;
-const MAX_WIDTH = 720;
-const DEFAULT_WIDTH = 510;
 /** 命令卡渲染的输出尾部行数。 */
 const TERMINAL_LINE_CAP = 200;
 
@@ -131,7 +134,11 @@ export function ArtifactPane({
   fileRequest?: OpenedFileRequest | null;
   returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
-  const [width, setWidth] = useState(DEFAULT_WIDTH);
+  const [widthPreference, setWidthPreference] = useState(
+    artifactPaneWidth.getSnapshot(),
+  );
+  const [dragWidth, setDragWidth] = useState<number | null>(null);
+  const width = dragWidth ?? widthPreference.width;
   const [localMode, setLocalMode] = useState<"files" | "browser">("files");
   const contentMode = requestedMode ?? localMode;
   const [nativeVisible, setNativeVisible] = useState(false);
@@ -150,6 +157,14 @@ export function ArtifactPane({
   const roundId = thread.artifactPaneTarget?.roundId ?? null;
   const displayed = open || nativeVisible;
   const showingBrowser = contentMode === "browser" || nativeVisible;
+  useEffect(() => {
+    if (!active || !displayed) return;
+    const sync = () => setWidthPreference(artifactPaneWidth.getSnapshot());
+    const unsubscribe = artifactPaneWidth.subscribe(sync);
+    sync();
+    void artifactPaneWidth.load();
+    return unsubscribe;
+  }, [active, displayed]);
   const ownsContent = useContentOwner(
     thread,
     active && open && !showingBrowser,
@@ -276,7 +291,15 @@ export function ArtifactPane({
     retirePicker();
     threads.closeArtifactPane(thread.key);
   };
-  const drag = useRef<{ startX: number; startWidth: number } | null>(null);
+  const drag = useRef<{
+    pointerId: number;
+    startX: number;
+    startWidth: number;
+  } | null>(null);
+  useEffect(() => {
+    drag.current = null;
+    setDragWidth(null);
+  }, [thread.key, active, displayed]);
   const paneRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -365,8 +388,14 @@ export function ArtifactPane({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [thread.key, active, displayed]);
-  const resize = (next: number) =>
-    setWidth(Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, next)));
+  const finishDrag = (pointerId: number, clientX?: number) => {
+    const current = drag.current;
+    if (current?.pointerId !== pointerId) return;
+    drag.current = null;
+    setDragWidth(null);
+    if (clientX !== undefined && active && displayed)
+      artifactPaneWidth.resize(current.startWidth + current.startX - clientX);
+  };
 
   const outputScope = JSON.stringify([thread.key, roundId]);
   const [outputFilter, setOutputFilter] = useState({ scope: "", value: "all" });
@@ -555,35 +584,49 @@ export function ArtifactPane({
         role="separator"
         aria-orientation="vertical"
         aria-label={W.resizeContent}
-        aria-valuemin={MIN_WIDTH}
-        aria-valuemax={MAX_WIDTH}
+        aria-valuemin={MIN_ARTIFACT_WIDTH}
+        aria-valuemax={MAX_ARTIFACT_WIDTH}
         aria-valuenow={width}
+        aria-disabled={!widthPreference.ready}
         tabIndex={0}
         onKeyDown={(event) => {
-          if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+          if (
+            widthPreference.ready &&
+            !drag.current &&
+            (event.key === "ArrowLeft" || event.key === "ArrowRight")
+          ) {
             event.preventDefault();
             setExpanded(false);
-            resize(width + (event.key === "ArrowLeft" ? 24 : -24));
+            artifactPaneWidth.resize(
+              artifactPaneWidth.getSnapshot().width +
+                (event.key === "ArrowLeft" ? 24 : -24),
+            );
           }
         }}
         onPointerDown={(event) => {
+          if (!widthPreference.ready || event.button !== 0 || drag.current)
+            return;
           event.preventDefault();
           setExpanded(false);
-          drag.current = { startX: event.clientX, startWidth: width };
+          drag.current = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startWidth: artifactPaneWidth.getSnapshot().width,
+          };
           event.currentTarget.setPointerCapture(event.pointerId);
         }}
         onPointerMove={(event) => {
-          if (drag.current)
-            resize(
-              drag.current.startWidth + drag.current.startX - event.clientX,
+          const current = drag.current;
+          if (current?.pointerId === event.pointerId)
+            setDragWidth(
+              clampArtifactWidth(
+                current.startWidth + current.startX - event.clientX,
+              ),
             );
         }}
-        onPointerUp={() => {
-          drag.current = null;
-        }}
-        onPointerCancel={() => {
-          drag.current = null;
-        }}
+        onPointerUp={(event) => finishDrag(event.pointerId, event.clientX)}
+        onPointerCancel={(event) => finishDrag(event.pointerId)}
+        onLostPointerCapture={(event) => finishDrag(event.pointerId)}
       />
       <div
         className="artifact-content-tabs"
@@ -606,6 +649,18 @@ export function ArtifactPane({
         </button>
         {contentMode === "browser" && headerActions}
       </div>
+      {widthPreference.error && (
+        <div className="workspace-request-alert" role="status">
+          {widthPreference.error === "load"
+            ? W.contentWidthLoadFailed
+            : W.contentWidthSaveFailed}
+          {widthPreference.error === "load" && (
+            <button type="button" onClick={artifactPaneWidth.load}>
+              {STRINGS.common.retry}
+            </button>
+          )}
+        </div>
+      )}
       <div hidden={showingBrowser}>
         <FilePreviewPicker
           workingDirectory={thread.cwd}

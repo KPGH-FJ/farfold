@@ -89,7 +89,7 @@ export function parseAgentIds(text) {
   );
   const ids = [...array.matchAll(/"([^"]+)"/g)].map((item) => item[1]);
   unique(ids, "first-release identity");
-  assert.equal(ids.length, 29, "expected all 29 first-release identities");
+  assert.equal(ids.length, 27, "expected all 27 first-release identities");
   return ids;
 }
 
@@ -804,7 +804,7 @@ export function runAcceptanceIndex(args, { rootDir = root } = {}) {
       "NEW requirements need explicitly supplied newPackages, never inferred owners.",
       "Coverage FILE is a JSON array of receipt-validator case summaries; exact source conditions and excerpts are checked, raw receipts and effects are not verified here.",
       "Source/fixture checks use shared; claimed layers remain independently reviewable.",
-      "Validation establishes index structure and current source identity, never 29-Agent acceptance.",
+      "Validation establishes index structure and current source identity, never Agent acceptance.",
       "Unmapped requirements remain in the complete 151-item catalog; no pass state is generated.",
       "Default queries also read the dated stage-one Agent ledger; recorded remaining conditions are not current project status.",
       "Default queries include scoped stage-two observations with explicit manual links and source digests; these remain unclassified, separate from receipt coverage and current status.",

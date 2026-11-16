@@ -88,6 +88,7 @@ fn forward(params: &[Value], live: bool, retain: bool) -> Observed {
             compactions: &mut compactions,
             async_tasks: &mut tasks,
             prompt_cancelling: false,
+            terminals: None,
         };
         for params in params {
             let message = UntypedMessage::new("session/update", params).unwrap();

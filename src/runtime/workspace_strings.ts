@@ -41,6 +41,8 @@ export const WORKSPACE_STRINGS = {
   stepsPending: "等待处理",
   stepsFailed: "有步骤未成功",
   resizeContent: "调整内容宽度",
+  contentWidthLoadFailed: "未能读取内容宽度，暂时使用默认宽度。",
+  contentWidthSaveFailed: "未能保存内容宽度，已恢复之前的宽度。",
   expandContent: "放大内容",
   restoreContent: "还原内容宽度",
   contentLabel: "对话内容面板",

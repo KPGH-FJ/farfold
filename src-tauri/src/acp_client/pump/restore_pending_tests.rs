@@ -171,6 +171,7 @@ async fn exercise(mode: &str, expected_polls: usize) {
         compactions: &mut compactions,
         async_tasks: &mut tasks,
         prompt_cancelling: false,
+        terminals: None,
     };
     let mut guard = ModelGuard::new(&applied, Some(&record), true);
     let mut permission_options = applied.clone();

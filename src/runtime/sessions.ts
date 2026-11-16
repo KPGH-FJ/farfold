@@ -18,7 +18,7 @@ import { requestSessionDeletion, SessionDeletions } from "./session_deletion";
 import type { SessionDeletionInput } from "./session_deletion";
 import { draftGroup, type OpenInput } from "./session_open_input";
 export type { OpenInput } from "./session_open_input";
-import { observeAuthentication } from "./authentication";
+import * as Auth from "./authentication";
 import {
   discardEmptyDraft,
   retirePreparationRead,
@@ -509,7 +509,6 @@ class ThreadsStore {
     );
     this.configurations.observe(state);
   }
-
   /** Concurrent opens for the same target share one close/load request. */
   open(input: OpenInput): Promise<ThreadState> {
     if (needsCanonicalRecovery(input, this.threads))
@@ -521,7 +520,6 @@ class ThreadsStore {
       );
     return this.openTarget(input);
   }
-
   private openTarget(
     input: OpenInput,
     recheck?: ConfigurationRecheck,
@@ -571,6 +569,7 @@ class ThreadsStore {
       return pending;
     }
     const inquiry = openingInquiries.begin(openingKey, input);
+    let authentication: ReturnType<typeof Auth.captureProgramAuthentication>;
     const replay = new SessionOpenReplay(
       input,
       (key) => this.threads.get(key),
@@ -583,7 +582,6 @@ class ThreadsStore {
     const channel = new OwnedSessionChannel(delivery);
     let deliveryBound = false;
     const admission = historyReads.begin(openingKey, input, replay.token);
-
     let opened: OpenResult | undefined;
     let routePrepared = false;
     let abandonRecheck: (() => void) | undefined;
@@ -649,6 +647,9 @@ class ThreadsStore {
           return replay.push(event);
         },
       });
+      const replacing = Auth.pendingProgramAuthenticationChange(input.agentId);
+      if (replacing) await replacing;
+      authentication = Auth.captureProgramAuthentication(input.agentId);
       admission?.dispatch();
       const result = await invoke<OpenResult>("session_open", {
         processEndedChannel,
@@ -703,17 +704,14 @@ class ThreadsStore {
             if (failedConnectionId) old.connectionId = failedConnectionId;
             this.channels.set(boundKey, channel);
             deliveryBound = true;
+            Auth.bindProgramAuthentication(old, authentication);
             processEndedChannel.bind(old);
           };
         } else channel.dispose();
         throw error;
       }
-      observeAuthentication(
-        input.agentId,
-        input.cwd,
-        undefined,
-        state.serviceContext,
-      );
+      Auth.bindProgramAuthentication(state, authentication);
+      authentication.observe(input.cwd, undefined, state.serviceContext);
       const previous = this.threads.get(key);
       if (previous) this.forks.retire(previous);
       this.stopConfirmation.clear(key);
@@ -760,8 +758,7 @@ class ThreadsStore {
             this.threads.get(target.originalKey))
           : undefined;
         if (!input.nativeSessionId || previous)
-          observeAuthentication(
-            input.agentId,
+          authentication?.observe(
             target.cwd,
             error,
             previous?.serviceContext ??
@@ -810,7 +807,6 @@ class ThreadsStore {
     this.openings.set(openingKey, promise);
     return promise;
   }
-
   /** Explicit recovery exit: a separate empty draft, never a resumed prompt. */
   async newAfterRecoveryFailure(key: string): Promise<ThreadState> {
     const old = this.thread(key);
@@ -826,7 +822,6 @@ class ThreadsStore {
       fresh: true,
     });
   }
-
   /** Preserve failed state; restart-resume failures render as 无法恢复. */
   markOpenFailed(
     key: string,
@@ -1464,8 +1459,13 @@ class ThreadsStore {
     return this.deletions.run(
       key,
       async () => {
-        const s = this.threads.get(key);
         this.emit(key);
+        await draftPersistence.flush();
+        const s = this.threads.get(key);
+        const blocked = archiveBlockReason(key, s, (state) =>
+          this.needsAttention(state),
+        );
+        if (blocked) throw new Error(LIBRARY.deleteReasons[blocked]);
         const remote = await requestSessionDeletion(
           { agentId: row.agentId, cwd: row.cwd, nativeSessionId: native },
           s,

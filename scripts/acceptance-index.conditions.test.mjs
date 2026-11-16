@@ -22,7 +22,7 @@ describe("existing per-Agent evidence in the normal acceptance entry", () => {
   it("reads all 29 actual rows with provenance, while keeping empty cells unrecorded", () => {
     const result = index.runAcceptanceIndex([]);
     expect(result.agentEvidence.rows.map((row) => row.agentId)).toEqual(
-      authorities.agents,
+      original.rows.map((row) => row.agentId),
     );
     expect(result.agentEvidence.source).toEqual(source);
     expect(result.agentEvidence.role).toBe(
@@ -31,7 +31,13 @@ describe("existing per-Agent evidence in the normal acceptance entry", () => {
     expect(result.agentEvidence.scope).toBe(original.scope);
     expect(result.agentEvidence.basedOnCommit).toBe(original.basedOnCommit);
     expect(result.agentEvidence.currentStatusSource).toBe("docs/status.md");
-    expect(result.cells).toHaveLength(232);
+    expect(result.cells).toHaveLength(216);
+    for (const id of ["kimi", "nova"]) {
+      expect(result.cells.some((cell) => cell.agentId === id)).toBe(false);
+      expect(result.agentEvidence.rows.some((row) => row.agentId === id)).toBe(
+        true,
+      );
+    }
     expect(result.coverage).toEqual([]);
     expect(result.acceptanceVerified).toBe(false);
     expect(result.cells.every((cell) => cell.acceptance === "unreviewed")).toBe(

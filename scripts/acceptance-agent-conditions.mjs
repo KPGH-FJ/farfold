@@ -72,6 +72,11 @@ export function parseAgentConditions(
   assert.match(data.basedOnCommit, /^[a-f0-9]{40}$/, "invalid recorded commit");
   text(data.scope);
   text(data.stage1SupplementScope);
+  // The November 6 ledger predates the removal of Kimi CLI Legacy and Nova
+  // from the release scope. Both rows stay in the historical projection.
+  const recordedAgentIds = [
+    ...new Set([...authorities.agents, "kimi", "nova"]),
+  ];
   const checkedPaths = new Set();
   const evidencePath = (path) => {
     text(path);
@@ -115,7 +120,7 @@ export function parseAgentConditions(
   ]);
   assert.equal(
     data.counts.agents,
-    authorities.agents.length,
+    recordedAgentIds.length,
     "conditions identity count mismatch",
   );
   assert.equal(
@@ -126,7 +131,7 @@ export function parseAgentConditions(
   for (const count of Object.values(data.counts))
     assert.ok(Number.isInteger(count) && count >= 0, "invalid recorded count");
   assert.ok(
-    data.counts.wholeAgentConfirmed <= authorities.agents.length,
+    data.counts.wholeAgentConfirmed <= recordedAgentIds.length,
     "invalid recorded Agent count",
   );
   const declaration = data.installedCapabilityDeclarationCheck;
@@ -139,7 +144,7 @@ export function parseAgentConditions(
   text(declaration.environment);
   text(declaration.scope);
   assert.match(declaration.projectionSha256, /^[a-f0-9]{64}$/);
-  keys(declaration.reportedProgramVersions, [], authorities.agents);
+  keys(declaration.reportedProgramVersions, [], recordedAgentIds);
   for (const version of Object.values(declaration.reportedProgramVersions))
     text(version);
   const exit = data.stage1Exit;
@@ -165,7 +170,7 @@ export function parseAgentConditions(
   list(data.rows);
   assert.equal(
     data.rows.length,
-    authorities.agents.length,
+    recordedAgentIds.length,
     "missing conditions Agent",
   );
   const seen = new Set();
@@ -182,7 +187,7 @@ export function parseAgentConditions(
       ["stage1Supplement"],
     );
     assert.ok(
-      authorities.agents.includes(row.agentId),
+      recordedAgentIds.includes(row.agentId),
       "unknown conditions Agent",
     );
     assert.ok(!seen.has(row.agentId), "duplicate conditions Agent");
@@ -280,8 +285,6 @@ export function parseAgentConditions(
       "Unassigned references do not establish any standard coverage; prose results are not classified automatically.",
       "Recorded counts and remaining conditions retain the ledger's historical scope; current facts are in docs/status.md.",
     ],
-    rows: authorities.agents.map((id) =>
-      rows.find((row) => row.agentId === id),
-    ),
+    rows,
   };
 }

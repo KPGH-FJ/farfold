@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
 import {
   Children,
   isValidElement,
@@ -58,6 +59,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 import { ThreadView } from "./ThreadView";
 import { Composer } from "./Composer";
 import { ModelPicker } from "./ModelPicker";
+import { WorkspacePopover } from "./WorkspacePopover";
 import { ConfigurationChangeReview } from "./ConfigurationChangeReview";
 import {
   freshThreadState,
@@ -70,6 +72,7 @@ import {
 } from "../runtime/agent_preparation";
 import { configOptionChangeBlocked } from "../runtime/protected_config";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
+import { OpeningBaseline } from "../runtime/session_open_baseline";
 
 type Element = ReactElement<Record<string, unknown>>;
 function nodes(tree: ReactNode): Element[] {
@@ -161,6 +164,75 @@ it("keeps an idle confirmed established model change review reachable despite th
   expect(review!.props.value).toBe("different");
   expect(thread).toEqual(before);
   noImplicitWork(set);
+});
+
+it("shows the saved API model name after reopening and preserves the exact selectable wire value", () => {
+  const model = "mimo-v2.6-flash";
+  const provider = `farfold_${"a".repeat(64)}`;
+  const wire = `${provider}/${model}`;
+  const other = { value: `${provider}/different`, name: "Different" };
+  const agentId = "saved-api-model-reopen";
+  const cwd = "/owned-fixture";
+  const nativeSessionId = "saved-conversation";
+  const connectionId = "reopened-connection";
+  const opening = new OpeningBaseline({ agentId, cwd, nativeSessionId });
+  opening.identify({ cwd, sessionId: nativeSessionId, connectionId });
+  const thread = opening.accept(
+    {
+      cwd,
+      nativeSessionId,
+      connectionId,
+      resumed: true,
+      warnings: [],
+      service: { id: "saved-api", model, fingerprint: "fixture" },
+      serviceModelValue: wire,
+      configOptions: [
+        {
+          id: "model",
+          category: "model",
+          name: "Model",
+          type: "select",
+          currentValue: wire,
+          options: [{ value: wire, name: wire }, other],
+        },
+      ],
+      configCheck: {
+        status: "ready",
+        protectedIds: ["model"],
+        issues: [],
+        current: {
+          choices: [
+            { id: "model", category: "model", type: "select", value: wire },
+          ],
+        },
+      },
+    },
+    "Saved conversation",
+  );
+  expect(thread.identity).toBe("established");
+  const before = structuredClone(thread);
+  const controls = view(thread).controls;
+  const trigger = controls.find(
+    (control) => control.type === WorkspacePopover,
+  )!;
+  const triggerHtml = renderToStaticMarkup(trigger.props.label as ReactNode);
+  expect(triggerHtml).toContain(model);
+  expect(triggerHtml).not.toContain(wire);
+  expect(
+    controls.some(
+      (node) => node.type === "dd" && node.props.children === model,
+    ),
+  ).toBe(true);
+
+  const picker = controls.find((control) => control.type === ModelPicker)!;
+  expect(picker.props.option).toMatchObject({
+    currentValue: wire,
+    options: [{ value: wire, name: model }, other],
+  });
+  const pickerHtml = renderToStaticMarkup(picker);
+  expect(pickerHtml).toContain(`aria-label="Model: ${model}"`);
+  expect(pickerHtml).not.toContain(wire);
+  expect(thread).toEqual(before);
 });
 
 it("keeps a new draft gated by that same real preparation marker without a model selection or implicit send", async () => {

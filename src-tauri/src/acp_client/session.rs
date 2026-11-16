@@ -1272,6 +1272,14 @@ impl AcpManager {
                 Some("审批选项的标识重复或无效，请重新选择"),
             ));
         }
+        if let Some(decision) = request.local_decision.take() {
+            let submitted = decision.send(option_id == Some("allow_once")).is_ok();
+            pending.remove(request_id);
+            return Ok(InteractionReply::new(
+                if submitted { "submitted" } else { "expired" },
+                None,
+            ));
+        }
         let Some(responder) = request.responder.take() else {
             return Ok(InteractionReply::new(
                 "uncertain",
@@ -1355,6 +1363,9 @@ pub struct SessionOpenResult {
     pub warnings: Vec<String>,
     pub service: Option<crate::credentials::ServiceIdentity>,
     pub service_context: Option<String>,
+    /// The concrete wire model option for the connection's selected service.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub service_model_value: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]

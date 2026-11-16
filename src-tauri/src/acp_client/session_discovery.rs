@@ -237,6 +237,7 @@ pub(super) async fn open_preview(
             session_operations,
             connection_id: opened.connection_id,
             service: source.as_ref().map(|source| source.identity.clone()),
+            service_model_value: None,
             service_context: source.map(|source| source.revision),
             native_session_id: opened.session_id,
             cwd: cwd.to_string_lossy().into_owned(),

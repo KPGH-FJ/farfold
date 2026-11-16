@@ -1,5 +1,9 @@
 import { SessionDeliveryObserver } from "./session_delivery_observer";
 import { invoke } from "@tauri-apps/api/core";
+import {
+  bindProgramAuthentication,
+  threadProgramAuthentication,
+} from "./authentication";
 import { OwnedSessionChannel } from "./session_channels";
 import {
   configurationInputBusy,
@@ -419,6 +423,7 @@ export class SessionForks {
           opened,
           this.ports.rows().find((row) => row.id === key)?.title,
         );
+        bindProgramAuthentication(state, threadProgramAuthentication(parent));
         this.ports.install(state, channel, replay.acceptedPermissionChanges);
         boundKey = key;
         transferOwner();

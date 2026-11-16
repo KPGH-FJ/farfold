@@ -20,6 +20,7 @@ pub(crate) enum Kind {
     },
     Mode,
     Close,
+    DeleteClose,
     StoppedToolClose(super::pump::StoppedToolCloseReceipt),
     Delete,
 }
@@ -35,6 +36,7 @@ pub(crate) enum Reply {
     Config(oneshot::Sender<Result<Value, String>>),
     Unit(oneshot::Sender<Result<(), String>>),
     Delete(oneshot::Sender<Result<(), DeleteFailure>>),
+    DeleteClose(oneshot::Sender<Result<bool, String>>),
     StoppedToolClose(oneshot::Sender<Result<super::pump::StoppedToolCloseReceipt, String>>),
 }
 impl Reply {
@@ -44,6 +46,7 @@ impl Reply {
             Self::Config(reply) => reply.is_closed(),
             Self::Unit(reply) => reply.is_closed(),
             Self::Delete(reply) => reply.is_closed(),
+            Self::DeleteClose(reply) => reply.is_closed(),
             Self::StoppedToolClose(reply) => reply.is_closed(),
         }
     }
@@ -62,6 +65,11 @@ impl Reply {
             }
             Self::Delete(reply) => {
                 let _ = reply.send(value.map(|_| ()).map_err(DeleteFailure::Unconfirmed));
+            }
+            Self::DeleteClose(reply) => {
+                let _ = reply.send(Err(value
+                    .err()
+                    .unwrap_or_else(|| "关闭结果尚未确认，请等待".into())));
             }
             Self::StoppedToolClose(reply) => {
                 let _ = reply.send(Err(value
@@ -84,6 +92,7 @@ impl Reply {
             Self::Config(reply) => reply.closed().await,
             Self::Unit(reply) => reply.closed().await,
             Self::Delete(reply) => reply.closed().await,
+            Self::DeleteClose(reply) => reply.closed().await,
             Self::StoppedToolClose(reply) => reply.closed().await,
         }
     }
@@ -144,6 +153,13 @@ impl Mutation {
         let reply = self.reply.take();
         drop(self);
         if let Some(Reply::Open(reply)) = reply {
+            let _ = reply.send(outcome);
+        }
+    }
+    pub(super) fn finish_delete_close(mut self, outcome: Result<bool, String>) {
+        let reply = self.reply.take();
+        drop(self);
+        if let Some(Reply::DeleteClose(reply)) = reply {
             let _ = reply.send(outcome);
         }
     }

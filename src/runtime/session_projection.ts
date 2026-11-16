@@ -35,11 +35,13 @@ import { streamTailItem } from "./session_streams";
 import { appendMessageContentPart } from "./message_content_order";
 import { retainReportedDetails } from "./reported_details";
 import { historyForkHint } from "./history_fork_point";
+import { selectablePermissionOption } from "./permission_options";
 import type {
   ConfigChoice,
   ConfigOptionView,
   PermissionOption,
   PlanEntry,
+  TerminalCommandPermission,
   ThreadItem,
   ThreadState,
   ToolCallView,
@@ -928,6 +930,32 @@ function roundToolItemIds(s: ThreadState): string[] {
     .map((item) => item.id);
 }
 
+function readTerminalCommand(value: unknown): TerminalCommandPermission | null {
+  if (typeof value !== "object" || value === null || Array.isArray(value))
+    return null;
+  const { program, args, cwd } = value as Record<string, unknown>;
+  if (
+    Object.keys(value).length !== 3 ||
+    typeof program !== "string" ||
+    program.length === 0 ||
+    program.includes("\0") ||
+    typeof cwd !== "string" ||
+    cwd.length === 0 ||
+    cwd.includes("\0") ||
+    !Array.isArray(args)
+  ) {
+    return null;
+  }
+  const argv: unknown[] = [...args];
+  if (
+    !argv.every(
+      (arg): arg is string => typeof arg === "string" && !arg.includes("\0"),
+    )
+  )
+    return null;
+  return { program, args: argv, cwd };
+}
+
 export function applyPermissionRequest(
   s: ThreadState,
   event: {
@@ -935,13 +963,21 @@ export function applyPermissionRequest(
     toolCall: unknown;
     options: unknown;
     request?: unknown;
+    terminalCommand?: unknown;
   },
 ): void {
-  const toolCall = event.toolCall as Record<string, unknown> | null;
+  const terminalCommand =
+    event.terminalCommand === undefined
+      ? undefined
+      : readTerminalCommand(event.terminalCommand);
+  const toolCall =
+    terminalCommand === undefined
+      ? (event.toolCall as Record<string, unknown> | null)
+      : null;
   if (toolCall && typeof toolCall === "object") {
     upsertToolCall(s, toolCall);
   }
-  const options: PermissionOption[] = Array.isArray(event.options)
+  let options: PermissionOption[] = Array.isArray(event.options)
     ? (event.options as Record<string, unknown>[]).map((o) => ({
         optionId: typeof o?.optionId === "string" ? o.optionId : "",
         ...(typeof o?.optionId === "string" ? {} : { invalidId: true }),
@@ -949,6 +985,31 @@ export function applyPermissionRequest(
         kind: String(o?.kind ?? ""),
       }))
     : [];
+  if (terminalCommand !== undefined) {
+    const singleUse = options.filter(
+      (option) =>
+        option.optionId.trim().length > 0 &&
+        (option.kind === "allow_once" || option.kind === "reject_once") &&
+        selectablePermissionOption(options, option),
+    );
+    const rejection = singleUse.filter(
+      (option) => option.kind === "reject_once",
+    );
+    options =
+      terminalCommand &&
+      options.length === 2 &&
+      singleUse.length === 2 &&
+      rejection.length === 1
+        ? singleUse
+        : rejection;
+    options = options.map((option) => ({
+      ...option,
+      name:
+        option.kind === "allow_once"
+          ? STRINGS.thread.permissionCommand
+          : STRINGS.thread.reject,
+    }));
+  }
   const locations = normalizeLocations(toolCall?.locations);
   if (s.pendingPermissions.some((p) => p.requestId === event.requestId)) return;
   s.pendingPermissions = [
@@ -957,13 +1018,17 @@ export function applyPermissionRequest(
       requestId: event.requestId,
       status: "pending",
       error: null,
+      ...(terminalCommand === undefined ? {} : { terminalCommand }),
       toolCallId:
         typeof toolCall?.toolCallId === "string" ? toolCall.toolCallId : null,
       toolCallSnapshot:
         toolCall && typeof toolCall === "object" && !Array.isArray(toolCall)
           ? structuredClone(toolCall)
           : null,
-      requestSnapshot: structuredClone(event.request),
+      requestSnapshot:
+        terminalCommand === undefined
+          ? structuredClone(event.request)
+          : undefined,
       title: String(toolCall?.title ?? ""),
       kind: String(toolCall?.kind ?? "other"),
       locations,

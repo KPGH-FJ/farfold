@@ -568,6 +568,10 @@ export const draftQueues = {
     const value = queueValues.get(key);
     return value ? structuredClone(value) : null;
   },
+  hasUnconfirmedOutcome(key: string): boolean {
+    const saved = queueValues.get(key);
+    return saved?.outcomeUnknown === true || saved?.uncertainIndex != null;
+  },
   write(
     key: string,
     blocks: PromptBlock[][],

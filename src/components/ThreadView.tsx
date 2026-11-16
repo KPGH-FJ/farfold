@@ -79,7 +79,7 @@ import {
 import { useContentOwner } from "./useContentOwner";
 import { settledRoundResults } from "../runtime/round_result";
 import { SettledLine } from "./SettledLine";
-import { historyForkSelection } from "../runtime/history_fork_point";
+import { historyForkableItems } from "../runtime/history_fork_point";
 import { COMPACTION } from "../runtime/compaction_strings";
 import {
   hasActiveCompaction,
@@ -525,6 +525,7 @@ export function ThreadView({
 
   const permissions = thread.pendingPermissions;
   const blocks = itemBlocks(thread.items);
+  const forkableItems = onForkFromMessage && historyForkableItems(thread);
   const stoppedToolCalls = unfinishedStoppedToolCallIds(thread);
   const stepActivity = (call: ToolCallView) =>
     toolActivityState(thread, call, stoppedToolCalls);
@@ -553,9 +554,28 @@ export function ThreadView({
     (thread.configCheck
       ? thread.configCheck.status !== "ready"
       : !draftChoices);
+  const serviceModel = thread.service?.model;
+  const serviceModelValue = thread.serviceModelValue;
+  // The service's display name belongs to this exact wire choice. Keep the
+  // original configuration and all values used for selection and saving.
+  const displayedModelOption = useMemo(() => {
+    if (!modelOption || !serviceModel || !serviceModelValue) return modelOption;
+    return {
+      ...modelOption,
+      options: modelOption.options.map((choice) =>
+        choice.value === serviceModelValue
+          ? { ...choice, name: serviceModel }
+          : choice,
+      ),
+    };
+  }, [modelOption, serviceModel, serviceModelValue]);
   const modelLabel =
     modelOption && !(choicesUnchecked && modelOption.currentValue == null)
-      ? configValueLabel(modelOption)
+      ? serviceModel &&
+        serviceModelValue &&
+        modelOption.currentValue === serviceModelValue
+        ? serviceModel
+        : configValueLabel(modelOption)
       : choicesUnchecked
         ? STRINGS.repair.unknownModel
         : STRINGS.switcher.defaultModel;
@@ -877,8 +897,7 @@ export function ThreadView({
                           <UserMessageActions
                             text={first.text}
                             onForkFromMessage={
-                              onForkFromMessage &&
-                              historyForkSelection(thread, first)
+                              onForkFromMessage && forkableItems?.has(first)
                                 ? () => onForkFromMessage(first)
                                 : undefined
                             }
@@ -923,8 +942,7 @@ export function ThreadView({
                             <UserMessageActions
                               text={first.text}
                               onForkFromMessage={
-                                onForkFromMessage &&
-                                historyForkSelection(thread, first)
+                                onForkFromMessage && forkableItems?.has(first)
                                   ? () => onForkFromMessage(first)
                                   : undefined
                               }
@@ -1087,6 +1105,7 @@ export function ThreadView({
                       kind={permission.kind}
                       locations={permission.locations}
                       rawInput={permission.toolCallSnapshot?.rawInput}
+                      terminalCommand={permission.terminalCommand}
                       options={
                         permission.status === "pending"
                           ? permission.options
@@ -1309,10 +1328,10 @@ export function ThreadView({
                         option={
                           selectedModel
                             ? {
-                                ...modelOption,
+                                ...(displayedModelOption ?? modelOption),
                                 currentValue: selectedModel.value,
                               }
-                            : modelOption
+                            : displayedModelOption
                         }
                         disabled={configOptionChangeBlocked(
                           thread,
@@ -1344,7 +1363,7 @@ export function ThreadView({
                       selectedModel && (
                         <ConfigurationChangeReview
                           thread={thread}
-                          option={modelOption}
+                          option={displayedModelOption ?? modelOption}
                           value={selectedModel.value}
                           onCancel={() => setModelSelection(null)}
                           onSaved={() => setModelSelection(null)}

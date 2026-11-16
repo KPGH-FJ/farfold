@@ -182,6 +182,7 @@ fn opened_result(
         resumed: true,
         warnings: opened.warnings,
         service: source.as_ref().map(|s| s.identity.clone()),
+        service_model_value: None,
         service_context: source.map(|s| s.revision),
     }
 }

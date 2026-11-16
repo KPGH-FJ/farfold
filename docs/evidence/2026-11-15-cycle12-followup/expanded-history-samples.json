@@ -1,0 +1,187 @@
+{
+  "Qoder CLI": {
+    "observed": "default_list_empty",
+    "protocol": [
+      {
+        "trace": "protocol-v1-1794736696943-1.jsonl",
+        "events": [
+          {
+            "ts": 1794736696952,
+            "dir": "out",
+            "event": "initialize",
+            "wireSequence": 1,
+            "error": "none"
+          },
+          {
+            "ts": 1794736715173,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 2,
+            "error": "none"
+          },
+          {
+            "ts": 1794736715178,
+            "dir": "out",
+            "event": "session/list",
+            "wireSequence": 3,
+            "error": "none"
+          },
+          {
+            "ts": 1794736715181,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 4,
+            "error": "none"
+          }
+        ]
+      }
+    ]
+  },
+  "MiniMax Code": {
+    "observed": "existing_directory_original_body_read_only",
+    "protocol": [
+      {
+        "trace": "protocol-v1-1794736753993-2.jsonl",
+        "events": [
+          {
+            "ts": 1794736753995,
+            "dir": "out",
+            "event": "initialize",
+            "wireSequence": 1,
+            "error": "none"
+          },
+          {
+            "ts": 1794736755218,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 2,
+            "error": "none"
+          },
+          {
+            "ts": 1794736755218,
+            "dir": "out",
+            "event": "session/list",
+            "wireSequence": 3,
+            "error": "none"
+          },
+          {
+            "ts": 1794736756124,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 4,
+            "error": "none"
+          }
+        ]
+      },
+      {
+        "trace": "protocol-v1-1794736781979-3.jsonl",
+        "events": [
+          {
+            "ts": 1794736781982,
+            "dir": "out",
+            "event": "initialize",
+            "wireSequence": 1,
+            "error": "none"
+          },
+          {
+            "ts": 1794736783184,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 2,
+            "error": "none"
+          },
+          {
+            "ts": 1794736783186,
+            "dir": "out",
+            "event": "session/load",
+            "wireSequence": 3,
+            "error": "none"
+          },
+          {
+            "ts": 1794736784138,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 5,
+            "error": "none"
+          },
+          {
+            "ts": 1794736791478,
+            "dir": "out",
+            "event": "other",
+            "wireSequence": 8,
+            "error": "none"
+          },
+          {
+            "ts": 1794736791479,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 9,
+            "error": "none"
+          }
+        ]
+      }
+    ]
+  },
+  "siGit Code": {
+    "observed": "default_list_empty",
+    "protocol": [
+      {
+        "trace": "protocol-v1-1794736792465-4.jsonl",
+        "events": [
+          {
+            "ts": 1794736792468,
+            "dir": "out",
+            "event": "initialize",
+            "wireSequence": 1,
+            "error": "none"
+          },
+          {
+            "ts": 1794736795464,
+            "dir": "err",
+            "event": "other",
+            "error": "stderr"
+          },
+          {
+            "ts": 1794736795468,
+            "dir": "err",
+            "event": "other",
+            "error": "stderr"
+          },
+          {
+            "ts": 1794736795472,
+            "dir": "err",
+            "event": "other",
+            "error": "stderr"
+          },
+          {
+            "ts": 1794736795473,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 2,
+            "error": "none"
+          },
+          {
+            "ts": 1794736795474,
+            "dir": "out",
+            "event": "session/list",
+            "wireSequence": 3,
+            "error": "none"
+          },
+          {
+            "ts": 1794736795474,
+            "dir": "err",
+            "event": "other",
+            "error": "stderr"
+          },
+          {
+            "ts": 1794736795474,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 4,
+            "error": "none"
+          }
+        ]
+      }
+    ]
+  }
+}

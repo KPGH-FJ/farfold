@@ -97,6 +97,9 @@ pub(super) async fn send(
     if in_flight || unresolved || mutation.is_some() {
         return Err("上次请求尚未结束，请先停止或等待".into());
     }
+    if ctx.terminals.is_some_and(tool_terminal::Session::blocked) {
+        return Err("上次命令仍未确认结束，请先检查".into());
+    }
     let lease = ctx.ops.life.work()?;
     let saved_config = model_guard.record();
     if config_store
@@ -184,6 +187,9 @@ pub(super) async fn send(
         })
         .map_err(describe_acp_error);
     if sent.is_ok() {
+        if let Some(terminals) = ctx.terminals {
+            terminals.begin(receipt_id, active.observation.clone());
+        }
         ctx.tools.start_prompt(receipt_id);
         ctx.compactions.begin_live();
         (ctx.events)(serde_json::json!({"kind":"configCheck","check":model_guard.check()}));
@@ -206,7 +212,10 @@ pub(super) fn cancel(
     let matches = active.is_some_and(|active| {
         active.owner == request.owner
             && active.observation.receipt_id() == request.receipt_id
-            && active.unresolved()
+            && (active.unresolved()
+                || ctx
+                    .terminals
+                    .is_some_and(|terminals| terminals.stopping_possible(request.receipt_id)))
     });
     if !matches {
         let _ = request.result.send(Ok(false));
@@ -220,4 +229,25 @@ pub(super) fn cancel(
         .and_then(|result| result)
         .map(|()| true);
     let _ = request.result.send(sent);
+}
+
+/// `{kind:"turnEnd"}` event for a finished prompt request.
+pub(super) fn turn_end_event(outcome: Result<Value, String>) -> Value {
+    match outcome {
+        Ok(response) => {
+            let mut event = serde_json::Map::new();
+            event.insert("kind".to_string(), Value::String("turnEnd".to_string()));
+            if let Some(stop_reason) = response.get("stopReason") {
+                event.insert("stopReason".to_string(), stop_reason.clone());
+            }
+            if let Some(usage) = response.get("usage") {
+                event.insert("usage".to_string(), usage.clone());
+            }
+            if let Some(meta) = response.get("_meta") {
+                event.insert("meta".to_string(), meta.clone());
+            }
+            Value::Object(event)
+        }
+        Err(error) => serde_json::json!({"kind": "turnEnd", "error": error}),
+    }
 }

@@ -216,8 +216,16 @@ export interface PendingElicitation extends PendingRequest {
   values: Record<string, unknown>;
 }
 
+export interface TerminalCommandPermission {
+  program: string;
+  args: string[];
+  cwd: string;
+}
+
 export interface PendingPermission extends PendingRequest {
   toolCallId: string | null;
+  /** Absent for Agent tool approvals; null when command details are invalid. */
+  terminalCommand?: TerminalCommandPermission | null;
   /** Exact data for this request, never borrowed from a mutable live tool. */
   toolCallSnapshot?: Record<string, unknown> | null;
   /** Original request params, including opaque extensions; memory only. */
@@ -246,6 +254,8 @@ export interface ThreadState extends ReportedDetailsOwner {
   nativeSessionId: string;
   service?: import("./credentials").ServiceIdentity;
   serviceContext?: string;
+  /** Exact wire model option for the connection's selected service. */
+  serviceModelValue?: string;
   /** Live process only, not saved in the conversation index. */
   connectionId?: string;
   /** Separate local process-end channel only; never copied to a new route. */

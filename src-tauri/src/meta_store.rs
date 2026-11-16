@@ -666,8 +666,8 @@ impl MetaStore {
         use LocalSessionDeleteError::{NotRemoved, Unknown};
 
         let mut connection = self.lock().map_err(|_| NotRemoved)?;
-        mcp_pending::ensure_absent(&connection, session_id).map_err(|_| NotRemoved)?;
         let tx = connection.transaction().map_err(|_| NotRemoved)?;
+        Self::check_delete_ready(&tx, session_id).map_err(|_| NotRemoved)?;
         if Self::remove_session_metadata(&tx, session_id)
             .and_then(|_| Self::insert_dismissal(&tx, session_id))
             .is_err()
@@ -681,6 +681,20 @@ impl MetaStore {
             });
         }
         tx.commit().map_err(|_| Unknown)
+    }
+
+    pub(crate) fn require_delete_ready(&self, session_id: &str) -> Result<(), String> {
+        Self::check_delete_ready(&*self.lock()?, session_id)
+    }
+
+    fn check_delete_ready(connection: &Connection, session_id: &str) -> Result<(), String> {
+        mcp_pending::ensure_absent(connection, session_id)?;
+        if let Some(saved) = archive::read_saved_work(connection)?
+            && archive::has_unsent_work(&saved, session_id)?
+        {
+            return Err("此对话还有未发送内容或发送结果待确认，请处理后再删除".into());
+        }
+        Ok(())
     }
 
     // ------------------------------------------------------------------

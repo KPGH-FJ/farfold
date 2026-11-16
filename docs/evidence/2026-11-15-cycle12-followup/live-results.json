@@ -1,0 +1,320 @@
+{
+  "app": {
+    "version": "0.1.7",
+    "cdhash": "77fb03ec0c2e336c4d9024e7b18ffe93f624daff"
+  },
+  "cursor": {
+    "officialRegistryVersion": "2026.11.13",
+    "archiveRelease": "2026.11.13-eacade1",
+    "priorRegistryVersion": "2026.09.28",
+    "service": "existing Cursor settings",
+    "model": "Auto",
+    "uiClickMs": 1794734552594,
+    "ui": "回复已停止，仍有步骤未确认结束",
+    "naturalSeconds": 55,
+    "finishedMarkerAfterWindow": false,
+    "observedProcesses": [
+      {
+        "atMs": 1794734545303,
+        "pids": [9172, 9174],
+        "ps": [
+          "9172  9160  9160 Sun Nov 15 17:22:25 2026     /bin/sh",
+          " 9174  9172  9160 Sun Nov 15 17:22:25 2026     /bin/sleep"
+        ],
+        "finished": false
+      },
+      {
+        "atMs": 1794734552974,
+        "pids": [9172, 9174],
+        "ps": [],
+        "finished": false
+      }
+    ],
+    "uiClickToFirstAbsentMs": 380,
+    "wire": {
+      "trace": "protocol-v1-1794734461352-5.jsonl",
+      "events": [
+        {
+          "ts": 1794734461355,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1,
+          "error": "none"
+        },
+        {
+          "ts": 1794734461605,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794734461605,
+          "dir": "out",
+          "event": "session/new",
+          "wireSequence": 3,
+          "error": "none"
+        },
+        {
+          "ts": 1794734483125,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 4,
+          "error": "none"
+        },
+        {
+          "ts": 1794734524774,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 6,
+          "error": "none"
+        },
+        {
+          "ts": 1794734532970,
+          "dir": "in",
+          "event": "session/request_permission",
+          "wireSequence": 52,
+          "error": "none"
+        },
+        {
+          "ts": 1794734544721,
+          "dir": "out",
+          "event": "response",
+          "wireSequence": 54,
+          "error": "none"
+        },
+        {
+          "ts": 1794734552745,
+          "dir": "out",
+          "event": "session/cancel",
+          "wireSequence": 55,
+          "error": "none"
+        },
+        {
+          "ts": 1794734552757,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 56,
+          "error": "none"
+        }
+      ]
+    },
+    "coldContinue": {
+      "quitAtMs": 1794735526521,
+      "reopenedAtMs": 1794735544042,
+      "sentAtMs": 1794735580603,
+      "uiBefore": "此前请求结果未确认，未自动重发",
+      "sameOriginAndModel": "Cursor existing settings / Auto",
+      "reply": "FF_C12_CURSOR_NOV13_STOP_V1",
+      "uiTurn": "已完成",
+      "trace": "protocol-v1-1794735544226-0.jsonl",
+      "events": [
+        {
+          "ts": 1794735544229,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1,
+          "error": "none"
+        },
+        {
+          "ts": 1794735544554,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794735544557,
+          "dir": "out",
+          "event": "session/load",
+          "wireSequence": 3,
+          "error": "none"
+        },
+        {
+          "ts": 1794735555853,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 7,
+          "error": "none"
+        },
+        {
+          "ts": 1794735580752,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 9,
+          "error": "none"
+        },
+        {
+          "ts": 1794735586295,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 40,
+          "error": "none"
+        }
+      ],
+      "newSession": false,
+      "automaticResend": false
+    }
+  },
+  "historyPreview": [
+    {
+      "agent": "GitHub Copilot",
+      "query": "FARFOLD_COPILOT_A_20261006",
+      "originalReplyVisible": true,
+      "continue": "read_only_unverified_original_model",
+      "reportedCurrentSelection": "Auto",
+      "list": {
+        "trace": "protocol-v1-1794734032905-1.jsonl",
+        "events": [
+          {
+            "ts": 1794734032908,
+            "dir": "out",
+            "event": "initialize",
+            "wireSequence": 1,
+            "error": "none"
+          },
+          {
+            "ts": 1794734055221,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 2,
+            "error": "none"
+          },
+          {
+            "ts": 1794734055223,
+            "dir": "out",
+            "event": "session/list",
+            "wireSequence": 3,
+            "error": "none"
+          },
+          {
+            "ts": 1794734055233,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 4,
+            "error": "none"
+          }
+        ]
+      },
+      "preview": {
+        "trace": "protocol-v1-1794734780409-6.jsonl",
+        "events": [
+          {
+            "ts": 1794734780410,
+            "dir": "out",
+            "event": "initialize",
+            "wireSequence": 1,
+            "error": "none"
+          },
+          {
+            "ts": 1794734780930,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 2,
+            "error": "none"
+          },
+          {
+            "ts": 1794734780931,
+            "dir": "out",
+            "event": "session/load",
+            "wireSequence": 3,
+            "error": "none"
+          },
+          {
+            "ts": 1794734788054,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 53,
+            "error": "none"
+          },
+          {
+            "ts": 1794734990788,
+            "dir": "out",
+            "event": "other",
+            "wireSequence": 55,
+            "error": "none"
+          },
+          {
+            "ts": 1794734991064,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 56,
+            "error": "none"
+          }
+        ]
+      }
+    },
+    {
+      "agent": "Pi",
+      "query": "FARFOLD_PI_A_20261006_1632",
+      "originalReplyVisible": true,
+      "continue": "read_only_unverified_original_model_and_thinking",
+      "list": {
+        "trace": "protocol-v1-1794735016913-7.jsonl",
+        "events": [
+          {
+            "ts": 1794735016918,
+            "dir": "out",
+            "event": "initialize",
+            "wireSequence": 1,
+            "error": "none"
+          },
+          {
+            "ts": 1794735017026,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 2,
+            "error": "none"
+          },
+          {
+            "ts": 1794735017029,
+            "dir": "out",
+            "event": "session/list",
+            "wireSequence": 3,
+            "error": "none"
+          },
+          {
+            "ts": 1794735017049,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 4,
+            "error": "none"
+          }
+        ]
+      },
+      "preview": {
+        "trace": "protocol-v1-1794735021382-8.jsonl",
+        "events": [
+          {
+            "ts": 1794735021384,
+            "dir": "out",
+            "event": "initialize",
+            "wireSequence": 1,
+            "error": "none"
+          },
+          {
+            "ts": 1794735021461,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 2,
+            "error": "none"
+          },
+          {
+            "ts": 1794735021462,
+            "dir": "out",
+            "event": "session/load",
+            "wireSequence": 3,
+            "error": "none"
+          },
+          {
+            "ts": 1794735021636,
+            "dir": "in",
+            "event": "response",
+            "wireSequence": 41,
+            "error": "none"
+          }
+        ]
+      }
+    }
+  ]
+}

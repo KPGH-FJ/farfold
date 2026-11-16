@@ -1,0 +1,506 @@
+{
+  "appCDHash": "aed12e353224056ba742eb7716a95409d81eb09e",
+  "agent": "fast-agent 0.10.1",
+  "paired": {
+    "sentA": 1794740190777,
+    "sentB": 1794740206797,
+    "allowA": 1794740239946,
+    "allowB": 1794740251198,
+    "stopA": 1794740262360,
+    "observations": [
+      {
+        "atMs": 1794740240142,
+        "role": "A",
+        "pids": [73721, 73723],
+        "ps": [
+          "73721 73380 73721 Sun Nov 15 18:57:20 2026     /bin/sh",
+          "73723 73721 73721 Sun Nov 15 18:57:20 2026     /bin/sleep"
+        ],
+        "finished": false
+      },
+      {
+        "atMs": 1794740251464,
+        "role": "B",
+        "pids": [73787, 73789],
+        "ps": [
+          "73787 73380 73787 Sun Nov 15 18:57:31 2026     /bin/sh",
+          "73789 73787 73787 Sun Nov 15 18:57:31 2026     /bin/sleep"
+        ],
+        "finished": false
+      },
+      {
+        "atMs": 1794740263046,
+        "role": "A",
+        "pids": [73721, 73723],
+        "ps": [],
+        "finished": false
+      },
+      {
+        "atMs": 1794740285445,
+        "role": "B",
+        "pids": [73787, 73789],
+        "ps": [],
+        "finished": true
+      }
+    ],
+    "controlAfterStop": {
+      "atMs": 1794740276694,
+      "pids": [73787, 73789],
+      "ps": [
+        "73787 73380 73787 Sun Nov 15 18:57:31 2026     /bin/sh",
+        "73789 73787 73787 Sun Nov 15 18:57:31 2026     /bin/sleep"
+      ]
+    },
+    "aNaturalMarkerAbsent": true,
+    "bFileMatches": true,
+    "bUIReply": "PAIR_B_SHELL_DONE",
+    "traceA": {
+      "name": "protocol-v1-1794740168768-0.jsonl",
+      "events": [
+        {
+          "ts": 1794740168771,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1,
+          "error": "none"
+        },
+        {
+          "ts": 1794740170334,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794740170335,
+          "dir": "out",
+          "event": "session/new",
+          "wireSequence": 3,
+          "error": "none"
+        },
+        {
+          "ts": 1794740170460,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 4,
+          "error": "none"
+        },
+        {
+          "ts": 1794740191277,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 6,
+          "error": "none"
+        },
+        {
+          "ts": 1794740198092,
+          "dir": "in",
+          "event": "session/request_permission",
+          "wireSequence": 12,
+          "error": "none"
+        },
+        {
+          "ts": 1794740200354,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794740214073,
+          "dir": "out",
+          "event": "response",
+          "wireSequence": 13,
+          "error": "none"
+        },
+        {
+          "ts": 1794740214074,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 15,
+          "error": "none"
+        },
+        {
+          "ts": 1794740240114,
+          "dir": "out",
+          "event": "response",
+          "wireSequence": 16,
+          "error": "none"
+        },
+        {
+          "ts": 1794740240114,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 17,
+          "error": "none"
+        },
+        {
+          "ts": 1794740262861,
+          "dir": "out",
+          "event": "session/cancel",
+          "wireSequence": 18,
+          "error": "none"
+        },
+        {
+          "ts": 1794740262867,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 20,
+          "error": "none"
+        },
+        {
+          "ts": 1794740262886,
+          "dir": "out",
+          "event": "response",
+          "wireSequence": 21,
+          "error": "none"
+        }
+      ]
+    },
+    "traceB": {
+      "name": "protocol-v1-1794740199280-1.jsonl",
+      "events": [
+        {
+          "ts": 1794740199283,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1,
+          "error": "none"
+        },
+        {
+          "ts": 1794740200397,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794740200397,
+          "dir": "out",
+          "event": "session/new",
+          "wireSequence": 3,
+          "error": "none"
+        },
+        {
+          "ts": 1794740200523,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 4,
+          "error": "none"
+        },
+        {
+          "ts": 1794740207325,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 6,
+          "error": "none"
+        },
+        {
+          "ts": 1794740212489,
+          "dir": "in",
+          "event": "session/request_permission",
+          "wireSequence": 12,
+          "error": "none"
+        },
+        {
+          "ts": 1794740230419,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794740246091,
+          "dir": "out",
+          "event": "response",
+          "wireSequence": 13,
+          "error": "none"
+        },
+        {
+          "ts": 1794740246092,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 15,
+          "error": "none"
+        },
+        {
+          "ts": 1794740251363,
+          "dir": "out",
+          "event": "response",
+          "wireSequence": 16,
+          "error": "none"
+        },
+        {
+          "ts": 1794740251364,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 17,
+          "error": "none"
+        },
+        {
+          "ts": 1794740285398,
+          "dir": "out",
+          "event": "response",
+          "wireSequence": 18,
+          "error": "none"
+        },
+        {
+          "ts": 1794740285399,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 19,
+          "error": "none"
+        },
+        {
+          "ts": 1794740285399,
+          "dir": "out",
+          "event": "response",
+          "wireSequence": 20,
+          "error": "none"
+        },
+        {
+          "ts": 1794740285399,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 21,
+          "error": "none"
+        },
+        {
+          "ts": 1794740285400,
+          "dir": "out",
+          "event": "response",
+          "wireSequence": 22,
+          "error": "none"
+        },
+        {
+          "ts": 1794740288543,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 31,
+          "error": "none"
+        }
+      ]
+    }
+  },
+  "coldA": {
+    "quitAt": 1794740315717,
+    "openAt": 1794740361136,
+    "manualSendAt": 1794740381651,
+    "originalReply": "FF_C12_FAST_PAIR_A_9402",
+    "autoResend": false,
+    "trace": {
+      "name": "protocol-v1-1794740361322-0.jsonl",
+      "events": [
+        {
+          "ts": 1794740361324,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1,
+          "error": "none"
+        },
+        {
+          "ts": 1794740362453,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794740362453,
+          "dir": "out",
+          "event": "session/load",
+          "wireSequence": 3,
+          "error": "none"
+        },
+        {
+          "ts": 1794740362583,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 8,
+          "error": "none"
+        },
+        {
+          "ts": 1794740382164,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 9,
+          "error": "none"
+        },
+        {
+          "ts": 1794740386744,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 22,
+          "error": "none"
+        },
+        {
+          "ts": 1794740392478,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        }
+      ]
+    }
+  },
+  "priorNegative": {
+    "queuedB": {
+      "name": "protocol-v1-1794739585512-24.jsonl",
+      "events": [
+        {
+          "ts": 1794739585514,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1,
+          "error": "none"
+        },
+        {
+          "ts": 1794739586640,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794739586641,
+          "dir": "out",
+          "event": "session/new",
+          "wireSequence": 3,
+          "error": "none"
+        },
+        {
+          "ts": 1794739586764,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 4,
+          "error": "none"
+        },
+        {
+          "ts": 1794739616663,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        }
+      ]
+    },
+    "retainedClaudeAuthRequired": {
+      "name": "protocol-v1-1794738096642-4.jsonl",
+      "events": [
+        {
+          "ts": 1794738096645,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1,
+          "error": "none"
+        },
+        {
+          "ts": 1794738096778,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794738096779,
+          "dir": "out",
+          "event": "session/new",
+          "wireSequence": 3,
+          "error": "none"
+        },
+        {
+          "ts": 1794738096782,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794738096783,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794738096783,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794738096785,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794738096863,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 4,
+          "error": "none"
+        },
+        {
+          "ts": 1794738096930,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794738096930,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794738096930,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794738096930,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794738096931,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794738096931,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 5,
+          "error": "none"
+        },
+        {
+          "ts": 1794738096935,
+          "dir": "out",
+          "event": "session/set_config_option",
+          "wireSequence": 7,
+          "error": "none"
+        },
+        {
+          "ts": 1794738096938,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 8,
+          "error": "none"
+        },
+        {
+          "ts": 1794738104585,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 9,
+          "error": "none"
+        },
+        {
+          "ts": 1794738104629,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 12,
+          "error": "protocol"
+        }
+      ]
+    }
+  }
+}

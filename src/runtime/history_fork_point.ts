@@ -47,30 +47,63 @@ export function historyForkHint(
   return { messageId: hint.messageId, connectionId: thread.connectionId };
 }
 
+function isMessage(item: ThreadItem) {
+  return item.kind === "user" || item.kind === "agent";
+}
+
+function forkConnection(thread: ThreadState): string | undefined {
+  if (thread.sessionOperations?.forkHistoricalPoint && !thread.connectionLost)
+    return thread.connectionId;
+}
+
+function forkMessageId(
+  item: ThreadItem,
+  connection: string,
+): string | undefined {
+  if (
+    !isMessage(item) ||
+    item.streaming ||
+    item.historyForkPoint?.connectionId !== connection ||
+    !validForkId(item.historyForkPoint.messageId) ||
+    item.messageId !== item.historyForkPoint.messageId
+  )
+    return;
+  return item.messageId;
+}
+
+/** A render-scoped index. The action still rechecks the current thread. */
+export function historyForkableItems(
+  thread: ThreadState,
+): ReadonlySet<ThreadItem> {
+  const items = new Set<ThreadItem>();
+  const connection = forkConnection(thread);
+  if (!connection) return items;
+  const unique = new Map<string, ThreadItem | null>();
+  for (const item of thread.items) {
+    if (isMessage(item) && item.messageId)
+      unique.set(item.messageId, unique.has(item.messageId) ? null : item);
+  }
+  for (const item of unique.values()) {
+    if (item && forkMessageId(item, connection)) items.add(item);
+  }
+  return items;
+}
+
 export function historyForkSelection(
   thread: ThreadState,
   item: ThreadItem,
 ): HistoryForkSelection | undefined {
-  if (
-    !thread.sessionOperations?.forkHistoricalPoint ||
-    !thread.connectionId ||
-    thread.connectionLost ||
-    !thread.items.includes(item) ||
-    (item.kind !== "user" && item.kind !== "agent") ||
-    item.streaming ||
-    item.historyForkPoint?.connectionId !== thread.connectionId ||
-    !validForkId(item.historyForkPoint.messageId) ||
-    item.messageId !== item.historyForkPoint.messageId ||
-    thread.items.filter(
-      (other) =>
-        (other.kind === "user" || other.kind === "agent") &&
-        other.messageId === item.messageId,
-    ).length !== 1
-  )
-    return;
+  const connection = forkConnection(thread);
+  if (!connection || !isMessage(item)) return;
+  const messageId = forkMessageId(item, connection);
+  if (!messageId) return;
+  const matches = thread.items.filter(
+    (other) => isMessage(other) && other.messageId === messageId,
+  );
+  if (matches.length !== 1 || matches[0] !== item) return;
   return {
     item,
-    point: { messageId: item.messageId },
+    point: { messageId },
     preview: item.text.slice(0, 240),
   };
 }
@@ -79,10 +112,11 @@ export function hasHistoryForkPoint(
   thread: ThreadState,
   point: HistoryForkPoint,
 ): boolean {
-  return thread.items.some(
-    (item) =>
-      historyForkSelection(thread, item)?.point.messageId === point.messageId,
+  const item = thread.items.find(
+    (candidate) =>
+      isMessage(candidate) && candidate.messageId === point.messageId,
   );
+  return !!item && !!historyForkSelection(thread, item);
 }
 export function sameHistoryForkPoint(
   value: unknown,

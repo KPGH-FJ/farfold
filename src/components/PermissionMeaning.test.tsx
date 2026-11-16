@@ -142,6 +142,60 @@ it.each(["allow_once", "allow_always", "reject_once", "reject_always"])(
   },
 );
 
+it.each(["allow_once", "reject_once"])(
+  "uses the original owned command permission request for %s",
+  async (kind) => {
+    const id = `terminal-${++serial}`;
+    const state = threads.markOpenFailed(
+      `a:/fixture:${id}`,
+      "a",
+      "/fixture",
+      id,
+      "fixture",
+    );
+    state.openError = null;
+    state.running = true;
+    const options = [
+      {
+        optionId: "allow-this-command",
+        name: "Allow once",
+        kind: "allow_once",
+      },
+      {
+        optionId: "deny-this-command",
+        name: "Reject once",
+        kind: "reject_once",
+      },
+    ];
+    const requestId = "owned-command-request";
+    channel.applyChannelEvent(state.key, {
+      kind: "permissionRequest",
+      requestId,
+      terminalCommand: { program: "/usr/bin/true", args: [], cwd: "/tmp" },
+      options,
+    });
+    const pending = state.pendingPermissions[0];
+    render(state);
+    const option = pending.options.find((option) => option.kind === kind)!;
+    h.pick!(option);
+    expect(pending.decision).toMatchObject({
+      allow: kind === "allow_once",
+      undoable: false,
+    });
+    await vi.runAllTimersAsync();
+    expect(replies()).toEqual([
+      [
+        "session_permission_respond",
+        {
+          sessionId: state.nativeSessionId,
+          requestId,
+          optionId: option.optionId,
+        },
+      ],
+    ]);
+  },
+);
+
 it("does not turn an unknown delivery result into a neutral success record or repeat the original choice", async () => {
   h.invoke.mockImplementation(async (command) => {
     if (command === "session_permission_respond")

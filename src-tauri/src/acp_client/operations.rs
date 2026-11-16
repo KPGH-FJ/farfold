@@ -428,7 +428,12 @@ pub(crate) async fn run(
             )
             .await;
         }
-        ManagerCommand::DeleteSession { session_id, result } => {
+        ManagerCommand::DeleteSession {
+            session_id,
+            row_id,
+            store,
+            result,
+        } => {
             execute(
                 result,
                 ops.life.clone(),
@@ -436,13 +441,21 @@ pub(crate) async fn run(
                 deadline,
                 true,
                 async {
+                    if store
+                        .run(move |store| store.require_delete_ready(&row_id))
+                        .await
+                        .is_err()
+                        || !operation.interested()
+                    {
+                        return Ok(false);
+                    }
                     operation
                         .request(
                             &cx,
                             cx.send_request_to(Agent, DeleteSessionRequest::new(session_id)),
                         )
                         .await
-                        .map(|_| ())
+                        .map(|_| true)
                         .map_err(pump::describe_acp_error)
                 },
             )

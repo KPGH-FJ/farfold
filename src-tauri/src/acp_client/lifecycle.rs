@@ -204,6 +204,7 @@ pub(super) type RetirementObserver = Arc<dyn Fn(serde_json::Value) + Send + Sync
 pub(crate) struct ConnectionLife {
     pub(super) routes: Arc<super::session_routes::Routes>,
     pub(super) ingress: super::ingress_permit::ConsumerProbe,
+    pub(super) tool_terminals: super::pump::tool_terminal::Connection,
     pub state: Arc<AtomicU8>,
     pub work: Arc<AtomicU64>,
     activity: Mutex<Activity>,
@@ -264,6 +265,7 @@ impl ConnectionLife {
             state: Arc::new(AtomicU8::new(CONNECTING)),
             routes: Arc::new(super::session_routes::Routes::default()),
             ingress: super::ingress_permit::ConsumerProbe::default(),
+            tool_terminals: Default::default(),
             work: Arc::new(AtomicU64::new(0)),
             activity: Mutex::new(Activity {
                 last: Instant::now(),

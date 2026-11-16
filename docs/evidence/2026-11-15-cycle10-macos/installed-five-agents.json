@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "scope": "Farfold installed macOS, correlated with one normal UI action per read; only payload-free diagnostic classifications",
+  "appCDHash": "44d969fc62bf11cfb31200a2828a409f7145a824",
+  "historyVisibleRows": {
+    "dimcode": 0,
+    "autohand": 0,
+    "antigravity": 0,
+    "minimax": 6,
+    "sigit-in-owned-directory": 0
+  },
+  "minimaxOwnedTestMarkerVisible": true,
+  "ordinaryPrompts": 0,
+  "loads": 0,
+  "authenticateRequests": 0,
+  "imports": 0,
+  "cases": {
+    "dimcode-list": {
+      "sourceName": "protocol-v1-1794729343163-5.jsonl",
+      "sourceSha256": "a3f23d09bbaf96776ce15f25c4d3b3ffcf935a55cff46b2445372631f07eb680",
+      "request": "session/list",
+      "response": "success",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "startedAtUtc": "2026-11-15T07:55:45.848000+00:00"
+    },
+    "autohand-list": {
+      "sourceName": "protocol-v1-1794729361956-6.jsonl",
+      "sourceSha256": "4fa61f2afe3386ef941d850f5d27cd658625ce62e057d8534f77fc782a2d9f0c",
+      "request": "session/list",
+      "response": "success",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "startedAtUtc": "2026-11-15T07:56:03.141000+00:00"
+    },
+    "antigravity-list": {
+      "sourceName": "protocol-v1-1794729370453-7.jsonl",
+      "sourceSha256": "78906f760aebd68d1e0c10a4b00f9e6368f8e6e1aa2296e89fdadc5329b3d67a",
+      "request": "session/list",
+      "response": "success",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "startedAtUtc": "2026-11-15T07:56:13.261000+00:00"
+    },
+    "minimax-list": {
+      "sourceName": "protocol-v1-1794729388068-8.jsonl",
+      "sourceSha256": "54f16e22b945edf508afc66be1e465acc58b5e0e3bd25dc88fc6fb2a14225b93",
+      "request": "session/list",
+      "response": "success",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "startedAtUtc": "2026-11-15T07:56:30.540000+00:00"
+    },
+    "sigit-list-owned-directory": {
+      "sourceName": "protocol-v1-1794729531061-9.jsonl",
+      "sourceSha256": "1ceeb4ca22744c319a74a4b8fe28e06b33135d95871c884612b18baf02398790",
+      "request": "session/list",
+      "response": "success",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "startedAtUtc": "2026-11-15T07:59:02.767000+00:00"
+    },
+    "minimax-existing-settings": {
+      "sourceName": "protocol-v1-1794729616408-10.jsonl",
+      "sourceSha256": "4045b03aeaa2a149d4d1c6166111671ad4d7445b5ae4de2a8efe9c81b014def9",
+      "request": "session/new",
+      "response": "success",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "startedAtUtc": "2026-11-15T08:00:18.128000+00:00"
+    },
+    "antigravity-existing-settings": {
+      "sourceName": "protocol-v1-1794729663098-11.jsonl",
+      "sourceSha256": "6cd1bd9245e724ce3a5be8d31ff65bcd390d30e2af85b8640e59504dce870969",
+      "request": "session/new",
+      "response": "auth_required",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "startedAtUtc": "2026-11-15T08:01:04.119000+00:00"
+    },
+    "autohand-existing-settings": {
+      "sourceName": "protocol-v1-1794729684253-12.jsonl",
+      "sourceSha256": "a06b04e46e0c423a0d22d57a7bffd3fa519b559e1be7d8e883aa5235260497e4",
+      "request": "session/new",
+      "response": "auth_required",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "startedAtUtc": "2026-11-15T08:01:24.609000+00:00"
+    },
+    "dimcode-existing-settings": {
+      "sourceName": "protocol-v1-1794729709875-13.jsonl",
+      "sourceSha256": "03f3f7995bbdca591aabb9167fc908530babe5a9fd17efa61287bf63bc5430d4",
+      "request": "session/new",
+      "response": "internal_error",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "startedAtUtc": "2026-11-15T08:01:50.172000+00:00"
+    },
+    "sigit-initialization": {
+      "sourceName": "protocol-v1-1794729745136-14.jsonl",
+      "sourceSha256": "ba018574c56f8769b03064eeb52adfa40c637e465a08b746cce3e77e2bfe9da8",
+      "request": "initialize",
+      "response": "success",
+      "requestSequence": 1,
+      "responseSequence": 2,
+      "startedAtUtc": "2026-11-15T08:02:25.138000+00:00"
+    },
+    "sigit-existing-settings": {
+      "sourceName": "protocol-v1-1794729748464-15.jsonl",
+      "sourceSha256": "98653d6f29d2f589959bb912f498be4be34440ee18358654c443ed8e511b432b",
+      "request": "session/new",
+      "response": "success",
+      "requestSequence": 3,
+      "responseSequence": 5,
+      "startedAtUtc": "2026-11-15T08:02:31.039000+00:00"
+    }
+  },
+  "afterUpdate": {
+    "appCDHash": "8064235bd1101a04dfec59b5294543fa692f8bd4",
+    "binarySha256": "e6b3c0516202291d4cb789b01070fcadc2482b54904a713d0fef1e73ac852bcf",
+    "closedRootsSame": true,
+    "closedRootsEntryCount": 206480,
+    "duplicateRemoved": true,
+    "coldUI": {
+      "indexedConversations": 19,
+      "withUnsentContent": 6,
+      "running": 0
+    },
+    "minimaxListSmoke": {
+      "rows": 7,
+      "ownedTestMarkerVisible": true,
+      "sourceName": "protocol-v1-1794729951495-0.jsonl",
+      "sourceSha256": "d1e3153c0ab194c3c1dbd62a216919644d3b58447c24b22925bfa1f01a20ea71",
+      "knownIdFormOpened": true
+    }
+  }
+}

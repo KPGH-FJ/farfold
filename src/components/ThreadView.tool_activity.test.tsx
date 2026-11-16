@@ -56,6 +56,8 @@ const render = (thread: ReturnType<typeof state>) =>
 it("distinguishes a stopped reply from still active official steps and clears the note only on terminal activity", () => {
   const thread = state();
   const html = render(thread);
+  expect(html).toContain('class="no">■ 回复已停止</span>');
+  expect(html).not.toContain('class="no">■ 已停止</span>');
   expect(html).toContain("回复已停止，仍有步骤未确认结束");
   expect(html).toContain("正在处理");
   expect(html).toContain('class="g run"');
@@ -66,6 +68,7 @@ it("distinguishes a stopped reply from still active official steps and clears th
   });
   Object.assign(thread, { activeToolCallIds: [] });
   const done = render(thread);
+  expect(done).toContain('class="no">■ 回复已停止</span>');
   expect(done).not.toContain("回复已停止，仍有步骤未确认结束");
   expect(done).toContain('class="g ok"');
 });

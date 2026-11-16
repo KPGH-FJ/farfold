@@ -6,6 +6,35 @@ type AuthenticationStage = "session" | "request";
 let required: ReadonlyMap<string, AuthenticationStage> = new Map();
 const listeners = new Set<() => void>();
 const accountListeners = new Set<(agentId: string) => void>();
+const programObservers = new Map<string, AuthenticationObserver>();
+const programChanges = new Map<string, Set<Promise<void>>>();
+
+export function beginProgramAuthenticationChange(agent: string) {
+  const changes = programChanges.get(agent) ?? new Set();
+  programChanges.set(agent, changes);
+  let release!: () => void;
+  const pending = new Promise<void>((resolve) => (release = resolve));
+  changes.add(pending);
+  return () => {
+    changes.delete(pending);
+    if (changes.size === 0 && programChanges.get(agent) === changes)
+      programChanges.delete(agent);
+    release();
+  };
+}
+
+export function hasPendingProgramAuthenticationChange(agent: string) {
+  return programChanges.has(agent);
+}
+
+export function pendingProgramAuthenticationChange(
+  agent: string,
+): Promise<void> | undefined {
+  const changes = programChanges.get(agent);
+  return changes
+    ? Promise.all(changes).then(() => pendingProgramAuthenticationChange(agent))
+    : undefined;
+}
 /** Explicit account/configuration actions invalidate prior model verification. */
 export function invalidateAuthentication(agentId: string) {
   for (const listener of accountListeners) listener(agentId);
@@ -41,6 +70,58 @@ export function observeAuthentication(
   required = next;
   listeners.forEach((fn) => fn());
 }
+
+type AuthenticationObserver = {
+  current: () => boolean;
+  observe: (
+    cwd: string,
+    error?: unknown,
+    source?: string,
+    stage?: AuthenticationStage,
+  ) => void;
+};
+
+/** Older openings and deliveries cannot publish evidence for a new program. */
+export function captureProgramAuthentication(
+  agent: string,
+): AuthenticationObserver {
+  const existing = programObservers.get(agent);
+  if (existing) return existing;
+  const current = () => programObservers.get(agent) === observer;
+  const observer: AuthenticationObserver = {
+    current,
+    observe: (cwd, error, source, stage) => {
+      if (current()) observeAuthentication(agent, cwd, error, source, stage);
+    },
+  };
+  programObservers.set(agent, observer);
+  return observer;
+}
+
+const threadObservers = new WeakMap<object, AuthenticationObserver>();
+export function bindProgramAuthentication(
+  thread: object,
+  observer: AuthenticationObserver | undefined,
+) {
+  if (observer) threadObservers.set(thread, observer);
+}
+export function threadProgramAuthentication(thread: object) {
+  return threadObservers.get(thread);
+}
+
+/** A committed replacement invalidates only evidence collected by its old program. */
+export function programAuthenticationChanged(agent: string) {
+  programObservers.delete(agent);
+  const next = new Map(required);
+  for (const id of required.keys())
+    if (id.startsWith(`${agent}\n`)) next.delete(id);
+  if (next.size !== required.size) {
+    required = next;
+    listeners.forEach((fn) => fn());
+  }
+  invalidateAuthentication(agent);
+}
+
 export function useAuthentication() {
   return useSyncExternalStore(
     (fn) => {

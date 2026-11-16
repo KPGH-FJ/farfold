@@ -70,6 +70,8 @@ pub(crate) use open::open_session_on_connection;
 mod list;
 #[path = "pump/restore_config.rs"]
 pub(crate) mod restore_config;
+#[path = "pump/tool_terminal/mod.rs"]
+pub(crate) mod tool_terminal;
 #[path = "session_tools/dispatch.rs"]
 mod tools_report;
 pub(crate) use list::list_sessions_on_connection;
@@ -81,6 +83,7 @@ pub(crate) type SessionSink = Arc<dyn Fn(Value) + Send + Sync>;
 /// session pump.
 pub(crate) struct PendingPermission {
     pub responder: Option<Responder<Value>>,
+    pub local_decision: Option<oneshot::Sender<bool>>,
     pub cancelled: RequestCancellation,
     _completed: oneshot::Sender<()>,
     pub session_id: String,
@@ -203,7 +206,9 @@ impl SessionEntry {
 }
 
 mod control;
-pub(crate) use control::SessionControl;
+pub(crate) use control::{SessionControl, clear_connection_interactions};
+mod closing;
+pub(crate) use closing::{notify_connection_end, wait_for_connection_end};
 mod fork;
 mod stopped_tool_close;
 pub(crate) use stopped_tool_close::StoppedToolCloseReceipt;
@@ -314,27 +319,6 @@ async fn restore_synthetic_mode(
     Ok(())
 }
 
-/// `{kind:"turnEnd"}` event for a finished prompt request.
-fn turn_end_event(outcome: Result<Value, String>) -> Value {
-    match outcome {
-        Ok(response) => {
-            let mut event = serde_json::Map::new();
-            event.insert("kind".to_string(), Value::String("turnEnd".to_string()));
-            if let Some(stop_reason) = response.get("stopReason") {
-                event.insert("stopReason".to_string(), stop_reason.clone());
-            }
-            if let Some(usage) = response.get("usage") {
-                event.insert("usage".to_string(), usage.clone());
-            }
-            if let Some(meta) = response.get("_meta") {
-                event.insert("meta".to_string(), meta.clone());
-            }
-            Value::Object(event)
-        }
-        Err(error) => serde_json::json!({"kind": "turnEnd", "error": error}),
-    }
-}
-
 /// Per-session context the dispatch handler needs beyond the dispatch:
 /// the event sink, the shared pending-request registries, and the ids
 /// cleaned up when the pump exits.
@@ -351,6 +335,7 @@ struct DispatchContext<'a> {
     compactions: &'a mut super::compaction_activity::CompactionActivity,
     async_tasks: &'a mut super::async_tasks::Tasks,
     prompt_cancelling: bool,
+    terminals: Option<&'a tool_terminal::Session>,
 }
 
 /// Handle one session-scoped dispatch: forward notifications to the frontend
@@ -416,6 +401,17 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                 }
             }
             match method {
+                tool_terminal::CREATE
+                | tool_terminal::OUTPUT
+                | tool_terminal::KILL
+                | tool_terminal::RELEASE
+                | tool_terminal::WAIT
+                    if ctx.terminals.is_some() =>
+                {
+                    ctx.terminals
+                        .unwrap()
+                        .dispatch(ctx, method, params, responder);
+                }
                 "session/request_permission" => {
                     let request_id = next_request_id();
                     ctx.tools
@@ -439,6 +435,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                                 request_id.clone(),
                                 PendingPermission {
                                     responder: Some(responder),
+                                    local_decision: None,
                                     cancelled,
                                     _completed: completed,
                                     lease,
@@ -512,6 +509,9 @@ fn send_session_cancel(
     prompt_in_flight: bool,
     mcp_requests: Option<&super::transient_mcp::SessionMcpRequests>,
 ) {
+    if let Some(terminals) = ctx.terminals {
+        terminals.stop();
+    }
     let sent = cx
         .send_notification_to(Agent, CancelNotification::new(ctx.session_id.to_owned()))
         .map_err(describe_acp_error);
@@ -573,6 +573,10 @@ async fn session_pump(
     let mut identity_read: Option<super::identity_read::Pending> = None;
     let mut pending_config_store = None;
     let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<prompt::Outcome>();
+    let terminals = (ops.life.tool_terminals.enabled.load(Ordering::SeqCst)
+        && purpose == super::open_purpose::OpenPurpose::Conversation)
+        .then(|| tool_terminal::Session::new(&config_store.cwd));
+    let mut held_turn = None;
     let load_notifications::State {
         mut permission_ids,
         mut elicitation_ids,
@@ -619,6 +623,7 @@ async fn session_pump(
             compactions: &mut compactions,
             async_tasks: &mut async_tasks,
             prompt_cancelling,
+            terminals: terminals.as_ref(),
         };
         // Inspect only the FIFO head: a running prompt's cancellation must
         // not wait for a continuously ready inbox. Never pass an earlier
@@ -810,7 +815,12 @@ async fn session_pump(
                     MutationReply::Open(initial.reply.take().unwrap()), initial.operation.clone(), lease,
                     tokio::time::Instant::now()+std::time::Duration::from_secs(60), future));
             },
-            outcome = turn_rx.recv() => {
+            outcome = async {
+                match &terminals {
+                    Some(terminals) => terminals.next_turn(&mut turn_rx, &mut held_turn).await,
+                    None => turn_rx.recv().await,
+                }
+            } => {
                 if let Some(prompt::Outcome { receipt_id, result: outcome }) = outcome {
                     ops.life.touch();
                     ctx.tools.finish_prompt(receipt_id, outcome.as_ref().is_ok_and(|reply| reply["stopReason"] == "cancelled"));
@@ -826,7 +836,7 @@ async fn session_pump(
                     cancel_elicitations(&ops.elicitations, &mut elicitation_ids);
                     if let Some(requests) = &mcp_requests { requests.set_prompt_active(false); }
                     let failure = failures.finish(outcome.as_ref().ok());
-                    let mut event = turn_end_event(outcome);
+                    let mut event = prompt::turn_end_event(outcome);
                     event["promptReceiptId"] = serde_json::json!(receipt_id);
                     if let Some(failure) = failure { event["failure"] = failure; }
                     events(event);
@@ -984,13 +994,19 @@ async fn session_pump(
                         } else if let Ok(options) = &outcome { permission_guard.observe(options); }
                         events(permission_guard.event());
                     }
-                    let closed = matches!(completed.kind, MutationKind::Close | MutationKind::Delete) && outcome.is_ok();
+                    let closing_for_delete = matches!(completed.kind, MutationKind::DeleteClose);
+                    if closing_for_delete && outcome.is_ok() {
+                        restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard, &mut permission_guard, &mut opening, &mut mutation);
+                    }
+                    let closed = matches!(completed.kind, MutationKind::Close | MutationKind::DeleteClose | MutationKind::Delete) && outcome.is_ok();
                     if closed && let Ok(mut entries) = sessions.lock() { entries.remove(&session_id); }
                     if matches!(&completed.kind, MutationKind::Config { .. }) {
                         outcome = outcome.map(|options| configuration_snapshot(options,
                             configuration.modern_options().is_some(), &model_guard, &config_store, &permission_guard));
                     }
-                    completed.finish(outcome);
+                    if closing_for_delete {
+                        completed.finish_delete_close(outcome.map(|_| !restore_config::deletion_busy(&ctx)));
+                    } else { completed.finish(outcome); }
                     if closed { break; }
                 } else if let Some(current) = &mutation {
                     if matches!(&current.kind, MutationKind::Config { permission_value: Some(_), .. }) {
@@ -1039,6 +1055,16 @@ async fn session_pump(
                     if let Some(error) = command.pending_tools_error(&config_store, &session_id).await {
                         command.reject(error); continue;
                     }
+                    let deleting = command.deletion();
+                    if deleting {
+                        if matches!(&command,SessionControl::Delete { .. }) && !control::saved_delete_ready(&config_store, &session_id).await {
+                            command.reject("此对话还有未发送内容或发送结果待确认，请处理后再删除".into()); continue;
+                        }
+                        restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard, &mut permission_guard, &mut opening, &mut mutation);
+                        if mutation.is_some() || prompt_in_flight || prompt_cancelling || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved) || restore_config::deletion_busy(&ctx) {
+                            command.reject("请先完成此对话的任务及待处理事项，再删除".into()); continue;
+                        }
+                    }
                     match command {
                 SessionControl::Shutdown => break,
                 SessionControl::Fork { request,result,.. } => {
@@ -1067,8 +1093,7 @@ async fn session_pump(
                 SessionControl::Archive { row, canonical_cwd, reservations, admission, result, .. } => {
                     let busy = prompt_in_flight || mutation.is_some() || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy())
                         || !permission_guard.admissible() || !model_guard.admissible()
-                        || pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id && entry.lease.belongs_to(&ops.life))).unwrap_or(true)
-                        || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id && entry.lease.belongs_to(&ops.life))).unwrap_or(true);
+                        || restore_config::owned_interactions(&ctx);
                     if busy {
                         let _ = result.send(Err("请先完成此对话的任务及待处理事项，再归档".into()));
                         continue;
@@ -1097,8 +1122,8 @@ async fn session_pump(
                         _ => unreachable!(),
                     }
                 }
-                SessionControl::Detach { result, .. } => {
-                    detached = control::LocalDetach::start(&ctx, prompt_in_flight || mutation.is_some(), result);
+                SessionControl::Detach { result, .. } | SessionControl::DeleteDetach { result, .. } => {
+                    detached = control::LocalDetach::start(&ctx, prompt_in_flight || mutation.is_some() || (!deleting && restore_config::busy(&ctx)), result);
                     if detached.is_some() { break; }
                 }
                 SessionControl::Prompt { blocks, grant, result } => {
@@ -1382,7 +1407,7 @@ async fn session_pump(
                         let _ = result.send(outcome);
                     }
                 }
-                command @ (SessionControl::SetMode { .. } | SessionControl::Close { .. } | SessionControl::ForkClose { .. } | SessionControl::Delete { .. }) => {
+                command @ (SessionControl::SetMode { .. } | SessionControl::Close { .. } | SessionControl::ForkClose { .. } | SessionControl::DeleteClose { .. } | SessionControl::Delete { .. }) => {
                     let actual_reply = matches!(&command,SessionControl::ForkClose { .. });
                     let mut command = match command {
                         SessionControl::ForkClose {result} => SessionControl::Close {result,require_idle_interactions:true,deadline:tokio::time::Instant::now()},
@@ -1402,17 +1427,14 @@ async fn session_pump(
                         SessionControl::SetMode { mode_id, result, deadline } => (MutationKind::Mode, MutationReply::Unit(result), deadline,
                             "session/set_mode", serde_json::json!({"sessionId":session_id, "modeId":mode_id})),
                         SessionControl::Close { result, deadline, require_idle_interactions } => {
-                            if require_idle_interactions
-                                && (pending.lock().map(|entries| entries.values().any(|entry|
-                                    entry.session_id == session_id && entry.lease.belongs_to(&ops.life))).unwrap_or(true)
-                                    || ops.elicitations.lock().map(|entries| entries.values().any(|entry|
-                                        entry.session_id == session_id && entry.lease.belongs_to(&ops.life))).unwrap_or(true))
-                            {
+                            if require_idle_interactions && restore_config::owned_interactions(&ctx) {
                                 let _ = result.send(Err("请先完成此对话的任务及待处理事项，再关闭或重新连接".into()));
                                 continue;
                             }
                             (MutationKind::Close, MutationReply::Unit(result), deadline, "session/close", serde_json::json!({"sessionId":session_id}))
                         }
+                        SessionControl::DeleteClose { result, deadline } => (MutationKind::DeleteClose, MutationReply::DeleteClose(result), deadline,
+                            "session/close", serde_json::json!({"sessionId":session_id})),
                         SessionControl::Delete { result, deadline, .. } => (MutationKind::Delete, MutationReply::Delete(result), deadline,
                             "session/delete", serde_json::json!({"sessionId":session_id})),
                         _ => unreachable!(),
@@ -1445,56 +1467,5 @@ async fn session_pump(
     cancel_elicitations(&ops.elicitations, &mut elicitation_ids);
     if let Some(detach) = detached {
         detach.finish(&sessions, &session_id);
-    }
-}
-/// Push `{kind:"connectionLost"}` to every session on the connection and drop
-/// the registrations (pumps exit as their channels close).
-pub(crate) fn notify_connection_lost(sessions: &SessionMap, reason: super::lifecycle::CloseReason) {
-    if let Ok(mut map) = sessions.lock() {
-        for (session_id, entry) in map.drain() {
-            // The process owner calls this only after the exact child and its
-            // process group ended. This does not rewrite any tool outcome.
-            (entry.events)(
-                serde_json::json!({"kind":"toolActivity", "toolCallIds":[], "reason":"process_ended"}),
-            );
-            (entry.events)(
-                serde_json::json!({"kind":"compactionActivity", "connectionId":entry.connection_id,
-                "sessionId":session_id, "compactionIds":[], "uncertain":false, "reason":"process_ended"}),
-            );
-            (entry.events)(serde_json::json!({"kind": "connectionLost", "closeReason": reason}));
-            // Only this actual process-owner closure path has this capability.
-            // No JSON marker forwarded through SessionSink can invoke it.
-            if let Some(sink) = &entry.process_ended_sink {
-                sink(ProcessEndedReceipt {
-                    connection_id: entry.connection_id.clone(),
-                    close_reason: reason,
-                });
-            }
-        }
-    }
-}
-
-pub(crate) fn clear_connection_interactions(
-    pending: &PendingPermissions,
-    forms: &PendingElicitations,
-    life: &Arc<ConnectionLife>,
-) {
-    if let Ok(map) = pending.lock() {
-        let mut ids = map
-            .iter()
-            .filter(|(_, item)| item.lease.belongs_to(life))
-            .map(|(id, _)| id.clone())
-            .collect::<Vec<_>>();
-        drop(map);
-        cancel_permissions(pending, &mut ids);
-    }
-    if let Ok(map) = forms.lock() {
-        let mut ids = map
-            .iter()
-            .filter(|(_, item)| item.lease.belongs_to(life))
-            .map(|(id, _)| id.clone())
-            .collect::<Vec<_>>();
-        drop(map);
-        cancel_elicitations(forms, &mut ids);
     }
 }

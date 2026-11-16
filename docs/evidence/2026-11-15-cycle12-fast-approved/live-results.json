@@ -1,0 +1,145 @@
+{
+  "app": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "aed12e353224056ba742eb7716a95409d81eb09e"
+  },
+  "agent": "registry:fast-agent",
+  "agentVersion": "0.10.1",
+  "selection": "existing Agent settings / current model",
+  "oneShotLocalApproval": {
+    "program": "/bin/sh",
+    "args": ["./wait-owned.sh"],
+    "cwd": "<macOS temporary directory>/farfold-fast-terminal-ub12nf9t"
+  },
+  "events": {
+    "sentAt": 1794737581633,
+    "agentApprovedAt": 1794737607261,
+    "localApprovedAt": 1794737617160,
+    "stopClickedAt": 1794737625873
+  },
+  "toolState": "回复已停止，仍有步骤未确认结束",
+  "ownedProcesses": [
+    {
+      "atMs": 1794737617412,
+      "pids": [66676, 66678],
+      "ps": [
+        "66676 66351 66676 Sun Nov 15 18:13:37 2026     /bin/sh",
+        "66678 66676 66676 Sun Nov 15 18:13:37 2026     /bin/sleep"
+      ],
+      "finished": false
+    },
+    {
+      "atMs": 1794737626146,
+      "pids": [66676, 66678],
+      "ps": [],
+      "finished": false
+    }
+  ],
+  "naturalExitMarkerAtOrAfterDeadline": false,
+  "andCheckedAtMs": 1794737753198,
+  "officialTrace": {
+    "file": "protocol-v1-1794737534865-1.jsonl",
+    "events": [
+      {
+        "ts": 1794737534869,
+        "dir": "out",
+        "event": "initialize",
+        "wireSequence": 1,
+        "error": "none"
+      },
+      {
+        "ts": 1794737536026,
+        "dir": "in",
+        "event": "response",
+        "wireSequence": 2,
+        "error": "none"
+      },
+      {
+        "ts": 1794737536027,
+        "dir": "out",
+        "event": "session/new",
+        "wireSequence": 3,
+        "error": "none"
+      },
+      {
+        "ts": 1794737536150,
+        "dir": "in",
+        "event": "response",
+        "wireSequence": 4,
+        "error": "none"
+      },
+      {
+        "ts": 1794737566049,
+        "dir": "err",
+        "event": "other",
+        "error": "stderr"
+      },
+      {
+        "ts": 1794737581784,
+        "dir": "out",
+        "event": "session/prompt",
+        "wireSequence": 6,
+        "error": "none"
+      },
+      {
+        "ts": 1794737586943,
+        "dir": "in",
+        "event": "session/request_permission",
+        "wireSequence": 12,
+        "error": "none"
+      },
+      {
+        "ts": 1794737607398,
+        "dir": "out",
+        "event": "response",
+        "wireSequence": 13,
+        "error": "none"
+      },
+      {
+        "ts": 1794737607399,
+        "dir": "in",
+        "event": "other",
+        "wireSequence": 15,
+        "error": "none"
+      },
+      {
+        "ts": 1794737617298,
+        "dir": "out",
+        "event": "response",
+        "wireSequence": 16,
+        "error": "none"
+      },
+      {
+        "ts": 1794737617299,
+        "dir": "in",
+        "event": "other",
+        "wireSequence": 17,
+        "error": "none"
+      },
+      {
+        "ts": 1794737626012,
+        "dir": "out",
+        "event": "session/cancel",
+        "wireSequence": 18,
+        "error": "none"
+      },
+      {
+        "ts": 1794737626017,
+        "dir": "in",
+        "event": "response",
+        "wireSequence": 20,
+        "error": "none"
+      },
+      {
+        "ts": 1794737626035,
+        "dir": "out",
+        "event": "response",
+        "wireSequence": 21,
+        "error": "none"
+      }
+    ]
+  }
+}

@@ -203,7 +203,7 @@ it("exports the readable surface as Markdown without collapsed technical detail"
   expect(readable).toContain("读取 — /work/a.ts（已完成）");
   expect(markdown).toContain("**Codex**");
   expect(markdown).toContain("已经看过文件了。");
-  expect(markdown).toContain("> 已停止");
+  expect(markdown).toContain("> 回复已停止");
   // Collapsed technical details never reach the export.
   expect(markdown).not.toContain("SECRET-DETAIL");
   expect(markdown).not.toContain("raw title stays inside");

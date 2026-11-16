@@ -3,7 +3,7 @@ import {
   rememberToolMediaSource,
 } from "./session_tool_media";
 import { invoke } from "@tauri-apps/api/core";
-import { observeAuthentication } from "./authentication";
+import { threadProgramAuthentication } from "./authentication";
 import { observeDesktopNotification } from "./desktop_notifications";
 import { appendToolOutput } from "./artifacts";
 import { receiveFileInput } from "./tool_file_input";
@@ -163,6 +163,7 @@ export function applySessionEvent(
       toolCall: e.toolCall,
       options: e.options,
       request: e.request,
+      terminalCommand: e.terminalCommand,
     });
   } else if (kind === "turnEnd") {
     const owner = endingOwner;
@@ -197,8 +198,7 @@ export function applySessionEvent(
       }
     }
     if (effects && e.error === "AUTH_REQUIRED")
-      observeAuthentication(
-        s.agentId,
+      threadProgramAuthentication(s)?.observe(
         s.cwd,
         e.error,
         s.serviceContext,
@@ -211,8 +211,7 @@ export function applySessionEvent(
       e.stopReason === "end_turn" &&
       (result === "reply" || result === "tool")
     )
-      observeAuthentication(
-        s.agentId,
+      threadProgramAuthentication(s)?.observe(
         s.cwd,
         undefined,
         s.serviceContext,

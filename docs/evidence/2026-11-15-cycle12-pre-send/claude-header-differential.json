@@ -1,0 +1,147 @@
+{
+  "recordedAt": "2026-11-15",
+  "installedAdapter": {
+    "package": "@agentclientprotocol/claude-agent-acp",
+    "version": "0.81.2",
+    "agentSdkVersion": "0.3.280",
+    "protocolVersion": 1
+  },
+  "officialInstalledFarfoldObservation": {
+    "service": "Xiaomi",
+    "apiType": "messages",
+    "model": "mimo-v2.6-flash",
+    "configuredServiceSaved": true,
+    "directSettingsApiTestReturnedResponse": true,
+    "sessionPromptSent": true,
+    "agentTextObserved": false,
+    "elapsedUntilCancelMs": 133588,
+    "officialCancelConfirmed": true,
+    "trace": "protocol-v1-1794743341068-8.jsonl"
+  },
+  "controlledLoopback": {
+    "startedAt": "2026-11-15T11:57:32.860451Z",
+    "usedSyntheticCredential": true,
+    "externalModelRequests": 0,
+    "methodSequence": [
+      "initialize",
+      "providers/list",
+      "providers/set",
+      "providers/list",
+      "session/new",
+      "session/prompt"
+    ],
+    "httpPath": "/v1/messages?beta=true",
+    "syntheticModel": "farfold-controlled-route-model",
+    "baseline": {
+      "providerHeaderNames": ["x-api-key"],
+      "httpRequestCount": 1,
+      "receivedExpectedApiKey": true,
+      "receivedAuthorization": true,
+      "receivedProxyAuthorization": true,
+      "receivedSelectedAuthorization": false,
+      "stream": true,
+      "syntheticReplyReceived": true,
+      "stopReason": "end_turn",
+      "ownedProcessGroupExited": true
+    },
+    "candidate": {
+      "providerHeaderNames": ["x-api-key", "Authorization"],
+      "httpRequestCount": 1,
+      "receivedExpectedApiKey": true,
+      "receivedAuthorization": true,
+      "receivedProxyAuthorization": true,
+      "receivedSelectedAuthorization": false,
+      "stream": true,
+      "syntheticReplyReceived": true,
+      "stopReason": "end_turn",
+      "ownedProcessGroupExited": true
+    }
+  },
+  "latestInstalledLoopback": {
+    "version": "0.107.0",
+    "startedAt": "2026-11-15T12:04:35.159476Z",
+    "protocolVersion": 1,
+    "usedSyntheticCredential": true,
+    "externalModelRequests": 0,
+    "providerHeaderNames": ["x-api-key", "Authorization"],
+    "firstFixturePreparation": {
+      "failedAt": "providers/set",
+      "modelsHttpStatus": 501,
+      "messagesHttpRequestCount": 0,
+      "reason": "The prior fixture implemented POST only. The installed adapter now discovers models with GET before setting the provider."
+    },
+    "modelDiscovery": {
+      "httpPath": "/v1/models?limit=1000",
+      "httpRequestCount": 1,
+      "receivedExpectedApiKey": true,
+      "receivedAuthorization": true,
+      "receivedProxyAuthorization": false,
+      "receivedSelectedAuthorization": true
+    },
+    "messages": {
+      "httpPath": "/v1/messages?beta=true",
+      "acpPromptCount": 1,
+      "httpRequestCount": 2,
+      "allReceivedExpectedApiKey": true,
+      "allReceivedAuthorization": true,
+      "allReceivedProxyAuthorization": true,
+      "anyReceivedSelectedAuthorization": false,
+      "allStreamed": true,
+      "syntheticReplyReceived": true,
+      "stopReason": "end_turn"
+    },
+    "ownedProcessGroupExited": true
+  },
+  "sessionScopedEnvironmentLoopback": {
+    "version": "0.107.0",
+    "startedAt": "2026-11-15T12:20:50.390313Z",
+    "protocolVersion": 1,
+    "usedSyntheticCredential": true,
+    "externalModelRequests": 0,
+    "sandboxAllowedOnlyOwnedLoopbackPort": true,
+    "sandboxDeniedConnectionToSeparateLocalPort": true,
+    "ambientEndpointAndTokenDiffered": true,
+    "providerOverrideSet": false,
+    "methods": ["initialize", "session/new", "session/prompt"],
+    "sessionOption": "_meta.claudeCode.options.env",
+    "sessionPersistenceRequested": false,
+    "disableHooksRequested": true,
+    "emptyToolSetRequested": true,
+    "httpPath": "/v1/messages?beta=true",
+    "messagesRequestCount": 2,
+    "selectedModelConfirmed": true,
+    "allReceivedSelectedAuthorization": true,
+    "anyReceivedApiKeyHeader": false,
+    "anyReceivedProxyAuthorization": false,
+    "allStreamed": true,
+    "syntheticReplyReceived": true,
+    "stopReason": "end_turn",
+    "syntheticTokensFoundInCapturedStderr": false,
+    "ownedProcessGroupExited": true,
+    "sessionLoadTested": false,
+    "installedFarfoldEntryTested": false
+  },
+  "sessionScopedEnvironmentSourceReview": {
+    "explicitHandshakeAcceptanceMarker": false,
+    "newSessionResultFields": ["sessionId", "modes", "configOptions"],
+    "endpointOrCredentialIdentityReturned": false,
+    "cliSettingsCanOverrideOptionsEnvironment": true,
+    "conflictingSettingsTested": false
+  },
+  "officialReferences": {
+    "xiaomiClaudeCodeSetup": "https://mimo.mi.com/docs/integration/claudecode",
+    "claudeGatewayProtocol": "https://code.claude.com/docs/en/llm-gateway-protocol",
+    "registry": "https://cdn.agentclientprotocol.com/registry/v1/latest/registry.json",
+    "latestRegistryVersion": "0.107.0",
+    "latestProviderImplementation": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.107.0/src/providers.ts#L129-L188",
+    "latestListingHeaderBehavior": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.107.0/src/gateway-models.ts#L19-L25",
+    "sessionOptionsExtension": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.107.0/docs/air-extensions.md#L257-L260",
+    "sessionOptionType": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.107.0/src/new-session-meta.ts#L9-L30",
+    "agentSdkEnvironmentOption": "https://code.claude.com/docs/en/agent-sdk/typescript",
+    "sessionEnvironmentPrecedence": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.107.0/src/v1/acp-agent.ts#L9925-L9955",
+    "newSessionResponseShape": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.107.0/src/v1/acp-agent.ts#L10511-L10515",
+    "latestRuntimeWireTested": true
+  },
+  "finding": "Both installed adapter versions delivered the selected x-api-key and a proxy bearer header on Messages after Authorization was added to providers/set. Version 0.107.0 delivered the selected bearer on model discovery. Xiaomi documents using the genuine gateway token as bearer. The live absence of text does not identify how Xiaomi handled the request or prove that the header explains the delay.",
+  "remaining": "Verify the vendor-documented native Claude setup through Farfold's existing configuration, or wire the official session options into Farfold and verify private delivery, selected route, model, and cold reopen before a real service test."
+}

@@ -132,7 +132,8 @@ async fn protocol_errors_incoming_real_bridge_retains_only_fixed_classes() {
         assert_eq!(records[0]["protocolErrorClass"], class);
         assert_eq!(records[0]["responseIdNull"], false);
         assert_eq!(records[0]["beforeInitializeAccepted"], false);
-        assert_eq!(records[0].as_object().unwrap().len(), 9);
+        assert!(records[0]["wireSequence"].as_u64().unwrap() > 0);
+        assert_eq!(records[0].as_object().unwrap().len(), 10);
     }
 }
 

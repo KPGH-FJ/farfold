@@ -127,7 +127,10 @@ pub enum ManagerCommand {
     /// `session/delete` for sessions without an open pump (agent-side rows).
     DeleteSession {
         session_id: String,
-        result: oneshot::Sender<Result<(), String>>,
+        row_id: String,
+        store: crate::meta_store::MetaStore,
+        /// False proves the local readiness check prevented dispatch.
+        result: oneshot::Sender<Result<bool, String>>,
     },
 }
 
@@ -195,6 +198,8 @@ pub struct AcpManager {
     pub(crate) pending_elicitations: PendingElicitations,
     pub(crate) tool_recovery: Arc<super::session_tool_recovery::Reviews>,
     status_sink: Option<Arc<dyn Fn(AgentConnectionStatus) + Send + Sync>>,
+    #[cfg(test)]
+    pub(super) test_tool_terminal: bool,
 }
 
 /// Dropping a connect future must not leave its transport or reservation behind.
@@ -227,6 +232,8 @@ impl AcpManager {
             pending_elicitations: PendingElicitations::default(),
             tool_recovery: Arc::new(super::session_tool_recovery::Reviews::default()),
             status_sink: None,
+            #[cfg(test)]
+            test_tool_terminal: false,
         };
         manager.spawn_idle_reaper();
         manager
@@ -531,6 +538,19 @@ impl AcpManager {
             mpsc::unbounded_channel::<super::operations::QueuedCommand>();
         let (init_tx, init_rx) = oneshot::channel::<Result<Handshake, InitializeFailure>>();
         let life = ConnectionLife::new();
+        let selected_fast_agent = agent.source == "registry"
+            && agent.id == "registry:fast-agent"
+            && Path::new(&agent.command)
+                .file_name()
+                .is_some_and(|name| name == "fast-agent-acp")
+            && agent.args.iter().any(|argument| argument == "-x")
+            && key.conversation_id.is_some();
+        #[cfg(test)]
+        let selected_fast_agent = selected_fast_agent || self.test_tool_terminal;
+        if cfg!(target_os = "macos") && !candidate && selected_fast_agent {
+            life.tool_terminals.enable(self.data_dir.clone());
+        }
+        let tool_terminal = life.tool_terminals.enabled.load(Ordering::SeqCst);
         life.retain_startup(admission)?;
         life.retain_history_startup(history)?;
         let state = life.state.clone();
@@ -688,6 +708,7 @@ impl AcpManager {
                         .client_info(Implementation::new("farfold", env!("CARGO_PKG_VERSION")))
                         .client_capabilities(
                             ClientCapabilities::new()
+                                .terminal(tool_terminal)
                                 .session(
                                     ClientSessionCapabilities::new().compaction(CompactionCapabilities::new()).config_options(
                                         SessionConfigOptionsCapabilities::new()
@@ -779,12 +800,28 @@ impl AcpManager {
             let _ = life_for_task.close_for(true, None, fallback_reason);
             let reason = life_for_task.close_reason().unwrap_or(CloseReason::Unexpected);
             process.stop();
-            let process_result = process.closed().await;
+            let (process_result, terminal_result, transport_reported) = if life_for_task.tool_terminals.enabled.load(Ordering::SeqCst) {
+                pump::clear_connection_interactions(&pending_for_cleanup, &forms_for_cleanup, &life_for_task);
+                let ((agent, terminal), transport_reported) = pump::wait_for_connection_end(&sessions_for_cleanup, reason, async {
+                    tokio::join!(process.closed(), life_for_task.tool_terminals.close())
+                }).await;
+                (agent, terminal, transport_reported)
+            } else {
+                let process_result = process.closed().await;
+                pump::clear_connection_interactions(&pending_for_cleanup, &forms_for_cleanup, &life_for_task);
+                (process_result, Ok(()), false)
+            };
+            pump::notify_connection_end(&sessions_for_cleanup, reason, terminal_result.is_ok(), transport_reported);
+            if terminal_result.is_err() {
+                // The original owner can no longer observe terminal exit. Keep
+                // the closing entry so replacement and account cleanup cannot
+                // treat lost OS evidence as successful reap.
+                logging::warn("acp_client", "delegated terminal termination not confirmed; closing owner retained");
+                return result;
+            }
             let outcome = process_result.and_then(|_| if requested { Ok(()) } else {
                 result.as_ref().map(|_| ()).map_err(|_| "Agent 连接已结束".to_string())
             });
-            pump::clear_connection_interactions(&pending_for_cleanup, &forms_for_cleanup, &life_for_task);
-            pump::notify_connection_lost(&sessions_for_cleanup, reason);
             // Completion includes removing this exact instance. A waiter must
             // not return from disconnect while status still exposes the owner.
             let outcome = match connections_for_cleanup.lock() {

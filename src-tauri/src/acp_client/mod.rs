@@ -179,3 +179,6 @@ mod transient_pressure;
 
 #[cfg(test)]
 mod flow_pressure_tests;
+
+#[cfg(all(test, target_os = "macos"))]
+mod tool_terminal_wire_tests;

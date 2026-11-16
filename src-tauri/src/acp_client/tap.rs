@@ -26,6 +26,50 @@ const EVENTS: &[&str] = &[
     "response",
     "other",
 ];
+const UPDATE_CLASSES: &[&str] = &[
+    "assistant_text",
+    "assistant_image",
+    "assistant_other",
+    "tool_image",
+    "tool",
+    "other",
+];
+
+fn update_class(update: &serde_json::Value) -> &'static str {
+    match update
+        .get("sessionUpdate")
+        .and_then(serde_json::Value::as_str)
+    {
+        Some("agent_message_chunk") => match update
+            .pointer("/content/type")
+            .and_then(serde_json::Value::as_str)
+        {
+            Some("text") => "assistant_text",
+            Some("image") => "assistant_image",
+            _ => "assistant_other",
+        },
+        Some("tool_call" | "tool_call_update") => {
+            if update
+                .get("content")
+                .and_then(serde_json::Value::as_array)
+                .is_some_and(|blocks| {
+                    blocks.iter().any(|block| {
+                        block.get("type").and_then(serde_json::Value::as_str) == Some("content")
+                            && block
+                                .pointer("/content/type")
+                                .and_then(serde_json::Value::as_str)
+                                == Some("image")
+                    })
+                })
+            {
+                "tool_image"
+            } else {
+                "tool"
+            }
+        }
+        _ => "other",
+    }
+}
 
 pub(crate) fn diagnostic_record(line: &str, direction: &str) -> serde_json::Value {
     let value = serde_json::from_str::<serde_json::Value>(line).ok();
@@ -51,7 +95,15 @@ pub(crate) fn diagnostic_record(line: &str, direction: &str) -> serde_json::Valu
     } else {
         "none"
     };
-    serde_json::json!({"version":1,"ts":now_millis(),"dir":direction,"event":event,"bytes":line.len(),"error":error})
+    let mut record = serde_json::json!({"version":1,"ts":now_millis(),"dir":direction,"event":event,"bytes":line.len(),"error":error});
+    if direction == "in" && event == "session/update" && error == "none" {
+        record["updateClass"] = value
+            .as_ref()
+            .and_then(|value| value.pointer("/params/update"))
+            .map_or("other", update_class)
+            .into();
+    }
+    record
 }
 
 /// Rebuild from validated fields; never forward arbitrary fields from disk.
@@ -72,6 +124,21 @@ pub(crate) fn safe_record(value: &serde_json::Value) -> Option<serde_json::Value
         return None;
     }
     let mut safe = serde_json::json!({"version":1,"ts":value.get("ts")?.as_u64()?,"dir":dir,"event":event,"bytes":value.get("bytes")?.as_u64()?,"error":error});
+    if let Some(sequence) = value
+        .get("wireSequence")
+        .and_then(serde_json::Value::as_u64)
+        && sequence > 0
+    {
+        safe["wireSequence"] = sequence.into();
+    }
+    if dir == "in"
+        && event == "session/update"
+        && error == "none"
+        && let Some(class) = value.get("updateClass").and_then(serde_json::Value::as_str)
+        && UPDATE_CLASSES.contains(&class)
+    {
+        safe["updateClass"] = class.into();
+    }
     // Additive v1 group: old records stay readable. A partial/untrusted group
     // is omitted together; no arbitrary error, request or code value survives.
     if ["in", "out"].contains(&dir)
@@ -229,6 +296,50 @@ impl Drop for DebugTap {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn incoming_update_diagnostics_keep_only_fixed_content_classes() {
+        let updates = [
+            (
+                serde_json::json!({"sessionUpdate":"agent_message_chunk","content":{"type":"text","text":"update-private-canary"}}),
+                "assistant_text",
+            ),
+            (
+                serde_json::json!({"sessionUpdate":"agent_message_chunk","content":{"type":"image","data":"update-private-canary"}}),
+                "assistant_image",
+            ),
+            (
+                serde_json::json!({"sessionUpdate":"agent_message_chunk","content":{"type":"update-private-canary"}}),
+                "assistant_other",
+            ),
+            (
+                serde_json::json!({"sessionUpdate":"tool_call_update","content":[{"type":"content","content":{"type":"image","data":"update-private-canary"}}]}),
+                "tool_image",
+            ),
+            (
+                serde_json::json!({"sessionUpdate":"tool_call","content":[{"type":"content","content":{"type":"text","text":"update-private-canary"}}]}),
+                "tool",
+            ),
+            (
+                serde_json::json!({"sessionUpdate":"update-private-canary"}),
+                "other",
+            ),
+        ];
+        for (update, class) in updates {
+            let line = serde_json::json!({"method":"session/update","params":{"sessionId":"update-private-canary","update":update}}).to_string();
+            let mut record = diagnostic_record(&line, "in");
+            assert_eq!(record["updateClass"], class);
+            let saved = safe_record(&record).unwrap();
+            assert_eq!(saved["updateClass"], class);
+            assert!(!saved.to_string().contains("canary"));
+            assert!(diagnostic_record(&line, "out").get("updateClass").is_none());
+            record["updateClass"] = "update-private-canary".into();
+            assert!(safe_record(&record).unwrap().get("updateClass").is_none());
+            record["updateClass"] = class.into();
+            record["event"] = "response".into();
+            assert!(safe_record(&record).unwrap().get("updateClass").is_none());
+        }
+    }
+
     #[test]
     fn spawn_failure_tap_preserves_only_typed_facts_for_records_and_summaries() {
         let expected = serde_json::json!({

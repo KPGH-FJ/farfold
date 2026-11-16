@@ -140,6 +140,7 @@ impl State {
             compactions: &mut self.compactions,
             async_tasks: &mut self.async_tasks,
             prompt_cancelling: false,
+            terminals: None,
         };
         // Preserve the original dispatcher and inquiry owners across load,
         // its queued prefix and the optional read-only empty-history inquiry.

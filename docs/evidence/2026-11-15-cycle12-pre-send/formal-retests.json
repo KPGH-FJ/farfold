@@ -1,0 +1,132 @@
+{
+  "installedApp": {
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "cdhash": "195969c5753ec3997f7940d8c9c2d43952da1555"
+  },
+  "workingDirectoryControl": "A dedicated temporary directory outside Desktop was selected before switching Agents. Both launch checks used that same fixed directory.",
+  "qoder": {
+    "registeredVersion": "0.2.14",
+    "trace": "protocol-v1-1794743217104-3.jsonl",
+    "initializeMilliseconds": 9596,
+    "sessionNewMilliseconds": 36,
+    "modelPrompts": 0,
+    "savedModel": "qfmodel",
+    "savedMode": "Default",
+    "advertisedSelectableModelInSetup": false,
+    "settingsChanged": false,
+    "officialUpdate": {
+      "checkedVersion": "1.1.89",
+      "oldInstallationPreserved": true,
+      "reportedModel": "auto",
+      "savedMode": "Default",
+      "previousModelAdvertised": false
+    }
+  },
+  "devin": {
+    "registeredVersion": "3000.11.3",
+    "trace": "protocol-v1-1794743275629-5.jsonl",
+    "initializeMilliseconds": 1925,
+    "sessionNewMilliseconds": 95,
+    "modelPrompts": 0,
+    "savedModel": "swe-2-high",
+    "savedThoughtLevel": "high",
+    "savedAndObservedMode": "Code",
+    "advertisedModelChoices": ["SWE-2 Flash Medium"],
+    "settingsChanged": false,
+    "officialUpdate": {
+      "checkedVersion": "3000.12.57",
+      "oldInstallationPreserved": true,
+      "reportedModel": "SWE-2 Flash Medium",
+      "previousModelAdvertised": false,
+      "previousThoughtLevelAdvertised": false
+    }
+  },
+  "openCode": {
+    "trace": "protocol-v1-1794743415897-10.jsonl",
+    "selectedSavedSource": "Xiaomi Chat Completions",
+    "storedSourceKind": "configured",
+    "selectedAndStoredModel": "mimo-v2.6-flash",
+    "matchedModelNamespaceFromSelectedService": true,
+    "modelPrompts": 1,
+    "expectedAssistantMarker": "FF_C12_OPENCODE_XIAOMI_1950",
+    "exactAssistantMarkerObserved": true,
+    "finalResponseAfterDispatchMilliseconds": 1774,
+    "coldReopen": {
+      "trace": "protocol-v1-1794744045700-0.jsonl",
+      "sessionLoad": 1,
+      "sessionNew": 0,
+      "modelPrompts": 0,
+      "originalMarkerAndConfiguredSourceVisible": true,
+      "internalModelLabelObserved": true
+    },
+    "finalDisplayVerification": {
+      "installedAppCdhash": "f7d18f13d392cc45bd68b90340b8df826a2cbc92",
+      "trace": "protocol-v1-1794745144124-0.jsonl",
+      "sessionLoad": 1,
+      "sessionNew": 0,
+      "modelPrompts": 0,
+      "sourceCorrect": true,
+      "originalAnswerVisible": true,
+      "summaryAndAccessiblePickerLabel": "mimo-v2.6-flash",
+      "internalNamespaceVisible": false,
+      "firstDisplayOnlyCandidateStillFailedColdReopen": true
+    }
+  },
+  "claude": {
+    "trace": "protocol-v1-1794743341068-8.jsonl",
+    "selectedSavedSource": "Xiaomi Messages",
+    "storedSourceKind": "configured",
+    "selectedAndStoredModel": "mimo-v2.6-flash",
+    "modelPrompts": 1,
+    "promptAlsoContainedPreviousUnsentSyntheticMarker": true,
+    "assistantTextObserved": false,
+    "cancelAfterDispatchMilliseconds": 133588,
+    "cancelReturnedTerminalResponse": true,
+    "standaloneSettingsMessagesProbe": "received response from this model",
+    "officialUpdate": {
+      "checkedVersion": "0.107.0",
+      "oldInstallationPreserved": true,
+      "sameConfiguredServiceAndModel": true,
+      "trace": "protocol-v1-1794744252557-7.jsonl",
+      "modelPrompts": 1,
+      "outcome": "matched auth_required without assistant text",
+      "timeFromPromptToProtocolErrorMilliseconds": 182079,
+      "providerHttpStatusObserved": false,
+      "assistantTextObserved": false
+    }
+  },
+  "autohand": {
+    "registeredVersion": "0.9.11",
+    "trace": "protocol-v1-1794743619719-13.jsonl",
+    "selectedExistingModel": "fantail",
+    "officialSessionLoad": 1,
+    "officialSessionNew": 0,
+    "originalPromptAndAnswerReplayed": true,
+    "newExplicitModelPrompts": 1,
+    "answerMatchedPriorSyntheticMarker": true,
+    "originalDirectoryOfficialList": {
+      "trace": "protocol-v1-1794744627093-8.jsonl",
+      "exactOriginalShownAlreadyAdded": true,
+      "newCopies": 0,
+      "modelPrompts": 0
+    }
+  },
+  "grokBuild": {
+    "trace": "protocol-v1-1794743680341-14.jsonl",
+    "selectedExistingModel": "grok-4.7",
+    "restoredThoughtLevel": "low",
+    "officialSessionLoad": 1,
+    "officialSessionNew": 0,
+    "originalBodyReplayed": true,
+    "newExplicitModelPrompts": 1,
+    "answerMatchedFirstEightCharactersOfPriorAnswer": true,
+    "priorAnswerPersistedInReceipt": false,
+    "originalDirectoryOfficialList": {
+      "trace": "protocol-v1-1794744680885-9.jsonl",
+      "exactOriginalShownAlreadyAdded": true,
+      "newCopies": 0,
+      "modelPrompts": 0
+    }
+  }
+}

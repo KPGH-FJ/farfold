@@ -1069,7 +1069,7 @@ mod tests {
         let catalog = AgentCatalog::new(root.path().into());
         let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([
             {"id":"cline","name":"Example","distribution":{"npx":{"package":"example-agent@1.2.3","args":["--agent"]}}},
-            {"id":"nova","distribution":{"npx":{"package":"example@1.0.0","env":{"HOME":"/private"}}}}
+            {"id":"autohand","distribution":{"npx":{"package":"example@1.0.0","env":{"HOME":"/private"}}}}
         ])).unwrap();
         write_registry_cache(root.path(), &registry);
         let (entry, launch) = catalog.installation_entry("registry:cline").unwrap();
@@ -1083,7 +1083,10 @@ mod tests {
         );
         assert!(catalog.installation_entry("cline").is_err());
         assert!(catalog.installation_entry("registry:unknown").is_err());
-        assert!(catalog.installation_entry("registry:nova").is_err());
+        assert_eq!(
+            catalog.installation_entry("registry:autohand").unwrap_err(),
+            "Farfold 当前尚不能安装此条目，请查看官方说明或添加已安装的程序"
+        );
     }
 
     fn fixture_registry(version: &str) -> Vec<RegistryAgent> {

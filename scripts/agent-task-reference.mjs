@@ -156,7 +156,7 @@ export function renderTaskRequirements(selection) {
   const lines = [
     "# 按ID读取的要求（只读参考，无调度权）",
     "",
-    "执行顺序只见 plans/agent-access.md；当前证据见 docs/status.md。产品要求仍为 PRODUCT.md 的29家八项标准；本输出不改变范围或证明完成。",
+    "执行顺序只见 plans/agent-access.md；当前证据见 docs/status.md。首发名单与八项标准见 PRODUCT.md；本输出不改变范围或证明完成。",
     "",
     "已归并条目的最新结论直接读取 docs/status.md；要求参考只保留链接。其他条目明确标作参考进度，仍需核对原件。所有相对证据链接以 docs/ 为起点。",
     "",

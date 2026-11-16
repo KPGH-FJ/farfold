@@ -136,6 +136,7 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
                 compactions: &mut compactions,
                 async_tasks: &mut tasks,
                 prompt_cancelling: false,
+                terminals: None,
             };
             let permissions = PermissionGuard::new(false, &options, false);
             let request = configuration.prepare("format", &json!("two")).unwrap();

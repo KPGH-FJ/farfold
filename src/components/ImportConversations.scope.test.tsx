@@ -78,10 +78,13 @@ vi.mock("../runtime/sessions", () => ({
   threads: { getSnapshot: () => ({ index: [] }), refreshIndex: h.refresh },
 }));
 import { ImportConversations } from "./ImportConversations";
+import { KnownHistoryImport } from "./KnownHistoryImport";
 import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
 import { IMPORT_STRINGS as S } from "../runtime/import_strings";
+import { ERROR_STRINGS } from "../runtime/error_strings";
 import type { AgentCardModel } from "../runtime/agents";
 import type { DiscoveredConversation } from "../runtime/history_import";
+import type { IndexRow } from "../runtime/sessions";
 
 const agent: AgentCardModel = {
   id: "a",
@@ -108,6 +111,25 @@ const row: DiscoveredConversation = {
   alreadyAddedId: null,
   isOpen: false,
 };
+const retired: AgentCardModel = {
+  ...agent,
+  id: "retired",
+  name: "Retired catalog Agent",
+  source: "registry",
+  firstBatchVisible: false,
+};
+const retiredHistory: IndexRow = {
+  id: "existing-retired-history",
+  nativeSessionId: "original-retired-history",
+  agentId: retired.id,
+  cwd: "/original-retired",
+  title: "Already saved",
+  pinned: false,
+  archived: true,
+  createdAt: 1,
+  updatedAt: 1,
+  configOptions: null,
+};
 let props: ComponentProps<typeof ImportConversations>;
 function render() {
   h.cursor = 0;
@@ -130,6 +152,9 @@ function button(label: string) {
     (node) => node.type === "button" && node.props.children === label,
   );
 }
+function agentChoice(id: string) {
+  return render().find((node) => node.type === "button" && node.key === id);
+}
 function click(label: string) {
   const node = button(label);
   expect(node).toBeDefined();
@@ -140,6 +165,14 @@ async function idle() {
   await vi.waitFor(() =>
     expect(button(S.chooseLocation)?.props.disabled).toBe(false),
   );
+}
+function readKnown(cwd: string) {
+  const entry = render().find((node) => node.type === KnownHistoryImport);
+  expect(entry).toBeDefined();
+  const { reader, read, run } = entry!.props as ComponentProps<
+    typeof KnownHistoryImport
+  >;
+  return { reader, pending: run(() => read("typed-id", cwd, () => true)) };
 }
 beforeEach(() => {
   h.slots.length = 0;
@@ -181,6 +214,133 @@ beforeEach(() => {
     onClose: vi.fn(),
     onOpen: vi.fn(),
   };
+});
+
+it.each([null, retired.id])(
+  "excludes zero-history retired entries without hiding custom or discovered Agents (entry %s)",
+  async (initialAgentId) => {
+    props = {
+      ...props,
+      initialAgentId,
+      agents: [
+        retired,
+        agent,
+        { ...retired, id: "custom", custom: true, source: "custom" },
+        { ...retired, id: "discovered", source: "discovered" },
+      ],
+    };
+    expect(agentChoice(retired.id)).toBeUndefined();
+    expect(agentChoice(agent.id)?.props["aria-pressed"]).toBe(true);
+    expect(agentChoice("custom")).toBeDefined();
+    expect(agentChoice("discovered")).toBeDefined();
+    click(S.search);
+    await idle();
+    expect(h.discover).toHaveBeenCalledExactlyOnceWith(
+      agent.id,
+      undefined,
+      null,
+    );
+  },
+);
+
+it("keeps indexed retired history available without offering a new draft", async () => {
+  props = {
+    ...props,
+    agents: [agent, retired],
+    index: [retiredHistory],
+    initialAgentId: retired.id,
+    onNew: vi.fn(),
+  };
+  h.discover.mockResolvedValueOnce({
+    status: "unsupported",
+    sessions: [],
+    nextCursor: null,
+  });
+  expect(agentChoice(retired.id)?.props["aria-pressed"]).toBe(true);
+  click(S.search);
+  await idle();
+  expect(h.discover).toHaveBeenCalledExactlyOnceWith(
+    retired.id,
+    undefined,
+    null,
+  );
+  expect(button(S.newChat)).toBeUndefined();
+  expect(props.onNew).not.toHaveBeenCalled();
+});
+
+it("does not publish a retired Agent's pending lookup after its last history disappears", async () => {
+  props = {
+    ...props,
+    agents: [agent, retired],
+    index: [retiredHistory],
+    initialAgentId: retired.id,
+  };
+  let finish!: (page: unknown) => void;
+  h.discover.mockImplementationOnce(
+    () => new Promise((resolve) => (finish = resolve)),
+  );
+  click(S.search);
+  await vi.waitFor(() => expect(h.discover).toHaveBeenCalledOnce());
+  props = { ...props, index: [] };
+  render();
+  finish({ status: "supported", sessions: [row], nextCursor: null });
+  await idle();
+  await vi.waitFor(() =>
+    expect(agentChoice(agent.id)?.props["aria-pressed"]).toBe(true),
+  );
+  expect(agentChoice(retired.id)).toBeUndefined();
+  expect(render().some((node) => node.props["aria-label"] === row.title)).toBe(
+    false,
+  );
+  expect(h.discover).toHaveBeenCalledExactlyOnceWith(
+    retired.id,
+    undefined,
+    null,
+  );
+});
+
+it("waits for an explicit retry when a retired selection cannot release its preview", async () => {
+  props = {
+    ...props,
+    agents: [agent, retired],
+    index: [retiredHistory],
+    initialAgentId: retired.id,
+  };
+  click(S.search);
+  await idle();
+  const result = render().find(
+    (node) =>
+      node.type === "button" &&
+      Children.toArray(node.props.children as ReactNode).some(
+        (child) =>
+          isValidElement<{ children: ReactNode }>(child) &&
+          child.props.children === row.title,
+      ),
+  )!;
+  (result.props.onClick as () => void)();
+  await idle();
+  expect(h.preview).toHaveBeenCalledExactlyOnceWith(retired.id, row);
+
+  h.closePreview.mockRejectedValueOnce(new Error("cleanup failed"));
+  props = { ...props, index: [] };
+  render();
+  await vi.waitFor(() => {
+    const nodes = render();
+    expect(h.closePreview).toHaveBeenCalledOnce();
+    expect(nodes.some((node) => node.props.children === S.cleanupFailed)).toBe(
+      true,
+    );
+  });
+  expect(h.discover).toHaveBeenCalledOnce();
+
+  click(S.changeAgent);
+  await idle();
+  expect(h.closePreview).toHaveBeenCalledTimes(2);
+  expect(agentChoice(retired.id)).toBeUndefined();
+  (agentChoice(agent.id)!.props.onClick as () => void)();
+  await idle();
+  expect(agentChoice(agent.id)?.props["aria-pressed"]).toBe(true);
+  expect(h.discover).toHaveBeenCalledOnce();
 });
 
 it("leaves the first lookup in the Agent default range and keeps pagination accessible after local filtering", async () => {
@@ -704,6 +864,76 @@ it("offers preparation for explicit authentication failure but does not infer it
   expect(button(S.prepareAgent)).toBeUndefined();
   expect(props.onPrepare).not.toHaveBeenCalled();
 });
+
+it.each([
+  ["AGENT_INITIALIZE_TIMEOUT", ERROR_STRINGS.agentInitializeTimeout],
+  ["AGENT_INITIALIZE_TIMEOUT: diagnostic canary", S.listFailed],
+])("uses a safe lookup explanation for %s", async (failure, explanation) => {
+  props.onPrepare = vi.fn();
+  h.discover.mockRejectedValueOnce(failure);
+  click(S.search);
+  await idle();
+  const text = render().map((node) => node.props.children);
+  expect(text).toContain(explanation);
+  expect(text).not.toContain(failure);
+  expect(button(S.prepareAgent)).toBeUndefined();
+  expect(h.discover).toHaveBeenCalledOnce();
+});
+
+it("prepares the exact typed history folder when list succeeded but reading requires authentication", async () => {
+  props.onPrepare = vi.fn();
+  h.discover.mockResolvedValueOnce({
+    status: "supported",
+    sessions: [],
+    nextCursor: null,
+    canLoad: true,
+  });
+  h.preview.mockRejectedValueOnce("AUTH_REQUIRED");
+  click(S.search);
+  await idle();
+  const { reader, pending } = readKnown("/typed-history");
+  await pending;
+  expect(reader.state.error).toBe(S.authRequired);
+  expect(h.commit).not.toHaveBeenCalled();
+  click(S.prepareAgent);
+  await idle();
+  expect(props.onPrepare).toHaveBeenCalledExactlyOnceWith(
+    "a",
+    "/typed-history",
+  );
+  expect(h.preview).toHaveBeenCalledOnce();
+});
+
+it.each(["unknown", "retired"])(
+  "does not prepare a typed history lookup with a %s failure",
+  async (kind) => {
+    props.onPrepare = vi.fn();
+    h.discover.mockResolvedValueOnce({
+      status: "supported",
+      sessions: [],
+      nextCursor: null,
+      canLoad: true,
+    });
+    click(S.search);
+    await idle();
+    let reject!: (reason: string) => void;
+    h.preview.mockImplementationOnce(
+      () => new Promise((_resolve, fail) => (reject = fail)),
+    );
+    const { pending } = readKnown("/typed-history");
+    await vi.waitFor(() => expect(h.preview).toHaveBeenCalledOnce());
+    if (kind === "retired") {
+      props = { ...props, initialAgentId: "b", requestRevision: 2 };
+      render();
+    }
+    reject(
+      kind === "retired" ? "AUTH_REQUIRED" : "Unknown AUTH_REQUIRED reply",
+    );
+    await pending;
+    expect(button(S.prepareAgent)).toBeUndefined();
+    expect(props.onPrepare).not.toHaveBeenCalled();
+  },
+);
 
 it("provides a way to add an Agent when none is available without attempting history lookup", async () => {
   props = { ...props, agents: [], initialAgentId: null, onPrepare: vi.fn() };

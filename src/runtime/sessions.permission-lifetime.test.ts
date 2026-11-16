@@ -140,8 +140,12 @@ beforeEach(() => {
     }
     if (command === "session_open") return replay(args);
     if (command === "agent_work_get") return { cwd: args.cwd };
-    if (command === "settings_get" && args.key === "autoArchiveDays")
+    if (
+      command === "settings_get" &&
+      ["autoArchiveDays", "unsentWork.v1"].includes(args.key)
+    )
       return null;
+    if (command === "settings_set" && args.key === "unsentWork.v1") return null;
     if (command === "session_delete") {
       if (h.refuseClose) throw { code: "localNotRemoved", agent: null };
       if (

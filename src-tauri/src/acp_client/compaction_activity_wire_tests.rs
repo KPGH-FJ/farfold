@@ -303,6 +303,58 @@ async fn active_compaction_blocks_conversation_deletion_and_preserves_local_reco
 }
 
 #[tokio::test]
+async fn saved_unknown_outcome_blocks_delete_before_dispatch_for_open_and_closed_conversations() {
+    for close_first in [false, true] {
+        let f = Fixture::new(false).await;
+        let row = super::session_index::touch_session_row(
+            &f.store,
+            &f.agent.id,
+            &f.cwd.to_string_lossy(),
+            &f.session_id,
+            None,
+            None,
+        )
+        .unwrap();
+        if close_first {
+            f.manager
+                .close_session_owned(&f.agent.id, &f.cwd, &f.session_id, None)
+                .await
+                .unwrap();
+        }
+        f.store
+            .set_setting(
+                "unsentWork.v1",
+                &json!({"version": 1, "composers": {}, "feedback": {}, "queues": {
+                    &row.id: {"blocks": [], "uncertainIndex": null, "outcomeUnknown": true}
+                }}),
+            )
+            .unwrap();
+
+        let result = super::session_commands::delete_session_in_scope(
+            &f.manager,
+            &f.store,
+            &f.agent.id,
+            &f.cwd,
+            &f.session_id,
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(
+                super::session_commands::SessionDeleteFailure::LocalNotRemoved {
+                    agent: None,
+                    connection_closed: false
+                }
+            )
+        ));
+        assert_eq!(f.cwd.join("close-pid").exists(), close_first);
+        assert!(!f.cwd.join("delete-observed").exists());
+        assert_eq!(f.store.get_session(&row.id).unwrap(), Some(row));
+        assert!(f.store.list_dismissed().unwrap().is_empty());
+    }
+}
+
+#[tokio::test]
 async fn agent_error_after_delete_dispatch_does_not_claim_no_dispatch() {
     let f = Fixture::new(false).await;
     let row = super::session_index::touch_session_row(

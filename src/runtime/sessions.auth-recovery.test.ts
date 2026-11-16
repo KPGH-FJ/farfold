@@ -16,7 +16,10 @@ import { threads } from "./sessions";
 import { AgentPreparation } from "./agent_preparation";
 import {
   authenticationRequired,
+  beginProgramAuthenticationChange,
+  captureProgramAuthentication,
   observeAuthentication,
+  programAuthenticationChanged,
   useAuthentication,
 } from "./authentication";
 import { recheckAuthentication } from "./auth_actions";
@@ -28,7 +31,34 @@ afterEach(async () => {
   vi.restoreAllMocks();
 });
 
+it("opens a new session only after the selected program's receipt and records that program's own auth error", async () => {
+  h.invoke.mockClear();
+  h.invoke.mockImplementation(async (command: string, args) => {
+    if (command === "settings_get")
+      return args?.key === "autoArchiveDays" ? 30 : null;
+    if (command === "session_open") throw new Error("AUTH_REQUIRED");
+    return [];
+  });
+  const agentId = "program-replacement-open";
+  const cwd = "/during-selection";
+  const old = captureProgramAuthentication(agentId);
+  old.observe(cwd, "AUTH_REQUIRED");
+  const finish = beginProgramAuthenticationChange(agentId);
+  const opening = threads.open({ agentId, cwd });
+  expect(h.invoke).not.toHaveBeenCalledWith("session_open", expect.anything());
+  programAuthenticationChanged(agentId);
+  finish();
+  await expect(opening).rejects.toThrow("AUTH_REQUIRED");
+  expect(h.invoke).toHaveBeenCalledWith(
+    "session_open",
+    expect.objectContaining({ agentId, cwd }),
+  );
+  old.observe(cwd);
+  expect(authenticationRequired(useAuthentication(), agentId, cwd)).toBe(true);
+});
+
 it("clears a login requirement only after explicit preparation gets a successful fresh session response", async () => {
+  h.invoke.mockClear();
   let authenticated = false;
   h.invoke.mockImplementation(async (command: string, args) => {
     if (command === "settings_get")

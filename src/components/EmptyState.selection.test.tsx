@@ -746,6 +746,7 @@ async function startEditableDraft(cwd = "/work", serviceContext?: string) {
       ...newConversationChoice.service,
       fingerprint: "fixture-api",
     };
+    h.live.serviceModelValue = newConversationChoice.service.model;
     h.live.serviceContext =
       serviceContext ?? JSON.stringify(newConversationChoice.service);
   }

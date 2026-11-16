@@ -1,0 +1,579 @@
+{
+  "grok": {
+    "userSignedIn": true,
+    "originalConversationShowsCompleted": true,
+    "trace": {
+      "name": "protocol-v1-1794738247427-8.jsonl",
+      "events": [
+        {
+          "ts": 1794738247429,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247551,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247552,
+          "dir": "out",
+          "event": "session/new",
+          "wireSequence": 3,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247575,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 4,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247575,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 5,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247575,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 6,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247575,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 7,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247575,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 8,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247575,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 9,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247575,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 10,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247586,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 11,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247586,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 12,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247604,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 13,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247604,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 14,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247604,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 15,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247604,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 16,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247604,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 17,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247608,
+          "dir": "out",
+          "event": "session/set_config_option",
+          "wireSequence": 18,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247612,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 19,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247623,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 22,
+          "error": "none"
+        },
+        {
+          "ts": 1794738247623,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 23,
+          "error": "none"
+        },
+        {
+          "ts": 1794738249058,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 25,
+          "error": "none"
+        },
+        {
+          "ts": 1794738249058,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 26,
+          "error": "none"
+        },
+        {
+          "ts": 1794738249058,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 27,
+          "error": "none"
+        },
+        {
+          "ts": 1794738249059,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 28,
+          "error": "none"
+        },
+        {
+          "ts": 1794738249059,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 29,
+          "error": "none"
+        },
+        {
+          "ts": 1794738249554,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 30,
+          "error": "none"
+        },
+        {
+          "ts": 1794738249924,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 31,
+          "error": "none"
+        },
+        {
+          "ts": 1794738249925,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 32,
+          "error": "none"
+        },
+        {
+          "ts": 1794738249926,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 33,
+          "error": "none"
+        },
+        {
+          "ts": 1794738249926,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 34,
+          "error": "none"
+        },
+        {
+          "ts": 1794738250975,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 35,
+          "error": "none"
+        },
+        {
+          "ts": 1794738254198,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 79,
+          "error": "none"
+        },
+        {
+          "ts": 1794738254431,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 81,
+          "error": "none"
+        },
+        {
+          "ts": 1794738254431,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 82,
+          "error": "none"
+        },
+        {
+          "ts": 1794738254495,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 84,
+          "error": "none"
+        },
+        {
+          "ts": 1794738254496,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 86,
+          "error": "none"
+        },
+        {
+          "ts": 1794738254496,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 88,
+          "error": "none"
+        },
+        {
+          "ts": 1794738256165,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 142,
+          "error": "none"
+        },
+        {
+          "ts": 1794738256208,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 143,
+          "error": "none"
+        },
+        {
+          "ts": 1794738256208,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 144,
+          "error": "none"
+        },
+        {
+          "ts": 1794738256209,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 145,
+          "error": "none"
+        },
+        {
+          "ts": 1794738256209,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 146,
+          "error": "none"
+        },
+        {
+          "ts": 1794738256209,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 147,
+          "error": "none"
+        },
+        {
+          "ts": 1794738258034,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 148,
+          "error": "none"
+        }
+      ]
+    }
+  },
+  "autohand": {
+    "officialVersion": "0.9.11",
+    "selectedExistingModel": "fantail",
+    "expectedMarkerReturned": true,
+    "trace": {
+      "name": "protocol-v1-1794740591104-5.jsonl",
+      "events": [
+        {
+          "ts": 1794740591105,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1,
+          "error": "none"
+        },
+        {
+          "ts": 1794740591266,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794740591266,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794740594578,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794740594579,
+          "dir": "out",
+          "event": "session/new",
+          "wireSequence": 3,
+          "error": "none"
+        },
+        {
+          "ts": 1794740594784,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 4,
+          "error": "none"
+        },
+        {
+          "ts": 1794740597718,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 6,
+          "error": "none"
+        },
+        {
+          "ts": 1794740598066,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 7,
+          "error": "none"
+        },
+        {
+          "ts": 1794740655916,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 8,
+          "error": "none"
+        },
+        {
+          "ts": 1794740655939,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 10,
+          "error": "none"
+        },
+        {
+          "ts": 1794740655939,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 11,
+          "error": "none"
+        },
+        {
+          "ts": 1794740655939,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794740661998,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794740661999,
+          "dir": "err",
+          "event": "other",
+          "error": "stderr"
+        },
+        {
+          "ts": 1794740662000,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 47,
+          "error": "none"
+        },
+        {
+          "ts": 1794740662000,
+          "dir": "in",
+          "event": "other",
+          "wireSequence": 48,
+          "error": "none"
+        },
+        {
+          "ts": 1794740662000,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 49,
+          "error": "none"
+        }
+      ]
+    }
+  },
+  "nova": {
+    "userSavedAndExited": true,
+    "existingAgentStillShowsLoginRequired": true,
+    "latestOfficialVersion": "1.1.65",
+    "approvalMethodInV1": "permission/request",
+    "officialV1Method": "session/request_permission",
+    "activeDirectoryCountAfterInstall": 27,
+    "registrationExists": true
+  },
+  "openCode": {
+    "savedApiShape": "chat-completions",
+    "selectedConfiguredModel": "apodex/apodex-1.1-mini:free",
+    "actualReceivedReply": false,
+    "response": "protocol_error",
+    "configuredIdentityPersisted": true,
+    "preFix": {
+      "name": "protocol-v1-1794740448672-3.jsonl",
+      "events": [
+        {
+          "ts": 1794740448674,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1,
+          "error": "none"
+        },
+        {
+          "ts": 1794740448856,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794740448856,
+          "dir": "out",
+          "event": "session/new",
+          "wireSequence": 3,
+          "error": "none"
+        },
+        {
+          "ts": 1794740449112,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 4,
+          "error": "none"
+        },
+        {
+          "ts": 1794740683210,
+          "dir": "out",
+          "event": "other",
+          "wireSequence": 6,
+          "error": "none"
+        },
+        {
+          "ts": 1794740683222,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 7,
+          "error": "none"
+        }
+      ]
+    },
+    "postFix": {
+      "name": "protocol-v1-1794741675632-2.jsonl",
+      "events": [
+        {
+          "ts": 1794741675634,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1,
+          "error": "none"
+        },
+        {
+          "ts": 1794741675757,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794741675758,
+          "dir": "out",
+          "event": "session/new",
+          "wireSequence": 3,
+          "error": "none"
+        },
+        {
+          "ts": 1794741676005,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 4,
+          "error": "none"
+        },
+        {
+          "ts": 1794741690756,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 6,
+          "error": "none"
+        },
+        {
+          "ts": 1794741694933,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 7,
+          "error": "protocol"
+        },
+        {
+          "ts": 1794741803666,
+          "dir": "out",
+          "event": "session/cancel",
+          "wireSequence": 8,
+          "error": "none"
+        }
+      ]
+    },
+    "directSavedServiceProbes": [
+      {
+        "atMs": 1794741835048,
+        "model": "apodex/apodex-1.1-mini:free",
+        "httpStatus": 404
+      },
+      {
+        "atMs": 1794741886233,
+        "model": "cohere/north-mini-code:free",
+        "outcome": "timeout"
+      }
+    ]
+  }
+}

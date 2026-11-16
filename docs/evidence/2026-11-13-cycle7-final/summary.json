@@ -1,0 +1,226 @@
+{
+  "kind": "Cycle7InstalledIncrementAndFormalResults",
+  "asOfUtc": "2026-11-13T11:20:22.179352+00:00",
+  "sourceCommit": "975f1c7ec63d5523333ccaace822177e459c848f",
+  "stageStatus": "Cycle6 closed within its original wave scope; cycle7 continues. No complete P item, Stage2 or 29x8 acceptance is asserted.",
+  "installed": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "b3f88cbe233ac4e724744eda9601f3b49d1b6da0",
+    "binarySha256": "5cfb92632aa94fa75651bd6927335e621487bcb3ac20ff8481ed46085895494f",
+    "candidateDuplicateRemoved": true,
+    "releaseManifestRole": "Static packaging metadata; source provenance comes from frozen inputs, source commit, build receipt and candidate binary/signature."
+  },
+  "engineering": {
+    "changedFiles": 57,
+    "inputs": 2616,
+    "inputsUnchangedWithinFinalRun": true,
+    "allSevenPassed": true,
+    "frontendFiles": 784,
+    "frontendTests": 10910,
+    "rustUnitTests": 2769,
+    "rustIntegrationTests": 10,
+    "rustIgnored": 11,
+    "reuse": "After the final one-line GeneralSettings diagnostics-close change, four frontend checks ran again; three Rust checks reused with all other 2615 inputs unchanged."
+  },
+  "implementation": [
+    "Exact owner close/delete repaired; remote receipt and local failure remain separate, unknown work retains protection.",
+    "Normalized tool media now participates in exact-conversation unread and readable-open clearing; repeated/history events stay silent.",
+    "Custom archive days, saved native interface size with actual platform readback, and matching native web/drop coordinates.",
+    "Explicit test reminder uses existing notification system and routes to reminder settings, without changing task/unread state."
+  ],
+  "formal": {
+    "archive": {
+      "source": "Root CUA observation recorded in formal/ui-progress.json",
+      "initialIndices": 13,
+      "customZeroRejected": true,
+      "customOneSaved": true,
+      "eligibleActuallyArchived": 2,
+      "afterArchive": {
+        "active": 11,
+        "archived": 2
+      },
+      "coldRetained": true,
+      "normalRestore": {
+        "active": 13,
+        "archived": 0
+      },
+      "settingAfter": 30,
+      "scope": "Two naturally eligible owned rows; restored activity and explicit preference changes are normal effects. Old uncertain archive results are not reclassified."
+    },
+    "interfaceSize": {
+      "actualPercentages": [100, 125, 150],
+      "shortcutsObserved": true,
+      "coldPercent": 125,
+      "nativeW3cGeometryAt": [125, 150],
+      "result": "Content remained below toolbar and within page bounds, without sidebar overlap.",
+      "limits": [
+        "Not native exact900x620",
+        "Not arbitrary DPI or all paths",
+        "No Windows device evidence"
+      ]
+    },
+    "mediaUnread": {
+      "earlierAttempts": [
+        "One screenshot permission expired; no image.",
+        "One allowed screenshot was safely refused after Settings hid the page; no image."
+      ],
+      "thirdRequest": "One new user send using official read on exact owned PNG; one matching tool result contained PNG and final assistant text.",
+      "nativeToolCallsAfterMarker": 1,
+      "pngBytes": 1086,
+      "pngSha256": "b96ad102de3894bc3a9e3724728df3d76d6f5cbc4cb5c1ad8bae34fbccef192d",
+      "assistantTextCharacters": 6,
+      "backgroundUnread": [1, 2],
+      "coldHomeUnread": 2,
+      "exactConversationOpenedAndImageExpanded": true,
+      "afterReadUnread": 1,
+      "scope": "Mixed text+PNG background unread, normal exit/cold persistence and exact image readback. UI observations come from root; persisted native bytes independently checked.",
+      "limits": [
+        "Does not isolate image-only unread causation",
+        "No WAV audible playback",
+        "Native stored result alone does not prove ACP delivery"
+      ]
+    },
+    "export": {
+      "interfacePercent": 150,
+      "zipBytes": 4589,
+      "zipSha256": "0e0b29483474a17e615d89282c6f2109319cfa3e68093e4404dd2a4a8f17b7c0",
+      "selectedPngBytes": 1086,
+      "pngSha256": "b96ad102de3894bc3a9e3724728df3d76d6f5cbc4cb5c1ad8bae34fbccef192d",
+      "matchesSource": true,
+      "crcPassed": true,
+      "toolDetailsSelected": false,
+      "scope": "Normal UI ZIP with one explicitly selected PNG; not an Agent-recoverable history archive."
+    },
+    "attention": {
+      "permissionWaitNavigation": "Earlier owned screenshot wait badge1 and exact-thread navigation observed.",
+      "mixedUnreadNavigation": "New-reply entry led to exact owned conversation and cleared only its unread; original1 remained.",
+      "scope": "These selected attention entries do not establish every filter or a global action center."
+    }
+  },
+  "protection": {
+    "installation": {
+      "dataEntries": 206477,
+      "threeRootContentManifestUnchanged": true,
+      "scope": "Installation interval only."
+    },
+    "formalFinalDataComparison": "Pending root final closed-state comparison; archive/restore, size/preferences and one new owned index are intentional changes, not all-settings-unchanged.",
+    "candidateCleanup": "Existing reviewed helper removed exact duplicate five files; candidate absent, formal application unchanged in cleanup receipt. Final independent cleanup review pending.",
+    "privateOriginals": "Private SQLite copies, credentials and full native bodies are not published by this summary."
+  },
+  "storage": {
+    "removedExactRebuildableObjects": 3397,
+    "measuredRecoveredGiB": 7.986961364746094,
+    "protectedMetadataEntries": 206483,
+    "protectedMetadataUnchanged": true,
+    "dirtyEvidenceHashUnchanged": true,
+    "limits": "Metadata comparison is not a full protected-data content hash; deletion limited to the reviewed exact old single-link Mach-O objects."
+  },
+  "open": {
+    "officialDeletion": {
+      "state": "Confirmation screen reached; explicit permission for irreversible deletion of one owned SID is pending. Not executed or passed.",
+      "targetNativeId": "ses_e2b74f6d4ffe1g16gwvT4Cb3Rg"
+    },
+    "interruptionNotice": "No verified safe genuine interruption producer; TestReminder, user cancel, tool error and old replay are not substitutes.",
+    "sound": "User explicitly unavailable now and will test later; prior displayShared mute remains separate from app delivery.",
+    "voiceOver": "Explicitly deferred, not passed.",
+    "display": "Exact minimum window and unobserved relevant paths remain bounded gaps; no cartesian matrix imposed.",
+    "agentWave": "Existing five-agent increment/dependency records remain; Mistral two authorized sends exhausted, missing unindexed image sample not manufactured.",
+    "fullScope": "151 original conditions and final29x8 retained; no new stage7 all-Agent gate."
+  },
+  "records": [
+    {
+      "path": "output/2026-11-13-cycle7-final/integration-review.json",
+      "sha256": "c19d8913568ee80dde6759c2d37e64715a069c02a34b85f4213cb08f46f7047c"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/engineering-final/result.json",
+      "sha256": "52e441741464d2728768fa78e3c0c71aeb9b71f871b0bab246cc9db74066f615"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/formal/candidate-review.json",
+      "sha256": "139af88c6e4998c1b47e179c09ef39d59436007ab60ed3952d3f3e8ee636f5ba"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/formal/install.json",
+      "sha256": "8475d53745c5c40267620602347e62c59f90a88941b82c7bb0da0849a5e59bea"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/formal/install-review.json",
+      "sha256": "fbda3eedafbf7847c841bc657650fb24481ea55303a3c318852880b4ccae0695"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/formal/duplicate-cleanup.json",
+      "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/formal/ui-progress.json",
+      "sha256": "2be4ea97c40edb99f842739283388a5b76f5309dc5dd71536025b6328c37e1ad"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/formal/owned-export-check.json",
+      "sha256": "1e167be4ba00276b0c26e4122a2a4b87776e69a896d87e9d9e8c5201a0c4b695"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/interaction/summary.json",
+      "sha256": "5da0aa19a838f617f2065039a662ce514371ecd8b727c7b386cbe94b4740fcab"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/interaction/independent-review/review.json",
+      "sha256": "e89a911d0ec2e51c1a239390fe9a9f848403864462db4cbb8c2f10ff67610db9"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/interaction/media-readback/closed-summary.json",
+      "sha256": "ec5b1d2d9e8197d068f03c40539a19c1e73d3c6b9e4c590744f0e8d0f7c2eb6c"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/interaction/media-readback/native-result.json",
+      "sha256": "2fa6a829e503a55593af74301cbe2bd749026fa4b230bc004cdb2df52ab30569"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/maintenance/deletion-independent-review.json",
+      "sha256": "27d6c5ba662fcc10ddd9a7353933c14c742a8a7bec4d084c65b6d27453207d2f"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/notifications/summary.json",
+      "sha256": "3e1e60996d780d922376d6ceb8c040f454c794031cf095005c4b74fded6a4546"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/notifications/slash-trigger-final.json",
+      "sha256": "8ab617021d2f4d9e9de64e38ff82365e24fd33de74a5738c4ae9050b64aca49d"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/notifications/sound-method.json",
+      "sha256": "36df6b8d504dbe9e46554e7c98d4bb0d3c24af904a031bec5f943242eefb78fc"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/interface-scale/independent-review.json",
+      "sha256": "2ed7d302c26fea49426efd716a4a099bfcf02e1644518334d9ffc275b3301046"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/interaction/native-zoom/root-review.json",
+      "sha256": "20d803014000351dbf844c6129f9bad95a2e65a91d2a839f38d360593da2b94e"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/storage/result.json",
+      "sha256": "5d31340185eb7d70250aa9449a69dbe1f85b6a112379b661792671aa46886a10"
+    },
+    {
+      "path": "output/2026-11-13-cycle7-final/storage/completion-review.json",
+      "sha256": "c0d6a1c48cc58c49d097b527316cdff1f1ef12f34d06b42d18b4cd676a636e05"
+    }
+  ],
+  "recordValidation": {
+    "allReferencedFilesPresentAndShaComputed": true,
+    "engineerCheckLogsMatchDeclaredHashes": true,
+    "noOriginalRecordModified": true
+  },
+  "limitations": [
+    "Author/source reviews retain their original pre-install timing; this later summary adds installed observations, not retroactive claims.",
+    "UI CUA outcomes are root operator observations, not an independent UI rerun by document author.",
+    "Final data protection/deletion outcome will be added only after actual evidence arrives."
+  ]
+}

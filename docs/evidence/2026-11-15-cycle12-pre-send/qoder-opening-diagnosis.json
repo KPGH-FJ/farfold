@@ -1,0 +1,123 @@
+{
+  "scope": "Cycle 12 Qoder CLI pre-send diagnosis",
+  "registeredLaunch": {
+    "agentId": "registry:qoder",
+    "version": "0.2.14",
+    "nodeVersion": "v22.22.3",
+    "command": "node",
+    "arguments": ["qodercli.js", "--acp"],
+    "cwd": "output/2026-11-15-cycle12-continuation/qoder-first-use",
+    "registeredEnvironmentOverrides": 0,
+    "farfoldCredentialGrants": 0
+  },
+  "cachedOfficialRegistry": {
+    "version": "1.1.89",
+    "package": "@qoder-ai/qodercli@1.1.89",
+    "arguments": ["--acp"],
+    "installedOrTested": false
+  },
+  "officialDocumentation": "https://docs.qoder.com/cli/acp",
+  "formalFailure": {
+    "formalProtocolLog": "~/Library/Logs/Farfold/protocol-v1-1794740731498-9.jsonl",
+    "vendorRun": "~/.qoder/logs/runs/2026-11-15T19-05-31-797+08-00-dwno4h-p75479",
+    "parentPid": 74336,
+    "childPid": 75479,
+    "agentLastStageBeforeTimeout": "cli.arguments.parsed (has_prompt=false)",
+    "formalLaunchesAtThisCwdDuringAttempt": 1,
+    "earlierSameParentLaunchesAtOtherCwdReachedVendorAuth": 2,
+    "vendorChildObserved": false,
+    "initializeSent": "2026-11-15T19:05:31.500+08:00",
+    "deadlineReached": "2026-11-15T19:06:31.501+08:00",
+    "timedOutAfterMilliseconds": 60001,
+    "initializeResponse": "not_observed",
+    "sessionNewSent": false,
+    "modelPromptSent": false,
+    "transportIo": {
+      "completion": "parent_wrappers_dropped",
+      "stdin": {
+        "bytes": 486,
+        "eof": false,
+        "errorCount": 0,
+        "firstError": null
+      },
+      "stdout": {
+        "bytes": 0,
+        "eof": true,
+        "errorCount": 0,
+        "firstError": null
+      },
+      "stderr": {
+        "bytes": 0,
+        "eof": true,
+        "errorCount": 0,
+        "firstError": null
+      }
+    },
+    "groupEnded": true,
+    "exitCode": 0
+  },
+  "macosDesktopAccess": {
+    "source": "macOS unified log, com.apple.TCC:access",
+    "requestId": "40610.4566",
+    "requestedAt": "2026-11-15T19:05:32.170+08:00",
+    "service": "kTCCServiceSystemPolicyDesktopFolder",
+    "responsibleBundle": "ai.farfold.desktop",
+    "responsiblePid": 74336,
+    "accessingCommand": "git",
+    "accessingPid": 75495,
+    "previousCodeRequirementMatched": false,
+    "promptRequestedAt": "2026-11-15T19:05:32.174+08:00",
+    "resultOrReplyObservedThrough": "2026-11-15T19:12:30+08:00",
+    "resultOrReplyObserved": false,
+    "limit": "The log proves a Desktop access prompt was requested during startup under the same Farfold process. It does not establish whether the user saw or dismissed a prompt, or whether this was the only contributing cause."
+  },
+  "directInitializeOnly": {
+    "vendorRun": "~/.qoder/logs/runs/2026-11-15T19-37-21-121+08-00-6f8v68-p24848",
+    "vendorChildRun": "~/.qoder/logs/runs/2026-11-15T19-37-26-418+08-00-1nauer-p24879",
+    "elapsedMilliseconds": 14253,
+    "stdoutBytes": 715,
+    "stderrBytes": 0,
+    "protocolVersion": 1,
+    "sameRegisteredCommandAndCwd": true,
+    "environment": "Inherited diagnostic shell and exact empty registered overrides",
+    "sessionNewSent": false,
+    "modelPromptSent": false,
+    "exitCode": 0
+  },
+  "directInitializeThenNew": {
+    "started": "2026-11-15T19:41:00.737+08:00",
+    "sameRegisteredCommandAndCwd": true,
+    "environment": "Inherited diagnostic process overlaid with the normal login shell probe. The GUI parent and cached snapshot are separate.",
+    "pipeStdinKeptOpen": true,
+    "modelPromptSent": false,
+    "responses": [
+      {
+        "method": "initialize",
+        "elapsedMilliseconds": 9731,
+        "requestBytes": 399,
+        "responseBytes": 715,
+        "outcome": "result",
+        "sessionIdPresent": false,
+        "protocolVersion": 1,
+        "vendorVersion": "0.2.14"
+      },
+      {
+        "method": "session/new",
+        "elapsedMilliseconds": 44,
+        "requestBytes": 164,
+        "responseBytes": 510,
+        "outcome": "result",
+        "sessionIdPresent": true,
+        "configurationFields": ["models", "modes"]
+      }
+    ],
+    "childPid": 25751,
+    "exitCode": 0,
+    "stdoutBytes": 1225,
+    "stderrBytes": 0,
+    "otherAcpmethods": [],
+    "vendorRun": "~/.qoder/logs/runs/2026-11-15T19-41-01-000+08-00-qj9wql-p25751",
+    "vendorChildPid": 25777
+  },
+  "conclusion": "The formal timeout preceded the first response, session creation, and model send. macOS requested Desktop access for an action attributed to the formal app, with no recorded decision across the timeout. Two same-command, same-directory shell probes progressed through vendor startup, and the second opened a session. A formal rerun in a non-Desktop directory or after the system access request is resolved is needed to isolate whether the prompt caused the timeout."
+}

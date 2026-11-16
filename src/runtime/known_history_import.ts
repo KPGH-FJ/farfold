@@ -81,6 +81,7 @@ export class KnownHistoryReader {
     agentId: string,
     target: HistoryPreviewTarget,
     current: () => boolean,
+    onAuthenticationRequired?: () => void,
   ): Promise<void> {
     if (this.activeJob || !current()) return;
     if (!target.nativeSessionId.trim() || !target.cwd) {
@@ -128,18 +129,19 @@ export class KnownHistoryReader {
     } catch (reason) {
       if (owner?.inquiryCurrent?.() ?? current()) {
         const message = String(reason).replace(/^Error:\s*/, "");
+        const authenticationRequired = message === "AUTH_REQUIRED";
         this.publish({
           preview: null,
           saved: null,
-          error:
-            message === "AUTH_REQUIRED"
-              ? S.authRequired
-              : message === S.noContent
-                ? S.noContent
-                : message === S.cleanupFailed
-                  ? S.cleanupFailed
-                  : S.loadFailed,
+          error: authenticationRequired
+            ? S.authRequired
+            : message === S.noContent
+              ? S.noContent
+              : message === S.cleanupFailed
+                ? S.cleanupFailed
+                : S.loadFailed,
         });
+        if (authenticationRequired) onAuthenticationRequired?.();
       }
     } finally {
       this.activeJob = false;

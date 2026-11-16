@@ -71,6 +71,7 @@ fn drain(initial: Value, snapshots: Vec<Value>) -> Observed {
         compactions: &mut compactions,
         async_tasks: &mut tasks,
         prompt_cancelling: false,
+        terminals: None,
     };
     let mut configuration = SessionConfig::from_response(&json!({"configOptions":initial}));
     let mut models = model_ids(&initial);

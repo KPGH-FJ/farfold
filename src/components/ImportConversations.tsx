@@ -7,6 +7,7 @@ import {
   WarningCircleIcon,
 } from "@phosphor-icons/react";
 import type { AgentCardModel } from "../runtime/agents";
+import { isAgentPresentable } from "../runtime/agent_directory";
 import { threads, type IndexRow } from "../runtime/sessions";
 import {
   closeHistoryPreview,
@@ -27,7 +28,9 @@ import { HistoryReadStatus } from "./HistoryReadStatus";
 import { AgentLogo } from "./AgentLogo";
 import { chooseDirectory } from "../runtime/dialogs";
 import {
-  observeAuthentication,
+  captureProgramAuthentication,
+  hasPendingProgramAuthenticationChange,
+  pendingProgramAuthenticationChange,
   subscribeAuthenticationChanges,
 } from "../runtime/authentication";
 import { subscribeCredentialChanges } from "../runtime/credentials";
@@ -39,6 +42,7 @@ import {
 import { renderHistoryPreviewBody } from "./HistoryPreviewBody";
 import { KnownHistoryImport } from "./KnownHistoryImport";
 import { KnownHistoryReader } from "../runtime/known_history_import";
+import { agentOpenError } from "../runtime/ui_error";
 
 interface AddedConversation {
   saved: IndexRow;
@@ -150,18 +154,25 @@ export function ImportConversations({
   onNew?: (agentId: string) => void;
   returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
+  const historyAgents = new Set(index.map((row) => row.agentId));
   const available = agents.filter(
-    (a) => a.status === "installed" || a.status === "connected",
+    (card) =>
+      (card.status === "installed" || card.status === "connected") &&
+      (isAgentPresentable(card) || historyAgents.has(card.id)),
   );
+  const firstAvailableId = available[0]?.id ?? "";
+  const requestedAgentId = available.find(
+    (card) => card.id === initialAgentId,
+  )?.id;
   const [agentQuery, setAgentQuery] = useState("");
   const visibleAgents = available.filter((card) =>
     card.name
       .toLocaleLowerCase()
       .includes(agentQuery.trim().toLocaleLowerCase()),
   );
-  const [agentId, setAgentId] = useState(
-    initialAgentId ?? available[0]?.id ?? "",
-  );
+  const [agentId, setAgentId] = useState(requestedAgentId ?? firstAvailableId);
+  const agentIdRef = useRef(agentId);
+  agentIdRef.current = agentId;
   const [lookupCwd, setLookupCwd] = useState<string | null>(null);
   const lookupRevision = useRef(0);
   const requestedContext = `${requestRevision}\0${initialAgentId ?? ""}`;
@@ -257,7 +268,12 @@ export function ImportConversations({
     mounted.current &&
     lookupRevision.current === revision &&
     requestedContextRef.current === context;
-  const selectedAgent = agents.find((card) => card.id === agentId);
+  const selectedAgent = available.find((card) => card.id === agentId);
+  const selectedAgentId = selectedAgent?.id;
+  const newConversationAgentId =
+    selectedAgent && isAgentPresentable(selectedAgent)
+      ? selectedAgent.id
+      : null;
   const viewKey = JSON.stringify([
     requestedContext,
     open,
@@ -265,6 +281,7 @@ export function ImportConversations({
     lookupCwd,
     query,
     historyPreviewAgentKey(selectedAgent),
+    newConversationAgentId,
   ]);
   const viewScope = useRef({ key: viewKey });
   if (viewScope.current.key !== viewKey) viewScope.current = { key: viewKey };
@@ -328,7 +345,7 @@ export function ImportConversations({
   }, [viewKey, rows, index]);
   useEffect(() => {
     const retire = (agent?: string) => {
-      known.retire();
+      if (!agent || agent === agentIdRef.current) known.retire();
       const owner = previewInterest.current;
       if (owner && (!agent || owner.agentId === agent)) {
         owner.retire();
@@ -357,9 +374,6 @@ export function ImportConversations({
       for (const pending of pendingImports.current) pending.retire();
     };
   }, []);
-  useEffect(() => {
-    if (!agentId && available.length) setAgentId(available[0].id);
-  }, [agentId, available]);
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -441,17 +455,27 @@ export function ImportConversations({
     if (!open) void work(release);
   }, [open]);
   const handledRequest = useRef(-1);
+  const attemptedFallback = useRef<string | null>(null);
   useEffect(() => {
-    if (
-      !open ||
-      busy ||
-      handledRequest.current === requestRevision ||
-      !initialAgentId
-    )
-      return;
-    if (!available.some((card) => card.id === initialAgentId)) return;
-    handledRequest.current = requestRevision;
-    if (agentId === initialAgentId) return;
+    if (!open || selectedAgentId) attemptedFallback.current = null;
+    if (!open || busy || inFlight.current) return;
+    const target =
+      handledRequest.current !== requestRevision ? requestedAgentId : undefined;
+    if (target) handledRequest.current = requestRevision;
+    const nextAgent = target ?? selectedAgentId ?? firstAvailableId;
+    if (agentId === nextAgent) return;
+    if (!selectedAgentId) {
+      const fallback = JSON.stringify([
+        requestRevision,
+        requestedAgentId,
+        agentId,
+        firstAvailableId,
+      ]);
+      // Leave a failed preview release visible until eligibility changes or
+      // the user explicitly retries by changing Agent or closing the dialog.
+      if (attemptedFallback.current === fallback) return;
+      attemptedFallback.current = fallback;
+    }
     void work(async () => {
       const context = requestedContextRef.current;
       const revision = lookupRevision.current;
@@ -464,20 +488,35 @@ export function ImportConversations({
       )
         return;
       restoreDiscovery(
-        initialAgentId,
-        agentLocations.current.get(initialAgentId) ?? null,
+        nextAgent,
+        agentLocations.current.get(nextAgent) ?? null,
       );
     });
-  }, [open, busy, initialAgentId, requestRevision]);
+  }, [
+    open,
+    busy,
+    requestRevision,
+    requestedAgentId,
+    selectedAgentId,
+    firstAvailableId,
+    agentId,
+  ]);
   const close = () => {
     openRef.current = false;
     onClose();
   };
-  const preparationFailure = (reason: unknown, cwd: string | null) => {
-    if (String(reason).replace(/^Error:\s*/, "") !== "AUTH_REQUIRED")
+  const preparationFailure = (
+    reason: unknown,
+    cwd: string | null,
+    authentication: ReturnType<typeof captureProgramAuthentication>,
+  ) => {
+    if (
+      !authentication.current() ||
+      String(reason).replace(/^Error:\s*/, "") !== "AUTH_REQUIRED"
+    )
       return false;
     const effectiveCwd = cwd ?? defaultCwd;
-    if (effectiveCwd) observeAuthentication(agentId, effectiveCwd, reason);
+    if (effectiveCwd) authentication.observe(effectiveCwd, reason);
     setPreparationCwd({ cwd });
     return true;
   };
@@ -506,10 +545,13 @@ export function ImportConversations({
   };
   const discover = (more = false) =>
     work(async () => {
+      if (!selectedAgent) return;
       const revision = lookupRevision.current;
       const context = requestedContextRef.current;
       const scope = viewScope.current;
       await release();
+      const replacing = pendingProgramAuthenticationChange(agentId);
+      if (replacing) await replacing;
       if (
         !openRef.current ||
         !currentLookup(revision, context) ||
@@ -519,23 +561,29 @@ export function ImportConversations({
       setPreviewId(null);
       setManualLoadSupport(false);
       setListing(true);
+      const authentication = captureProgramAuthentication(agentId);
       const page = await discoverHistory(
         agentId,
         more ? (cursor ?? undefined) : undefined,
         lookupCwd,
       )
         .catch((reason) => {
-          if (!currentLookup(revision, context) || viewScope.current !== scope)
+          if (
+            !authentication.current() ||
+            !currentLookup(revision, context) ||
+            viewScope.current !== scope
+          )
             return null;
           throw new Error(
-            preparationFailure(reason, lookupCwd)
+            preparationFailure(reason, lookupCwd, authentication)
               ? S.authRequired
-              : S.listFailed,
+              : (agentOpenError(reason) ?? S.listFailed),
           );
         })
         .finally(() => setListing(false));
       if (
         !page ||
+        !authentication.current() ||
         !openRef.current ||
         !currentLookup(revision, context) ||
         viewScope.current !== scope
@@ -566,10 +614,13 @@ export function ImportConversations({
     });
   const view = (row: DiscoveredConversation) =>
     work(async () => {
+      if (!selectedAgent) return;
       const revision = lookupRevision.current;
       const context = requestedContextRef.current;
       const scope = viewScope.current;
       await release();
+      const replacing = pendingProgramAuthenticationChange(agentId);
+      if (replacing) await replacing;
       if (
         !openRef.current ||
         !currentLookup(revision, context) ||
@@ -584,11 +635,12 @@ export function ImportConversations({
       const owner = createPreviewInterest(row);
       if (!owner.inquiryCurrent()) return;
       previewInterest.current = owner;
+      const authentication = captureProgramAuthentication(agentId);
       const loaded = await readHistoryPreview(agentId, row, owner).catch(
         (reason) => {
           if (!owner.inquiryCurrent()) return null;
           throw new Error(
-            preparationFailure(reason, row.cwd)
+            preparationFailure(reason, row.cwd, authentication)
               ? S.authRequired
               : reason instanceof Error && reason.message === S.noContent
                 ? S.noContent
@@ -608,6 +660,7 @@ export function ImportConversations({
     });
   const add = (targets = selectedRows) =>
     work(async () => {
+      if (!selectedAgent) return;
       const revision = lookupRevision.current;
       const context = requestedContextRef.current;
       const scope = viewScope.current;
@@ -755,7 +808,15 @@ export function ImportConversations({
     cwd: string,
     interested: () => boolean,
   ) => {
-    if (!manualLoadSupport || !knownCurrent() || !interested()) return;
+    const replacing = pendingProgramAuthenticationChange(agentId);
+    if (replacing) await replacing;
+    if (
+      !selectedAgent ||
+      !manualLoadSupport ||
+      !knownCurrent() ||
+      !interested()
+    )
+      return;
     const association = historyPreviewAssociationKey(
       threads.getSnapshot().index,
       agentId,
@@ -769,17 +830,21 @@ export function ImportConversations({
         )
     )
       throw new Error(S.knownAlreadyAdded);
+    const authentication = captureProgramAuthentication(agentId);
     await known.read(
       agentId,
       { nativeSessionId: id, cwd },
       () =>
         interested() &&
+        authentication.current() &&
+        !hasPendingProgramAuthenticationChange(agentId) &&
         knownCurrent() &&
         historyPreviewAssociationKey(
           threads.getSnapshot().index,
           agentId,
           id,
         ) === association,
+      () => preparationFailure("AUTH_REQUIRED", cwd, authentication),
     );
   };
   const previewRow = visible.find((r) => r.nativeSessionId === previewId);
@@ -842,7 +907,7 @@ export function ImportConversations({
       restoreDiscovery(agentId, next);
     });
   const startNew = () => {
-    if (!onNew || !agentId) return;
+    if (!onNew || !newConversationAgentId) return;
     const revision = lookupRevision.current;
     const context = requestedContextRef.current;
     const scope = viewScope.current;
@@ -855,7 +920,7 @@ export function ImportConversations({
       )
         return;
       close();
-      onNew(agentId);
+      onNew(newConversationAgentId);
     });
   };
   const step = listing ? 1 : choosing ? 0 : 2;
@@ -1107,11 +1172,11 @@ export function ImportConversations({
                     ? S.queryHint
                     : S.emptyHint}
               </p>
-              {unsupported && onNew && (
+              {unsupported && onNew && newConversationAgentId && (
                 <button
                   type="button"
                   className="btn btn-ghost"
-                  disabled={busy || !agentId}
+                  disabled={busy}
                   onClick={startNew}
                 >
                   {S.newChat}
@@ -1332,8 +1397,7 @@ export function ImportConversations({
           type="button"
           className="btn btn-primary"
           disabled={
-            busy ||
-            (choosing ? !agentId || !available.length : !selectedRows.length)
+            busy || !selectedAgent || (!choosing && !selectedRows.length)
           }
           onClick={() => void (choosing ? discover() : add())}
         >

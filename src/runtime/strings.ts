@@ -475,7 +475,7 @@ export const STRINGS = {
     resultPending: "回复已结束，步骤仍在进行",
     noResultNote:
       "没有收到可展示的回答或工具结果。不会自动重试；你可以检查对话后再决定下一步。",
-    stopped: "已停止",
+    stopped: "回复已停止",
     failed: "出错了",
     unknown: "结果未知",
     historicalOutcomeUnknown: "此前请求结果未确认，未自动重发",
@@ -510,7 +510,7 @@ export const STRINGS = {
         case "end_turn":
           return "已完成";
         case "cancelled":
-          return "已停止";
+          return "回复已停止";
         case "refusal":
           return "已拒绝";
         case "error":
@@ -523,6 +523,11 @@ export const STRINGS = {
     unrecoverableHint: "你可以新开对话，原对话记录不会删除。",
     queuedDropped: (n: number) => `${n} 条排队消息未发出`,
     permissionCommand: "运行命令",
+    permissionApproveCommandOnce: "批准一次",
+    permissionCommandDetailsUnavailable: "无法核对这次命令的完整信息。",
+    inputProgram: "程序",
+    inputArguments: "参数",
+    inputNoArguments: "无参数",
     inputCommand: "命令",
     inputCwd: "执行目录",
     fullInput: "完整输入",

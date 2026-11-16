@@ -12,10 +12,11 @@ const included = readFileSync(
   .map((id) => JSON.parse(id) as string);
 
 describe("reviewed Agent branding", () => {
-  it("covers exactly the current 29 directory identities with short Chinese introductions and local artwork", () => {
-    expect(included).toHaveLength(29);
-    expect(Object.keys(AGENT_BRANDS).sort()).toEqual([...included].sort());
-    for (const id of included) {
+  it("covers the current directory and preserves branding for historical Kimi and Nova conversations", () => {
+    expect(included).toHaveLength(27);
+    const supportedBrands = [...included, "kimi", "nova"];
+    expect(Object.keys(AGENT_BRANDS).sort()).toEqual(supportedBrands.sort());
+    for (const id of supportedBrands) {
       const brand = agentBrand({ id: `registry:${id}` });
       expect(brand).toBe(AGENT_BRANDS[id]);
       expect(brand?.description).toMatch(/[\u4e00-\u9fff]/);

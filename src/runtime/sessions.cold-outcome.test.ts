@@ -1453,6 +1453,53 @@ it("persists an idle historical acknowledgement without inventing any request ou
   expectNoColdDispatch(1);
 });
 
+it("protects an unopened conversation with a saved unknown outcome from archive and deletion", async () => {
+  const key = `${input.agentId}:${input.cwd}:${nativeId}`;
+  const sibling = `${key}-sibling`;
+  const previous = await loadRuntime();
+  const { archiveActivity } = await import("./archive_activity");
+  await archiveActivity.finish(key);
+  await archiveActivity.finish(sibling);
+  previous.drafts.draftQueues.write(key, [], null, true);
+  await previous.drafts.draftPersistence.flush();
+  vi.resetModules();
+  const runtime = await loadRuntime();
+  const { archiveEligible } = await import("./auto_archive");
+  const row = {
+    ...input,
+    id: key,
+    nativeSessionId: nativeId,
+    title: null,
+    configOptions: null,
+    pinned: false,
+    archived: false,
+    createdAt: 1,
+    updatedAt: 1,
+  };
+  const afterDeadline = Date.now() + 2 * 86_400_000;
+  expect(runtime.threads.thread(key)).toBeUndefined();
+  expect(runtime.threads.archiveBlockReason(key)).toBe("unconfirmed");
+  expect(runtime.threads.archiveBlockReason(sibling)).toBeNull();
+  expect(archiveEligible(row, undefined, 1, afterDeadline)).toBe(false);
+  expect(
+    archiveEligible({ ...row, id: sibling }, undefined, 1, afterDeadline),
+  ).toBe(true);
+  await expect(runtime.threads.setArchived(key, true)).rejects.toThrow();
+  await expect(
+    runtime.threads.delete({ ...input, id: key, nativeSessionId: nativeId }),
+  ).rejects.toThrow();
+  expect(h.invoke.mock.calls.map(([command]) => command)).not.toContain(
+    "session_meta_archive",
+  );
+  expect(h.invoke.mock.calls.map(([command]) => command)).not.toContain(
+    "session_delete",
+  );
+  const opened = await openRetained(runtime);
+  expect(runtime.threads.archiveBlockReason(key)).not.toBeNull();
+  runtime.threads.acknowledgeHistoricalOutcome(opened);
+  expect(runtime.threads.archiveBlockReason(key)).toBeNull();
+});
+
 it("persists new uncertainty that arrives after acknowledging the older notice", async () => {
   const original = await loadRuntime();
   const hot = await original.threads.open(input);

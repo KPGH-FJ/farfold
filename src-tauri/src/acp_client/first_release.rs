@@ -1,4 +1,4 @@
-//! Current product directory scope, selected by the user on 2026-10-07.
+//! Current product directory scope, last reviewed on 2026-11-15.
 //! Compatibility still comes from initialize; existing user data is retained.
 
 const INCLUDED: &[&str] = &[
@@ -21,10 +21,8 @@ const INCLUDED: &[&str] = &[
     "grok-build",
     "kilo",
     "kimchi",
-    "kimi",
     "minimax-code",
     "mistral-vibe",
-    "nova",
     "opencode",
     "pi-acp",
     "poolside",
@@ -46,18 +44,21 @@ mod tests {
     use std::collections::HashSet;
 
     #[test]
-    fn current_directory_has_29_unique_reviewed_identities() {
-        assert_eq!(INCLUDED.len(), 29);
+    fn current_directory_has_27_unique_reviewed_identities() {
+        assert_eq!(INCLUDED.len(), 27);
         let mut reviewed = HashSet::new();
         for id in INCLUDED {
             assert!(reviewed.insert(*id));
             assert!(first_batch_visible(id));
         }
-        assert_eq!(reviewed.len(), 29);
+        assert_eq!(reviewed.len(), 27);
         assert!(!first_batch_visible("future-agent"));
         assert!(!first_batch_visible("Cline"));
         assert!(!first_batch_visible("registry:cline"));
         assert!(first_batch_visible("cline"));
         assert!(first_batch_visible("fast-agent"));
+        assert!(!first_batch_visible("kimi"));
+        assert!(!first_batch_visible("kimi-code"));
+        assert!(!first_batch_visible("nova"));
     }
 }

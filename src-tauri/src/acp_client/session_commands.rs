@@ -196,6 +196,7 @@ pub async fn session_open(
         session_operations,
         connection_id: opened.connection_id,
         service: source.as_ref().map(|s| s.identity.clone()),
+        service_model_value: source.as_ref().map(|s| s.model_id.clone()),
         service_context: source.map(|s| s.revision),
         native_session_id: opened.session_id,
         cwd: cwd_string,
@@ -936,7 +937,7 @@ pub(super) async fn delete_session_in_scope(
     let row_id = MetaStore::dismissed_id(agent_id, &cwd_string, native_session_id);
     let guarded_id = row_id.clone();
     if store
-        .run(move |store| store.require_mcp_ready(&guarded_id))
+        .run(move |store| store.require_delete_ready(&guarded_id))
         .await
         .is_err()
     {
@@ -946,7 +947,7 @@ pub(super) async fn delete_session_in_scope(
         });
     }
     let attempt = manager
-        .close_and_delete_session(agent_id, cwd, native_session_id)
+        .close_and_delete_session(agent_id, cwd, native_session_id, store)
         .await;
     let connection_closed = attempt.connection_closed;
     let remote = match attempt.result {

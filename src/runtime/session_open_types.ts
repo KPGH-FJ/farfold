@@ -28,4 +28,5 @@ export interface OpenResult {
   permissionEffect?: unknown;
   service?: import("./credentials").ServiceIdentity | null;
   serviceContext?: string | null;
+  serviceModelValue?: string;
 }

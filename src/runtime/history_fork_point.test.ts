@@ -5,6 +5,11 @@ import {
   sealStreams,
 } from "./session_projection";
 import { sessionOperations } from "./session_fork_types";
+import {
+  hasHistoryForkPoint,
+  historyForkableItems,
+  historyForkSelection,
+} from "./history_fork_point";
 
 function fixture() {
   const thread = freshThreadState("a:/work:parent", "a", "/work", "parent");
@@ -73,3 +78,30 @@ it.each(["owner", "session", "identity", "unknown", "lost"])(
     );
   },
 );
+
+it("uses the same ownership and duplicate checks for displayed and confirmed fork targets", () => {
+  const thread = fixture();
+  thread.sessionOperations = sessionOperations({ forkHistoricalPoint: true });
+  for (const messageId of ["duplicate", "valid", "replaced"]) {
+    const original = event(messageId);
+    applyUpdate(thread, original.update, original);
+  }
+  sealStreams(thread);
+  const [duplicate, valid, replaced] = thread.items;
+  if (duplicate.kind !== "agent" || replaced.kind !== "agent")
+    throw new Error("Expected fixture messages");
+  replaced.historyForkPoint = { messageId: "replaced", connectionId: "old" };
+  thread.items.push({ ...duplicate, id: "later", historyForkPoint: undefined });
+
+  expect([...historyForkableItems(thread)]).toEqual([valid]);
+  expect(hasHistoryForkPoint(thread, { messageId: "duplicate" })).toBe(false);
+  expect(hasHistoryForkPoint(thread, { messageId: "valid" })).toBe(true);
+  expect(historyForkSelection(thread, { ...valid })).toBeUndefined();
+  thread.items.push(valid);
+  expect(historyForkableItems(thread).size).toBe(0);
+  expect(historyForkSelection(thread, valid)).toBeUndefined();
+  thread.items.pop();
+  thread.connectionLost = true;
+  expect(historyForkableItems(thread).size).toBe(0);
+  expect(hasHistoryForkPoint(thread, { messageId: "valid" })).toBe(false);
+});

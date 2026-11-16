@@ -75,6 +75,7 @@ export function applyOpeningResult(
   state.nativeSessionId = result.nativeSessionId;
   state.service = result.service ?? undefined;
   state.serviceContext = result.serviceContext ?? undefined;
+  state.serviceModelValue = result.serviceModelValue;
   state.connectionId = result.connectionId;
   state.sessionOperations = sessionOperations(result.sessionOperations);
   state.workspaceAccess = workspaceAccessCapability(result.workspaceAccess);

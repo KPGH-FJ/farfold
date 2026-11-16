@@ -52,12 +52,15 @@ export function configurationRestoreIntent(
     model &&
     protectedConfigIds(state.configOptions).has(model.id)
   ) {
+    const expectedModelValue = state.serviceModelValue;
     if (
-      model.currentValue !== serviceModel ||
-      (Object.hasOwn(saved, model.id) && saved[model.id] !== serviceModel)
+      state.service?.model !== serviceModel ||
+      !expectedModelValue ||
+      model.currentValue !== expectedModelValue ||
+      (Object.hasOwn(saved, model.id) && saved[model.id] !== expectedModelValue)
     )
       throw new Error(STRINGS.repair.configFailed);
-    saved[model.id] = serviceModel;
+    saved[model.id] = expectedModelValue;
   }
   return saved;
 }

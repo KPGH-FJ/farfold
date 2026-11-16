@@ -1,6 +1,10 @@
 # 首批 Agent 目录范围
 
-当前范围决定：2026-10-07。用户明确将 Corust Agent（`corust-agent`）、Junie（`junie`）、Stakpak（`stakpak`，用户消息拼作 starpak）和 Auggie CLI（`auggie`）移出首批，并删除相关专属内容。当前产品目录与接入开发范围为 29 项，八项接入标准保持；移出条目的专属开发和验收任务撤销。移除是用户主动缩减，不是对官方接入方式或登录结果的判定；未来增加须另行授权和审核，没有自动重新纳入条件。
+范围决定（2026-11-15 早期）：按用户要求，将已由厂商停止维护的 Kimi CLI Legacy（`kimi`）移出首发目录与整家验收，剩余 28 项。已有程序、登记、凭据、配置、历史与证据保留。新版 Kimi Code CLI 是不同登记（`kimi-code`），独立审核，保留用户选择的迁移边界。 [厂商停维公告](https://github.com/MoonshotAI/kimi-cli/issues/2661) · [官方迁移文档](https://www.kimi.com/en/help/kimi-code/cli-migration)
+
+当前范围决定（2026-11-15）：用户授权，官方现行版本无法满足接入时将 Nova（`nova`）移出当前首发。Nova 已保存设置并结束官方终端后，Farfold 仍要求登录。官方最新 1.1.65 对 ACP V1 发送旧权限请求，现有官方入口尚不能完成必需审批。当前 27 家，Nova 既有登记、程序、凭据、配置和历史保留。 [官方版本](https://registry.npmjs.org/@compass-ai%2Fnova/latest) · [ACP V1 权限](https://agentclientprotocol.com/protocol/v1/prompt-turn)
+
+历史范围决定（2026-10-07）：用户明确将 Corust Agent（`corust-agent`）、Junie（`junie`）、Stakpak（`stakpak`，用户消息拼作 starpak）和 Auggie CLI（`auggie`）移出首批，并删除相关专属内容。当时范围为 29 项，八项接入标准保持。未来增加须审核，没有自动重新纳入条件。
 
 本次不改写旧实测数字，不删除原始证据、用户历史、凭据或外部 Agent 配置。正式应用及已有数据的实际状态另见 [当前状态](status.md)，不能由名单变更推定已经安装或清理。
 
@@ -25,7 +29,7 @@
 
 上表失败及未关闭条件仅作历史追溯，不再是本轮实现或接入检查依赖。GLM 的旧静态记录以已装官方包 `glm-acp-agent@1.13.0` 为依据：普通 `authenticate` 不收集或验证 Key，直接返回空对象；此事实不代表新增实测，也不构成移除理由。
 
-## 当前 29 项的既有验证记录（历史候选）
+## 原 29 项的既有验证记录
 
 | Agent / 目录 ID                       | 已知登录或准备路线                              | 实际验证边界                                                                                                                                                                                   |
 | ------------------------------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -61,17 +65,17 @@
 
 上述事实首先定位于[41 项跨候选覆盖索引](evidence/2026-10-01-agent-access-directory-batch7/coverage.md)，并以之后的 [Copilot 登录验证](evidence/2026-10-01-agent-copilot-login/installed.md)、[Autohand 准备验证](evidence/2026-10-01-agent-access-companion-program/installed.md)、[多模型项验证](evidence/2026-10-01-agent-config-categories/README.md)及[历史恢复复验](evidence/2026-10-01-agent-history-retry/installed.md)补充。不同候选的成功不合成一次完整接入通过；公开方法可见不证明实际登录成功。
 
-剩余 29 项的账号、Key、服务额度或本地模型条件分别记录，真实登录和秘密输入交用户本人完成；缺账号不自动缩减保留范围。方法存在、连接成功与入口打开不代表账号或请求成功。当前完成标准以 [产品契约](../PRODUCT.md#3-当前接入完成标准) 的八项要求为准，代表结果只证明实际覆盖路径；实测顺序与授权以 [活动计划](../plans/agent-access.md) 为准。
+原 29 项的账号、Key、服务额度或本地模型条件分别记录，真实登录和秘密输入交用户本人完成；缺账号不自动缩减保留范围。方法存在、连接成功与入口打开不代表账号或请求成功。当前完成标准以 [产品契约](../PRODUCT.md#3-当前接入完成标准) 的八项要求为准，代表结果只证明实际覆盖路径；实测顺序与授权以 [活动计划](../plans/agent-access.md) 为准。
 
 ## 实现与再审核
 
-集中名单在 [first_release.rs](../src-tauri/src/acp_client/first_release.rs)，仅保留当前 29 项精确目录 ID。`catalog_list` 只给出当前目录条目，目录安装和准备入口也核对当前范围；完整远端缓存不因范围变化清除。客户端仍用通用卡片处理已有登记；目录外旧登记退出日常列表，历史访问与自定义接入沿共用规则保留，不删除外部程序或用户配置。
+集中名单在 [first_release.rs](../src-tauri/src/acp_client/first_release.rs)，保留当前 27 项精确目录 ID。`catalog_list` 只给出当前目录条目，目录安装和准备入口也核对当前范围；完整远端缓存不因范围变化清除。客户端仍用通用卡片处理已有登记；目录外旧登记退出日常列表，历史访问与自定义接入沿共用规则保留，不删除外部程序或用户配置。
 
-安装版 `b751575` 曾观察到探索 33 项及已有 40 项管理入口，见[原安装记录](evidence/2026-10-02-agent-onboarding-consistency/installed.md)；那是旧范围与展示策略的历史结果，不证明当前 29 项目录已在正式应用生效，也不代表账号或完整接入通过。
+安装版 `b751575` 曾观察到探索 33 项及已有 40 项管理入口，见[原安装记录](evidence/2026-10-02-agent-onboarding-consistency/installed.md)。先前 28 项另有正式验收原件。当前 27 项按本轮正式验收记录跟踪。每家认证与实测状态分别留证。
 
-## 当前保留的 29 项
+## 当前保留的 27 项
 
-下表29个目录身份与当前[源码允许名单](../src-tauri/src/acp_client/first_release.rs)逐项一致。已有登记、历史分项和整家八项通过分别核对，验收见[当前状态](status.md)及[逐家证据台账](evidence/2026-11-06-cycle-01/agent-conditions.json)。
+下表28个目录身份与当前[源码允许名单](../src-tauri/src/acp_client/first_release.rs)逐项一致。已有登记、历史分项和整家八项通过分别核对，验收见[当前状态](status.md)及[逐家证据台账](evidence/2026-11-06-cycle-01/agent-conditions.json)。
 
 | Agent / 目录 ID                       |
 | ------------------------------------- |
@@ -94,10 +98,8 @@
 | Grok Build / `grok-build`             |
 | Kilo / `kilo`                         |
 | Kimchi / `kimchi`                     |
-| Kimi / `kimi`                         |
 | MiniMax / `minimax-code`              |
 | Mistral Vibe / `mistral-vibe`         |
-| Nova / `nova`                         |
 | OpenCode / `opencode`                 |
 | Pi / `pi-acp`                         |
 | Poolside / `poolside`                 |

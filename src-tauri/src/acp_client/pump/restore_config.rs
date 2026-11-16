@@ -250,6 +250,31 @@ fn work_busy(ctx: &DispatchContext<'_>) -> bool {
     ctx.tools.busy() || ctx.compactions.busy() || ctx.async_tasks.busy()
 }
 
+pub(super) fn owned_interactions(ctx: &DispatchContext<'_>) -> bool {
+    ctx.pending
+        .lock()
+        .map(|entries| {
+            entries.values().any(|entry| {
+                entry.session_id == ctx.session_id && entry.lease.belongs_to(&ctx.ops.life)
+            })
+        })
+        .unwrap_or(true)
+        || ctx
+            .ops
+            .elicitations
+            .lock()
+            .map(|entries| {
+                entries.values().any(|entry| {
+                    entry.session_id == ctx.session_id && entry.lease.belongs_to(&ctx.ops.life)
+                })
+            })
+            .unwrap_or(true)
+}
+
+pub(super) fn deletion_busy(ctx: &DispatchContext<'_>) -> bool {
+    work_busy(ctx) || owned_interactions(ctx)
+}
+
 pub(super) fn busy(ctx: &DispatchContext<'_>) -> bool {
     work_busy(ctx)
         || ctx
@@ -292,7 +317,10 @@ pub(super) async fn next_mutation(
             MutationKind::Config { .. } if busy(ctx) => {
                 Some("当前无法修改此设置，请等待已发出的请求结束")
             }
-            MutationKind::Mode | MutationKind::Close | MutationKind::Delete if work_busy(ctx) => {
+            MutationKind::DeleteClose | MutationKind::Delete if deletion_busy(ctx) => {
+                Some("请先完成此对话的任务及待处理事项，再删除")
+            }
+            MutationKind::Mode | MutationKind::Close if work_busy(ctx) => {
                 Some("上次请求尚未结束，请先停止或等待")
             }
             MutationKind::StoppedToolClose(expected)

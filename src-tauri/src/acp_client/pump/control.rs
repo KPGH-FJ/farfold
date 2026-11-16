@@ -105,6 +105,12 @@ pub(crate) enum SessionControl {
         deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<(), String>>,
     },
+    /// Close on the original route as the first step of deletion.
+    DeleteClose {
+        deadline: tokio::time::Instant,
+        /// A confirmed close reports whether deletion is still admissible.
+        result: oneshot::Sender<Result<bool, String>>,
+    },
     CheckUnapprovedStoppedClose {
         deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<Option<StoppedToolCloseReceipt>, String>>,
@@ -130,6 +136,11 @@ pub(crate) enum SessionControl {
         deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<(), String>>,
     },
+    /// Remove a local route before local-only deletion.
+    DeleteDetach {
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<Result<(), String>>,
+    },
     /// Metadata mutation serialized with this session's prompt/config admission.
     Archive {
         row: Box<crate::meta_store::SessionRow>,
@@ -144,6 +155,12 @@ pub(crate) enum SessionControl {
 }
 
 impl SessionControl {
+    pub(super) fn deletion(&self) -> bool {
+        matches!(
+            self,
+            Self::DeleteClose { .. } | Self::Delete { .. } | Self::DeleteDetach { .. }
+        )
+    }
     pub(super) async fn pending_tools_error(
         &self,
         store: &super::super::model_guard::ConfigStore,
@@ -233,7 +250,11 @@ impl SessionControl {
             | Self::SetMode { result, .. }
             | Self::Close { result, .. }
             | Self::ForkClose { result }
-            | Self::Detach { result, .. } => {
+            | Self::Detach { result, .. }
+            | Self::DeleteDetach { result, .. } => {
+                let _ = result.send(Err(error));
+            }
+            Self::DeleteClose { result, .. } => {
                 let _ = result.send(Err(error));
             }
             Self::Delete { result, .. } => {
@@ -292,7 +313,9 @@ impl SessionControl {
             | Self::Close {
                 deadline, result, ..
             }
-            | Self::Detach { deadline, result } => (*deadline, result.is_closed()),
+            | Self::Detach { deadline, result }
+            | Self::DeleteDetach { deadline, result } => (*deadline, result.is_closed()),
+            Self::DeleteClose { deadline, result } => (*deadline, result.is_closed()),
             Self::Delete {
                 deadline, result, ..
             } => (*deadline, result.is_closed()),
@@ -331,7 +354,7 @@ impl LocalDetach {
         busy: bool,
         reply: oneshot::Sender<Result<(), String>>,
     ) -> Option<Self> {
-        if busy || restore_config::busy(ctx) {
+        if busy {
             let _ = reply.send(Err(
                 "请先完成此对话的任务及待处理事项，再关闭或重新连接".into()
             ));
@@ -358,6 +381,43 @@ impl LocalDetach {
             .map_err(|_| "无法完成对话关闭，请重试".to_string());
         drop(lease);
         let _ = reply.send(outcome);
+    }
+}
+
+pub(super) async fn saved_delete_ready(
+    store: &super::super::model_guard::ConfigStore,
+    native: &str,
+) -> bool {
+    let id = crate::meta_store::MetaStore::dismissed_id(&store.agent_id, &store.cwd, native);
+    store
+        .store
+        .run(move |store| store.require_delete_ready(&id))
+        .await
+        .is_ok()
+}
+
+pub(crate) fn clear_connection_interactions(
+    pending: &PendingPermissions,
+    forms: &PendingElicitations,
+    life: &Arc<ConnectionLife>,
+) {
+    if let Ok(map) = pending.lock() {
+        let mut ids = map
+            .iter()
+            .filter(|(_, item)| item.lease.belongs_to(life))
+            .map(|(id, _)| id.clone())
+            .collect::<Vec<_>>();
+        drop(map);
+        cancel_permissions(pending, &mut ids);
+    }
+    if let Ok(map) = forms.lock() {
+        let mut ids = map
+            .iter()
+            .filter(|(_, item)| item.lease.belongs_to(life))
+            .map(|(id, _)| id.clone())
+            .collect::<Vec<_>>();
+        drop(map);
+        cancel_elicitations(forms, &mut ids);
     }
 }
 

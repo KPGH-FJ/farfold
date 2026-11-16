@@ -1,7 +1,7 @@
 import { isAbsoluteFilePath } from "./file_paths";
 import { invoke } from "@tauri-apps/api/core";
 import { archiveActivity } from "./archive_activity";
-import { draftPersistence, hasUnsentWork } from "./drafts";
+import { draftPersistence, draftQueues, hasUnsentWork } from "./drafts";
 import type { IndexRow } from "./sessions";
 import { hasActiveWork, type ThreadState } from "./session_types";
 import { STRINGS } from "./strings";
@@ -12,7 +12,11 @@ export function archiveBlockReason(
   needsAttention: (state: ThreadState) => boolean,
 ) {
   if (state?.stopping) return "stopping" as const;
-  if (state?.stopUnconfirmed || state?.uncertainPrompt)
+  if (
+    state?.stopUnconfirmed ||
+    state?.uncertainPrompt ||
+    draftQueues.hasUnconfirmedOutcome(key)
+  )
     return "unconfirmed" as const;
   if (state?.submitting) return "submitting" as const;
   if (state?.configuring) return "configuring" as const;
