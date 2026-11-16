@@ -1,0 +1,182 @@
+[
+  {
+    "case": "conflict",
+    "inventory": {
+      "requestId": "a606df4b-2a53-4c5a-bcf6-e759975cf50d",
+      "agentId": "40687c1e-193c-467a-95f9-7a6e2671e5a2",
+      "cwd": "/private/var/folders/dv/gy63h88s3cj_ryrb2m1hzcd80000gn/T/.tmp02gPAU",
+      "kind": "mcp",
+      "extraSkillRoots": [],
+      "state": "ready",
+      "settled": true,
+      "snapshot": {
+        "observedAtMs": 1793835187100,
+        "scope": "officialCliConfigurationForDirectory",
+        "source": "officialCli",
+        "complete": true,
+        "sessionApplicability": "unverified",
+        "items": [
+          {
+            "enablement": {
+              "availability": "available",
+              "reason": null
+            },
+            "id": 0,
+            "name": "fixture.one",
+            "transport": "stdio",
+            "reportedEnabled": true,
+            "reportedAuth": "unsupported",
+            "origin": "unreported",
+            "configurationLayer": "unreported",
+            "connection": "unverified",
+            "tools": "unreported"
+          }
+        ]
+      }
+    },
+    "operation": {
+      "agentId": "40687c1e-193c-467a-95f9-7a6e2671e5a2",
+      "requestId": "316ed05c-aee7-4f96-93c2-de8bf458fe8a",
+      "action": "inspect",
+      "cwd": "/private/var/folders/dv/gy63h88s3cj_ryrb2m1hzcd80000gn/T/.tmp02gPAU",
+      "target": {
+        "kind": "mcp",
+        "inventoryRequestId": "a606df4b-2a53-4c5a-bcf6-e759975cf50d",
+        "itemId": 0,
+        "name": "fixture.one",
+        "transport": "stdio"
+      },
+      "requestedEnabled": false,
+      "operationId": null,
+      "state": "failed",
+      "phase": "complete",
+      "settled": true,
+      "writeDispatched": false,
+      "writeAck": "none",
+      "outcome": null,
+      "code": "configurationLayerConflict",
+      "review": null,
+      "observation": null
+    }
+  },
+  {
+    "case": "inherited",
+    "inventory": {
+      "requestId": "216ccca1-559b-45fe-a4fb-2fca959c34b6",
+      "agentId": "487daf7c-c33f-42dd-8830-9a80d0799cf9",
+      "cwd": "/private/var/folders/dv/gy63h88s3cj_ryrb2m1hzcd80000gn/T/.tmpyzb3WV",
+      "kind": "mcp",
+      "extraSkillRoots": [],
+      "state": "ready",
+      "settled": true,
+      "snapshot": {
+        "observedAtMs": 1793835187942,
+        "scope": "officialCliConfigurationForDirectory",
+        "source": "officialCli",
+        "complete": true,
+        "sessionApplicability": "unverified",
+        "items": [
+          {
+            "enablement": {
+              "availability": "available",
+              "reason": null
+            },
+            "id": 0,
+            "name": "fixture.one",
+            "transport": "stdio",
+            "reportedEnabled": true,
+            "reportedAuth": "unsupported",
+            "origin": "unreported",
+            "configurationLayer": "unreported",
+            "connection": "unverified",
+            "tools": "unreported"
+          }
+        ]
+      }
+    },
+    "operation": {
+      "agentId": "487daf7c-c33f-42dd-8830-9a80d0799cf9",
+      "requestId": "5aa02d4b-7f35-45be-909c-4bf8898a18d7",
+      "action": "inspect",
+      "cwd": "/private/var/folders/dv/gy63h88s3cj_ryrb2m1hzcd80000gn/T/.tmpyzb3WV",
+      "target": {
+        "kind": "mcp",
+        "inventoryRequestId": "216ccca1-559b-45fe-a4fb-2fca959c34b6",
+        "itemId": 0,
+        "name": "fixture.one",
+        "transport": "stdio"
+      },
+      "requestedEnabled": false,
+      "operationId": null,
+      "state": "failed",
+      "phase": "complete",
+      "settled": true,
+      "writeDispatched": false,
+      "writeAck": "none",
+      "outcome": null,
+      "code": "configurationInherited",
+      "review": null,
+      "observation": null
+    }
+  },
+  {
+    "case": "project",
+    "inventory": {
+      "requestId": "ef6dad7b-aa7b-4ff5-99ec-6d87df56ed3f",
+      "agentId": "b876771f-dbc9-4ca1-8c07-0da101ff91fd",
+      "cwd": "/private/var/folders/dv/gy63h88s3cj_ryrb2m1hzcd80000gn/T/.tmp3cPWhh",
+      "kind": "mcp",
+      "extraSkillRoots": [],
+      "state": "ready",
+      "settled": true,
+      "snapshot": {
+        "observedAtMs": 1793835188110,
+        "scope": "officialCliConfigurationForDirectory",
+        "source": "officialCli",
+        "complete": true,
+        "sessionApplicability": "unverified",
+        "items": [
+          {
+            "enablement": {
+              "availability": "available",
+              "reason": null
+            },
+            "id": 0,
+            "name": "fixture.one",
+            "transport": "stdio",
+            "reportedEnabled": true,
+            "reportedAuth": "unsupported",
+            "origin": "unreported",
+            "configurationLayer": "unreported",
+            "connection": "unverified",
+            "tools": "unreported"
+          }
+        ]
+      }
+    },
+    "operation": {
+      "agentId": "b876771f-dbc9-4ca1-8c07-0da101ff91fd",
+      "requestId": "d3e585a9-a710-45a6-9491-b57740bc446c",
+      "action": "inspect",
+      "cwd": "/private/var/folders/dv/gy63h88s3cj_ryrb2m1hzcd80000gn/T/.tmp3cPWhh",
+      "target": {
+        "kind": "mcp",
+        "inventoryRequestId": "ef6dad7b-aa7b-4ff5-99ec-6d87df56ed3f",
+        "itemId": 0,
+        "name": "fixture.one",
+        "transport": "stdio"
+      },
+      "requestedEnabled": false,
+      "operationId": null,
+      "state": "failed",
+      "phase": "complete",
+      "settled": true,
+      "writeDispatched": false,
+      "writeAck": "none",
+      "outcome": null,
+      "code": "configurationProjectOnly",
+      "review": null,
+      "observation": null
+    }
+  }
+]

@@ -149,6 +149,89 @@ fn forget_and_empty_clear_reject_late_writes_without_touching_sibling_data() {
 }
 
 #[test]
+fn explicit_deletion_rolls_back_index_and_pages_when_dismissal_write_fails() {
+    let store = store();
+    let who = owner("first", 10);
+    let sibling = owner("second", 20);
+    insert(&store, &who);
+    insert(&store, &sibling);
+    let row = store.get_session(&who.session_id).unwrap();
+    let pages = store
+        .remember_page(&who, 0, "https://example.com/a")
+        .unwrap();
+    let sibling_pages = store
+        .remember_page(&sibling, 0, "https://example.org/other")
+        .unwrap();
+    store
+        .lock()
+        .unwrap()
+        .execute_batch(
+            "CREATE TRIGGER refuse_dismissal BEFORE INSERT ON dismissed_sessions \
+             BEGIN SELECT RAISE(ABORT, 'fixture'); END;",
+        )
+        .unwrap();
+
+    assert_eq!(
+        store.remove_and_dismiss_session(&who.session_id),
+        Err(crate::meta_store::LocalSessionDeleteError::NotRemoved)
+    );
+    assert_eq!(store.get_session(&who.session_id).unwrap(), row);
+    assert_eq!(store.remembered_pages(&who).unwrap(), pages);
+    assert!(store.list_dismissed().unwrap().is_empty());
+
+    store
+        .lock()
+        .unwrap()
+        .execute_batch("DROP TRIGGER refuse_dismissal")
+        .unwrap();
+    store.remove_and_dismiss_session(&who.session_id).unwrap();
+    assert!(store.get_session(&who.session_id).unwrap().is_none());
+    assert!(raw(&store, &who).is_none());
+    assert_eq!(store.remembered_pages(&sibling).unwrap(), sibling_pages);
+    assert_eq!(store.list_dismissed().unwrap(), [who.session_id].into());
+
+    // A remote-only item can be hidden even though it has no local index row.
+    let remote_only = "remote-only";
+    store.remove_and_dismiss_session(remote_only).unwrap();
+    store.remove_and_dismiss_session(remote_only).unwrap();
+    assert_eq!(store.list_dismissed().unwrap().len(), 2);
+    assert!(store.list_dismissed().unwrap().contains(remote_only));
+}
+
+#[test]
+fn automatic_metadata_cannot_restore_a_removed_conversation_before_explicit_import() {
+    let store = store();
+    let id = MetaStore::dismissed_id("fixture", "/fixture", "native");
+    let who = owner(&id, 10);
+    let sibling = owner("sibling", 20);
+    insert(&store, &who);
+    insert(&store, &sibling);
+    let mut neighbor = store.get_session(&sibling.session_id).unwrap().unwrap();
+    neighbor.native_session_id = Some("other-native".into());
+    store.upsert_session(&neighbor).unwrap();
+    let mut stale = store.get_session(&id).unwrap().unwrap();
+    stale.title = Some("Late automatic title".into());
+    stale.updated_at = 50;
+    store.remove_and_dismiss_session(&id).unwrap();
+
+    assert!(store.touch_session(&stale).is_err());
+    assert!(store.get_session(&id).unwrap().is_none());
+    assert_eq!(store.list_dismissed().unwrap(), [id.clone()].into());
+    assert_eq!(
+        store.get_session(&sibling.session_id).unwrap(),
+        Some(neighbor)
+    );
+
+    let restored = store
+        .import_session("fixture", "/fixture", "native", Some("Explicit return"))
+        .unwrap();
+    assert_eq!(restored.id, id);
+    assert!(store.list_dismissed().unwrap().is_empty());
+    let updated = store.touch_session(&stale).unwrap();
+    assert_eq!(updated.title.as_deref(), Some("Explicit return"));
+}
+
+#[test]
 fn deletion_is_atomic_and_stale_owner_cannot_restore_pages_after_delete_or_clear() {
     let store = store();
     let who = owner("first", 10);

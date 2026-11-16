@@ -55,6 +55,7 @@ function setup(id: string) {
   const controller = new BrowserSharingController(
     {
       status: async () => info,
+      connect: vi.fn(),
       respond: async () =>
         (info = { ...info, revision: info.revision + 1, pendingRequest: null }),
       allow: vi.fn(),

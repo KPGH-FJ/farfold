@@ -702,5 +702,6 @@ fn ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_materi
 }
 
 // Both tests acquire the real application-wide maintenance gate. Keep their
-// fixtures independent and allow for the full Git, archive and recovery path.
-const PUBLIC_COLD_TEST_TIMEOUT: Duration = Duration::from_secs(180);
+// fixtures independent. The delete path has five phases with separate 180s test waits:
+// create, archive, prepare removal, confirm removal and recover, plus setup/recheck.
+const PUBLIC_COLD_TEST_TIMEOUT: Duration = Duration::from_secs(5 * 180 + 60);

@@ -136,6 +136,10 @@ it("uses an explicitly confirmed location without sending or replacing the draft
   render();
   expect(newConversationChoice.cwd).toBe("/trees/new");
   expect(composerDrafts.read("new").text).toBe("latest edit");
+  expect(
+    render().find((n) => n.props.className === "workspace-folder-hint")!.props
+      .children,
+  ).toContain("同一文件夹里的对话共享文件");
   expect(props.onStarted).not.toHaveBeenCalled();
   expect(render().find((n) => n.type === Composer)!.props.sendRequest).toBe(0);
   expect(pick.isCurrent()).toBe(false);

@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
 
 export const taskReferencePath = "docs/agent-access-requirements.md";
+export const taskStatusPath = "docs/status.md";
 export const referenceRole =
   "<!-- role: task-requirements-reference; scheduling-authority: none -->";
 
 const taskRow = /^\|\s*(ARCH-\d+|NEW-\d+|P\d+|H\d+)\s*\|/;
 const packageIds = "ABCDEFGHIJKLMNXZ";
-const commonPrefixes = ["每个条目的完成依据 =", "每次更新条目必须记录："];
+const commonPrefixes = ["每个条目的完成依据 =", "每次更新条目必须记录"];
 
 export function parseTaskReference(text) {
   text = text.replace(/\r\n/g, "\n");
@@ -101,11 +102,63 @@ export function selectTaskRequirements(reference, ids, extraPackages = []) {
   };
 }
 
+/** Current conclusions live once in status.md. Unmigrated rows remain explicitly
+ * identified as reference progress, rather than being silently promoted. */
+export function resolveTaskProgress(reference, statusText) {
+  const current = new Map();
+  const text = statusText.replace(/\r\n/g, "\n");
+  const starts = [...text.matchAll(/<!-- task-current: ([A-Z0-9-]+) -->/g)];
+  const blocks = [
+    ...text.matchAll(
+      /<!-- task-current: ([A-Z0-9-]+) -->\n+### ([A-Z0-9-]+)\n\n([\s\S]*?)\n<!-- \/task-current -->/g,
+    ),
+  ];
+  assert.equal(blocks.length, starts.length, "malformed current task block");
+  for (const [, id, heading, body] of blocks) {
+    assert.equal(id, heading, `current task heading mismatch: ${id}`);
+    assert.ok(reference.tasks.has(id), `unknown current task: ${id}`);
+    assert.ok(!current.has(id), `duplicate current task: ${id}`);
+    assert.ok(
+      body.trim() && !body.includes("<!-- task-current:"),
+      `empty or nested current task: ${id}`,
+    );
+    current.set(id, body.trim());
+  }
+  const tasks = new Map();
+  for (const [id, task] of reference.tasks) {
+    const pointer = `[最新结论](status.md#${id.toLowerCase()})`;
+    const linked = task.progress === pointer;
+    assert.ok(
+      !current.has(id) || linked,
+      `current task still duplicates reference progress: ${id}`,
+    );
+    assert.ok(
+      !linked || current.has(id),
+      `current task conclusion missing: ${id}`,
+    );
+    assert.ok(
+      !task.progress?.includes("[最新结论](") || linked,
+      `invalid current task link: ${id}`,
+    );
+    tasks.set(id, {
+      ...task,
+      progress: linked ? current.get(id) : task.progress,
+      progressSource: linked
+        ? `${taskStatusPath}#${id.toLowerCase()}`
+        : taskReferencePath,
+      currentConclusion: linked,
+    });
+  }
+  return { ...reference, tasks };
+}
+
 export function renderTaskRequirements(selection) {
   const lines = [
     "# 按ID读取的要求（只读参考，无调度权）",
     "",
-    "执行顺序只见 plans/agent-access.md；当前证据见 docs/status.md。产品要求仍为 PRODUCT.md 的29家八项标准；本输出不改变范围或证明完成。",
+    "执行顺序只见 plans/agent-access.md；当前证据见 docs/status.md。首发名单与八项标准见 PRODUCT.md；本输出不改变范围或证明完成。",
+    "",
+    "已归并条目的最新结论直接读取 docs/status.md；要求参考只保留链接。其他条目明确标作参考进度，仍需核对原件。所有相对证据链接以 docs/ 为起点。",
     "",
     ...selection.common.flatMap((line) => [line, ""]),
     "## 官方接口与范围约束",
@@ -115,7 +168,13 @@ export function renderTaskRequirements(selection) {
   ];
   for (const task of selection.tasks) {
     lines.push(`## ${task.id} ${task.title}`, "");
-    if (task.progress !== null) lines.push(`当前进度：${task.progress}`, "");
+    if (task.progress !== null) {
+      lines.push(
+        `${task.currentConclusion ? "最新结论" : "参考进度（尚未归并）"}：${task.progress}`,
+        "",
+      );
+      lines.push(`结论来源：${task.progressSource ?? taskReferencePath}`, "");
+    }
     lines.push(`专项完成条件：${task.completion}`, "");
     if (task.package) lines.push(`所属工作包：${task.package}`, "");
     else

@@ -2,6 +2,10 @@
 //! Agent file tool and does not read or store conversation history.
 use serde::Serialize;
 use std::path::{Path, PathBuf};
+use std::sync::{
+    Arc,
+    atomic::{AtomicBool, Ordering},
+};
 
 use crate::file_delivery::{self, DeliveryError};
 
@@ -146,15 +150,25 @@ pub async fn draft_attachment_image(
         return Err("请从主界面操作附件".to_owned());
     }
     let path = attachment_path(&uri)?;
-    crate::file_read_check::run(move || images::read_candidate(&path, read)).await
+    let recognized = Arc::new(AtomicBool::new(false));
+    let worker_recognized = Arc::clone(&recognized);
+    crate::file_read_check::run(move || {
+        images::read_candidate(&path, read, || {
+            worker_recognized.store(true, Ordering::Release);
+        })
+    })
+    .await
+    .map_err(|error| images::preserve_read_progress(error, recognized.load(Ordering::Acquire)))
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::file_read_check::tests::PRODUCTION_CHECKS;
 
     #[tokio::test]
     async fn encoded_file_names_read_the_exact_selected_file() {
+        let _checks = PRODUCTION_CHECKS.lock().await;
         let dir = tempfile::tempdir().unwrap();
         for name in ["附件 space%测试.txt", "escaped%2F.txt"] {
             let path = dir.path().join(name);
@@ -170,6 +184,7 @@ mod tests {
     #[cfg(unix)]
     #[tokio::test]
     async fn rejects_a_selected_link_redirected_outside_its_parent() {
+        let _checks = PRODUCTION_CHECKS.lock().await;
         let dir = tempfile::tempdir().unwrap();
         let selected_dir = dir.path().join("selected");
         std::fs::create_dir(&selected_dir).unwrap();
@@ -228,6 +243,7 @@ mod tests {
 
     #[tokio::test]
     async fn bounded_check_preserves_selected_file_categories_instead_of_flattening_them() {
+        let _checks = PRODUCTION_CHECKS.lock().await;
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("private-selected-name.bin");
         std::fs::write(&path, [0xff, 0xfe]).unwrap();

@@ -5,6 +5,9 @@ use inventory::{Kind, mcp_targets};
 use serde_json::{Value, json};
 use std::{path::PathBuf, process::Command};
 
+#[path = "mcp_peer_publication_tests.rs"]
+mod publication_tests;
+
 pub(super) struct CancelledWorkerObservation {
     retired: tokio::sync::oneshot::Receiver<Option<Code>>,
     _release: std::sync::mpsc::Sender<()>,

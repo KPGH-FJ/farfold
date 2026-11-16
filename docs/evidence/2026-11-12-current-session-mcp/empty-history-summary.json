@@ -1,0 +1,128 @@
+{
+  "updatedAtUtc": "2026-11-12T05:01:21.315988+00:00",
+  "requirements": ["P41", "ARCH-35"],
+  "problem": "Installedf537 successfully loaded owned Goose20261111_7 but frontend rejected its genuinely empty history. The same read failure persisted after clearing another session pending marker. A real official conversation usage notification was also rendered as unknown content.",
+  "implementation": [
+    "Only the original successful restored open on the reviewed official surface can confirm exact ID/cwd and current messageCount zero; optional top-level fact is transient.",
+    "Complete marker, identity, configuration, lost connection and conversion guards remain. Existing content and tool/thought/unknown/permission content cannot be overwritten by an empty result; following live updates remain.",
+    "Strict owned sessionUsage presentation maps actual context usage; original notification fields remain in existing details. No currency, total, compaction outcome or work completion is inferred.",
+    "New load-prefix drains take only the finite queued prefix; later frames remain in original FIFO. Other preexisting drain paths are unchanged."
+  ],
+  "engineering": {
+    "path": "output/2026-11-12-mcp-recovery/engineering-final2/result.json",
+    "sha256": "9d36527c0fcf0975af81de1a035c18073cd7e6606e572f5cb05bd80930b80b51"
+  },
+  "sourceManifest": {
+    "path": "output/2026-11-12-mcp-recovery/engineering-final2/inputs-after.json",
+    "sha256": "1787cd85fe099c1b04c9420e7744ce11f738518fe1153cc7810a5f78fe675bff"
+  },
+  "native": {
+    "passed": 2604,
+    "ignored": 8
+  },
+  "frontend": {
+    "files": 761,
+    "passed": 10536
+  },
+  "review": {
+    "path": "output/2026-11-12-mcp-recovery/review/integration.json",
+    "sha256": "b5277ad58b4e249acc1399e15fbdf7f794584cb545abe07637cd4fa2f3398c11"
+  },
+  "nativeRedGreen": {
+    "path": "output/2026-11-12-mcp-recovery/empty-history-backend/delta-freeze.json",
+    "sha256": "d111ead199621b44054c19946011cfa62e79e672e1c36fef9291be982410b8cd"
+  },
+  "frontendOriginalFailure": {
+    "path": "output/2026-11-12-mcp-recovery/empty-history-red.log",
+    "sha256": "1ee12092eb5efbc8b692b226a45a43f09e304d29dfdf4fe36bb66bb9dfdeea31"
+  },
+  "formalBefore": {
+    "path": "output/2026-11-12-mcp-recovery/ui/09-empty-notification-type.txt",
+    "sha256": "0d2fdf89acb5a0580fa09a7ec1c5b4cf38187a3301e678b3cb0082f68e563e74"
+  },
+  "formalAfter": {
+    "sourceCommit": "c68acf7b0d6af085cddb5f9433616d4a3301beca",
+    "installation": {
+      "path": "output/2026-11-12-mcp-recovery/formal-empty/install.json",
+      "sha256": "c2cb0dac4b89c38ea3a658a4a041f12e5bbb5f6f375a87c76a7add606802718f"
+    },
+    "dataEntriesPreservedDuringInstallation": 206420,
+    "originalEmptySession": "20261111_7",
+    "firstAndColdOpenSucceeded": true,
+    "draftRestoredAndSendEnabledWithoutSending": true,
+    "retainedUnsentFileFeedback": 1,
+    "contextUsageDisplayed": {
+      "usedTokens": 0,
+      "capacityTokens": 1000000,
+      "costAndCumulativeTotal": "not provided; not invented"
+    },
+    "originalNonemptySession": "20261112_1",
+    "originalPromptReplyAndFailureDraftRestored": true,
+    "newPromptRequests": 0,
+    "newNativeSessions": 0,
+    "allPriorNativeMessageRowsUnchanged": true,
+    "allOtherNativeSessionRowsUnchanged": true,
+    "selectedAndProtectedConfigurationUnchanged": true,
+    "pendingMarkers": 0,
+    "normalAppAndGooseExit": true,
+    "duplicateCandidateRemoved": true,
+    "scope": "Real installed app and existing official Goose source, same saved model/off configuration. Empty open/cold recovery/usage and nonempty history regression only; no new prompt or tool call.",
+    "evidence": [
+      {
+        "path": "output/2026-11-12-mcp-recovery/formal-empty/01-opened.txt",
+        "sha256": "5e5490403093e3fbe874b3778ce08f39019ed019af0ecfae92243abfc939de35"
+      },
+      {
+        "path": "output/2026-11-12-mcp-recovery/formal-empty/02-usage.png",
+        "sha256": "91f933582ee08b802ccb3ea5bd9b4a2b7d646faff58dd0f02cbc9d9fcce08244"
+      },
+      {
+        "path": "output/2026-11-12-mcp-recovery/formal-empty/02-usage.txt",
+        "sha256": "c4bb56397d00664aa213ef4d1927eb318f955e752ac3a6530989ffc22b8d87d2"
+      },
+      {
+        "path": "output/2026-11-12-mcp-recovery/formal-empty/03-ready-unsent.txt",
+        "sha256": "a64c670caf96736d684ce8de442254fc11df04b7b6ea6f17aa44bdc9ccb0b0f2"
+      },
+      {
+        "path": "output/2026-11-12-mcp-recovery/formal-empty/04-cold-restored.txt",
+        "sha256": "a64c670caf96736d684ce8de442254fc11df04b7b6ea6f17aa44bdc9ccb0b0f2"
+      },
+      {
+        "path": "output/2026-11-12-mcp-recovery/formal-empty/05-existing-history.txt",
+        "sha256": "11aea2b96fd91b23bbd79197293704fa284df2eb1f843538d02d66d7f5298fe3"
+      },
+      {
+        "path": "output/2026-11-12-mcp-recovery/formal-empty/06-after-switch.txt",
+        "sha256": "a64c670caf96736d684ce8de442254fc11df04b7b6ea6f17aa44bdc9ccb0b0f2"
+      },
+      {
+        "path": "output/2026-11-12-mcp-recovery/formal-empty/duplicate-cleanup.json",
+        "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+      },
+      {
+        "path": "output/2026-11-12-mcp-recovery/formal-empty/first-normal-exit.json",
+        "sha256": "4c9c516a5daea1474265e1f2ccc6a542b595741faeb8230d7ddd1fb4eb0278f5"
+      },
+      {
+        "path": "output/2026-11-12-mcp-recovery/formal-empty/protocol-summary.json",
+        "sha256": "d696927d6031b797b5d01e8c05220abdd7c9f140a696f05067b1e70872588655"
+      },
+      {
+        "path": "output/2026-11-12-mcp-recovery/formal-empty/second-normal-exit.json",
+        "sha256": "650d8def1a6d7bc08b6cce76fbcb73b0b5d9ea89abc405b29fd6b29d94a837b6"
+      },
+      {
+        "path": "output/2026-11-12-mcp-recovery/formal-empty/stores-after.json",
+        "sha256": "e9646a4ed45009f0579e236ac4aeda02f85fec658a83cad3c23b9d77f8e5fabf"
+      }
+    ]
+  },
+  "limits": [
+    "Other Agents lack this verified empty-history supplement and retain original behavior.",
+    "Native list/load/info is not an atomic snapshot against external concurrent writers.",
+    "Context usage only; cumulative counters and cost stay in original details, no full ARCH-35 acceptance.",
+    "P41, history-node branching, other exception combinations, Windows and29x8 remain open."
+  ],
+  "sourceCommit": "c68acf7b0d6af085cddb5f9433616d4a3301beca"
+}

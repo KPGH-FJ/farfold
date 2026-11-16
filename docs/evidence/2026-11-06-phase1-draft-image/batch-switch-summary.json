@@ -1,0 +1,18 @@
+{
+  "formalVersion": "6ce829c5",
+  "nativePickerSelectedFileCount": 3,
+  "testConversationSavedImageCount": 3,
+  "originalDraftSavedTestImageCount": 0,
+  "allSavedImageBytesMatchOriginals": true,
+  "imageSizesBytes": [7683924, 7688605, 7693286],
+  "strictReadInProgressAtSwitchObserved": false,
+  "originalDraftExactBeforeAfter": true,
+  "originalDraftRetainedCopies": 1,
+  "originalLocationVisibleAfter": true,
+  "testReferencesRemovedFromLocalDrafts": 3,
+  "sourceFilesRetained": true,
+  "sameTestConversationWireLogAsPriorSeal": true,
+  "newModelSendsOnTestConversation": 0,
+  "applicationRestarted": false,
+  "checkedAt": "2026-11-06T15:47:45.526245+00:00"
+}

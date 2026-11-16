@@ -30,6 +30,7 @@ export class SessionDeliveryObserver {
   private pending?: Sample;
   private enqueued = 0;
   private drained = 0;
+  private deferred = 0;
   private retired = false;
   private flow: SessionDeliveryFlow;
 
@@ -44,6 +45,14 @@ export class SessionDeliveryObserver {
    * changes actual control Promise consumption or external Agent execution. */
   pause(): () => void {
     return this.flow.pause();
+  }
+
+  async settle(deadline: number): Promise<void> {
+    await this.flow.settle(deadline);
+    // Transport transfer is not business consumption. Configuration events in
+    // a live view are synchronous; other outstanding transfers cannot certify it.
+    if (this.retired || this.enqueued !== this.drained || this.deferred)
+      throw new Error("delivery consumption pending");
   }
 
   receive(
@@ -105,13 +114,16 @@ export class SessionDeliveryObserver {
         this.enqueued += 1;
         if (sample) sample.position = this.enqueued;
       } else if (result instanceof Promise) {
+        this.deferred += 1;
         // Only a sampled delivery can produce a receipt; unsampled control
         // failures are also observed so they cannot become unhandled promises.
         void result.then(
           (outcome) => {
+            this.deferred -= 1;
             if (sample) this.finish(sample, outcome);
           },
           () => {
+            this.deferred -= 1;
             if (sample) this.finish(sample, "error");
           },
         );

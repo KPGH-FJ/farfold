@@ -1,0 +1,64 @@
+{
+  "scope": "macOS fast-agent/Mistral no-secret per-conversation multi-helper transport and exact ACP launch admission",
+  "sourceFiles": 36,
+  "implementation": [
+    "Standard stdio offer carries public service name/broker PID and empty environment; no temporary bearer in Agent logs/configuration",
+    "Actual READY Child and live owner bind before official new/load; changed source/entry or wrong transport rejected",
+    "Each helper owns request IDs/ACKs; discovery EOF permits reconstruction, unknown partial output does not",
+    "Retirement revokes page access and waits exact helper barriers; old route/name cannot restore permission"
+  ],
+  "verification": {
+    "wiringTargeted": 69,
+    "actualProductionQueuedBeforeExec": "foreign queued packet rejected before authorization; fresh trusted same process succeeds",
+    "fullNative": {
+      "passed": 2718,
+      "failed": 0,
+      "ignored": 11
+    },
+    "frontend": "769 files/10667 tests and type/build reused after exact input/log checks; fresh format passed",
+    "productInputs": 2566,
+    "independentReviews": [
+      "identity by root",
+      "controller and actual ACP wiring by product_process"
+    ]
+  },
+  "notYetVerified": [
+    "Installed actual official fast-agent/Mistral lifecycle",
+    "Official Mistral business invocation pool or model webpage result",
+    "Other platforms and full29x8 acceptance"
+  ],
+  "records": [
+    {
+      "path": "output/2026-11-13-cycle7/integration/multi-helper/root-identity-review.json",
+      "sha256": "7794e274c6edcbbc1c529c816953d8a33ae0b2d31b5089da54fdf9121c6e91bb"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/multi-helper/independent-controller-review.json",
+      "sha256": "6124491665eda7ab506f92bdca6517cef7d39d3d126b731791ad118c0a1adbaa"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/multi-helper/queued-exec/summary.json",
+      "sha256": "88fd2bfcd8bc8a206ac61db8b26b8fed1920c5daf1a9600ac11fd28df2c7fcad"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/mach-admission/summary.json",
+      "sha256": "3941d633c81aae9ef8be710eb6b61f89cfa666502a2a8e023e6640eb4892eb90"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/mach-admission/combined-source-freeze.json",
+      "sha256": "60ac253185e86818226d13f38ea9669a95d2c50e90d0064e7bde4bf67b0e28f3"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/mach-admission/independent-review.json",
+      "sha256": "ff984327f13c794756b15155a52c12bedb29e4e7a5a1f8cb113a4945dd4a3701"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/mach-admission/root-final-review.json",
+      "sha256": "2645c9f1244b96e0246e24a4a2278e91aec8d975c461b0413bebab83d105f16b"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/engineering-mach/result.json",
+      "sha256": "1a47c83d097c42ebf6dcc8f1f9e3286ed4d4fa6b96b0706cf6e94aa3b14e9606"
+    }
+  ]
+}

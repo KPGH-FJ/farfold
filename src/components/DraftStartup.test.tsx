@@ -7,8 +7,12 @@ const h = vi.hoisted(() => ({
   effects: [] as (() => unknown)[],
   invoke: vi.fn(),
   flush: vi.fn(),
+  draftRevision: vi.fn<() => number>(),
+  draftIsSaved: vi.fn<(expectedRevision: number) => boolean>(),
   setupFlush: vi.fn(),
+  setupHasPending: vi.fn<() => boolean>(),
   readFlush: vi.fn(),
+  readHasPending: vi.fn<() => boolean>(),
   lock: vi.fn(),
   acquireLock: vi.fn(),
   active: false,
@@ -44,6 +48,8 @@ vi.mock("../runtime/drafts", () => ({
   draftPersistence: {
     load: async () => undefined,
     flush: h.flush,
+    revision: h.draftRevision,
+    isSaved: h.draftIsSaved,
     lockInteraction: h.lock,
     acquireInteractionLock: h.acquireLock,
   },
@@ -56,7 +62,9 @@ vi.mock("../runtime/sessions", () => ({
   threads: {
     pauseQueuesForExit: vi.fn(),
     getSnapshot: () => ({
-      threads: new Map(h.active ? [["a", { running: true }]] : []),
+      threads: new Map(
+        h.active ? [["a", { running: true, title: "测试对话" }]] : [],
+      ),
     }),
   },
 }));
@@ -80,13 +88,18 @@ vi.mock("../runtime/update_impact", () => ({
 }));
 vi.mock("./WorkspaceDialog", () => ({ WorkspaceDialog: () => null }));
 vi.mock("../runtime/setup_storage", () => ({
-  setupStorage: { load: async () => undefined, flush: h.setupFlush },
+  setupStorage: {
+    load: async () => undefined,
+    flush: h.setupFlush,
+    hasPending: h.setupHasPending,
+  },
   useSetupStorage: () => ({ ready: true, error: null }),
   SETUP_STORAGE_STRINGS: {},
 }));
 vi.mock("../runtime/conversation_read_state", () => ({
   conversationReadState: {
     flushPending: h.readFlush,
+    hasPending: h.readHasPending,
     snapshot: () => ({ error: "新回复状态尚未保存，请重试。" }),
   },
 }));
@@ -135,8 +148,12 @@ beforeEach(async () => {
   h.listeners.clear();
   h.invoke.mockReset().mockResolvedValue(undefined);
   h.flush.mockReset();
+  h.draftRevision.mockReset().mockReturnValue(0);
+  h.draftIsSaved.mockReset().mockReturnValue(true);
   h.setupFlush.mockReset().mockResolvedValue(undefined);
+  h.setupHasPending.mockReset().mockReturnValue(false);
   h.readFlush.mockReset().mockResolvedValue(undefined);
+  h.readHasPending.mockReset().mockReturnValue(false);
   h.lock.mockReset();
   h.acquireLock.mockReset().mockImplementation(() => {
     h.lock(true);
@@ -281,6 +298,7 @@ it("does not acknowledge normal quit while known work is still running", async (
     token: 50,
   });
   expect(h.flush).not.toHaveBeenCalled();
+  expect(nodes(render())).toContain("尝试退出时，「测试对话」仍在执行。");
 });
 
 it("requires review when backend activity starts after the renderer save began", async () => {
@@ -296,6 +314,28 @@ it("requires review when backend activity starts after the renderer save began",
   expect(h.states[1]).toBe(false);
   expect(h.states).toContain(51);
   expect(h.lock).not.toHaveBeenCalledWith(false);
+  expect(nodes(render())).toContain("退出检查时，应用后台还有操作未确认结束。");
+});
+
+it.each([
+  ["FILE_COPY_EXIT_REVIEW_REQUIRED", EXIT_IMPACT.copyUnknown],
+  ["BROWSER_TOOL_EXIT_REVIEW_REQUIRED", EXIT_IMPACT.browserToolUnknown],
+  ["WORKTREE_EXIT_REVIEW_REQUIRED", "工作位置操作的结果尚未确认。"],
+])("explains %s and retains explicit confirmation", async (code, detail) => {
+  h.invoke.mockImplementation((name, input) =>
+    name === "app_exit_after_save" && !input.confirmActivity
+      ? Promise.reject(code)
+      : undefined,
+  );
+  h.listeners.get("app:save-before-exit")!({ payload: 52 });
+  await vi.waitFor(() => expect(nodes(render())).toContain(detail));
+  click(EXIT_IMPACT.exit);
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", {
+      token: 52,
+      confirmActivity: true,
+    }),
+  );
 });
 
 it("only an explicit confirm saves and acknowledges active work", async () => {
@@ -803,4 +843,148 @@ it("waits for pending unread metadata, keeps its actual save error and retries b
   await vi.waitFor(() =>
     expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", { token: 41 }),
   );
+});
+
+it("waits for alternating unread and draft writes before acknowledging exit", async () => {
+  const firstSave = deferred();
+  const unreadSave = deferred();
+  const outcomeSave = deferred();
+  const lateUnreadSave = deferred();
+  let revision = 1;
+  let savedRevision = 0;
+  let unreadWrite: Promise<void> | null = null;
+  const beginUnreadWrite = (save: ReturnType<typeof deferred>) => {
+    const writing = save.promise.then(() => {
+      unreadWrite = null;
+    });
+    unreadWrite = writing;
+    return writing;
+  };
+  h.draftRevision.mockImplementation(() => revision);
+  h.draftIsSaved.mockImplementation(
+    (expected) => expected <= savedRevision && savedRevision === revision,
+  );
+  h.flush.mockImplementation(() =>
+    revision === 1 ? firstSave.promise : outcomeSave.promise,
+  );
+  h.readFlush.mockImplementation(() => unreadWrite ?? Promise.resolve());
+  h.readHasPending.mockImplementation(() => unreadWrite !== null);
+  const firstUnreadWrite = beginUnreadWrite(unreadSave);
+  h.listeners.get("app:save-before-exit")!({ payload: 42 });
+  expect(h.flush).toHaveBeenCalledTimes(1);
+  savedRevision = 1;
+  firstSave.resolve();
+  await vi.waitFor(() => expect(h.readFlush).toHaveBeenCalledTimes(1));
+
+  // A connection can report an unknown outcome while unread metadata saves.
+  // Its draft revision advances and the automatic write starts independently.
+  revision = 2;
+  const automaticWrite = h.flush();
+  unreadSave.resolve();
+  await firstUnreadWrite;
+  await Promise.resolve();
+  expect(h.invoke).not.toHaveBeenCalledWith("app_exit_after_save", {
+    token: 42,
+  });
+  await vi.waitFor(() => expect(h.flush).toHaveBeenCalledTimes(3));
+
+  // Another conversation gets a new reply while exit waits for the new draft.
+  const lateUnreadWrite = beginUnreadWrite(lateUnreadSave);
+  savedRevision = 2;
+  outcomeSave.resolve();
+  await automaticWrite;
+  await Promise.resolve();
+  expect(h.invoke).not.toHaveBeenCalledWith("app_exit_after_save", {
+    token: 42,
+  });
+
+  lateUnreadSave.resolve();
+  await lateUnreadWrite;
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", { token: 42 }),
+  );
+});
+
+it("waits for an Agent setup completion that starts while unread metadata is saving", async () => {
+  const { setupStorage: setup, SETUP_STORAGE_KEY } = await vi.importActual<
+    typeof import("../runtime/setup_storage")
+  >("../runtime/setup_storage");
+  const { conversationReadState: unread } = await vi.importActual<
+    typeof import("../runtime/conversation_read_state")
+  >("../runtime/conversation_read_state");
+  const unreadKey = "conversationReadState.v1";
+  const unreadReceipt = deferred();
+  const setupReceipt = deferred();
+  const saved = new Map<string, unknown>();
+  const acknowledgedSetup: unknown[] = [];
+  const selection = { service: null, config: { model: "selected-model" } };
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command === "settings_get") return saved.get(args.key) ?? null;
+    if (command === "settings_set") {
+      if (args.key === unreadKey) await unreadReceipt.promise;
+      else if (args.key === SETUP_STORAGE_KEY) await setupReceipt.promise;
+      else throw new Error(`Unexpected setting ${args.key}`);
+      saved.set(args.key, args.value);
+    }
+    if (command === "app_exit_after_save")
+      acknowledgedSetup.push(saved.get(SETUP_STORAGE_KEY));
+  });
+  h.setupFlush.mockImplementation(() => setup.flush());
+  h.setupHasPending.mockImplementation(() => setup.hasPending());
+  h.readFlush.mockImplementation(unread.flushPending);
+  h.readHasPending.mockImplementation(unread.hasPending);
+  await Promise.all([setup.load(), unread.load()]);
+  const exitCalls = () =>
+    h.invoke.mock.calls.filter(
+      ([command]) => command === "app_exit_after_save",
+    );
+  let completing: ReturnType<typeof setup.complete> | undefined;
+  try {
+    unread.receiveUpdate("owned-reply", {
+      sessionUpdate: "agent_message_chunk",
+      content: { type: "text", text: "Unread fixture" },
+    });
+    await vi.waitFor(() =>
+      expect(h.invoke).toHaveBeenCalledWith("settings_set", {
+        key: unreadKey,
+        value: { version: 1, unread: ["owned-reply"] },
+      }),
+    );
+    h.listeners.get("app:save-before-exit")!({ payload: 43 });
+    await vi.waitFor(() => expect(h.readFlush).toHaveBeenCalledOnce());
+
+    completing = setup.complete("owned-agent", selection);
+    await vi.waitFor(() =>
+      expect(h.invoke).toHaveBeenCalledWith("settings_set", {
+        key: SETUP_STORAGE_KEY,
+        value: expect.objectContaining({
+          completed: ["owned-agent"],
+          selections: { "owned-agent": selection },
+        }),
+      }),
+    );
+    expect(setup.confirmedSelection("owned-agent")).toBeUndefined();
+    unreadReceipt.resolve();
+    await new Promise<void>((resolve) => setImmediate(resolve));
+    expect.soft(saved.has(unreadKey)).toBe(true);
+    expect.soft(exitCalls()).toEqual([]);
+    expect.soft(setup.confirmedSelection("owned-agent")).toBeUndefined();
+
+    setupReceipt.resolve();
+    expect(await completing).toEqual(selection);
+    await vi.waitFor(() =>
+      expect(exitCalls()).toEqual([["app_exit_after_save", { token: 43 }]]),
+    );
+    expect(acknowledgedSetup).toEqual([
+      expect.objectContaining({
+        completed: ["owned-agent"],
+        selections: { "owned-agent": selection },
+      }),
+    ]);
+  } finally {
+    unreadReceipt.resolve();
+    setupReceipt.resolve();
+    await completing?.catch(() => undefined);
+    await unread.flushPending().catch(() => undefined);
+  }
 });

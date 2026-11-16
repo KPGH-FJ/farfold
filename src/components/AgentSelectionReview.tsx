@@ -57,11 +57,13 @@ export function AgentSelectionReview({
   after,
   services,
   options,
+  draftOnly = false,
 }: {
   before: AgentSetupSelection;
   after: AgentSetupSelection;
   services: Credential[];
   options: ConfigOptionView[];
+  draftOnly?: boolean;
 }) {
   const rows = selectionReviewRows(before, after, services, options);
   const changed =
@@ -86,12 +88,16 @@ export function AgentSelectionReview({
             <tr key={row.name}>
               <th scope="row">{row.name}</th>
               <td>{row.before}</td>
-              <td>{row.after}</td>
+              <td>
+                {draftOnly && row.after === U.configurationUnknown
+                  ? U.notProvided
+                  : row.after}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <p>{U.settingsScope}</p>
+      {!draftOnly && <p>{U.settingsScope}</p>}
     </section>
   );
 }

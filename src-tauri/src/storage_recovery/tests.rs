@@ -38,12 +38,214 @@ fn recovery_gate_rejects_every_existing_non_recovery_command() {
     assert!(checked > 100);
     assert!(!command_allowed(false, "storage_recovery_reset"));
     assert!(!command_allowed(false, "app_drafts_ready"));
-    assert!(
-        source
-            .find("state.allows(invoke.message.command())")
-            .unwrap()
-            < source.find("tauri::generate_handler![").unwrap()
+    let handler = source
+        .split(".invoke_handler(|invoke|")
+        .nth(1)
+        .unwrap()
+        .split(".build(context)")
+        .next()
+        .unwrap();
+    let caller_check = handler.find("browser_workspace::caller_allowed").unwrap();
+    let storage_dispatch = handler
+        .find("dispatch_storage_command(invoke, handler)")
+        .unwrap();
+    assert!(caller_check < storage_dispatch);
+}
+
+#[tauri::command]
+fn draft_ipc_dispatch_probe() -> bool {
+    true
+}
+
+#[test]
+fn draft_settings_ipc_preserves_the_saved_value_during_a_sqlite_write_lock() {
+    use std::sync::mpsc;
+    use std::time::Duration;
+    use tauri::ipc::{CallbackFn, InvokeBody, InvokeResponse};
+    use tauri::test::{INVOKE_KEY, get_ipc_response, mock_builder, mock_context, noop_assets};
+    use tauri::webview::InvokeRequest;
+
+    let dir = tempfile::tempdir().unwrap();
+    let path = MetaStore::default_path(dir.path());
+    let key = "unsentWork.v1";
+    let snapshot = |text| {
+        json!({
+            "version": 1,
+            "composers": {"new": {"text": text, "attachments": []}},
+            "choice": null,
+            "feedback": {},
+            "queues": {}
+        })
+    };
+    let old = snapshot("owned saved draft");
+    let new = snapshot("owned newer draft");
+    MetaStore::open(&path)
+        .unwrap()
+        .set_setting(key, &old)
+        .unwrap();
+
+    let app = mock_builder()
+        .manage(StorageRecoveryState::new(path.clone()))
+        .invoke_handler(|invoke| {
+            crate::dispatch_storage_command(
+                invoke,
+                tauri::generate_handler![
+                    crate::auth::settings_get,
+                    crate::auth::settings_set,
+                    draft_ipc_dispatch_probe
+                ],
+            )
+        })
+        .build(mock_context(noop_assets()))
+        .unwrap();
+    let window = tauri::WebviewWindowBuilder::new(&app, "main", Default::default())
+        .build()
+        .unwrap();
+    let request = |command: &str, body| InvokeRequest {
+        cmd: command.into(),
+        callback: CallbackFn(0),
+        error: CallbackFn(1),
+        url: if cfg!(windows) {
+            "http://tauri.localhost"
+        } else {
+            "tauri://localhost"
+        }
+        .parse()
+        .unwrap(),
+        body: InvokeBody::Json(body),
+        headers: Default::default(),
+        invoke_key: INVOKE_KEY.into(),
+    };
+    let invoke = |command: &str, body| {
+        get_ipc_response(&window, request(command, body))
+            .map(|response| response.deserialize::<serde_json::Value>().unwrap())
+    };
+    let dispatch_setting = |key: &str, value: &serde_json::Value| {
+        let (sent, reply) = mpsc::sync_channel(1);
+        window.as_ref().clone().on_message(
+            request("settings_set", json!({"key": key, "value": value})),
+            Box::new(move |_, _, response, _, _| {
+                sent.send(response).unwrap();
+            }),
+        );
+        reply
+    };
+    let get = || invoke("settings_get", json!({"key": key}));
+    let set = || invoke("settings_set", json!({"key": key, "value": new}));
+    let blocked = || Err(json!("本机资料尚未就绪，请先完成资料恢复"));
+
+    assert_eq!(get(), blocked());
+    assert_eq!(set(), blocked());
+    let storage = app.state::<StorageRecoveryState>();
+    storage.0.lock().unwrap().initialize(|store| {
+        assert!(app.manage(store));
+        Ok(())
+    });
+    assert_eq!(get(), Ok(old.clone()));
+    assert_eq!(set(), blocked());
+    storage.mark_editable().unwrap();
+
+    let mut writer = rusqlite::Connection::open(&path).unwrap();
+    let transaction = writer
+        .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
+        .unwrap();
+    assert_eq!(
+        set(),
+        Err(json!("FARFOLD_STORAGE:busy:无法读取或保存本机资料"))
     );
+    assert_eq!(get(), Ok(old.clone()));
+    transaction.rollback().unwrap();
+    assert_eq!(get(), Ok(old));
+
+    // While another writer still holds the test DB, a second command on the
+    // same dispatch thread must be handled before this save can finish.
+    let transaction = writer
+        .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
+        .unwrap();
+    let reply = dispatch_setting(key, &new);
+    let second_command = invoke("draft_ipc_dispatch_probe", json!({}));
+    let pending = matches!(reply.try_recv(), Err(mpsc::TryRecvError::Empty));
+    transaction.rollback().unwrap();
+    assert_eq!(second_command, Ok(json!(true)));
+    assert!(pending, "the dispatch thread waited for the locked write");
+    assert!(matches!(
+        reply.recv_timeout(Duration::from_secs(5)).unwrap(),
+        InvokeResponse::Ok(_)
+    ));
+    assert_eq!(get(), Ok(new.clone()));
+
+    // An unrelated setting still uses its existing synchronous write path:
+    // it is not among the writes the normal exit coordinator waits for.
+    let transaction = writer
+        .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
+        .unwrap();
+    let reply = dispatch_setting("themeMode", &json!("dark"));
+    let before_unlock = reply.try_recv();
+    transaction.rollback().unwrap();
+    if before_unlock.is_err() {
+        // Let the unexpected asynchronous save finish before reporting red.
+        let _ = reply.recv_timeout(Duration::from_secs(5));
+    }
+    assert!(
+        matches!(
+            before_unlock,
+            Ok(InvokeResponse::Err(tauri::ipc::InvokeError(value)))
+                if value == json!("FARFOLD_STORAGE:busy:无法读取或保存本机资料")
+        ),
+        "unrelated setting left the dispatch thread before the save receipt"
+    );
+
+    // Updates to other saved metadata can arrive during a draft save. None
+    // may delay the next quit/cancel dispatch.
+    let latest = snapshot("owned draft with a background write");
+    let unread_key = "conversationReadState.v1";
+    let unread = json!({"version": 1, "unread": ["owned-other-conversation"]});
+    let setup_key = "agentSetup.v1";
+    let setup = json!({"version": 1, "completed": ["owned-agent"], "pending": {}, "progress": {}, "selections": {}});
+    let transaction = writer
+        .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
+        .unwrap();
+    let draft_reply = dispatch_setting(key, &latest);
+    let unread_reply = dispatch_setting(unread_key, &unread);
+    let setup_reply = dispatch_setting(setup_key, &setup);
+    let quit_dispatch = invoke("draft_ipc_dispatch_probe", json!({}));
+    let draft_before_unlock = draft_reply.try_recv();
+    let unread_before_unlock = unread_reply.try_recv();
+    let setup_before_unlock = setup_reply.try_recv();
+    transaction.rollback().unwrap();
+    for (before_unlock, reply) in [
+        (&draft_before_unlock, draft_reply),
+        (&unread_before_unlock, unread_reply),
+        (&setup_before_unlock, setup_reply),
+    ] {
+        if matches!(before_unlock, Err(mpsc::TryRecvError::Empty)) {
+            assert!(matches!(
+                reply.recv_timeout(Duration::from_secs(5)).unwrap(),
+                InvokeResponse::Ok(_)
+            ));
+        }
+    }
+    assert_eq!(quit_dispatch, Ok(json!(true)));
+    assert!(
+        matches!(setup_before_unlock, Err(mpsc::TryRecvError::Empty)),
+        "Agent setup write returned before the next quit/cancel command while SQLite was locked: {setup_before_unlock:?}"
+    );
+    assert!(
+        matches!(unread_before_unlock, Err(mpsc::TryRecvError::Empty)),
+        "background unread write returned before the next quit/cancel command while SQLite was locked: {unread_before_unlock:?}"
+    );
+    assert!(
+        matches!(draft_before_unlock, Err(mpsc::TryRecvError::Empty)),
+        "draft write returned before the next quit/cancel command while SQLite was locked: {draft_before_unlock:?}"
+    );
+    drop(writer);
+    drop(window);
+    drop(app);
+
+    let cold = MetaStore::open(&path).unwrap();
+    assert_eq!(cold.get_setting(key).unwrap(), Some(latest));
+    assert_eq!(cold.get_setting(unread_key).unwrap(), Some(unread));
+    assert_eq!(cold.get_setting(setup_key).unwrap(), Some(setup));
 }
 
 #[test]

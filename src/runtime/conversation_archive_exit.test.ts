@@ -8,7 +8,7 @@ vi.mock("./authentication", () => ({ hasActiveAuthentication: () => false }));
 import wire from "../../docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/canonical-wire.json";
 import { conversationArchiveJobs } from "./conversation_archive_jobs";
 import { hasUnsettledFileCopies } from "./file_copy_jobs";
-import { exitNeedsReview, hasUnknownFinishedFileCopies } from "./exit_impact";
+import { exitReviewReason, hasUnknownFinishedFileCopies } from "./exit_impact";
 import type { ArchivePrepareInput } from "./conversation_archive_types";
 const flush = async () => {
   for (let i = 0; i < 12; i++) await Promise.resolve();
@@ -35,20 +35,20 @@ it("real archive observer participates in shared exit protection after its dialo
             : false,
     ),
   );
-  expect(exitNeedsReview()).toBe(false);
+  expect(exitReviewReason()).toBeNull();
   conversationArchiveJobs.begin(input);
   expect(hasUnsettledFileCopies()).toBe(true);
-  expect(exitNeedsReview()).toBe(true);
+  expect(exitReviewReason()).not.toBeNull();
   await flush();
   await conversationArchiveJobs.cancel(input.operationId);
   expect(hasUnsettledFileCopies()).toBe(false);
   expect(hasUnknownFinishedFileCopies()).toBe(true);
-  expect(exitNeedsReview()).toBe(true);
+  expect(exitReviewReason()).not.toBeNull();
   await conversationArchiveJobs.dismiss(input.operationId, true);
-  expect(exitNeedsReview()).toBe(true);
+  expect(exitReviewReason()).not.toBeNull();
   expect(conversationArchiveJobs.getSnapshot()[0].closeFailed).toBe(true);
   h.invoke.mockResolvedValue(true);
   await conversationArchiveJobs.dismiss(input.operationId, true);
   expect(conversationArchiveJobs.getSnapshot()).toEqual([]);
-  expect(exitNeedsReview()).toBe(false);
+  expect(exitReviewReason()).toBeNull();
 });

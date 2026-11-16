@@ -1,0 +1,165 @@
+{
+  "agentLaunches": 0,
+  "cases": {
+    "ancestor_metadata_only": {
+      "databaseArtifacts": [
+        {
+          "bytes": 8192,
+          "name": "sessions.db",
+          "regularOwned": true
+        },
+        {
+          "bytes": 32768,
+          "name": "sessions.db-shm",
+          "regularOwned": true
+        },
+        {
+          "bytes": 0,
+          "name": "sessions.db-wal",
+          "regularOwned": true
+        }
+      ],
+      "exitCode": 0,
+      "facts": {
+        "ancestorDirectoryContentsDenied": true,
+        "ancestorOpendirErrno": 1,
+        "beginCreateInsertCommitRc": 0,
+        "closeRc": 0,
+        "cwdExact": true,
+        "databaseFilenameExactOwned": true,
+        "databaseParentMetadata": {
+          "errno": 0,
+          "ok": true
+        },
+        "databaseParentRealpath": {
+          "errno": 0,
+          "exact": true,
+          "ok": true
+        },
+        "getcwdErrno": 0,
+        "homeDirectoryReadDenied": true,
+        "openErrno": 2,
+        "openExtendedRc": 0,
+        "openMessageIsCantOpen": false,
+        "openRc": 0,
+        "outsideContentReadDenied": true,
+        "outsideWriteDenied": true,
+        "ownedAncestorMetadata": {
+          "errno": 0,
+          "ok": true
+        },
+        "ownedContentReadPositive": true,
+        "privateTmpMetadata": {
+          "errno": 0,
+          "ok": true
+        },
+        "queryRc": 0,
+        "sqliteSourceId": "2026-04-09 12:25:13 8fa8248e303219400c646a885e36dfc52eae33d83f4412e3f369b2be5373aapl",
+        "sqliteSystemErrno": 0,
+        "sqliteVersion": "3.54.0",
+        "sqliteVersionNumber": 3054000,
+        "storedValueReadbackExact": true,
+        "vfsIsUnix": true,
+        "walPragmaRc": 0,
+        "walReadbackExact": true
+      },
+      "profileSha256": "1b44aab9b340d95b19727c5ee4cc042a6211ad7db3892cec49aca81eff82ae12",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "original": {
+      "databaseArtifacts": [
+        {
+          "bytes": 8192,
+          "name": "sessions.db",
+          "regularOwned": true
+        },
+        {
+          "bytes": 32768,
+          "name": "sessions.db-shm",
+          "regularOwned": true
+        },
+        {
+          "bytes": 0,
+          "name": "sessions.db-wal",
+          "regularOwned": true
+        }
+      ],
+      "exitCode": 0,
+      "facts": {
+        "ancestorDirectoryContentsDenied": true,
+        "ancestorOpendirErrno": 1,
+        "beginCreateInsertCommitRc": 0,
+        "closeRc": 0,
+        "cwdExact": true,
+        "databaseFilenameExactOwned": true,
+        "databaseParentMetadata": {
+          "errno": 0,
+          "ok": true
+        },
+        "databaseParentRealpath": {
+          "errno": 1,
+          "exact": false,
+          "ok": false
+        },
+        "getcwdErrno": 0,
+        "homeDirectoryReadDenied": true,
+        "openErrno": 2,
+        "openExtendedRc": 0,
+        "openMessageIsCantOpen": false,
+        "openRc": 0,
+        "outsideContentReadDenied": true,
+        "outsideWriteDenied": true,
+        "ownedAncestorMetadata": {
+          "errno": 1,
+          "ok": false
+        },
+        "ownedContentReadPositive": true,
+        "privateTmpMetadata": {
+          "errno": 1,
+          "ok": false
+        },
+        "queryRc": 0,
+        "sqliteSourceId": "2026-04-09 12:25:13 8fa8248e303219400c646a885e36dfc52eae33d83f4412e3f369b2be5373aapl",
+        "sqliteSystemErrno": 0,
+        "sqliteVersion": "3.54.0",
+        "sqliteVersionNumber": 3054000,
+        "storedValueReadbackExact": true,
+        "vfsIsUnix": true,
+        "walPragmaRc": 0,
+        "walReadbackExact": true
+      },
+      "profileSha256": "b93ccc534cfd5f263704c64f5419f7988e6fed54f89c9d499336434938c5f98f",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "commonTighteningForNoNetworkCanary": "No original provider TCP or MCP UDS exception is required or granted. All network/system sockets remain denied in both cases.",
+  "correctedSqliteOpenWalTransactionAndReadback": true,
+  "directSignals": 0,
+  "elapsedSeconds": 0.897,
+  "endedUtc": "2026-11-07T04:04:11.036229+00:00",
+  "failure": "expected-discriminating-result-not-observed",
+  "kind": "OwnedSystemSQLiteGuardAncestorMetadataCanary",
+  "libraryDistinction": "This tiny executable links Apple /usr/lib/libsqlite3.dylib. Goose pinned source uses sqlx0.9.0 / libsqlite3-sys0.37.0; this is not its bundled runtime or an Agent acceptance test.",
+  "metadataOnlyDeltaConcrete": true,
+  "modelCalls": 0,
+  "networkSends": 0,
+  "originalOfficialError": {
+    "message": "unable to open database file",
+    "sqliteCode": 14,
+    "sqlxClass": "Database"
+  },
+  "ownedStorageAndOutsideCanariesRemoved": true,
+  "policyDeltaOnlyBetweenCases": "Allow file-read-metadata on exact private tmp ancestor directories only; no contents or writes allowed there.",
+  "productionWrites": 0,
+  "readDataNegativesRemainDenied": true,
+  "realCredentialAccess": 0,
+  "reproducedOfficialCantOpen14": false,
+  "result": "failed",
+  "sourceHashes": {
+    "canary": "f634851266bada896ae948bd6c488b7974ff975225fb4402450f5b5fac048234",
+    "canary.c": "6a14f6de8b6a0bb950d8e42349a438aa26927b5ba94223e7607e208f2b012852",
+    "exercise.py": "65a352d6b37f1ab4b39d3ec8a794398b43a3526879e6508752bdaadeb03b5c25"
+  },
+  "startedUtc": "2026-11-07T04:04:10.138726+00:00",
+  "toolCalls": 0
+}

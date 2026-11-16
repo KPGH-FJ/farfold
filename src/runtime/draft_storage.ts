@@ -60,6 +60,7 @@ export class DraftSaveError extends Error {
 let snapshot: () => unknown = () => ({});
 let restore: (value: unknown) => void = () => {};
 let legacyInteractionLock = false;
+let interactionRevision = 0;
 const interactionOwners = new Set<object>();
 function publish(change: Partial<Status>) {
   status = { ...status, ...change };
@@ -83,12 +84,18 @@ export const draftPersistence = {
   },
   snapshot: () => status,
   revision: () => revision,
-  /** Only a completed write of all current input proves this revision saved. */
-  isSaved(expectedRevision: number): boolean {
+  /** An earlier snapshot can be durable while a newer write still needs retry. */
+  wasSaved(expectedRevision: number): boolean {
     return (
       Number.isSafeInteger(expectedRevision) &&
       expectedRevision >= 0 &&
-      expectedRevision <= savedRevision &&
+      expectedRevision <= savedRevision
+    );
+  },
+  /** Only a completed write of all current input proves this revision saved. */
+  isSaved(expectedRevision: number): boolean {
+    return (
+      this.wasSaved(expectedRevision) &&
       savedRevision === revision &&
       status.ready &&
       !status.saving &&
@@ -96,13 +103,21 @@ export const draftPersistence = {
     );
   },
   lockInteraction(value: boolean) {
+    if (value && !legacyInteractionLock) interactionRevision++;
     legacyInteractionLock = value;
     publish({ interactionLocked: value || interactionOwners.size > 0 });
+  },
+  /** A lock also interrupts work that resumes after the lock is released. */
+  captureInteractionInterruption(): () => boolean {
+    const captured = interactionRevision;
+    const alreadyLocked = this.snapshot().interactionLocked === true;
+    return () => alreadyLocked || captured !== interactionRevision;
   },
   /** Independent maintenance cannot release a quit/storage lock or a newer owner. */
   acquireInteractionLock(): () => void {
     const owner = {};
     interactionOwners.add(owner);
+    interactionRevision++;
     publish({ interactionLocked: true });
     return () => {
       if (!interactionOwners.delete(owner)) return;
@@ -153,6 +168,9 @@ export const draftPersistence = {
       publish({ saving: true, error: null });
       try {
         while (savedRevision !== revision) {
+          // An attachment may have started while the previous write was in flight.
+          while (pendingAttachments.size)
+            await Promise.allSettled([...pendingAttachments]);
           const current = revision;
           // Capture now: callers can keep editing while IPC is in flight.
           const json = JSON.stringify(snapshot());

@@ -1,4 +1,6 @@
 import { expect, it } from "vitest";
+import { completion } from "./completion";
+import { ERROR_STRINGS } from "./error_strings";
 import { STRINGS } from "./strings";
 import { uiError } from "./ui_error";
 
@@ -10,6 +12,15 @@ const failures = [
   ],
   ["AGENT_CONNECTION_ENDED", "连接在检查完成前结束，请检查程序后重试"],
   ["AGENT_START_FAILED", "程序未能启动，请检查程序文件和资料文件夹后重试"],
+  [
+    "AGENT_OPEN_TIMEOUT",
+    "打开对话尚未确认完成，等待已超时。原内容已保留，请先查看是否有待处理的提示。",
+  ],
+  [
+    "AGENT_OPEN_CLOSED",
+    "打开对话尚未确认完成，未能取得结果。原内容已保留，请检查连接后重试。",
+  ],
+  ["AGENT_OPEN_WAIT_CANCELLED", "已取消等待读取。原内容已保留。"],
   [
     "AGENT_WORK_DIRECTORY_UNAVAILABLE",
     "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
@@ -71,6 +82,22 @@ it("retains authentication and short app-authored error explanations", () => {
     STRINGS.access.authRequired,
   );
   expect(uiError("请先选择资料文件夹", "连接失败")).toBe("请先选择资料文件夹");
+});
+
+it("shows the confirmed model-provider credit failure without raw diagnostics", () => {
+  const code = "PROMPT_MODEL_PROVIDER_CREDITS_EXHAUSTED";
+  expect(uiError(code, "请求失败")).toBe(
+    ERROR_STRINGS.modelProviderCreditsExhausted,
+  );
+  expect(completion({ error: code })).toEqual({
+    status: "failed",
+    error: ERROR_STRINGS.modelProviderCreditsExhausted,
+  });
+  expect(uiError(`${code} extra info`, "请求失败")).toBe("请求失败");
+  expect(completion({ error: `${code} extra info` })).toEqual({
+    status: "failed",
+    error: STRINGS.repair.requestFailed,
+  });
 });
 
 it("keeps startup explanations free of product-forbidden terminology", () => {

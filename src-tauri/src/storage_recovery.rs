@@ -99,6 +99,16 @@ impl StorageRecoveryState {
             .map_err(|_| restore::RestoreFailure::new("unavailable"))?;
         Ok(ChangeGuard(&self.1))
     }
+    pub(crate) fn admit_startup_exit<T>(
+        &self,
+        admit_file_exit: impl FnOnce() -> Result<T, String>,
+    ) -> Result<T, String> {
+        // A blocked file or worktree exit must leave recovery available.
+        let change = self.begin_change().map_err(|_| "暂时无法关闭，请重试")?;
+        let admitted = admit_file_exit()?;
+        change.reserve_exit().map_err(|_| "暂时无法关闭，请重试")?;
+        Ok(admitted)
+    }
     pub(crate) fn mark_editable(&self) -> Result<(), String> {
         let mut state = self.0.lock().map_err(|_| "资料尚未就绪，请重试")?;
         if !state.status.ready || state.restore.active() || state.replacement.active() {

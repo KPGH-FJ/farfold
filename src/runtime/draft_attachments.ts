@@ -17,6 +17,7 @@ import { localResourcePath } from "./file_delivery";
 import { documentMediaFormat } from "./document_media_type";
 import { FILE_DELIVERY_STRINGS } from "./file_delivery_strings";
 import {
+  IMAGE_INPUT_STRINGS,
   isBitmapMime,
   readFileImage,
   validateDraftImage,
@@ -148,10 +149,16 @@ function readsFileText(attachment: DraftAttachment, embed: boolean): boolean {
  * restart. Never send cached file contents from before the restart. */
 export async function validateQueuedAttachments(
   blocks: PromptBlock[],
-  options: { reparseDocuments?: boolean; signal?: AbortSignal } = {},
+  options: {
+    reparseDocuments?: boolean;
+    signal?: AbortSignal;
+    canApplyUpdates?: () => boolean;
+  } = {},
 ): Promise<void> {
+  const updates: (() => void)[] = [];
   let audioBytes = 0;
   for (const block of blocks) {
+    if (options.canApplyUpdates?.() === false) return;
     if (block.type === "audio") {
       const capture = await verifyAudioInput(block);
       audioBytes = addAudioBytes(audioBytes, capture.file.size);
@@ -167,22 +174,28 @@ export async function validateQueuedAttachments(
           signal: options.signal,
         });
       } else if (block.resource.uri.startsWith("file:")) {
-        const content = await checkFile(
-          block.resource.uri,
-          true,
-          block.resource,
-        );
-        if (content !== null) block.resource.text = content;
+        const resource = block.resource;
+        const content = await checkFile(resource.uri, true, resource);
+        if (content !== null)
+          updates.push(() => {
+            resource.text = content;
+          });
       }
     }
     if (block.type === "image") {
       const image = block.uri
         ? await readFileImage(block.uri)
         : await validateDraftImage(block.data, block.mimeType);
-      block.data = image.data;
-      block.mimeType = image.mimeType;
+      updates.push(() => {
+        block.data = image.data;
+        block.mimeType = image.mimeType;
+      });
     }
   }
+  // Keep the last saved bytes until every check succeeds and the original
+  // preparation still owns the live queue.
+  if (options.canApplyUpdates?.() === false) return;
+  for (const update of updates) update();
 }
 
 export async function prepareDraftAttachments(
@@ -197,6 +210,8 @@ export async function prepareDraftAttachments(
   for (const attachment of attachments) {
     if (attachment.audioClassificationFailed)
       throw new AudioInputError("classificationFailed");
+    if (attachment.imageClassificationFailed)
+      throw new Error(IMAGE_INPUT_STRINGS.classificationFailed);
     if (attachment.kind === "audio") {
       try {
         if (!attachment.localAudio)
@@ -270,6 +285,8 @@ export function attachmentPromptBlocks(
   for (const attachment of attachments) {
     if (attachment.audioClassificationFailed)
       throw new AudioInputError("classificationFailed");
+    if (attachment.imageClassificationFailed)
+      throw new Error(IMAGE_INPUT_STRINGS.classificationFailed);
     if (attachment.kind === "audio") {
       if (
         !attachment.localAudio ||

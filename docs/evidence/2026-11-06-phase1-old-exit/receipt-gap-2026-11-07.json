@@ -1,0 +1,57 @@
+{
+  "observedAtUtc": "2026-11-06T17:05:19Z",
+  "installedSource": "6ce829c5",
+  "sameInstalledProgramAndRunningOwner": true,
+  "sealedTargetTranscriptsUnchanged": 3,
+  "exactTargetProcessGroupsStillPresent": 3,
+  "additionalGroupMembersOrTraceableDescendantsObserved": 0,
+  "outboundSessionCloses": 0,
+  "matchingProcessEndOrRemovalReceipts": 0,
+  "previousPersistedUnknownMarkers": 0,
+  "preservationRecheck": {
+    "observedAtUtc": "2026-11-06T17:16:52Z",
+    "exactTargetProcessGroupsStillPresent": 3,
+    "targetTranscriptsStillOpenAndSealed": 3,
+    "matchingEndReceipts": 0,
+    "persistedUnknownMarkers": 0,
+    "queuedBlocksOnTargets": 0,
+    "originalDraftObjectAndTextMatch": true,
+    "retainedDrafts": 1
+  },
+  "observations": [
+    {
+      "sample": "Copilot running tool",
+      "originalTurnCancellationConfirmed": true,
+      "firstApprovalGranted": true,
+      "earlierObservedShellAndChildExitedBeforeNaturalDeadline": true,
+      "matchingToolTerminalObserved": false,
+      "nativeShutdownObserved": false
+    },
+    {
+      "sample": "Copilot first approval",
+      "originalTurnCancellationConfirmed": true,
+      "firstApprovalGranted": false,
+      "matchingToolTerminalObserved": false,
+      "nativeShutdownObserved": false,
+      "toolStartRecordPrecededApprovalAndDoesNotProveExecution": true
+    },
+    {
+      "sample": "Goose first approval",
+      "originalTurnCancellationConfirmedInApp": true,
+      "firstApprovalGranted": false,
+      "originalTurnNativeUserTextRows": 2,
+      "originalTurnNativeAssistantOrToolRows": 0,
+      "matchingToolTerminalObserved": false
+    }
+  ],
+  "otherConnectionsClosedByThisCheck": 0,
+  "signalsSent": 0,
+  "productionWrites": 0,
+  "newAgentRequests": 0,
+  "safeUpgradeProven": false,
+  "limitations": [
+    "All three transports were still live; the observation does not establish what the sleeping processes were waiting for.",
+    "No matching tool terminal was found; provider-internal causes and detached descendants are not established.",
+    "This evidence preserves the observation outside the app; it does not write or stand in for the old app's own persisted outcome marker."
+  ]
+}

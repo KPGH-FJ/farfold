@@ -1,6 +1,10 @@
 //! Temporary, explicitly granted access to one running public page.
 //! Agent-specific eligibility lives in acp_client; no page bodies are retained here.
 mod channel;
+mod connect;
+#[cfg(target_os = "macos")]
+mod mach_channel;
+pub(crate) use connect::*;
 mod helper;
 mod helper_io;
 mod permission;
@@ -23,6 +27,8 @@ use tauri::{AppHandle, Emitter, EventTarget, Manager, State, Webview};
 use crate::acp_client::transient_mcp::{SessionMcpOwner, TransientMcpOpen};
 use crate::browser_workspace::{BrowserInfo, BrowserWorkspace, FixedPageReadScope, PageReadLease};
 use permission::{PendingPermission, PendingRequestInfo};
+#[cfg(target_os = "macos")]
+pub(crate) use transport::OwnerCheck as HelperOwnerCheck;
 use transport::{SharedPage, TransportHandle};
 
 const CONNECTING: u8 = 0;
@@ -52,9 +58,16 @@ pub(crate) struct ShareInfo {
     revision: u64,
     reason: Option<&'static str>,
     pending_request: Option<PendingRequestInfo>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    connection_available: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    connection_reason: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    connection_id: Option<String>,
 }
 
 struct ShareState {
+    connection: Option<connect::Attempt>,
     phase: u8,
     ready: bool,
     ended: bool,
@@ -95,7 +108,7 @@ impl ToolSession {
             return;
         }
         state.ready = true;
-        if state.phase == CONNECTING {
+        if state.phase == CONNECTING && state.connection.as_ref().is_none_or(|c| c.confirmed) {
             state.phase = READY;
         }
         state.revision = state.revision.saturating_add(1);
@@ -119,18 +132,28 @@ impl ToolSession {
     fn invalidated(self: &Arc<Self>, scope: &FixedPageReadScope) {
         let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
         let mut page = self.page.lock().unwrap_or_else(|e| e.into_inner());
-        if state.ended
-            || !page
-                .as_ref()
-                .is_some_and(|current| current.same_grant(scope))
+        if state.ended {
+            return;
+        }
+        let standing = page
+            .as_ref()
+            .is_some_and(|current| current.same_grant(scope));
+        if standing {
+            let old = page.take().expect("checked standing grant");
+            old.revoke();
+            state.retiring = Some(old);
+        } else if state.retiring.is_none()
+            && state.active_screenshot.as_ref().is_some_and(|active| {
+                active.scope.same_request(scope) && !active.scope.grant_is_valid()
+            })
         {
+            // A first screenshot has no standing page grant, but it can
+            // still own a response buffered in the helper after navigation.
+            state.retire_screenshot();
+        } else {
             return;
         }
         state.phase = STOPPING;
-        if let Some(old) = page.take() {
-            old.revoke();
-            state.retiring = Some(old);
-        }
         state.revision = state.revision.saturating_add(1);
         drop(page);
         drop(state);
@@ -138,7 +161,13 @@ impl ToolSession {
         let owner = self.clone();
         let expected = scope.clone();
         tauri::async_runtime::spawn(async move {
-            let _ = owner.stop_expected(&expected).await;
+            if standing {
+                let _ = owner.stop_expected(&expected).await;
+            } else {
+                let _ = owner
+                    .stop_if_retiring(|old| old.same_request(&expected))
+                    .await;
+            }
         });
     }
 
@@ -202,7 +231,7 @@ impl ToolSession {
             label.to_owned()
         };
         let label = owner_label.as_str();
-        let (phase, reason) = match state.phase {
+        let (mut phase, mut reason) = match state.phase {
             CLOSED => ("unavailable", Some("tool_disconnected")),
             STOPPING => ("stopping", None),
             STOP_FAILED => ("stop_failed", Some("stop_unconfirmed")),
@@ -226,6 +255,10 @@ impl ToolSession {
                 }
             }
         };
+        if state.connection.as_ref().is_some_and(|c| c.unknown) {
+            phase = "unavailable";
+            reason = Some("connection_unknown");
+        }
         ShareInfo {
             task_key: task.into(),
             label: label.into(),
@@ -234,10 +267,30 @@ impl ToolSession {
             reason,
             revision: state.revision,
             pending_request: state.pending_request.as_ref().map(|p| p.info.clone()),
+            connection_available: state.connection.as_ref().map(|_| false),
+            connection_reason: state
+                .connection
+                .as_ref()
+                .filter(|c| !c.confirmed && !c.safe_failed && !c.removed)
+                .map(|c| {
+                    if c.unknown {
+                        "connection_unknown"
+                    } else {
+                        "connection_pending"
+                    }
+                }),
+            connection_id: None,
         }
     }
 
     async fn stop_expected(&self, expected: &FixedPageReadScope) -> Result<(), String> {
+        self.stop_if_retiring(|old| old.same_grant(expected)).await
+    }
+
+    async fn stop_if_retiring(
+        &self,
+        matches: impl FnOnce(&FixedPageReadScope) -> bool,
+    ) -> Result<(), String> {
         let _operation = self.operation.lock().await;
         let still_retiring = self
             .state
@@ -245,7 +298,7 @@ impl ToolSession {
             .unwrap_or_else(|e| e.into_inner())
             .retiring
             .as_ref()
-            .is_some_and(|old| old.same_grant(expected));
+            .is_some_and(matches);
         if still_retiring {
             self.stop_locked().await
         } else {
@@ -358,6 +411,23 @@ impl Drop for ToolSession {
 }
 
 impl SessionMcpOwner for ToolSession {
+    fn fork_blocker(&self) -> Option<&'static str> {
+        if self.state.lock().is_ok_and(|s| {
+            s.connection
+                .as_ref()
+                .is_some_and(|c| !c.removed && !c.safe_failed)
+        }) {
+            Some("browser_connected")
+        } else {
+            (!self.fork_admissible()).then_some("browser_shared")
+        }
+    }
+
+    fn prepare_close(
+        self: Arc<Self>,
+    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<(), String>> + Send>> {
+        Box::pin(async move { connect::close_owner(&self).await })
+    }
     fn fork_admissible(&self) -> bool {
         let Ok(_operation) = self.operation.try_lock() else {
             return false;
@@ -368,7 +438,11 @@ impl SessionMcpOwner for ToolSession {
         let Ok(page) = self.page.lock() else {
             return false;
         };
-        matches!(state.phase, READY | CLOSED)
+        state
+            .connection
+            .as_ref()
+            .is_none_or(|c| c.removed || c.safe_failed)
+            && matches!(state.phase, READY | CLOSED)
             && !state.prompt_active
             && state.pending_request.is_none()
             && state.active_screenshot.is_none()
@@ -380,9 +454,11 @@ impl SessionMcpOwner for ToolSession {
         if native_session_id.is_empty() || state.ended {
             return Err("网页工具连接已结束".into());
         }
-        self.native_session_id
-            .set(native_session_id.into())
-            .map_err(|_| "网页工具归属已确定".to_string())?;
+        if self.native_session_id.get().map(String::as_str) != Some(native_session_id) {
+            self.native_session_id
+                .set(native_session_id.into())
+                .map_err(|_| "网页工具归属已确定".to_string())?;
+        }
         state.revision = state.revision.saturating_add(1);
         drop(state);
         self.changed();
@@ -442,6 +518,45 @@ impl BrowserSharing {
         agent_id: &str,
         cwd: &Path,
     ) -> Result<TransientMcpOpen, String> {
+        let (session, launch) =
+            self.prepare_inner(app, agent_id, cwd, None, connect::Transport::Stdio)?;
+        match launch {
+            connect::Launch::Stdio(launch) => {
+                Ok(TransientMcpOpen::new(launch.into_server(), session))
+            }
+            #[cfg(target_os = "macos")]
+            connect::Launch::Local(_) | connect::Launch::Mach(_) => unreachable!("requested stdio"),
+        }
+    }
+
+    // Only the reviewed ACP launch factory can select this public-route channel;
+    // no user configuration switches an old bearer offer into this transport.
+    #[cfg(target_os = "macos")]
+    pub(crate) fn prepare_mach(
+        &self,
+        app: &AppHandle,
+        agent_id: &str,
+        cwd: &Path,
+        owner: transport::OwnerCheck,
+    ) -> Result<TransientMcpOpen, String> {
+        let (session, launch) =
+            self.prepare_inner(app, agent_id, cwd, None, connect::Transport::Mach(owner))?;
+        match launch {
+            connect::Launch::Mach(launch) => {
+                Ok(TransientMcpOpen::new(launch.into_server(), session))
+            }
+            _ => unreachable!("requested authenticated channel"),
+        }
+    }
+
+    fn prepare_inner(
+        &self,
+        app: &AppHandle,
+        agent_id: &str,
+        cwd: &Path,
+        attempt: Option<connect::Attempt>,
+        source: connect::Transport,
+    ) -> Result<(Arc<ToolSession>, connect::Launch), String> {
         let notify_app = app.clone();
         let session = Arc::new(ToolSession {
             notify: Arc::new(move |task_key| {
@@ -457,6 +572,7 @@ impl BrowserSharing {
             page: Arc::new(Mutex::new(None)),
             transport: OnceLock::new(),
             state: Mutex::new(ShareState {
+                connection: attempt,
                 phase: CONNECTING,
                 ready: false,
                 ended: false,
@@ -474,7 +590,8 @@ impl BrowserSharing {
         let invalidated_owner = Arc::downgrade(&session);
         let permission_owner = Arc::downgrade(&session);
         let workspace = app.state::<BrowserWorkspace>().inner().clone();
-        let (transport, launch) = transport::start(
+        let (transport, launch) = connect::start_transport(
+            source,
             app.clone(),
             session.page.clone(),
             Arc::new(move || {
@@ -518,11 +635,25 @@ impl BrowserSharing {
         if session.transport.set(transport).is_err() {
             return Err("无法准备网页工具".into());
         }
-        self.0
-            .lock()
-            .unwrap_or_else(|e| e.into_inner())
-            .push(session.clone());
-        Ok(TransientMcpOpen::new(launch.into_server(), session))
+        {
+            let mut entries = self.0.lock().unwrap_or_else(|e| e.into_inner());
+            entries.retain(|entry| !entry.removable());
+            let target = session
+                .state
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .connection
+                .as_ref()
+                .map(|a| a.target.clone());
+            if let Some(target) = target {
+                if entries.iter().any(|e| e.matches(&target)) {
+                    return Err("网页工具连接已开始，请检查原结果".into());
+                }
+                session.bind_session(&target.native_session_id)?;
+            }
+            entries.push(session.clone());
+        }
+        Ok((session, launch))
     }
 
     fn entry(&self, target: &ShareTarget, task: &str) -> Result<Option<Arc<ToolSession>>, String> {
@@ -559,6 +690,9 @@ impl BrowserSharing {
                 revision: 0,
                 reason: Some("tool_not_connected"),
                 pending_request: None,
+                connection_available: None,
+                connection_reason: None,
+                connection_id: None,
             },
         })
     }
@@ -574,12 +708,21 @@ impl BrowserSharing {
         for entry in self.entries() {
             entry.invalidate_pending_page(info);
             let invalid = {
+                let state = entry.state.lock().unwrap_or_else(|e| e.into_inner());
                 let page = entry.page.lock().unwrap_or_else(|e| e.into_inner());
+                let changed = |scope: &FixedPageReadScope| {
+                    scope.task_key() == info.task_key
+                        && scope.label() == info.label
+                        && !scope.grant_is_valid()
+                };
                 page.as_ref()
-                    .filter(|page| {
-                        page.task_key() == info.task_key
-                            && page.label() == info.label
-                            && !page.is_valid()
+                    .filter(|scope| changed(scope))
+                    .or_else(|| {
+                        state
+                            .active_screenshot
+                            .as_ref()
+                            .map(|active| &active.scope)
+                            .filter(|scope| changed(scope))
                     })
                     .cloned()
             };
@@ -607,7 +750,7 @@ fn require_main(webview: &Webview) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub(crate) fn browser_share_status(
+pub(crate) async fn browser_share_status(
     webview: Webview,
     app: AppHandle,
     state: State<'_, BrowserSharing>,
@@ -628,6 +771,7 @@ pub(crate) fn browser_share_status(
     {
         info.reason = Some(reason.reason());
     }
+    connect::refresh_status(&app, &state, &target, &task_key, &label, &mut info).await?;
     Ok(info)
 }
 
@@ -651,6 +795,9 @@ pub(crate) async fn browser_share_allow(
         if state.pending_request.is_some() {
             return Err("请在对话中确认本次网页读取".into());
         }
+        if state.active_screenshot.is_some() {
+            return Err("请先处理原网页读取请求".into());
+        }
         if !state.ready || state.ended || state.phase != READY || state.retiring.is_some() {
             return Err("当前对话尚未接通网页工具，请稍后重试".into());
         }
@@ -669,6 +816,7 @@ pub(crate) async fn browser_share_allow(
             || state.phase != READY
             || state.retiring.is_some()
             || state.pending_request.is_some()
+            || state.active_screenshot.is_some()
             || !page.is_valid()
         {
             page.revoke();

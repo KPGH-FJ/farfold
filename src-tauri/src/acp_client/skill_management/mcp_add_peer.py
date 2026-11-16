@@ -41,7 +41,9 @@ if stage == "get":
         import signal
         import time
         signal.signal(signal.SIGTERM, signal.SIG_IGN)
-        (root / "waiting").write_text(str(os.getpid()))
+        temporary = root / "waiting.tmp"
+        temporary.write_text(str(os.getpid()))
+        temporary.replace(root / "waiting")
         time.sleep(60)
     entry = state["config"]["layers"][0]["config"].get("mcp_servers", {}).get(state["name"])
     if entry is None:

@@ -31,6 +31,7 @@ export interface DraftAttachment {
   kind: "file" | "image" | "audio";
   localAudio?: LocalAudio | null;
   audioClassificationFailed?: boolean;
+  imageClassificationFailed?: true;
   name: string;
   uri?: string;
   data?: string;
@@ -69,6 +70,7 @@ export interface PendingConversation {
 
 const empty: ComposerDraft = { text: "", attachments: [] };
 const values = new Map<string, ComposerDraft>();
+const queueHandoffDrafts = new WeakMap<ComposerDraft, string>();
 const listeners = new Set<() => void>();
 const generations = new Map<string, number>();
 let draftRevision = 0;
@@ -79,10 +81,15 @@ function conversationKey(key: string): string | undefined {
   if (key.startsWith("resend:")) return key.slice("resend:".length);
   return undefined;
 }
-function changed(threadKey?: string) {
+function publishDrafts() {
   draftRevision++;
-  if (threadKey) archiveActivity.stageDraftEdit(threadKey);
   listeners.forEach((fn) => fn());
+}
+function changed(threadKey?: string) {
+  if (restoredHandoff && !ownsRestoredHandoff(restoredHandoff))
+    releaseRestoredHandoff(restoredHandoff);
+  if (threadKey) archiveActivity.stageDraftEdit(threadKey);
+  publishDrafts();
   draftPersistence.changed();
   if (threadKey && draftPersistence.snapshot().ready)
     void archiveActivity.flush().catch(() => undefined);
@@ -92,9 +99,68 @@ type PreservedNew = {
   draft: ComposerDraft;
   generation: number;
   selection: string;
+  interrupted: () => boolean;
 };
+const retainedNewKeys = new WeakMap<ComposerDraft, Map<string, string>>();
+const savingRestoredDrafts = new WeakSet<ComposerDraft>();
+type RestoredHandoff = {
+  key: string;
+  source: ComposerDraft;
+  active: ComposerDraft;
+  generation: number;
+  selection: string;
+  unsubscribe: () => void;
+};
+let restoredHandoff: RestoredHandoff | undefined;
+
+function sameRestoredDraft(handoff: RestoredHandoff): boolean {
+  return (
+    values.get("new") === handoff.active &&
+    composerDrafts.generation("new") === handoff.generation &&
+    JSON.stringify(choice) === handoff.selection
+  );
+}
+
+function ownsRestoredHandoff(handoff: RestoredHandoff): boolean {
+  return (
+    restoredHandoff === handoff &&
+    values.get(handoff.key) === handoff.source &&
+    sameRestoredDraft(handoff)
+  );
+}
+
+function releaseRestoredHandoff(handoff: RestoredHandoff): void {
+  restoredHandoff = undefined;
+  handoff.unsubscribe();
+}
+
+function finishRestoredHandoff(handoff: RestoredHandoff): void {
+  if (!ownsRestoredHandoff(handoff)) return;
+  releaseRestoredHandoff(handoff);
+  values.delete(handoff.key);
+  // The acknowledged snapshot already omitted this source.
+  publishDrafts();
+}
+
+function isRestoredSource(key: string, draft: ComposerDraft): boolean {
+  return (
+    restoredHandoff?.key === key &&
+    restoredHandoff.source === draft &&
+    ownsRestoredHandoff(restoredHandoff)
+  );
+}
+
+function capturePreservedNew(): PreservedNew {
+  return {
+    draft: composerDrafts.read("new"),
+    generation: composerDrafts.generation("new"),
+    selection: JSON.stringify(choice),
+    interrupted: draftPersistence.captureInteractionInterruption(),
+  };
+}
 function assertPreservedNew(ticket: PreservedNew) {
   if (
+    ticket.interrupted() ||
     composerDrafts.read("new") !== ticket.draft ||
     composerDrafts.generation("new") !== ticket.generation ||
     JSON.stringify(choice) !== ticket.selection
@@ -108,6 +174,26 @@ function assertPreservedNew(ticket: PreservedNew) {
     throw new Error(REDESIGN.pendingDraft);
 }
 
+function stagePreservedNew(ticket: PreservedNew): boolean {
+  if (!composerDrafts.hasContent("new")) return false;
+  let retained = retainedNewKeys.get(ticket.draft);
+  if (!retained) {
+    retained = new Map();
+    retainedNewKeys.set(ticket.draft, retained);
+  }
+  const identity = `${ticket.generation}:${ticket.selection}`;
+  const retainedKey = retained.get(identity);
+  // A failed write keeps the staged copy for a retry of this exact input.
+  if (retainedKey && values.has(retainedKey)) return false;
+  const key = `saved-new:${crypto.randomUUID()}`;
+  values.set(key, {
+    ...structuredClone(ticket.draft),
+    savedChoice: structuredClone(choice),
+  });
+  retained.set(identity, key);
+  return true;
+}
+
 /** Only unsent input. No Agent transcript, events, auth forms or secrets. */
 export const composerDrafts = {
   revision: () => draftRevision,
@@ -116,28 +202,16 @@ export const composerDrafts = {
       ([key, draft]) => key.startsWith("saved-new:") && !!draft.savedChoice,
     );
   },
+  /** A displayed row may outlive its source or its pending restore. */
+  canRestorePreserved(key: string, listed: ComposerDraft): boolean {
+    return values.get(key) === listed && !savingRestoredDrafts.has(listed);
+  },
   /** Persist the original before the caller replaces the active input. */
-  async preserveNew() {
+  async preserveNew(ticket = capturePreservedNew()) {
     await draftPersistence.flush();
-    const current = this.read("new");
-    if (
-      current.sendPending ||
-      current.pendingConversation ||
-      current.attachments.some((a) => a.loading)
-    )
-      throw new Error(REDESIGN.pendingDraft);
-    const ticket = {
-      draft: current,
-      generation: this.generation("new"),
-      selection: JSON.stringify(choice),
-    };
+    assertPreservedNew(ticket);
     if (!this.hasContent("new")) return ticket;
-    const key = `saved-new:${crypto.randomUUID()}`;
-    values.set(key, {
-      ...structuredClone(current),
-      savedChoice: structuredClone(choice),
-    });
-    changed();
+    if (stagePreservedNew(ticket)) changed();
     await draftPersistence.flush();
     assertPreservedNew(ticket);
     return ticket;
@@ -148,37 +222,110 @@ export const composerDrafts = {
   },
   async restorePreserved(key: string) {
     const saved = values.get(key);
-    if (!key.startsWith("saved-new:") || !saved?.savedChoice) return false;
-    const ticket = await this.preserveNew();
+    if (
+      !key.startsWith("saved-new:") ||
+      !saved?.savedChoice ||
+      savingRestoredDrafts.has(saved)
+    )
+      return false;
+    const pending = restoredHandoff;
+    if (
+      pending?.key === key &&
+      pending.source === saved &&
+      ownsRestoredHandoff(pending)
+    ) {
+      savingRestoredDrafts.add(saved);
+      try {
+        await draftPersistence.flush();
+        if (!sameRestoredDraft(pending)) throw new Error(REDESIGN.draftChanged);
+        finishRestoredHandoff(pending);
+        return true;
+      } finally {
+        savingRestoredDrafts.delete(saved);
+      }
+    }
+    // The restore belongs to the draft visible when the user requested it,
+    // including while an earlier save still owns the storage writer.
+    const ticket = capturePreservedNew();
+    await draftPersistence.flush();
     assertPreservedNew(ticket);
+    if (values.get(key) !== saved) return false;
     const { savedChoice, ...content } = structuredClone(saved);
-    values.set("new", {
+    savingRestoredDrafts.add(saved);
+    const active = {
       ...content,
       attachments: content.attachments.map((a) => ({
         ...a,
         recovered: true,
         imageChecked: undefined,
       })),
+    };
+    // Both original drafts are durable. Swap their roles in one snapshot so
+    // neither full attachment set has to fit twice during the move.
+    stagePreservedNew(ticket);
+    values.set("new", active);
+    Object.assign(choice, savedChoice, {
+      reviewRequired:
+        savedChoice?.reviewRequired === true ||
+        Boolean(savedChoice?.service && !savedChoice.service.revision),
     });
-    Object.assign(choice, savedChoice);
-    generations.set("new", this.generation("new") + 1);
+    const generation = this.generation("new") + 1;
+    generations.set("new", generation);
+    if (restoredHandoff) releaseRestoredHandoff(restoredHandoff);
+    const revision = draftPersistence.revision() + 1;
+    const handoff: RestoredHandoff = {
+      key,
+      source: saved,
+      active,
+      generation,
+      selection: JSON.stringify(choice),
+      unsubscribe: draftPersistence.subscribe(() => {
+        if (draftPersistence.isSaved(revision)) finishRestoredHandoff(handoff);
+      }),
+    };
+    restoredHandoff = handoff;
     changed();
     // Publish the restored choice to the UI immediately. A failed save keeps
     // both retained copies and the global save-error guard; it must not leave
     // restored text displayed under the previous Agent selection.
     void draftPersistence
       .flush()
-      .then(() => {
-        if (values.get(key) === saved) {
-          values.delete(key);
-          changed();
-        }
-      })
-      .catch(() => undefined);
+      .then(() => finishRestoredHandoff(handoff))
+      .catch(() => undefined)
+      .finally(() => {
+        savingRestoredDrafts.delete(saved);
+      });
     return true;
   },
   read(key: string): ComposerDraft {
     return values.get(key) ?? empty;
+  },
+  /** Adopt only the current prepared input; never merge into another editor.
+   * Both keys change in one save snapshot, and late imports lose the old key. */
+  movePreparedToSession(threadKey: string, expected: ComposerDraft): boolean {
+    const destination = `session:${threadKey}`;
+    if (
+      !threadKey ||
+      this.read("new") !== expected ||
+      values.has(destination) ||
+      expected.sendPending ||
+      expected.pendingConversation ||
+      expected.queueEdit ||
+      expected.attachments.some((item) => item.loading) ||
+      draftPersistence.snapshot().interactionLocked
+    )
+      return false;
+    if (values.has("new")) values.set(destination, expected);
+    values.delete("new");
+    generations.set("new", this.generation("new") + 1);
+    generations.set(destination, this.generation(destination) + 1);
+    changed(threadKey);
+    return true;
+  },
+  /** Keep the editor visible while the same snapshot gives the queue ownership. */
+  holdForQueue(key: string, draft: ComposerDraft): () => void {
+    queueHandoffDrafts.set(draft, key);
+    return () => queueHandoffDrafts.delete(draft);
   },
   update(key: string, update: (draft: ComposerDraft) => ComposerDraft) {
     let next = update(this.read(key));
@@ -300,6 +447,11 @@ export interface FileFeedbackDestination {
 export interface SavedFileFeedback extends FileFeedback {
   path: string;
 }
+export type FileFeedbackDraftEntry = [
+  threadKey: string,
+  key: string,
+  entry: SavedFileFeedback,
+];
 const emptyFeedback: FileFeedback = { text: "", selection: null };
 const emptyFeedbackEntries: Readonly<Record<string, SavedFileFeedback>> = {};
 const feedbackValues = new Map<string, Record<string, SavedFileFeedback>>();
@@ -308,6 +460,16 @@ const feedbackKey = (path: string, contentId?: string) =>
 export const fileFeedbackDrafts = {
   entries(threadKey: string): Readonly<Record<string, SavedFileFeedback>> {
     return feedbackValues.get(threadKey) ?? emptyFeedbackEntries;
+  },
+  withoutAvailableOwner(owners: ReadonlySet<string>): FileFeedbackDraftEntry[] {
+    const retained: FileFeedbackDraftEntry[] = [];
+    for (const [threadKey, entries] of feedbackValues) {
+      if (owners.has(threadKey)) continue;
+      for (const [key, entry] of Object.entries(entries)) {
+        if (entry.text.trim()) retained.push([threadKey, key, entry]);
+      }
+    }
+    return retained;
   },
   read(threadKey: string, path: string, contentId?: string): FileFeedback {
     const entries = this.entries(threadKey);
@@ -406,6 +568,10 @@ export const draftQueues = {
     const value = queueValues.get(key);
     return value ? structuredClone(value) : null;
   },
+  hasUnconfirmedOutcome(key: string): boolean {
+    const saved = queueValues.get(key);
+    return saved?.outcomeUnknown === true || saved?.uncertainIndex != null;
+  },
   write(
     key: string,
     blocks: PromptBlock[][],
@@ -457,11 +623,41 @@ function record(value: unknown): Record<string, unknown> {
     throw new Error("invalid draft");
   return value as Record<string, unknown>;
 }
-function isPromptBlocks(value: unknown): value is PromptBlock[] {
+type DraftParseMode = "load" | "recovery";
+function knownFields(value: unknown, keys: readonly string[]) {
+  if (Object.keys(record(value)).some((key) => !keys.includes(key)))
+    throw new Error("unsupported draft fields");
+}
+function isPromptBlocks(
+  value: unknown,
+  mode: DraftParseMode,
+): value is PromptBlock[] {
   return (
     Array.isArray(value) &&
     value.every((item) => {
       if (!item || typeof item !== "object") return false;
+      // Ordinary loading retains opaque official metadata. Recovery must not
+      // guess future send semantics, but uses the same supported block shapes.
+      if (mode === "recovery") {
+        if (item.type === "text") knownFields(item, ["type", "text"]);
+        else if (item.type === "image")
+          knownFields(item, ["type", "data", "mimeType", "uri"]);
+        else if (item.type === "audio") {
+          knownFields(item, ["type", "data", "mimeType", "uri", "localAudio"]);
+          parseLocalAudio(item.localAudio);
+        } else if (item.type === "resource_link")
+          knownFields(item, ["type", "name", "uri", "mimeType"]);
+        else if (item.type === "resource") {
+          knownFields(item, ["type", "resource", "localDocumentText"]);
+          knownFields(item.resource, ["uri", "mimeType", "text"]);
+        }
+        if (
+          ["uri", "mimeType"].some(
+            (key) => item[key] !== undefined && typeof item[key] !== "string",
+          )
+        )
+          return false;
+      }
       if (item.type !== "resource" && item.localDocumentText !== undefined)
         return false;
       if (item.type === "text") return typeof item.text === "string";
@@ -499,8 +695,16 @@ function isPromptBlocks(value: unknown): value is PromptBlock[] {
     })
   );
 }
-function parseChoice(value: unknown): ConversationChoice {
+function parseChoice(value: unknown, mode: DraftParseMode): ConversationChoice {
   const selected = record(value);
+  if (mode === "recovery")
+    knownFields(selected, [
+      "agentId",
+      "cwd",
+      "config",
+      "service",
+      "reviewRequired",
+    ]);
   if (
     (selected.agentId !== null && typeof selected.agentId !== "string") ||
     (selected.cwd !== null && typeof selected.cwd !== "string")
@@ -517,6 +721,7 @@ function parseChoice(value: unknown): ConversationChoice {
     throw new Error("invalid option");
   if (selected.service !== null) {
     const service = record(selected.service);
+    if (mode === "recovery") knownFields(service, ["id", "model", "revision"]);
     if (
       ![service.id, service.model, service.revision].every(
         (v) => typeof v === "string",
@@ -535,15 +740,66 @@ function parseChoice(value: unknown): ConversationChoice {
   } as ConversationChoice;
 }
 function retainedAudioSource(value: unknown): LocalAudio | null {
+  // Unknown saved fields must block replacement of the complete snapshot.
+  // Known malformed legacy sources still lose read authority below.
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    const source = value as Record<string, unknown>;
+    if (
+      Object.keys(source).some(
+        (key) =>
+          ![
+            "file",
+            "channels",
+            "sampleRate",
+            "bitsPerSample",
+            "frames",
+            "durationMs",
+          ].includes(key),
+      )
+    )
+      throw new Error("unsupported draft audio source");
+    const file = source.file;
+    if (
+      file &&
+      typeof file === "object" &&
+      !Array.isArray(file) &&
+      Object.keys(file).some(
+        (key) =>
+          ![
+            "root",
+            "path",
+            "resolvedPath",
+            "name",
+            "size",
+            "sha256",
+            "version",
+          ].includes(key),
+      )
+    )
+      throw new Error("unsupported draft audio source");
+  }
   try {
     return parseLocalAudio(value);
   } catch {
     return null;
   }
 }
-function parseComposer(value: unknown): ComposerDraft {
+function parseComposer(value: unknown, mode: DraftParseMode): ComposerDraft {
   const raw = record(value);
+  // Reconstructing only supported fields must not silently discard newer
+  // persisted input before an ordinary edit replaces the saved snapshot.
   if (
+    Object.keys(raw).some(
+      (key) =>
+        ![
+          "text",
+          "attachments",
+          "sendPending",
+          "queueEdit",
+          "pendingConversation",
+          "savedChoice",
+        ].includes(key),
+    ) ||
     typeof raw.text !== "string" ||
     !Array.isArray(raw.attachments) ||
     (raw.sendPending !== undefined && typeof raw.sendPending !== "boolean")
@@ -551,11 +807,13 @@ function parseComposer(value: unknown): ComposerDraft {
     throw new Error("invalid draft");
   const editing =
     raw.queueEdit === undefined ? undefined : record(raw.queueEdit);
+  if (editing && mode === "recovery")
+    knownFields(editing, ["index", "original"]);
   if (
     editing &&
     (!Number.isSafeInteger(editing.index) ||
       Number(editing.index) < 0 ||
-      !isPromptBlocks(editing.original))
+      !isPromptBlocks(editing.original, mode))
   )
     throw new Error("invalid queue editor");
   const pending =
@@ -563,6 +821,14 @@ function parseComposer(value: unknown): ComposerDraft {
       ? undefined
       : record(raw.pendingConversation);
   if (pending) {
+    if (mode === "recovery")
+      knownFields(pending, [
+        "agentId",
+        "cwd",
+        "nativeSessionId",
+        "service",
+        "serviceRevision",
+      ]);
     if (
       ![pending.agentId, pending.cwd, pending.nativeSessionId].every(
         (v) => typeof v === "string" && v.length > 0,
@@ -571,6 +837,7 @@ function parseComposer(value: unknown): ComposerDraft {
       throw new Error("invalid pending target");
     if (pending.service !== undefined) {
       const service = record(pending.service);
+      if (mode === "recovery") knownFields(service, ["id", "model"]);
       if (
         ![service.id, service.model].every(
           (v) => typeof v === "string" && v.length > 0,
@@ -588,17 +855,42 @@ function parseComposer(value: unknown): ComposerDraft {
     text: raw.text,
     ...(raw.savedChoice === undefined
       ? {}
-      : { savedChoice: parseChoice(raw.savedChoice) }),
+      : { savedChoice: parseChoice(raw.savedChoice, mode) }),
     pendingConversation: pending as unknown as PendingConversation | undefined,
     queueEdit: editing as ComposerDraft["queueEdit"],
     sendPending: raw.sendPending === true,
     attachments: raw.attachments.map((item: unknown) => {
       const a = record(item);
       if (
+        Object.keys(a).some(
+          (key) =>
+            ![
+              "id",
+              "name",
+              "kind",
+              "uri",
+              "data",
+              "mimeType",
+              "deliveryMode",
+              "documentText",
+              "localAudio",
+              "audioClassificationFailed",
+              "imageClassificationFailed",
+              // Known legacy transient fields remain readable but are not trusted.
+              ...(mode === "load"
+                ? ["content", "loading", "recovered", "imageChecked"]
+                : []),
+            ].includes(key),
+        ) ||
         typeof a.id !== "string" ||
         typeof a.name !== "string" ||
         typeof a.kind !== "string" ||
         !["file", "image", "audio"].includes(a.kind) ||
+        (a.imageClassificationFailed !== undefined &&
+          a.imageClassificationFailed !== true) ||
+        (mode === "recovery" &&
+          a.audioClassificationFailed !== undefined &&
+          typeof a.audioClassificationFailed !== "boolean") ||
         ["uri", "data", "mimeType"].some(
           (key) => a[key] !== undefined && typeof a[key] !== "string",
         )
@@ -616,6 +908,12 @@ function parseComposer(value: unknown): ComposerDraft {
           : parseApprovedDocumentText(a.documentText);
       if (documentText && (a.kind !== "file" || typeof a.uri !== "string"))
         throw new Error("invalid document attachment");
+      if (
+        mode === "recovery" &&
+        a.kind !== "audio" &&
+        a.localAudio !== undefined
+      )
+        throw new Error("invalid audio attachment");
       let audioSource =
         a.kind === "audio" ? retainedAudioSource(a.localAudio) : null;
       const uri = typeof a.uri === "string" ? a.uri : undefined;
@@ -631,6 +929,9 @@ function parseComposer(value: unknown): ComposerDraft {
         ...(a.kind === "audio" ? { localAudio: audioSource } : {}),
         ...(a.audioClassificationFailed === true
           ? { audioClassificationFailed: true }
+          : {}),
+        ...(a.imageClassificationFailed === true
+          ? { imageClassificationFailed: true as const }
           : {}),
         uri: a.kind === "audio" && !audioSource ? undefined : uri,
         data: typeof a.data === "string" ? a.data : undefined,
@@ -663,7 +964,13 @@ function serializeComposer(value: ComposerDraft): ComposerDraft {
   };
 }
 
-export function parseDraftSnapshot(value: unknown) {
+/** One persisted format for ordinary load and recovery. Recovery additionally
+ * refuses unknown nested send fields; legacy load keeps its existing rules.
+ * Neither mode publishes state, reads a file, or approves an attachment. */
+export function parseDraftSnapshot(
+  value: unknown,
+  mode: DraftParseMode = "load",
+) {
   if (value === null || value === undefined) return;
   const raw = record(decodeDraftAudio(value));
   if (
@@ -684,9 +991,9 @@ export function parseDraftSnapshot(value: unknown) {
     throw new Error("unsupported draft format");
   // Validate the entire value before publishing any restored content.
   const composers = Object.entries(record(raw.composers)).map(
-    ([key, item]) => [key, parseComposer(item)] as const,
+    ([key, item]) => [key, parseComposer(item, mode)] as const,
   );
-  const selected = parseChoice(raw.choice);
+  const selected = parseChoice(raw.choice, mode);
   const feedback = Object.entries(record(raw.feedback)).map(([key, items]) => {
     const entries = Object.entries(record(items)).map(([storedKey, item]) => {
       const itemValue = record(item);
@@ -779,11 +1086,18 @@ export function parseDraftSnapshot(value: unknown) {
   });
   const queues = Object.entries(record(raw.queues)).map(([key, item]) => {
     const q = record(item);
+    if (
+      Object.keys(q).some(
+        (field) =>
+          !["blocks", "uncertainIndex", "outcomeUnknown"].includes(field),
+      )
+    )
+      throw new Error("unsupported draft queue");
     if (q.outcomeUnknown !== undefined && typeof q.outcomeUnknown !== "boolean")
       throw new Error("invalid outcome notice");
     if (
       !Array.isArray(q.blocks) ||
-      q.blocks.some((blocks) => !isPromptBlocks(blocks))
+      q.blocks.some((blocks) => !isPromptBlocks(blocks, mode))
     )
       throw new Error("invalid queue");
     if (
@@ -818,6 +1132,11 @@ draftPersistence.configure(
               key.startsWith("queue-edit:") ||
               key.startsWith("resend:") ||
               key.startsWith("saved-new:"),
+          )
+          .filter(
+            ([key, draft]) =>
+              queueHandoffDrafts.get(draft) !== key &&
+              !isRestoredSource(key, draft),
           )
           .map(([key, value]) => [key, serializeComposer(value)]),
       ),

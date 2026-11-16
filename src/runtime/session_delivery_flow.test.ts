@@ -10,6 +10,150 @@ const tick = async () => {
 };
 beforeEach(() => invoke.mockReset());
 
+it("finishes a fresh post-request pull after an older in-flight null, including its actual ACK", async () => {
+  const flow = new SessionDeliveryFlow("agent", "open");
+  let oldNull!: () => void;
+  let acknowledge!: () => void;
+  let pulls = 0;
+  invoke.mockImplementation((command) => {
+    if (command === "session_delivery_pull") {
+      pulls += 1;
+      if (pulls === 1)
+        return new Promise((resolve) => {
+          oldNull = () => resolve(null);
+        });
+      return Promise.resolve(
+        pulls === 2 ? { sequence: "1", event: { ready: true } } : null,
+      );
+    }
+    if (command === "session_delivery_ack")
+      return new Promise((resolve) => {
+        acknowledge = () => resolve(true);
+      });
+    return Promise.resolve(true);
+  });
+  const consume = vi.fn(() => "consumed" as const);
+  flow.receive(wake, consume);
+  let completed = false;
+  const completion = flow.settle(performance.now() + 1_000).then(() => {
+    completed = true;
+  });
+  oldNull();
+  await tick();
+  expect(consume.mock.calls).toEqual([[{ ready: true }]]);
+  expect(pulls).toBe(2);
+  expect(completed).toBe(false);
+  acknowledge();
+  await completion;
+  expect(pulls).toBe(3);
+  expect(completed).toBe(true);
+  flow.dispose();
+});
+
+it.each(["retire", "consume", "ack-false", "ack-reject"] as const)(
+  "rejects and cleans a delivery completion for %s without stopping external work",
+  async (failure) => {
+    vi.useFakeTimers();
+    try {
+      const flow = new SessionDeliveryFlow("agent", "open");
+      let deliver!: () => void;
+      invoke.mockImplementation((command) => {
+        if (command === "session_delivery_pull")
+          return new Promise((resolve) => {
+            deliver = () => resolve({ sequence: "1", event: { ready: true } });
+          });
+        if (command === "session_delivery_ack")
+          return failure === "ack-reject"
+            ? Promise.reject(new Error("private failure"))
+            : Promise.resolve(failure !== "ack-false");
+        return Promise.resolve(true);
+      });
+      flow.receive(wake, () => {
+        if (failure === "consume") throw new Error("private failure");
+        return "consumed";
+      });
+      const result = flow
+        .settle(performance.now() + 1_000)
+        .catch(() => "rejected");
+      if (failure === "retire") flow.dispose();
+      deliver();
+      expect(await result).toBe("rejected");
+      expect(vi.getTimerCount()).toBe(0);
+      expect(
+        invoke.mock.calls.some(([name]) => /cancel|disconnect/.test(name)),
+      ).toBe(false);
+      flow.dispose();
+    } finally {
+      vi.useRealTimers();
+    }
+  },
+);
+
+it("bounds only its own wait and never resumes another caller's pause", async () => {
+  vi.useFakeTimers();
+  try {
+    const flow = new SessionDeliveryFlow("agent", "open");
+    const resume = flow.pause();
+    invoke.mockImplementation(async (command) =>
+      command === "session_delivery_pull" ? null : true,
+    );
+    flow.receive(wake, () => "consumed");
+    const result = flow.settle(performance.now() + 30).catch(() => "timeout");
+    await vi.advanceTimersByTimeAsync(31);
+    expect(await result).toBe("timeout");
+    expect(invoke).not.toHaveBeenCalled();
+    expect(vi.getTimerCount()).toBe(0);
+    resume();
+    await flow.settle(performance.now() + 1_000);
+    expect(invoke.mock.calls.map(([name]) => name)).toEqual([
+      "session_delivery_pull",
+      "session_delivery_pull",
+    ]);
+    expect(vi.getTimerCount()).toBe(0);
+    flow.dispose();
+  } finally {
+    vi.useRealTimers();
+  }
+});
+
+it("rejects a missing owned queue, retired flow, or expired deadline instead of treating them as empty", async () => {
+  const flow = new SessionDeliveryFlow("agent", "open");
+  await expect(flow.settle(performance.now() + 1_000)).rejects.toThrow();
+  flow.receive(wake, () => "consumed");
+  await expect(flow.settle(performance.now() - 1)).rejects.toThrow();
+  flow.dispose();
+  await expect(flow.settle(performance.now() + 1_000)).rejects.toThrow();
+});
+
+it.each(["buffered", "deferred"] as const)(
+  "does not certify an ACK-transferred but still %s body as consumed configuration",
+  async (kind) => {
+    const observer = new SessionDeliveryObserver("agent", "open");
+    const pending = [{ sequence: "1", event: { owned: true } }, null];
+    invoke.mockImplementation(async (command) =>
+      command === "session_delivery_pull" ? (pending.shift() ?? null) : true,
+    );
+    let complete!: (value: "consumed") => void;
+    const consumption = new Promise<"consumed">((resolve) => {
+      complete = resolve;
+    });
+    observer.receive(wake, () =>
+      kind === "buffered" ? "buffered" : consumption,
+    );
+    await expect(observer.settle(performance.now() + 1_000)).rejects.toThrow(
+      "delivery consumption pending",
+    );
+    expect(
+      invoke.mock.calls.find(([name]) => name === "session_delivery_ack")?.[1]
+        .receipt.outcome,
+    ).toBe(kind === "buffered" ? "transferred_replay" : "transferred_control");
+    if (kind === "buffered") observer.consumeBuffered(() => {});
+    else complete("consumed");
+    await observer.settle(performance.now() + 1_000);
+    observer.dispose();
+  },
+);
+
 it("takes one original body at a time and receipts only after synchronous consumption", async () => {
   const flow = new SessionDeliveryFlow("agent", "open");
   const original = {

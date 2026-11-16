@@ -99,6 +99,7 @@ pub(super) fn preparation_untouched(path: &Path, intent: &Intent) -> Result<(), 
     Ok(())
 }
 pub(super) fn prepare(path: &Path, pending: &Pending, io: &impl FileOps) -> Result<(), Failure> {
+    super::pending_tools::reject_known_pending(path)?;
     files::directory(parent(path)?)?;
     if read_intent(path)? != pending.previous || files::fact(&pending.snapshot)? != pending.fact {
         return Err(Failure::new("changed"));
@@ -280,6 +281,8 @@ pub(super) fn advance(path: &Path, id: &str, io: &impl FileOps) -> Result<Status
     let folder = work(path, id)?;
     let result = (|| {
         resumable(path, &intent)?;
+        let original_name = path.file_name().ok_or_else(|| Failure::new("blocked"))?;
+        super::pending_tools::reject_known_pending(&folder.join("protected").join(original_name))?;
         if files::exists(&folder.join("candidate.sqlite3"))? {
             for original in &intent.originals {
                 let source = parent(path)?.join(&original.name);

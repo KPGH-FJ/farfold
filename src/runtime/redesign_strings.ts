@@ -2,7 +2,7 @@ export const REDESIGN = {
   startKicker: "从一个想法开始",
   startTitle: "今天，想完成什么？",
   startSubtitle: "先写下目标，再和合适的 Agent 一起推进。",
-  folderHint: "仅作为工作位置，权限另行确认",
+  folderHint: "同一文件夹里的对话共享文件。权限另行确认。",
   moreSettings: "更多设置",
   manageAgents: "管理我的 Agent",
   sidebarTagline: "一个工作台，接续每段对话。",

@@ -21,6 +21,7 @@ function model(patch: Partial<BrowserSharingModel> = {}): BrowserSharingModel {
       phase: "awaiting_permission",
     },
     refresh: vi.fn(async () => {}),
+    connect: vi.fn(async () => {}),
     allow: vi.fn(async () => {}),
     stop: vi.fn(async () => {}),
     respond: vi.fn(async () => {}),

@@ -1,0 +1,142 @@
+{
+  "currentFarfoldNativeManager": true,
+  "officialKiloVersion": "7.8.1",
+  "installedAppOperated": false,
+  "userConfigOrCredentialCopied": false,
+  "privateHomeCreated": false,
+  "existingSignedAccountUsed": false,
+  "isolatedXdgRootsAndNativeDb": true,
+  "signedCredentialOrOrgInEffectiveEnv": false,
+  "officialAnonymousSentinelCanBeTransmitted": true,
+  "httpAttemptCountObserved": false,
+  "pinnedUpstreamMayRepeatIncompleteResponseWithSameModelAtMostTwice": true,
+  "providerErrorRetryLimit": 0,
+  "acpPromptOperatorAttempts": 1,
+  "effectivePreflight": {
+    "fieldsExact": {
+      "compaction": true,
+      "default_agent": true,
+      "enabled_providers": true,
+      "instructions": true,
+      "mcp": true,
+      "permission": true,
+      "plugin": true,
+      "reference": true,
+      "references": true,
+      "share": true,
+      "skills": true,
+      "small_model": true,
+      "username": true
+    },
+    "codeOneStep": true,
+    "effectiveTools": 28,
+    "enabledTools": 0,
+    "titleDisabled": true,
+    "telemetryDisabled": true,
+    "noEndpointOrProviderOverride": true,
+    "externalSkillsAndProjectInstructionsDisabledByPinnedOfficialFlags": true,
+    "globalClaudeContextDisabledByPinnedOfficialFlag": true,
+    "managedConfigAndPlistsAbsent": true,
+    "isolatedAuthAbsent": true,
+    "ordinaryHomeInherited": true,
+    "fixtureWorkspaceEmpty": true
+  },
+  "publicLivePrice": {
+    "officialPublicEndpoint": true,
+    "authorizationCredentialsPassed": false,
+    "exactModel": "dots-studio/dots-3-note-preview:free",
+    "inputPrice": 0,
+    "outputPrice": 0
+  },
+  "twoOwnedOfficialSessions": true,
+  "factoryDiffersFromTargetAlternative": true,
+  "fixtureSetup": {
+    "exactOfficialBaseline": "kilo/nvidia/nemotron-3-ultra-550b-a55b:free",
+    "explicitlySeededViaProductionConfigStoreAfterOfficialAcks": true,
+    "reason": "No first prompt or synthetic Agent message was used to establish the two owned index rows.",
+    "shutdown": {
+      "outboundCounts": {
+        "initialize": 2,
+        "session/new": 2,
+        "session/set_config_option": 2
+      },
+      "confirmedGroupsGone": 2,
+      "killEscalations": 0,
+      "singleOwnedRouteLogsWithExactlyOneLoadThenOneSetter": 0
+    }
+  },
+  "managerSetterSavedAOnly": true,
+  "beforeRestart": {
+    "outboundCounts": {
+      "initialize": 2,
+      "session/load": 2,
+      "session/set_config_option": 3
+    },
+    "confirmedGroupsGone": 2,
+    "killEscalations": 0,
+    "singleOwnedRouteLogsWithExactlyOneLoadThenOneSetter": 1
+  },
+  "separateReadOnlyLoadControl": {
+    "aOfficialFactoryModelThroughReadOnlyLoad": true,
+    "bOfficialFactoryModelThroughReadOnlyLoad": true,
+    "shutdown": {
+      "outboundCounts": {
+        "initialize": 2,
+        "session/load": 2
+      },
+      "confirmedGroupsGone": 2,
+      "killEscalations": 0,
+      "singleOwnedRouteLogsWithExactlyOneLoadThenOneSetter": 0
+    }
+  },
+  "coldOwner": {
+    "aSameNativeId": true,
+    "bSameNativeId": true,
+    "separateOfficialReadOnlyDefaultControlUsed": true
+  },
+  "coldFarfoldConfig": {
+    "aExactAlternateEffective": true,
+    "bOriginalExactModelEffective": true,
+    "aReady": true,
+    "bReady": true,
+    "aIssueCount": 0,
+    "bIssueCount": 0,
+    "distinctNewProcesses": true
+  },
+  "singleManagerReply": {
+    "exactMarker": true,
+    "stopReason": "end_turn",
+    "elapsedMs": 2764,
+    "noToolOrApprovalEventsObserved": true,
+    "operatorRetries": 0
+  },
+  "nativeReply": {
+    "aNativeMessages": 2,
+    "bNativeMessages": 0,
+    "provider": "kilo",
+    "model": "dots-studio/dots-3-note-preview:free",
+    "finish": "stop",
+    "nativeReportedCost": 0.0,
+    "exactMarker": true,
+    "nativeToolParts": 0
+  },
+  "bSavedAndNativeRowAndLiveOwnerUnchangedAfterReply": true,
+  "afterRestart": {
+    "outboundCounts": {
+      "initialize": 2,
+      "session/load": 2,
+      "session/prompt": 1,
+      "session/set_config_option": 2
+    },
+    "confirmedGroupsGone": 2,
+    "killEscalations": 0,
+    "singleOwnedRouteLogsWithExactlyOneLoadThenOneSetter": 2
+  },
+  "zeroNativeMessagesBeforePrompt": true,
+  "onlyOneAcpPromptProvenByWire": true,
+  "nativeHistoriesStillBothOwned": true,
+  "savedAAndBRecordsUnchangedByColdRead": true,
+  "productionProfileFileMetadataUnchanged": true,
+  "temporaryFixtureRemoved": true,
+  "outcome": "passed"
+}

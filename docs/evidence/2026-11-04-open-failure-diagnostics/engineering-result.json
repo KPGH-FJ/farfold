@@ -1,0 +1,170 @@
+{
+  "recordedAt": "2026-11-04T13:01:09.035010+00:00",
+  "sourceInputs": 2366,
+  "frontendFiles": 705,
+  "frontendPassed": 9481,
+  "rustPassed": 2339,
+  "rustIgnored": 7,
+  "sevenCommands": [
+    {
+      "argv": ["corepack", "pnpm", "format:check"],
+      "naturalExitCode": 0,
+      "log": "format-final.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "receipt": {
+        "path": "output/2026-11-04-open-failure-diagnostics/engineering-final/checks/format-final.json",
+        "sha256": "2846a8bdd56ef92f62decf7a5a21b790ee166e0d3e062d4ea93d2466a50079af"
+      },
+      "durationSeconds": 29.308
+    },
+    {
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "naturalExitCode": 0,
+      "log": "typecheck-final.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "receipt": {
+        "path": "output/2026-11-04-open-failure-diagnostics/engineering-final/checks/typecheck-final.json",
+        "sha256": "fc1e9bf4e3e991b5805c0e7fb089b7e3a44f70f5f16b9bb9491402048cc4a349"
+      },
+      "durationSeconds": 8.054
+    },
+    {
+      "argv": ["corepack", "pnpm", "test"],
+      "naturalExitCode": 0,
+      "log": "frontend-final.log",
+      "sha256": "8e017b66852f47f5a5c1f2c88441aa9102c5f9c57328f5131ebfbd6807796fdb",
+      "receipt": {
+        "path": "output/2026-11-04-open-failure-diagnostics/engineering-final/checks/frontend-final.json",
+        "sha256": "f548330125e2907de67a992fedc72dc66d22e1591aa27d8358c19e8e9dc56e55"
+      },
+      "durationSeconds": 39.699
+    },
+    {
+      "argv": ["corepack", "pnpm", "build"],
+      "naturalExitCode": 0,
+      "log": "build-final.log",
+      "sha256": "7c25d2aedfeb8ccb29f014ab5c384266f6c6fac4d9c82f8e622389d5db9510b9",
+      "receipt": {
+        "path": "output/2026-11-04-open-failure-diagnostics/engineering-final/checks/build-final.json",
+        "sha256": "134bbd38569cb0936ce7aea6957fb83e124157e66b478468b06511857882a93b"
+      },
+      "durationSeconds": 8.5
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "naturalExitCode": 0,
+      "log": "cargo-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt": {
+        "path": "output/2026-11-04-open-failure-diagnostics/engineering/checks/cargo-fmt.json",
+        "sha256": "ff12bbd82c10dc2b55cd490dbf3d06408d488d94efc91a6b76dfb988adc27d0e"
+      },
+      "durationSeconds": 1.239
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "naturalExitCode": 0,
+      "log": "clippy.log",
+      "sha256": "7c1f8f0b0e9b579166577190b2ae60b816b2ba36723f60116216c20f3aeeccd6",
+      "receipt": {
+        "path": "output/2026-11-04-open-failure-diagnostics/engineering/checks/clippy.json",
+        "sha256": "65e28361e0c019b52c7e8ca977bcbfe173292b615dbe75b38eddd40d32bd5b1f"
+      },
+      "durationSeconds": 8.633
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "naturalExitCode": 0,
+      "log": "rust-full.log",
+      "sha256": "8a1033b7a30060bde42066d9fc1bc71a284f8e3eecaf64d649021a94d745ebb5",
+      "receipt": {
+        "path": "output/2026-11-04-open-failure-diagnostics/engineering/checks/rust-full.json",
+        "sha256": "602e22126bccfb77e3948d9ef4230ec643b4bb34cfd9daf04c84c5f5d60d8cac"
+      },
+      "durationSeconds": 128.217
+    }
+  ],
+  "logProvenance": {
+    "format-final.log": {
+      "source": "output/2026-11-04-open-failure-diagnostics/engineering-final/checks/format-final.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    "typecheck-final.log": {
+      "source": "output/2026-11-04-open-failure-diagnostics/engineering-final/checks/typecheck-final.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    "frontend-final.log": {
+      "source": "output/2026-11-04-open-failure-diagnostics/engineering-final/checks/frontend-final.log",
+      "sha256": "8e017b66852f47f5a5c1f2c88441aa9102c5f9c57328f5131ebfbd6807796fdb"
+    },
+    "build-final.log": {
+      "source": "output/2026-11-04-open-failure-diagnostics/engineering-final/checks/build-final.log",
+      "sha256": "7c25d2aedfeb8ccb29f014ab5c384266f6c6fac4d9c82f8e622389d5db9510b9"
+    },
+    "cargo-fmt.log": {
+      "source": "output/2026-11-04-open-failure-diagnostics/engineering/checks/cargo-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "clippy.log": {
+      "source": "output/2026-11-04-open-failure-diagnostics/engineering/checks/clippy.log",
+      "sha256": "7c1f8f0b0e9b579166577190b2ae60b816b2ba36723f60116216c20f3aeeccd6"
+    },
+    "rust-full.log": {
+      "source": "output/2026-11-04-open-failure-diagnostics/engineering/checks/rust-full.log",
+      "sha256": "8a1033b7a30060bde42066d9fc1bc71a284f8e3eecaf64d649021a94d745ebb5"
+    }
+  },
+  "finalInputs": {
+    "before": {
+      "path": "output/2026-11-04-open-failure-diagnostics/engineering-final/source-before.json",
+      "sha256": "f1653d37d9de8492a4700d5aa6168829e620639fdc0117bf6fb8b2fed84f1fb0"
+    },
+    "after": {
+      "path": "output/2026-11-04-open-failure-diagnostics/engineering-final/source-after.json",
+      "sha256": "f1653d37d9de8492a4700d5aa6168829e620639fdc0117bf6fb8b2fed84f1fb0"
+    },
+    "allEqual": true
+  },
+  "dependencyReuse": {
+    "earlierInputMap": {
+      "path": "output/2026-11-04-open-failure-diagnostics/engineering/source-before.json",
+      "sha256": "fa61e874dba6d40bb0e694c319dee7e83290f7d502708e271d22db87463d121d"
+    },
+    "finalInputMap": {
+      "path": "output/2026-11-04-open-failure-diagnostics/engineering-final/source-before.json",
+      "sha256": "f1653d37d9de8492a4700d5aa6168829e620639fdc0117bf6fb8b2fed84f1fb0"
+    },
+    "proof": {
+      "path": "output/2026-11-04-open-failure-diagnostics/engineering/type-only-input-delta.json",
+      "sha256": "b7d39f3d95ee2b7cdb9ede81fb72f70fe625dd6cddb161e3960ab482edcbcbd0"
+    },
+    "onlyChangedDeclaredInput": "src/components/ThreadView.history-recovery.test.tsx",
+    "unchangedOtherDeclaredInputs": 2365,
+    "typescriptVersion": "5.9.3",
+    "emittedRuntimeBytesIdentical": true,
+    "reusedRustCommands": ["cargo-fmt", "clippy", "rust-full"],
+    "explanation": "Only a TypeScript test input annotation changed after the original typecheck failed. Runtime implementation, Rust/build inputs and emitted test JavaScript are identical; frontend four checks were rerun on final inputs. Seven results are genuine but were not all executed during one identical full-input interval."
+  },
+  "scope": "Current-host engineering only. Not Windows current-source execution, installed validation or real Agent recovery/root-cause proof. New ignored storage-bridge driver is explicit-only; ordinary cargo test does not exercise it."
+}

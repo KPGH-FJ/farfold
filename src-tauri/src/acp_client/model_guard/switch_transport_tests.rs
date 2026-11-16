@@ -54,12 +54,17 @@ for line in sys.stdin:
    result['modes']={'currentModeId':'first','availableModes':[{'id':'first','name':'First'},{'id':'second','name':'Second'}]}
  elif method=='session/set_config_option':
   if p['sessionId']!='switch-proof': raise ValueError('changed session')
+  restatement=os.path.exists(os.path.join(root,'restatement-before-set'))
+  if restatement:
+   send({'method':'session/update','params':{'sessionId':'switch-proof','update':{'sessionUpdate':'config_option_update','configOptions':state['options']}}})
   for o in state['options']:
    if o['id']==p['configId']: o['currentValue']=p['value']
    if p['configId']=='model' and o['id']=='reasoning_effort':
     o['currentValue']='high' if p['value']=='m2' else 'low'
+  held_reply=json.loads(json.dumps(state['options'])) if os.path.exists(os.path.join(root,'snapshot-held-set')) else None
   save()
-  send({'method':'session/update','params':{'sessionId':'switch-proof','update':{'sessionUpdate':'config_option_update','configOptions':state['options']}}})
+  if not restatement:
+   send({'method':'session/update','params':{'sessionId':'switch-proof','update':{'sessionUpdate':'config_option_update','configOptions':state['options']}}})
   if os.path.exists(os.path.join(root,'request-permission')):
    send({'id':'held-permission','method':'session/request_permission','params':{'sessionId':'switch-proof','toolCall':{'toolCallId':'pending-tool','title':'Fixture approval','kind':'read','status':'pending'},'options':[{'optionId':'allow','name':'Allow','kind':'allow_once'}]}})
   if os.path.exists(os.path.join(root,'hold-set')):
@@ -68,7 +73,7 @@ for line in sys.stdin:
    while not os.path.exists(os.path.join(root,'release-set')):
     if time.monotonic()>until: raise TimeoutError('test never released reply')
     time.sleep(.005)
-  result={'configOptions':state['options']}
+  result={'configOptions':held_reply if held_reply is not None else state['options']}
  elif method=='session/prompt':
   if os.path.exists(os.path.join(root,'prompt-error')):
    save();send({'id':m['id'],'error':{'code':-32603,'message':'Fixture unknown prompt outcome'}});continue
@@ -349,6 +354,158 @@ async fn configuration_change_transport_notifies_before_ack_persists_and_cold_lo
     fixture.assert_calls(1, 1, 1, 1);
 }
 
+async fn assert_conflicting_observation(revert: bool) {
+    let mut fixture = Fixture::open().await;
+    fixture.admit().await;
+    let record_id = session_row_id(&fixture.row.id, &fixture.cwd.to_string_lossy(), SESSION);
+    let stored = |fixture: &Fixture| {
+        fixture
+            .store
+            .get_session(&record_id)
+            .unwrap()
+            .unwrap()
+            .config_options
+            .unwrap()
+    };
+    let original = stored(&fixture);
+    assert_eq!(original["_farfoldService"]["kind"], "existing");
+    for marker in ["hold-set", "snapshot-held-set"] {
+        std::fs::write(fixture.cwd.join(marker), "").unwrap();
+    }
+    let manager = fixture.manager.clone();
+    let agent = fixture.row.id.clone();
+    let cwd = fixture.cwd.clone();
+    let request = tokio::spawn(async move {
+        manager
+            .session_set_config(&agent, &cwd, SESSION, "reasoning_effort", json!("high"))
+            .await
+    });
+    // The peer captures the response before publishing this first observation.
+    let first = fixture.check("blocked").await;
+    assert_choices(&first["current"], "m1", "high");
+    let published = fixture.publish_update(json!({"values":{"model":"m2"}}));
+    // This guard event proves the later real notification reached the actor;
+    // only then is the older response snapshot released.
+    let drift = fixture.check("blocked").await;
+    assert_choices(&drift["current"], "m2", "high");
+    let latest = if revert {
+        // The peer removes the injection after emitting it. Wait for that
+        // ownership handoff before reusing the same fixture path.
+        tokio::time::timeout(Duration::from_secs(3), async {
+            while published.exists() {
+                tokio::time::sleep(Duration::from_millis(5)).await;
+            }
+        })
+        .await
+        .expect("first owned injection was consumed");
+        fixture.publish_update(json!({"values":{"model":"m1","reasoning_effort":"low"}}));
+        let original_values = fixture.check("ready").await;
+        assert_choices(&original_values["current"], "m1", "low");
+        original_values
+    } else {
+        drift.clone()
+    };
+    assert!(!request.is_finished());
+    assert_eq!(stored(&fixture), original);
+    std::fs::write(fixture.cwd.join("release-set"), "").unwrap();
+    let reply = tokio::time::timeout(Duration::from_secs(3), request)
+        .await
+        .expect("owned setter received its reply")
+        .unwrap();
+    let final_check = fixture.next("configCheck").await["check"].clone();
+    let final_record = stored(&fixture);
+    let actual = fixture.state();
+    println!(
+        "conflicting_config_observation={}",
+        json!({
+            "appliedBeforeReply":first["current"],
+            "driftSunkBeforeRelease":drift["current"],
+            "latestBeforeRelease":latest["current"],
+            "reply":reply,
+            "finalCheck":final_check,
+            "stored":final_record,
+            "peerOptions":actual["options"],
+            "wireCounts":actual["counts"],
+        })
+    );
+    assert!(
+        reply.is_err(),
+        "an older response cannot confirm a newer drift"
+    );
+    assert_eq!(final_check["status"], "blocked");
+    assert_eq!(final_check["current"], latest["current"]);
+    assert!(
+        final_check["issues"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|issue| issue["reason"] == "unknown")
+    );
+    assert_eq!(final_record, original);
+    assert!(
+        fixture
+            .manager
+            .confirm_config(
+                &fixture.row.id,
+                &fixture.cwd,
+                SESSION,
+                final_check["current"].clone()
+            )
+            .await
+            .is_err()
+    );
+    assert_eq!(
+        fixture
+            .manager
+            .session_prompt(&fixture.row.id, &fixture.cwd, SESSION, blocks())
+            .await
+            .unwrap_err(),
+        "FAILED: CONFIG_BLOCKED"
+    );
+    fixture.assert_calls(1, 0, 1, 1);
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn configuration_change_transport_observation_rejects_conflicting_snapshot() {
+    assert_conflicting_observation(false).await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn configuration_change_transport_observation_rejects_snapshot_after_revert() {
+    assert_conflicting_observation(true).await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn configuration_change_transport_observation_accepts_unchanged_restatement() {
+    let mut fixture = Fixture::open().await;
+    fixture.admit().await;
+    for marker in ["hold-set", "restatement-before-set"] {
+        std::fs::write(fixture.cwd.join(marker), "").unwrap();
+    }
+    let manager = fixture.manager.clone();
+    let agent = fixture.row.id.clone();
+    let cwd = fixture.cwd.clone();
+    let request = tokio::spawn(async move {
+        manager
+            .session_set_config(&agent, &cwd, SESSION, "reasoning_effort", json!("high"))
+            .await
+    });
+    let observed = fixture.check("ready").await;
+    assert_choices(&observed["current"], "m1", "low");
+    assert!(!request.is_finished(), "notification is not a setter reply");
+    fixture.assert_record("m1", "low");
+    std::fs::write(fixture.cwd.join("release-set"), "").unwrap();
+    let reply = tokio::time::timeout(Duration::from_secs(3), request)
+        .await
+        .expect("owned setter received its reply")
+        .unwrap()
+        .unwrap();
+    assert_eq!(reply["configCheck"]["status"], "ready");
+    assert_choices(&reply["configCheck"]["current"], "m1", "high");
+    fixture.assert_record("m1", "high");
+    fixture.assert_calls(1, 0, 1, 1);
+}
+
 #[tokio::test(flavor = "multi_thread")]
 async fn configuration_change_transport_save_failure_keeps_exact_retry_without_resending() {
     let mut fixture = Fixture::open().await;
@@ -395,6 +552,18 @@ async fn configuration_change_transport_save_failure_keeps_exact_retry_without_r
         .unwrap();
     assert_eq!(confirmed["status"], "ready");
     assert_choices(&confirmed["current"], "m2", "high");
+    let configuration = &confirmed["configuration"];
+    assert_eq!(configuration["configOptionsModern"], true);
+    let mut check = confirmed.clone();
+    check.as_object_mut().unwrap().remove("configuration");
+    assert_eq!(configuration["configCheck"], check);
+    assert_eq!(configuration["configOptions"], fixture.state()["options"]);
+    assert_eq!(configuration["configOptions"][0]["currentValue"], "m2");
+    assert_eq!(configuration["configOptions"][1]["currentValue"], "high");
+    assert_eq!(configuration["service"], Value::Null);
+    assert_eq!(configuration["permissionConfigId"], Value::Null);
+    assert_eq!(configuration["permissionState"], "ready");
+    assert!(configuration.get("permissionEffect").is_some());
     fixture.assert_record("m2", "high");
     fixture.assert_calls(1, 0, 1, 1);
     let cold = fixture.cold_check("ready").await;

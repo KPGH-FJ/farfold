@@ -235,11 +235,13 @@ fn api_connection(
             account_query: None,
             workspace_access: super::super::workspace_access::Availability::new(None),
             identity_read: crate::acp_client::identity_read::Availability::new(None),
+            session_tools: crate::acp_client::session_tools::Availability::unavailable(),
             command_tx,
             state: life.state.clone(),
             handshake: Arc::new(OnceLock::new()),
             sessions: Arc::new(Mutex::new(HashMap::new())),
             child_pid: Arc::new(AtomicU32::new(0)),
+            process_identity: Default::default(),
             browser_launch: None,
             mcp_spawn_facts: Arc::new(std::sync::OnceLock::new()),
             life: life.clone(),
@@ -391,7 +393,7 @@ fn encoded_goose_root_keeps_the_existing_configuration_action_proof() {
     assert!(actions_for(&store, &row, data.path()).unwrap().is_empty());
 }
 
-fn npm_fixture(encoded: bool) -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {
+fn npm_fixture(encoded: bool, version: &str) -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {
     let data = tempfile::tempdir().unwrap();
     let base = data.path().canonicalize().unwrap();
     let root = base.join(if encoded || cfg!(windows) {
@@ -406,7 +408,7 @@ fn npm_fixture(encoded: bool) -> (tempfile::TempDir, MetaStore, AgentRow, PathBu
     std::fs::write(
         package.join("package.json"),
         serde_json::to_vec(&serde_json::json!({
-            "name":"cline", "version":"3.0.65", "bin":{"cline":"./bin/cline"},
+            "name":"cline", "version":version, "bin":{"cline":"./bin/cline"},
             "repository":{"type":"git","url":"git+https://github.com/cline/cline.git","directory":"apps/cli"}
         })).unwrap(),
     ).unwrap();
@@ -432,7 +434,7 @@ fn npm_fixture(encoded: bool) -> (tempfile::TempDir, MetaStore, AgentRow, PathBu
         command: node.display().to_string(),
         args: vec![loader.display().to_string(), "--acp".into()],
         env: vec![],
-        version: Some("3.0.65".into()),
+        version: Some(version.into()),
         handshake: Some(serde_json::json!({
             "authMethods":[
                 {"id":"fixture-one","name":"One","type":"agent"},
@@ -451,8 +453,17 @@ fn npm_fixture(encoded: bool) -> (tempfile::TempDir, MetaStore, AgentRow, PathBu
 
 #[test]
 fn service_configuration_npm_preview_keeps_shared_node_loader_and_protocol_methods() {
-    for encoded in [false, true] {
-        let (data, store, row, root) = npm_fixture(encoded);
+    let legacy_source = "https://github.com/cline/cline/tree/main/apps/cli";
+    for (encoded, version, source) in [
+        (false, "3.0.65", legacy_source),
+        (true, "3.0.65", legacy_source),
+        (
+            true,
+            "3.0.74",
+            "https://github.com/cline/cline/blob/cli-v3.0.74/docs/cli/cli-reference.mdx",
+        ),
+    ] {
+        let (data, store, row, root) = npm_fixture(encoded, version);
         let before = store.list_settings().unwrap();
         assert!(!Path::new(&row.command).starts_with(&root));
         let actions = actions_for(&store, &row, data.path()).unwrap();
@@ -462,10 +473,7 @@ fn service_configuration_npm_preview_keeps_shared_node_loader_and_protocol_metho
         assert_eq!(action.args, [row.args[0].clone(), "auth".into()]);
         assert_eq!(action.purpose, "service_configuration");
         assert_eq!(action.transport, "terminal");
-        assert_eq!(
-            action.source_url,
-            "https://github.com/cline/cline/tree/main/apps/cli"
-        );
+        assert_eq!(action.source_url, source);
         assert!(
             !root.join("invocation").exists(),
             "preview must not execute Node"
@@ -480,7 +488,7 @@ fn service_configuration_npm_preview_keeps_shared_node_loader_and_protocol_metho
 
 #[test]
 fn service_configuration_npm_rejects_unverified_registration_receipts_and_manifest() {
-    let (data, store, original, root) = npm_fixture(true);
+    let (data, store, original, root) = npm_fixture(true, "3.0.65");
     for kind in [
         "custom", "id", "version", "empty", "args", "flag", "node", "loader", "env",
     ] {
@@ -567,7 +575,7 @@ fn service_configuration_npm_rejects_unverified_registration_receipts_and_manife
 #[cfg(unix)]
 fn service_configuration_npm_rejects_loader_package_or_manifest_aliases() {
     for kind in ["loader", "package", "manifest"] {
-        let (data, store, row, root) = npm_fixture(true);
+        let (data, store, row, root) = npm_fixture(true, "3.0.65");
         let package = root.join("node_modules/cline");
         let outside = data.path().canonicalize().unwrap().join("outside-package");
         std::fs::create_dir_all(outside.join("bin")).unwrap();
@@ -599,7 +607,7 @@ fn service_configuration_npm_rejects_loader_package_or_manifest_aliases() {
 
 #[test]
 fn service_configuration_npm_rederives_reviewed_prefix_and_public_package() {
-    let (data, store, row, root) = npm_fixture(true);
+    let (data, store, row, root) = npm_fixture(true, "3.0.65");
     let action = actions_for(&store, &row, data.path()).unwrap().remove(0);
     assert!(
         reviewed_action(
@@ -657,7 +665,7 @@ fn service_configuration_npm_rederives_reviewed_prefix_and_public_package() {
 #[tokio::test]
 #[cfg(unix)]
 async fn service_configuration_npm_terminal_uses_exact_loader_then_auth_without_metadata_changes() {
-    let (data, store, row, root) = npm_fixture(true);
+    let (data, store, row, root) = npm_fixture(true, "3.0.65");
     let before = store.list_settings().unwrap();
     let manager = AcpManager::new(data.path().into(), data.path().into());
     let pty = Arc::new(PtyManager::new());

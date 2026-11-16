@@ -1,6 +1,8 @@
 import { Channel, invoke } from "@tauri-apps/api/core";
 import type { ThreadState } from "./session_types";
-import { pauseQueue } from "./queue";
+import { composerDrafts } from "./drafts";
+import type { PendingAttempt } from "./pending_conversation";
+import { pauseQueue, removeQueued } from "./queue";
 import { PROMPT_ADMISSION as S } from "./prompt_admission_strings";
 
 export interface PromptAdmissionView {
@@ -11,6 +13,115 @@ export interface PromptAdmissionView {
 type CancelReply = { receiptId: number; outcome: string };
 type CancelDispatch =
   "pendingReceipt" | "acknowledged" | "unconfirmed" | "inactive";
+
+function currentSubmission(thread: ThreadState) {
+  const submission = thread.promptSubmission;
+  return submission && submission.connectionId === thread.connectionId
+    ? submission
+    : undefined;
+}
+
+type FirstPromptDraft = {
+  blocks: NonNullable<ThreadState["promptSubmission"]>["blocks"];
+  attempt: PendingAttempt;
+  returnDraft: () => void;
+};
+const firstPromptDrafts = new WeakMap<ThreadState, FirstPromptDraft>();
+
+export function holdFirstPromptDraft(owner: FirstPromptDraft): () => void {
+  const state = owner.attempt.state;
+  firstPromptDrafts.set(state, owner);
+  return () => {
+    if (firstPromptDrafts.get(state) === owner) firstPromptDrafts.delete(state);
+  };
+}
+
+function returnFirstPromptDraft(
+  thread: ThreadState,
+  submission: NonNullable<ThreadState["promptSubmission"]>,
+): void {
+  const owner = firstPromptDrafts.get(thread);
+  if (
+    !owner ||
+    owner.blocks !== submission.blocks ||
+    thread.queued[0] !== owner.blocks ||
+    thread.connectionLost ||
+    thread.connectionOutcomeUnknown ||
+    thread.uncertainPrompt
+  )
+    return;
+  const { attempt } = owner;
+  const editor = composerDrafts.read(attempt.draftKey);
+  if (
+    attempt.draftKey !== "new" ||
+    attempt.connectionId !== submission.connectionId ||
+    !attempt.clearOnAccepted ||
+    editor !== attempt.snapshot ||
+    editor.pendingConversation !== attempt.target
+  )
+    return;
+  // Remove only the proven queue occurrence and return the editor before the
+  // exit caller emits the combined draft/queue settings snapshot.
+  attempt.returnedToEditor = true;
+  thread.promptSubmission = undefined;
+  removeQueued(thread, owner.blocks);
+  owner.returnDraft();
+}
+
+export function pauseQueueForExit(
+  thread: ThreadState,
+  confirmed: boolean,
+): void {
+  if (thread.queued.length)
+    pauseQueue(thread, thread.uncertainPrompt ? "uncertain" : "stopped");
+  const submission = currentSubmission(thread);
+  if (!confirmed || !submission || submission.dispatched) return;
+  // A confirmed quit can revoke local preparation before it reaches IPC.
+  if (thread.identity === "draft") returnFirstPromptDraft(thread, submission);
+  else thread.promptSubmission = undefined;
+}
+
+/** Settle queue ownership before replacing or losing the exact connection. */
+export function retirePromptSubmission(thread: ThreadState): void {
+  const submission = currentSubmission(thread);
+  if (!submission) return;
+  if (submission.deliveryConfirmed) {
+    // A replacement inherits the live queue, not the saved projection.
+    removeQueued(thread, submission.blocks);
+    thread.promptSubmission = undefined;
+    thread.identity = "established";
+  } else if (submission.dispatched) {
+    thread.connectionOutcomeUnknown = true;
+    if (thread.queued.includes(submission.blocks)) {
+      thread.uncertainPrompt = submission.blocks;
+      thread.identity = "established";
+    }
+  }
+}
+
+/** Keep the live queue intact until IPC settles, while excluding a confirmed
+ * delivery from recovery. An unknown outcome still quarantines its exact input. */
+export function persistedQueue(thread: ThreadState) {
+  const submission = currentSubmission(thread);
+  const deliveredIndex = submission?.deliveryConfirmed
+    ? thread.queued.indexOf(submission.blocks)
+    : -1;
+  const blocks =
+    deliveredIndex < 0
+      ? thread.queued
+      : [
+          ...thread.queued.slice(0, deliveredIndex),
+          ...thread.queued.slice(deliveredIndex + 1),
+        ];
+  const uncertain =
+    thread.uncertainPrompt ??
+    (!thread.connectionLost && !submission?.deliveryConfirmed
+      ? submission?.blocks
+      : undefined);
+  const index = uncertain ? blocks.indexOf(uncertain) : -1;
+  return { blocks, uncertainIndex: index < 0 ? null : index };
+}
+
 /** Exactly one current local send. No message history or global request map. */
 export class PromptRequestOwner {
   readonly token = crypto.randomUUID();
@@ -21,6 +132,8 @@ export class PromptRequestOwner {
   private offered = false;
   private cancelledBeforeOffer = false;
   private cancelRequested = false;
+  private earlyCancel = false;
+  private unconfirmedWaitingStop = false;
   private cancelling: Promise<CancelDispatch> | null = null;
   constructor(
     private thread: ThreadState,
@@ -28,6 +141,8 @@ export class PromptRequestOwner {
     private emit: () => void,
     private onOffer: () => void,
     private onEnd: () => void,
+    private onEarlyStopAcknowledged: () => void,
+    readonly confirmDelivery: () => void,
   ) {
     thread.promptAdmission = { phase: "preparing", cancelling: false };
     this.channel.onmessage = (value) => this.receive(value);
@@ -63,8 +178,18 @@ export class PromptRequestOwner {
     this.offered = true;
     this.thread.promptAdmission = { phase: "offered", cancelling: false };
     this.thread.running = true;
+    if (this.unconfirmedWaitingStop) this.preserveUnconfirmedWaitingStop();
     this.onOffer();
     this.emit();
+  }
+  private preserveUnconfirmedWaitingStop(): void {
+    // A waiting prompt can still be definitively rejected. Only promote the
+    // lost stop reply to a running prompt's unknown stop once it was offered.
+    this.unconfirmedWaitingStop = !this.offered;
+    if (this.offered) {
+      this.thread.stopUnconfirmed = true;
+      pauseQueue(this.thread, "uncertain");
+    }
   }
   ending(receipt: unknown): boolean {
     if (
@@ -88,16 +213,20 @@ export class PromptRequestOwner {
   async cancel(explicit = true): Promise<CancelDispatch> {
     if (this.ended || !this.current()) return "inactive";
     if (this.cancelling) return this.cancelling;
+    if (explicit && !this.offered && this.thread.stopping) return "inactive";
     // A click before the receipt arrives remains an explicit cancellation;
     // it is sent once upon receipt, not turned into a bare session cancel.
     if (!explicit && !this.cancelRequested) return "inactive";
+    if (explicit && !this.offered) this.earlyCancel = true;
     this.cancelRequested = true;
-    pauseQueue(this.thread, "stopped");
+    if (!this.thread.stopUnconfirmed) pauseQueue(this.thread, "stopped");
     if (this.thread.promptAdmission)
       this.thread.promptAdmission.cancelling = true;
     this.emit();
     if (this.receipt === null) return "pendingReceipt";
     const receipt = this.receipt;
+    const early = this.earlyCancel;
+    this.earlyCancel = false;
     this.cancelRequested = false;
     this.cancelling = Promise.resolve().then(
       async (): Promise<CancelDispatch> => {
@@ -118,15 +247,22 @@ export class PromptRequestOwner {
             // tentative display after the matching rejected admission returns.
             if (this.offered) throw new Error("late cancellation");
             this.cancelledBeforeOffer = true;
+            this.unconfirmedWaitingStop = false;
             if (this.thread.promptAdmission)
               this.thread.promptAdmission.notice = S.cancelled;
           } else if (reply.outcome !== "cancelRequested") {
             throw new Error("unconfirmed");
+          } else if (early && !this.endingObserved) {
+            this.unconfirmedWaitingStop = false;
+            this.onEarlyStopAcknowledged();
           }
           return "acknowledged";
         } catch {
-          if (!this.ended && this.current() && this.thread.promptAdmission)
+          if (!this.ended && this.current() && this.thread.promptAdmission) {
             this.thread.promptAdmission.notice = S.unconfirmed;
+            if (early && !this.endingObserved)
+              this.preserveUnconfirmedWaitingStop();
+          }
           return "unconfirmed";
         } finally {
           this.cancelling = null;

@@ -26,6 +26,20 @@ vi.mock("react", async (original) => ({
   },
   useRef: (initial: unknown) =>
     (h.slots[h.cursor++] ??= { value: { current: initial } }).value,
+  // This callback harness flushes effects before exposing the rendered controls.
+  // Real layout/passive timing is covered by the React/WebKit regression.
+  useLayoutEffect: (effect: () => void | (() => void), deps: unknown[]) => {
+    const index = h.cursor++;
+    const prior = h.slots[index];
+    if (!prior || deps.some((value, i) => !Object.is(value, prior.deps?.[i]))) {
+      const slot = { deps, cleanup: prior?.cleanup };
+      h.slots[index] = slot;
+      h.effects.push(() => {
+        slot.cleanup?.();
+        slot.cleanup = effect() || undefined;
+      });
+    }
+  },
   useEffect: (effect: () => void | (() => void), deps: unknown[]) => {
     const index = h.cursor++;
     const prior = h.slots[index];

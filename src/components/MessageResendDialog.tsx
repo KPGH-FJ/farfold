@@ -2,7 +2,6 @@ import { pendingPreparationRead } from "../runtime/agent_preparation";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import type { ThreadState } from "../runtime/session_types";
 import { composerDrafts, useComposerDraft } from "../runtime/drafts";
-import { draftPersistence } from "../runtime/draft_storage";
 import { threads } from "../runtime/sessions";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
@@ -52,14 +51,12 @@ export function MessageResendDialog({
           note={readRequired ? C.readRequired : undefined}
           prepareAction={readRequired ? onGoSettings : undefined}
           sendActionLabel={R.resendSend}
-          onSend={async (blocks) => {
-            if (threads.thread(thread.key) !== thread) return false;
+          onSend={async (blocks, submitted) => {
+            if (thread.connectionLost || threads.thread(thread.key) !== thread)
+              return false;
             if (thread.identity === "draft" && pendingPreparationRead(thread))
               throw new Error(C.readRequired);
-            await threads.send(thread.key, blocks);
-            // The existing queue owns rejected/unknown submissions as well; it is
-            // persisted before the editor closes and never retried here.
-            await draftPersistence.flush().catch(() => undefined);
+            await threads.send(thread.key, blocks, { key, value: submitted });
             onClose();
           }}
         />

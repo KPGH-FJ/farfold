@@ -78,6 +78,7 @@ export interface AgentPreparationContext {
   conversation?: ConversationRepairContext;
   /** Prepare a separate draft choice and return to its unchanged origin. */
   preserveOrigin?: boolean;
+  applyToDraft?: (selection: AgentSetupSelection) => boolean;
 }
 export interface AgentHubSurface {
   selected: string | null;
@@ -177,6 +178,8 @@ export function AgentHub({
   );
   const [detail, setDetail] = useState<string | null>(null);
   const detailReturnFocus = useRef<HTMLElement | null>(null);
+  const preparationReturnFocus = useRef<HTMLElement | null>(null);
+  const preparationFocusEntry = useRef<string | null>(null);
   const [selected, setSelected] = useState<string | null>(
     initialAgentId ?? null,
   );
@@ -245,6 +248,10 @@ export function AgentHub({
     requestRevision,
     preparationContext,
   ]);
+  if (preparationFocusEntry.current !== entryKey) {
+    preparationFocusEntry.current = entryKey;
+    preparationReturnFocus.current = null;
+  }
   const effectiveIntent =
     seenEntry.current === entryKey
       ? intent
@@ -277,29 +284,45 @@ export function AgentHub({
   const preservesOrigin = (agentId: string) =>
     preparationContext?.agentId === agentId &&
     !!preparationContext.preserveOrigin;
+  const draftReviewFor = (agentId: string) =>
+    preparationContext?.agentId === agentId
+      ? preparationContext.applyToDraft
+      : undefined;
   const localProgress = (agentId: string) =>
-    !!conversationFor(agentId) || preservesOrigin(agentId);
+    !!conversationFor(agentId) ||
+    preservesOrigin(agentId) ||
+    !!draftReviewFor(agentId);
   const progressKey = (agentId: string) =>
-    conversationFor(agentId)
+    draftReviewFor(agentId)
       ? JSON.stringify([
           agentId,
           preparationContext!.cwd,
-          "conversation",
-          conversationFor(agentId)!.key,
+          "draft",
+          requestRevision,
         ])
-      : preservesOrigin(agentId)
-        ? preparationProgressKey(agentId, preparationContext)
-        : setupStorage.scope(
+      : conversationFor(agentId)
+        ? JSON.stringify([
             agentId,
-            preparationProgressKey(agentId, preparationContext),
-          );
+            preparationContext!.cwd,
+            "conversation",
+            conversationFor(agentId)!.key,
+          ])
+        : preservesOrigin(agentId)
+          ? preparationProgressKey(agentId, preparationContext)
+          : setupStorage.scope(
+              agentId,
+              preparationProgressKey(agentId, preparationContext),
+            );
   const setupIntent = (agentId: string) =>
-    conversationFor(agentId) || preservesOrigin(agentId)
-      ? "manage"
-      : setupStorage.completed(agentId) &&
-          (entrySelection(agentId) || setupStorage.confirmedSelection(agentId))
-        ? effectiveIntent
-        : "use";
+    draftReviewFor(agentId)
+      ? "use"
+      : conversationFor(agentId) || preservesOrigin(agentId)
+        ? "manage"
+        : setupStorage.completed(agentId) &&
+            (entrySelection(agentId) ||
+              setupStorage.confirmedSelection(agentId))
+          ? effectiveIntent
+          : "use";
   const entrySelection = (agentId: string) =>
     !preparationContext?.conversation && preparationContext?.agentId === agentId
       ? preparationContext.selection
@@ -374,8 +397,13 @@ export function AgentHub({
     else setupStorage.remember(card.id, scope, progress);
   }, [active, setup.ready, entryKey, agents.cards]);
   liveEntry.current = { active, entry: entryKey };
-  const prepare = (agentId: string, nextIntent: "use" | "manage" = "use") => {
+  const prepare = (
+    agentId: string,
+    nextIntent: "use" | "manage" = "use",
+    opener?: HTMLElement | null,
+  ) => {
     if (!isCurrentCandidate(agentId)) return;
+    preparationReturnFocus.current = opener ?? null;
     navigationRevision.current++;
     setDetail(null);
     setIntent(nextIntent);
@@ -384,9 +412,18 @@ export function AgentHub({
   const closePreparation = (agentId: string) => {
     navigationRevision.current++;
     setSelected(null);
-    if (initialAgentId === agentId && initialIntent === "manage") onReturn();
+    if (
+      initialAgentId === agentId &&
+      (initialIntent === "manage" || draftReviewFor(agentId))
+    )
+      onReturn();
   };
-  const viewProgress = (card: AgentCardModel, step: number) => {
+  const viewProgress = (
+    card: AgentCardModel,
+    step: number,
+    opener?: HTMLElement | null,
+  ) => {
+    preparationReturnFocus.current = opener ?? null;
     navigationRevision.current++;
     const scope = progressKey(card.id);
     const progress = { ...progressFor(card), step };
@@ -415,16 +452,19 @@ export function AgentHub({
     !authenticationRequired(authentication, card.id, null) &&
     !agents.busy[card.id] &&
     !accountInProgress(card);
-  const startOrPrepare = (card: AgentCardModel) => {
+  const startOrPrepare = (
+    card: AgentCardModel,
+    opener?: HTMLElement | null,
+  ) => {
     if (!isCurrentCandidate(card.id)) return;
-    if (accountInProgress(card)) viewProgress(card, 1);
+    if (accountInProgress(card)) viewProgress(card, 1, opener);
     else if (canStart(card)) {
       allowAutomaticConnection(card.id);
       setDetail(null);
       setSelected(null);
       onStart(card.id, newSelection(card.id), "new-conversation");
-    } else if (readRequired(card)) viewProgress(card, 2);
-    else prepare(card.id);
+    } else if (readRequired(card)) viewProgress(card, 2, opener);
+    else prepare(card.id, "use", opener);
   };
   useEffect(() => {
     for (const card of agents.cards) {
@@ -683,10 +723,10 @@ export function AgentHub({
                     <button
                       className={`btn agent-hub-start ${canStart(card) && view !== "added" ? "btn-primary" : "btn-ghost"}`}
                       disabled={!setup.ready}
-                      onClick={() =>
+                      onClick={(event) =>
                         programStatus(card)
-                          ? viewProgress(card, 0)
-                          : startOrPrepare(card)
+                          ? viewProgress(card, 0, event.currentTarget)
+                          : startOrPrepare(card, event.currentTarget)
                       }
                     >
                       {programStatus(card)
@@ -706,7 +746,9 @@ export function AgentHub({
                       className={`btn agent-hub-detail-button ${view === "added" ? "btn-primary" : "btn-ghost"}`}
                       aria-label={`${U.manage} · ${card.name}`}
                       disabled={!setup.ready}
-                      onClick={() => prepare(card.id, "manage")}
+                      onClick={(event) =>
+                        prepare(card.id, "manage", event.currentTarget)
+                      }
                     >
                       <SlidersHorizontal size={16} />
                       {U.manage}
@@ -762,7 +804,9 @@ export function AgentHub({
           active={active}
           source={agentSourceLabel(detailCard)}
           onClose={() => setDetail(null)}
-          onPrepare={() => startOrPrepare(detailCard)}
+          onPrepare={() =>
+            startOrPrepare(detailCard, detailReturnFocus.current)
+          }
           canStart={canStart(detailCard)}
           status={statusFor(detailCard)}
           returnFocusRef={detailReturnFocus}
@@ -786,12 +830,15 @@ export function AgentHub({
           card={selectedCard}
           agents={agents}
           active={active}
+          returnFocusRef={preparationReturnFocus}
           progress={progressFor(selectedCard)}
           conversation={conversationFor(selectedCard.id)}
+          draftReview={!!draftReviewFor(selectedCard.id)}
           sourceContext={
             conversationFor(selectedCard.id)?.sourceContext ??
-            (progressKey(selectedCard.id) ===
-              preparationProgressKey(selectedCard.id, preparationContext) &&
+            ((draftReviewFor(selectedCard.id) ||
+              progressKey(selectedCard.id) ===
+                preparationProgressKey(selectedCard.id, preparationContext)) &&
             JSON.stringify(
               progressFor(selectedCard).selection?.service ?? null,
             ) ===
@@ -810,6 +857,20 @@ export function AgentHub({
           }}
           onClose={() => closePreparation(selectedCard.id)}
           onStart={async (agentId, selection) => {
+            const applyToDraft = draftReviewFor(agentId);
+            if (applyToDraft) {
+              if (
+                !selection ||
+                !isCurrentCandidate(agentId) ||
+                selectedCard.status !== "connected" ||
+                !liveEntry.current.active ||
+                liveEntry.current.entry !== entryKey
+              )
+                return;
+              if (!applyToDraft(selection)) throw new Error(C.draftChanged);
+              setSelected(null);
+              return;
+            }
             if (conversationFor(agentId) || setupIntent(agentId) === "manage") {
               closePreparation(agentId);
               return;

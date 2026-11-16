@@ -224,9 +224,11 @@ pub(super) async fn submit(
             if !super::may_submit_locked(&app, &ticket, kind, revision, &attempt, Stage::Native) {
                 return Ok(false);
             }
-            if super::resolve_target(app.state::<crate::meta_store::MetaStore>().inner(), &target)
-                .is_none()
-            {
+            if !super::target_current(
+                app.state::<crate::meta_store::MetaStore>().inner(),
+                &target,
+                kind,
+            ) {
                 super::diagnostic_stop(&app, &attempt, Stage::Native, Reason::TargetUnconfirmed);
                 return Ok(false);
             }

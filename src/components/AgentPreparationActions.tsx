@@ -98,6 +98,8 @@ export function AgentPreparationActions({
     hideChoices,
   ]);
   const blocked = disabled || !!source || !targetCwd || !!currentError;
+  const reviewCopy =
+    review?.action.purpose === "account_login" ? S.accountLogin : S;
   const runReviewed = () => {
     if (
       blocked ||
@@ -118,7 +120,7 @@ export function AgentPreparationActions({
     review
       ? {
           id: JSON.stringify([agentId, review.cwd, program, review.action]),
-          label: S.run,
+          label: reviewCopy.run,
           disabled: blocked,
           run: runReviewed,
         }
@@ -144,8 +146,16 @@ export function AgentPreparationActions({
         currentActions.map((action) => (
           <div className="agent-account-action" key={action.id}>
             <div>
-              <div className="auth-name">{S.title}</div>
-              <div className="auth-desc">{S.hint}</div>
+              <div className="auth-name">
+                {action.purpose === "account_login"
+                  ? S.accountLogin.title
+                  : S.title}
+              </div>
+              <div className="auth-desc">
+                {action.purpose === "account_login"
+                  ? S.accountLogin.hint
+                  : S.hint}
+              </div>
             </div>
             <button
               className="btn btn-ghost"
@@ -174,8 +184,8 @@ export function AgentPreparationActions({
         </p>
       )}
       {review && (
-        <section className="agent-account-more" aria-label={S.title}>
-          <p>{S.effects}</p>
+        <section className="agent-account-more" aria-label={reviewCopy.title}>
+          <p>{reviewCopy.effects}</p>
           <details className="journey-details">
             <summary>{S.details}</summary>
             <p className="auth-note">{S.environment}</p>
@@ -204,7 +214,7 @@ export function AgentPreparationActions({
                 disabled={blocked}
                 onClick={runReviewed}
               >
-                {S.run}
+                {reviewCopy.run}
               </button>
             )}
             {!hideChoices && (

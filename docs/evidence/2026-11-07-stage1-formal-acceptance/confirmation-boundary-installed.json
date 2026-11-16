@@ -1,0 +1,38 @@
+{
+  "sourceCodeCommit": "ed50985a14e952ff3e08417ad2ad638d626aedbf",
+  "engineering": {
+    "frontendFull": {
+      "files": 724,
+      "testsPassed": 9828
+    },
+    "rustFull": {
+      "passed": 2428,
+      "failed": 0,
+      "ignored": 7
+    },
+    "formatTypecheckBuildClippy": "passed",
+    "scope": "Fixed confirmation classification, original guards preserved; no causal fix claimed."
+  },
+  "formalInstall": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "codeSignature": "adhoc",
+    "closedDataEntriesUnchanged": 206275,
+    "privateBackupIntegrity": "ok",
+    "normalQuit": true
+  },
+  "singleGoosePreparation": {
+    "agent": "goose",
+    "nativeSessionId": "20261107_3",
+    "nativeMessageCount": 0,
+    "zeroPromptSubmitted": true,
+    "uiShowsOriginalNemotronUltraFree": true,
+    "uiThinking": "off",
+    "noConfirmationFailureObserved": true,
+    "syntheticDraftEditable": true,
+    "sendButtonEnabledAfterDraftEntry": true,
+    "failureReproduction": false,
+    "inferenceBoundary": "One attempt succeeded; no causal fix is claimed and the earlier two failures remain unexplained."
+  },
+  "remaining": "Prior intermittent failures remain unexplained; current account storage fault validation follows authorized Farfold-only data cleanup."
+}

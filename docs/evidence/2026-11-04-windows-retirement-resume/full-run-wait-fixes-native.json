@@ -1,0 +1,877 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-11-04T22:35:08.305103+08:00",
+  "runId": 41843965055,
+  "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41843965055",
+  "sourceHead": "0bfc79a46801be0d077fd9d8f282a0fe95d1427d",
+  "cohort": "FrozenRetirementResume",
+  "scope": "FullRunFailures",
+  "conclusion": "success",
+  "actualDifferentTestCases": 5,
+  "actualGroups": 3,
+  "actualCases": [
+    {
+      "fqn": "acp_client::history_search::tests::real_cancel_keeps_worker_scope_and_budget_until_owned_process_exit",
+      "result": "ok",
+      "group": "history-cancel-pid-publication",
+      "reportedSingleCaseSeconds": 0.46,
+      "singleCaseSummaryOrigin": "direct existing test",
+      "groupNaturalExitCode": 0
+    },
+    {
+      "fqn": "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+      "result": "ok",
+      "group": "recovery-running-waits",
+      "reportedSingleCaseSeconds": 184.3,
+      "singleCaseSummaryOrigin": "captured isolated exact child; outer parent separately checked",
+      "groupNaturalExitCode": 0
+    },
+    {
+      "fqn": "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+      "result": "ok",
+      "group": "recovery-running-waits",
+      "reportedSingleCaseSeconds": 191.22,
+      "singleCaseSummaryOrigin": "captured isolated exact child; outer parent separately checked",
+      "groupNaturalExitCode": 0
+    },
+    {
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+      "result": "ok",
+      "group": "recovery-parent-budgets",
+      "reportedSingleCaseSeconds": 234.35,
+      "singleCaseSummaryOrigin": "captured isolated exact child; outer parent separately checked",
+      "groupNaturalExitCode": 0
+    },
+    {
+      "fqn": "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+      "result": "ok",
+      "group": "recovery-parent-budgets",
+      "reportedSingleCaseSeconds": 326.45,
+      "singleCaseSummaryOrigin": "captured isolated exact child; outer parent separately checked",
+      "groupNaturalExitCode": 0
+    }
+  ],
+  "groups": [
+    {
+      "name": "history-cancel-pid-publication",
+      "naturalExitCode": 0,
+      "argv": [
+        "acp_client::history_search::tests::real_cancel_keeps_worker_scope_and_budget_until_owned_process_exit",
+        "--show-output",
+        "--test-threads=1",
+        "--color=never",
+        "--exact"
+      ],
+      "actualParentSummary": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2465 filtered out; finished in 0.46s",
+      "startedAtUtc": "2026-11-04T14:20:38.5175547Z",
+      "finishedAtUtc": "2026-11-04T14:20:39.0497929Z"
+    },
+    {
+      "name": "recovery-running-waits",
+      "naturalExitCode": 0,
+      "argv": [
+        "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+        "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+        "--show-output",
+        "--test-threads=2",
+        "--color=never"
+      ],
+      "actualParentSummary": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2464 filtered out; finished in 191.25s",
+      "startedAtUtc": "2026-11-04T14:20:39.3961598Z",
+      "finishedAtUtc": "2026-11-04T14:23:50.6647135Z"
+    },
+    {
+      "name": "recovery-parent-budgets",
+      "naturalExitCode": 0,
+      "argv": [
+        "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+        "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+        "--show-output",
+        "--test-threads=2",
+        "--color=never"
+      ],
+      "actualParentSummary": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2464 filtered out; finished in 326.48s",
+      "startedAtUtc": "2026-11-04T14:23:51.2135967Z",
+      "finishedAtUtc": "2026-11-04T14:29:17.7184826Z"
+    }
+  ],
+  "sourceBinding": {
+    "mappedFiles": 849,
+    "beforeAfterEqual": true,
+    "gitSourceMatchForms": {
+      "CRLFCheckout": 846,
+      "exactGitBlob": 3
+    },
+    "fixedGitSourceHead": "0bfc79a46801be0d077fd9d8f282a0fe95d1427d",
+    "inputsBeforeSha256": "70EBA581E1924238D884EC8B439B6BB4151730422D2CB50F4ABED2DCCB087C26",
+    "inputsAfterSha256": "70EBA581E1924238D884EC8B439B6BB4151730422D2CB50F4ABED2DCCB087C26",
+    "selectedBuildNaturalExitCode": 0,
+    "testBuildNaturalExitCode": 0,
+    "fixtureBuildNaturalExitCode": 0,
+    "singleLibtestBinarySha256": "D44FA4243EB864696971CA2D92385B9F0C126A2582E0A3B0A955CD657802544F",
+    "singleFixtureSha256": "D9D270226FE8BA2C86F77AC4888763EDDE5FB56A9211B504B10F7BA4395B65DB",
+    "allGroupsUseSameBinaryFixtureAndSelection": true,
+    "all4NativePowerShellParseFileChecksPassed": true
+  },
+  "parentChildEvidence": {
+    "worktreeParentCommandsOmitExact": true,
+    "actualBodyCompletedMarkers": [
+      {
+        "fqn": "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+        "completedMarkerCount": 1,
+        "artifactLog": "recovery-running-waits.stdout.log",
+        "line": 1775,
+        "parentInvocationHasExact": false,
+        "parentThreads": 2,
+        "parentNaturalExitCode": 0
+      },
+      {
+        "fqn": "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+        "completedMarkerCount": 1,
+        "artifactLog": "recovery-running-waits.stdout.log",
+        "line": 860,
+        "parentInvocationHasExact": false,
+        "parentThreads": 2,
+        "parentNaturalExitCode": 0
+      },
+      {
+        "fqn": "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+        "completedMarkerCount": 1,
+        "artifactLog": "recovery-parent-budgets.stdout.log",
+        "line": 2872,
+        "parentInvocationHasExact": false,
+        "parentThreads": 2,
+        "parentNaturalExitCode": 0
+      },
+      {
+        "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+        "completedMarkerCount": 1,
+        "artifactLog": "recovery-parent-budgets.stdout.log",
+        "line": 1219,
+        "parentInvocationHasExact": false,
+        "parentThreads": 2,
+        "parentNaturalExitCode": 0
+      }
+    ],
+    "meaning": "Source-bound parent wrappers naturally passed their actual child status.success() and completed:FQN assertions. Captured child terminal lines are separate observations, not additional selected tests."
+  },
+  "tamperBothVariants": {
+    "sourceFile": "src-tauri/src/worktrees/remove_recheck_tests.rs",
+    "sourceMapSha256": "eef082ab4c1d6527e8e687b9c227c88ce551234ec90ebc872cd27aa5e04802d5",
+    "orderedVariants": ["recovery.bundle", "manifest.json"],
+    "fixturePhases": [
+      {
+        "line": 1230,
+        "elapsedMs": 0,
+        "phase": "create.enter"
+      },
+      {
+        "line": 1445,
+        "elapsedMs": 48277,
+        "phase": "archive.enter"
+      },
+      {
+        "line": 1509,
+        "elapsedMs": 65370,
+        "phase": "prepare-remove.enter"
+      },
+      {
+        "line": 1861,
+        "elapsedMs": 149415,
+        "phase": "confirm-remove.enter"
+      },
+      {
+        "line": 1862,
+        "elapsedMs": 149418,
+        "phase": "wait-remove.enter"
+      },
+      {
+        "line": 2049,
+        "elapsedMs": 186033,
+        "phase": "delete.complete"
+      },
+      {
+        "line": 2050,
+        "elapsedMs": 0,
+        "phase": "create.enter"
+      },
+      {
+        "line": 2268,
+        "elapsedMs": 43698,
+        "phase": "archive.enter"
+      },
+      {
+        "line": 2331,
+        "elapsedMs": 56511,
+        "phase": "prepare-remove.enter"
+      },
+      {
+        "line": 2683,
+        "elapsedMs": 114313,
+        "phase": "confirm-remove.enter"
+      },
+      {
+        "line": 2684,
+        "elapsedMs": 114315,
+        "phase": "wait-remove.enter"
+      },
+      {
+        "line": 2871,
+        "elapsedMs": 139497,
+        "phase": "delete.complete"
+      }
+    ],
+    "sourceAndExecutionConclusion": "Source-bound two-element loop; both create/delete fixture cycles and the body completed marker are present, and the outer parent naturally passed its actual child-status/body-completion assertions."
+  },
+  "independentVerification": {
+    "allChecksPassed": true,
+    "checkCount": 47,
+    "checks": [
+      {
+        "name": "fixed run head and natural service success",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "watch natural exit0",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "download matches service artifact digest",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "complete expected source map set",
+        "passed": true,
+        "detail": {
+          "before": 849,
+          "after": 849,
+          "expected": 849
+        }
+      },
+      {
+        "name": "all mapped source bytes stable",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "all849 source map entries match fixed Git blobs or CRLF checkout",
+        "passed": true,
+        "detail": {
+          "forms": {
+            "CRLFCheckout": 846,
+            "exactGitBlob": 3
+          },
+          "mismatches": []
+        }
+      },
+      {
+        "name": "build and selection source binding",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "actual input map hashes match selection",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "selected native build natural exits",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "build original hash test-build.stdout.jsonl",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "build original hash test-build.stderr.log",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "build original hash fixture-build.stdout.log",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "build original hash fixture-build.stderr.log",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "build original hash inputs-before.json",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "build original hash inputs-after.json",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "build original hash identity.json",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "build original hash build-selection.json",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "native ParseFile .github/scripts/windows-selected-build.ps1",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "native ParseFile .github/scripts/windows-stdio-eof.ps1",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "native ParseFile .github/scripts/windows-stdout-controls.ps1",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "native ParseFile .github/scripts/windows-launch-prerequisites.ps1",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "single actual libtest executable selected",
+        "passed": true,
+        "detail": [
+          "D:\\a\\farfold\\farfold\\src-tauri\\target\\debug\\deps\\farfold_lib-ec387578f4a9b290.exe"
+        ]
+      },
+      {
+        "name": "history-cancel-pid-publication exact actual outer cases",
+        "passed": true,
+        "detail": [
+          {
+            "name": "acp_client::history_search::tests::real_cancel_keeps_worker_scope_and_budget_until_owned_process_exit",
+            "result": "ok"
+          }
+        ]
+      },
+      {
+        "name": "history-cancel-pid-publication raw stdout/stderr hashes",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "history-cancel-pid-publication source binary fixture selection binding",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "history-cancel-pid-publication natural process exit and native strict receipt",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "history-cancel-pid-publication exactness and thread arguments",
+        "passed": true,
+        "detail": [
+          "acp_client::history_search::tests::real_cancel_keeps_worker_scope_and_budget_until_owned_process_exit",
+          "--show-output",
+          "--test-threads=1",
+          "--color=never",
+          "--exact"
+        ]
+      },
+      {
+        "name": "history-cancel-pid-publication actual final parent summary",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "history-cancel-pid-publication actual child body completion markers",
+        "passed": true,
+        "detail": {}
+      },
+      {
+        "name": "recovery-running-waits exact actual outer cases",
+        "passed": true,
+        "detail": [
+          {
+            "name": "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+            "result": "ok"
+          }
+        ]
+      },
+      {
+        "name": "recovery-running-waits raw stdout/stderr hashes",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "recovery-running-waits source binary fixture selection binding",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "recovery-running-waits natural process exit and native strict receipt",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "recovery-running-waits exactness and thread arguments",
+        "passed": true,
+        "detail": [
+          "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+          "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+          "--show-output",
+          "--test-threads=2",
+          "--color=never"
+        ]
+      },
+      {
+        "name": "recovery-running-waits actual final parent summary",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "recovery-running-waits actual child body completion markers",
+        "passed": true,
+        "detail": {
+          "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts": 1,
+          "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline": 1
+        }
+      },
+      {
+        "name": "recovery-parent-budgets exact actual outer cases",
+        "passed": true,
+        "detail": [
+          {
+            "name": "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+            "result": "ok"
+          }
+        ]
+      },
+      {
+        "name": "recovery-parent-budgets raw stdout/stderr hashes",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "recovery-parent-budgets source binary fixture selection binding",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "recovery-parent-budgets natural process exit and native strict receipt",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "recovery-parent-budgets exactness and thread arguments",
+        "passed": true,
+        "detail": [
+          "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+          "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+          "--show-output",
+          "--test-threads=2",
+          "--color=never"
+        ]
+      },
+      {
+        "name": "recovery-parent-budgets actual final parent summary",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "recovery-parent-budgets actual child body completion markers",
+        "passed": true,
+        "detail": {
+          "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest": 1,
+          "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material": 1
+        }
+      },
+      {
+        "name": "both tamper fixture branches entered and deleted",
+        "passed": true,
+        "detail": [
+          {
+            "line": 1230,
+            "elapsedMs": 0,
+            "phase": "create.enter"
+          },
+          {
+            "line": 1445,
+            "elapsedMs": 48277,
+            "phase": "archive.enter"
+          },
+          {
+            "line": 1509,
+            "elapsedMs": 65370,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "line": 1861,
+            "elapsedMs": 149415,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "line": 1862,
+            "elapsedMs": 149418,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "line": 2049,
+            "elapsedMs": 186033,
+            "phase": "delete.complete"
+          },
+          {
+            "line": 2050,
+            "elapsedMs": 0,
+            "phase": "create.enter"
+          },
+          {
+            "line": 2268,
+            "elapsedMs": 43698,
+            "phase": "archive.enter"
+          },
+          {
+            "line": 2331,
+            "elapsedMs": 56511,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "line": 2683,
+            "elapsedMs": 114313,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "line": 2684,
+            "elapsedMs": 114315,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "line": 2871,
+            "elapsedMs": 139497,
+            "phase": "delete.complete"
+          }
+        ]
+      },
+      {
+        "name": "five different actual cases",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "all four actual child-body completion markers",
+        "passed": true,
+        "detail": null
+      },
+      {
+        "name": "phase aggregate exactly3groups5tests and actual returns",
+        "passed": true,
+        "detail": null
+      }
+    ],
+    "verificationOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/native-verification.json",
+    "verificationSha256": "3372dc2929c1237dcf67104249cd7cef86d7f86408acb6b6448d5dac8fdb8a3e"
+  },
+  "naturalExits": {
+    "ghRunWatch": 0,
+    "watchWrapper": 0,
+    "build": 0,
+    "eachNativeGroup": [0, 0, 0],
+    "allGroupsReturned": true,
+    "strictPhaseAggregatePassed": true
+  },
+  "providerArtifact": {
+    "id": 13330609947,
+    "name": "farfold-windows-launch-prerequisites-41843965055-1",
+    "bytes": 140486,
+    "declaredDigest": "sha256:d4f266a05a440a4691134555172e792a9ec771e622b017d69302cb91006a63b2",
+    "downloadedZipSha256": "d4f266a05a440a4691134555172e792a9ec771e622b017d69302cb91006a63b2",
+    "declaredDigestMatchesDownload": true
+  },
+  "runBudget": {
+    "jobSeconds": 1484,
+    "steps": [
+      {
+        "name": "Build and bind the selected library test binary",
+        "conclusion": "success",
+        "startedAtUtc": "2026-11-04T14:05:26Z",
+        "finishedAtUtc": "2026-11-04T14:20:36Z",
+        "seconds": 910
+      },
+      {
+        "name": "Five failures from the cancelled full run",
+        "conclusion": "success",
+        "startedAtUtc": "2026-11-04T14:20:37Z",
+        "finishedAtUtc": "2026-11-04T14:29:18Z",
+        "seconds": 521
+      },
+      {
+        "name": "Require all resumed phases to have executed exactly and passed",
+        "conclusion": "success",
+        "startedAtUtc": "2026-11-04T14:29:18Z",
+        "finishedAtUtc": "2026-11-04T14:29:18Z",
+        "seconds": 0
+      }
+    ],
+    "interpretation": "Measured runtime of this selected build and5-case execution only. No full-suite runtime or performance improvement is inferred."
+  },
+  "boundaries": [
+    "Only5 existing controlled Windows tests on fixed0bfc are verified. This is not a complete Rust run, a replacement for the old17-failure full baseline, or a repeat of45 selected cases.",
+    "The4 worktree cases exercised their real parent wrappers with2 test threads and unchanged assertions; only test-layer wait/parent budgets changed. Production deadlines and unknown-exit proof rules remain.",
+    "No installed Windows UI/installer, real Agent/account/model, user-data journey, or29-by-8 acceptance is established.",
+    "Later ARCH20 changes and later documentation commits are outside this fixed run. No full workflow was dispatched by this work."
+  ],
+  "originalsArchive": {
+    "suggestedDocsPath": "docs/evidence/2026-11-04-windows-retirement-resume/full-run-wait-fixes-native-originals.zip",
+    "privatePath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/publication-candidate/full-run-wait-fixes-native-originals.zip",
+    "bytes": 496637,
+    "sha256": "55ad814696ee6dea3fd39f351ddadf274c789c627d74f666188e762a0544609d",
+    "entries": 38,
+    "verifiedByteExactForEveryEntry": true,
+    "contents": "Original provider ZIPs and extracted native receipts/logs, source hash expectations, completed metadata/watch receipts and independent verification. No target tree, executable, app bundle, user data or other run is packed."
+  },
+  "originals": {
+    "dispatch.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/dispatch.json",
+      "archiveEntry": "run-41843965055/dispatch.json",
+      "bytes": 536,
+      "sha256": "cf41438c4559d6ba9f2eab67562f3d5e7b8c7c147ecc9fc79b28cedfa77523de"
+    },
+    "watch-command.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/watch-command.json",
+      "archiveEntry": "run-41843965055/watch-command.json",
+      "bytes": 264,
+      "sha256": "0261c274bc50f579e6f17b8e92008b1b860aa5eca038767bcedad0e7668589fe"
+    },
+    "watch-result.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/watch-result.json",
+      "archiveEntry": "run-41843965055/watch-result.json",
+      "bytes": 399,
+      "sha256": "a3505099acced45af412791bc6f7b5ddb13c907bd8eca4dc5196a302c0dfbc6a"
+    },
+    "watch.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/watch.log",
+      "archiveEntry": "run-41843965055/watch.log",
+      "bytes": 68108,
+      "sha256": "da0a04f7d563f4425e2f28296ccbaa882becb5df92b301e6c758f1a34040373c"
+    },
+    "watch.stderr.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/watch.stderr.log",
+      "archiveEntry": "run-41843965055/watch.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/run.json",
+      "archiveEntry": "run-41843965055/run.json",
+      "bytes": 4735,
+      "sha256": "c744f1da1ae90bf4410df59870221931c85d3882dc334f7e31dce2f5153ef260"
+    },
+    "run.json.download-result.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/run.json.download-result.json",
+      "archiveEntry": "run-41843965055/run.json.download-result.json",
+      "bytes": 512,
+      "sha256": "68198e88a588575905f005a9c7b1959440d1a36b3d420b629fd04de3ffb4393c"
+    },
+    "run.json.stderr.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/run.json.stderr.log",
+      "archiveEntry": "run-41843965055/run.json.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifacts.json",
+      "archiveEntry": "run-41843965055/artifacts.json",
+      "bytes": 771,
+      "sha256": "cc4a7b45d61b15ac5f6f5ff158277b6b4636f30a15498597bfeab4ae4d9becf8"
+    },
+    "artifacts.json.download-result.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifacts.json.download-result.json",
+      "archiveEntry": "run-41843965055/artifacts.json.download-result.json",
+      "bytes": 494,
+      "sha256": "5dc47f8410ca6fba9ce27a77d24385fb2e6794bd19ab4869553f16d9f4b1ada1"
+    },
+    "artifacts.json.stderr.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifacts.json.stderr.log",
+      "archiveEntry": "run-41843965055/artifacts.json.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact.zip": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact.zip",
+      "archiveEntry": "run-41843965055/artifact.zip",
+      "bytes": 140486,
+      "sha256": "d4f266a05a440a4691134555172e792a9ec771e622b017d69302cb91006a63b2"
+    },
+    "artifact-download.result.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact-download.result.json",
+      "archiveEntry": "run-41843965055/artifact-download.result.json",
+      "bytes": 566,
+      "sha256": "028ca1a9a2adafe9b6bea67f7beb7d90af69aa5befed27ef3877f7b78e963403"
+    },
+    "artifact.zip.stderr.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact.zip.stderr.log",
+      "archiveEntry": "run-41843965055/artifact.zip.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "complete-run-logs.zip": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/complete-run-logs.zip",
+      "archiveEntry": "run-41843965055/complete-run-logs.zip",
+      "bytes": 127144,
+      "sha256": "8df7f627d7fcdc6cb09abf91f0c20cbce0cbf8347572f61528aa0bf0df5e1a77"
+    },
+    "complete-run-logs.zip.download-result.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/complete-run-logs.zip.download-result.json",
+      "archiveEntry": "run-41843965055/complete-run-logs.zip.download-result.json",
+      "bytes": 499,
+      "sha256": "2f0d3344788945e07458125f095a20f2afc7962cf2a3423762719cbee89e059e"
+    },
+    "complete-run-logs.zip.stderr.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/complete-run-logs.zip.stderr.log",
+      "archiveEntry": "run-41843965055/complete-run-logs.zip.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "expected-source-binding.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/expected-source-binding.json",
+      "archiveEntry": "run-41843965055/expected-source-binding.json",
+      "bytes": 225760,
+      "sha256": "cbfb7ecffc92a9e9d5ab2604f3866c84857f8a003948b6264efd5d4f94a78ca6"
+    },
+    "native-verification.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/native-verification.json",
+      "archiveEntry": "run-41843965055/native-verification.json",
+      "bytes": 19761,
+      "sha256": "3372dc2929c1237dcf67104249cd7cef86d7f86408acb6b6448d5dac8fdb8a3e"
+    },
+    "artifact/build-selection.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/build-selection.json",
+      "archiveEntry": "run-41843965055/artifact/build-selection.json",
+      "bytes": 1082,
+      "sha256": "4577068a23784d097626abeba9be2c419798e290f07ea833e8ae47ab275b429b"
+    },
+    "artifact/fixture-build.stderr.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/fixture-build.stderr.log",
+      "archiveEntry": "run-41843965055/artifact/fixture-build.stderr.log",
+      "bytes": 136,
+      "sha256": "3985d567a834d0ff02cbf5bae0ecf0625803dda1399b5bbe5be34e592fef9a23"
+    },
+    "artifact/fixture-build.stdout.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/fixture-build.stdout.log",
+      "archiveEntry": "run-41843965055/artifact/fixture-build.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/history-cancel-pid-publication.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/history-cancel-pid-publication.json",
+      "archiveEntry": "run-41843965055/artifact/history-cancel-pid-publication.json",
+      "bytes": 1398,
+      "sha256": "1217ae3cb678308d03f073d4f617d7ee8fc2dfe3e35f79cf74869703acec7e98"
+    },
+    "artifact/history-cancel-pid-publication.stderr.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/history-cancel-pid-publication.stderr.log",
+      "archiveEntry": "run-41843965055/artifact/history-cancel-pid-publication.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/history-cancel-pid-publication.stdout.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/history-cancel-pid-publication.stdout.log",
+      "archiveEntry": "run-41843965055/artifact/history-cancel-pid-publication.stdout.log",
+      "bytes": 802,
+      "sha256": "45f186197a4d5f15a81b84d10899e67176cbc736a751ba3632acb933cc62a6bb"
+    },
+    "artifact/identity.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/identity.json",
+      "archiveEntry": "run-41843965055/artifact/identity.json",
+      "bytes": 354,
+      "sha256": "107caa682ad9be049360e7fac30ef1d69ef571fa04d80282fd294a987cfd6d31"
+    },
+    "artifact/inputs-after.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/inputs-after.json",
+      "archiveEntry": "run-41843965055/artifact/inputs-after.json",
+      "bytes": 104073,
+      "sha256": "70eba581e1924238d884ec8b439b6bb4151730422d2cb50f4abed2dccb087c26"
+    },
+    "artifact/inputs-before.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/inputs-before.json",
+      "archiveEntry": "run-41843965055/artifact/inputs-before.json",
+      "bytes": 104073,
+      "sha256": "70eba581e1924238d884ec8b439b6bb4151730422d2cb50f4abed2dccb087c26"
+    },
+    "artifact/recovery-parent-budgets.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/recovery-parent-budgets.json",
+      "archiveEntry": "run-41843965055/artifact/recovery-parent-budgets.json",
+      "bytes": 1824,
+      "sha256": "a08235ac2c1835dc1b9651538ddec04410df66da4a72de7137cdd3682622636c"
+    },
+    "artifact/recovery-parent-budgets.stderr.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/recovery-parent-budgets.stderr.log",
+      "archiveEntry": "run-41843965055/artifact/recovery-parent-budgets.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/recovery-parent-budgets.stdout.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/recovery-parent-budgets.stdout.log",
+      "archiveEntry": "run-41843965055/artifact/recovery-parent-budgets.stdout.log",
+      "bytes": 322897,
+      "sha256": "9ce3444f4ad6908ec37b5bd620f7fbce47007ded439e718247c58a1c91fadfe4"
+    },
+    "artifact/recovery-running-waits.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/recovery-running-waits.json",
+      "archiveEntry": "run-41843965055/artifact/recovery-running-waits.json",
+      "bytes": 1728,
+      "sha256": "5715a8aac7d2a63728a95e5478858f468e537eb1c86caf87fa459c49eb2d6c1f"
+    },
+    "artifact/recovery-running-waits.stderr.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/recovery-running-waits.stderr.log",
+      "archiveEntry": "run-41843965055/artifact/recovery-running-waits.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/recovery-running-waits.stdout.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/recovery-running-waits.stdout.log",
+      "archiveEntry": "run-41843965055/artifact/recovery-running-waits.stdout.log",
+      "bytes": 201731,
+      "sha256": "608cf6412f4f689e158aa6823d5f89822ad3ca6d44a37816de2b4520ea6b05b5"
+    },
+    "artifact/resume-FullRunFailures.result.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/resume-FullRunFailures.result.json",
+      "archiveEntry": "run-41843965055/artifact/resume-FullRunFailures.result.json",
+      "bytes": 946,
+      "sha256": "f009b5a78d942498074b506c54fab88518a7f53f337d80fa552ab469b1b5da49"
+    },
+    "artifact/selected-build.result.json": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/selected-build.result.json",
+      "archiveEntry": "run-41843965055/artifact/selected-build.result.json",
+      "bytes": 2139,
+      "sha256": "45f038ef9861a95a47414de2dcaa4751e77f6e1589c44d26e794a3b87dc48347"
+    },
+    "artifact/test-build.stderr.log": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/test-build.stderr.log",
+      "archiveEntry": "run-41843965055/artifact/test-build.stderr.log",
+      "bytes": 23757,
+      "sha256": "d370d218cb7d695946dfdaba1768976c88d0ffc807ed70b95410fa9ea2825d23"
+    },
+    "artifact/test-build.stdout.jsonl": {
+      "privateOriginalPath": "output/2026-11-04-windows-retirement-resume/full-run-wait-fixes/run-41843965055/artifact/test-build.stdout.jsonl",
+      "archiveEntry": "run-41843965055/artifact/test-build.stdout.jsonl",
+      "bytes": 424527,
+      "sha256": "cff6cddfa0854d640bc2f2d10c32a6254c456f4fa21ba982c8da00f44819a3b8"
+    }
+  }
+}

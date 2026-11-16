@@ -1,0 +1,32 @@
+{
+  "kind": "InstalledSameNameImagesKeepExactAttachmentIdentity",
+  "date": "2026-11-07",
+  "platform": "macOS arm64",
+  "installedSource": "6ce829c538da454414bd1158ef0c8bbb521b2a20",
+  "installedBinarySha256": "40758ffc653c3de0e7554730bbbc604590267bc4fd95b988edaaab0014f2da73",
+  "scope": "Four owned synthetic PNG files in one already completed Copilot test conversation, selected through the native macOS file chooser.",
+  "fixtures": {
+    "pngBytesEach": 73,
+    "sameNameDifferentDirectorySha256": [
+      "45e1e18473ff27f679a4688f02f1141d6fba929d1348b08f00907468fa5a11f1",
+      "32f5711ed9cb54af634e4b400a170410f5aa91e659ce56e1c3e94e593ca93ac8"
+    ],
+    "controlSha256": [
+      "4d43c8c9f8ce888052ac7e95870be133d6cdc9690c27b7117d944d4daca7fa0c",
+      "62b5009640d31f977a9e0f8da171b8fb3e2df2af49d4ec6ad3519fa71581b357"
+    ]
+  },
+  "observed": {
+    "distinctStoredImagesAfterImport": 4,
+    "duplicateExactPathLeftWholeDraftAndAttachmentIdsUnchanged": true,
+    "bothSameNamePathsVisibleAfterExpansion": true,
+    "removedOnlyFirstSameNamePathUsingItsOwnRow": true,
+    "survivingThreeIdsAndBytesUnchanged": true,
+    "testAttachmentsRemovedAndOriginalViewRestored": true,
+    "originalDraftAndOtherUnsentWorkPreserved": true,
+    "retainedDraftCount": 1,
+    "protectedAndTargetProtocolTapsUnchanged": 4,
+    "newAgentRequests": 0
+  },
+  "boundary": "Warm installed picker, exact attachment ownership, duplicate path, expanded disambiguation and removal. No drag event, request dispatch, cold reopening or injected failure was exercised."
+}

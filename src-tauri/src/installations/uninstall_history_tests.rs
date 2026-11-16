@@ -1,5 +1,17 @@
 //! Whole-program history, owned removal and retry using only temporary data.
 use super::*;
+
+fn remove_installed(
+    store: &MetaStore,
+    data: &Path,
+    agent_id: &str,
+    installation_id: &str,
+) -> Result<(), String> {
+    super::remove_installed_with_lookup(store, data, agent_id, installation_id, &|_| {
+        Some("synthetic-credential-value".into())
+    })
+}
+
 #[cfg(unix)]
 use std::os::unix::fs::symlink;
 

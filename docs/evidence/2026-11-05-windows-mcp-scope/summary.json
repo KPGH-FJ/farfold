@@ -1,0 +1,149 @@
+{
+  "schema": 1,
+  "state": "ARCHIVED_CHECKPOINT_EVIDENCE",
+  "kind": "actual-Windows-MCP-native-and-shared-frontend-evidence",
+  "sourceHead": "b7147e530742c47b96713495dea8b736dc9ec630",
+  "runId": 41942738310,
+  "runUrl": "https://github.com/KPGH-FJ/farfold/actions/runs/41942738310",
+  "runAttempt": 1,
+  "workflowConclusion": "success",
+  "dispatchCount": 1,
+  "watchNaturalExitCode": 0,
+  "nativePowerShellParseFiles": {
+    "actualCount": 4,
+    "parseErrors": 0
+  },
+  "build": {
+    "actualLibraryBuilds": 1,
+    "libraryNaturalExitCode": 0,
+    "existingHelperBuilds": 1,
+    "helperNaturalExitCode": 0,
+    "testBinaryRecordedSha256": "1d08b9a0bd9fb6864848ee36f93806aeba0c84da300dd6ac8624ccd176734ac7",
+    "helperRecordedSha256": "2eed3e6243181afdca1a915615f95adb1f3575b98036b9e2c9c4c29fe37cbb4b",
+    "executableBytesIncluded": false,
+    "readerLocallyRehashedRemoteExecutable": false
+  },
+  "native": {
+    "actualListTests": 18,
+    "actualListNaturalExitCode": 0,
+    "actualExecutedTests": 18,
+    "passed": 18,
+    "failed": 0,
+    "ignored": 0,
+    "naturalExitCode": 0,
+    "seconds": 9.01,
+    "unixOnlyExcludedTests": [
+      "acp_client::skill_management::mcp_tests::mcp_postget_cancel_retains_actual_worker_lease_and_unknown_write_fact",
+      "acp_client::skill_management::mcp_tests::mcp_scope_cancelled_layer_read_ends_worker_without_writing"
+    ],
+    "publicWindowsDtoRecords": {
+      "preciseScopeRefusals": 3,
+      "untrustedGenericRefusals": 4,
+      "duplicateSourceGenericRefusals": 3,
+      "total": 10
+    }
+  },
+  "sharedFrontend": {
+    "actualFiles": 3,
+    "actualTests": 15,
+    "passed": 15,
+    "pending": 0,
+    "todo": 0,
+    "testNaturalExitCode": 0,
+    "typecheckNaturalExitCode": 0,
+    "parts": {
+      "mcpScopeWire": 9,
+      "mcpReview": 3,
+      "p01QueueSchema": 3
+    },
+    "fixture": {
+      "path": "src/runtime/fixtures/mcp-scope-refusals-wire.json",
+      "origin": "Three committed DTOs previously captured on Mac using the controlled synthetic peer",
+      "gitBlobSha256": "86b64e140f0281fb69d6315dbbf5bb135994d93f19df5aeff04b126b62a97b22",
+      "nativeCheckoutSha256": "e7a3e7e2dc6c2c6bb44b00406197d6a1cc48a18d409b75b9ed694f1c0f5244ae",
+      "checkoutMapping": "gitBlobLfToWindowsCrlf"
+    },
+    "executionBoundary": "Windows Node SSR/controller tests plus mocked queue-settings transport. The 10 Windows native DTOs were not fed through these frontend cases, a complete IPC route or installed UI."
+  },
+  "aggregate": {
+    "actualWorkflowStepConclusion": "success",
+    "all3ActualPhaseResultsReturnedAndPassed": true,
+    "selectionSourceMapBinaryHelperCrossBindingsMatched": true,
+    "notOnlyContinueOnErrorColor": true
+  },
+  "sourceInputs": {
+    "count": 2307,
+    "beforeAfterIdentical": true,
+    "beforeAfterSha256": "8f53889ad55d16b5c477a8729b58e2e314e4968a81d5eac4a167c1c801fd73e3",
+    "allActualNativeHashEntriesMatchFixedGitSource": true,
+    "eolMapping": {
+      "gitBlobBytes": 35,
+      "gitBlobLfToWindowsCrlf": 2272
+    },
+    "scope": "Native declared source map; not every transitive environment input. Mac LF and Windows CRLF byte hashes are distinguished."
+  },
+  "timing": {
+    "selectedJobSeconds": 881,
+    "buildStepSeconds": 749,
+    "sharedFrontendStepSeconds": 36,
+    "nativeStepSeconds": 12,
+    "nativeLibtestSeconds": 9.01
+  },
+  "artifact": {
+    "id": 13377433297,
+    "members": 22,
+    "sha256": "008eb498e84d12dc32416a48b059bdb6e24f965421c9687ae2c0aee1a1036c57",
+    "apiDigest": "sha256:008eb498e84d12dc32416a48b059bdb6e24f965421c9687ae2c0aee1a1036c57",
+    "apiDigestMatches": true,
+    "crcAllPassed": true,
+    "allMemberPayloadsUtf8JsonOrLogs": true,
+    "executablesDllsOrHelperBytes": false
+  },
+  "workflowLogs": {
+    "members": 17,
+    "sha256": "278dc9338878bbafa230130e080a30d8f8e82a39d128db4efd737942ae93f217",
+    "crcAllPassed": true
+  },
+  "independentReview": {
+    "state": "ACTUAL_RECEIPT_INCLUDED",
+    "reviewer": "environment_review",
+    "verdict": "PASS_WITH_EXPLICIT_SCOPE",
+    "blockingFindings": [],
+    "originalReceiptSha256": "2d8294fde4a1a782557b66009f8c1241b6650dde53a93e981e55504bd24ced64",
+    "originalReceiptBytes": 29094,
+    "archivePath": "review/independent-review.json",
+    "scope": "Original run/artifacts/logs and phase/source/binary-recorded-hash facts reviewed; 2307 binding-detail rows checked, 12 supporting sources plus archived old Vite sampled. No new2307 Git rerun or local rehash of remote executable.",
+    "doesNotClaim": "Independent reader did not review this newly generated outer ZIP."
+  },
+  "coverageBoundaries": [
+    "Backend: actual Windows production registry/exchange/worker against a synthetic Python peer and owned temporary layer data, not a real official Agent/CLI or user configuration adoption/connection/tool call.",
+    "Frontend: Mac three-DTO fixture replay plus queue tests on Windows Node; not Windows DOM, installed UI, complete IPC or a bridge from the ten Windows DTOs to the UI.",
+    "The two Unix-only lifetime tests were not compiled or executed on Windows. P01queue3 is not Windows SQLite_FULL or whole P01/Windows acceptance.",
+    "Only fixed b714 inputs are covered. Later ea6 Vite changes are excluded.",
+    "Executable SHA values are actual CI-recorded and cross-bound receipts. No exe/dll/helper bytes are packaged or independently rehashed by this local reader."
+  ],
+  "packagingActions": "Only this private preparation directory is writable. No additional GH/watch/build/test/Git/source/docs or App/account/model action.",
+  "sealedAtUtc": "2026-11-05T01:08:44.946152+00:00",
+  "originalsArchive": {
+    "file": "originals.zip",
+    "sha256": "29730ebc18584bec9d21ed7061eca21dcabc8523f65fe632354dc5457e197dc8",
+    "bytes": 545112,
+    "members": 31,
+    "crcAllPassed": true,
+    "everyMemberMatchesOriginalSourceBytes": true
+  },
+  "rootArchiveReview": {
+    "recordedAtUtc": "2026-11-05T01:11:56.086823+00:00",
+    "outerMembers": 31,
+    "allMemberSizeShaCrcMatched": true,
+    "innerArtifactMembers": 22,
+    "innerLogsMembers": 17,
+    "innerAllCrcAndTextTypesVerified": true,
+    "executablePayloadsIncluded": false,
+    "sealedManifest": {
+      "path": "sealed-manifest.json",
+      "sha256": "a94eab091cee1f03c4f9992c9d6cd7a513874ebbd8b8b375f5148ffe8e51fc39"
+    },
+    "meaning": "Root mechanical packaging review after the independent original-run review. No new native execution, local remote-exe hash or broader acceptance."
+  }
+}

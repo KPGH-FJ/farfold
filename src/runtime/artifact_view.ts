@@ -1,7 +1,13 @@
 import { paneCards, type PaneCard } from "./artifacts";
-import type { ThreadState } from "./session_types";
+import type { ThreadState, ToolCallView } from "./session_types";
+import {
+  NO_STOPPED_TOOL_CALLS,
+  unfinishedStoppedToolCallIds,
+} from "./stopped_tool_results";
 
-export type FileArtifact = Extract<PaneCard, { kind: "diff" }>;
+export type FileArtifact = Extract<PaneCard, { kind: "diff" }> & {
+  fragment?: { toolCallId: string; number: number };
+};
 import type { DiffLine } from "./line_diff";
 export type { DiffLine } from "./line_diff";
 
@@ -87,6 +93,63 @@ export function artifactFiles(cards: PaneCard[]): FileArtifact[] {
   return [...files.values()];
 }
 
+type ArtifactFileChoice = { key: string; card: FileArtifact };
+
+// An explicit fragment choice belongs to the current report array. A later
+// content update replaces that array and may reuse its path and ordinal.
+const reportKeys = new WeakMap<ToolCallView["content"], number>();
+let nextReportKey = 0;
+
+function reportKey(content: ToolCallView["content"]): number {
+  const existing = reportKeys.get(content);
+  if (existing !== undefined) return existing;
+  const key = ++nextReportKey;
+  reportKeys.set(content, key);
+  return key;
+}
+
+/** Wider views still group by path. An exact step can report several separate
+ * snippets for one path, with no evidence that they are contiguous. */
+export function artifactFileChoices(
+  cards: PaneCard[],
+  step?: ThreadState["items"][number],
+): ArtifactFileChoice[] {
+  if (step?.kind !== "tool")
+    return artifactFiles(cards).map((card) => ({
+      key: `file:${card.path}`,
+      card,
+    }));
+
+  const totals = new Map<string, number>();
+  const numbers = new Map<string, number>();
+  const reports = cards.filter((card) => card.kind === "diff");
+  for (const { path } of reports) totals.set(path, (totals.get(path) ?? 0) + 1);
+  return reports.map((card) => {
+    const { path } = card;
+    if (totals.get(path) === 1) return { key: `file:${path}`, card };
+    const number = (numbers.get(path) ?? 0) + 1;
+    numbers.set(path, number);
+    return {
+      key: `fragment:${JSON.stringify([reportKey(step.call.content), path, number])}`,
+      card: { ...card, fragment: { toolCallId: step.call.toolCallId, number } },
+    };
+  });
+}
+
+export function canSelectArtifact(
+  thread: ThreadState,
+  scopeId: string | null,
+  selected: string,
+): boolean {
+  const cards = artifactPaneCards(thread, scopeId);
+  if (!cards) return false;
+  if (selected === "output") return cards.some((card) => card.kind !== "diff");
+  const step = thread.items.find((item) => item.id === scopeId);
+  return artifactFileChoices(cards, step).some(
+    (choice) => choice.key === selected,
+  );
+}
+
 /** Resolve only the chosen step or round's existing tool items. A missing boundary
  * after replay is unavailable, never permission to show a different round. */
 export function artifactPaneCards(
@@ -94,15 +157,19 @@ export function artifactPaneCards(
   roundId: string | null,
 ): PaneCard[] | null {
   if (roundId === null) return paneCards(thread);
+  // A selected step/round contains only tool cards. Keep the full conversation
+  // as the source of its matched cancellation receipt.
+  const selectedCards = (items: ThreadState["items"]) =>
+    paneCards({ ...thread, items }, 0, unfinishedStoppedToolCallIds(thread));
   const round = thread.items.find((item) => item.id === roundId);
-  if (round?.kind === "tool") return paneCards({ ...thread, items: [round] });
+  if (round?.kind === "tool") return selectedCards([round]);
   if (round?.kind !== "settled" || !round.artifactToolItemIds) return null;
   const ids = new Set(round.artifactToolItemIds);
   const items = thread.items.filter(
     (item) => item.kind === "tool" && ids.has(item.id),
   );
   if (items.length !== ids.size) return null;
-  return paneCards({ ...thread, items });
+  return selectedCards(items);
 }
 
 /** Refresh displayed counts from the same references as navigation, including
@@ -122,7 +189,11 @@ export function artifactRoundCounts(thread: ThreadState): Map<string, number> {
         break;
       }
       if (!toolCounts.has(id))
-        toolCounts.set(id, paneCards({ ...thread, items: [tool] }).length);
+        toolCounts.set(
+          id,
+          paneCards({ ...thread, items: [tool] }, 0, NO_STOPPED_TOOL_CALLS)
+            .length,
+        );
       count += toolCounts.get(id)!;
     }
     if (complete) rounds.set(item.id, count);
@@ -130,13 +201,17 @@ export function artifactRoundCounts(thread: ThreadState): Map<string, number> {
   return rounds;
 }
 
-/** Prefix path values so a literal file named output cannot select the log view. */
+/** An explicit selection within a step must never fall back to another file. */
 export function selectedArtifactFile(
-  files: FileArtifact[],
+  files: ArtifactFileChoice[],
   selected: string | null,
-): FileArtifact | null {
+  exact = false,
+): ArtifactFileChoice | null {
   if (selected === "output") return null;
   return (
-    files.find((card) => `file:${card.path}` === selected) ?? files[0] ?? null
+    files.find(
+      ({ key, card }) =>
+        key === selected || (exact && `file:${card.path}` === selected),
+    ) ?? (exact && selected !== null ? null : (files[0] ?? null))
   );
 }

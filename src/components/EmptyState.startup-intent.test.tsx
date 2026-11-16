@@ -110,6 +110,7 @@ vi.mock("../runtime/sessions", async (original) => ({
 }));
 import { EmptyState } from "./EmptyState";
 import { Composer } from "./Composer";
+import { PreservedDrafts } from "./PreservedDrafts";
 import { NewConversationAgentDialog } from "./NewConversationPickers";
 import {
   composerDrafts,
@@ -118,6 +119,7 @@ import {
 } from "../runtime/drafts";
 import { allowAutomaticConnection } from "../runtime/connection_intent";
 import { freshThreadState } from "../runtime/session_projection";
+import { pauseQueueForExit } from "../runtime/prompt_admission";
 import type { AgentCardModel } from "../runtime/agents";
 import { removalArchive } from "../runtime/worktree_remove.test-fixtures";
 
@@ -365,6 +367,127 @@ it("retains an already prepared draft and its browser owner while hidden without
   expect(h.send).not.toHaveBeenCalled();
   expect(composerDrafts.read("new")).toBe(original);
 });
+
+it.each(["duplicate", "different source", "retry after failure"] as const)(
+  "protects prepared work while restoring a retained draft (%s)",
+  async (action) => {
+    const ticket = await composerDrafts.preserveNew();
+    const [[savedKey, saved]] = composerDrafts.preserved();
+    composerDrafts.clearPreservedNew(ticket);
+    const otherText = "another retained draft";
+    if (action === "different source") {
+      composerDrafts.update("new", () => ({
+        text: otherText,
+        attachments: [],
+      }));
+      composerDrafts.clearPreservedNew(await composerDrafts.preserveNew());
+    }
+    composerDrafts.update("new", () => ({
+      text: "active input",
+      attachments: [],
+    }));
+    const restore = vi.fn(async (key: string) => {
+      await composerDrafts.restorePreserved(key);
+    });
+    props.onRestoreDraft = restore;
+    let releaseWrite!: () => void;
+    let rejectWrite!: (reason: Error) => void;
+    const writing = new Promise<void>((resolve, reject) => {
+      releaseWrite = resolve;
+      rejectWrite = reject;
+    });
+    vi.mocked(draftPersistence.flush)
+      .mockResolvedValueOnce(undefined)
+      .mockReturnValueOnce(writing);
+    const retainedSlots: typeof h.slots = [];
+    function restoreButton(text = saved.text) {
+      const retained = render().find((node) => node.type === PreservedDrafts)!;
+      const { slots, cursor } = h;
+      h.slots = retainedSlots;
+      h.cursor = 0;
+      try {
+        const row = nodes(
+          PreservedDrafts(
+            retained.props as ComponentProps<typeof PreservedDrafts>,
+          ),
+        )
+          .filter((node) => node.type === "article")
+          .find((node) =>
+            nodes(node.props.children as ReactNode).some(
+              (child) =>
+                child.type === "strong" && child.props.children === text,
+            ),
+          )!;
+        return nodes(row.props.children as ReactNode).find(
+          (node) => node.type === "button",
+        )!;
+      } finally {
+        h.slots = slots;
+        h.cursor = cursor;
+      }
+    }
+    try {
+      await (restoreButton().props.onClick as () => Promise<void>)();
+      expect(restore).toHaveBeenCalledExactlyOnceWith(savedKey);
+      expect(composerDrafts.preserved()).toContainEqual([savedKey, saved]);
+      chooseSameAgent();
+      await vi.advanceTimersByTimeAsync(300);
+      render();
+      const prepared = h.threads.get("prepared");
+      expect(prepared).toBeDefined();
+      expect(props.onPreparedKey).toHaveBeenLastCalledWith("prepared");
+      const draft = composerDrafts.read("new");
+
+      if (action === "different source") {
+        const otherKey = composerDrafts
+          .preserved()
+          .find(([, value]) => value.text === otherText)![0];
+        vi.mocked(draftPersistence.flush).mockReturnValueOnce(writing);
+        const second = (
+          restoreButton(otherText).props.onClick as () => Promise<void>
+        )();
+        expect(restore.mock.calls).toEqual([[savedKey], [otherKey]]);
+        releaseWrite();
+        await second;
+        expect(composerDrafts.read("new").text).toBe(otherText);
+        expect(h.send).not.toHaveBeenCalled();
+        return;
+      }
+
+      if (action === "retry after failure") {
+        rejectWrite(new Error("retained draft write failed"));
+        await settle();
+        expect(composerDrafts.preserved()).toContainEqual([savedKey, saved]);
+        await (restoreButton().props.onClick as () => Promise<void>)();
+        await settle();
+        expect(restore.mock.calls).toEqual([[savedKey], [savedKey]]);
+        expect(composerDrafts.read("new").text).toBe(saved.text);
+        expect(composerDrafts.preserved()).not.toContainEqual([
+          savedKey,
+          saved,
+        ]);
+        expect(h.send).not.toHaveBeenCalled();
+        return;
+      }
+
+      const duplicate = restoreButton();
+      expect(duplicate.props.disabled).toBe(false);
+      await (duplicate.props.onClick as () => Promise<void>)();
+      render();
+      expect.soft(restore).toHaveBeenCalledExactlyOnceWith(savedKey);
+      expect.soft(h.discard).not.toHaveBeenCalled();
+      expect.soft(h.threads.get("prepared")).toBe(prepared);
+      expect.soft(props.onPreparedKey).toHaveBeenLastCalledWith("prepared");
+      expect(composerDrafts.read("new")).toBe(draft);
+      expect(h.send).not.toHaveBeenCalled();
+    } finally {
+      releaseWrite();
+      await settle();
+      delete props.onRestoreDraft;
+      for (const [key] of composerDrafts.preserved()) composerDrafts.clear(key);
+    }
+  },
+);
 
 it.each(["agent", "model"])(
   "reuses the pending preparation when another explicit %s action occurs during config confirmation",
@@ -619,4 +742,53 @@ it("an unknown first-send result retains its target and never prepares or sends 
   expect(h.open).toHaveBeenCalledOnce();
   expect(h.send).toHaveBeenCalledOnce();
   expect(composerDrafts.read("new")).toBe(pending);
+});
+
+it("returns an undispatched first send without closing a same-key replacement after quit", async () => {
+  chooseSameAgent();
+  await vi.advanceTimersByTimeAsync(300);
+  render();
+  const original = h.threads.get("prepared")!;
+  original.connectionId = "original-prepared-connection";
+  let release!: () => void;
+  const check = new Promise<void>((resolve) => (release = resolve));
+  h.send.mockImplementation(
+    async (_key, blocks: ThreadState["queued"][number]) => {
+      original.submitting = true;
+      original.queued.push(blocks);
+      original.promptSubmission = {
+        blocks,
+        connectionId: original.connectionId,
+        dispatched: false,
+        deliveryConfirmed: false,
+      };
+      await check;
+      original.submitting = false;
+      return { status: "rejected", reason: "unavailable" };
+    },
+  );
+  const sending = beginSend();
+  try {
+    await settle();
+    expect(h.send).toHaveBeenCalledOnce();
+    expect(
+      composerDrafts.read("new").pendingConversation?.nativeSessionId,
+    ).toBe(original.nativeSessionId);
+    pauseQueueForExit(original, true);
+    const returned = composerDrafts.read("new");
+    expect(returned.pendingConversation).toBeUndefined();
+    unmount();
+    h.discard.mockClear();
+    const replacement = prepared();
+    replacement.connectionId = "replacement-prepared-connection";
+    h.threads.set(replacement.key, replacement);
+    release();
+    expect(await sending).toBe(false);
+    expect(h.discard).not.toHaveBeenCalled();
+    expect(h.threads.get(replacement.key)).toBe(replacement);
+    expect(composerDrafts.read("new")).toBe(returned);
+  } finally {
+    release();
+    await sending;
+  }
 });

@@ -34,3 +34,20 @@ fn p40_management_preserves_the_existing_unsupported_inventory_control() {
     assert_eq!(wire["mcpInventory"]["reason"], "notReviewed");
     assert!(wire["selectionId"].is_null());
 }
+
+#[test]
+fn p40_skill_preference_removal_uses_reviewed_capability_and_may_be_omitted() {
+    let mut capabilities = launch::capabilities(&unsupported_row()).unwrap();
+    let wire = serde_json::to_value(&capabilities).unwrap();
+    assert_eq!(
+        wire["skillPreferenceRemoval"],
+        serde_json::json!({"availability":"unavailable","source":null,"reason":"notReviewed"})
+    );
+    capabilities.skill_preference_removal = None;
+    assert!(
+        serde_json::to_value(capabilities)
+            .unwrap()
+            .get("skillPreferenceRemoval")
+            .is_none()
+    );
+}

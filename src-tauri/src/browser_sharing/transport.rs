@@ -25,6 +25,22 @@ use tokio::sync::{oneshot, watch};
 
 #[path = "transport_admission.rs"]
 mod admission;
+#[path = "transport_execution.rs"]
+mod execution;
+use execution::Execution;
+#[cfg(target_os = "macos")]
+#[path = "transport_multi.rs"]
+mod multi;
+#[cfg(target_os = "macos")]
+pub(crate) use multi::{MachLaunch, OwnerCheck, start_mach};
+#[path = "transport_stream.rs"]
+mod stream;
+
+#[cfg(target_os = "macos")]
+#[path = "transport_uds.rs"]
+mod uds;
+#[cfg(target_os = "macos")]
+pub(super) type PeerCheck = Arc<dyn Fn(&Stream) -> bool + Send + Sync>;
 
 #[cfg(test)]
 #[path = "transport_lifecycle_tests.rs"]
@@ -35,10 +51,11 @@ const WRITE_WAIT: Duration = Duration::from_secs(1);
 const MAX_REQUEST: usize = 65_536;
 const MAX_RESPONSE: usize = 600_000;
 pub(crate) type SharedPage = Arc<Mutex<Option<FixedPageReadScope>>>;
-type Callback = Arc<dyn Fn() + Send + Sync>;
-type Closed = Arc<dyn Fn(bool) + Send + Sync>;
-type Permission = Arc<dyn Fn(&ToolRequest) -> Result<PermissionWait, String> + Send + Sync>;
-type Invalidated = Arc<dyn Fn(FixedPageReadScope) + Send + Sync>;
+pub(super) type Callback = Arc<dyn Fn() + Send + Sync>;
+pub(super) type Closed = Arc<dyn Fn(bool) + Send + Sync>;
+pub(super) type Permission =
+    Arc<dyn Fn(&ToolRequest) -> Result<PermissionWait, String> + Send + Sync>;
+pub(super) type Invalidated = Arc<dyn Fn(FixedPageReadScope) + Send + Sync>;
 
 fn operation_error_reply(id: Value, control: bool, error: ToolFailure) -> Value {
     match (control, error) {
@@ -93,9 +110,17 @@ struct HandleInner {
     controls: mpsc::Sender<Control>,
     shutdown: Arc<AtomicBool>,
     completed: watch::Receiver<u8>,
+    #[cfg(target_os = "macos")]
+    initialized: Arc<AtomicBool>,
+    #[cfg(target_os = "macos")]
+    listed: Arc<AtomicBool>,
+    #[cfg(target_os = "macos")]
+    multi: Option<Arc<multi::Gate>>,
 }
 enum Control {
     Quiesce(Option<oneshot::Sender<Result<(), String>>>),
+    #[cfg(target_os = "macos")]
+    MultiQuiesce(u64, oneshot::Sender<Result<(), String>>),
 }
 fn revoke_page(page: &SharedPage) {
     let old = page.lock().unwrap_or_else(|e| e.into_inner()).take();
@@ -105,20 +130,39 @@ fn revoke_page(page: &SharedPage) {
 }
 impl Drop for HandleInner {
     fn drop(&mut self) {
+        #[cfg(target_os = "macos")]
+        if let Some(gate) = &self.multi {
+            gate.close();
+        }
         revoke_page(&self.page);
         self.shutdown.store(true, Ordering::Release);
     }
 }
 impl TransportHandle {
+    #[cfg(target_os = "macos")]
+    pub(crate) fn locally_ready(&self) -> bool {
+        self.0.initialized.load(Ordering::Acquire)
+            && self.0.listed.load(Ordering::Acquire)
+            && *self.0.completed.borrow() == 0
+    }
     /// Cancels observation/output pending before this barrier. A partial JSON
     /// reply closes the transport; on_closed is called before this ACK.
     pub(crate) async fn quiesce(&self) -> Result<(), String> {
+        #[cfg(target_os = "macos")]
+        let epoch = self.0.multi.as_ref().map(|gate| gate.retire());
         revoke_page(&self.0.page);
         if *self.0.completed.borrow() != 0 {
             return self.closed().await;
         }
         let (send, receive) = oneshot::channel();
-        if self.0.controls.send(Control::Quiesce(Some(send))).is_err() {
+        #[cfg(target_os = "macos")]
+        let control = match epoch {
+            Some(epoch) => Control::MultiQuiesce(epoch, send),
+            None => Control::Quiesce(Some(send)),
+        };
+        #[cfg(not(target_os = "macos"))]
+        let control = Control::Quiesce(Some(send));
+        if self.0.controls.send(control).is_err() {
             return self.closed().await;
         }
         match tokio::time::timeout(Duration::from_secs(3), receive).await {
@@ -128,6 +172,10 @@ impl TransportHandle {
         }
     }
     pub(crate) fn shutdown(&self) {
+        #[cfg(target_os = "macos")]
+        if let Some(gate) = &self.0.multi {
+            gate.close();
+        }
         revoke_page(&self.0.page);
         self.0.shutdown.store(true, Ordering::Release);
     }
@@ -183,17 +231,25 @@ pub(super) fn start(
         controls,
         shutdown: shutdown.clone(),
         completed,
+        #[cfg(target_os = "macos")]
+        initialized: Arc::new(AtomicBool::new(false)),
+        #[cfg(target_os = "macos")]
+        listed: Arc::new(AtomicBool::new(false)),
+        #[cfg(target_os = "macos")]
+        multi: None,
     }));
     std::thread::Builder::new()
         .name("farfold-page-mcp".into())
         .spawn(move || {
             let _directory = directory;
             let mut worker = Worker {
-                app,
+                execution: Execution::native(app),
                 page,
                 shutdown,
                 controls: control_rx,
                 on_ready,
+                #[cfg(target_os = "macos")]
+                on_initialized: None,
                 on_closed,
                 on_permission,
                 on_invalidated,
@@ -206,12 +262,21 @@ pub(super) fn start(
         .map_err(|_| "无法启动网页工具".to_owned())?;
     Ok((handle, launch))
 }
+
+#[cfg(target_os = "macos")]
+#[path = "transport_uds_start.rs"]
+mod uds_start;
+#[cfg(target_os = "macos")]
+pub(super) use uds_start::{LocalEndpoint, start_uds};
+
 struct Worker {
-    app: AppHandle,
+    execution: Execution,
     page: SharedPage,
     shutdown: Arc<AtomicBool>,
     controls: mpsc::Receiver<Control>,
     on_ready: Callback,
+    #[cfg(target_os = "macos")]
+    on_initialized: Option<Callback>,
     on_closed: Closed,
     on_permission: Permission,
     on_invalidated: Invalidated,
@@ -307,6 +372,7 @@ impl Drop for PendingRead {
 }
 struct Barrier {
     number: u64,
+    idle_at_start: bool,
     close: bool,
     deadline: Instant,
     replies: Vec<oneshot::Sender<Result<(), String>>>,
@@ -428,6 +494,7 @@ impl Wire {
             }
             return Ok(());
         }
+        let idle_at_start = self.idle();
         if let Some(old) = self.waiting.take() {
             let id = old.id.clone();
             drop(old);
@@ -456,6 +523,7 @@ impl Wire {
         )?);
         self.barrier = Some(Barrier {
             number,
+            idle_at_start,
             close,
             deadline: Instant::now() + Duration::from_millis(2500),
             replies: reply.into_iter().collect(),
@@ -579,16 +647,8 @@ impl Worker {
     ) {
         let scope = scope.request_scope();
         let (send, receive) = mpsc::channel();
-        let observer = scope.clone();
-        let app = self.app.clone();
         let finished = Arc::new(AtomicBool::new(false));
-        let finished_task = finished.clone();
-        let operation = request.clone();
-        let task = tauri::async_runtime::spawn(async move {
-            let result = observer.tool(&app, operation).await;
-            finished_task.store(true, Ordering::Release);
-            let _ = send.send(result);
-        });
+        let task = (self.execution.read)(scope.clone(), request.clone(), finished.clone(), send);
         wire.pending = Some(PendingRead {
             id,
             scope,
@@ -605,227 +665,6 @@ impl Worker {
             Err(()) => return false,
         }
         true
-    }
-
-    fn serve(&mut self, mut channel: Stream) -> bool {
-        let mut protocol = protocol::Protocol::new(
-            crate::browser_workspace::screenshot_capability::for_mcp_worker(&self.app),
-        );
-        let mut input = Vec::new();
-        let mut wire = Wire::default();
-        loop {
-            if self.shutdown.load(Ordering::Acquire) && wire.stop(true, None).is_err() {
-                return false;
-            }
-            while let Ok(Control::Quiesce(reply)) = self.controls.try_recv() {
-                if wire.stop(false, reply).is_err() {
-                    return false;
-                }
-            }
-            if wire
-                .barrier
-                .as_ref()
-                .is_some_and(|barrier| Instant::now() >= barrier.deadline)
-            {
-                return false;
-            }
-            if wire.barrier.is_none()
-                && wire.delivery.is_none()
-                && wire.pending.is_none()
-                && wire.waiting.is_none()
-                && let Some(action) = wire.deferred.take()
-                && !self.act(action, &mut wire)
-            {
-                return false;
-            }
-            if wire.delivery.is_none()
-                && let Some(read) = wire.pending.as_ref()
-            {
-                match read.result.try_recv() {
-                    Ok(result) => {
-                        let id = read.id.clone();
-                        let scope = read.scope.clone();
-                        let control = read.request.control();
-                        wire.pending = None;
-                        let (value, grant) = match result {
-                            Ok(page) => (protocol::snapshot(id, page), Some(scope)),
-                            Err(error) => {
-                                if !scope.grant_is_valid() {
-                                    (self.on_invalidated)(scope);
-                                }
-                                let value = operation_error_reply(id, control, error);
-                                (value, None)
-                            }
-                        };
-                        let reply = match grant {
-                            Some(scope) if control => wire.control_reply(value, scope),
-                            grant => wire.reply(value, grant, false),
-                        };
-                        if reply.is_err() {
-                            return false;
-                        }
-                    }
-                    Err(mpsc::TryRecvError::Disconnected) => {
-                        let id = read.id.clone();
-                        let control = read.request.control();
-                        wire.pending = None;
-                        if wire
-                            .reply(
-                                operation_error_reply(id, control, ToolFailure::Unconfirmed),
-                                None,
-                                false,
-                            )
-                            .is_err()
-                        {
-                            return false;
-                        }
-                    }
-                    Err(mpsc::TryRecvError::Empty) => {}
-                }
-            }
-            // Read control traffic before attempting an outgoing response. A stop
-            // acknowledgement is never inferred from socket EOF or queued writes.
-            if poll_ready(channel::token(&channel), channel::READ) {
-                let mut bytes = [0u8; 8192];
-                match channel.read(&mut bytes) {
-                    Ok(0) => return false,
-                    Ok(count) => {
-                        input.extend_from_slice(&bytes[..count]);
-                        if input.len() > 1_300_000 {
-                            return false;
-                        }
-                    }
-                    Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {}
-                    Err(_) => return false,
-                }
-            }
-            while let Some(end) = input.iter().position(|byte| *byte == b'\n') {
-                let line: Vec<u8> = input.drain(..=end).collect();
-                let Ok(message) = serde_json::from_slice::<Value>(&line) else {
-                    return false;
-                };
-                match message.get("kind").and_then(Value::as_str) {
-                    Some("written") => {
-                        let Some(number) = message.get("delivery").and_then(Value::as_u64) else {
-                            return false;
-                        };
-                        if wire.acknowledge_written(number) == Some(true)
-                            && protocol.mark_list_delivered()
-                        {
-                            (self.on_ready)();
-                        }
-                    }
-                    Some("stopped") => {
-                        let Some(number) = message.get("barrier").and_then(Value::as_u64) else {
-                            return false;
-                        };
-                        let Some(stdout_closed) =
-                            message.get("stdoutClosed").and_then(Value::as_bool)
-                        else {
-                            return false;
-                        };
-                        if wire
-                            .barrier
-                            .as_ref()
-                            .is_some_and(|barrier| barrier.number == number)
-                        {
-                            let barrier = wire.barrier.take().expect("checked barrier");
-                            if barrier.close && !stdout_closed {
-                                return false;
-                            }
-                            if wire
-                                .delivery
-                                .as_ref()
-                                .is_some_and(|delivery| delivery.scope.is_some())
-                            {
-                                let delivery = wire.delivery.take().expect("checked delivery");
-                                wire.finish_screenshot(&delivery.id);
-                            }
-                            wire.finish_stopped_screenshot();
-                            if stdout_closed {
-                                drop(channel);
-                                self.notify_closed(true);
-                                for reply in barrier.replies {
-                                    let _ = reply.send(Ok(()));
-                                }
-                                return true;
-                            }
-                            for reply in barrier.replies {
-                                let _ = reply.send(Ok(()));
-                            }
-                        }
-                    }
-                    Some("request") => {
-                        let Some(request) = message.get("message").cloned() else {
-                            return false;
-                        };
-                        if serde_json::to_vec(&request)
-                            .map_or(true, |bytes| bytes.len() > MAX_REQUEST)
-                        {
-                            return false;
-                        }
-                        let action = protocol.receive(request);
-                        if wire.barrier.is_some()
-                            && !matches!(
-                                action,
-                                protocol::Action::None | protocol::Action::Cancel { .. }
-                            )
-                        {
-                            if wire.defer_during_stop(action).is_err() {
-                                return false;
-                            }
-                        } else if !self.act(action, &mut wire) {
-                            return false;
-                        }
-                    }
-                    _ => return false,
-                }
-            }
-            // Consume cancellation and stop traffic before an allowed request
-            // can start observing. The original request id never changes.
-            if wire.barrier.is_none()
-                && wire.delivery.is_none()
-                && !self.permission_result(&mut wire)
-            {
-                return false;
-            }
-            if let Some(packet) = wire.packets.front_mut() {
-                if Instant::now() >= packet.deadline {
-                    return false;
-                }
-                let Ok(withdrawn) = packet.withdraw_invalid() else {
-                    return false;
-                };
-                if let Some(scope) = withdrawn {
-                    if let Some(delivery) = wire.delivery.as_mut() {
-                        delivery.scope = None;
-                    }
-                    if !scope.grant_is_valid() {
-                        (self.on_invalidated)(scope);
-                    }
-                }
-                if poll_ready(channel::token(&channel), channel::WRITE) {
-                    match channel.write(&packet.bytes[packet.written..]) {
-                        Ok(0) => return false,
-                        Ok(count) => {
-                            packet.written += count;
-                            if packet.written == packet.bytes.len() {
-                                wire.packets.pop_front();
-                            }
-                        }
-                        Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {}
-                        Err(_) => return false,
-                    }
-                }
-            }
-            let events = channel::READ
-                | if wire.packets.is_empty() {
-                    0
-                } else {
-                    channel::WRITE
-                };
-            wait_fd(channel::token(&channel), events, 50);
-        }
     }
 }
 fn same_capability(left: &[u8], right: &[u8]) -> bool {
@@ -1419,4 +1258,26 @@ mod tests {
                 .is_none()
         );
     }
+}
+
+#[cfg(test)]
+pub(super) fn control_state_fixture(page: SharedPage) -> (TransportHandle, Arc<AtomicBool>) {
+    let shutdown = Arc::new(AtomicBool::new(false));
+    let (controls, _) = mpsc::channel();
+    let (_, completed) = watch::channel(0);
+    (
+        TransportHandle(Arc::new(HandleInner {
+            page,
+            controls,
+            shutdown: shutdown.clone(),
+            completed,
+            #[cfg(target_os = "macos")]
+            initialized: Arc::new(AtomicBool::new(true)),
+            #[cfg(target_os = "macos")]
+            listed: Arc::new(AtomicBool::new(true)),
+            #[cfg(target_os = "macos")]
+            multi: None,
+        })),
+        shutdown,
+    )
 }

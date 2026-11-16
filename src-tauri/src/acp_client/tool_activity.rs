@@ -3,11 +3,14 @@ use super::lifecycle::{ConnectionLife, WorkLease};
 use serde_json::{Value, json};
 use std::{collections::BTreeSet, sync::Arc};
 
+mod stopped_close;
+
 pub(super) struct ToolActivity {
     life: Arc<ConnectionLife>,
     active: BTreeSet<String>,
     lease: Option<WorkLease>,
     live: bool,
+    stopped_close: stopped_close::Proof,
 }
 impl ToolActivity {
     pub(super) fn new(life: Arc<ConnectionLife>) -> Self {
@@ -16,6 +19,7 @@ impl ToolActivity {
             active: BTreeSet::new(),
             lease: None,
             live: false,
+            stopped_close: Default::default(),
         }
     }
     /// Treat pre-prompt notifications, including replay delayed past open's
@@ -23,6 +27,34 @@ impl ToolActivity {
     /// observation; the protocol has no separate activity-query receipt.
     pub(super) fn begin_live(&mut self) {
         self.live = true;
+    }
+    pub(super) fn start_prompt(&mut self, receipt: u64) {
+        self.begin_live();
+        self.stopped_close.start(receipt, self.active.is_empty());
+    }
+    pub(super) fn invalidate_stopped_close(&mut self) {
+        self.stopped_close.invalidate();
+    }
+    pub(super) fn observe_permission(&mut self, request_id: &str, tool_call: &Value) {
+        self.stopped_close.permission(request_id, tool_call);
+    }
+    pub(super) fn first_permission_id(&self) -> Option<&str> {
+        self.stopped_close.permission_id()
+    }
+    pub(super) fn cancel_first_permission(&mut self, confirmed: bool) {
+        self.stopped_close.cancelled_permission(confirmed);
+    }
+    pub(super) fn finish_prompt(&mut self, receipt: u64, cancelled: bool) {
+        self.stopped_close.finish(receipt, cancelled);
+    }
+    pub(super) fn stopped_close(&self) -> Option<(&str, u64)> {
+        let (id, receipt) = self.stopped_close.stopped()?;
+        (self.active.len() == 1 && self.active.contains(id)).then_some((id, receipt))
+    }
+    pub(super) fn release_stopped_close(&mut self) {
+        self.active.clear();
+        self.lease.take();
+        self.stopped_close.invalidate();
     }
     pub(super) fn busy(&self) -> bool {
         !self.active.is_empty()
@@ -35,20 +67,32 @@ impl ToolActivity {
             return None;
         }
         let update = params.get("update")?;
-        let kind = update.get("sessionUpdate")?.as_str()?;
-        if !matches!(kind, "tool_call" | "tool_call_update") {
+        let kind = update.get("sessionUpdate").and_then(Value::as_str);
+        let Some(kind @ ("tool_call" | "tool_call_update")) = kind else {
+            // Official terminal output can be rendered without a tool-update
+            // label. Its presence still defeats the pre-approval proof.
+            if stopped_close::reports_output_extension(update) {
+                self.stopped_close.invalidate();
+            } else if matches!(kind, Some("config_option_update" | "current_mode_update")) {
+                self.stopped_close.config_changed();
+            }
             return None;
-        }
-        let id = update
-            .get("toolCallId")?
-            .as_str()
-            .filter(|id| !id.is_empty())?;
+        };
+        let Some(id) = update
+            .get("toolCallId")
+            .and_then(Value::as_str)
+            .filter(|id| !id.is_empty())
+        else {
+            self.stopped_close.invalidate();
+            return None;
+        };
         // The official ToolCall schema omits its default Pending status when
         // serializing. Partial ToolCallUpdate has no such initial default.
         let status = match update.get("status") {
             None if kind == "tool_call" => Some("pending"),
             value => value.and_then(Value::as_str),
         };
+        self.stopped_close.tool(kind, id, status, update);
         let changed = match status {
             Some("pending" | "in_progress") => {
                 if self.lease.is_none() {
@@ -81,6 +125,39 @@ mod tests {
     use super::*;
     use agent_client_protocol::schema::v1::{SessionNotification, SessionUpdate, ToolCall};
     use std::sync::atomic::Ordering;
+
+    #[test]
+    fn stopped_tool_close_invalidates_for_reported_output_without_a_tool_update_label() {
+        for (kind, extension) in [
+            (None, "terminal_output"),
+            (Some("agent_message_chunk"), "terminal_output_delta"),
+        ] {
+            let life = ConnectionLife::new();
+            life.ready().unwrap();
+            let mut tools = ToolActivity::new(life.clone());
+            tools.start_prompt(13);
+            tools.observe(&json!({"update":{"sessionUpdate":"tool_call","toolCallId":"exact"}}));
+            tools.observe_permission("held", &json!({"toolCallId":"exact"}));
+            tools.cancel_first_permission(true);
+            tools.finish_prompt(13, true);
+            assert_eq!(tools.stopped_close(), Some(("exact", 13)));
+
+            let mut output = json!({"update":{"toolCallId":"exact","_meta":{}}});
+            output["update"]["_meta"][extension] = json!({"terminal_id":"tty","data":"worked"});
+            if let Some(kind) = kind {
+                output["update"]["sessionUpdate"] = json!(kind);
+            }
+            assert_eq!(
+                crate::acp_client::terminal_output::output_event(&output).unwrap()["data"],
+                "worked"
+            );
+            assert!(tools.observe(&output).is_none());
+            assert!(tools.stopped_close().is_none());
+            assert!(tools.busy());
+            assert_eq!(life.work.load(Ordering::SeqCst), 1);
+        }
+    }
+
     #[test]
     fn tool_call_default_status_from_official_sdk_retains_pending_work() {
         let life = ConnectionLife::new();

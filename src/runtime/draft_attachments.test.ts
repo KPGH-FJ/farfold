@@ -160,6 +160,33 @@ it("reads a local image again before preparing and dispatching, preserving its s
   expect(image.data).toBe("stale contents");
 });
 
+it("does not apply new bytes or start the next read after queue preparation loses ownership", async () => {
+  const queued: PromptBlock[] = files()
+    .slice(0, 2)
+    .map((file) => ({
+      type: "resource",
+      resource: { uri: file.uri!, mimeType: "text/plain", text: file.content! },
+    }));
+  const original = structuredClone(queued);
+  let release!: (value: string) => void;
+  h.invoke
+    .mockReturnValueOnce(new Promise<string>((resolve) => (release = resolve)))
+    .mockResolvedValue("later contents");
+  let owns = true;
+  const checking = validateQueuedAttachments(queued, {
+    canApplyUpdates: () => owns,
+  });
+  expect(h.invoke).toHaveBeenCalledTimes(1);
+  owns = false;
+  release("changed first contents");
+  await checking;
+  expect(queued).toEqual(original);
+  expect(h.invoke).toHaveBeenCalledExactlyOnceWith("draft_attachment_check", {
+    uri: files()[0]!.uri,
+    embed: true,
+  });
+});
+
 it("rejects nonempty invalid clipboard image data instead of sending it", async () => {
   await expect(
     prepareDraftAttachments(

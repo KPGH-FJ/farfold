@@ -1,0 +1,435 @@
+{
+  "recordedAtUtc": "2026-11-07T05:25:48.804746+00:00",
+  "scope": "Independent read-only verification of the old formal 6ce829c5 three self-test connection endings, saved unknown outcomes, preservation, remaining-connection qualification, and normal app exit.",
+  "installedSource": "6ce829c538da454414bd1158ef0c8bbb521b2a20",
+  "oldFormalPid": 38569,
+  "actionsPerformedByThisReader": {
+    "signalsSent": 0,
+    "uiActions": 0,
+    "productionWrites": 0,
+    "filesWritten": [
+      "docs/evidence/2026-11-07-stage1-formal-acceptance/old-exit.json"
+    ]
+  },
+  "sourceReceipts": {
+    "directory": "output/2026-11-07-stage1-formal-acceptance",
+    "sha256": {
+      "before.json": "c4c9286d0d5eba2ac6f1454de6a3fd68c353ba59e712d58ffb41fa86309eb845",
+      "after-all.json": "a9f8574093ad7dc0ebf426170382d65d55a7215ce8fbe21248905f37994b6073",
+      "after-normal-exit.json": "db0cf9a40bb51c0b183d009e518091e8826e65cfd937701cb2ced0e1757ad78c",
+      "goose-term.json": "dce3fb7456ada46e044e9262462d619499b6b50adb710068e2a23b46e48f7f47",
+      "copilot-running-term.json": "d5830ccbde837a5e93543ab4a49adf1b1ec28c934e84a35339e96141f43e6735",
+      "copilot-approval-term.json": "5acdbce3d7ad6ddaf9735871ff22c0d12930ea1287f462123d4a941165c238a7",
+      "normal-exit.json": "a6b314ff97462aa10813f0ba67f218e6de2ab4821a88a473656fd73b0db8eb5f"
+    }
+  },
+  "legacySnapshotFieldCorrection": {
+    "field": "before.json targets.*.queued (and any same legacy snapshot field)",
+    "actualMeaning": "len(queue_dictionary), the number of dictionary keys; it is not len(queue.blocks).",
+    "useAsMessageCount": false,
+    "correctEvidence": "Use after-all/after-normal-exit targets.*.queue.blocks and queuedBlocks. The after nonTargetQueuesSha256 equals the entire before queuesSha256, proving original non-target queues are unchanged. Independent pre-action database reads found all three target queue entries absent."
+  },
+  "targets": [
+    {
+      "sample": "gooseApproval",
+      "agentId": "registry:goose",
+      "nativeSessionId": "20261106_3",
+      "conversationTitlePrefix": "连接测试 · goose",
+      "storageKey": "registry:goose:/private/tmp/farfold-phase1-neutral.tGZU83dX:20261106_3",
+      "processBefore": {
+        "formalOwnerPid": 38569,
+        "signalledCliPid": 41094,
+        "processGroupId": 41094,
+        "exactGroupMembers": [41094],
+        "startedAtLocal": "2026-11-06T19:03:11+08:00",
+        "appStandardPipePeerFds": {
+          "stdin": 41,
+          "stdout": 42,
+          "stderr": 44
+        },
+        "pipeOwnershipEvidence": "Independent pre-action libproc PROC_PIDFDPIPEINFO double-ended handle matching; CLI fds 0/1/2 paired only to the listed formal-app fds."
+      },
+      "action": {
+        "actor": "root agent",
+        "signal": "SIGTERM",
+        "signalsSent": 1,
+        "forceSignalSent": false,
+        "formalApplicationKeptRunning": true,
+        "receipt": "output/2026-11-07-stage1-formal-acceptance/goose-term.json",
+        "atUtc": "2026-11-07T05:19:50.401890+00:00"
+      },
+      "protocol": {
+        "path": "/Users/tw/Library/Logs/Farfold/protocol-v1-1793962991606-3.jsonl",
+        "preActionSealedSha256": "9773dbdada61035d3dbc7b53118ee79f78ed5f090f9623083b138fb9ee5ee2a6",
+        "preActionPrefixStillMatchesSeal": true,
+        "finalSha256": "fdcfe4243716b9bbf2419b970ace2b75d6149487ef380d11badf0ef3c920d90f",
+        "bytes": 8252,
+        "newPromptsAfterOriginalCancel": 0,
+        "finalOwnerCleanup": {
+          "ts": 1794028790415,
+          "phase": "cleanup",
+          "childReaped": true,
+          "waitFailed": false,
+          "exitCode": null,
+          "exitSignal": 15,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": true,
+          "groupEnded": true,
+          "connectionRemoved": true
+        },
+        "transportIo": {
+          "completion": "parent_wrappers_dropped",
+          "stdin": {
+            "bytes": 1336,
+            "eof": false,
+            "errorCount": 0,
+            "firstError": null
+          },
+          "stdout": {
+            "bytes": 45347,
+            "eof": true,
+            "errorCount": 0,
+            "firstError": null
+          },
+          "stderr": {
+            "bytes": 0,
+            "eof": true,
+            "errorCount": 0,
+            "firstError": null
+          }
+        }
+      },
+      "persistedAfterExactEnd": {
+        "queue": {
+          "blocks": [],
+          "uncertainIndex": null,
+          "outcomeUnknown": true
+        },
+        "sameQueueAfterNormalExit": true,
+        "archiveActivityEnded": false,
+        "archiveActivityIsSeparateFromOutcomeUnknown": true
+      },
+      "uiObservation": {
+        "source": "Root agent observed the original formal UI after each end; not a UI action by this independent reader.",
+        "toolResultRemainedUnknown": true,
+        "connectionInterruptionUnknownShown": true
+      }
+    },
+    {
+      "sample": "copilotRunning",
+      "agentId": "registry:github-copilot-cli",
+      "nativeSessionId": "136bcb13-69d7-448e-89db-e81252686ae8",
+      "conversationTitlePrefix": "连接测试 · GitHub Copilot",
+      "storageKey": "registry:github-copilot-cli:/private/tmp/farfold-phase1-neutral.tGZU83dX:136bcb13-69d7-448e-89db-e81252686ae8",
+      "processBefore": {
+        "formalOwnerPid": 38569,
+        "signalledCliPid": 38786,
+        "processGroupId": 38785,
+        "exactGroupMembers": [38785, 38786],
+        "startedAtLocal": "2026-11-06T18:53:53+08:00",
+        "appStandardPipePeerFds": {
+          "stdin": 25,
+          "stdout": 27,
+          "stderr": 29
+        },
+        "pipeOwnershipEvidence": "Independent pre-action libproc PROC_PIDFDPIPEINFO double-ended handle matching; CLI fds 0/1/2 paired only to the listed formal-app fds."
+      },
+      "action": {
+        "actor": "root agent",
+        "signal": "SIGTERM",
+        "signalsSent": 1,
+        "forceSignalSent": false,
+        "formalApplicationKeptRunning": true,
+        "receipt": "output/2026-11-07-stage1-formal-acceptance/copilot-running-term.json",
+        "atUtc": "2026-11-07T05:20:38.379074+00:00"
+      },
+      "protocol": {
+        "path": "/Users/tw/Library/Logs/Farfold/protocol-v1-1793962433727-0.jsonl",
+        "preActionSealedSha256": "743ffc2dc89b4b805ae0490c54bbe33fef3f7fe0b36302e9b08f09e1f6fe9e51",
+        "preActionPrefixStillMatchesSeal": true,
+        "finalSha256": "8cd00197332cb0edc8c7a43cdc763b6c02d29903379e7555889596e8fc4cdfda",
+        "bytes": 6626,
+        "newPromptsAfterOriginalCancel": 0,
+        "finalOwnerCleanup": {
+          "ts": 1794028839538,
+          "phase": "cleanup",
+          "childReaped": true,
+          "waitFailed": false,
+          "exitCode": 0,
+          "exitSignal": null,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": true,
+          "groupEnded": true,
+          "connectionRemoved": true
+        },
+        "transportIo": {
+          "completion": "parent_wrappers_dropped",
+          "stdin": {
+            "bytes": 1555,
+            "eof": false,
+            "errorCount": 0,
+            "firstError": null
+          },
+          "stdout": {
+            "bytes": 37371,
+            "eof": true,
+            "errorCount": 0,
+            "firstError": null
+          },
+          "stderr": {
+            "bytes": 0,
+            "eof": true,
+            "errorCount": 0,
+            "firstError": null
+          }
+        }
+      },
+      "persistedAfterExactEnd": {
+        "queue": {
+          "blocks": [],
+          "uncertainIndex": null,
+          "outcomeUnknown": true
+        },
+        "sameQueueAfterNormalExit": true,
+        "archiveActivityEnded": false,
+        "archiveActivityIsSeparateFromOutcomeUnknown": true
+      },
+      "uiObservation": {
+        "source": "Root agent observed the original formal UI after each end; not a UI action by this independent reader.",
+        "toolResultRemainedUnknown": true,
+        "connectionInterruptionUnknownShown": true
+      }
+    },
+    {
+      "sample": "copilotApproval",
+      "agentId": "registry:github-copilot-cli",
+      "nativeSessionId": "abe2484e-2d04-4482-92fd-7ff1adad5808",
+      "conversationTitlePrefix": "COPILOT ISO A 982D",
+      "storageKey": "registry:github-copilot-cli:/private/tmp/farfold-phase1-neutral.tGZU83dX:abe2484e-2d04-4482-92fd-7ff1adad5808",
+      "processBefore": {
+        "formalOwnerPid": 38569,
+        "signalledCliPid": 70611,
+        "processGroupId": 70610,
+        "exactGroupMembers": [70610, 70611],
+        "startedAtLocal": "2026-11-06T19:34:12+08:00",
+        "appStandardPipePeerFds": {
+          "stdin": 38,
+          "stdout": 40,
+          "stderr": 51
+        },
+        "pipeOwnershipEvidence": "Independent pre-action libproc PROC_PIDFDPIPEINFO double-ended handle matching; CLI fds 0/1/2 paired only to the listed formal-app fds."
+      },
+      "action": {
+        "actor": "root agent",
+        "signal": "SIGTERM",
+        "signalsSent": 1,
+        "forceSignalSent": false,
+        "formalApplicationKeptRunning": true,
+        "receipt": "output/2026-11-07-stage1-formal-acceptance/copilot-approval-term.json",
+        "atUtc": "2026-11-07T05:20:58.947498+00:00"
+      },
+      "protocol": {
+        "path": "/Users/tw/Library/Logs/Farfold/protocol-v1-1793964852682-7.jsonl",
+        "preActionSealedSha256": "ef82d63cff8a03c7a1311c867aa6a622f9be7c29711934377e79323240d62fc7",
+        "preActionPrefixStillMatchesSeal": true,
+        "finalSha256": "e3a528283f5a26b63732a9ee7a31977ec1453b70b38124cc8a36b36fbc251986",
+        "bytes": 7191,
+        "newPromptsAfterOriginalCancel": 0,
+        "finalOwnerCleanup": {
+          "ts": 1794028860012,
+          "phase": "cleanup",
+          "childReaped": true,
+          "waitFailed": false,
+          "exitCode": 0,
+          "exitSignal": null,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": true,
+          "groupEnded": true,
+          "connectionRemoved": true
+        },
+        "transportIo": {
+          "completion": "parent_wrappers_dropped",
+          "stdin": {
+            "bytes": 1611,
+            "eof": false,
+            "errorCount": 0,
+            "firstError": null
+          },
+          "stdout": {
+            "bytes": 38556,
+            "eof": true,
+            "errorCount": 0,
+            "firstError": null
+          },
+          "stderr": {
+            "bytes": 0,
+            "eof": true,
+            "errorCount": 0,
+            "firstError": null
+          }
+        }
+      },
+      "persistedAfterExactEnd": {
+        "queue": {
+          "blocks": [],
+          "uncertainIndex": null,
+          "outcomeUnknown": true
+        },
+        "sameQueueAfterNormalExit": true,
+        "archiveActivityEnded": false,
+        "archiveActivityIsSeparateFromOutcomeUnknown": true
+      },
+      "uiObservation": {
+        "source": "Root agent observed the original formal UI after each end; not a UI action by this independent reader.",
+        "toolResultRemainedUnknown": true,
+        "connectionInterruptionUnknownShown": true
+      }
+    }
+  ],
+  "preservation": {
+    "snapshotTimesUtc": {
+      "before": "2026-11-07T05:19:32.340736+00:00",
+      "afterAllTargetEnds": "2026-11-07T05:22:13.836011+00:00",
+      "afterNormalExit": "2026-11-07T05:23:09.037187+00:00"
+    },
+    "unchangedAcrossThreeSnapshots": {
+      "composersSha256": true,
+      "choiceSha256": true,
+      "feedbackSha256": true,
+      "otherSettingsSha256": true,
+      "sessionRowsSha256": true,
+      "nonTargetActivitySha256": true
+    },
+    "retainedDraftCountAcrossThreeSnapshots": 1,
+    "sessionCountAcrossThreeSnapshots": [167, 167, 167],
+    "originalQueuesSha256": "e81eca4e0eb1764962c4dbd151348a014dd02a1529268db76ab206559b34b80e",
+    "afterAllNonTargetQueuesSha256": "e81eca4e0eb1764962c4dbd151348a014dd02a1529268db76ab206559b34b80e",
+    "afterExitNonTargetQueuesSha256": "e81eca4e0eb1764962c4dbd151348a014dd02a1529268db76ab206559b34b80e",
+    "allOriginalQueuesExactlyPreserved": true,
+    "allQueuesStableAcrossNormalExit": true,
+    "threeExactUnknownMarkersSaved": true,
+    "independentLiveReadBeforeQuit": "This reader independently read production SQLite in mode=ro/query_only after all three endings; all protected digests matched before, the three exact empty unknown queues existed, and excluding these three queues reproduced the entire original queue digest."
+  },
+  "otherFourConnections": [
+    {
+      "sample": "Kilo",
+      "managedGroupId": 42400,
+      "protocolPath": "/Users/tw/Library/Logs/Farfold/protocol-v1-1793963342638-4.jsonl",
+      "preQuitSha256": "ab15229750b68e3717de1bc9cc48b0ac4505087f39394153eb7f2582f2c69621",
+      "preQuitBytesUnchangedUntilQuitCleanup": true,
+      "preQuitRequests": 4,
+      "preQuitResponses": 4,
+      "preQuitPromptCount": 0,
+      "preQuitOutstandingByCount": 0,
+      "preQuitPendingApprovalByCount": 0,
+      "databaseActivityEndedForSelectedSelfTest": true,
+      "qualification": "Pre-quit independent read-only database check found ended=true, no queued blocks, and no composer for this self-test; completed-request counts agree.",
+      "postQuitOwnerCleanup": {
+        "ts": 1794028950912,
+        "childReaped": true,
+        "waitFailed": false,
+        "exitCode": null,
+        "exitSignal": 15,
+        "termRequested": true,
+        "killRequested": false,
+        "groupEnded": true,
+        "connectionRemoved": true
+      }
+    },
+    {
+      "sample": "Goose B",
+      "managedGroupId": 69567,
+      "protocolPath": "/Users/tw/Library/Logs/Farfold/protocol-v1-1793964607229-6.jsonl",
+      "preQuitSha256": "ede6925365bc43a1e04df8f56f29d315cdb8a4acff81f054e8b9eed5ece987c6",
+      "preQuitBytesUnchangedUntilQuitCleanup": true,
+      "preQuitRequests": 8,
+      "preQuitResponses": 8,
+      "preQuitPromptCount": 3,
+      "preQuitOutstandingByCount": 0,
+      "preQuitPendingApprovalByCount": 0,
+      "databaseActivityEndedForSelectedSelfTest": true,
+      "qualification": "Pre-quit independent read-only database check found ended=true, no queued blocks, and no composer for this self-test; completed-request counts agree.",
+      "postQuitOwnerCleanup": {
+        "ts": 1794028950912,
+        "childReaped": true,
+        "waitFailed": false,
+        "exitCode": null,
+        "exitSignal": 15,
+        "termRequested": true,
+        "killRequested": false,
+        "groupEnded": true,
+        "connectionRemoved": true
+      }
+    },
+    {
+      "sample": "Copilot B",
+      "managedGroupId": 70731,
+      "protocolPath": "/Users/tw/Library/Logs/Farfold/protocol-v1-1793964902464-8.jsonl",
+      "preQuitSha256": "7f36beaf87aad6ba939f0523bd73e6b1a610728d2d5cb2f5230e5c7659a01554",
+      "preQuitBytesUnchangedUntilQuitCleanup": true,
+      "preQuitRequests": 4,
+      "preQuitResponses": 4,
+      "preQuitPromptCount": 2,
+      "preQuitOutstandingByCount": 0,
+      "preQuitPendingApprovalByCount": 0,
+      "databaseActivityEndedForSelectedSelfTest": true,
+      "qualification": "Pre-quit independent read-only database check found ended=true, no queued blocks, and no composer for this self-test; completed-request counts agree.",
+      "postQuitOwnerCleanup": {
+        "ts": 1794028951962,
+        "childReaped": true,
+        "waitFailed": false,
+        "exitCode": null,
+        "exitSignal": 15,
+        "termRequested": true,
+        "killRequested": false,
+        "groupEnded": true,
+        "connectionRemoved": true
+      }
+    },
+    {
+      "sample": "CodeBuddy history-only",
+      "managedGroupId": 71733,
+      "protocolPath": "/Users/tw/Library/Logs/Farfold/protocol-v1-1794007119667-9.jsonl",
+      "preQuitSha256": "620f06560d9726f19c5a0c749cdad6a3498024578bf325a259f9611ffce5ae9b",
+      "preQuitBytesUnchangedUntilQuitCleanup": true,
+      "preQuitRequests": 3,
+      "preQuitResponses": 3,
+      "preQuitPromptCount": 0,
+      "preQuitOutstandingByCount": 0,
+      "preQuitPendingApprovalByCount": 0,
+      "databaseActivityEndedForSelectedSelfTest": null,
+      "qualification": "Only initialize/configuration/history reads on this current connection; no prompt or permission request.",
+      "postQuitOwnerCleanup": {
+        "ts": 1794028950912,
+        "childReaped": true,
+        "waitFailed": false,
+        "exitCode": 0,
+        "exitSignal": null,
+        "termRequested": true,
+        "killRequested": false,
+        "groupEnded": true,
+        "connectionRemoved": true
+      }
+    }
+  ],
+  "normalExit": {
+    "sourceReceipt": "output/2026-11-07-stage1-formal-acceptance/normal-exit.json",
+    "rootObservedUi": "Quit confirmation -> Save and exit -> App quit",
+    "normalSaveAndExit": true,
+    "independentlyRecheckedOldFormalPidAndAllSevenManagedGroupsAbsent": true,
+    "remainingOriginalOwnerOrGroupMembers": [],
+    "originalDraftAndRetainedOneSeenBeforeExitByRoot": true,
+    "afterExitAllThreeUnknownQueuesMatchAfterAllTargetEnds": true,
+    "afterExitProtectedDataMatchBefore": true
+  },
+  "limits": [
+    "The independent reader did not capture the typed IPC channel payload directly; exact owner cleanup diagnostics, root UI observation, and exact saved outcome markers are recorded separately.",
+    "Terminating a cancelled self-test connection proves local process/group release and preservation of an unknown result; it does not manufacture a tool terminal result or prove remote resource release.",
+    "Request/response counts alone are not a universal idle proof; remaining self-test activity and the current history-only CodeBuddy connection were also checked.",
+    "No original work was resent, no production database was manually edited, and no new natural-exit requirement was added.",
+    "The pre-existing dirty debugger-system-native.json was not modified by this reader."
+  ]
+}

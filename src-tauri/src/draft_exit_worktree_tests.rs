@@ -65,7 +65,7 @@ fn cold_unknown_requires_explicit_risk_confirmation_at_the_actual_exit_gate() {
         admit_file_exit(&copies, &work, Some(&s), false)
             .err()
             .as_deref(),
-        Some("EXIT_CONFIRMATION_REQUIRED")
+        Some("WORKTREE_EXIT_REVIEW_REQUIRED")
     );
     let _held = admit_file_exit(&copies, &work, Some(&s), true).unwrap();
     assert!(

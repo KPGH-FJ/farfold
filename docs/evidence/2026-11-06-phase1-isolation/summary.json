@@ -1,0 +1,90 @@
+{
+  "installedRevision": "6ce829c53",
+  "completeFirstWaveAgents": 0,
+  "scope": "Two distinct owned conversations per agent, one shared empty work directory, same existing service and selected model within each agent",
+  "agents": {
+    "goose": {
+      "distinctNativeSessions": true,
+      "observedOverlap": true,
+      "onlyACancelled": true,
+      "aOfficialTurnStopObserved": true,
+      "aMatchingToolTerminalConfirmed": false,
+      "bExactReplyAndCompletionObserved": true,
+      "bPromptToResponseMs": 20318,
+      "bCancels": 0,
+      "bPermissionRequests": 0,
+      "wireSha256": {
+        "A": "9773dbdada61035d3dbc7b53118ee79f78ed5f090f9623083b138fb9ee5ee2a6",
+        "B": "86f0f7275257347c2d2a6e80ea3e84474eb7a47c4ff154bd642ce495bb12e5d3"
+      },
+      "aNativeMode": "approve",
+      "bNativeMode": "auto",
+      "bEarlierShellOutsideOverlapUsedAsApprovalEvidence": false
+    },
+    "copilot": {
+      "distinctNativeSessions": true,
+      "observedOverlap": true,
+      "onlyACancelled": true,
+      "aOfficialTurnStopObserved": true,
+      "aMatchingToolTerminalConfirmed": false,
+      "bExactReplyAndCompletionObserved": true,
+      "bPromptToResponseMs": 4473,
+      "bCancels": 0,
+      "bPermissionRequests": 0,
+      "wireSha256": {
+        "A": "ef82d63cff8a03c7a1311c867aa6a622f9be7c29711934377e79323240d62fc7",
+        "B": "7f36beaf87aad6ba939f0523bd73e6b1a610728d2d5cb2f5230e5c7659a01554"
+      },
+      "aNativeUserAbort": true,
+      "aNativePermissionResult": "denied-interactively-by-user",
+      "bNativeReplyAndNoToolsVerified": true
+    }
+  },
+  "originalDraftPersistedDigestUnchanged": true,
+  "originalRetainedDraftCount": 1,
+  "emptyTestDirectoryAtEnd": true,
+  "oldRequestsResent": 0,
+  "verificationReceiptSha256": "2c774a318ccc00997839f82b162388cf27c54b1f860f7c99900de0e338211e90",
+  "copilotDirectWire": {
+    "runtime": "1.0.106",
+    "firstPreflightPrompts": 0,
+    "firstPreflightReceiptSha256": "b12a53e65d123e8c920510b1729654fc3d6d0c19a6cdaf8c60b5b51fa5872f05",
+    "naturalCompletion": {
+      "prompts": 1,
+      "singleUseApprovals": 2,
+      "cancels": 0,
+      "sameToolWireCompletedAndNativeSuccess": true,
+      "promptResult": "end_turn",
+      "receiptSha256": "ce0e850802d3852abb3d9fc3f73bd8a0d0641a8b3908763a9735f20c6c0211a2"
+    },
+    "cancellation": {
+      "prompts": 1,
+      "singleUseApprovals": 2,
+      "cancels": 1,
+      "closeCalls": 0,
+      "advertisedSessionClose": true,
+      "knownChildProcessesGoneWithinMs": 24,
+      "copilotAliveAtProcessExit": true,
+      "toolShellHadSeparateProcessGroup": true,
+      "observationAfterCancelMs": 22002,
+      "promptResult": "cancelled",
+      "postCancelOnlyUpdate": "agent_message_chunk",
+      "postCancelOnlyUpdateCanonicalBytes": 223,
+      "matchingToolTerminalOnWire": false,
+      "matchingNativeToolComplete": false,
+      "operatorSignals": 0,
+      "ownedProcessExit": 0,
+      "receiptSha256": "4ae518ff3c25f7b4a290c3168b5d9ce8de5d3c9790d20a8b0fe2f430c6e68938"
+    }
+  },
+  "currentSourceControlChecks": {
+    "rustToolActivityPassed": 6,
+    "frontendToolActivityPassed": 49
+  },
+  "waitDiagnostics": {
+    "currentFilesystemMetadataPassed": 9,
+    "ownedOpenStackSampleCount": 48,
+    "desktopLongWaitRecurrenceObserved": false,
+    "fileOpenPositiveControlReceiptSha256": "c07570e2cb6500c2ec4e7394bd20566825140fcfeac9f7e6e3e2d3355c6e0923"
+  }
+}

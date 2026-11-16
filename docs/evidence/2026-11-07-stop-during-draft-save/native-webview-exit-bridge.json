@@ -1,0 +1,30 @@
+{
+  "sourceCommit": "077b4b988abff80ee9bf686512e253a51ed3f2da",
+  "scope": "Standalone native test executable with real hidden macOS WebKit, actual current-source Tauri dispatch and draft quit commands, disposable SQLite and synthetic JS.",
+  "returnCode": 0,
+  "eventCount": 18,
+  "strictOrderingChecks": 15,
+  "actualWebKitUsesNonPersistentDataStore": true,
+  "windowHidden": true,
+  "writtenKey": "unsentWork.v1",
+  "firstNativeQuitRequestedWhileWritePending": true,
+  "cancelResponseBeforeLockedSaveError": true,
+  "lockError": "SQLITE_BUSY",
+  "independentReadAfterFailureMatchedOldDraft": true,
+  "secondNativeQuitRequestedAfterFailure": true,
+  "explicitRetryAfterReleaseSavedNewDraft": true,
+  "exactSecondQuitAcknowledged": true,
+  "actualNativeExitEvent": true,
+  "newProcessReadMatchedNewDraft": true,
+  "probeStderrBytes": 0,
+  "traceSha256": "bda676fca1c1df33385f3fa92e6f51e84245bde28dee403c21f0cb63d2dc8f8a",
+  "probeSourceSha256": {
+    "rust": "e2a4ff6ad1367545e7150cb5e9676fd15c52a37f077bc7ec6d71c10d49e90187",
+    "syntheticJavascript": "af180cc94ffc57a5a686103ed1661c04d54220cf62283800e691fb0cec72ccfd"
+  },
+  "limitations": [
+    "Thin temporary setup seam skips production launch, plugins and notification setup.",
+    "Native quit notification relayed into synthetic WebKit script; actual settings, cancel and acknowledge travel through WebKit IPC.",
+    "No installed Farfold, real DraftStartup, system Dock/Apple Event or Agent was tested in this sample."
+  ]
+}

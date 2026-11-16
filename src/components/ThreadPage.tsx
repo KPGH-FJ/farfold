@@ -14,6 +14,7 @@ import { TranscriptSearchContext } from "./transcript-search";
 import { ConversationFind } from "./ConversationFind";
 import { HistoryReadStatus } from "./HistoryReadStatus";
 import { PromptAdmissionStatus } from "./PromptAdmissionStatus";
+import { ProgramStatusNotice } from "./ProgramStatusNotice";
 import { LoadedSearchJump, type LoadedSearchRequest } from "./LoadedSearchJump";
 import { useEffect, useRef, useState } from "react";
 import type { BrowserWorkspaceState } from "../runtime/browser_workspace";
@@ -36,7 +37,13 @@ import { ThreadView } from "./ThreadView";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { WorkspaceActionMenu } from "./WorkspaceActionMenu";
 import { SessionForkDialog } from "./SessionForkDialog";
+import { SessionToolsDialog } from "./SessionToolsDialog";
+import { SESSION_TOOLS_STRINGS as TOOLS } from "../runtime/session_tools_strings";
 import { sessionForkControl } from "../runtime/session_fork_ui";
+import {
+  historyForkSelection,
+  type HistoryForkSelection,
+} from "../runtime/history_fork_point";
 import { SESSION_FORK_STRINGS as FORK } from "../runtime/session_fork_strings";
 import { MoveConversationsDialog } from "./MoveConversationsDialog";
 import { DeleteConversationsDialog } from "./DeleteConversationsDialog";
@@ -47,7 +54,9 @@ import {
   useCollections,
 } from "../runtime/collections";
 import { LIBRARY } from "../runtime/library_strings";
+import { agentDeletionNotice } from "../runtime/session_deletion";
 import { useArchiveBlockReasons } from "../runtime/archive_blockers";
+import { hasUnconfirmedToolTail } from "../runtime/thread_attention";
 import {
   threads,
   basename,
@@ -187,14 +196,33 @@ export function ThreadPage({
   const [name, setName] = useState(title);
   const [moving, setMoving] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const forkControl = sessionForkControl(thread, onOpened);
+  const [deletionNotice, setDeletionNotice] = useState<string | null>(null);
+  const [toolsOwner, setToolsOwner] = useState<{
+    thread: ThreadState;
+    connectionId: string | undefined;
+  } | null>(null);
+  const toolsVisible = Boolean(
+    active &&
+    toolsOwner &&
+    toolsOwner.thread === thread &&
+    toolsOwner.connectionId === thread?.connectionId,
+  );
+  useEffect(() => {
+    if (toolsOwner && !toolsVisible) setToolsOwner(null);
+  }, [toolsOwner, toolsVisible]);
   const [forkReview, setForkReview] = useState<{
     owner: object;
     thread: ThreadState;
     connectionId: string | undefined;
     isCurrent: () => boolean;
     retired: boolean;
+    selection?: HistoryForkSelection;
   } | null>(null);
+  const forkControl = sessionForkControl(
+    thread,
+    onOpened,
+    forkReview && !forkReview.retired ? forkReview.selection : undefined,
+  );
   if (
     forkReview &&
     (!active ||
@@ -214,13 +242,17 @@ export function ThreadPage({
     setRename(false);
     setMoving(false);
     setDeleting(false);
+    setToolsOwner(null);
     if (forkReview) forkReview.retired = true;
     setForkReview(null);
     setExported(null);
     setError(null);
   };
   useEffect(() => {
-    if (!active) closeDialog();
+    if (!active) {
+      closeDialog();
+      setDeletionNotice(null);
+    }
     return () => actions.current.invalidate();
   }, [active, viewKey]);
   const mutate = (action: () => Promise<void>) =>
@@ -253,9 +285,11 @@ export function ThreadPage({
                 ·{" "}
                 {threads.needsAttention(thread)
                   ? LIBRARY.attention
-                  : thread.running || hasActiveWork(thread)
-                    ? LIBRARY.running
-                    : LIBRARY.notRunning}
+                  : hasUnconfirmedToolTail(thread)
+                    ? STRINGS.thread.unknown
+                    : thread.running || hasActiveWork(thread)
+                      ? LIBRARY.running
+                      : LIBRARY.notRunning}
               </>
             )}
           </span>
@@ -323,6 +357,7 @@ export function ThreadPage({
       </header>
       <HistoryReadStatus target={viewKey} active={active} />
       <PromptAdmissionStatus thread={thread} active={active} />
+      <ProgramStatusNotice thread={thread} active={active} />
       {active && finding && (
         <ConversationFind
           key={viewKey}
@@ -376,12 +411,34 @@ export function ThreadPage({
               !rename &&
               !moving &&
               !deleting &&
+              !deletionNotice &&
               !exported &&
               !forkVisible
             }
             agents={agents.cards}
             onGoSettings={onGoSettings}
             onOpened={onOpened}
+            onForkFromMessage={(item) => {
+              if (!active || !ownsContent() || forkVisible) return;
+              const selection = historyForkSelection(thread, item);
+              if (!selection) return;
+              let control = sessionForkControl(thread, onOpened, selection);
+              if (!control || !control.isCurrent()) return;
+              if (control.prepareNew) {
+                control.prepareNew();
+                control = sessionForkControl(thread, onOpened, selection);
+              }
+              if (!control || !control.isCurrent()) return;
+              if (forkReview) forkReview.retired = true;
+              setForkReview({
+                owner: control.owner,
+                thread,
+                connectionId: thread.connectionId,
+                isCurrent: ownsContent,
+                retired: false,
+                ...(control.phase === "idle" ? { selection } : {}),
+              });
+            }}
             onRecover={onRecover}
             onNew={onNew}
             onNewFromMessage={
@@ -424,6 +481,23 @@ export function ThreadPage({
             onClose={closeDialog}
           >
             <div className="workspace-action-body">
+              {thread?.sessionToolInventory && (
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  disabled={saving || !thread.connectionId}
+                  onClick={() => {
+                    if (!active || !thread.connectionId) return;
+                    setToolsOwner({
+                      thread,
+                      connectionId: thread.connectionId,
+                    });
+                    setMenu(false);
+                  }}
+                >
+                  {TOOLS.open}
+                </button>
+              )}
               <button
                 type="button"
                 className="btn btn-ghost"
@@ -626,6 +700,15 @@ export function ThreadPage({
             </div>
           </WorkspaceActionMenu>
         )}
+        {toolsVisible && toolsOwner && (
+          <SessionToolsDialog
+            thread={toolsOwner.thread}
+            title={title}
+            active={active}
+            onClose={() => setToolsOwner(null)}
+            returnFocusRef={menuAnchor}
+          />
+        )}
         {active && exported && (
           <ConversationExportHost
             {...exported}
@@ -662,7 +745,11 @@ export function ThreadPage({
                       forkReview.retired = true;
                       setForkReview(null);
                       forkControl.prepareNew?.();
-                      const next = sessionForkControl(thread, onOpened);
+                      const next = sessionForkControl(
+                        thread,
+                        onOpened,
+                        forkReview.selection,
+                      );
                       if (
                         !forkReview.isCurrent() ||
                         forkReview.connectionId !== thread.connectionId ||
@@ -678,6 +765,7 @@ export function ThreadPage({
                         connectionId: thread.connectionId,
                         isCurrent: forkReview.isCurrent,
                         retired: false,
+                        selection: forkReview.selection,
                       });
                     },
                   }
@@ -721,12 +809,44 @@ export function ThreadPage({
             returnFocusRef={menuAnchor}
             onClose={closeDialog}
             onDelete={() =>
-              void mutate(async () => {
-                await threads.delete(row);
-                onBack();
-              })
+              void actions.current.run(
+                async () => {
+                  const outcome = await threads.delete(row);
+                  await collections
+                    .assign([viewKey], "")
+                    .catch(() => undefined);
+                  return outcome;
+                },
+                {
+                  pending: setSaving,
+                  success: (outcome) => {
+                    closeDialog();
+                    if (outcome === "deleted") onBack();
+                    else setDeletionNotice(agentDeletionNotice(outcome));
+                  },
+                  failure: (reason) =>
+                    setError(uiError(reason, LIBRARY.deleteLocalUnknown)),
+                },
+              )
             }
           />
+        )}
+        {active && deletionNotice && (
+          <WorkspaceDialog title={LIBRARY.deleteResult} onClose={onBack}>
+            <div className="workspace-dialog-body" role="status">
+              <p>{LIBRARY.deleteLocalRemoved}</p>
+              <p>{deletionNotice}</p>
+            </div>
+            <footer>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={onBack}
+              >
+                {LIBRARY.back}
+              </button>
+            </footer>
+          </WorkspaceDialog>
         )}
         {active && rename && (
           <WorkspaceDialog

@@ -16,7 +16,7 @@ Farfold 是独立的多 Agent 桌面产品。React工作台只有一套对话、
 
 工作位置不可访问在进程准备前校验并返回固定无路径错误码；恢复、规范路径预检与工作设置读取共用精确安全提示，并保留归档位置引导。e472已正式验证原目录缺失的两处提示，不创建替代目录、改写历史或重发请求；新旧正式分项边界见[当前状态](status.md)。
 
-首发范围仍为[29家 × 八项标准](agent-first-release.md)。目录条目、可安装、握手、认证、请求、恢复、工具和真实用户效果分别判断。当前缺口不因同一界面、代表样本或测试数量而缩小；NEW-24受影响的新真实发送继续暂停，完整权限读回、OpenCode初始化和历史自动重开请求者仍有未知，详见状态页。
+当前首发目录见[名单及八项标准](agent-first-release.md)。目录条目、可安装、握手、认证、请求、恢复、工具和真实用户效果分别判断。当前缺口不因同一界面、代表样本或测试数量而缩小；NEW-24受影响的新真实发送继续暂停，完整权限读回、OpenCode初始化和历史自动重开请求者仍有未知，详见状态页。
 
 ## 源码入口与职责
 
@@ -41,11 +41,15 @@ Farfold 是独立的多 Agent 桌面产品。React工作台只有一套对话、
 
 ## 接入、认证和服务配置
 
-[first_release.rs](../src-tauri/src/acp_client/first_release.rs) 是29项当前允许名单；目录缓存与实时目录都需过滤。少数内置发现入口只是发现已有程序的方式，不代表首发只覆盖这些程序。安装只执行官方目录或用户明确配置的命令；归档下载摘要用于校验下载，不把 Agent二进制摘要或固定版本当握手兼容性。
+[first_release.rs](../src-tauri/src/acp_client/first_release.rs) 是当前首发允许名单；目录缓存与实时目录都需过滤。少数内置发现入口只是发现已有程序的方式，不代表首发只覆盖这些程序。安装只执行官方目录或用户明确配置的命令；归档下载摘要用于校验下载，不把 Agent二进制摘要或固定版本当握手兼容性。
 
 通用接入对象保持 id、command、args、env；兼容性由 initialize握手确认。不得清空继承环境、建立私有HOME、替 Agent写用户配置，或从项目目录读取启动配置。Agent差异限于接入层核过的官方能力、认证方法和配置选项；组件不新增专属面板。旧阶段的三个适配器、注册表和专属面板不保留兼容实现，历史删除记录仅在归档中。
 
 认证由协议方法驱动：Agent认证调用 authenticate，终端认证使用内嵌PTY。终端退出、网页返回和安装成功不能替代认证回执。服务说明、模型ID及密钥引用属于元数据；密钥保存在系统凭据存储，不进入数据库、事件或日志。保存服务不自动分发，明确选择服务才授权本次使用，见 [service_delivery.rs](../src-tauri/src/acp_client/service_delivery.rs)。
+
+自定义接入由 [CustomAgentDialog.tsx](../src/components/CustomAgentDialog.tsx) 明确区分普通环境变量与安全输入。普通值作为非秘密元数据原样保存，保留空值和空格，不按变量名猜测秘密或迁移旧值；安全输入单独交付 [auth/agent_environment.rs](../src-tauri/src/auth/agent_environment.rs)，真实值只进入系统凭据存储，Agent登记只保留变量名与引用。写凭据前先保存不含秘密的pending归属；凭据全部保存后，[meta_store/custom_agent.rs](../src-tauri/src/meta_store/custom_agent.rs) 在同一事务中发布接入并移除pending。保存或清理结果未明时保留归属，避免误删已发布凭据。
+
+[auth.rs](../src-tauri/src/auth.rs) 在可信启动准备中解析安全引用；缺失或无法读取即失败，不沿用继承环境中的同名值。环境合并共用 [shell_env/overrides.rs](../src-tauri/src/shell_env/overrides.rs)：Windows按不区分大小写的键覆盖全部同名变体，Unix按大小写区分；未覆盖的继承变量保持。所选服务与程序交付沿各自既有优先级合并，完整环境与秘密不进入启动诊断。
 
 终端由[既有退出所有者](../src-tauri/src/pty.rs)持有同一Child、进程组与控制句柄；[startup_owner.rs](../src-tauri/src/pty/startup_owner.rs)把该工作线程前移到首个系统调用之前。每个管理器只允许一个未确认的启动，[startup_control.rs](../src-tauri/src/pty/startup_control.rs)在同一状态锁下裁定就绪与等待超时。失败、取消或析构阻塞时，认证输出闭包、配置保护和活动许可仍随原所有者保留；只有实际清退才可报告完成，未知状态不自动释放或重试。这些后续源码已随fa5689纳入macOS正式应用；选定Windows终端取消与认证退出分项另有成功证据，保留主句柄的无应答负控仍失败，不代表ConPTY全部退出路径已验。
 
@@ -61,6 +65,8 @@ Farfold 是独立的多 Agent 桌面产品。React工作台只有一套对话、
 
 恢复标记保存实际已确认的配置和服务身份，不只保存显示文字。服务变化、旧配置缺字段或恢复失败会保留历史、草稿、附件和暂停队列，要求核对；默认配置不冒充原设置。配置与恢复入口见 [session_configuration.ts](../src/runtime/session_configuration.ts)、[session_config_recheck.ts](../src/runtime/session_config_recheck.ts) 与 [model_guard.rs](../src-tauri/src/acp_client/model_guard.rs)。
 
+已读到正文且缺原配置的旧对话可以核对已知原设置。确认仅限同一已打开的对话、同一现用连接及完整读回的模型选项，只补 Farfold 对应的空配置。选定备份时先从私有快照核对 Agent、目录和原对话标识。查看当前报告时，用户核对它与原账号、服务和选项一致后才保存。两种途径均沿用 Agent 的已有服务，保留暂停中的待发内容。[原设置确认](../src-tauri/src/acp_client/original_config.rs)
+
 [delivery_flow.rs](../src-tauri/src/acp_client/delivery_flow.rs)让打开、预览与复制对话的Tauri通道只发送轻通知；界面逐项取出并精确确认原事件，缓冲/异步控制转交与消费分别计数。队列保存原事件及逻辑配额，退役不提前释放在途副本债务，窗口实际销毁才清理未归还的副本。[ingress_permit.rs](../src-tauri/src/acp_client/ingress_permit.rs)在官方SDK前按逻辑积压暂停后续读取，单个已接纳有限帧可越过水位；未知归属前缀超额明确结果未知而保留原工作。现有[delivery_observation.rs](../src-tauri/src/acp_client/delivery_observation.rs)采样另算，不用于筛除原始事件，也不把入缓冲当消费。[session_delivery_observer.ts](../src/runtime/session_delivery_observer.ts)只在外层解析交付封套。当前受控检查不证明React绘制、真实多Agent资源或RSS上限，安装版未验。
 
 最新源码由 [history_admission.rs](../src-tauri/src/acp_client/history_admission.rs) 统一限制已有对话打开/读取的同时开始数、纯等待数和保留请求逻辑字节；[cold_history_open.rs](../src-tauri/src/acp_client/cold_history_open.rs) 在入队前后复核保存来源、模型和目标设置，获准后才准备临时网页工具与连接。许可保持到完整读取标记交付，超时或无人接收时随真实进程归属保留；最后释放不在队列、连接或活动状态锁内唤醒下一项。窗口销毁撤回尚未开始的等待，取消只接受当前窗口与请求令牌；已开始仍按原操作结果判断。前端 [HistoryReadStatus.tsx](../src/components/HistoryReadStatus.tsx) 展示独立读取状态，Agent原始事件不经该状态通道筛除。首发、预览、列表、分支及当前停止/审批不纳入此冷读取队列；这不提供传输背压、渲染消费确认或RSS硬上限。该机制已随3845完成完整工程与安装检查；正式界面一次既有Dirac读取的状态和回复回放已验，真实等待取消、并发突发与长期资源仍未验。a371另将审批登记后的事件发布移到审批表锁外，登记及原始请求保持；该修复已包含在5790安装源码中，不能由此推定全部审批真实路径已验。
@@ -71,11 +77,15 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 未发送内容与准备记录保存在meta_store的settings键中；文字、附件位置、意见与暂停队列可恢复，但附件需重新核验，保存失败明确呈现。保存退出采用单次共享操作和令牌校验，等当前保存完成；取消仅释放本次退出自己的锁，不释放更新、工作位置等其他操作的锁。重启仍受原有忙态与未知保护。
 
+[storage_restore.ts](../src/runtime/storage_restore.ts) 的恢复预览与普通读取共用 [drafts.ts](../src/runtime/drafts.ts) 的 `parseDraftSnapshot`：先解码持久化音频，再核同一生产格式，保留合法音频和文档元数据。恢复模式额外拒绝未知嵌套字段，普通旧格式读取保留既有兼容规则；未知内容不能被静默丢弃后覆盖旧稿。解析不发布状态、不读取外部文件，也不从备份元数据恢复文件许可；附件仍须经过发送前的重新核对。
+
 [composer_attachment_import.ts](../src/runtime/composer_attachment_import.ts)按原草稿代次及仍属于该草稿的精确附件对象持有导入责任；每次实际结果写入前重核该归属。保存继续等待所有仍归属原草稿的未完成输入；切换对话或退出锁不解除等待。用户移除输入后可释放相应保存等待；这不取消或假称实际File/系统读取已结束。原任务继续自然收尾，迟到内容不能加入新文字或另一个附件，拒绝与错误亦不能重新取得旧输入的写入权。该结构只管理当前未发送输入，不增加事件账本或另一套运行控制者；受控settings写入不替代真实退出/重启和存储故障验证。
 
 [draft_images.ts](../src/runtime/draft_images.ts)另以共用两项名额限制跨批次剪贴板候选准备，涵盖实际File读取返回、编码与候选检查；原缺失、大小门槛优先，忙态在arrayBuffer及Base64编码前拒绝。名额等该准备真正返回、拒绝或抛错后释放，草稿撤回不释放它。它与系统文件读取的两项限制、浏览器解码的两项限制彼此独立；不排队或自动重试，也不把被拒绝的图片字节称为已经保存。
 
 [audio_input_draft.ts](../src/runtime/audio_input_draft.ts)为仍归属当前音频审阅的读取登记保存等待，[useAudioComposerAttachments.tsx](../src/components/useAudioComposerAttachments.tsx)初读和确认重读共用该责任。取消、移除或归属失效时退役该等待；仅仍归属本次的附件恢复原对象，已移除的附件不重建。真实读取仍由调用方等待，系统许可不在此释放。迟到的有效内容不能覆盖新文字、恢复旧附件或提示已保存。文档输入原有取消等待与共用存储代码保持；受控组件与设置写入仍不替代正式退出/重启、真实文件读取或长期内存验证。
+
+[live_status.rs](../src-tauri/src/acp_client/live_status.rs)只为已核官方通知附加共用临时呈现，原方法与参数完整保留；前端[program_status.ts](../src/runtime/program_status.ts)仅为当前已发布的精确对话对象保留最近提示，不写正文或元数据，也不改变工作与整理责任。已识别的打开期状态提示保留原件但不给显示权。官方单条用量经独立nullable DTO进入共用[message_usage.ts](../src/runtime/message_usage.ts)，仅在精确连接的同一视图保留最近一条；有效公共打开可随成功历史视图转交，预览和退役归属不展示。它与上下文/累计值分开，不猜消息关联或费用币种，不推断整理终态；实际边界见[当前状态](status.md)。
 
 ## 文件输入、成果和意见
 
@@ -89,6 +99,8 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 [OpenedFileView.tsx](../src/components/OpenedFileView.tsx) 及 [workers](../src/workers) 实现文字、Markdown、Office及PDF的有限预览。PPTX始终是部分预览；表格范围、PDF文字和DOCX结构不等同源应用全部显示。HTML由网页预览处理，其他文件可交系统应用。 DOCX图片由[DocumentImages](../src/runtime/document_images.ts)按当前显示者引用计数共用Blob URL；[DocxDocumentView.tsx](../src/components/DocxDocumentView.tsx)在失败时先撤本节点来源，再释放自己的引用，最后一个显示者释放才撤销URL。当前来源及存活状态校验隔离迟到错误，换源或卸载清理幂等；不自动重试，不据URL撤销推断原文档字节或物理解码内存已经释放。
 
+工作簿刷新和重开把同根同路径的保留页提示交给[xlsx_directory.ts](../src/runtime/xlsx_directory.ts)的共用纯选择函数；先校验新捕获目录，再一次解析确认的实际页，显式新选择优先。取消/失败不触发换页重试，完整成功前原预览与版本意见保持。
+
 [xlsx_sheet.ts](../src/runtime/xlsx_sheet.ts)为每张已选工作表使用16,385项Uint32列索引（65,540字节数据区），以样式编号加一保存覆盖，默认样式0也能拒绝重叠。有效区间总覆盖不超过16,384列；区间检查与填充有界，单元格按行/列默认与显式样式优先级读取，列布局保持输入顺序。XML、单元格及展开文字原上限不变；这不是总解析内存或耗时保证。
 
 [xml_namespace_scope.ts](../src/runtime/xml_namespace_scope.ts)供DOCX/PPTX解析器共用只读声明作用域：无本地声明时共用父作用域，有声明时仅保存本地自有数据并冻结，祖先声明不复制到每个节点。前缀继承、局部覆盖、兄弟隔离及MC分支和MustUnderstand规则保持，特殊名称不触发原型设置。原XML预算及未知格式拒绝不变；本批受控验证中真实Worker所用输入是自有合成parts，文件身份为逻辑夹具标签，不能称为系统文件/ZIP核验或完整Office排版证明。
@@ -98,6 +110,12 @@ PDF外层[预览](../src/runtime/pdf_preview.ts)及内层[绘制线程](../src/w
 PDF文件预览在[组件](../src/components/VisualFilePreview.tsx)先核原文件身份、MIME与编码长度，再向原共用绘制入口交付延后取字节的方法；[pdf_preview.ts](../src/runtime/pdf_preview.ts)取得既有名额后才调用实际字节校验与展开。入口仍接受直接字节；准备失败或取消在原`finally`归还自己的名额，未新增资源池或自动重试。真实受控WebKit验证真实解析、画布像素、满额拒绝和隐藏后迟到位图清理；只暂留已完成结果的交付，不证明物理解析忙态、进程内存或正式应用界面。
 
 意见绑定原对话、规范路径和具体磁盘版本；DOCX结构位置、XLSX单元格范围、PPTX预览位置等只对实际已解析的内容有效。明确加入原草稿后才由用户发送，不自动提交。刷新、切换、隐藏和迟到回包需核对版本与归属；自动刷新失败保留旧预览并标明状态，不能把旧位置当新文件。只有 Agent真实修改及重新核验文件，才证明返工完成。
+
+[xlsx_parse.ts](../src/runtime/xlsx_parse.ts)在全局元数据核验后可先发轻量目录，再解析所选页；工作线程中间包不结束请求、不延长时限或提前释放共用名额。[WorkbookFilePreview.tsx](../src/components/WorkbookFilePreview.tsx)把同捕获目录与成功网格分开，首次坏页也能另选；网格、意见及版本刷新仍沿原成功与归属边界。目录不是完整内容证明，完整输入读取不采用此中间包。
+
+[FileArtifactView.tsx](../src/components/FileArtifactView.tsx)以明确来源、范围和准确双侧文本的SHA-256保留报告片段意见；旧弱键保留在原意见区，不当作新版本。异步摘要及编辑都核当前归属，报告摘要不冒充磁盘文件摘要。[file_copy_jobs.rs](../src-tauri/src/file_copy_jobs.rs)只在精确Ready且尚未派写时将忙态结算为失败，原写者继续，拒绝请求释放自己的退出许可；未知通信和实际发布保留原判断。
+
+新对话的保留区以已确认的完整本地索引和当前准备对话的完整键识别失联意见。失联项沿用原意见记录和版本，只提供查看与复制。列表就绪确认属于当前索引快照，读取失败保留原侧栏并暂缓分类。
 
 ## 消息图片与音频预览
 
@@ -168,19 +186,25 @@ Markdown导出仅覆盖当前已加载的可读消息；资料包按实际选取
 
 “复制当前对话”调用 Agent官方复制能力，在本次处理时保存完整当前上下文；不是指定历史节点分支。父对话保留、子会话独立，项目文件仍共享；新连接不恢复旧网页等许可，不自动发送。复制已经派发而结果未知时禁止盲目再建。它不同于“用相同设置再开一段”和“从一条消息准备新稿”，后两者不复制完整历史，见 [session_fork_strings.ts](../src/runtime/session_fork_strings.ts)。
 
+[conversation_read_state.ts](../src/runtime/conversation_read_state.ts)按当前可见且可读的对话登记未读归属。后台保留页各自记录未读，过期可见事件和清理按原登记对象核对。
+
 ## 网页、标签和许可
 
 前端每个对话管理标签与选中页，后端 [tab_commands.rs](../src-tauri/src/browser_workspace/tab_commands.rs)、[page_store.rs](../src-tauri/src/browser_workspace/page_store.rs) 管理真实页面身份。手动浏览、文件预览和 Agent读取是不同授权。隐藏或收起可保留页面与许可；明确关闭、换页或连接结束撤回旧范围，旧页面回包不得沿用到新页。
 
 公开网页使用隔离网页存储；macOS本地HTML专用存档按规范项目/文件范围区分。多文件项目和本地开发服务器通过各自路径、来源与网络规则预览，不把只读预览策略称为操作系统沙箱。网页没有Tauri应用桥，页面内容也不能直接成为工作台指令。
 
-当前网页工具包括观察、读取快照以及经确认的节点点击和普通输入；生产截图仅在系统可检查封闭内容且前后页面/许可一致时工作，编辑区、整页编辑、框架或证据不足均拒绝。每次截图单独确认，已有文字许可不包含截图；首次截图不产生长期文字许可，失败不降级返回文字，在途请求直到实际回传确认仍可撤回。旧macOS能力不足继续不可用；Windows已取得受控网页经真实WebView2与辅助进程的生产接口分项实测，macOS27、正式界面、远程网页与真实Agent交付仍未验，具体范围见[当前状态](status.md)。节点身份、页面版本与许可需在执行时核对；敏感输入、登录或页面请求不能自行扩权。交付点击命令不等于网站业务动作完成。
+当前网页工具包括观察、读取快照以及经确认的节点点击和普通输入；生产截图仅在系统可检查封闭内容且前后页面/许可一致时工作，编辑区、整页编辑、框架或证据不足均拒绝。每次截图单独确认，已有文字许可不包含截图；首次截图不产生长期文字许可，失败不降级返回文字，在途请求直到实际回传确认仍可撤回。临时stdio接入开放给[已审核的Codex与OpenCode启动形态](../src-tauri/src/acp_client/browser_capability.rs)，实际子进程的有效环境、来源及入口须匹配；OpenCode自动堆快照或未审遥测会拒绝工具接入，不替用户关闭诊断。握手或创建对话成功不代表工具就绪，仍须实际辅助连接完成初始化及工具清单交付。macOS正式Goose已有同调用公开页PNG、撤回及取消分项；OpenCode已有零模型连接与许可状态分项；后续单次真实请求未产生可展示回复或网页调用，原因未知，不记作读取成功。Windows保留此前WebView2生产接口分项；其他版本、来源及逐家原条件见[当前状态](status.md)。节点身份、页面版本与许可需在执行时核对；敏感输入、登录或页面请求不能自行扩权。交付点击命令不等于网站业务动作完成。
 
 输入执行前后若发现受保护控件，或已派发输入但无法确认结果，撤回该页原共享许可；晚回包不能继续交付原许可的内容。保留实际派发与未知结果，不自动重试，也不把撤回许可说成敏感网页操作已通过。
 
-[browser_sharing.rs](../src-tauri/src/browser_sharing.rs) 与接入层临时工具配置建立本次连接通道：macOS用私有Unix socket，Windows用当前用户管道，权限令牌不持久保存。辅助进程先消费临时秘密再进入普通应用初始化；准备、确认、连接结束与资源清理有独立归属。该接入不是29家网页能力验收。
+[browser_sharing.rs](../src-tauri/src/browser_sharing.rs)与接入层建立本次连接通道：stdio辅助程序在macOS通过私有Unix socket、Windows通过当前用户管道交换临时令牌，先消费秘密再进入普通应用初始化，不持久保存令牌。Goose经官方扩展接口直接使用Unix连接，不把凭据写入扩展配置；实际进程及对话身份、原工具集合和精确移除分别核对。所有路径共用页面许可与输出撤回；OpenCode的关闭回执不证明工具已断开，本地归属撤回、输出屏障及进程结束仍分别确认。普通同目录对话使用独立进程，复制时源端临时预览不可发送，关闭后才在独立目标进程打开，不继承旧网页许可。退出先撤页面，再等待有界清理；结果未知沿既有退出确认保留，不伪造停止。该接入不是29家网页能力验收。
+
+最新源码另为macOS已核fast-agent/Mistral入口接入无秘密通道：[browser_offer.rs](../src-tauri/src/acp_client/browser_offer.rs)在准备时选择通道，发送前核实际启动入口、通道配对及READY子进程；[browser_helper_owner.rs](../src-tauri/src/acp_client/browser_helper_owner.rs)只在内存绑定这一实际进程及生命周期。MCP描述仅带公开临时名称和程序参数，环境为空；[mach_channel.rs](../src-tauri/src/browser_sharing/mach_channel.rs)用发送时进程身份和本应用代码身份校验后交付新连接，旧公开名称不构成页面权限。每个辅助进程保留自己的请求与输出确认，共享本次对话的页面许可；发现连接自然结束不结束整个通道，重建不能清除未知输出，撤回等待所有实际连接的停止确认。旧令牌通道不能混用于这两种来源，既有Codex/OpenCode及Goose条件保持。受控测试和官方实际接入分开，当前安装及逐家验证以[状态页](status.md)为准。
 
 [remembered_pages.rs](../src-tauri/src/browser_workspace/remembered_pages.rs) 只在用户逐页核对并确认无秘密后保存公开网址、所属对话与顺序。重启只列清单，点击后才打开；不保存旧读取许可，不自动恢复页面。关闭页面保留清单，忘记或清空只移除相应记录。
+
+[browser_sharing.rs](../src-tauri/src/browser_sharing.rs)将原页实际失效的一次性截图交由已有停止流程；等待操作锁后再核同一原请求，且有回执才解除停止。常驻许可沿原核对，独立取消不等于页面失效。在途首张截图会阻止迟到的手动授予长期许可，不新增输运协议。
 
 ## 技能与MCP清单、管理
 
@@ -191,6 +215,12 @@ Markdown导出仅覆盖当前已加载的可读消息；资料包按实际选取
 额外技能目录仅用于一次明确查询：UI先支持单目录，请求结构最多4个有序目录；与默认技能合并，不是只列额外目录。后端在初始化、设置确认与列表读取间复核目录身份，设置ACK和返回范围必须匹配。非空额外目录得到的整份报告均只读，无管理目标，后端也拒绝绕过；不安装技能，不持久配置，不使当前对话自动采用，见 [extra_skill_roots.rs](../src-tauri/src/acp_client/extension_inventory/extra_skill_roots.rs)。
 
 普通范围的技能启停及部分MCP管理属于独立审阅流程；必须取得当前有效目标、确认实际修改内容，满足忙态与清理门禁后才调用官方方式。管理入口并非所有来源、操作或29家全支持，配置修改成功也不替代当前对话实际采用及具体工具测试。
+
+当前对话管理复用 [SessionToolsDialog.tsx](../src/components/SessionToolsDialog.tsx) 与共用 [SessionToolManagement.tsx](../src/components/SessionToolManagement.tsx)，仅由接入层核实的管理能力开放。当前接线支持 Goose 官方无凭据 HTTP 项的读取、审阅添加和精确撤回，见 [session_tool_changes.rs](../src-tauri/src/acp_client/session_tool_changes.rs)。清单项目的短期编号对应准确官方标识、完整描述和完整清单摘要；同名歧义不可撤回，外部变化使旧编号失效。操作沿原对话与连接派发，保存回执、持久清单及活动工具报告分别记录；空工具报告不作为已经撤回的证明。
+
+修改前以事务在 [meta_store/mcp_pending.rs](../src-tauri/src/meta_store/mcp_pending.rs) 保存本条对话的待核摘要，只含操作身份、动作、索引创建身份及前后配置摘要，不存工具地址、凭据或事件账本。内存操作所有者复用既有忙态；关闭面板、超时或传输结束不解除未知结果。待核期间阻止本条发送、加载、分支及配置修改，并保护涉及的账号、服务、接入登记和整库恢复；其他无关对话不受此记录限制。
+
+恢复由 [session_tool_recovery.rs](../src-tauri/src/acp_client/session_tool_recovery.rs) 核实原操作结束，沿原保存服务启动只读检查，在加载历史前读取官方清单。只允许确认与修改前或本次目标准确一致的结果；出现其他配置变化时保留待核，不自行接纳。确认再次核清单、原记录和检查身份后才清除本条标记，要求用户重新打开，不自动发送或重放修改。前端等待超时后可显式查询同一确认，后端保留同一任务；迟到结果不能覆盖新的查询。以上为实现结构，正式验证范围以[当前状态](status.md#p41)为准。
 
 技能包管理使用同一共用类别，见 [plugin_management/mod.rs](../src-tauri/src/acp_client/plugin_management/mod.rs) 与 [plugin_management_controller.ts](../src/runtime/plugin_management_controller.ts)。先明确查询来源，再选择来源并明确读取其中的技能包；接口不接受界面传来的来源路径或任意名称，也不回退到全量查询。来源报告的编号仅指向短期内存中的名称、根目录和完整官方来源身份；每次技能包读取前后重新核对，审阅、确认及只读核对继承同一范围。缺少配置依据的安全来源可以只读查询，管理仍须已确认的配置来源与项目；歧义来源及官方远程全量入口不用于此范围查询。
 
@@ -215,11 +245,11 @@ Windows资料树与受控独立Git目录共用[recovery_pack.rs](../src-tauri/sr
 <details>
 <summary>早期Windows组件与运行记录（历史边界，不代表当前入口或未完成清单）</summary>
 
-当前631增量中，Git有限输入在Windows命令重建之后安装；资料对象以同一持有文件核完整卷/128位身份、范围、哈希和前后版本。[private_bare_windows.rs](../src-tauri/src/worktrees/private_bare_windows.rs)及[git_source_export_windows.rs](../src-tauri/src/worktrees/git_source_export_windows.rs)已有受限内部消费者，但真实Windows新增7项/5项均在来源只读连接前提失败，尚未证明消费成功；后续29433以生产者原文件哈希、当前完整身份与关闭写句柄后的严格读取配对补交接；中间存在写入共享窗口，后续复核并不称连续不可变。公开变更入口与Manifest1部分资料拒绝门保持，不因内部模块存在就称完整归档或恢复。
+当时631增量中，Git有限输入在Windows命令重建之后安装；资料对象以同一持有文件核完整卷/128位身份、范围、哈希和前后版本。[private_bare_windows.rs](../src-tauri/src/worktrees/private_bare_windows.rs)及[git_source_export_windows.rs](../src-tauri/src/worktrees/git_source_export_windows.rs)已有受限内部消费者，但真实Windows新增7项/5项均在来源只读连接前提失败，尚未证明消费成功；后续29433以生产者原文件哈希、当前完整身份与关闭写句柄后的严格读取配对补交接；中间存在写入共享窗口，后续复核并不称连续不可变。公开变更入口与Manifest1部分资料拒绝门保持，不因内部模块存在就称完整归档或恢复。
 
 [worktrees](../src-tauri/src/worktrees/mod.rs) 通过官方Git创建或接入独立目录；从提交内容创建，不复制原目录未提交修改，不执行项目钩子或自动访问网络。“使用”更新明确的新稿，不改既有历史的工作位置，也不自动合并项目更改。
 
-Windows现有目录沿“检查、明确接入、重查”路径保存私有完整卷与文件身份；[read_context.rs](../src-tauri/src/worktrees/read_context.rs) 在一次只读操作期间持有经核查的本地目录、元数据和Git程序句柄，限定只读命令及配置环境，结束前重查身份。Unix原身份表示保持。目录凭据不是持续文件系统授权；当前正式应用中的Windows新建、归档、删除、恢复及依赖实际准备仍在入口拒绝，不能由已有目录接入推为整个生命周期完成。依赖元数据检查已有源码；后续9文件通过同一持有目录对象的完整扫描锁、原始UTF-16与完整128位身份配对22个固定名称及真实叶元数据，错误不变成缺失或部分成功。该源码已包含在5790的macOS安装中，但Windows实际执行未验，不代表材料完整保存、依赖安装或服务就绪；同步锁及内核等待不被15秒响应期限中止，新建、归档、删除、恢复仍拒绝。已有目录相关源码已安装到macOS应用，Windows真实运行尚未验证。
+Windows现有目录沿“检查、明确接入、重查”路径保存私有完整卷与文件身份；[read_context.rs](../src-tauri/src/worktrees/read_context.rs) 在一次只读操作期间持有经核查的本地目录、元数据和Git程序句柄，限定只读命令及配置环境，结束前重查身份。Unix原身份表示保持。目录凭据不是持续文件系统授权；当时的Windows新建、归档、删除、恢复及依赖实际准备仍在入口拒绝，不能由已有目录接入推为整个生命周期完成。依赖元数据检查已有源码；后续9文件通过同一持有目录对象的完整扫描锁、原始UTF-16与完整128位身份配对22个固定名称及真实叶元数据，错误不变成缺失或部分成功。该源码已包含在5790的macOS安装中，但Windows实际执行未验，不代表材料完整保存、依赖安装或服务就绪；同步锁及内核等待不被15秒响应期限中止，新建、归档、删除、恢复仍拒绝。已有目录相关源码已安装到macOS应用，Windows真实运行尚未验证。
 
 后续[material_windows.rs](../src-tauri/src/worktrees/material_windows.rs)以同一持有对象核默认数据、扩展属性、命名数据流及所有者、组和DACL；另读已存储完整性标签，不能将标签缺失推定为没有有效系统策略或完整SACL为空（[Windows说明](https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control)）。安全描述符使用有界缓冲并计入共同观察工作预算。[material_links.rs](../src-tauri/src/worktrees/material_links.rs)按完整卷/128位身份及原始UTF-16名称摘要核树内硬链接成员；树外或排除名称未计齐即拒绝，不越界寻找名称，也不声称原子快照。[material_owner.rs](../src-tauri/src/worktrees/material_owner.rs)统一保留无法确认清退的原句柄与读取上下文，此后拒绝再次观察，直到实际进程结束。
 

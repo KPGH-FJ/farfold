@@ -7,10 +7,17 @@ import {
 import { beforeEach, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => ({
-  slots: [] as { value?: unknown; deps?: unknown[]; cleanup?: () => void }[],
+  slots: [] as {
+    value?: unknown;
+    deps?: unknown[];
+    cleanup?: () => void;
+    phase?: "layout" | "passive";
+  }[],
+  layoutEffects: [] as (() => void)[],
   cursor: 0,
   effects: [] as (() => void)[],
   active: true,
+  cwd: "/work",
   onOpenFile: undefined as ((path: string) => void) | undefined,
   onOpenHtml: undefined as ((file: typeof verified) => void) | undefined,
   open: vi.fn(),
@@ -42,36 +49,44 @@ vi.mock("../runtime/file_delivery", () => ({
     reveal: h.reveal,
   },
 }));
-vi.mock("react", async (original) => ({
-  ...(await original<typeof import("react")>()),
-  useState: (initial: unknown) => {
-    const slot = (h.slots[h.cursor++] ??= {
-      value:
-        typeof initial === "function" ? (initial as () => unknown)() : initial,
-    });
-    return [
-      slot.value,
-      (next: unknown) => {
-        slot.value =
-          typeof next === "function"
-            ? (next as (value: unknown) => unknown)(slot.value)
-            : next;
-      },
-    ];
-  },
-  useRef: (initial: unknown) =>
-    (h.slots[h.cursor++] ??= { value: { current: initial } }).value,
-  useEffect: (effect: () => void | (() => void), deps: unknown[]) => {
-    const index = h.cursor++;
-    const slot = h.slots[index];
-    if (!slot || deps.some((value, i) => !Object.is(value, slot.deps?.[i])))
-      h.effects.push(() => {
-        slot?.cleanup?.();
-        h.slots[index].cleanup = effect() || undefined;
+vi.mock("react", async (original) => {
+  const effectFor =
+    (phase: "layout" | "passive") =>
+    (effect: () => void | (() => void), deps: unknown[]) => {
+      const index = h.cursor++;
+      const slot = h.slots[index];
+      if (!slot || deps.some((value, i) => !Object.is(value, slot.deps?.[i])))
+        (phase === "layout" ? h.layoutEffects : h.effects).push(() => {
+          slot?.cleanup?.();
+          h.slots[index].cleanup = effect() || undefined;
+        });
+      h.slots[index] = { deps, cleanup: slot?.cleanup, phase };
+    };
+  return {
+    ...(await original<typeof import("react")>()),
+    useState: (initial: unknown) => {
+      const slot = (h.slots[h.cursor++] ??= {
+        value:
+          typeof initial === "function"
+            ? (initial as () => unknown)()
+            : initial,
       });
-    h.slots[index] = { deps, cleanup: slot?.cleanup };
-  },
-}));
+      return [
+        slot.value,
+        (next: unknown) => {
+          slot.value =
+            typeof next === "function"
+              ? (next as (value: unknown) => unknown)(slot.value)
+              : next;
+        },
+      ];
+    },
+    useRef: (initial: unknown) =>
+      (h.slots[h.cursor++] ??= { value: { current: initial } }).value,
+    useEffect: effectFor("passive"),
+    useLayoutEffect: effectFor("layout"),
+  };
+});
 
 import {
   FileDeliveryActions,
@@ -114,12 +129,13 @@ function render(value = card) {
   h.cursor = 0;
   const tree = FileDeliveryControls({
     card: value,
-    workingDirectory: "/work",
+    workingDirectory: h.cwd,
     identity: "thread:revision-1",
     active: h.active,
     onOpenHtml: h.onOpenHtml,
     onOpenFile: h.onOpenFile,
   });
+  for (const effect of h.layoutEffects.splice(0)) effect();
   for (const effect of h.effects.splice(0)) effect();
   return elements(tree);
 }
@@ -160,8 +176,10 @@ async function checkFile(value = card) {
 beforeEach(() => {
   h.slots.length = 0;
   h.effects.length = 0;
+  h.layoutEffects.length = 0;
   h.cursor = 0;
   h.active = true;
+  h.cwd = "/work";
   h.onOpenHtml = undefined;
   h.onOpenFile = undefined;
   for (const mock of [
@@ -317,6 +335,158 @@ it("shows disk text independently and refuses a mismatched read receipt", async 
   click(S.current);
   await vi.waitFor(() => expect(button(S.open)).toBeUndefined());
   expect(text()).not.toContain("WRONG VERSION");
+});
+
+it("keeps the exact inline text limit on the original verified read path", async () => {
+  const atLimit = { ...verified, size: 1_048_576 };
+  h.onOpenFile = vi.fn();
+  h.inspect.mockResolvedValueOnce(atLimit);
+  h.readText.mockResolvedValueOnce({ file: atLimit, text: "AT INLINE LIMIT" });
+  await checkFile();
+  click(S.current);
+  await vi.waitFor(() => expect(text()).toContain("AT INLINE LIMIT"));
+  expect(h.readText).toHaveBeenCalledExactlyOnceWith(atLimit);
+  expect(h.onOpenFile).not.toHaveBeenCalled();
+  expect(button(T.save)).toBeDefined();
+});
+
+it.each([
+  ["reports/alias.md", "/work", "/work/reports/result.md", "reports/result.md"],
+  [
+    "/work/reports/alias.md",
+    "/work",
+    "/work/reports/result.md",
+    "reports/result.md",
+  ],
+  [
+    "C:\\work\\reports\\alias.md",
+    "C:\\work",
+    "C:\\work\\reports\\result.md",
+    "reports/result.md",
+  ],
+])(
+  "hands a verified oversized report %s to the original project and keeps whole-file Save",
+  async (path, root, resolvedPath, expected) => {
+    const reported = { ...card, path };
+    const large = { ...verified, root, path, resolvedPath, size: 1_048_577 };
+    h.cwd = root;
+    h.onOpenFile = vi.fn();
+    h.inspect.mockResolvedValueOnce(large);
+    h.readText.mockRejectedValueOnce(new Error("文件超过当前操作的大小限制"));
+    await checkFile(reported);
+    click(S.current, reported);
+    expect(h.onOpenFile).toHaveBeenCalledExactlyOnceWith(expected, {
+      ...large,
+      path: resolvedPath,
+    });
+    expect(h.inspect).toHaveBeenCalledExactlyOnceWith(root, path);
+    expect(h.inspectSelected).not.toHaveBeenCalled();
+    expect(h.readText).not.toHaveBeenCalled();
+    expect(text(reported)).toContain(S.verified(large.name, large.size));
+    expect(text(reported)).toContain(S.reportedOrigin);
+    h.save.mockResolvedValueOnce("/delivery/large.md");
+    h.copy.mockResolvedValueOnce(undefined);
+    click(T.save, reported);
+    await vi.waitFor(() =>
+      expect(h.copy).toHaveBeenCalledExactlyOnceWith(
+        large,
+        "/delivery/large.md",
+      ),
+    );
+  },
+);
+
+it("uses the verified target of the picked oversized path and discards the earlier report handler", async () => {
+  const chosen = "/outside/chosen-alias.md";
+  const selected = {
+    ...verified,
+    root: "/outside",
+    path: chosen,
+    resolvedPath: "/outside/chosen.md",
+    size: 1_048_577,
+  };
+  h.onOpenFile = vi.fn();
+  h.inspect.mockResolvedValueOnce({ ...verified, size: 1_048_577 });
+  await checkFile();
+  const stale = button(S.current)!.props.onClick as () => void;
+  h.open.mockResolvedValueOnce(chosen);
+  h.inspectSelected.mockResolvedValueOnce(selected);
+  click(S.choose);
+  await vi.waitFor(() => expect(text()).toContain(S.selectedOrigin));
+  stale();
+  expect(h.onOpenFile).not.toHaveBeenCalled();
+  click(S.current);
+  expect(h.onOpenFile).toHaveBeenCalledExactlyOnceWith(selected.resolvedPath, {
+    ...selected,
+    path: selected.resolvedPath,
+  });
+  expect(h.inspectSelected).toHaveBeenCalledExactlyOnceWith(chosen);
+  expect(h.readText).not.toHaveBeenCalled();
+  expect(button(T.save)).toBeDefined();
+});
+
+it("omits unsupported inline viewing for an oversized file without an in-app callback", async () => {
+  const large = { ...verified, size: 1_048_577 };
+  h.inspect.mockResolvedValueOnce(large);
+  await checkFile();
+  expect(button(S.current)).toBeUndefined();
+  expect(button(T.save)).toBeDefined();
+  h.openFile.mockResolvedValueOnce(undefined);
+  click(S.open);
+  await vi.waitFor(() =>
+    expect(h.openFile).toHaveBeenCalledExactlyOnceWith(large),
+  );
+  expect(h.readText).not.toHaveBeenCalled();
+});
+
+it.each(["site.html", "site.HTM", "picture.png", "attachment.bin"])(
+  "does not offer the segmented text handoff for %s but keeps its explicit actions",
+  async (name) => {
+    const artifact = { ...card, path: name };
+    const file = {
+      ...verified,
+      name,
+      path: `/work/${name}`,
+      resolvedPath: `/work/${name}`,
+      size: 1_048_577,
+    };
+    h.onOpenFile = vi.fn();
+    h.onOpenHtml = vi.fn();
+    h.inspect.mockResolvedValueOnce(file);
+    await checkFile(artifact);
+    expect(button(S.current, artifact)).toBeUndefined();
+    expect(
+      button(/\.html?$/i.test(name) ? S.openHtml : S.open, artifact),
+    ).toBeDefined();
+    expect(button(T.save, artifact)).toBeDefined();
+    expect(h.onOpenFile).not.toHaveBeenCalled();
+    expect(h.onOpenHtml).not.toHaveBeenCalled();
+    expect(h.readText).not.toHaveBeenCalled();
+    if (/\.html?$/i.test(name)) {
+      click(S.openHtml, artifact);
+      expect(h.onOpenHtml).toHaveBeenCalledExactlyOnceWith(file);
+    } else {
+      click(S.open, artifact);
+      expect(h.onOpenFile).toHaveBeenCalledExactlyOnceWith(file.resolvedPath);
+    }
+  },
+);
+
+it("does not turn an unprovable absolute report into an explicitly selected file", async () => {
+  const reported = { ...card, path: "/work/alias.md" };
+  h.onOpenFile = vi.fn();
+  h.inspect.mockResolvedValueOnce({
+    ...verified,
+    path: reported.path,
+    resolvedPath: "/work-other/large.md",
+    size: 1_048_577,
+  });
+  await checkFile(reported);
+  expect(button(S.current, reported)).toBeUndefined();
+  expect(button(S.open, reported)).toBeDefined();
+  expect(button(T.save, reported)).toBeDefined();
+  expect(h.onOpenFile).not.toHaveBeenCalled();
+  expect(h.readText).not.toHaveBeenCalled();
 });
 
 it("exports the explicit Agent text snapshot without inspecting or claiming the original file", async () => {
@@ -550,3 +720,29 @@ it("opens a reported file directly but never falls back to it after a chosen fil
   expect(button(S.open)).toBeUndefined();
   expect(open).toHaveBeenCalledTimes(1);
 });
+
+// React commits an unmount before flushing its passive effect cleanup. A dialog
+// may settle in that interval; the removed report must no longer authorize I/O.
+it.each(["choose", "copy", "snapshot"] as const)(
+  "does not dispatch %s after unmount commit before passive cleanup",
+  async (action) => {
+    if (action === "copy") await checkFile();
+    const dialog = deferred<string>();
+    if (action === "choose") h.open.mockReturnValue(dialog.promise);
+    else h.save.mockReturnValue(dialog.promise);
+    click(
+      action === "choose" ? S.choose : action === "copy" ? T.save : S.snapshot,
+    );
+    for (const slot of h.slots) if (slot.phase === "layout") slot.cleanup?.();
+    dialog.resolve("/delivery/late-result.md");
+    for (let tick = 0; tick < 12; tick++) await Promise.resolve();
+    try {
+      expect(h.inspectSelected).not.toHaveBeenCalled();
+      expect(h.copy).not.toHaveBeenCalled();
+      expect(h.exportText).not.toHaveBeenCalled();
+    } finally {
+      for (const slot of h.slots)
+        if (slot.phase === "passive") slot.cleanup?.();
+    }
+  },
+);

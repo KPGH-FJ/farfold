@@ -21,7 +21,10 @@ export function useDraftSendIntent(view: {
   requireCurrent: () => void;
   retireLocation: () => void;
   prepare: () => void;
-  send: (blocks: PromptBlock[], submitted: ComposerDraft) => Promise<void>;
+  send: (
+    blocks: PromptBlock[],
+    submitted: ComposerDraft,
+  ) => Promise<void | false>;
   pickProject: () => Promise<boolean>;
   requestSend: () => void;
   folderCancelled: (value: boolean) => void;
@@ -80,10 +83,8 @@ export function useDraftSendIntent(view: {
     current.requireCurrent();
     current.retireLocation();
     pending.current = null;
-    if (current.cwd && current.ready) {
-      await current.send(blocks, submitted);
-      return true;
-    }
+    if (current.cwd && current.ready)
+      return (await current.send(blocks, submitted)) !== false;
     const armed = {
       from: pair,
       to: current.cwd ? pair : null,

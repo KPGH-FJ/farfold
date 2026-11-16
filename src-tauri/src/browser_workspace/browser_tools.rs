@@ -323,6 +323,20 @@ impl FixedPageReadScope {
         self.complete_observation_for_request(raw, false)
     }
 
+    #[cfg(target_os = "macos")]
+    fn current_screenshot_failure(
+        &self,
+        value: &Value,
+    ) -> Option<crate::logging::BrowserScreenshotFailure> {
+        let failure = super::screenshot::failure_diagnostic(&value["screenshot"])?;
+        let url = value["url"].as_str()?;
+        // Admit only the exact live request under the existing gates. The
+        // caller writes the enum after releasing the gates, without page data.
+        self.with_valid(|| Ok(self.matches_url(url).then_some(failure)))
+            .ok()
+            .flatten()
+    }
+
     fn complete_observation_for_request(
         &self,
         raw: &str,
@@ -339,6 +353,10 @@ impl FixedPageReadScope {
         }
         let screenshot = super::screenshot::checked(&value["screenshot"], screenshot_requested);
         if screenshot_requested && screenshot["status"] != "captured" {
+            #[cfg(target_os = "macos")]
+            if let Some(failure) = self.current_screenshot_failure(&value) {
+                crate::logging::record_browser_screenshot_failure(failure);
+            }
             return Err("本次无法安全提供网页截图".into());
         }
         self.with_valid(|| {
@@ -525,6 +543,33 @@ mod tests {
         scope.revoke();
         assert!(scope.complete_observation_for_request(&raw, true).is_err());
     }
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn screenshot_diagnostic_requires_the_current_page_and_live_one_shot() {
+        use crate::logging::BrowserScreenshotFailure;
+
+        let (scope, _) = sharing_scope_fixture("agent:/fixture:screenshot", "page");
+        let mut value = json!({
+            "url":"https://wrong.example/",
+            "screenshot":{
+                "status":"unavailable",
+                "diagnostic":{"stage":"capture","category":"system_capture_failed"}
+            }
+        });
+        let attempt = scope.one_shot().unwrap();
+        assert_eq!(attempt.current_screenshot_failure(&value), None);
+        value["url"] = json!("https://www.rust-lang.org/");
+        assert_eq!(
+            attempt.current_screenshot_failure(&value),
+            Some(BrowserScreenshotFailure::SystemCaptureFailed)
+        );
+        attempt.cancel_action();
+        assert_eq!(attempt.current_screenshot_failure(&value), None);
+        assert!(scope.is_valid());
+        let next = scope.one_shot().unwrap();
+        scope.revoke();
+        assert_eq!(next.current_screenshot_failure(&value), None);
+    }
     #[test]
     fn requested_screenshot_unavailable_or_invalid_never_falls_back_to_text_or_nodes() {
         let (scope, _) = sharing_scope_fixture("agent:/fixture:screenshot", "page");
@@ -533,7 +578,7 @@ mod tests {
         let mut value: Value = serde_json::from_str(&raw).unwrap();
         value["text"] = json!("CANARY_NO_TEXT_FALLBACK");
         for screenshot in [
-            json!({"status":"unavailable","reason":"protected page"}),
+            json!({"status":"unavailable","reason":"protected page","diagnostic":{"stage":"capture","category":"CANARY_UNKNOWN_CATEGORY"}}),
             json!({"status":"captured","data":"not-valid-png"}),
         ] {
             value["screenshot"] = screenshot;

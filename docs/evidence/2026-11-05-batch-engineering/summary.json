@@ -1,0 +1,327 @@
+{
+  "schema": 1,
+  "state": "ARCHIVED_CHECKPOINT_EVIDENCE",
+  "recordedAtUtc": "2026-11-05T00:04:21.364131+00:00",
+  "checkpointSource": "603056dd11baea68a438f686ee83f96d89377ba4",
+  "checkpointBoundary": "Pre-focus batch only; later focus/source/docs changes require separate affected validation. No current-worktree freeze or current installed-source claim.",
+  "sourceBinding": {
+    "declaredInputs": 2372,
+    "beforeAfterBytesEqual": true,
+    "sourceMapSha256": "fdf4d4e2f2fff2817fc78c8f024e7f0500fdd46c69c1acd06ca9ab557bb5e5c5",
+    "gitBoundInputs": 2372,
+    "gitMismatches": [],
+    "bindingReceipt": "output/2026-11-05-development-continuation/engineering-final/git-input-binding.json",
+    "gitBindingPerformedBy": "root original recorded cat-file--batch comparison; no Git command performed by this packager",
+    "productionInputs": 2368,
+    "limits": "Content endpoint and committed-blob identity only; not continuous filesystem lock, mode verification or every transitive environment input."
+  },
+  "firstEngineeringAttempt": {
+    "actualCommands": 6,
+    "naturalExitCodes": [0, 0, 0, 1, 0, 0],
+    "checks": [
+      {
+        "receipt": "output/2026-11-05-development-continuation/engineering/checks/cargo-fmt.json",
+        "receiptSha256": "58c3c6c3d92281bf16262b5d10285f8442b889eb804a6fa87b4be400a597f4a0",
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "naturalExitCode": 0,
+        "startedAt": "2026-11-04T23:39:24.441873+00:00",
+        "finishedAt": "2026-11-04T23:39:25.631910+00:00",
+        "durationSeconds": 1.19,
+        "log": "output/2026-11-05-development-continuation/engineering/checks/cargo-fmt.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "receipt": "output/2026-11-05-development-continuation/engineering/checks/clippy.json",
+        "receiptSha256": "664dc6ca5a171d34c3e1afe210bed61b1417652386ad836c97990fbb9802e945",
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "naturalExitCode": 0,
+        "startedAt": "2026-11-04T23:39:25.652702+00:00",
+        "finishedAt": "2026-11-04T23:39:25.832625+00:00",
+        "durationSeconds": 0.18,
+        "log": "output/2026-11-05-development-continuation/engineering/checks/clippy.log",
+        "logSha256": "a41051563a4cb5fc1b1bcdd9aa0ba28ca80f7736d629d90cc138218756e8e3a9"
+      },
+      {
+        "receipt": "output/2026-11-05-development-continuation/engineering/checks/format-final.json",
+        "receiptSha256": "b51a40abc211a10d135a90cfd1a555a996151f3c20ca3b83cccff490740c3f30",
+        "command": ["corepack", "pnpm", "format:check"],
+        "naturalExitCode": 0,
+        "startedAt": "2026-11-04T23:39:24.441888+00:00",
+        "finishedAt": "2026-11-04T23:39:56.843558+00:00",
+        "durationSeconds": 32.401,
+        "log": "output/2026-11-05-development-continuation/engineering/checks/format-final.log",
+        "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      {
+        "receipt": "output/2026-11-05-development-continuation/engineering/checks/frontend-final.json",
+        "receiptSha256": "94e949fcf27e40fdb90f024b8c96faedd0e564feb61a4579f940e6c78c0f86ca",
+        "command": ["corepack", "pnpm", "test"],
+        "naturalExitCode": 1,
+        "startedAt": "2026-11-04T23:40:04.617590+00:00",
+        "finishedAt": "2026-11-04T23:40:43.679221+00:00",
+        "durationSeconds": 39.061,
+        "log": "output/2026-11-05-development-continuation/engineering/checks/frontend-final.log",
+        "logSha256": "0397b308ef2758ae2ee0388ae2cdffaa18a89b1fb7dfd075c2f1cbd0acea52d7"
+      },
+      {
+        "receipt": "output/2026-11-05-development-continuation/engineering/checks/rust-full.json",
+        "receiptSha256": "d735261655dc438c4e8106592b36f1c9e48b7b02b6181a7c1b095d3af6ec3e4b",
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "naturalExitCode": 0,
+        "startedAt": "2026-11-04T23:39:25.851703+00:00",
+        "finishedAt": "2026-11-04T23:41:47.281786+00:00",
+        "durationSeconds": 141.429,
+        "log": "output/2026-11-05-development-continuation/engineering/checks/rust-full.log",
+        "logSha256": "69a1a906d6032301f9ac57207a797d729757fa3b518b848ecd42eaa17737e8f9"
+      },
+      {
+        "receipt": "output/2026-11-05-development-continuation/engineering/checks/typecheck-final.json",
+        "receiptSha256": "0ab12c99a9a6478b9c22bd143c4fd6de814c128e0b4769e8b395e36d95719e79",
+        "command": ["corepack", "pnpm", "typecheck"],
+        "naturalExitCode": 0,
+        "startedAt": "2026-11-04T23:39:56.864024+00:00",
+        "finishedAt": "2026-11-04T23:40:04.598821+00:00",
+        "durationSeconds": 7.734,
+        "log": "output/2026-11-05-development-continuation/engineering/checks/typecheck-final.log",
+        "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    ],
+    "frontend": {
+      "files": 709,
+      "passed": 9517,
+      "failed": 1,
+      "case": "audio_input_draft cold restoration fixture had unsupported paused:true"
+    },
+    "buildExecuted": false,
+    "keptOriginalFailure": true
+  },
+  "audioFixtureCorrection": {
+    "commit": "032d8a03e34d9bae1c2233dfadedd2d0cfae0c19",
+    "changedField": "Remove only paused:true from the supported synthetic audio queue fixture",
+    "productionGuardRelaxed": false,
+    "sourceMapOnlyDelta": ["src/runtime/audio_input_draft.test.ts"],
+    "associatedFiles": 4,
+    "associatedPassed": 57,
+    "originalArtifactsRoot": "output/2026-11-05-development-continuation/audio-fixture-correction",
+    "userDatabaseScanned": false
+  },
+  "finalEngineering": {
+    "allSevenFreshNaturalZero": true,
+    "reuseEarlierSuccessReceipts": false,
+    "checks": [
+      {
+        "receipt": "output/2026-11-05-development-continuation/engineering-final/checks/build-final.json",
+        "receiptSha256": "c1e98b5eac53d37ae6f6ebfa678a452ba540787ee32a8087fffdf026fd4d1eca",
+        "command": ["corepack", "pnpm", "build"],
+        "naturalExitCode": 0,
+        "startedAt": "2026-11-04T23:48:04.535312+00:00",
+        "finishedAt": "2026-11-04T23:48:12.681222+00:00",
+        "durationSeconds": 8.146,
+        "log": "output/2026-11-05-development-continuation/engineering-final/checks/build-final.log",
+        "logSha256": "5a0579387e1adb29e7ca3238f9e93aabffc2127ada7a241c42dd8607772c67fe"
+      },
+      {
+        "receipt": "output/2026-11-05-development-continuation/engineering-final/checks/cargo-fmt.json",
+        "receiptSha256": "604da909155ec7dab3fedacfb6918df9a8249fbba5df998dece466b20c05a527",
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "naturalExitCode": 0,
+        "startedAt": "2026-11-04T23:46:48.729296+00:00",
+        "finishedAt": "2026-11-04T23:46:49.964808+00:00",
+        "durationSeconds": 1.235,
+        "log": "output/2026-11-05-development-continuation/engineering-final/checks/cargo-fmt.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "receipt": "output/2026-11-05-development-continuation/engineering-final/checks/clippy.json",
+        "receiptSha256": "8aadcf954b7fab0c969319bb120fb18245a6412fa8924c3492dd06966ecf251d",
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "naturalExitCode": 0,
+        "startedAt": "2026-11-04T23:46:49.985530+00:00",
+        "finishedAt": "2026-11-04T23:46:50.487919+00:00",
+        "durationSeconds": 0.502,
+        "log": "output/2026-11-05-development-continuation/engineering-final/checks/clippy.log",
+        "logSha256": "45f75b19e5718ce74d75d27dc949e2b0cc21908a1e53dca4d31c24e03ebe8e09"
+      },
+      {
+        "receipt": "output/2026-11-05-development-continuation/engineering-final/checks/format-final.json",
+        "receiptSha256": "fa62dbfae21aaca651045c2ac9ec7d3d0be7d4aeb905c4f1f232e74301e1a2fa",
+        "command": ["corepack", "pnpm", "format:check"],
+        "naturalExitCode": 0,
+        "startedAt": "2026-11-04T23:46:48.727654+00:00",
+        "finishedAt": "2026-11-04T23:47:18.377317+00:00",
+        "durationSeconds": 29.649,
+        "log": "output/2026-11-05-development-continuation/engineering-final/checks/format-final.log",
+        "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      {
+        "receipt": "output/2026-11-05-development-continuation/engineering-final/checks/frontend-final.json",
+        "receiptSha256": "49147cd5ab5f31121da0af06e9020a73ab8b826d1e03ef91594703c56d57e80f",
+        "command": ["corepack", "pnpm", "test"],
+        "naturalExitCode": 0,
+        "startedAt": "2026-11-04T23:47:26.188318+00:00",
+        "finishedAt": "2026-11-04T23:48:04.517087+00:00",
+        "durationSeconds": 38.328,
+        "log": "output/2026-11-05-development-continuation/engineering-final/checks/frontend-final.log",
+        "logSha256": "c039f8b64084101902a79af065d9b70fdbf34329b44e012981628d082f26a1ca"
+      },
+      {
+        "receipt": "output/2026-11-05-development-continuation/engineering-final/checks/rust-full.json",
+        "receiptSha256": "dadcd661b0dc86d497ff8ae05f1e7d630091c8c39bb5484cee2ac879211f0ca2",
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "naturalExitCode": 0,
+        "startedAt": "2026-11-04T23:46:50.509359+00:00",
+        "finishedAt": "2026-11-04T23:48:50.788388+00:00",
+        "durationSeconds": 120.278,
+        "log": "output/2026-11-05-development-continuation/engineering-final/checks/rust-full.log",
+        "logSha256": "9192dd434b5bd599ad1741c66e7f79703a283e31f8d5880f7fe795bcd58d2569"
+      },
+      {
+        "receipt": "output/2026-11-05-development-continuation/engineering-final/checks/typecheck-final.json",
+        "receiptSha256": "ca907207642dd57967db7dc9dce759062dc9611e241b939a0067b6835addcd8c",
+        "command": ["corepack", "pnpm", "typecheck"],
+        "naturalExitCode": 0,
+        "startedAt": "2026-11-04T23:47:18.396392+00:00",
+        "finishedAt": "2026-11-04T23:47:26.169013+00:00",
+        "durationSeconds": 7.772,
+        "log": "output/2026-11-05-development-continuation/engineering-final/checks/typecheck-final.log",
+        "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    ],
+    "frontendFiles": 709,
+    "frontendPassed": 9518,
+    "rustLibraryPassed": 2349,
+    "rustLibraryFailed": 0,
+    "rustLibraryIgnored": 7,
+    "rawCountsLocation": {
+      "frontendSummaryLfLines": [9, 10],
+      "rustLibrarySummaryLfLine": 2362
+    },
+    "warningBoundary": "Preserved raw build advisories; no warning-free claim."
+  },
+  "sqlite": {
+    "standaloneVitest": {
+      "naturalExitCode": 0,
+      "files": 1,
+      "passed": 1,
+      "receipt": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/vitest-result.json"
+    },
+    "driverName": "meta_store::recovery_tests::explicit_frontend_storage_bridge",
+    "driverDefaultIgnored": true,
+    "historicalExecutableSha256": "a142ea5449dce3fc96c7e746d117eb7198a06c2460c1c03ac95f31987304edd7",
+    "executableIncluded": false,
+    "currentExecutableRehashPerformed": false,
+    "bindingSha256": "f52bce7508b6566a0975c4c91817e092b8a4d960a036efa0df7cff62e989d18d",
+    "actualExchangeCount": 8,
+    "allEightChildrenNaturalExit": 0,
+    "eachChildPassed": 1,
+    "eachChildIgnored": 0,
+    "sequence": [
+      ["fixture-control", "unsupported", "settings_set"],
+      ["frontend", "unsupported", "settings_get"],
+      ["frontend", "unsupported", "settings_get"],
+      ["fixture-control", "unsupported", "settings_get"],
+      ["fixture-control", "supported-fixture-retry", "settings_set"],
+      ["frontend", "supported-fixture-retry", "settings_get"],
+      ["frontend", "supported-fixture-retry", "settings_set"],
+      ["frontend", "cold-module-read", "settings_get"]
+    ],
+    "unsupportedFrontendSettingsGet": 2,
+    "unsupportedFrontendSettingsSet": 0,
+    "wholeUnknownJsonPreserved": true,
+    "knownOldInputNotPartiallyPublished": true,
+    "laterLocalInputPreserved": true,
+    "supportedBackupReplacement": "Explicit owned fixture-control settings_set, not product recovery UI or automatic stripping",
+    "supportedFrontendSettingsSet": 1,
+    "opaquePromptBlockMetaPreserved": true,
+    "coldRead": "Front-end module reset plus new Rust process/production MetaStore SQLite connection; saved JSON equals final read",
+    "fixtureRemovalReported": true,
+    "cleanupIndependentAbsenceProbe": false,
+    "limits": "GREEN-only real production MetaStore/SQLite value transport with actual frontend draft/session functions and a controlled invoke replacement. No SQLite readonly/FULL fault, byte-identical RED pair for this bridge, complete Tauri IPC, installed UI, recovery UI, App restart/exit, real Agent/account/model or whole-P01 acceptance."
+  },
+  "underlyingIndependentReview": {
+    "path": "output/2026-11-05-development-continuation/independent-final-review.json",
+    "sha256": "01fb7b552cede869950a9a3f489c6cdabc6a9a25ba00a78f086d1ee374e6f9d7",
+    "verdict": "PASS_WITH_EXPLICIT_SCOPE",
+    "newArchiveIndependentlyReviewedByAnotherReader": true
+  },
+  "originals": {
+    "path": "originals.zip",
+    "bytes": 689270,
+    "sha256": "aad0ccdc80318c3bbdde4638a16bc4f919a4dd89de4f7f7d663d59134b51d6f7",
+    "entries": 93,
+    "payloadEntries": 92,
+    "crcPassed": true,
+    "manifest": "archive-manifest.json",
+    "manifestSha256": "d98e84e48f591ff88fa3ddab7d6282e18af876715068e94bed20acbc57776f06",
+    "manifestBytesEqualExternalAndZip": true,
+    "everyPayloadComparedByteExact": true,
+    "originalFilesUnchangedDuringAssembly": true
+  },
+  "excluded": [
+    "Current focus/browser work and future source/docs changes",
+    "Executable binaries and App packages",
+    "Temporary SQLite/database files",
+    "Real user/account/credential data",
+    "Formal installation or product acceptance claims"
+  ],
+  "packagerActions": {
+    "newEngineeringCommands": 0,
+    "newTests": 0,
+    "cargo": 0,
+    "git": 0,
+    "network": 0,
+    "sqlDriverCalls": 0,
+    "browserOrAppOperations": 0,
+    "writesConfinedTo": "output/2026-11-05-development-continuation/public-capsule-preparation"
+  },
+  "browserFixtureSuggestionOnly": "Existing close/reopen may revoke original inspection; switching case may revoke original inventory management map. Record exact ownership-cleanup attempts separately, preserve original denied observation, keep confirm/write/real-native zero. No browser fixture changed or UI claim included.",
+  "rootArchiveReview": {
+    "atUtc": "2026-11-05T00:05:45.828076+00:00",
+    "crcAndMembers": 93,
+    "payloadShaAndSizes": 92,
+    "embeddedExternalManifestByteEqual": true,
+    "note": "Root reviewed summary/README and mechanically checked all archive payloads against manifest; raw independent review remains separately scoped."
+  }
+}

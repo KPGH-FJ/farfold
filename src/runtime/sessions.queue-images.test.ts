@@ -24,6 +24,7 @@ const BEFORE =
 const AFTER =
   "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAADElEQVR4nGNg+A+CAAj+Av5GJ00oAAAAAElFTkSuQmCC";
 const URI = "file:///own/chosen.png";
+const SECOND_URI = "file:///own/second.png";
 
 beforeEach(() => {
   h.invoke.mockReset();
@@ -40,10 +41,16 @@ afterEach(() => {
 function scenario(name: string) {
   let fileData = BEFORE;
   let unreadable = false;
+  let secondUnreadable = false;
   const submitted: PromptBlock[][] = [];
   let receiptId = 0;
   h.invoke.mockImplementation(async (command: string, args) => {
     if (command === "draft_attachment_image") {
+      if (args.uri === SECOND_URI) {
+        expect(args.read).toBe(true);
+        if (secondUnreadable) throw new Error("second file unreadable");
+        return { data: BEFORE, mimeType: "image/png" };
+      }
       expect(args).toEqual({ uri: URI, read: true });
       if (unreadable) throw new Error("private OS detail");
       return { data: fileData, mimeType: "image/png" };
@@ -83,6 +90,9 @@ function scenario(name: string) {
     loseFile: () => {
       unreadable = true;
     },
+    loseSecondFile: () => {
+      secondUnreadable = true;
+    },
     finishFirst: () => {
       event({
         update: {
@@ -99,14 +109,14 @@ function scenario(name: string) {
   };
 }
 
-async function prepareImage() {
+async function prepareImage(uri = URI) {
   const prepared = await prepareDraftAttachments(
     [
       {
         id: "selected",
         kind: "image",
         name: "chosen.png",
-        uri: URI,
+        uri,
         mimeType: "image/png",
         data: BEFORE,
       },
@@ -179,4 +189,27 @@ it("keeps a queued image and prior response when dispatch-time re-reading fails,
       (item) => item.kind === "agent" && item.text === "first response",
     ),
   ).toBe(true);
+});
+
+it("retains both original queued images when a later dispatch-time re-read fails", async () => {
+  const f = scenario("partial-queued-image-check");
+  await threads.send(f.state.key, [{ type: "text", text: "first request" }]);
+  const queued = [
+    ...(await prepareImage()),
+    (await prepareImage(SECOND_URI))[1]!,
+  ];
+  const original = structuredClone(queued);
+  expect(await threads.send(f.state.key, queued)).toEqual({ status: "queued" });
+  f.replaceFile();
+  f.loseSecondFile();
+  f.finishFirst();
+  await vi.waitFor(() => expect(f.state.queuePaused).toBe("failed"));
+
+  const rereads = h.invoke.mock.calls
+    .filter(([command]) => command === "draft_attachment_image")
+    .map(([, args]) => args.uri);
+  expect(rereads).toEqual([URI, SECOND_URI, URI, SECOND_URI]);
+  expect(f.submitted).toHaveLength(1);
+  expect.soft(f.state.queued).toEqual([original]);
+  expect.soft(draftQueues.read(f.state.key)?.blocks).toEqual([original]);
 });

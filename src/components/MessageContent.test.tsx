@@ -218,6 +218,25 @@ it("opens an exact inline path only after a click, preserving its code appearanc
   expect(onOpenFile).toHaveBeenCalledWith(path, opener);
 });
 
+it.each([
+  ["[报告](C:/work/report.md)", "C:/work/report.md"],
+  ["[报告](file:///C:/work/report.md#L2)", "C:/work/report.md"],
+  ["`C:\\work\\report.md:12`", "C:\\work\\report.md"],
+  ["`.\\report.md`", ".\\report.md"],
+])(
+  "routes Windows message destination %s only after an explicit click",
+  (text, path) => {
+    const onOpenFile = vi.fn();
+    const html = renderToStaticMarkup(
+      <MessageContent source={{}} text={text} onOpenFile={onOpenFile} />,
+    );
+    expect(html).toContain('class="message-file-link message-file-button"');
+    expect(onOpenFile).not.toHaveBeenCalled();
+    const opener = clickCaptured();
+    expect(onOpenFile).toHaveBeenCalledExactlyOnceWith(path, opener);
+  },
+);
+
 it("keeps cached Markdown bound to the latest file callback and permits old messages to become clickable", () => {
   const source = {};
   const text = "[成果](./game.html) 和 `./notes.md`";

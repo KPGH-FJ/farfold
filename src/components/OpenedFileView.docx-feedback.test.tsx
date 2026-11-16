@@ -92,6 +92,8 @@ import {
 } from "../runtime/pptx_feedback_target";
 import type { VerifiedFile } from "../runtime/file_delivery";
 import type { DocxParagraph, DocxPreview } from "../runtime/docx_types";
+import { DocxError } from "../runtime/docx_types";
+import { DOCUMENT_STRINGS as D } from "../runtime/document_strings";
 import type { PreviewContentStatus } from "../runtime/preview_capture";
 import {
   createDocumentFeedbackSource,
@@ -276,6 +278,30 @@ it("gates DOCX opinions on current completed preview and revokes a stale editor"
   expect(saved().text).toBe("保留整文件意见");
   expect(button(S.feedback)?.props.disabled).toBe(true);
 });
+it("blocks top-level DOCX reread until the first capture receipt returns", async () => {
+  render();
+  await vi.waitFor(() =>
+    expect(render().nodes.some((n) => n.type === DocxFilePreview)).toBe(true),
+  );
+  const p = child();
+  const staleClick = button(S.refresh)!.props.onClick as () => void;
+  p.onStatus({ file, state: "loading", readInFlight: true });
+  expect(button(S.refresh)?.props.disabled).toBe(true);
+  staleClick();
+  p.onStatus({ file, state: "paused", readInFlight: true });
+  expect(button(S.refresh)?.props.disabled).toBe(true);
+  staleClick();
+  expect(h.inspect).toHaveBeenCalledOnce();
+
+  p.onStatus({ file, state: "failed", readInFlight: false, code: "invalid" });
+  expect(button(S.refresh)?.props.disabled).toBe(false);
+  const next = { ...file, version: "v2", sha256: "b".repeat(64) };
+  h.inspect.mockResolvedValueOnce(next);
+  click(S.refresh);
+  await vi.waitFor(() => expect(child().file).toBe(next));
+  expect(h.inspect).toHaveBeenCalledTimes(2);
+  expect(h.prepare).not.toHaveBeenCalled();
+});
 it("only explicit current confirmation changes a same-text block target, retaining opinion text", async () => {
   const p = await ready();
   seed();
@@ -343,11 +369,19 @@ it("preserves old DOCX coordinates across replacement and joins new content once
   const next = { ...file, version: "v2", sha256: "b".repeat(64) };
   expect(await monitor().apply(next, () => true)).toBe("deferred");
   h.inspect.mockResolvedValue(next);
+  let complete!: (preview: unknown) => void;
+  h.prepare.mockReturnValueOnce(new Promise((resolve) => (complete = resolve)));
   click(S.refresh);
+  expect(
+    render().nodes.find((n) => n.type === DocxFilePreview)?.props.file,
+  ).toBe(file);
+  await vi.waitFor(() => expect(h.prepare).toHaveBeenCalledOnce());
+  expect(child().interactionBlocked).toBe(true);
   p.onOfficeTargetConfirm({
     ...a,
     anchor: { ...a.anchor, elementPath: [0, 3] },
   });
+  complete({ kind: "docx", file: next, value: { file: next } });
   await vi.waitFor(() => expect(child().file).toBe(next));
   expect(saved()).toMatchObject({ anchor: a.anchor, text: " 保留原意见\n" });
   p.onStatus({ file, state: "ready" });
@@ -368,6 +402,91 @@ it("preserves old DOCX coordinates across replacement and joins new content once
   expect(joined).toContain("[2,0]");
   expect(saved(next).text).toBe("");
   expect(saved().anchor).toEqual(a.anchor);
+});
+
+it("keeps the ready DOCX and its opinion when the manually reread file is invalid", async () => {
+  const position = {
+    kind: "document" as const,
+    root: file.root,
+    resolvedPath: file.resolvedPath,
+    story: null,
+    segment: 2,
+  };
+  const readingPosition = { current: position };
+  props.readingPosition = readingPosition;
+  const old = await ready();
+  seed();
+  const retained = announce(old);
+  old.onOfficeTargetConfirm(retained);
+  const next = { ...file, version: "v2", sha256: "b".repeat(64) };
+  h.inspect.mockResolvedValue(next);
+  h.prepare.mockRejectedValueOnce(new DocxError("invalid"));
+  click(S.refresh);
+  expect(
+    render().nodes.find((n) => n.type === DocxFilePreview)?.props.file,
+  ).toBe(file);
+  await vi.waitFor(() => expect(render().html).toContain(D.invalid));
+  expect(render().html).toContain(S.revisionNotices.refreshFailed);
+  expect(child().file).toBe(file);
+  expect(child().interactionBlocked).toBe(false);
+  expect(readingPosition.current).toBe(position);
+  expect(h.prepare).toHaveBeenCalledExactlyOnceWith(
+    next,
+    readingPosition,
+    expect.any(AbortSignal),
+    expect.any(Function),
+    undefined,
+  );
+  expect(saved()).toMatchObject({
+    text: " 保留原意见\n",
+    anchor: retained.anchor,
+  });
+  expect(saved(next).anchor).toBeUndefined();
+});
+
+it("waits for the original DOCX read receipt through hide and resumes only on explicit reread", async () => {
+  await ready();
+  const next = { ...file, version: "v2", sha256: "b".repeat(64) };
+  h.inspect.mockResolvedValue(next);
+  let fail!: (reason: DocxError) => void;
+  h.prepare.mockReturnValueOnce(new Promise((_, reject) => (fail = reject)));
+  click(S.refresh);
+  await vi.waitFor(() => expect(h.prepare).toHaveBeenCalledOnce());
+  const signal = h.prepare.mock.calls[0][2] as AbortSignal;
+  render({ ...props, active: false });
+  expect(signal.aborted).toBe(true);
+  render({ ...props, active: true });
+  expect(child().file).toBe(file);
+  expect(button(S.refresh)?.props.disabled).toBe(true);
+  fail(new DocxError("readPending"));
+  await vi.waitFor(() => expect(render().html).toContain(D.readPending));
+  expect(child().file).toBe(file);
+  expect(h.monitor.mock.calls.at(-1)?.[0].blocked).toBe(true);
+  expect(h.prepare).toHaveBeenCalledOnce();
+  h.prepare.mockResolvedValueOnce({
+    kind: "docx",
+    file: next,
+    value: { file: next },
+  });
+  expect(button(S.refresh)?.props.disabled).toBe(false);
+  click(S.refresh);
+  await vi.waitFor(() => expect(child().file).toBe(next));
+  expect(h.prepare).toHaveBeenCalledTimes(2);
+});
+
+it("keeps the old DOCX if a manual reread resolves the path to another file", async () => {
+  await ready();
+  h.inspect.mockResolvedValue({
+    ...file,
+    resolvedPath: "/work/redirected.docx",
+    version: "v2",
+  });
+  click(S.refresh);
+  await vi.waitFor(() =>
+    expect(render().html).toContain(S.revisionNotices.redirected),
+  );
+  expect(child().file).toBe(file);
+  expect(h.prepare).not.toHaveBeenCalled();
 });
 it.each([false, true])(
   "does not cancel DOCX refresh itself while interaction is blocked (hide=%s)",

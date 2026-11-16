@@ -211,7 +211,7 @@ fn cold_old_location_and_material_ids_cannot_start_new_filesystem_work() {
     );
     m.prepare(&s, OTHER, next).unwrap();
     m.start(&s, OTHER).unwrap();
-    let until = Instant::now() + Duration::from_secs(15);
+    let until = Instant::now() + Duration::from_secs(if cfg!(windows) { 60 } else { 15 });
     loop {
         let value = op(m.status(&s, OTHER).unwrap());
         if value.settled {

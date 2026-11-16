@@ -7,7 +7,14 @@ import {
 } from "./session_recovery";
 import type { OpenResult } from "./session_open_types";
 import type { ThreadState } from "./session_types";
+import { isProgramStatusNotification } from "./program_status";
+import { isMessageUsageNotification } from "./message_usage";
 import { STRINGS } from "./strings";
+import {
+  applyHistoryToolSupplement,
+  boundedHistoryToolSupplement,
+  isOwnedHistoryToolSupplement,
+} from "./history_tool_supplement";
 
 export type HistoryProjectionPhase = "history" | "following";
 type ProjectionOutcome = "consumed" | "discarded";
@@ -26,8 +33,11 @@ export class HistoryReplayProjection {
   private owned: ThreadState | undefined;
   private marked = false;
   private readable = false;
+  private hasHistoryContent = false;
   private failed = false;
   private failure: unknown;
+  private supplemented = false;
+  private supplementData: unknown;
 
   constructor(
     state: ThreadState,
@@ -56,10 +66,32 @@ export class HistoryReplayProjection {
     return this.marked ? "following" : "history";
   }
 
+  /** Only the cold-open owner calls this; preview/search retain their scope. */
+  supplement(event: unknown): boolean {
+    const state = this.owned;
+    if (
+      !state ||
+      !this.current() ||
+      this.marked ||
+      this.failed ||
+      this.supplemented
+    )
+      return false;
+    if (!isOwnedHistoryToolSupplement(state, event, this.token)) return false;
+    // One bounded local result is consumed at the original prefix barrier, so
+    // intervening official updates participate in exact text/tool matching.
+    this.supplementData = boundedHistoryToolSupplement(event);
+    this.supplemented = true;
+    return true;
+  }
+
   push(event: unknown): ProjectionOutcome {
     const state = this.owned;
     if (!state || !this.current()) return "discarded";
+    // Temporary live receipts never enter even an already-failed raw replay.
+    if (isProgramStatusNotification(event)) return "consumed";
     if (this.failed) {
+      if (isMessageUsageNotification(event)) return "consumed";
       pushRaw(state, event);
       return "consumed";
     }
@@ -84,7 +116,15 @@ export class HistoryReplayProjection {
     const state = this.owned;
     if (!state || !this.current() || token !== this.token) return false;
     if (!this.marked) {
+      if (!this.failed && this.supplementData !== undefined)
+        applyHistoryToolSupplement(state, this.supplementData, this.token);
+      this.supplementData = undefined;
       this.readable = hasReadableMessages(state.items);
+      this.hasHistoryContent = Boolean(
+        state.items.length ||
+        state.pendingPermissions.length ||
+        state.pendingElicitations.length,
+      );
       finishHistoryPrefix(state);
       this.marked = true;
     }
@@ -105,13 +145,30 @@ export class HistoryReplayProjection {
 
   /** Read only the actually projected state and the original marker facts.
    * Caller-owned loss remains independent of a conversion exception. */
-  requireReadable(agentId: string, result: OpenResult, lost: boolean): void {
+  requireReadable(
+    agentId: string,
+    result: OpenResult,
+    lost: boolean,
+    allowConfirmedEmpty = false,
+  ): void {
     this.requireComplete(agentId, result, lost);
+    const confirmedEmpty = result.historyEmptyConfirmed === true;
+    if (confirmedEmpty && this.hasHistoryContent)
+      throw historyProjectionFailure(
+        agentId,
+        result,
+        new TypeError(
+          "Confirmed empty history conflicts with replayed content",
+        ),
+      );
     requireReadableProjectedHistory(
       agentId,
       result,
       this.marked,
-      this.readable,
+      // Only the owning open can allow the current backend fact. It must not
+      // replace previous content; preview/import rules stay intact. Following
+      // live events remain independent of the completed historical prefix.
+      this.readable || (allowConfirmedEmpty && confirmedEmpty),
       false,
     );
   }
@@ -127,6 +184,7 @@ export class HistoryReplayProjection {
 
   clear(): void {
     this.owned = undefined;
+    this.supplementData = undefined;
     this.failure = undefined;
     this.failed = false;
   }

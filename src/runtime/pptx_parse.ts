@@ -8,6 +8,7 @@ import {
   type PptxWarning,
   type PptxWarningCode,
   type PptxWorkerInput,
+  type PptxGroupTransform,
 } from "./pptx_types";
 import { A, P, R, attr, child, children, root, type PptxXml } from "./pptx_xml";
 import {
@@ -28,6 +29,7 @@ import {
 } from "./pptx_layout";
 import { PptxImages } from "./pptx_images";
 import { shape, type PptxShapeContext } from "./pptx_shapes";
+import { pptxGroup } from "./pptx_groups";
 
 /** MS-PPTX 2.2.9: this exact extension is a creation-tracking uint32,
  * not paint or behaviour. All other extension payloads still reject. */
@@ -232,21 +234,33 @@ export function parsePptx(input: PptxWorkerInput): PptxDocument {
     }
     const result: PptxSlide = { id, part: slide.part, background, shapes: [] };
     const add = (l: PptxLayer, kind: "master" | "layout" | "slide") => {
-      for (const s of l.shapes) {
-        if (kind !== "slide" && placeholder(s)) continue;
+      const visit = (s: PptxXml, groupTransform?: PptxGroupTransform) => {
+        if (kind !== "slide" && !groupTransform && placeholder(s)) return;
         if (hiddenShape(s)) {
           warn("hiddenContent", id);
-          continue;
+          return;
         }
         if (++shapeCount > L.shapes) throw new PptxError("limit");
-        const chain =
-          kind === "slide"
+        if (s.name === "grpSp") {
+          const group = pptxGroup(s, groupTransform, c.warn);
+          for (const child of group.shapes) visit(child, group.transform);
+          return;
+        }
+        if (groupTransform && placeholder(s))
+          throw new PptxError("unsupported");
+        const chain = groupTransform
+          ? [s]
+          : kind === "slide"
             ? inheritance(s, layout, master)
             : kind === "layout"
               ? inheritance(s, undefined, master)
               : [s];
-        result.shapes.push(shape(chain, l.part, kind, c));
-      }
+        result.shapes.push({
+          ...shape(chain, l.part, kind, c),
+          ...(groupTransform ? { groupTransform } : {}),
+        });
+      };
+      for (const s of l.shapes) visit(s);
     };
     if (
       master &&

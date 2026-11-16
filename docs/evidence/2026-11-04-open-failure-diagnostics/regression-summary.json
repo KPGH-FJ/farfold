@@ -1,0 +1,48 @@
+{
+  "regressionOriginals": {
+    "path": "docs/evidence/2026-11-04-open-failure-diagnostics/regression-originals.zip",
+    "sha256": "405a488e356fd223f7a9223e9d4e7b5ee6b4b0b3bd2b58c0437d96e80be85be8",
+    "entries": 69,
+    "bytes": 666727,
+    "byteExactOriginals": true
+  },
+  "engineeringOriginals": {
+    "path": "docs/evidence/2026-11-04-open-failure-diagnostics/engineering-originals.zip",
+    "sha256": "20c1ffdbe5633d137538dd1c0ea2a074e6facfcd078460a043f791f1cbb27dd3",
+    "entries": 28,
+    "bytes": 411359,
+    "byteExactOriginals": true
+  },
+  "frontend": {
+    "redFailed": 16,
+    "redPassed": 35,
+    "greenPassed": 51,
+    "relatedFiles": 12,
+    "relatedPassed": 154,
+    "initialFixtureIdFailurePreserved": true,
+    "typecheckFailurePreserved": true,
+    "typeOnlyFixRuntimeIdentical": true
+  },
+  "backend": {
+    "redPassed": 1,
+    "redFailed": 2,
+    "greenPassed": 18,
+    "unchangedDeadlineSeconds": 120,
+    "forkDeadlineNotAdded": true,
+    "innerErrorAndLateReceiptOwnershipKept": true
+  },
+  "engineering": {
+    "frontendFiles": 705,
+    "frontendPassed": 9481,
+    "rustPassed": 2339,
+    "rustIgnored": 7,
+    "genuineNaturalZeroCommands": 7,
+    "sameFullInputIntervalClaimed": false,
+    "reusedByExactTypeOnlyDelta": true
+  },
+  "limits": [
+    "Controlled IPC/SSR and real oneshot/channel tests; no new real Agent recovery/root-cause proof.",
+    "Windows run41830692244 remains bound to earlier eeac source; this new common change still needs affected platform validation.",
+    "Formal installation and installed UI pending."
+  ]
+}

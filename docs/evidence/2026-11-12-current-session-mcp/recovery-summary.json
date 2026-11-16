@@ -1,0 +1,163 @@
+{
+  "updatedAtUtc": "2026-11-12T04:22:28.262135+00:00",
+  "requirement": "P41",
+  "installedSource": "f537cd2a402a4ec8beb5f19de2521a3d83b5dc16",
+  "scope": "Formal macOS app, existing owned Goose conversation 20261112_1, existing selected OpenRouter/Ultra free/off/auto; loopback initialize delay only; no model requests",
+  "lateResult": {
+    "passed": true,
+    "initializationHoldSeconds": 33.7,
+    "result": "UI timeout kept one pending operation. Explicit later check observed its success; no second add dispatch. Exact item then explicitly withdrawn and absent from saved settings/active tools.",
+    "pendingOperationId": "ff6c9a75-6d36-4fff-a0dd-15ce369ac581"
+  },
+  "pendingColdStart": {
+    "passed": true,
+    "pendingOperationId": "a6f82f7e-69de-450f-b0a0-25dc363cf32c",
+    "result": "Normal Save and Quit ended original app/Goose while initialize was held. The exact pending record survived exit and cold reopen; history load/send stayed blocked, draft remained, listening endpoint saw no reconnect. Explicit inspect found saved settings unchanged; explicit confirm cleared pending; reconnect restored exact prior history and draft.",
+    "confirmationRetry": "First confirmation was rejected without clearing protection after a delay between inspection and confirmation. Fresh explicit inspection plus confirmation succeeded; no mutation replay.",
+    "finalPendingCount": 0
+  },
+  "dataProtection": {
+    "noNewNativeSessions": true,
+    "allPriorNativeMessageRowsUnchanged": true,
+    "onlyNativeSessionRowsChanged": ["20261111_7", "20261112_1"],
+    "allOtherNativeSessionRowsUnchanged": true,
+    "selectedAndProtectedConfigurationUnchanged": true,
+    "originalBytesUnchangedDuringObservation": true,
+    "unsentDraftRetained": true,
+    "normalExitAndOwnedServerClosed": true,
+    "unrelatedDirtyFileUnchanged": true
+  },
+  "independentFinding": {
+    "nativeSessionId": "20261111_7",
+    "ownedSample": "Earlier tool-saved empty conversation with retained unsent file feedback",
+    "observed": "History reading failed before and after clearing the other conversation pending record; one explicit retry still failed. No protocol error in the time-correlated load exchanges.",
+    "attribution": "Not evidence of cross-conversation pending blocking; investigating empty replay classification separately. No repair claimed."
+  },
+  "limits": [
+    "No deliberate loss of the official ACP mutation acknowledgment; initialization delay and process end are distinct failure cases.",
+    "No new model/tool execution; previous real call evidence remains installed8f80.",
+    "External extra settings changes, other failure/cancellation combinations, other Agents/platforms and full P41/29x8 remain open."
+  ],
+  "evidence": [
+    {
+      "path": "output/2026-11-12-mcp-recovery/baseline.json",
+      "sha256": "a0a4b9dd64f94d3d1ab39526480f26ec17724080e01279423c3b2f2c8a9e2374"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/cold-launch.json",
+      "sha256": "5a267d76c972c5655e390c1c790e625bfbed036b2f737e7b8f0e5ab1abd37f6e"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/content-free-cold-trace.json",
+      "sha256": "ba443f96efff550fcd9f50488f4894302f3b28897ed2160526372bdc5b09e32c"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/delayed-launch.json",
+      "sha256": "8c0d79025d830b4ecc7d141d950461184a0f4240c882e43db14ccad35e04e8e1"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/final-normal-exit.json",
+      "sha256": "f5cc6b919cdf3f9783e0fa5981e240cb8743bb9ed7ee1e49b30ed5701db30a76"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/gated-server-102e8f1a6c492659.json",
+      "sha256": "d41ed822d9f07ce90b9ac5e9b60edece1c5b6257b84af3d355a1a5331fd07d2c"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/gated_mcp.py",
+      "sha256": "d1a72c2ba9b99134d85c0a98c096ef4ae4c1c1f4618c8ac3afcf3d3bf701cd18"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/inspect-owned-index-after-remove.json",
+      "sha256": "25460146ff9a80aed0c226bceb3788da2f3c3ea44ed2fec96056135d11614afd"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/inspect-owned-index-baseline.json",
+      "sha256": "9c159c0bee91f7fec2ca27ad71bf9139ebe68c02410a29ae087b0191ff7b8390"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/inspect-owned-index-closed-pending.json",
+      "sha256": "9c3082ee91c7f16d3711f8e12afdb65b14268bc1f176795e6e5f5cf2a2862c27"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/inspect-owned-index-cold-after-review.json",
+      "sha256": "a36a0abe75dde6ff8eaea9b9614de6a26543015bc1cc295ecf5588dc1f201cc3"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/inspect-owned-index-cold-before-review.json",
+      "sha256": "aa11b2da8cba5beb0c22e11b436659e1ef27571a4a91899e35dc57bea0919a17"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/inspect-owned-index-complete-delay.json",
+      "sha256": "d650beafd4b54fcc3d869b81e610d67ec135c21436ff743fdd80278de4e68e54"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/inspect-owned-index-pending-cold.json",
+      "sha256": "223b8983cc5c6348b2d35d3616b839a5f5ada76b0310f1ae72c1e763bf4ab329"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/inspect-owned-index-pending-delay.json",
+      "sha256": "4f4c74a57d53e0dfc63dab173216b4beb048e89ff187b12088e6adf2c3b207e0"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/launch.py",
+      "sha256": "a7b371c6d92bca5a876581ceb7819ecbfacf4152222ec4c1bcc1a59fc620c816"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/normal-exit-pending.json",
+      "sha256": "20dffa165d30519856cce5c83a41aa641c11d9e758f9baeec11426de706242e9"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/observe_index.py",
+      "sha256": "a159cd89f25fd222eda430f74790efea64087e48f10b0660968bbe43556a73d7"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/server-after-cold-block.json",
+      "sha256": "dcc71379148b2b4291d10ce63a307ed299d2f82a3eac405c96bba8d3413f3564"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/server-after-delayed-success.json",
+      "sha256": "b200974c2b63e6d1becb0a5b32d7f2087f53bc830daa33e15dce9316c4be679f"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/server-before-cold.json",
+      "sha256": "dcc71379148b2b4291d10ce63a307ed299d2f82a3eac405c96bba8d3413f3564"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/stores-after.json",
+      "sha256": "ef8ba6a71fd742936abaa336134227532e30e232babc36997eeaa614ff44fa3a"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/ui/01-delayed-pending.txt",
+      "sha256": "82ed602cbd1ea304619d1bd3d1e7cfc979a8c2b641f61c7997a07bfbd82c4909"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/ui/02-delayed-completed.txt",
+      "sha256": "33d050da5022179ab40292524e31b6ee1b21731461fb5afe5d89bfc79bc2d6d0"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/ui/03-delayed-withdrawn.txt",
+      "sha256": "5b6edb1ca0a5d62dc4d4e0338e1d759bae7e4edc558285a22efbf2f38a8f156b"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/ui/04-before-pending-exit.txt",
+      "sha256": "48d8b09cdfad9f5a3ad2fb9c94583b01650158ac5341b1410ba08808aea5fd87"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/ui/05-cold-pending.txt",
+      "sha256": "ec69fe75e6f208eb1e55091a6a6e05680e8b3216426443d00038c2328ce5a92b"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/ui/06-other-conversation-read-failed.txt",
+      "sha256": "55e06744d16b3e29a0d479a9cb08af3c110f076ccd007e5d3b30aea7553a4250"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/ui/07-recovered-original.txt",
+      "sha256": "2a7be332650b001c5291528e14e39bdd22adfaa1853e3e872f6d5d0980a0623c"
+    },
+    {
+      "path": "output/2026-11-12-mcp-recovery/ui/08-other-conversation-after-clear.txt",
+      "sha256": "13d91e05f561195d9f43c885b3c39c22a62f2b5c021c163f2f90f97941e92519"
+    }
+  ]
+}

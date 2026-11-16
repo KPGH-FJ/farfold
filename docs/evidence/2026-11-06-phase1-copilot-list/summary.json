@@ -1,0 +1,38 @@
+{
+  "installedRevision": "6ce829c53",
+  "agent": "github-copilot-cli",
+  "scope": "original work directory",
+  "queries": [
+    {
+      "scope": "Agent default",
+      "automatic": true,
+      "lists": 1,
+      "responses": 1,
+      "listToResponseMs": 2
+    },
+    {
+      "scope": "explicit original work directory",
+      "automatic": false,
+      "lists": 1,
+      "responses": 1,
+      "listToResponseMs": 1
+    }
+  ],
+  "target": {
+    "originalConversationFound": true,
+    "alreadyAdded": true,
+    "returnedAndSavedLocationsMatch": true,
+    "uniqueNativeIdForAgent": true,
+    "archivedRecordAndSavedAutoUnchanged": true,
+    "originalNativeHistoryPrefixUnchanged": true,
+    "nativeEventsAppendedAfterEarlierContinuation": { "session.shutdown": 1 }
+  },
+  "listRun": {
+    "newLoads": 0,
+    "prompts": 0,
+    "cancels": 0,
+    "configChanges": 0,
+    "imports": 0,
+    "originalDraftRestored": true
+  }
+}

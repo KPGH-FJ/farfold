@@ -1,0 +1,69 @@
+{
+  "beginUtc": "2026-11-06T18:15:00.888+00:00",
+  "source": "registered Kilo official ACP",
+  "productionAppOperated": false,
+  "usedOriginalSession": false,
+  "existingServiceModelAuthOrPermissionsModified": false,
+  "modelPrompts": 0,
+  "toolRequests": 0,
+  "approvals": 0,
+  "productionStoreOpenedByHarness": "read-only registration",
+  "databaseOverride": "only the official child process KILO_DB to a self-owned SQLite file",
+  "registrationMatched": true,
+  "registeredVersion": "7.8.1",
+  "initialize": {
+    "elapsedMs": 961,
+    "protocolVersion": 1,
+    "officialVersionMatches": true,
+    "closeAdvertised": true,
+    "resumeAdvertised": true,
+    "listAdvertised": true
+  },
+  "isolatedNativeDatabaseObservedBeforeAnySession": true,
+  "twoFreshOwnedSessions": {
+    "distinctSameTransport": true,
+    "elapsedMs": [1854, 3],
+    "unchangedSameExistingDefaults": true,
+    "nativeMessageCount": 0
+  },
+  "resourceObservation": {
+    "groupBeforeCloseMembers": 1,
+    "perSessionOsResourceReleaseProven": false,
+    "originalBRouteContinuityProven": false,
+    "sameProcessAfterAClose": true,
+    "groupAfterCloseMembers": 1
+  },
+  "aOnlyOfficialClose": {
+    "exactAResponse": true,
+    "emptyResult": true,
+    "elapsedMs": 4
+  },
+  "bStillUsable": {
+    "sameOfficialProcess": true,
+    "explicitReadbackOrReattachMethod": "session/resume",
+    "matchingBRequestId": true,
+    "sameExistingSettingsReturned": true,
+    "elapsedMs": 4
+  },
+  "bothDurableHistoriesListedAfterAClose": true,
+  "nativeTwoHistoriesPersistedWithZeroMessages": true,
+  "outcome": "scoped-a-close-ack-and-b-readback-verified",
+  "outbound": {
+    "initialize": 1,
+    "session/new": 2,
+    "session/close": 1,
+    "session/resume": 1,
+    "session/list": 1
+  },
+  "lifecycleUpdateTypes": {
+    "available_commands_update": 3
+  },
+  "ownedCleanup": {
+    "transportEof": true,
+    "exitCode": 0,
+    "ownProcessGroupGone": true,
+    "signalsSent": 0
+  },
+  "productionNativeDatabaseStatUnchanged": true,
+  "endUtc": "2026-11-06T18:15:04.180+00:00"
+}

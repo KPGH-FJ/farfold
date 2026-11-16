@@ -1,0 +1,57 @@
+{
+  "sourceCodeCommit": "fc5a0cfcac4f69909ba5f6a15fb4f014d7b921a3",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "c2d417c17b4e8a39b5df09a5f1019b4dc65ec34c",
+    "executableSha256": "9fe85a651370a97bf6f1cde8cdb5c59315352dc5e94ca3b1357714940b2c8b45"
+  },
+  "engineering": {
+    "inputs": 2474,
+    "allSevenPassedFresh": true,
+    "frontendFiles": 744,
+    "frontendPassed": 10139,
+    "rustPassed": 2480,
+    "rustIgnored": 7
+  },
+  "install": {
+    "independentExactFiveFileReview": true,
+    "closedRecordsUnchanged": 206346,
+    "duplicateRemoved": true
+  },
+  "observations": {
+    "png": {
+      "originalRedRendered": true,
+      "invalidFirstDeflateBlockRenderedBlack": true,
+      "invalidReplacementRejected": false,
+      "validBlueRendered": true,
+      "originalOpinionStillLinkedToOriginalSha": true,
+      "modelRequests": 0
+    },
+    "expiredInventory": {
+      "officialCodexMcpListNaturalExpiry": true,
+      "staleListRejectedDisabledAddReview": true,
+      "freshListAfterExplicitReadingMethodCheckAndQuery": true,
+      "addEntryAvailableAgain": true,
+      "previousRejectionStillVisible": true,
+      "configurationUnchanged": true,
+      "testEntryNeverAdded": true
+    },
+    "archiveAndTabPreciseRacesControlledOnly": true,
+    "mistralManagementSourceCurrentPackagePresent": false
+  },
+  "localReceiptRoot": "output/2026-11-09-six-hour-stage2",
+  "localReceiptSha256": {
+    "fourth-engineering/result.json": "a97a1292509092f19112f177bf4dd215d284879a36d1f6185d92a024a6dc12e8",
+    "formal-fourth/candidate-review.json": "95733a115c0c132b780ccf5f973beb83f3ad7132bfffbbea554940d014ddcdbf",
+    "formal-fourth/install.json": "6ffc2c37e71586567377bf058a692ba37eab0d73cf0dc3230b85beacb88ea5d1",
+    "formal-fourth/duplicate-cleanup.json": "88a1db576ecb74b227ab943f20b27fdd740bb675b3c98685d3a4d9086044c6cf",
+    "formal-fourth/inventory-observation.json": "a6318f2df357ad722a383d33bb0487b7bccd00dab72b57daa49b19ad2a24bbb4",
+    "formal-fourth/png-observation.json": "b7a92f5dadc113db9fe10e1645bd5921f74d8cd28a86e6edb74da75d134922fb",
+    "formal-fourth/png-fixture.json": "96a869e589d9e98e0e127f52daebed9389f8bbc9d4703bef33880411d16d7691",
+    "formal-fourth/png-swap-failure.json": "81ddb6f558dc29f28a6431007e5d088cf0fa9e7df47c4766a13903bea70b766b",
+    "formal-fourth/png-swap-new.json": "37aa7c63e1e4821a24a5392dde9d6bf5701625d9d950114af6c7b54c085ca609"
+  }
+}

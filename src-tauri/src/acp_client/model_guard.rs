@@ -62,9 +62,12 @@ fn issue(
 
 #[derive(Clone)]
 pub(crate) struct ModelGuard {
+    dialect: super::session_config::Dialect,
     current: Snapshot,
     expected: Snapshot,
     model_known: bool,
+    empty_existing_record: bool,
+    explicit_model: bool,
     locked: bool,
     established: bool,
     pending: Option<Snapshot>,
@@ -77,6 +80,15 @@ pub(crate) struct ModelGuard {
 }
 impl ModelGuard {
     pub(crate) fn new(options: &Value, recorded: Option<&Value>, restored: bool) -> Self {
+        Self::for_connection(options, recorded, restored, Default::default())
+    }
+
+    pub(crate) fn for_connection(
+        options: &Value,
+        recorded: Option<&Value>,
+        restored: bool,
+        dialect: super::session_config::Dialect,
+    ) -> Self {
         let (current, _, _) = format::observe(options, &Snapshot::default());
         let baseline = if restored {
             format::baseline(recorded, &current, options)
@@ -89,10 +101,14 @@ impl ModelGuard {
             }
         };
         let (current, invalid, declared_ids) = format::observe(options, &baseline.snapshot);
+        let explicit_model = explicit_model(options, &current, dialect);
         Self {
+            dialect,
             current,
             expected: baseline.snapshot,
             model_known: baseline.model_known,
+            empty_existing_record: restored && recorded == Some(&empty_existing_record()),
+            explicit_model,
             locked: restored,
             established: restored,
             pending: None,
@@ -106,6 +122,21 @@ impl ModelGuard {
     }
     pub(crate) fn observe(&mut self, options: &Value) {
         (self.current, self.invalid, self.declared_ids) = format::observe(options, &self.expected);
+        self.explicit_model = explicit_model(options, &self.current, self.dialect);
+    }
+    pub(crate) fn needs_model_record(&self) -> bool {
+        self.empty_existing_record
+            && self.expected.choices.is_empty()
+            && self.explicit_model
+            && self.invalid.is_empty()
+            && !self.change_unknown
+            && self.pending.is_none()
+    }
+
+    pub(crate) fn can_record_model(&self, modern_options: Option<&Value>) -> bool {
+        self.needs_model_record()
+            && modern_options
+                .is_some_and(|options| explicit_model(options, &self.current, self.dialect))
     }
     pub(crate) fn is_established(&self) -> bool {
         self.established
@@ -117,6 +148,7 @@ impl ModelGuard {
         let Some(current) = self.current.choices.iter().find(|choice| choice.id == id) else {
             if self.protected_ids().iter().any(|saved| saved == id)
                 || matches!(id, "model" | "thought_level" | "reasoning_effort")
+                || self.dialect.is_vibe_thinking(id)
             {
                 return Err("无法读取当前模型或思考选择，请检查后重试".into());
             }
@@ -193,6 +225,9 @@ impl ModelGuard {
         self.pending = None;
         self.authorized_change = None;
     }
+    pub(crate) fn blocks_vibe_restore(&self) -> bool {
+        self.dialect.is_vibe_family() && self.change_unknown
+    }
     pub(crate) fn protected_ids(&self) -> Vec<String> {
         self.declared_ids
             .iter()
@@ -263,9 +298,10 @@ impl ModelGuard {
             "record_failed"
         } else if issues.is_empty() {
             "ready"
-        } else if issues
-            .iter()
-            .all(|i| i.category == "thought_level" && i.reason == "unrecorded")
+        } else if self.needs_model_record()
+            || issues
+                .iter()
+                .all(|i| i.category == "thought_level" && i.reason == "unrecorded")
         {
             "confirmation_required"
         } else {
@@ -350,6 +386,92 @@ impl ModelGuard {
     }
 }
 
+fn empty_existing_record() -> Value {
+    json!({"_farfoldConfig":2,"_farfoldService":{"kind":"existing"},"choices":[]})
+}
+
+fn explicit_model(
+    options: &Value,
+    snapshot: &Snapshot,
+    dialect: super::session_config::Dialect,
+) -> bool {
+    let mut models = snapshot
+        .choices
+        .iter()
+        .filter(|choice| choice.category == "model");
+    let Some(choice) = models.next() else {
+        return false;
+    };
+    if models.next().is_some()
+        || choice.value.trim().is_empty()
+        || choice.id == super::session_config::LEGACY_MODEL_ID
+    {
+        return false;
+    }
+    let reviewed_vibe_pair = dialect == super::session_config::Dialect::Vibe
+        && snapshot.choices.len() == 2
+        && snapshot.choices.iter().any(|entry| {
+            entry.id == super::session_config::THINKING_ID && entry.category == "thought_level"
+        });
+    if snapshot.choices.len() != 1 && !reviewed_vibe_pair {
+        return false;
+    }
+    fn matching_choices(entries: &[Value], value: &str) -> Option<bool> {
+        let named = |item: &Value| {
+            item["name"]
+                .as_str()
+                .is_some_and(|name| !name.trim().is_empty())
+        };
+        let mut selected = Vec::new();
+        for entry in entries {
+            if !named(entry) {
+                return None;
+            }
+            if let Some(leaf) = entry["value"].as_str() {
+                if entry.get("options").is_some() {
+                    return None;
+                }
+                if leaf == value {
+                    selected.push((entry["name"].as_str()?, false));
+                }
+            } else {
+                entry["group"].as_str()?;
+                for leaf in entry["options"].as_array()? {
+                    if !named(leaf) || leaf.get("options").is_some() {
+                        return None;
+                    }
+                    if leaf["value"].as_str()? == value {
+                        selected.push((leaf["name"].as_str()?, true));
+                    }
+                }
+            }
+        }
+        // Only the wire value is written. Agents may repeat the same value
+        // with the same display name but different descriptive metadata.
+        Some(match selected.as_slice() {
+            [] => false,
+            [_] => true,
+            [(label, false), rest @ ..] => rest.iter().all(|choice| choice == &(*label, false)),
+            _ => false,
+        })
+    }
+    options.as_array().is_some_and(|entries| {
+        entries.iter().any(|entry| {
+            entry["id"] == choice.id
+                && entry["category"] == "model"
+                && entry["type"] == "select"
+                && entry["name"]
+                    .as_str()
+                    .is_some_and(|name| !name.trim().is_empty())
+                && entry["currentValue"] == choice.value
+                && entry["options"]
+                    .as_array()
+                    .and_then(|entries| matching_choices(entries, &choice.value))
+                    == Some(true)
+        })
+    })
+}
+
 #[derive(Clone)]
 pub(crate) struct ConfigStore {
     pub store: crate::meta_store::MetaStore,
@@ -360,6 +482,30 @@ pub(crate) struct ConfigStore {
     pub verified_permission_option: bool,
 }
 impl ConfigStore {
+    pub(crate) async fn save_missing_model(
+        &self,
+        session_id: &str,
+        mut value: Value,
+    ) -> Result<(), String> {
+        if self.service_record != Some(super::service_connection::ServiceRecord::Existing)
+            || self.expected_model.is_some()
+        {
+            return Err("无法确认此对话的原服务来源，请重新检查".into());
+        }
+        value["_farfoldService"] = json!({"kind":"existing"});
+        let id = super::session_index::session_row_id(&self.agent_id, &self.cwd, session_id);
+        let owner = (
+            self.agent_id.clone(),
+            self.cwd.clone(),
+            session_id.to_owned(),
+        );
+        self.store
+            .run(move |store| {
+                store.compare_session_config(&id, owner, &empty_existing_record(), &value)
+            })
+            .await
+    }
+
     pub(crate) async fn for_choice(&self, choice: Option<&Choice>) -> Result<Self, String> {
         let mut candidate = self.clone();
         let Some(choice) = choice.filter(|choice| choice.category == "model") else {
@@ -402,11 +548,15 @@ impl ConfigStore {
         }
         Ok(())
     }
-    pub(crate) async fn save(&self, session_id: &str, mut value: Value) -> Result<(), String> {
+    pub(crate) fn record_with_source(&self, mut value: Value) -> Result<Value, String> {
         if let Some(service) = &self.service_record {
             value["_farfoldService"] =
                 serde_json::to_value(service).map_err(|_| "CONFIG_RECORD_FAILED")?;
         }
+        Ok(value)
+    }
+    pub(crate) async fn save(&self, session_id: &str, value: Value) -> Result<(), String> {
+        let value = self.record_with_source(value)?;
         let agent = self.agent_id.clone();
         let cwd = self.cwd.clone();
         let id = session_id.to_owned();
@@ -417,6 +567,31 @@ impl ConfigStore {
             })
             .await
             .map_err(|_| "CONFIG_RECORD_FAILED".to_string())
+    }
+    pub(crate) async fn save_initial(
+        &self,
+        session_id: &str,
+        value: Value,
+        previous: Option<crate::meta_store::SessionRow>,
+    ) -> Result<crate::meta_store::SessionRow, crate::meta_store::InitialConfigError> {
+        use crate::meta_store::InitialConfigError::SaveFailed;
+        let now = super::session_index::now_millis();
+        let row = crate::meta_store::SessionRow {
+            id: super::session_index::session_row_id(&self.agent_id, &self.cwd, session_id),
+            agent_id: self.agent_id.clone(),
+            cwd: self.cwd.clone(),
+            native_session_id: Some(session_id.to_owned()),
+            title: None,
+            config_options: Some(self.record_with_source(value).map_err(|_| SaveFailed)?),
+            pinned: false,
+            archived: false,
+            created_at: now,
+            updated_at: now,
+        };
+        self.store
+            .run(move |store| Ok(store.save_initial_session_config(&row, previous.as_ref())))
+            .await
+            .map_err(|_| SaveFailed)?
     }
 }
 
@@ -431,6 +606,40 @@ mod tests {
     use super::*;
     fn options(model: &str, effort: &str) -> Value {
         json!([{"id":"model","category":"model","currentValue":model}, {"id":"reasoning_effort","category":"thought_level","currentValue":effort}])
+    }
+    #[test]
+    fn missing_model_record_requires_an_explicit_unambiguous_current_choice() {
+        let record = empty_existing_record();
+        let mut options = json!([{"id":"model","name":"Model","category":"model","type":"select","currentValue":"auto","options":[{"value":"auto","name":"Auto"}]}]);
+        let mut guard = ModelGuard::new(&options, Some(&record), true);
+        assert_eq!(guard.check().status, "confirmation_required");
+        assert!(!guard.admissible());
+        assert!(!guard.may_set("model"));
+        assert!(!guard.can_record_model(None));
+        assert!(guard.can_record_model(Some(&options)));
+        let mut wrong_service = record.clone();
+        wrong_service["_farfoldService"] = json!({"kind":"configured"});
+        assert!(!ModelGuard::new(&options, Some(&wrong_service), true).needs_model_record());
+        assert!(!ModelGuard::new(&options, None, true).needs_model_record());
+        options[0]["options"] = json!([
+            {"value":"auto","name":"Auto","description":"A","_meta":{"a":true}},
+            {"value":"auto","name":"Auto","description":"B","_meta":{"b":true}}
+        ]);
+        guard.observe(&options);
+        assert!(guard.can_record_model(Some(&options)));
+        options[0]["options"] = json!([
+            {"group":"one","name":"One","options":[{"value":"auto","name":"Auto"}]},
+            {"group":"two","name":"Two","options":[{"value":"auto","name":"Auto"}]}
+        ]);
+        guard.observe(&options);
+        assert!(!guard.can_record_model(Some(&options)));
+        options[0]["options"] = json!([{"value":"auto","name":"A"},{"value":"auto","name":"B"}]);
+        guard.observe(&options);
+        assert_eq!(guard.check().status, "blocked");
+        options[0]["options"] = json!([{"value":"auto","name":"Auto"}]);
+        options[0].as_object_mut().unwrap().remove("category");
+        guard.observe(&options);
+        assert!(!guard.needs_model_record());
     }
     #[test]
     fn same_model_effort_drift_and_missing_option_block() {

@@ -134,15 +134,18 @@ export class ExtensionInventoryController {
     promise: Promise<unknown>,
     success: (value: unknown) => void,
     failure: (reason: unknown) => void,
+    observationEpoch: number,
   ) {
     const timer = setTimeout(() => {
       if (this.entries.get(f.owner.agentId) === f && f.view.unresolved) {
+        // Retain lost-read evidence without ending a newer status observation.
         f.observationLost = true;
-        this.publish(f, {
-          checking: false,
-          error: "timedOut",
-          unresolved: true,
-        });
+        if (observationEpoch === f.checkEpoch)
+          this.publish(f, {
+            checking: false,
+            error: "timedOut",
+            unresolved: true,
+          });
       }
     }, this.observationMs);
     // Keep observing the original promise; timeout never starts another query.
@@ -250,6 +253,7 @@ export class ExtensionInventoryController {
           checking: false,
         });
       },
+      0,
     );
     return true;
   }
@@ -279,6 +283,7 @@ export class ExtensionInventoryController {
             error: extensionFailure(reason) ?? "unavailable",
           });
       },
+      epoch,
     );
   }
   cancel(agentId: string, requestId: string, explicit = true): void {
@@ -306,7 +311,8 @@ export class ExtensionInventoryController {
             error: "unknownRequest",
             stale: !!f.view.result,
           });
-        }
+        } else if (epoch === f.checkEpoch && f.view.unresolved)
+          this.publish(f, { checking: false });
         // Ordinary early null, including automatic close, remains uncertain.
       },
       (reason) => {
@@ -316,6 +322,7 @@ export class ExtensionInventoryController {
             error: extensionFailure(reason) ?? "unavailable",
           });
       },
+      epoch,
     );
   }
   retire(owner: InventoryOwner): void {

@@ -41,6 +41,7 @@ export interface ExtensionCapabilities {
   skillsInventory: InventoryCapability;
   skillsExtraRootsInventory?: InventoryCapability;
   skillEnablement: InventoryCapability;
+  skillPreferenceRemoval?: InventoryCapability; // Legacy absence grants no removal.
   pluginManagement?: PluginManagementCapability;
   mcpRemoval?: InventoryCapability; // Missing legacy report grants no removal.
   mcpHttpAddition?: InventoryCapability; // Only explicit availability grants HTTP addition.
@@ -173,6 +174,7 @@ export function parseExtensionCapabilities(
       "mcpHttpAddition",
       "skillsExtraRootsInventory",
       "pluginManagement",
+      "skillPreferenceRemoval",
     ],
   );
   const capability = (
@@ -209,6 +211,9 @@ export function parseExtensionCapabilities(
   const mcpInventory = capability(v.mcpInventory, "officialCli");
   const skillsInventory = capability(v.skillsInventory, "officialAppServer");
   const skillEnablement = capability(v.skillEnablement, "officialAppServer");
+  const skillPreferenceRemoval = Object.hasOwn(v, "skillPreferenceRemoval")
+    ? capability(v.skillPreferenceRemoval, "officialAppServer", true)
+    : undefined;
   const pluginManagement = Object.hasOwn(v, "pluginManagement")
     ? (() => {
         const raw = object(v.pluginManagement, [
@@ -233,6 +238,7 @@ export function parseExtensionCapabilities(
     : undefined;
   if (
     (skillEnablement.availability === "available" ||
+      skillPreferenceRemoval?.availability === "available" ||
       skillsExtraRootsInventory?.availability === "available") &&
     skillsInventory.availability !== "available"
   )
@@ -301,6 +307,7 @@ export function parseExtensionCapabilities(
     mcpInventory,
     skillsInventory,
     skillEnablement,
+    ...(skillPreferenceRemoval ? { skillPreferenceRemoval } : {}),
     ...(pluginManagement ? { pluginManagement } : {}),
     ...(skillsExtraRootsInventory ? { skillsExtraRootsInventory } : {}),
     ...(mcpEnablement ? { mcpEnablement } : {}),

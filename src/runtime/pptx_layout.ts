@@ -40,6 +40,25 @@ export function layer(part: string, node: PptxXml): PptxLayer {
   if (!tree) throw new PptxError("invalid");
   const shapes: PptxXml[] = [],
     ids = new Set<string>();
+  const unique = (node: PptxXml) => {
+    const id = shapeId(node);
+    if (ids.has(id)) throw new PptxError("invalid");
+    ids.add(id);
+    if (node.name === "grpSp")
+      for (const nested of node.children)
+        if (
+          nested.uri === P &&
+          [
+            "sp",
+            "pic",
+            "grpSp",
+            "cxnSp",
+            "graphicFrame",
+            "contentPart",
+          ].includes(nested.name)
+        )
+          unique(nested);
+  };
   for (const n of tree.children) {
     if (n.uri === P && n.name === "nvGrpSpPr") continue;
     if (n.uri === P && n.name === "grpSpPr") {
@@ -74,9 +93,7 @@ export function layer(part: string, node: PptxXml): PptxLayer {
       )
     )
       throw new PptxError("unsupported");
-    const id = shapeId(n);
-    if (ids.has(id)) throw new PptxError("invalid");
-    ids.add(id);
+    unique(n);
     shapes.push(n);
   }
   return { part, node, shapes };

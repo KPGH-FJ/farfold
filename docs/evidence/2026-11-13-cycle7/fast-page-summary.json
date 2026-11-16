@@ -1,0 +1,148 @@
+{
+  "scope": "One real installed cce3 fast-agent public-page request, followed by one zero-send cold restore of the exact owned conversation. Separate from mach-formal-summary zero-prompt phase.",
+  "sourceCommit": "cce3f5b805db9011d862c84f66b528b789bb84bf",
+  "nativeSessionId": "2611130944-EpURLr",
+  "selection": {
+    "savedModel": "codexplan",
+    "storedNativeModel": {
+      "model": "gpt-5.6-sol",
+      "model_spec": "codexplan",
+      "provider": "codexresponses"
+    },
+    "modelServiceReasoningChanges": 0,
+    "reasoningBoundary": "Native records contain no explicit reasoning-effort field; high is only the installed codexplan alias default, not a separate native/wire receipt."
+  },
+  "realRequest": {
+    "userPrompts": 1,
+    "toolCalls": 1,
+    "otherToolCalls": 0,
+    "retries": 0,
+    "nativeApproval": "Allow Once",
+    "farfoldPermission": "single screenshot permission",
+    "tool": {
+      "callCount": 1,
+      "resultCount": 1,
+      "callId": "call_8fc4080aea6b463e8d2eaf40272f474a",
+      "resultCallId": "call_8fc4080aea6b463e8d2eaf40272f474a",
+      "name": "farfold_page_634f0a00c5a646c3fc68cacfc88725a5__observe_page",
+      "input": {
+        "screenshot": true
+      },
+      "isError": false,
+      "textAndStructuredContentEqual": true,
+      "url": "https://www.w3.org/History/19921103-hypertext/hypertext/WWW/TheProject.html",
+      "title": "The World Wide Web project",
+      "truncated": false,
+      "screenshot": {
+        "status": "captured",
+        "mimeType": "image/png",
+        "height": 518,
+        "width": 509
+      }
+    },
+    "png": {
+      "sha256": "8d21be7cf8550a9b422c5e613c38dcd98f0fe85fb951a17e4505d6f641d41d79",
+      "bytes": 90330,
+      "width": 509,
+      "height": 518,
+      "signatureAndAllChunkCrcValid": true,
+      "dimensionsMatchToolReport": true,
+      "imageBlockCount": 1
+    },
+    "finalReplyMatches": true,
+    "stopReason": "endTurn",
+    "pageAfterPermission": "unshared",
+    "normalQuitObserved": true,
+    "providerRequestCount": "Not measured; one user prompt can contain multiple model completions."
+  },
+  "coldRestore": {
+    "newUserPrompts": 0,
+    "userAndFinalAnswerReplayed": true,
+    "toolStepReplayed": false,
+    "pngReplayed": false,
+    "contentPanel": "No artifacts",
+    "exactTwoHistoryFilesByteIdentical": true,
+    "sessionMetadataOnlyChangedField": "last_activity",
+    "samePublicPageOpenedAgainUnshared": true,
+    "permissionButtonEnabled": true,
+    "normalQuitObserved": true,
+    "completeReplayPassed": false,
+    "cause": "Observed missing tool/image projection; installed official fast-agent build_history_updates walks only message.content and omits separate tool_calls/tool_results. Native tool/image bytes remain intact. Exact cold IPC event packet counts were not captured, so reviewed source attribution is distinct from direct wire capture.",
+    "officialAlternative": "Existing /history save can export native JSON but writes a file and returns an export acknowledgement; it is not a replay fix and was not invoked."
+  },
+  "limits": [
+    "No full cycle6/cycle7/29x8 acceptance",
+    "No repair or revalidation of the old fast-agent bash Stop failure",
+    "No Mistral business request in this phase",
+    "No claim of image understanding, billing, current quota or explicit wire reasoning-effort receipt",
+    "Original work-location unknown warning preserved",
+    "Preservation compares named old roots and metadata, not all global history. Changed draft activity aggregate does not prove every prior activity item unchanged."
+  ],
+  "records": [
+    {
+      "path": "output/2026-11-13-cycle7/formal-fast-page/scope.json",
+      "sha256": "13c1731577111ffb25fb22933e09b80a0de7ae6cec9ac1096740ec5db79cd36a"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-fast-page/single-send.json",
+      "sha256": "52455fe2bdd46f0ff9cdd1a03f29c20aa0e9261cdd188b5bc633dd1ae7807151"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-fast-page/ui-observations.json",
+      "sha256": "805e01a4798b69d475fbab7ef626b86563234965b3bec52f7c07c6281b46ad1c"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-fast-page/closed-result.json",
+      "sha256": "d397ebd72e5404d21aed4c6ad7be7267670582f048f48412f5a712336f9a17a6"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-fast-page/native-result.json",
+      "sha256": "3f0030536dfda9cb5adc60a2984487bedd62ef5e4948e17f8f65e4c010f0b56f"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-fast-page/native-cold-comparison.json",
+      "sha256": "c06b388e668274f2b138ffe19c3093efb46a423cbb4a47f3b0b24392edd3150f"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-fast-page/cold-ui-observations.json",
+      "sha256": "01661d392f55dee1cef34c390873077dd2178663866689d0583ef495571c4de6"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/current-fast-choice.json",
+      "sha256": "9556aad13d62d4c01520756eb91244d82315bb0c2cee567cd95aed29d708e3c9"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/fast-model-review.json",
+      "sha256": "99285e0ebd80aa4448a095641ceaf3f28025f7b8648d5b85ac412f0e2d80f8de"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-fast-page/source-review.json",
+      "sha256": "ec45b9ee217ac4f427d965adb64c3560ef53331a17e4559041bdda5ebe8bb8f4"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mach/after-fast-page-cold.json",
+      "sha256": "c17c783235fa77d7b197a7f6bcea08b96b2e19ebea669fc938398d79300784f2"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-fast-page/final-review.json",
+      "sha256": "624a95ccdfcdef9748af3993c751634bfa67e176fe236ecd5c6b3a32cf32dab4"
+    }
+  ],
+  "preservationAfterCold": {
+    "original10SessionRowsUnchanged": true,
+    "original380DismissalsUnchanged": true,
+    "newOwnedSessionRows": 1,
+    "original202NamedNativeFilesUnchanged": true,
+    "exact22ConfigCandidateObservationsUnchanged": true,
+    "agentSetupWholeRowUnchanged": true,
+    "draftComposersFeedbackQueuesVersionUnchanged": true,
+    "changedDraftSubitems": ["choice", "activity"],
+    "activityCountBefore": 12,
+    "activityCountAfter": 13,
+    "individualPriorActivityEntriesNotCompared": true,
+    "changedAgentRow": "registry:fast-agent",
+    "other39AgentRowsUnchanged": true,
+    "exactRemainingChangedAgentFieldsNotResolved": true,
+    "pendingMarkers": 0
+  }
+}

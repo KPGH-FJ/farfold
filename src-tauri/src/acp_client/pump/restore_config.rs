@@ -45,6 +45,7 @@ impl Opening {
 
 pub(crate) struct Plan {
     pub record: Value,
+    required_vibe_thinking: Option<Choice>,
     remaining: VecDeque<Choice>,
     confirmed: Vec<Choice>,
     requested: Option<Choice>,
@@ -54,7 +55,11 @@ pub(crate) struct Plan {
 const UNCONFIRMED: &str = "无法确认此对话已保存的模型或思考选择，请检查后重试";
 
 impl Plan {
-    pub(super) fn new(opening: &Opening, store: &ConfigStore) -> Result<Option<Self>, String> {
+    pub(super) fn new(
+        opening: &Opening,
+        store: &ConfigStore,
+        dialect: crate::acp_client::session_config::Dialect,
+    ) -> Result<Option<Self>, String> {
         let Some(record) = opening.recorded.as_ref().filter(|_| opening.restored) else {
             return Ok(None);
         };
@@ -105,12 +110,25 @@ impl Plan {
         } else if matches!(source, ServiceRecord::Configured { .. }) {
             return Err("无法确认此对话的 API 模型，请检查原设置".into());
         }
+        let required_vibe_thinking = if dialect.is_vibe_family() {
+            saved
+                .choices
+                .iter()
+                .find(|choice| {
+                    choice.category == "thought_level"
+                        && choice.id == crate::acp_client::session_config::THINKING_ID
+                })
+                .cloned()
+        } else {
+            None
+        };
         let mut choices = saved.choices;
         choices.sort_by(|left, right| {
             (left.category != "model", &left.id).cmp(&(right.category != "model", &right.id))
         });
         Ok(Some(Self {
             record: record.clone(),
+            required_vibe_thinking,
             remaining: choices.into(),
             confirmed: Vec::new(),
             requested: None,
@@ -122,7 +140,13 @@ impl Plan {
         self.observed = Some(options.clone());
     }
 
-    pub(super) fn next(&mut self, options: &Value) -> Result<Option<Choice>, String> {
+    fn validate_confirmed(&self, options: &Value) -> Result<(), String> {
+        if let Some(choice) = &self.required_vibe_thinking {
+            let option = declared(options, choice)?;
+            if option["category"] != "thought_level" || !offers(&option["options"], &choice.value) {
+                return Err(UNCONFIRMED.into());
+            }
+        }
         if ModelGuard::new(options, Some(&self.record), true)
             .check()
             .issues
@@ -136,6 +160,21 @@ impl Plan {
                 return Err("Agent 已恢复的选择又发生变化，请重新检查此对话".into());
             }
         }
+        Ok(())
+    }
+
+    fn validate_pending(&self, options: &Value) -> Result<(), String> {
+        self.validate_confirmed(options)?;
+        let requested = self.requested.as_ref().ok_or(UNCONFIRMED)?;
+        let option = declared(options, requested)?;
+        if !offers(&option["options"], &requested.value) {
+            return Err(UNCONFIRMED.into());
+        }
+        Ok(())
+    }
+
+    pub(super) fn next(&mut self, options: &Value) -> Result<Option<Choice>, String> {
+        self.validate_confirmed(options)?;
         while let Some(choice) = self.remaining.pop_front() {
             let option = declared(options, &choice)?;
             if option["currentValue"] == choice.value {
@@ -207,10 +246,37 @@ fn offers(options: &Value, value: &str) -> bool {
     })
 }
 
+fn work_busy(ctx: &DispatchContext<'_>) -> bool {
+    ctx.tools.busy() || ctx.compactions.busy() || ctx.async_tasks.busy()
+}
+
+pub(super) fn owned_interactions(ctx: &DispatchContext<'_>) -> bool {
+    ctx.pending
+        .lock()
+        .map(|entries| {
+            entries.values().any(|entry| {
+                entry.session_id == ctx.session_id && entry.lease.belongs_to(&ctx.ops.life)
+            })
+        })
+        .unwrap_or(true)
+        || ctx
+            .ops
+            .elicitations
+            .lock()
+            .map(|entries| {
+                entries.values().any(|entry| {
+                    entry.session_id == ctx.session_id && entry.lease.belongs_to(&ctx.ops.life)
+                })
+            })
+            .unwrap_or(true)
+}
+
+pub(super) fn deletion_busy(ctx: &DispatchContext<'_>) -> bool {
+    work_busy(ctx) || owned_interactions(ctx)
+}
+
 pub(super) fn busy(ctx: &DispatchContext<'_>) -> bool {
-    ctx.tools.busy()
-        || ctx.compactions.busy()
-        || ctx.async_tasks.busy()
+    work_busy(ctx)
         || ctx
             .pending
             .lock()
@@ -232,9 +298,72 @@ pub(super) fn busy(ctx: &DispatchContext<'_>) -> bool {
             .unwrap_or(true)
 }
 
+pub(super) async fn next_mutation(
+    mutation: &mut Option<Mutation>,
+    opening: &Option<Opening>,
+    ctx: &mut DispatchContext<'_>,
+    permissions: &super::super::permission_guard::PermissionGuard,
+    stopped_close_ready: impl FnOnce() -> bool,
+) -> Option<Result<Value, String>> {
+    // This async body runs only when the select branch is polled. An inbox
+    // update can invalidate a prepared continuation before its first poll.
+    if let Some(pending) = mutation.as_ref()
+        && !pending.started()
+    {
+        // Repeat each control's existing work admission. Ordinary close need
+        // not wait for pending inquiries; ForkClose still owns its actual reply
+        // independently of caller interest/deadline in Mutation::poll.
+        let rejected = match &pending.kind {
+            MutationKind::Config { .. } if busy(ctx) => {
+                Some("当前无法修改此设置，请等待已发出的请求结束")
+            }
+            MutationKind::DeleteClose | MutationKind::Delete if deletion_busy(ctx) => {
+                Some("请先完成此对话的任务及待处理事项，再删除")
+            }
+            MutationKind::Mode | MutationKind::Close if work_busy(ctx) => {
+                Some("上次请求尚未结束，请先停止或等待")
+            }
+            MutationKind::StoppedToolClose(expected)
+                if !stopped_close_ready()
+                    || !permissions.admissible()
+                    || stopped_tool_close::candidate(ctx).as_ref() != Some(expected) =>
+            {
+                Some(stopped_tool_close::INELIGIBLE)
+            }
+            _ => None,
+        };
+        if let Some(error) = rejected {
+            return Some(Err(error.into()));
+        }
+    }
+    if let Some(pending) = mutation.as_ref()
+        && !pending.started()
+        && let MutationKind::Restore { plan, .. } = &pending.kind
+    {
+        let admission = if !pending.awaiting_reply()
+            || busy(ctx)
+            || !matches!(permissions.state(), "ready" | "required")
+        {
+            Err("恢复结果尚未确认，请完成待处理事项后重试".into())
+        } else {
+            plan.validate_pending(
+                opening
+                    .as_ref()
+                    .and_then(|opening| opening.options.as_ref())
+                    .unwrap_or(&Value::Null),
+            )
+        };
+        if let Err(error) = admission {
+            return Some(Err(error));
+        }
+    }
+    super::super::mutation::next(mutation).await
+}
+
 pub(super) fn update(
     options: &Value,
     modern: bool,
+    guard: &ModelGuard,
     opening: &mut Option<Opening>,
     mutation: &mut Option<Mutation>,
 ) {
@@ -242,12 +371,14 @@ pub(super) fn update(
         opening.options = Some(options.clone());
         opening.config_options_modern = modern;
     }
-    if let Some(Mutation {
-        kind: MutationKind::Restore { plan, .. },
-        ..
-    }) = mutation
-    {
-        plan.observe(options);
+    match mutation.as_mut().map(|active| &mut active.kind) {
+        Some(MutationKind::Restore { plan, .. }) => plan.observe(options),
+        Some(MutationKind::Config {
+            request,
+            prior_guard: Some(prior),
+            ..
+        }) => request.observe_choices(prior, guard),
+        _ => {}
     }
 }
 
@@ -274,6 +405,7 @@ pub(super) fn drain(
             update(
                 options,
                 configuration.modern_options().is_some(),
+                guard,
                 opening,
                 mutation,
             );

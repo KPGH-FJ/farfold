@@ -52,11 +52,15 @@ export type SkillChangeCode =
   | "requestConflict"
   | "unavailable"
   | "targetUnavailable"
+  | "inventoryExpired"
   | "targetChanged"
   | "inventoryIncomplete"
   | "reviewExpired"
   | "reviewConsumed"
   | "configurationUnsupported"
+  | "configurationProjectOnly"
+  | "configurationInherited"
+  | "configurationLayerConflict"
   | "configurationChanged"
   | "configurationReadOnly"
   | "configurationRejected"
@@ -187,6 +191,7 @@ export const SKILL_CHANGE_CODES: readonly SkillChangeCode[] = [
   "requestConflict",
   "unavailable",
   "targetUnavailable",
+  "inventoryExpired",
   "targetChanged",
   "inventoryIncomplete",
   "reviewExpired",

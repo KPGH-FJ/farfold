@@ -1,0 +1,88 @@
+{
+  "checkedAt": "2026-11-15T19:39:13+08:00",
+  "agent": {
+    "registration": "registry:devin",
+    "vendorCliVersion": "3000.11.3",
+    "argument": "acp",
+    "registrationEnvironmentOverrides": 0
+  },
+  "priorInstalledApp": {
+    "outcome": "session-new-no-matching-response-before-120-second-deadline",
+    "attempts": [
+      {
+        "protocolLog": "~/Library/Logs/Farfold/protocol-v1-1794740889510-10.jsonl",
+        "vendorLog": "~/.local/share/devin/cli/logs/devin_20261115-190809_75743.log",
+        "vendorEvidenceLines": [3, 244, 251, 255, 256, 266, 270],
+        "workingDirectory": "output/2026-11-15-cycle12-continuation/qoder-first-use",
+        "initializeResponseSequence": 2,
+        "sessionNewRequestSequence": 3,
+        "sessionNewSentAt": "2026-11-15T19:08:12.414+08:00",
+        "deadlineNotificationSequence": 18,
+        "secondsBetweenRequestAndDeadlineNotification": 120.004,
+        "unmatchedErrorSequence": 19,
+        "secondsBetweenDeadlineNotificationAndUnmatchedError": 0.007
+      },
+      {
+        "protocolLog": "~/Library/Logs/Farfold/protocol-v1-1794740892414-11.jsonl",
+        "vendorLog": "~/.local/share/devin/cli/logs/devin_20261115-190812_75760.log",
+        "vendorEvidenceLines": [3, 243, 250, 254, 255, 265, 269],
+        "workingDirectory": "output/2026-11-15-cycle12-continuation/devin-first-use",
+        "initializeResponseSequence": 2,
+        "sessionNewRequestSequence": 3,
+        "sessionNewSentAt": "2026-11-15T19:08:14.442+08:00",
+        "deadlineNotificationSequence": 18,
+        "secondsBetweenRequestAndDeadlineNotification": 120.003,
+        "unmatchedErrorSequence": 19,
+        "secondsBetweenDeadlineNotificationAndUnmatchedError": 0.006
+      }
+    ],
+    "workingDirectorySwitch": {
+      "secondsBetweenSessionNewRequests": 2.028,
+      "firstSessionNewUnansweredWhenSecondStarted": true,
+      "bothVendorSpansRemainedOpenUntilTeardownAt": "2026-11-15T19:19:00+08:00",
+      "overlapCausedHang": "unconfirmed"
+    },
+    "unmatchedError": { "class": "method_not_found", "responseIdNull": true },
+    "vendorSessionSetup": "dispatched; discovery and login-shell environment snapshot completed; request span ended on process teardown without a matching reply",
+    "modelPrompts": 0
+  },
+  "directOfficialStdioProbe": {
+    "isolatedOwnedPid": 25278,
+    "sameRegistryCommandAndArgs": true,
+    "sameCwdAsSecondInstalledAttempt": "output/2026-11-15-cycle12-continuation/devin-first-use",
+    "vendorLog": "~/.local/share/devin/cli/logs/devin_20261115-193907_25278.log",
+    "vendorRemoteConfigWarningLines": [99, 100, 102, 103],
+    "differences": "single independent stdio client, empty advertised client capabilities, numeric JSON-RPC IDs, launch environment inherited from this client",
+    "operations": ["initialize", "session/new"],
+    "clientMcpServers": 0,
+    "initializeResponseAfterSeconds": 2.089,
+    "sessionNewResponseAfterStartSeconds": 6.304,
+    "sessionIdReturned": true,
+    "agentToClientRequests": 0,
+    "modelPrompts": 0,
+    "authRequests": 0,
+    "cleanEofExitCode": 0
+  },
+  "existingConversation": {
+    "priorExactIndexedOwnedSample": "session/load reached Devin and the current Devin store returned session not found",
+    "vendorLog": "~/.local/share/devin/cli/logs/devin_20261115-165037_873.log",
+    "vendorEvidenceLine": 127
+  },
+  "officialRegistry": {
+    "publishedDarwinArm64Version": "3000.12.57",
+    "binaryArgument": "acp",
+    "manifest": "https://github.com/agentclientprotocol/registry/blob/main/devin/agent.json",
+    "releaseNotes": "https://docs.devin.ai/cli/changelog/stable",
+    "testedThisVersion": false
+  },
+  "conclusion": {
+    "startupFailureLocation": "previous registered Devin process received session/new but did not answer the request before Farfold's deadline",
+    "vendorRemoteConfigTimeoutObservedInBothFailedAndSuccessfulRuns": true,
+    "causeOfFailureWithinStartup": "unconfirmed",
+    "normalFarfoldNewChatRetest": "pending",
+    "officialSources": [
+      "https://docs.devin.ai/cli/reference/commands#devin-acp",
+      "https://agentclientprotocol.com/protocol/v1/session-setup"
+    ]
+  }
+}

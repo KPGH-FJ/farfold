@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import type { ThreadState, PromptBlock } from "./session_types";
 import type { PromptAdmission } from "./queue";
+import { failedWorkTarget } from "./stopped_work_close";
 const h = vi.hoisted(() => ({
   invoke: vi.fn(),
   prompts: [] as {
@@ -136,6 +137,101 @@ function event(value: unknown) {
 }
 const calls = (name: string) =>
   h.invoke.mock.calls.filter(([command]) => command === name);
+
+it.each([true, false])(
+  "closes only the owned failed connection whether the process event or command result arrives first (%s)",
+  async (eventFirst) => {
+    const { request, args, resolve } = await send();
+    progress(args, "offered");
+    resolve({ status: "accepted" });
+    await request;
+    const error = {
+      kind: "turnEnd",
+      error: "internal error",
+      failedWorkCloseAvailable: true,
+    };
+    event({ ...error, promptReceiptId: 999 });
+    event({ ...error, promptReceiptId: 11, sessionId: state.nativeSessionId });
+    expect(failedWorkTarget(state)).toBeNull();
+    event({ ...error, promptReceiptId: 11 });
+    const target = failedWorkTarget(state)!;
+    expect(target).toMatchObject({
+      connectionId: "owned-connection",
+      sessionId: "owned-session",
+    });
+    const other = threads.markOpenFailed(
+      "neighbor",
+      "owned",
+      "/neighbor",
+      "other-session",
+      "fixture",
+    );
+    other.connectionId = "other-connection";
+    other.running = true;
+    const queued = [
+      { type: "text", text: "keep queued message" },
+    ] satisfies PromptBlock[];
+    state.queued = [queued];
+    const localDraft = drafts.composerDrafts.read(`session:${state.key}`);
+    const proof = {
+      connectionId: target.connectionId,
+      sessionId: target.sessionId,
+      proofId: "8",
+    };
+    const { ProcessEndedChannel } = await import("./session_process_ended");
+    const channel = new ProcessEndedChannel(
+      (key) => threads.thread(key),
+      (_key, message) => event(message),
+    );
+    channel.bind(state);
+    const ended = { connectionId: proof.connectionId, closeReason: "user" };
+    const fallback = h.invoke.getMockImplementation()!;
+    h.invoke.mockImplementation(async (command, payload) => {
+      if (command === "prepare_failed_work_close") return proof;
+      if (command === "close_failed_work") {
+        if (eventFirst) channel.onmessage(ended);
+        return proof;
+      }
+      return fallback(command, payload);
+    });
+
+    expect(await threads.workConnectionClose.check(state, target)).toEqual(
+      proof,
+    );
+    expect(calls("close_failed_work")).toHaveLength(0);
+    await expect(
+      threads.workConnectionClose.close(state, target, {
+        ...proof,
+        sessionId: other.nativeSessionId,
+      }),
+    ).rejects.toThrow();
+    expect(calls("close_failed_work")).toHaveLength(0);
+    const previousItems = state.items.slice();
+    await threads.workConnectionClose.close(state, target, proof);
+    if (!eventFirst) channel.onmessage(ended);
+    expect(calls("close_failed_work")).toEqual([
+      [
+        "close_failed_work",
+        { agentId: state.agentId, cwd: state.cwd, ...proof },
+      ],
+    ]);
+    expect(state.items).toEqual(previousItems);
+    expect(state).toMatchObject({
+      connectionLost: true,
+      connectionOutcomeUnknown: false,
+      historicalOutcomeUnknown: true,
+      processEndedConnectionId: proof.connectionId,
+      queuePaused: "stopped",
+    });
+    expect(failedWorkTarget(state)).toBeNull();
+    expect(state.queued).toEqual([queued]);
+    expect(drafts.composerDrafts.read(`session:${state.key}`)).toEqual(
+      localDraft,
+    );
+    expect(other).toMatchObject({ running: true, connectionLost: false });
+    expect(calls("session_prompt")).toHaveLength(1);
+  },
+);
 
 it("a definite wait timeout keeps the existing conversation queue and rejects late offered progress without retry", async () => {
   const draft = drafts.composerDrafts.read(`session:${state.key}`);

@@ -49,13 +49,7 @@ fn remove_owned(path: &Path) -> Result<(), String> {
 /// vault entry whose reference was already forgotten.
 fn keychain_services(store: &MetaStore) -> Result<Vec<String>, String> {
     let mut services = crate::credentials::secret_services(store)?;
-    for row in store.list_agents()? {
-        for (name, value) in &row.env {
-            if value == crate::auth::KEYCHAIN_MARKER {
-                services.push(crate::auth::env_keychain_service(&row.id, name));
-            }
-        }
-    }
+    services.extend(crate::auth::agent_environment::secret_services(store)?);
     Ok(services)
 }
 
@@ -69,6 +63,7 @@ pub(crate) fn clear_owned(
     store: &MetaStore,
     delete_secret: &dyn Fn(&str) -> Result<(), String>,
 ) -> Result<(), String> {
+    store.require_no_mcp_pending()?;
     for service in keychain_services(store)? {
         delete_secret(&service)?;
     }

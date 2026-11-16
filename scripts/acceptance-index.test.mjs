@@ -10,6 +10,8 @@ import { validateReceipt } from "./acceptance-receipts.mjs";
 import {
   buildAcceptanceIndex,
   evidenceLevels,
+  loadAgentConditions,
+  loadStage2Evidence,
   loadAcceptanceAuthorities,
   normalizeMapping,
   parseAcceptanceAuthorities,
@@ -67,8 +69,8 @@ function observation(changes = {}) {
 describe("derived acceptance authority and complete scope", () => {
   it("derives all identities, original standards and 151 conditions without a second catalog", () => {
     const index = buildAcceptanceIndex({ authorities });
-    expect(index.cells).toHaveLength(232);
-    expect(index.authorities.agents).toHaveLength(29);
+    expect(index.cells).toHaveLength(176);
+    expect(index.authorities.agents).toHaveLength(22);
     expect(index.authorities.standards.map((item) => item.id)).toEqual([
       "S1",
       "S2",
@@ -95,10 +97,10 @@ describe("derived acceptance authority and complete scope", () => {
       mechanicallyValid: true,
       acceptanceVerified: false,
       requiresIndependentReview: true,
-      agents: 29,
+      agents: 22,
       standards: 8,
       requirements: 151,
-      cells: 232,
+      cells: 176,
     });
   });
 
@@ -109,7 +111,7 @@ describe("derived acceptance authority and complete scope", () => {
     );
     const ids = parseAgentIds(source);
     expect(() => parseAgentIds(source.replace(`    "${ids[0]}",`, ""))).toThrow(
-      /29/,
+      /22/,
     );
     expect(() =>
       parseAgentIds(source.replace(`    "${ids[1]}",`, `    "${ids[0]}",`)),
@@ -163,7 +165,7 @@ describe("derived acceptance authority and complete scope", () => {
     const ids = parseAgentIds(firstReleaseText);
     expect(() =>
       parseAgentIds(firstReleaseText.replace(`    "${ids[0]}",`, "")),
-    ).toThrow(/29/);
+    ).toThrow(/22/);
     expect(() =>
       parseStandards(productText.replace(/^4\. .+\r?\n/m, "")),
     ).toThrow(/eight/);
@@ -273,7 +275,7 @@ describe("evidence observations cannot become acceptance", () => {
         coverage: [only],
       });
       expect(index.coverage).toEqual([only]);
-      expect(index.cells).toHaveLength(232);
+      expect(index.cells).toHaveLength(176);
       expect(
         index.cells.every(
           (cell) =>
@@ -746,7 +748,11 @@ describe("read-only query and command-line contract", () => {
 
   it("defaults to deterministic in-memory output and provides a read-only usage message", () => {
     expect(runAcceptanceIndex([], { rootDir: root })).toEqual(
-      buildAcceptanceIndex({ authorities }),
+      buildAcceptanceIndex({
+        authorities,
+        conditions: loadAgentConditions(root),
+        stage2Evidence: loadStage2Evidence(root),
+      }),
     );
     expect(runAcceptanceIndex(["--help"])).toContain("writes JSON to stdout");
     expect(

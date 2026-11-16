@@ -4,13 +4,15 @@ pub mod mcp;
 pub mod mcp_add;
 mod mcp_add_input;
 mod mcp_add_plan;
-mod mcp_http_url;
+pub(crate) mod mcp_http_url;
 mod mcp_plan;
 pub mod mcp_remove;
 mod mcp_remove_plan;
 mod plan;
 mod requests;
 mod rpc;
+pub mod skill_preference_remove;
+mod skill_preference_remove_plan;
 mod types;
 use crate::{acp_client::extension_inventory as inventory, meta_store::MetaStore};
 use requests::Job;
@@ -149,8 +151,7 @@ async fn dispatch(
             let manager = app
                 .try_state::<crate::acp_client::manager::AcpManager>()
                 .ok_or(Code::Unavailable)?;
-            let scope =
-                inventory::skills_scope(&manager, job.source.row())?.ok_or(Code::Unavailable)?;
+            let scope = scope_for_action(&manager, job.source.row(), job.snapshot().action)?;
             Ok((activity, scope))
         })();
         match admission {
@@ -161,6 +162,27 @@ async fn dispatch(
         }
     }
     wait(job).await
+}
+fn scope_for_action(
+    manager: &crate::acp_client::manager::AcpManager,
+    row: &crate::meta_store::AgentRow,
+    action: Action,
+) -> Result<crate::acp_client::manager::AccountScope> {
+    if matches!(action, Action::SetEnabled | Action::Add | Action::Remove) {
+        if manager
+            .shutting_down
+            .load(std::sync::atomic::Ordering::SeqCst)
+            || manager.candidate_pending(&row.id).map_err(|_| Code::Busy)?
+        {
+            return Err(Code::Busy.into());
+        }
+        // Reviewed installations may use different entrypoints but share user
+        // configuration. Keep read-only inspection on its existing admission.
+        return manager
+            .reserve_plugin_configuration(row)
+            .map_err(|_| Code::Busy.into());
+    }
+    inventory::skills_scope(manager, row)?.ok_or_else(|| Code::Unavailable.into())
 }
 #[tauri::command]
 pub async fn agent_skill_change_inspect(
@@ -226,6 +248,12 @@ pub fn agent_skill_change_cancel(
 }
 #[cfg(test)]
 mod independent_tests;
+#[cfg(test)]
+mod prewrite_owner_tests;
+#[cfg(test)]
+mod shared_scope_tests;
+#[cfg(test)]
+mod skill_preference_remove_tests;
 #[cfg(test)]
 mod tests;
 

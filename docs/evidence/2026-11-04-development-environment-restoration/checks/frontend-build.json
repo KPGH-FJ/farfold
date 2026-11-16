@@ -1,0 +1,10 @@
+{
+  "label": "frontend-build",
+  "command": ["corepack", "pnpm", "build"],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-11-04T09:49:34.008066+00:00",
+  "finishedAt": "2026-11-04T09:49:55.603329+00:00",
+  "durationSeconds": 21.595,
+  "exitCode": 0,
+  "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/frontend-build.log"
+}

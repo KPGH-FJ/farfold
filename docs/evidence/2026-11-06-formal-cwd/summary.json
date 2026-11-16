@@ -1,0 +1,170 @@
+{
+  "kind": "FormalCwdComparisonAndPartialAgentEvidence",
+  "installedFunctionalSource": "68aefdb496c284252a38e86049d269baf0432439",
+  "basedOnDocumentationCommit": "f67c732236b172e571c7345d852ab3b720dcfdd1",
+  "platform": "macOS arm64 27.0 (26A425)",
+  "firstPhaseComplete": false,
+  "firstWaveFullyAccepted": 0,
+  "kiloFormalProgramAndListComparisons": {
+    "applicationDefault": {
+      "kernelVerifiedCwdClass": "application_default",
+      "kernelSamples": 22,
+      "pipeSampleDataSha256": "ab8aaaa4bdf09af7eb32fac16217ccac23521877b7f36e6c5826be5e7ed0ffce",
+      "initializeResponse": "matched_result",
+      "startupOutcome": "success",
+      "outboundList": 0,
+      "outboundNew": 0,
+      "outboundLoad": 0,
+      "inboundResponse": 1,
+      "childCleanupInThisTap": true,
+      "safeTapSha256": "47cb75a6ac952b481e2e1536710d6f4f2d573b307daf367834e050ecef74e3ea"
+    },
+    "originalFolder": {
+      "kernelVerifiedCwdClass": "original_agent_history",
+      "kernelSamples": 22,
+      "pipeSampleDataSha256": "838bb22d9b48b29d7359efcadc4507b7d06ab17ee49598d0a8bce642696d08db",
+      "initializeResponse": "not_observed",
+      "startupOutcome": "timeout",
+      "outboundList": 0,
+      "outboundNew": 0,
+      "outboundLoad": 0,
+      "inboundResponse": 0,
+      "childCleanupInThisTap": true,
+      "safeTapSha256": "f8346303120df381dbce78d2165add9f031597d644eeace64cdb0531308b5c64",
+      "sampledOpenatWaits": 48
+    },
+    "temporaryOutsideDesktop": {
+      "kernelVerifiedCwdClass": "owned-neutral",
+      "kernelSamples": 22,
+      "pipeSampleDataSha256": "8f1d9f069e5972bfbde0cebffe5890aa3b1d9b6d2d6bdf28b74b78fefbe8816a",
+      "initializeResponse": "matched_result",
+      "startupOutcome": "success",
+      "outboundList": 1,
+      "outboundNew": 0,
+      "outboundLoad": 0,
+      "inboundResponse": 2,
+      "childCleanupInThisTap": true,
+      "safeTapSha256": "e528375fafdaddb6e2ce698d0ceb78b86bf0cb8f1041b3e97ddbe8b2857d3711"
+    },
+    "emptyInsideDesktop": {
+      "kernelVerifiedCwdClass": "owned-desktop",
+      "kernelSamples": 22,
+      "pipeSampleDataSha256": "733265c37f36dfbcedb4e0df199b475f34a8610c62a7fdfc5d5c8c0130cb6f3b",
+      "initializeResponse": "not_observed",
+      "startupOutcome": "timeout",
+      "outboundList": 0,
+      "outboundNew": 0,
+      "outboundLoad": 0,
+      "inboundResponse": 0,
+      "childCleanupInThisTap": true,
+      "safeTapSha256": "48a4fdb75c3af41293bd7284f6924c783979562b46250379d75c438b5c5fe7c6",
+      "sampledOpenatWaits": 48
+    }
+  },
+  "priorGooseAndKiloCwdSamples": {
+    "localSystemImageVersion": "1786.0.3",
+    "sharedImageUuid": "822187A9-92CD-3EA2-BB59-65C6A1BB0D77",
+    "actualArgumentConfirmed": ".",
+    "flags": "O_RDONLY | O_CLOEXEC"
+  },
+  "newKiloDesktopStack": {
+    "kernelCall": "__openat_nocancel",
+    "pathArgumentObserved": false,
+    "returnCodeObserved": false
+  },
+  "desktopAccess": {
+    "settingsAfterTrialsShowsFarfoldDesktopOn": true,
+    "systemSettingsChanged": false,
+    "attributedKernelOrTccDecisionFound": false,
+    "underlyingMechanismConfirmed": false
+  },
+  "copilotFormalPreparation": {
+    "globalSetupPath": true,
+    "officialModelOptionsVisible": true,
+    "modelRequestSent": false,
+    "automaticSessionNewRequests": 1,
+    "bothObservedChildGroupsCleaned": true,
+    "temporarySessionDeletionVerified": false,
+    "taps": [
+      {
+        "initializeResponse": "matched_result",
+        "startupOutcome": "success",
+        "outboundList": 0,
+        "outboundNew": 0,
+        "outboundLoad": 0,
+        "inboundResponse": 1,
+        "childCleanupInThisTap": true,
+        "safeTapSha256": "0b0c32a3d9a4d75e3f9eca06f27bda2e7f6bae048c855e3648ce47a923f4e9d2"
+      },
+      {
+        "initializeResponse": "matched_result",
+        "startupOutcome": "success",
+        "outboundList": 0,
+        "outboundNew": 1,
+        "outboundLoad": 0,
+        "inboundResponse": 2,
+        "childCleanupInThisTap": true,
+        "safeTapSha256": "a5367e7c41552f0596f3899b55dfe924f57fb5329d30683b89c0ce7d12c8475a"
+      }
+    ]
+  },
+  "realOriginalHistoryViaIndependentStdio": [
+    {
+      "agent": "goose",
+      "registeredVersion": "1.52.0",
+      "historyUpdates": 33,
+      "loadSeconds": 0.084,
+      "sameOwnedOriginal": true,
+      "originalTerminalObserved": true,
+      "directReceiptSha256": "0c32f3ec249002b972f97accd9caf8add01deade3b25b55df23375cae35eff31"
+    },
+    {
+      "agent": "kilo",
+      "registeredVersion": "7.8.1",
+      "historyUpdates": 34,
+      "loadSeconds": 2.297,
+      "sameOwnedOriginal": true,
+      "originalTerminalObserved": true,
+      "directReceiptSha256": "0da1feb1bc3d8dfaaac20a533da14a948da5543d0d3c7c2cd0588138e998201d"
+    },
+    {
+      "agent": "github-copilot-cli",
+      "registeredVersion": "1.0.89",
+      "historyUpdates": 48,
+      "loadSeconds": 3.842,
+      "sameOwnedOriginal": true,
+      "originalTerminalObserved": true,
+      "directReceiptSha256": "a07f0c000d5c652259cb34d1490621c8e173ae55cda639c033e5f2e68d1c1b53"
+    }
+  ],
+  "arch26": {
+    "freshFrontendProcesses": 2,
+    "selectedTestsPassed": 2,
+    "successfulSqliteExchanges": 13,
+    "queuedUserItems": 2,
+    "promptsBeforeExplicitContinue": 0,
+    "orderedControlledSubmissionsAfterOneExplicitContinue": 2,
+    "persistedQueueClearedAfterResponses": true,
+    "formalApplicationOrRealAgentCovered": false
+  },
+  "preservation": {
+    "originalUnsentDraftVisibleAfterColdStart": true,
+    "retainedDraftCount": 1,
+    "originalCwdVisible": true,
+    "newModelPrompts": 0,
+    "oldRequestsResent": 0,
+    "permissionResponses": 0,
+    "actualAgentStops": 0,
+    "ownedEmptyControlsRemoved": 2
+  },
+  "evidenceDigests": {
+    "inertTerminalPosixSpawn": "bcdc80a3584db3798d8e5f5d8783fd3e6596047140e8875e33d225970708bd38",
+    "queueArch26": "3784e4b502cf6de35d2d303ece8e9b540bd204f5916fd1e94305476ebb739190",
+    "privacyPaneTargetOnly": "6cc0eca15112e0f54cefbfca626db41e7110f01e3d35dda16b8524da9f556f2a",
+    "historicalKernelLogAllowlist": "3ac31969d1179e21b0f52441f0f998661a84e078e3ffc0cef5236e648433fe55",
+    "currentSystemLogAttribution": "93e1d97856217bc364562e3f74e488b1ee1dc7b36e48f478ada99bdd3088941b",
+    "copilotModelOptionsAx": "88dafd54714c481251cf41104e60fca045f1e4e3199a1eb046d244c62b104f17",
+    "cwdIndependent": "da27d5b41e6dd69cb6dd265e2a0ed7e8d31a620edf1354fabe7f7b28756cd076",
+    "partialAcceptanceIndependent": "ca5a68528560799467ef8245e8ce1a3b03192646f345e8281bc4d11d29908151"
+  }
+}

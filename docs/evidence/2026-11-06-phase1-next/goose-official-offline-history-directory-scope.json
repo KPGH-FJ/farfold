@@ -1,0 +1,165 @@
+{
+  "acpProcesses": {
+    "cold": {
+      "incomingUnsolicited": 0,
+      "lists": {
+        "A": {
+          "count": 1,
+          "duplicates": 0,
+          "exactDirectoriesAndTitlesMatch": true,
+          "idsMatch": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        },
+        "B": {
+          "count": 1,
+          "duplicates": 0,
+          "exactDirectoriesAndTitlesMatch": true,
+          "idsMatch": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        },
+        "all": {
+          "count": 2,
+          "duplicates": 0,
+          "exactDirectoriesAndTitlesMatch": true,
+          "idsMatch": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        },
+        "empty": {
+          "count": 0,
+          "duplicates": 0,
+          "exactDirectoriesAndTitlesMatch": true,
+          "idsMatch": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        }
+      },
+      "normalEofExit": 0,
+      "outgoing": [
+        "initialize",
+        "session/list",
+        "session/list",
+        "session/list",
+        "session/list"
+      ],
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "versionVerified": true
+    },
+    "first": {
+      "incomingUnsolicited": 0,
+      "lists": {
+        "A": {
+          "count": 1,
+          "duplicates": 0,
+          "exactDirectoriesAndTitlesMatch": true,
+          "idsMatch": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        },
+        "B": {
+          "count": 1,
+          "duplicates": 0,
+          "exactDirectoriesAndTitlesMatch": true,
+          "idsMatch": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        },
+        "all": {
+          "count": 2,
+          "duplicates": 0,
+          "exactDirectoriesAndTitlesMatch": true,
+          "idsMatch": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        },
+        "empty": {
+          "count": 0,
+          "duplicates": 0,
+          "exactDirectoriesAndTitlesMatch": true,
+          "idsMatch": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        }
+      },
+      "normalEofExit": 0,
+      "outgoing": [
+        "initialize",
+        "session/list",
+        "session/list",
+        "session/list",
+        "session/list"
+      ],
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "versionVerified": true
+    }
+  },
+  "allTestProcessesNaturallyEnded": true,
+  "allThreeWorkingDirectoriesStillEmpty": true,
+  "authRequests": 0,
+  "checkedAtUtc": "2026-11-07T02:43:15.451451+00:00",
+  "directSqliteEdits": 0,
+  "gooseLaunches": 4,
+  "gooseNetworkRequests": 0,
+  "gooseOfficialSource": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+  "gooseVersionExpected": "1.52.0",
+  "guardErrorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "guardProcessExit": 0,
+  "harnessSha256": "a18a07575e9064ba764e6cd86d84a5e2d89def7546ff1c9f7235c9afe3906278",
+  "imports": {
+    "A": {
+      "assignedIdSha256": "599cbfd776d2088061e0ab650aae164329e784a690b76631106fdb342fb197ec",
+      "exitCode": 0,
+      "inputSha256": "ab73073c053c7d612fd2763d240a851979c3d43a28dc6f91962d03d3188d0c5c",
+      "officialFormatPi": true,
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutSha256": "3c1a9e1da93f852000d5698fec613f2fbc0887a013ac14464b1dd6cd4e03d1be",
+      "titleMatchesSyntheticMarker": true
+    },
+    "B": {
+      "assignedIdSha256": "f453c060c3caead6fa705bf2474fd85bb44b1b2e1631e6f0871e706b8855de12",
+      "exitCode": 0,
+      "inputSha256": "e8094147e44d4174be81f92b242a030d2c868810aff0564e3c6dba8d57482fd2",
+      "officialFormatPi": true,
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutSha256": "f320438d4a61541aa3908174a5cf8e7f99d1b2d5a35d36faf834a4989edff265",
+      "titleMatchesSyntheticMarker": true
+    }
+  },
+  "inputOrigin": "Two synthetic one-text-line Pi-format files authored exclusively for this test and imported by official Goose CLI",
+  "kind": "OfficialGooseScopedHistoryListColdAndWarm",
+  "modelRequests": 0,
+  "officialPageSize": 50,
+  "officialProfileSha256": "04325456928a66ada4980b3167be75d2ec52bd3a8e9f97af22b0254724c61883",
+  "offlineGuard": {
+    "homeDirectoryOpenDenied": true,
+    "insideWriteAndRead": true,
+    "otherProgramDenied": true,
+    "outsideCanaryReadDenied": true,
+    "outsideCanaryWriteDenied": true,
+    "tcpV4Denied": true,
+    "tcpV6Denied": true,
+    "udpV4Denied": true,
+    "unixSocketDenied": true
+  },
+  "ownedDataAndFixturesRemoved": true,
+  "productionProfileAccess": 0,
+  "productionWrites": 0,
+  "promptRequests": 0,
+  "realCredentialAccess": 0,
+  "registeredBinarySha256": "b7a38f3ff1e2d48b34b6550f84cf4104f3f7d797429e1231d1255d0501d47702",
+  "result": "official-offline-list-directory-isolation-passed-before-and-after-cold-process",
+  "runtimePaginationVerified": false,
+  "separateOfficialAcpProcesses": true,
+  "sourceReview": [
+    "crates/goose/src/acp/server/list_sessions.rs:14,160-206",
+    "crates/goose/src/session/session_manager.rs:1950-1991,2108-2147,2386-2422",
+    "crates/goose-cli/src/commands/session.rs:313-341",
+    "crates/goose/src/session/import_formats/pi.rs:20-34,100-110,184-213",
+    "crates/goose/src/config/paths.rs:5-41"
+  ],
+  "testSessionsCreated": 2,
+  "toolRequests": 0,
+  "usedPagination": false
+}

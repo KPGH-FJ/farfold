@@ -83,7 +83,7 @@ vi.mock("react", async (original) => {
 import { OpenedFileView, type OpenedFileViewProps } from "./OpenedFileView";
 import { WorkbookFilePreview } from "./WorkbookFilePreview";
 import type { VerifiedFile } from "../runtime/file_delivery";
-import type { WorkbookPreview } from "../runtime/xlsx_types";
+import { XlsxError, type WorkbookPreview } from "../runtime/xlsx_types";
 import type { PreviewContentStatus } from "../runtime/preview_capture";
 import { workbookWindow } from "../runtime/workbook_view";
 import {
@@ -100,6 +100,7 @@ import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { WORKBOOK_STRINGS as B } from "../runtime/workbook_strings";
 import { VISUAL_FEEDBACK_STRINGS as V } from "../runtime/visual_feedback_strings";
 import type { OfficeTargetEditing } from "../runtime/office_target_editing";
+import type { WorkbookRefreshRecovery } from "../runtime/office_preview_prepare";
 import { FileRevisionMonitor } from "../runtime/file_revision_monitor";
 
 const file: VerifiedFile = {
@@ -118,6 +119,12 @@ type Element = ReactElement<Record<string, unknown>>;
 type WorkbookProps = {
   file: VerifiedFile;
   active: boolean;
+  interactionBlocked: boolean;
+  prepared?: unknown;
+  replacement?: {
+    directory: WorkbookRefreshRecovery["directory"];
+    onSelect: (sheetId: string) => void;
+  };
   onStatus: (s: PreviewContentStatus) => void;
   onOfficeTargetAvailability: (v: OfficeTargetAvailability) => void;
   onOfficeTargetConfirm: (v: OfficeTargetConfirmation) => void;
@@ -333,6 +340,127 @@ it.each([false, true])(
     } finally {
       real.dispose();
     }
+  },
+);
+
+it("retains the last verified workbook and opinion when manual reread fails", async () => {
+  await ready();
+  seed();
+  const next = { ...file, version: "v2", sha256: "b".repeat(64) };
+  h.inspect.mockResolvedValue(next);
+  let fail!: (error: unknown) => void;
+  h.prepare.mockImplementationOnce(
+    () => new Promise((_, reject) => (fail = reject)),
+  );
+
+  click(S.refresh);
+  await Promise.resolve();
+  expect(child().file).toBe(file);
+  expect(child().interactionBlocked).toBe(true);
+  fail(new XlsxError("invalid"));
+
+  await vi.waitFor(() => expect(render().html).toContain(B.failed));
+  expect(child().file).toBe(file);
+  expect(child().interactionBlocked).toBe(false);
+  expect(saved().text).toBe(" 保留原意见\n");
+  expect(saved(next).text).toBe("");
+
+  h.prepare.mockResolvedValueOnce({ kind: "workbook", file: next });
+  click(S.refresh);
+  await vi.waitFor(() => expect(child().file).toBe(next));
+  expect(saved().text).toBe(" 保留原意见\n");
+});
+
+it("does not repeat a manually started workbook reread after hiding the view", async () => {
+  await ready();
+  let fail!: (error: unknown) => void;
+  h.prepare.mockImplementationOnce(
+    () => new Promise((_, reject) => (fail = reject)),
+  );
+  click(S.refresh);
+  await vi.waitFor(() => expect(h.prepare).toHaveBeenCalledOnce());
+
+  render({ ...props, active: false });
+  render({ ...props, active: true });
+  expect(button(S.refresh)?.props.disabled).toBe(true);
+  click(S.refresh);
+  expect(h.inspect).toHaveBeenCalledTimes(2);
+  fail(new XlsxError("readPending"));
+
+  await vi.waitFor(() => expect(render().html).toContain(B.readPending));
+  expect(child().file).toBe(file);
+  expect(h.monitor.mock.calls.at(-1)![0].blocked).toBe(true);
+  expect(button(S.refresh)?.props.disabled).toBe(false);
+});
+
+it("keeps the old workbook while allowing one verified replacement choice", async () => {
+  await ready();
+  seed();
+  const next = { ...file, version: "v2", sha256: "b".repeat(64) };
+  const recovery: WorkbookRefreshRecovery = {
+    capture: { file: next, parts: [], entries: [], inflatedBytes: 0 },
+    directory: {
+      selectedId: "broken",
+      sheets: [
+        { id: "broken", name: "Broken", state: "visible" },
+        { id: "good", name: "Good", state: "visible" },
+      ],
+    },
+  };
+  h.inspect.mockResolvedValue(next);
+  h.prepare.mockImplementationOnce(
+    async (_file, _position, _signal, _valid, options) => {
+      options?.onRecovery(recovery);
+      throw new XlsxError("invalid");
+    },
+  );
+  click(S.refresh);
+  await vi.waitFor(() => expect(render().html).toContain(B.failed));
+  expect(child().file).toBe(file);
+  const action = child().replacement!;
+  expect(action?.directory).toBe(recovery.directory);
+  expect(h.monitor.mock.calls.at(-1)![0].blocked).toBe(true);
+  action.onSelect("foreign");
+  action.onSelect("broken");
+  expect(h.prepare).toHaveBeenCalledOnce();
+
+  let finish!: (value: unknown) => void;
+  h.prepare.mockImplementationOnce(
+    () => new Promise((resolve) => (finish = resolve)),
+  );
+  action.onSelect("good");
+  action.onSelect("good");
+  expect(child().file).toBe(file);
+  expect(child().interactionBlocked).toBe(true);
+  expect(h.prepare).toHaveBeenCalledTimes(2);
+  expect(h.prepare.mock.calls.at(-1)![4].selection).toEqual({
+    capture: recovery.capture,
+    sheetId: "good",
+  });
+  finish({ kind: "workbook", file: next, selectedSheetId: "good" });
+  await vi.waitFor(() => expect(child().file).toBe(next));
+  expect(child().replacement).toBeUndefined();
+  action.onSelect("good");
+  expect(h.prepare).toHaveBeenCalledTimes(2);
+  expect(h.inspect).toHaveBeenCalledTimes(2);
+  expect(saved().text).toBe(" 保留原意见\n");
+});
+
+it.each([
+  { state: "loading", readInFlight: true },
+  { state: "loading", readInFlight: false },
+  { state: "paused", readInFlight: true },
+] as const)(
+  "blocks parent reread while the workbook child owns $state/$readInFlight",
+  async (status) => {
+    const original = await ready();
+    original.onStatus({ file, ...status });
+    expect(button(S.refresh)?.props.disabled).toBe(true);
+    click(S.refresh);
+    await Promise.resolve();
+    expect(h.inspect).toHaveBeenCalledOnce();
+    expect(h.prepare).not.toHaveBeenCalled();
+    expect(child().file).toBe(file);
   },
 );
 
@@ -565,8 +693,11 @@ it("rejects old editing callbacks after explicit same-file reread", async () => 
   const p = await ready(),
     owner = {};
   p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
+  const staged = { kind: "workbook", file };
+  h.prepare.mockResolvedValueOnce(staged);
   click(S.refresh);
-  await vi.waitFor(() => expect(child().file).toBe(file));
+  await vi.waitFor(() => expect(child().prepared).toBe(staged));
+  expect(child().file).toBe(file);
   child().onStatus({ file: child().file, state: "ready" });
   p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
   expect(await monitor().apply({ ...file, version: "v2" }, () => true)).toBe(

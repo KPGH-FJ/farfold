@@ -134,7 +134,7 @@ export function checkedPptxDocument(
       const base = object(
         raw,
         ["kind", "id", "source", "box"],
-        ["geometry", "fill", "stroke", "text", "imageId"],
+        ["geometry", "fill", "stroke", "text", "imageId", "groupTransform"],
       );
       const id = string(base.id);
       if (shapeIds.has(id)) invalid();
@@ -156,8 +156,30 @@ export function checkedPptxDocument(
       number(box.y, -G.coordinate, G.coordinate);
       const w = number(box.width, 0, G.extent),
         h = number(box.height, 0, G.extent);
+      let scaleX = 1,
+        scaleY = 1;
+      if (Object.hasOwn(base, "groupTransform")) {
+        const group = object(base.groupTransform, [
+          "x",
+          "y",
+          "scaleX",
+          "scaleY",
+        ]);
+        const x = number(group.x, -G.coordinate, G.coordinate),
+          y = number(group.y, -G.coordinate, G.coordinate);
+        scaleX = number(group.scaleX, Number.MIN_VALUE, G.extent);
+        scaleY = number(group.scaleY, Number.MIN_VALUE, G.extent);
+        number(x + (box.x as number) * scaleX, -G.coordinate, G.coordinate);
+        number(y + (box.y as number) * scaleY, -G.coordinate, G.coordinate);
+        number(w * scaleX, 0, G.extent);
+        number(h * scaleY, 0, G.extent);
+      }
       if (base.kind === "image") {
-        object(raw, ["kind", "id", "source", "box", "imageId"]);
+        object(
+          raw,
+          ["kind", "id", "source", "box", "imageId"],
+          ["groupTransform"],
+        );
         const count = images.get(string(base.imageId));
         if (!count || w <= 0 || h <= 0) invalid();
         displayPixels += count;
@@ -165,22 +187,21 @@ export function checkedPptxDocument(
         continue;
       }
       if (base.kind !== "shape") invalid();
-      object(raw, [
-        "kind",
-        "id",
-        "source",
-        "box",
-        "geometry",
-        "fill",
-        "stroke",
-        "text",
-      ]);
+      object(
+        raw,
+        ["kind", "id", "source", "box", "geometry", "fill", "stroke", "text"],
+        ["groupTransform"],
+      );
       choice(base.geometry, ["rect", "ellipse", null]);
       if (base.fill !== null) color(base.fill);
       if (base.stroke !== null) {
         const stroke = object(base.stroke, ["color", "width"]);
         color(stroke.color);
-        number(stroke.width, 0, G.stroke);
+        number(
+          number(stroke.width, 0, G.stroke) * Math.max(scaleX, scaleY),
+          0,
+          G.stroke,
+        );
       }
       if (
         base.geometry === null &&
@@ -195,7 +216,13 @@ export function checkedPptxDocument(
         "paragraphs",
       ]);
       const inset = object(body.inset, ["top", "right", "bottom", "left"]);
-      for (const value of Object.values(inset)) number(value, 0, G.inset);
+      for (const [key, value] of Object.entries(inset))
+        number(
+          number(value, 0, G.inset) *
+            (["left", "right"].includes(key) ? scaleX : scaleY),
+          0,
+          G.inset,
+        );
       choice(body.wrap, ["none", "square"]);
       choice(body.verticalAlign, ["top", "center", "bottom"]);
       for (const rawParagraph of array(body.paragraphs, L.runs)) {
@@ -238,6 +265,11 @@ export function checkedPptxDocument(
           const family = string(run.fontFamily, 256);
           if (!/^[\p{L}\p{N} _.-]+$/u.test(family)) invalid();
           if (number(run.fontSize, G.fontMin, G.fontMax) <= 0) invalid();
+          number(
+            (run.fontSize as number) * Math.max(scaleX, scaleY),
+            G.fontMin,
+            G.fontMax,
+          );
           color(run.color);
           for (const key of ["bold", "italic", "underline"])
             choice(run[key], [true, false]);

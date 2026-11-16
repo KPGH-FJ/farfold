@@ -9,7 +9,7 @@ import { threads } from "../runtime/sessions";
 import { StorageRecovery } from "./StorageRecovery";
 import { conversationReadState } from "../runtime/conversation_read_state";
 import {
-  exitNeedsReview,
+  exitReviewReason,
   hasUnknownFinishedFileCopies,
   EXIT_IMPACT as E,
 } from "../runtime/exit_impact";
@@ -51,6 +51,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
   const [readsSettled, setReadsSettled] = useState(false);
   const [backendCopyReview, setBackendCopyReview] = useState(false);
   const [backendWorktreeReview, setBackendWorktreeReview] = useState(false);
+  const [activityReview, setActivityReview] = useState<string | null>(null);
   const [cancellingExit, setCancellingExit] = useState<number | null>(null);
   const releaseExitInteraction = () => {
     const release = exitInteraction.current;
@@ -103,15 +104,18 @@ export function DraftStartup({ children }: { children: ReactNode }) {
     setCancelError(false);
     setBackendCopyReview(false);
     setBackendWorktreeReview(false);
+    setActivityReview(null);
     setCancellingExit(null);
-    threads.pauseQueuesForExit();
+    threads.pauseQueuesForExit(confirmActivity);
     exitInteraction.current ??= draftPersistence.acquireInteractionLock();
-    if (
-      hasUnsettledFileCopies() ||
-      (!confirmActivity &&
-        (hasUnknownFinishedFileCopies() ||
-          (restartingExit.current !== token && exitNeedsReview())))
-    ) {
+    const checkActivity = !confirmActivity && restartingExit.current !== token;
+    const review = checkActivity ? exitReviewReason() : null;
+    const needsFileReview =
+      !checkActivity &&
+      (hasUnsettledFileCopies() ||
+        (!confirmActivity && hasUnknownFinishedFileCopies()));
+    if (review || needsFileReview) {
+      if (review?.kind === "activity") setActivityReview(review.detail);
       setExitReview(token);
       return;
     }
@@ -120,15 +124,26 @@ export function DraftStartup({ children }: { children: ReactNode }) {
       await Promise.all([draftPersistence.flush(), setupStorage.flush()]);
       if (currentExit.current !== token || saveAttempt.current !== attempt)
         return;
-      // Include replies received while other metadata was being saved. A failed
-      // read without any unread edits is unrelated to this exit's save barrier.
-      await conversationReadState.flushPending().catch((reason) => {
-        if (currentExit.current === token && saveAttempt.current === attempt)
-          setExitReadError(conversationReadState.snapshot().error);
-        throw reason;
-      });
-      if (currentExit.current !== token || saveAttempt.current !== attempt)
-        return;
+      // Replies, stop receipts and setup completions can arrive during a save.
+      // Check all three stores in the same turn before acknowledging this exit.
+      for (;;) {
+        await conversationReadState.flushPending().catch((reason) => {
+          if (currentExit.current === token && saveAttempt.current === attempt)
+            setExitReadError(conversationReadState.snapshot().error);
+          throw reason;
+        });
+        if (currentExit.current !== token || saveAttempt.current !== attempt)
+          return;
+        if (!draftPersistence.isSaved(draftPersistence.revision())) {
+          await draftPersistence.flush();
+        } else if (setupStorage.hasPending()) {
+          await setupStorage.flush();
+        } else if (!conversationReadState.hasPending()) {
+          break;
+        }
+        if (currentExit.current !== token || saveAttempt.current !== attempt)
+          return;
+      }
       // A save may have started while metadata was flushing. The backend
       // repeats admission atomically through the actual native quit.
       if (
@@ -148,11 +163,22 @@ export function DraftStartup({ children }: { children: ReactNode }) {
       const code = String(reason).replace(/^Error:\s*/, "");
       if (
         code === "EXIT_CONFIRMATION_REQUIRED" ||
+        code === "BROWSER_TOOL_EXIT_REVIEW_REQUIRED" ||
         code === "FILE_COPY_EXIT_BLOCKED" ||
-        code === "WORKTREE_EXIT_BLOCKED"
+        code === "WORKTREE_EXIT_BLOCKED" ||
+        code === "FILE_COPY_EXIT_REVIEW_REQUIRED" ||
+        code === "WORKTREE_EXIT_REVIEW_REQUIRED"
       ) {
         setBackendCopyReview(code === "FILE_COPY_EXIT_BLOCKED");
         setBackendWorktreeReview(code === "WORKTREE_EXIT_BLOCKED");
+        if (code === "EXIT_CONFIRMATION_REQUIRED")
+          setActivityReview(E.applicationReview);
+        else if (code === "BROWSER_TOOL_EXIT_REVIEW_REQUIRED")
+          setActivityReview(E.browserToolUnknown);
+        else if (code === "FILE_COPY_EXIT_REVIEW_REQUIRED")
+          setActivityReview(E.copyUnknown);
+        else if (code === "WORKTREE_EXIT_REVIEW_REQUIRED")
+          setActivityReview(E.worktreeUnknown);
         setExitReview(token);
         return;
       }
@@ -245,6 +271,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
               ) : backendCopyReview ? (
                 <p role="status">{E.copyReview}</p>
               ) : null}
+              {activityReview && <p role="status">{activityReview}</p>}
               <FileCopyJobsStatus />
               <ConversationArchiveJobsStatus />
               {cancellingExit === exitReview && (

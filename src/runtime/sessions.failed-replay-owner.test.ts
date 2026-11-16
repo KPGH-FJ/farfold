@@ -273,7 +273,8 @@ it("retains an unprojectable following envelope exactly and still delivers the n
   const bad = {
     update: {
       sessionUpdate: "tool_call",
-      toolCallId: JSON.parse('{"toString":null,"valueOf":null}'),
+      toolCallId: "malformed-tool-title",
+      title: JSON.parse('{"toString":null,"valueOf":null}'),
     },
     opaque: ["must preserve envelope", null],
   };
@@ -320,7 +321,8 @@ it("keeps local JSON conversion failure typed without pretending the Agent conne
     wire.channel.onmessage({
       update: {
         sessionUpdate: "tool_call",
-        toolCallId: JSON.parse('{"toString":null,"valueOf":null}'),
+        toolCallId: "malformed-tool-title",
+        title: JSON.parse('{"toString":null,"valueOf":null}'),
       },
     });
     marker(wire);

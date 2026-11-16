@@ -1,0 +1,160 @@
+{
+  "kind": "FileFeedbackDeliveryAndBrowserRetirementEvidence",
+  "date": "2026-11-09",
+  "sourceCodeCommit": "f4593d6074b822797f576975e833621060a45125",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "f1dcbff884d5d70ad54fcd12838ad6ff70d3decc"
+  },
+  "engineering": {
+    "allSeven": {
+      "path": "output/2026-11-09-delivery-feedback/checks/engineering-results.json",
+      "sha256": "221ae654f0b3417ff4efcbf2047dca59180346e359befa416f6f2642cee2eb5f"
+    },
+    "frozenInputs": {
+      "path": "output/2026-11-09-delivery-feedback/checks/engineering-inputs.json",
+      "sha256": "b7923a19016a94ea65fa02133014a817baed241bb61740edb1d2ae8fafbc6b74"
+    },
+    "frozenInputCount": 2412,
+    "frontendFilesPassed": 742,
+    "frontendTestsPassed": 10070,
+    "rustTestsPassed": 2478,
+    "rustExistingIgnored": 7,
+    "feedbackFocusedTestsPassed": 165,
+    "copyFocusedTestsPassed": 23,
+    "browserFocusedTestsPassed": 209,
+    "copyRed": {
+      "path": "output/2026-11-09-file-copy-admission/copy-busy-red.json",
+      "sha256": "c2a14943b00eb073f1d8e2bb71d750f55e87f5459d47ebde5b6c7916f9f8242d"
+    },
+    "copyGreen": {
+      "path": "output/2026-11-09-file-copy-admission/copy-busy-green.json",
+      "sha256": "a3080bc714bb8fbb12a5064b30f483976cdbec9747d71fc8aa9f0366af03bd4c"
+    },
+    "feedbackRed": {
+      "toolChunk": "2d1cb9",
+      "exitCode": 1,
+      "oldFNV32CollisionReusedOldSelection": true
+    },
+    "browserRed": {
+      "toolChunk": "ff9d74",
+      "exitCode": 101,
+      "actual": "reading",
+      "expected": "stopping"
+    }
+  },
+  "independentReview": {
+    "path": "output/2026-11-09-delivery-feedback/independent-review.json",
+    "sha256": "0b7300e560c8d5377468c65f1d206be2a96da477011d1e8c0d167709d125dfb1"
+  },
+  "formal": {
+    "normalExit": {
+      "path": "output/2026-11-09-delivery-feedback/formal/normal-exit.json",
+      "sha256": "cfe7f38794141a2404619e6cc0992ec3d32e46aaf026e151793c07776b8737f5"
+    },
+    "candidateReview": {
+      "path": "output/2026-11-09-delivery-feedback/formal/candidate-review.json",
+      "sha256": "74be1feb8aab25bf88a9b0889338f8bd9416f2c4a90ca789db6ecf36b1014982"
+    },
+    "install": {
+      "path": "output/2026-11-09-delivery-feedback/formal/install.json",
+      "sha256": "1c07864f4ed8d59de906be0de10b0d01b96ee6d2c54ae61153dfc843167ddcc6"
+    },
+    "duplicateCleanup": {
+      "path": "output/2026-11-09-delivery-feedback/formal/duplicate-cleanup.json",
+      "sha256": "4d9e5408ee52c08e7c4a4d76c465143fb907a113444022a835156176f0fa3efa"
+    },
+    "dataEntries": 206275,
+    "dataRootsUnchanged": true
+  },
+  "actualUi": {
+    "path": "output/2026-11-09-delivery-feedback/installed-ui.json",
+    "sha256": "9958bab2ef30475c57ad532143ee00ceadf88b837a00846e9bc4d10e82000339"
+  },
+  "actualProtocolMetadata": {
+    "path": "output/2026-11-09-delivery-feedback/formal/installed-readonly-protocol.json",
+    "sha256": "099649f8415ce35be245005fbffd25bad5098e3647bf0de6896f685331c4bd2d"
+  },
+  "exactCopySample": {
+    "sourceBefore": {
+      "path": "docs/evidence/2026-11-09-delivery-feedback-browser/source-A.txt",
+      "sha256": "e83a6870ec6fe4e6575f19b5eba51e9fc172d5ee4a299c6e55aef6870e1335cd"
+    },
+    "sourceAfter": {
+      "path": "docs/evidence/2026-11-09-delivery-feedback-browser/source-B.txt",
+      "sha256": "a1a2eba535740af22e073d1eac27394fa4cf6412eb189ab2f913c053d5eeb06b"
+    },
+    "mutationDuringPicker": {
+      "path": "output/2026-11-09-delivery-feedback/source-drift-during-picker.json",
+      "sha256": "853c1efd4cfd25660f8fb61c45f00337fa56e0418e388dfe36884974d8fd49f2"
+    },
+    "actualFailure": {
+      "path": "output/2026-11-09-delivery-feedback/installed-copy-rejected.json",
+      "sha256": "dbf632a276ba0e0eb61dfc2dcfd550e90cdb6298f64c6d6727924176fabc4b05"
+    },
+    "actual": {
+      "path": "/private/tmp/farfold-phase1-neutral.tGZU83dX/farfold-owned-save-drift-20261109.txt",
+      "sourceOriginalA": {
+        "size": 61,
+        "sha256": "e83a6870ec6fe4e6575f19b5eba51e9fc172d5ee4a299c6e55aef6870e1335cd"
+      },
+      "currentB": {
+        "size": 78,
+        "sha256": "a1a2eba535740af22e073d1eac27394fa4cf6412eb189ab2f913c053d5eeb06b"
+      },
+      "selectedNativeSavePanelWhileAVisible": true,
+      "sameSourceChangedDuringPanel": true,
+      "oldCopyFailureObserved": "此次保存未完成。 原文件已变化，请重新核实。",
+      "oldCopyBytes": "0 / 61 字节",
+      "noTargetOrTemporaryAfterFailure": true,
+      "explicitRereadConfirmedB": true,
+      "oldFileOpinion": {
+        "text": "测试意见：保留另存前的 A 版（FF_COPY_A_20261109）。",
+        "originalSHA256": "e83a6870ec6fe4e6575f19b5eba51e9fc172d5ee4a299c6e55aef6870e1335cd",
+        "separateOtherVersionsSection": true,
+        "addedOrSent": false
+      },
+      "successDestination": "/private/tmp/farfold-owned-copy-dest-o3bc8qfp/verified-B.txt",
+      "successObserved": "完整文件副本已保存。 78 / 78 字节",
+      "byteExactWithB": true,
+      "destinationEntriesAfterSuccess": ["verified-B.txt"],
+      "sourceBUnchangedBySave": true
+    },
+    "coldReadOriginalWorkbookOpinion": {
+      "text": "测试意见：保留原版本 A1=42（FF_WORKBOOK_A42_20261109）。",
+      "originalSHA256": "9f5f6fbe428123c058ca6642dc598355387206c47df7bb46ef3a17f157af53e7",
+      "observedVia": "Original conversation unsent file opinions list after normal exit/update/cold launch",
+      "automaticPreviewPanelRestoreClaimed": false
+    }
+  },
+  "browserMacPrecondition": {
+    "receipt": {
+      "path": "output/2026-11-09-browser-mac27-preflight/execution.json",
+      "sha256": "a3af0485fdf17fdb65483d301f7e9134f9799e67b71bec02d785feed03ae46e6"
+    },
+    "system": "macOS 27.0 (26A425)",
+    "sdk": "15.5",
+    "nativeProbeResult": {
+      "capability": true,
+      "closedRootSensitiveBlocked": true,
+      "ordinaryPageCheckPassed": true,
+      "ordinaryPageWorldCannotSeeClosedRoot": true,
+      "sameRetainedWorld": true,
+      "webviewCreated": true
+    },
+    "sourceInputsUnchanged": true,
+    "actualPixelsOrHelperDelivery": false
+  },
+  "limits": [
+    "Actual native picker failure/retry on one explicitly chosen synthetic file; not actual Agent edit, ongoing cancellation, installed busy concurrency, or all filesystems.",
+    "P21 reported-fragment collision is controlled production component tests; installed old disk-file opinion recovery is separate.",
+    "P25/P27 controlled broker stop and macOS offscreen native content inspection are not installed real screenshot/Agent delivery.",
+    "Prepared pre-send feedback without an index still lacks an unambiguous recovery entry (function-level reproduced; not fixed).",
+    "Whole P21/P22/P25/P27, Stage2 and29-Agent acceptance remain incomplete."
+  ],
+  "wholeStage2Accepted": false,
+  "whole29AgentsAccepted": false
+}

@@ -31,6 +31,7 @@ vi.mock("react", async (original) => ({
   },
 }));
 import { useLoadedSearch } from "./useLoadedSearch";
+import * as loadedSearch from "../runtime/loaded_search";
 import { freshThreadState, applyUpdate } from "../runtime/session_projection";
 const state = () => freshThreadState("a", "agent", "/controlled", "native");
 let thread = state();
@@ -71,6 +72,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   h.slots.forEach((slot) => slot.cleanup?.());
+  vi.restoreAllMocks();
   vi.useRealTimers();
 });
 it("finishes searches during continuous streaming instead of waiting for an idle debounce period", async () => {
@@ -113,6 +115,47 @@ it("never presents an earlier query or scope as the current result", async () =>
   expect(render().result).toBeNull();
   await vi.advanceTimersByTimeAsync(130);
   expect(render().result).toMatchObject({ loaded: 0, unloaded: 1 });
+});
+it("hides already visible snippets when the same conversation begins reconnecting", async () => {
+  render();
+  await vi.advanceTimersByTimeAsync(130);
+  expect(render().result?.hits[0]?.before).toBe("first ");
+
+  thread.reconnecting = true;
+  revision++;
+  expect(render()).toMatchObject({ result: null, busy: true });
+
+  await vi.advanceTimersByTimeAsync(130);
+  expect(render().result).toMatchObject({ unavailable: 1, matches: 0 });
+});
+it("discards a late scan of the replaced conversation even when its key is unchanged", async () => {
+  const search = loadedSearch.searchLoadedConversations;
+  const held: { result?: loadedSearch.LoadedSearchResult } = {};
+  let release!: () => void;
+  const pending = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  vi.spyOn(loadedSearch, "searchLoadedConversations").mockImplementationOnce(
+    async (...args) => {
+      held.result = await search(...args);
+      await pending;
+      return held.result;
+    },
+  );
+  render();
+  await vi.advanceTimersByTimeAsync(130);
+  expect(held.result?.hits[0]?.before).toBe("first ");
+
+  thread = state();
+  states.set("a", thread);
+  chunk("replacement needle");
+  render();
+  release();
+  await vi.advanceTimersByTimeAsync(0);
+  expect(render()).toMatchObject({ result: null, busy: true });
+
+  await vi.advanceTimersByTimeAsync(130);
+  expect(render().result?.hits[0]?.before).toBe("replacement ");
 });
 it("cancels scheduled work when the body scope closes and does not publish a late scan", async () => {
   render();

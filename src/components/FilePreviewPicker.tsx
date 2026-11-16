@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { fileDelivery, type VerifiedFile } from "../runtime/file_delivery";
 import { isAbsoluteFilePath } from "../runtime/file_paths";
@@ -69,7 +69,7 @@ export function FilePreviewPicker({
     message: string;
     current: () => boolean;
   } | null>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const token = {};
     lifetime.current = token;
     const update = () => setPhase(pending?.phase ?? null);

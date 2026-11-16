@@ -31,11 +31,14 @@ import {
 import {
   fileFeedbackKey,
   fileFeedbackDrafts,
-  useFileFeedback,
+  useFileFeedbackEntries,
   type FileFeedbackDestination,
 } from "../runtime/drafts";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
-import { fileFeedbackText } from "../runtime/feedback_strings";
+import {
+  FEEDBACK_STRINGS as F,
+  fileFeedbackText,
+} from "../runtime/feedback_strings";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
 import { FileDeliveryActions } from "./FileDeliveryActions";
 import type { VerifiedFile } from "../runtime/file_delivery";
@@ -55,13 +58,29 @@ type Mode =
   | "read-before"
   | "preview";
 
-/** Identifies the Agent-reported revision without storing its body in drafts. */
-function feedbackContentId(before: string | null, after: string) {
-  let hash = 2166136261;
-  const text = `${before ?? ""}\u0000${after}`;
-  for (let i = 0; i < text.length; i++)
-    hash = Math.imul(hash ^ text.charCodeAt(i), 16777619);
-  return `physical-lines-v1:${before === null ? "missing" : `known-${before.length}`}:${after.length}:${hash >>> 0}`;
+/** JSON preserves null and escapes isolated UTF-16 code units before encoding. */
+async function feedbackContentId({
+  source,
+  scope,
+  oldText,
+  newText,
+  fragmentToolCallId,
+  fragmentNumber,
+}: Pick<FileArtifact, "source" | "scope" | "oldText" | "newText"> & {
+  fragmentToolCallId?: string;
+  fragmentNumber?: number;
+}) {
+  const identity = [source, scope, oldText, newText];
+  const isNumberedFragment =
+    fragmentNumber !== undefined && fragmentToolCallId !== undefined;
+  if (isNumberedFragment)
+    identity.push(fragmentToolCallId, String(fragmentNumber));
+  const bytes = new TextEncoder().encode(JSON.stringify(identity));
+  const hash = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
+  const hex = Array.from(hash, (byte) => byte.toString(16).padStart(2, "0"));
+  return isNumberedFragment
+    ? `reported-fragment-sha256-v1:${fragmentNumber}:${hex.join("")}`
+    : `reported-sha256-v1:${hex.join("")}`;
 }
 const PAGE_LINES = 400;
 
@@ -92,7 +111,7 @@ function NumberedText({
 }: {
   text: string;
   side: Selection["side"];
-  onLine: (selection: Selection) => void;
+  onLine?: (selection: Selection) => void;
   fragment: boolean;
   selection: Selection | null;
 }) {
@@ -110,10 +129,11 @@ function NumberedText({
             <button
               type="button"
               className="artifact-line-number"
+              disabled={!onLine}
               aria-label={
                 fragment ? W.fragmentLine(index + 1) : W.lineLabel(index + 1)
               }
-              onClick={() => onLine({ line: index + 1, side })}
+              onClick={() => onLine?.({ line: index + 1, side })}
             >
               {index + 1}
             </button>
@@ -142,7 +162,7 @@ export function FileDifference({
   comparison,
 }: {
   card: FileArtifact;
-  onLine: (selection: Selection) => void;
+  onLine?: (selection: Selection) => void;
   split?: boolean;
   selection?: Selection | null;
   comparison?: LineComparison;
@@ -170,14 +190,14 @@ export function FileDifference({
         <button
           type="button"
           className="artifact-line-number"
-          disabled={!line}
+          disabled={!line || !onLine}
           aria-pressed={selected}
           aria-label={
             line
               ? `${side === "before" ? W.fileBefore : W.fileAfter} · ${lineLabel(line)}`
               : undefined
           }
-          onClick={() => line && onLine({ line, side })}
+          onClick={() => line && onLine?.({ line, side })}
         >
           {line ?? ""}
         </button>
@@ -241,14 +261,14 @@ export function FileDifference({
               <button
                 type="button"
                 className="artifact-line-number"
-                disabled={row.oldLine === null}
+                disabled={row.oldLine === null || !onLine}
                 aria-label={
                   row.oldLine
                     ? `${W.fileBefore} · ${lineLabel(row.oldLine)}`
                     : undefined
                 }
                 onClick={() =>
-                  row.oldLine && onLine({ line: row.oldLine, side: "before" })
+                  row.oldLine && onLine?.({ line: row.oldLine, side: "before" })
                 }
               >
                 {row.oldLine ?? ""}
@@ -256,14 +276,14 @@ export function FileDifference({
               <button
                 type="button"
                 className="artifact-line-number"
-                disabled={row.newLine === null}
+                disabled={row.newLine === null || !onLine}
                 aria-label={
                   row.newLine
                     ? `${W.fileAfter} · ${lineLabel(row.newLine)}`
                     : undefined
                 }
                 onClick={() =>
-                  row.newLine && onLine({ line: row.newLine, side: "after" })
+                  row.newLine && onLine?.({ line: row.newLine, side: "after" })
                 }
               >
                 {row.newLine ?? ""}
@@ -335,7 +355,7 @@ export function FileArtifactView({
   fileSelector?: ReactNode;
   workingDirectory?: string;
   onOpenHtml?: (file: VerifiedFile) => void;
-  onOpenFile?: (path: string) => void;
+  onOpenFile?: (path: string, expectedFile?: VerifiedFile) => void;
   active?: boolean;
 }) {
   const presentation = filePresentation(card);
@@ -353,32 +373,93 @@ export function FileArtifactView({
     [card.newText],
   );
   const [requestedMode, setMode] = useState<Mode>("diff");
-  const contentId = useMemo(
-    () => feedbackContentId(card.oldText, card.newText),
-    [card.oldText, card.newText],
+  const { path, source, scope, oldText, newText } = card;
+  const fragmentToolCallId = card.fragment?.toolCallId;
+  const fragmentNumber = card.fragment?.number;
+  const feedbackOwner = useMemo(
+    () => ({
+      threadKey,
+      path,
+      source,
+      scope,
+      oldText,
+      newText,
+      active,
+      fragmentToolCallId,
+      fragmentNumber,
+    }),
+    [
+      threadKey,
+      path,
+      source,
+      scope,
+      oldText,
+      newText,
+      active,
+      fragmentToolCallId,
+      fragmentNumber,
+    ],
   );
-  const feedbackDraft = useFileFeedback(threadKey, card.path, contentId);
-  const feedback = feedbackDraft.text;
-  const selection =
-    feedbackDraft.contentId === contentId ? feedbackDraft.selection : null;
-  const setSelection = (value: Selection | null) =>
-    fileFeedbackDrafts.update(threadKey, card.path, {
-      ...fileFeedbackDrafts.read(threadKey, card.path, contentId),
+  const latestFeedbackOwner = useRef(feedbackOwner);
+  latestFeedbackOwner.current = feedbackOwner;
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  const [identified, setIdentified] = useState<{
+    owner: typeof feedbackOwner;
+    contentId: string | null;
+  } | null>(null);
+  useEffect(() => {
+    if (!feedbackOwner.active) return;
+    let listening = true;
+    const receive = (contentId: string | null) => {
+      if (listening && latestFeedbackOwner.current === feedbackOwner)
+        setIdentified({ owner: feedbackOwner, contentId });
+    };
+    void feedbackContentId(feedbackOwner).then(receive, () => receive(null));
+    return () => {
+      listening = false;
+    };
+  }, [feedbackOwner]);
+  const currentIdentity =
+    identified?.owner === feedbackOwner ? identified : null;
+  const contentId = currentIdentity?.contentId ?? null;
+  const canEditFeedback = () =>
+    mounted.current &&
+    latestFeedbackOwner.current === feedbackOwner &&
+    active &&
+    feedbackDestination?.isCurrent() !== false;
+  const savedEntries = useFileFeedbackEntries(threadKey);
+  const feedbackDraft = contentId
+    ? savedEntries[fileFeedbackKey(path, contentId)]
+    : undefined;
+  const feedback = feedbackDraft?.text ?? "";
+  const selection = feedbackDraft?.selection ?? null;
+  const setSelection = (value: Selection | null) => {
+    if (!contentId || !canEditFeedback()) return;
+    fileFeedbackDrafts.update(threadKey, path, {
+      ...fileFeedbackDrafts.read(threadKey, path, contentId),
       contentId,
-      scope: card.scope,
+      scope,
       selection: value,
       lineInput: undefined,
     });
-  const setFeedback = (value: string) =>
-    fileFeedbackDrafts.update(threadKey, card.path, {
-      ...fileFeedbackDrafts.read(threadKey, card.path, contentId),
+  };
+  const setFeedback = (value: string) => {
+    if (!contentId || !canEditFeedback()) return;
+    fileFeedbackDrafts.update(threadKey, path, {
+      ...fileFeedbackDrafts.read(threadKey, path, contentId),
       contentId,
-      scope: card.scope,
-      selection,
+      scope,
       text: value,
     });
+  };
   const [added, setAdded] = useState(false);
-  const [feedbackOpen, setFeedbackOpen] = useState(Boolean(feedback));
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [split, setSplit] = useState(false);
   const [copied, setCopied] = useState<"content" | "path" | "failed" | null>(
     null,
@@ -418,14 +499,16 @@ export function FileArtifactView({
   }, [threadKey, card.path, card.oldText, card.newText, mode]);
   useEffect(() => {
     setFeedbackOpen(
-      Boolean(fileFeedbackDrafts.read(threadKey, card.path, contentId).text),
+      !!contentId &&
+        Boolean(fileFeedbackDrafts.read(threadKey, path, contentId).text),
     );
     setAdded(false);
-  }, [threadKey, card.path, contentId]);
+  }, [threadKey, path, contentId]);
   useEffect(() => {
     if (feedbackOpen) feedbackRef.current?.focus();
   }, [feedbackOpen]);
   const selectLine = (value: Selection) => {
+    if (!contentId || !canEditFeedback()) return;
     setSelection(value);
     setAdded(false);
     setFeedbackOpen(true);
@@ -444,20 +527,21 @@ export function FileArtifactView({
     ? `${selection.side === "before" ? W.fileBefore : W.fileAfter} · ${W.feedbackRange(selectionInput(selection), card.scope === "fragment")}`
     : "";
   const lineSide =
-    feedbackDraft.lineInput?.side ??
+    feedbackDraft?.lineInput?.side ??
     selection?.side ??
     (copyingBefore ? "before" : "after");
-  const lineInput = feedbackDraft.lineInput?.text ?? selectionInput(selection);
+  const lineInput = feedbackDraft?.lineInput?.text ?? selectionInput(selection);
   const lineCount = lineSide === "before" ? beforeLineCount : afterLineCount;
   const lineInvalid = Boolean(
     lineInput.trim() && !parseFeedbackSelection(lineInput, lineSide, lineCount),
   );
   const editLineInput = (text: string, side = lineSide) => {
+    if (!contentId || !canEditFeedback()) return;
     const count = side === "before" ? beforeLineCount : afterLineCount;
-    fileFeedbackDrafts.update(threadKey, card.path, {
-      ...fileFeedbackDrafts.read(threadKey, card.path, contentId),
+    fileFeedbackDrafts.update(threadKey, path, {
+      ...fileFeedbackDrafts.read(threadKey, path, contentId),
       contentId,
-      scope: card.scope,
+      scope,
       selection: parseFeedbackSelection(text, side, count),
       lineInput: { side, text },
     });
@@ -486,6 +570,7 @@ export function FileArtifactView({
       if (request === copyRequest.current) setCopied("failed");
     }
   };
+  const feedbackLabel = feedbackOpen ? W.feedbackClose : W.feedbackOpen;
   return (
     <section className="file-artifact-view">
       <div className="a-head">
@@ -604,10 +689,18 @@ export function FileArtifactView({
           <button
             type="button"
             className="artifact-icon-button"
-            title={feedbackOpen ? W.feedbackClose : W.feedbackOpen}
-            aria-label={feedbackOpen ? W.feedbackClose : W.feedbackOpen}
+            title={
+              contentId
+                ? feedbackLabel
+                : currentIdentity
+                  ? F.reportUnavailable
+                  : F.reportChecking
+            }
+            aria-label={feedbackLabel}
             aria-expanded={feedbackOpen}
+            disabled={!contentId}
             onClick={() => {
+              if (!contentId || !canEditFeedback()) return;
               setFeedbackOpen(!feedbackOpen);
               setAdded(false);
             }}
@@ -616,6 +709,9 @@ export function FileArtifactView({
           </button>
         </div>
       </div>
+      {active && currentIdentity && !contentId && (
+        <p role="status">{F.reportUnavailable}</p>
+      )}
       {workingDirectory && (
         <FileDeliveryActions
           card={card}
@@ -641,7 +737,7 @@ export function FileArtifactView({
         {mode === "diff" && (
           <FileDifference
             card={card}
-            onLine={selectLine}
+            onLine={contentId ? selectLine : undefined}
             split={split}
             selection={selection}
             comparison={comparison}
@@ -652,7 +748,7 @@ export function FileArtifactView({
             key={mode}
             text={mode === "before" ? (card.oldText ?? "") : card.newText}
             side={mode}
-            onLine={selectLine}
+            onLine={contentId ? selectLine : undefined}
             fragment={card.scope === "fragment"}
             selection={selection}
           />
@@ -689,13 +785,13 @@ export function FileArtifactView({
           </div>
         )}
       </div>
-      {feedbackOpen && (
+      {contentId && feedbackOpen && (
         <form
           className="artifact-feedback"
           onSubmit={(event) => {
             event.preventDefault();
-            if (!feedback.trim() || lineInvalid) return;
-            const key = fileFeedbackKey(card.path, contentId);
+            if (!canEditFeedback() || !feedback.trim() || lineInvalid) return;
+            const key = fileFeedbackKey(path, contentId);
             const current = fileFeedbackDrafts.entries(threadKey)[key];
             if (
               !current ||
@@ -779,12 +875,14 @@ export function FileArtifactView({
           </div>
         </form>
       )}
-      <FileFeedbackDrafts
-        feedbackDestination={feedbackDestination}
-        threadKey={threadKey}
-        path={card.path}
-        excludeContentId={contentId}
-      />
+      {contentId && (
+        <FileFeedbackDrafts
+          feedbackDestination={feedbackDestination}
+          threadKey={threadKey}
+          path={card.path}
+          excludeContentId={contentId}
+        />
+      )}
       <div className="artifact-provenance" role="note">
         <span>{card.source === "diff" ? W.fileReported : W.fileInput}</span>
         {card.scope === "fragment" && <span>{W.fragmentNote}</span>}

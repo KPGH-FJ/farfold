@@ -10,6 +10,8 @@ import {
 import type { OpenResult } from "./session_open_types";
 import type { ThreadState } from "./session_types";
 import { pushRaw } from "./session_projection";
+import { isProgramStatusNotification } from "./program_status";
+import { isMessageUsageNotification } from "./message_usage";
 
 /** Delivery fallback for an already-failed read, not a second projector.
  * Actual new message bytes remain exact raw envelopes: they cannot repair or
@@ -20,6 +22,8 @@ export function applyFailedHistoryEvent(
   apply: (event: unknown) => void,
   emit: () => void,
 ): void {
+  if (isProgramStatusNotification(event) || isMessageUsageNotification(event))
+    return;
   const update = hasOwnUpdate(event)
     ? (event as { update: unknown }).update
     : undefined;
@@ -88,7 +92,7 @@ export class SessionOpenReplay {
     private existing: (key: string) => ThreadState | undefined = () =>
       undefined,
     restoreQueue?: (state: ThreadState) => void,
-    token = crypto.randomUUID(),
+    token: string = crypto.randomUUID(),
     current: () => boolean = () => true,
   ) {
     this.token = token;
@@ -120,6 +124,7 @@ export class SessionOpenReplay {
       this.delivered?.();
       return "consumed";
     }
+    if (this.identified && this.projection.supplement(event)) return "consumed";
     if (
       !hasOwnUpdate(event) &&
       (event as { kind?: unknown } | null)?.kind === "connectionLost"
@@ -156,7 +161,14 @@ export class SessionOpenReplay {
   ): ThreadState {
     try {
       if (result.resumed)
-        this.projection.requireReadable(this.input.agentId, result, this.lost);
+        this.projection.requireReadable(
+          this.input.agentId,
+          result,
+          this.lost,
+          !existing?.items.length &&
+            !existing?.pendingPermissions.length &&
+            !existing?.pendingElicitations.length,
+        );
       if (!this.identified || !this.baseline)
         throw new Error(STRINGS.repair.reconnectFailed);
       this.baseline.accept(result, savedTitle, existing);

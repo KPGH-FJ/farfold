@@ -1,0 +1,88 @@
+{
+  "sourceCodeCommit": "39fcd882a4127f52999d25492899e53b79212e07",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "267daca51235a82650e53862d4b7c34511d1561a",
+    "executableSha256": "178d2be32445246c722683b6c5f77cd3d904c87490f1e23aa06dd48b9e055401"
+  },
+  "engineering": {
+    "inputs": 2475,
+    "allSevenPassedFresh": true,
+    "frontendFiles": 744,
+    "frontendPassed": 10190,
+    "rustPassed": 2490,
+    "rustIgnored": 7
+  },
+  "install": {
+    "independentExactFiveFileReview": true,
+    "normalSaveAndExit": true,
+    "closedRecordsUnchanged": 206346,
+    "duplicateRemoved": true
+  },
+  "observations": {
+    "recordedAtUtc": "2026-11-10T04:50:07.545725+00:00",
+    "ownedExistingGooseConversation": "20261109_3",
+    "search": {
+      "coverage": "loaded body",
+      "loadedConversations": 1,
+      "unloadedConversations": 1,
+      "unconfirmedConversations": 0,
+      "matchOccurrences": 13,
+      "assistantReplySelected": true,
+      "originalMessageLocationConfirmed": true
+    },
+    "file": {
+      "name": "p21-revision.txt",
+      "sourceOrdinal": 1,
+      "sourceRole": "reported edit location",
+      "oneStepShown": true,
+      "exactFileSelected": true,
+      "beforeAndAfterLinesShown": true,
+      "shownAsWriteInputFragment": true,
+      "openedCurrentFileInUi": false,
+      "diskBytesMatchPriorEvidence": true,
+      "nativeToolPromptResent": false,
+      "wholeFileOrMultipleFragmentsObserved": false
+    },
+    "notification": {
+      "systemPermissionAllowedObserved": true,
+      "attentionEnabled": false,
+      "successEnabled": false,
+      "soundEnabled": false,
+      "preferencesUnchanged": true,
+      "systemDeliveryTested": false,
+      "soundTested": false,
+      "systemClickTested": false
+    },
+    "savedOpinionsAndWorktreeUnknownUnchanged": true
+  },
+  "modelRequests": 0,
+  "controlled": {
+    "searchImmediateStaleRetirementAndLateResults": true,
+    "separateDiffFragmentsAndReorderedReplacement": true,
+    "notificationNewClickAfterPreviousRejection": true,
+    "noNotificationAutomaticRetryWithoutNewClick": true,
+    "targetedSearchPassed": 104,
+    "targetedDiffPassed": 270,
+    "targetedNotificationPassed": 166
+  },
+  "localReceiptRoot": "output/2026-11-09-six-hour-stage2",
+  "localReceiptSha256": {
+    "seventh-engineering/result.json": "6c43821c7677e5f116b7f1949a2ed1ab38a4e14237347ac36302f27c8ca59a5d",
+    "seventh-engineering/inputs-after.json": "4a3028b3de51468368e191c7ace6d37f947a9367904499e3b45ee60f36044379",
+    "formal-seventh/source-freeze.json": "aaee49ffd494cc6693a455e57f52a108d096148d50eaf29008071a75618256a7",
+    "formal-seventh/release-build.json": "78dc9c54ee86a1f3364bd17560920d18c51eb2a9ddcbe9045f61459f44353fdc",
+    "formal-seventh/bundle.json": "e5b042a73b7ff7a969c5e3376c3573251373dfbc76948cdf57398a34796dfb75",
+    "formal-seventh/candidate.json": "b063916bb46748647bb04b7dc5fcead0c3b348f8ee2911b16888b2c54d9ca865",
+    "formal-seventh/candidate-review.json": "f2cb5086e78a16beec5105347277285c0c7d2af99e4663d0be045eaf335edfd1",
+    "formal-seventh/normal-exit-observation.json": "fd101d51a7468a93207d9df6e7ee488e99351af414c77b40e59ba7cc30f3f7dd",
+    "formal-seventh/normal-exit.json": "a39ffe7d29f6af0381d8fc70ff58a6e85f2599dae3c5a32435d0b9c9330458e4",
+    "formal-seventh/install.json": "2c98548380857283cc160ac09b5fc3adbc79fff6cbe99d73c3e1e15efab6fb98",
+    "formal-seventh/duplicate-cleanup.json": "88a1db576ecb74b227ab943f20b27fdd740bb675b3c98685d3a4d9086044c6cf",
+    "formal-seventh/ui-observation.json": "6d9b330d1f5c97e723fea2f407389db458144b490f5607c742225867d66257bc",
+    "notification-wake-red.log": "532597634ba53a2c9822b6c789ae0ff7a57a2a51bf8d6e3b28d39e8331f82e2e"
+  }
+}

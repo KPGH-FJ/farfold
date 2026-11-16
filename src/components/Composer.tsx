@@ -5,6 +5,7 @@ import { useComposerFileDrop } from "./useComposerFileDrop";
 import { FILE_DROP_STRINGS } from "../runtime/composer_file_drop";
 import { DocumentComposerAttachments } from "./DocumentComposerAttachments";
 import { useComposerSourceError } from "./useComposerSourceError";
+import { beginComposerPendingSend } from "./composer_pending_send";
 import { ThreadUsage } from "./ThreadUsage";
 import {
   ComposerTemplateActions,
@@ -17,6 +18,7 @@ import { localResourcePath as uriToSelectedPath } from "../runtime/file_delivery
 import { projectFileUri } from "../runtime/file_paths";
 import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
+import { REDESIGN } from "../runtime/redesign_strings";
 import { SENDING_STRINGS as SEND } from "../runtime/sending_strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { WorkspaceAccessControl } from "./WorkspaceAccessControl";
@@ -61,6 +63,7 @@ import { useWorkPolicy } from "../runtime/work_policy";
 import { STRINGS } from "../runtime/strings";
 import { hasPendingRequests } from "../runtime/session_types";
 import { canReleaseEmptyQueuePause } from "../runtime/queue";
+import { captureSubmissionStop } from "../runtime/stop_confirmation";
 import { hasActiveCompaction } from "../runtime/compaction_activity";
 import { LIBRARY } from "../runtime/library_strings";
 import { abandonPendingConversation } from "../runtime/pending_conversation";
@@ -89,7 +92,6 @@ import {
   DRAFT_STRINGS,
   useDraftSaveStatus,
 } from "../runtime/draft_storage";
-
 export function Composer({
   thread,
   imageEnabled,
@@ -127,8 +129,7 @@ export function Composer({
   /** `promptCapabilities.embeddedContext` — `@` picks embed file text. */
   embedContext?: boolean;
   onGoSettings: () => void;
-  /** When provided, the composer drives a not-yet-open conversation
-   *  (start page). Otherwise it sends into `thread`. */
+  /** The parent's send action, if it differs from sending into `thread`. */
   onSend?: (
     blocks: PromptBlock[],
     submitted: ComposerDraft,
@@ -194,7 +195,6 @@ export function Composer({
   };
   const [focus, setFocus] = useState(false);
   const [plusOpen, setPlusOpen] = useState(false);
-
   const plusAnchor = useRef<HTMLButtonElement>(null);
   const plusOwner = useRef<string | null>(null);
   plusOwner.current = active && plusOpen ? storageKey : null;
@@ -206,8 +206,15 @@ export function Composer({
   const shortcutOwner = useRef<string | null>(null);
   const shortcutOpen = active && shortcutScope === storageKey;
   shortcutOwner.current = shortcutOpen ? storageKey : null;
-  const { sendError, setSendError, setSendFailure, documentSaved, audioSaved } =
-    useComposerSourceError(storageKey, errorContext);
+  const {
+    sendError,
+    setSendError,
+    setSendFailure,
+    documentSaved,
+    audioSaved,
+    imageImportMessage,
+    reportImport,
+  } = useComposerSourceError(storageKey, errorContext, chips);
   const [recoveringPending, setRecoveringPending] = useState(false);
   const [abandonPending, setAbandonPending] =
     useState<PendingConversation | null>(null);
@@ -259,7 +266,6 @@ export function Composer({
       el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
     }
   }, [text, storageKey]);
-
   const workCwd = thread?.cwd ?? workContext?.cwd ?? null;
   const workAgentId = thread?.agentId ?? workContext?.agentId ?? null;
   const work = useWorkPolicy(workCwd);
@@ -276,7 +282,7 @@ export function Composer({
       ? STRINGS.repair.retryStop
       : STRINGS.composer.stopTitle;
   const queued = thread?.queued ?? [];
-  const willQueue =
+  const needsQueue =
     !queueEditing &&
     Boolean(
       running ||
@@ -285,6 +291,13 @@ export function Composer({
       (thread?.queuePaused && !canReleaseEmptyQueuePause(thread)) ||
       queued.length,
     );
+  // The new-conversation editor returns a stalled first message to its draft.
+  const firstSendBlocked =
+    needsQueue &&
+    storageKey === "new" &&
+    !!onSend &&
+    thread?.identity === "draft";
+  const willQueue = needsQueue && !firstSendBlocked;
   const sendLabel = queueEditing
     ? C.saveQueued
     : willQueue
@@ -315,22 +328,20 @@ export function Composer({
       !input.sendPending &&
       !draftSave.interactionLocked,
     add: (owner, paths) => {
-      void addPickedAttachments(owner, paths, imageEnabled, (message) => {
-        if (liveKey.current === owner) setSendError({ message });
-      }).catch(() => {
-        if (liveKey.current === owner)
-          setSendError({ message: STRINGS.repair.requestFailed });
-      });
+      void addPickedAttachments(owner, paths, imageEnabled, reportImport).catch(
+        () => {
+          if (liveKey.current === owner)
+            setSendError({ message: STRINGS.repair.requestFailed });
+        },
+      );
     },
   });
-
   const autogrow = () => {
     const el = areaRef.current;
     if (!el) return;
     el.style.height = "auto";
     el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
   };
-
   // Slash popup: whole input is a single `/token` and the agent declared
   // commands. Mention popup: live query after the `@` anchor.
   const commands = thread?.availableCommands ?? [];
@@ -411,7 +422,6 @@ export function Composer({
       filePickerMounted.current = false;
     };
   }, []);
-
   useEffect(() => setPickIndex(0), [slashQ, mentionQ, currentFiles?.requestId]);
 
   // `@` file search asks for a working folder first when none is chosen.
@@ -480,9 +490,7 @@ export function Composer({
       storageKey,
       [uriToSelectedPath(uri)!],
       imageEnabled,
-      (message) => {
-        if (liveKey.current === storageKey) setSendError({ message });
-      },
+      reportImport,
       { cwd, path: rel, embed: embedContext },
     );
     setText((prev) => prev.slice(0, mentionAt));
@@ -490,9 +498,11 @@ export function Composer({
     areaRef.current?.focus();
     requestAnimationFrame(autogrow);
   };
-
-  const unsupportedImages =
-    !imageEnabled && chips.some((chip) => chip.kind === "image");
+  const imageNotice = chips.some((chip) => chip.imageClassificationFailed)
+    ? IMAGE_INPUT_STRINGS.classificationFailed
+    : !imageEnabled && chips.some((chip) => chip.kind === "image")
+      ? W.imageUnsupported
+      : null;
   const audioNotice = chips.some((chip) => chip.audioClassificationFailed)
     ? AUDIO_INPUT.classificationFailed
     : chips.some((chip) => chip.kind === "audio")
@@ -505,12 +515,13 @@ export function Composer({
     Boolean(text.trim() || chips.length > 0) &&
     active &&
     !disabled &&
+    !firstSendBlocked &&
     !stopPending &&
     !thread?.submitting &&
     !input.sendPending &&
     !input.pendingConversation &&
     !chips.some((chip) => chip.recovered) &&
-    !unsupportedImages &&
+    !imageNotice &&
     !audioNotice &&
     !chips.some((chip) => chip.loading);
   useEffect(() => {
@@ -555,7 +566,6 @@ export function Composer({
     setPlusOpen(false);
     areaRef.current?.focus();
   };
-
   const doSend = async () => {
     if (!canSend || busy.current) return;
     busy.current = true;
@@ -565,57 +575,54 @@ export function Composer({
     let submitted = input;
     const targetKey = storageKey;
     const targetErrorContext = errorContext;
+    const submissionStopped = captureSubmissionStop(thread);
+    const interactionInterrupted =
+      draftPersistence.captureInteractionInterruption();
+    const submissionInterrupted = () =>
+      submissionStopped() ||
+      interactionInterrupted() ||
+      Boolean(
+        !onSend &&
+        thread &&
+        (thread.connectionLost || threads.thread(thread.key) !== thread),
+      );
+    let releasePending = () => false;
     try {
       await draftPersistence.flush();
+      if (submissionInterrupted()) return;
       const prepared = await prepareDraftAttachments(
         submitted.attachments,
         embedContext,
       );
       const payload = attachmentPromptBlocks(text, prepared, embedContext);
       if (composerDrafts.read(targetKey) !== submitted) return;
-      // A stop may arrive while attachments or the draft are being saved.
-      // Keep that input in place rather than silently adding it to the queue.
-      if (
-        thread?.stopping ||
-        thread?.stopUnconfirmed ||
-        thread?.connectionOutcomeUnknown
-      )
-        return;
-      if (!queueEditing)
-        composerDrafts.update(targetKey, (draft) => ({
-          ...draft,
-          sendPending: true,
-        }));
+      // A stop or disconnect during saving keeps the input in the editor.
+      if (submissionInterrupted()) return;
+      if (!queueEditing) releasePending = beginComposerPendingSend(targetKey);
       submitted = composerDrafts.read(targetKey);
       await draftPersistence.flush();
+      if (submissionInterrupted()) {
+        releasePending();
+        await draftPersistence.flush();
+        return;
+      }
       let sent: void | boolean = true;
       if (onSend) {
         sent = await onSend(payload, submitted);
       } else if (thread) {
-        await threads.send(thread.key, payload);
+        await threads.send(thread.key, payload, {
+          key: targetKey,
+          value: submitted,
+        });
       }
       // `false` means the send did not happen (e.g. waiting on a folder
       // choice): keep the draft instead of treating it as delivered.
       if (sent !== false) composerDrafts.clearIfUnchanged(targetKey, submitted);
-      if (
-        composerDrafts.read(targetKey).sendPending &&
-        !composerDrafts.read(targetKey).pendingConversation
-      )
-        composerDrafts.update(targetKey, (draft) => ({
-          ...draft,
-          sendPending: false,
-        }));
-      await draftPersistence.flush();
+      const released = releasePending();
+      if (sent !== false || released) await draftPersistence.flush();
       requestAnimationFrame(autogrow);
     } catch (error) {
-      if (
-        composerDrafts.read(targetKey).sendPending &&
-        !composerDrafts.read(targetKey).pendingConversation
-      )
-        composerDrafts.update(targetKey, (draft) => ({
-          ...draft,
-          sendPending: false,
-        }));
+      releasePending();
       if (
         liveKey.current === targetKey &&
         liveErrorContext.current === targetErrorContext
@@ -646,9 +653,7 @@ export function Composer({
     if (!picked || composerDrafts.generation(storageKey) !== generation) return;
     const paths = Array.isArray(picked) ? picked : [picked];
     try {
-      await addPickedAttachments(storageKey, paths, imageEnabled, (message) => {
-        if (liveKey.current === storageKey) setSendError({ message });
-      });
+      await addPickedAttachments(storageKey, paths, imageEnabled, reportImport);
     } catch {
       if (liveKey.current === storageKey)
         setSendError({ message: STRINGS.repair.requestFailed });
@@ -666,9 +671,7 @@ export function Composer({
       return;
     }
     e.preventDefault();
-    void addClipboardImages(storageKey, files, (message) => {
-      if (liveKey.current === storageKey) setSendError({ message });
-    });
+    void addClipboardImages(storageKey, files, reportImport);
   };
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -730,7 +733,6 @@ export function Composer({
       prepareAction();
     else void doSend();
   };
-
   const permissionNote =
     thread?.permissionConfigId && thread.permissionState !== "ready"
       ? thread.permissionState === "changing"
@@ -743,11 +745,12 @@ export function Composer({
   const noteDetail = note && typeof note === "object" ? note.detail : undefined;
   const notes: [string | null | undefined, boolean, string?][] = [
     [permissionNote, false],
-    [unsupportedImages ? W.imageUnsupported : null, false],
+    [imageNotice, false],
     [audioNotice, false],
     [suppressThreadOpenError ? null : thread?.openError, true],
     [thread?.configError, false],
     [sendError?.message, false, sendError?.detail],
+    [imageImportMessage, false],
     [
       !queueEditing && workAgentId && work.ready && !work.enabled(workAgentId)
         ? STRINGS.repair.workOff
@@ -763,6 +766,7 @@ export function Composer({
       false,
     ],
     [noteMessage, noteAction, noteDetail],
+    [firstSendBlocked && !stopPending ? C.stopSendingPaused : null, false],
   ];
   const [openNote, showAction, openNoteDetail] = notes.find(([text]) =>
     Boolean(text),
@@ -944,11 +948,10 @@ export function Composer({
             disabled={!queueEditorTarget(editingDraft, queued)}
             editableWhenDisabled
             onSend={async (replacement, submitted) => {
-              if (
-                composerDrafts.read(editingKey).queueEdit !==
-                submitted.queueEdit
-              )
+              const current = composerDrafts.read(editingKey);
+              if (current.queueEdit !== submitted.queueEdit)
                 throw new Error(C.queueEditStale);
+              if (current !== submitted) throw new Error(REDESIGN.draftChanged);
               const original = queueEditorTarget(submitted, thread.queued);
               if (!original) throw new Error(C.queueEditStale);
               threads.replaceQueued(thread.key, original, replacement);
@@ -972,9 +975,9 @@ export function Composer({
             <button
               type="button"
               className="btn btn-ghost"
+              disabled={editingDraft.attachments.some((item) => item.loading)}
               onClick={() => {
-                keepQueueEditAsDraft(thread.key);
-                setQueueEditOpen(false);
+                if (keepQueueEditAsDraft(thread.key)) setQueueEditOpen(false);
               }}
             >
               {C.keepAsDraft}
@@ -1027,7 +1030,11 @@ export function Composer({
                   }
                   onClick={() => {
                     try {
-                      const original = threads.beginQueueEdit(thread.key, i);
+                      const original = threads.beginQueueEdit(
+                        thread.key,
+                        i,
+                        blocksOfOne,
+                      );
                       startQueueEditor(thread.key, i, original);
                       setQueueEditOpen(true);
                     } catch (reason) {
@@ -1048,7 +1055,7 @@ export function Composer({
                     (thread.submitting && i === 0)
                   }
                   className="q-x"
-                  onClick={() => threads.dequeue(thread.key, i)}
+                  onClick={() => threads.dequeue(thread.key, i, blocksOfOne)}
                 >
                   ×
                 </button>

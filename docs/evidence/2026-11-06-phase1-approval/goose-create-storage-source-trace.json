@@ -1,0 +1,121 @@
+{
+  "candidateMatches": 1,
+  "classificationBoundaries": {
+    "actualSqliteCode": 14,
+    "actualTopLevelSqlxClass": "Database",
+    "notEmittedCodesInThisFailure": [5, 6, 8, 10, 13, 782, 1550],
+    "notMisclassified": "Code14 is not proof of disk full, database locked, read-only state, or corrupt database; those have other direct result codes, while file open can fail for various OS reasons",
+    "notObservedTopLevelClasses": [
+      "Configuration",
+      "InvalidArgument",
+      "Io",
+      "Tls",
+      "Protocol",
+      "PoolTimedOut",
+      "PoolClosed",
+      "WorkerCrashed",
+      "RowNotFound",
+      "ColumnDecode"
+    ],
+    "notProved": "Why open failed; main versus WAL/SHM/temp; underlying OS errno; no disk-space, path-specific deny, or exact VFS syscall recorded"
+  },
+  "databasePathScope": {
+    "absoluteFreshRootPassed": true,
+    "configuredTmp": "OWNED_ROOT/tmp",
+    "main": "OWNED_ROOT/profile/data/sessions/sessions.db",
+    "preciseFailedFileObserved": false,
+    "shm": "same owned sessions directory / sessions.db-shm",
+    "wal": "same owned sessions directory / sessions.db-wal"
+  },
+  "dependencyVersionsFromCompleteEntriesInPartialPinnedCargoLock": {
+    "libsqlite3-sys": "0.37.0",
+    "sqlx": "0.9.0",
+    "sqlx-core": "0.9.0",
+    "sqlx-sqlite": "0.9.0"
+  },
+  "diagnosticReceiptSha256": "3b26f1dfefdb38a5aded771d190db65d015594d0131aaa49663de865f586e082",
+  "guardRelevantDeltas": [
+    "Earlier success allowed metadata and content outside ordinary user HOME; new policy additionally denies all /private/tmp and /private/var/folders except owned root",
+    "Current Python direct file read/write guard positive is weaker than SQLite open/WAL transaction/canonical-path positive",
+    "Same explicit child HOME; fresh absolute owned profile and CWD; no production configuration or real credentials"
+  ],
+  "kind": "CreateFailureSourceTraceAndExactPublicErrorHashRecovery",
+  "localSourceFiles": {
+    "Cargo.lock": {
+      "bytes": 326154,
+      "complete": false,
+      "sha256": "eff01c95ff33a23bf6ba4a00eca21932ca5d285dda7744cb34e6ffd31b33db5b"
+    },
+    "paths.rs": {
+      "bytes": 3648,
+      "complete": true,
+      "sha256": "5df20511b6b564b58fc38a7d5ce842aedb5922d68905d6d0db64f7acf4ebe4b8"
+    },
+    "session_manager.rs": {
+      "bytes": 172807,
+      "complete": true,
+      "sha256": "3ff21a697f8095353883da3f3b8153b6c54160b955322d63a1a9d1471d5c81ac"
+    }
+  },
+  "matchedDataSha256": "a3bab66e9bc1112d5cc377303facec1ae034402565e9e66fd3603e22d285539e",
+  "matchedErrorData": "Failed to create session: error returned from database: (code: 14) unable to open database file",
+  "newGrants": 0,
+  "newOfficialLaunches": 0,
+  "newPrompts": 0,
+  "nextProposedGateNotExecuted": {
+    "limits": "System SQLite success is a guard positive, not acceptance of the exact official bundled SQLite; no official rerun or policy relaxation is authorized by this receipt",
+    "method": "One own inert SQLite C/Python canary opening a new own database RW+CREATE, WAL and BEGIN IMMEDIATE, capturing extended result plus system errno; pair unchanged policy with only exact owned ancestor metadata allowance if needed; retain all content/Keychain/production/exec restrictions",
+    "officialAgentOrModel": false,
+    "purpose": "Isolate SQLite open versus ancestor metadata policy before another official attempt"
+  },
+  "primaryReferences": [
+    "https://raw.githubusercontent.com/aaif-goose/goose/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/session/session_manager.rs",
+    "https://raw.githubusercontent.com/aaif-goose/goose/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/config/paths.rs",
+    "https://raw.githubusercontent.com/launchbadge/sqlx/v0.9.0/sqlx-core/src/error.rs",
+    "https://raw.githubusercontent.com/launchbadge/sqlx/v0.9.0/sqlx-sqlite/src/error.rs",
+    "https://raw.githubusercontent.com/launchbadge/sqlx/v0.9.0/sqlx-sqlite/src/connection/establish.rs",
+    "https://www.sqlite.org/rescode.html"
+  ],
+  "publicCandidatesCompared": 60,
+  "rawSyntheticErrorAfterProcessExit": "not-retained; recovered by exact SHA256 comparison to fixed public SQLite/SQLx message candidates",
+  "readOnlySourceReview": true,
+  "runtimeErrorType": "SQLx Database / SQLite SQLITE_CANTOPEN primary code14; no underlying errno or attempted filename returned",
+  "sourceChain": [
+    {
+      "file": "crates/goose/src/acp/server/new_session.rs",
+      "operation": "create_session(...).await, wrapped Failed to create session",
+      "webLineZeroBased": 52
+    },
+    {
+      "file": "crates/goose/src/session/session_manager.rs",
+      "operation": "SessionManager passes through SessionStorage.create_session",
+      "rawLineOneBased": 420
+    },
+    {
+      "file": "crates/goose/src/session/session_manager.rs",
+      "operation": "pool(), BEGIN IMMEDIATE, INSERT RETURNING Session, commit; failures propagate with ?",
+      "rawLineOneBased": 1617
+    },
+    {
+      "file": "crates/goose/src/session/session_manager.rs",
+      "operation": "lazy pool initialization; first schema probe errors swallowed to false; create_schema or migrations propagates errors",
+      "rawLineOneBased": 970
+    },
+    {
+      "file": "crates/goose/src/session/session_manager.rs",
+      "operation": "new schema uses BEGIN IMMEDIATE, schema DDL, inventory tables and commit",
+      "rawLineOneBased": 994
+    },
+    {
+      "file": "crates/goose/src/session/session_manager.rs",
+      "operation": "create parent dirs, chmod0700 (expect/panic rather than RPC error); connect lazy RW+CREATE, WAL, foreign_keys, busy_timeout30s",
+      "rawLineOneBased": 938
+    },
+    {
+      "file": "crates/goose/src/config/paths.rs",
+      "operation": "absolute GOOSE_PATH_ROOT selects owned profile/data; sessions/sessions.db under it",
+      "rawLineOneBased": 8
+    }
+  ],
+  "sourceCommit": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4"
+}

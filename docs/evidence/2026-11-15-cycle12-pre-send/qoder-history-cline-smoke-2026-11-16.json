@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-16",
+  "timezone": "Asia/Shanghai",
+  "installedFarfoldCdhash": "f7d18f13d392cc45bd68b90340b8df826a2cbc92",
+  "qoder": {
+    "version": "1.1.89",
+    "nativeSessionDigestBeforeAndAfter": "c5ad7b1668bc94a1",
+    "originalModel": "mimo-v2.6-flash",
+    "originalWorkMode": "Default",
+    "serviceKind": "existing",
+    "historyLookup": {
+      "normalEntry": "对话库 → 带入已有对话 → Qoder CLI → 原测试目录 → 查找对话",
+      "trace": "protocol-v1-1794800863858-1.jsonl",
+      "outgoingMethods": ["initialize", "session/list"],
+      "listResponseAfterMs": 16,
+      "matchedOriginalSample": true,
+      "alreadyImportedInUi": true,
+      "openedExistingConversation": true,
+      "originalExchangeVisible": true,
+      "matchingNativeSessionRowsAfter": 1
+    },
+    "continuation": {
+      "trace": "protocol-v1-1794800049905-0.jsonl",
+      "traceAlsoContainsPriorColdLoad": true,
+      "appReloadedTheSampleBeforeLookup": true,
+      "promptSentAt": "11:48:20.066",
+      "terminalResponseAfterPromptMs": 5574,
+      "originalMarkerNotInNewPrompt": true,
+      "exactNewAssistantReplyMatchedOriginalMarker": true,
+      "prompts": 1
+    },
+    "savedFarfoldDefaultsDigestBeforeAndAfter": "27675fc14338a113",
+    "remaining": ["pagination", "import of an original not already in Farfold"]
+  },
+  "cline": {
+    "version": "3.0.74",
+    "trialModelShown": "Claude Sonnet 5.5",
+    "serviceKind": "existing",
+    "selectionOnlyForTest": true,
+    "savedFarfoldDefaultsDigestBeforeAndAfter": "3f82b218b101255c",
+    "savedFarfoldSetupStillCompleted": true,
+    "testNativeSessionDigest": "5c62a4a533f58ee5",
+    "trace": "protocol-v1-1794800920062-3.jsonl",
+    "outgoingMethods": ["initialize", "session/new", "session/prompt"],
+    "promptSentAt": "11:51:17.295",
+    "terminalResponseAfterPromptMs": 3006,
+    "protocolErrorClass": "internal_error",
+    "officialClineSession": {
+      "sameSessionVerified": true,
+      "provider": "cline",
+      "observedModelMatchedTrialModel": true,
+      "status": "failed",
+      "exitCode": 1,
+      "specificErrorReasonRecorded": false
+    },
+    "assistantTextChunks": 0,
+    "exactAssistantReplyMatched": false,
+    "userVisibleOutcome": "请求未完成，请检查 Agent 后重试",
+    "prompts": 1
+  }
+}

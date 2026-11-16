@@ -1,6 +1,11 @@
 import { useSyncExternalStore } from "react";
 import { archiveActivity } from "./archive_activity";
-import { composerDrafts, draftPersistence, hasUnsentWork } from "./drafts";
+import {
+  composerDrafts,
+  draftPersistence,
+  draftQueues,
+  hasUnsentWork,
+} from "./drafts";
 import {
   hasActiveWork,
   hasPendingRequests,
@@ -52,6 +57,7 @@ export function archiveEligible(
     !row.archived &&
     !row.pinned &&
     !hasUnsentWork(row.id) &&
+    !draftQueues.hasUnconfirmedOutcome(row.id) &&
     (!live ||
       !(
         live.running ||

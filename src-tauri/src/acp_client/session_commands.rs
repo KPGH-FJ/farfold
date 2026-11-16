@@ -7,6 +7,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 
 use super::delivery_flow::Wake;
 use super::delivery_observation::DeliveryChannel;
+use super::mutation::DeleteFailure;
 use agent_client_protocol::schema::v1::ContentBlock;
 use serde_json::Value;
 use tauri::ipc::Channel;
@@ -14,14 +15,14 @@ use tauri::{AppHandle, Manager as _};
 
 use crate::acp_client::manager::{AcpManager, require_agent_row, validate_cwd, validate_cwd_async};
 pub use crate::acp_client::pump::ProcessEndedReceipt;
-use crate::acp_client::pump::SessionSink;
+use crate::acp_client::pump::{FailedWorkCloseReceipt, SessionSink, StoppedToolCloseReceipt};
 use crate::acp_client::session::{InteractionReply, SessionListEntry, SessionOpenResult};
 use crate::acp_client::session_index::{
     iso8601_millis, parse_config_map, same_dir, touch_session_row,
 };
 use crate::lifemodel;
 use crate::logging;
-use crate::meta_store::{MetaStore, SessionRow};
+use crate::meta_store::{LocalSessionDeleteError, MetaStore, SessionRow};
 
 /// Open (or resume) a session. `channel` receives every event for this
 /// session: raw `session/update` params, `permissionRequest`, `turnEnd`,
@@ -92,10 +93,12 @@ pub async fn session_open(
                     preparation.ready();
                 }
                 if super::browser_capability::eligible(&row) {
-                    match app
-                        .state::<crate::browser_sharing::BrowserSharing>()
-                        .prepare(&app, &agent_id, &cwd)
-                    {
+                    match super::browser_capability::prepare(
+                        &app,
+                        &app.state::<crate::browser_sharing::BrowserSharing>(),
+                        &row,
+                        &cwd,
+                    ) {
                         Ok(mcp) => (Some(mcp), None),
                         Err(_) => {
                             logging::warn(
@@ -173,6 +176,8 @@ pub async fn session_open(
     let session_operations = super::session_fork::capabilities(&connection, &opened.session_id);
     let workspace_access = super::workspace_access::capability(&connection);
     let identity_read = super::identity_read::capability(&connection);
+    let session_tool_inventory =
+        super::session_tools::opened_capability(&connection, &opened.session_id, &opened.response);
     let source = connection.service;
     let cwd_string = cwd.to_string_lossy().into_owned();
     if resumed {
@@ -184,11 +189,14 @@ pub async fn session_open(
             .map_err(|_| "未能完整读取对话内容，请重试")?;
     }
     Ok(SessionOpenResult {
+        history_empty_confirmed: opened.history_empty_confirmed,
         identity_read,
+        session_tool_inventory,
         workspace_access,
         session_operations,
         connection_id: opened.connection_id,
         service: source.as_ref().map(|s| s.identity.clone()),
+        service_model_value: source.as_ref().map(|s| s.model_id.clone()),
         service_context: source.map(|s| s.revision),
         native_session_id: opened.session_id,
         cwd: cwd_string,
@@ -514,11 +522,22 @@ pub async fn session_confirm_config(
     cwd: String,
     session_id: String,
     displayed: Value,
+    connection_id: Option<String>,
     restore_selection: Option<Value>,
 ) -> Result<Value, String> {
-    let cwd = validate_cwd_async(&cwd).await?;
+    let cwd = validate_cwd_async(&cwd).await.map_err(|error| {
+        super::restore_confirmation::Code::CwdInvalid
+            .for_restore(restore_selection.is_some(), error)
+    })?;
     app.state::<AcpManager>()
-        .confirm_config_selection(&agent_id, &cwd, &session_id, displayed, restore_selection)
+        .confirm_config_selection(
+            &agent_id,
+            &cwd,
+            &session_id,
+            displayed,
+            connection_id,
+            restore_selection,
+        )
         .await
 }
 
@@ -673,6 +692,76 @@ pub async fn session_close(
     }
 }
 
+/// Read the owning pump's current proof without requesting Agent work.
+#[tauri::command]
+pub async fn session_check_unapproved_stopped_close(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    connection_id: String,
+) -> Result<Option<StoppedToolCloseReceipt>, String> {
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .check_unapproved_stopped_close(&agent_id, &cwd, &session_id, &connection_id)
+        .await
+}
+
+/// Close only the exact session, tool and stop shown for explicit review.
+#[tauri::command]
+pub async fn session_close_unapproved_stopped(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    connection_id: String,
+    tool_call_id: String,
+    proof_id: String,
+) -> Result<StoppedToolCloseReceipt, String> {
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .close_unapproved_stopped(
+            &agent_id,
+            &cwd,
+            &session_id,
+            &connection_id,
+            tool_call_id,
+            proof_id,
+        )
+        .await
+}
+
+/// Read whether a matched failed request can safely end its one local connection.
+#[tauri::command]
+pub async fn prepare_failed_work_close(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    connection_id: String,
+) -> Result<Option<FailedWorkCloseReceipt>, String> {
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .prepare_failed_work_close(&agent_id, &cwd, &session_id, &connection_id)
+        .await
+}
+
+/// The reply confirms local process exit only. The earlier result is unknown.
+#[tauri::command]
+pub async fn close_failed_work(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    connection_id: String,
+    proof_id: String,
+) -> Result<FailedWorkCloseReceipt, String> {
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .close_failed_work(&agent_id, &cwd, &session_id, &connection_id, proof_id)
+        .await
+}
+
 /// Explicitly recheck a configuration without closing or deleting the Agent's
 /// conversation. The pump must confirm this route is idle before detaching.
 #[tauri::command]
@@ -757,58 +846,182 @@ pub async fn session_meta_archive(
         .await
 }
 
-/// Delete a session: `session/delete` on the agent when advertised, remove
-/// the index row, and always write a tombstone so agents without a delete
-/// capability cannot resurrect it through `session/list`.
+#[derive(Clone, Copy, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub enum SessionDeleteAgentResult {
+    Deleted,
+    Unsupported,
+    Unconfirmed,
+}
+
+#[derive(Clone, Copy, serde::Serialize)]
+#[serde(tag = "code", rename_all = "camelCase")]
+pub enum SessionDeleteFailure {
+    LocalNotRemoved {
+        agent: Option<SessionDeleteAgentResult>,
+        #[serde(
+            rename = "connectionClosed",
+            skip_serializing_if = "delete_connection_open"
+        )]
+        connection_closed: bool,
+    },
+    LocalRemovalUnknown {
+        agent: SessionDeleteAgentResult,
+        #[serde(
+            rename = "connectionClosed",
+            skip_serializing_if = "delete_connection_open"
+        )]
+        connection_closed: bool,
+    },
+}
+
+fn delete_connection_open(value: &bool) -> bool {
+    !*value
+}
+
+#[cfg(test)]
+#[test]
+fn session_delete_reports_the_agent_result_separately_from_local_failure() {
+    use serde_json::json;
+
+    for (agent, wire) in [
+        (SessionDeleteAgentResult::Deleted, "deleted"),
+        (SessionDeleteAgentResult::Unsupported, "unsupported"),
+        (SessionDeleteAgentResult::Unconfirmed, "unconfirmed"),
+    ] {
+        assert_eq!(serde_json::to_value(agent).unwrap(), json!(wire));
+        assert_eq!(
+            serde_json::to_value(SessionDeleteFailure::LocalNotRemoved {
+                agent: Some(agent),
+                connection_closed: false
+            })
+            .unwrap(),
+            json!({"code":"localNotRemoved","agent":wire})
+        );
+        assert_eq!(
+            serde_json::to_value(SessionDeleteFailure::LocalRemovalUnknown {
+                agent,
+                connection_closed: false
+            })
+            .unwrap(),
+            json!({"code":"localRemovalUnknown","agent":wire})
+        );
+    }
+    assert_eq!(
+        serde_json::to_value(SessionDeleteFailure::LocalNotRemoved {
+            agent: None,
+            connection_closed: false
+        })
+        .unwrap(),
+        json!({"code":"localNotRemoved","agent":null})
+    );
+    assert_eq!(
+        serde_json::to_value(SessionDeleteFailure::LocalNotRemoved {
+            agent: Some(SessionDeleteAgentResult::Deleted),
+            connection_closed: true,
+        })
+        .unwrap(),
+        json!({"code":"localNotRemoved","agent":"deleted","connectionClosed":true})
+    );
+}
+
+/// Request official Agent deletion and commit the local removal and history
+/// filter together. A local failure retains the distinct Agent-side result.
 ///
 /// `native_session_id` is passed explicitly so callers can also delete
 /// agent-side sessions that have no index row. The returned value reports the
 /// agent-side outcome so the UI can state residue honestly:
-/// `"deleted"`, `"unsupported"` (no session/delete capability or no live
-/// connection to ask), or `"unconfirmed"` (the remote call failed).
+/// `"deleted"`, `"unsupported"` (no remote deletion requested), or
+/// `"unconfirmed"` (the Agent-side result could not be confirmed).
 #[tauri::command]
 pub async fn session_delete(
     app: AppHandle,
     agent_id: String,
     cwd: String,
     native_session_id: String,
-) -> Result<&'static str, String> {
-    let cwd = validate_cwd_async(&cwd).await?;
+) -> Result<SessionDeleteAgentResult, SessionDeleteFailure> {
+    let cwd =
+        validate_cwd_async(&cwd)
+            .await
+            .map_err(|_| SessionDeleteFailure::LocalNotRemoved {
+                agent: None,
+                connection_closed: false,
+            })?;
+    delete_session_in_scope(
+        &app.state::<AcpManager>(),
+        &app.state::<MetaStore>(),
+        &agent_id,
+        &cwd,
+        &native_session_id,
+    )
+    .await
+}
+
+pub(super) async fn delete_session_in_scope(
+    manager: &AcpManager,
+    store: &MetaStore,
+    agent_id: &str,
+    cwd: &std::path::Path,
+    native_session_id: &str,
+) -> Result<SessionDeleteAgentResult, SessionDeleteFailure> {
     let cwd_string = cwd.to_string_lossy().into_owned();
-    let row_id = MetaStore::dismissed_id(&agent_id, &cwd_string, &native_session_id);
-    let manager = app.state::<AcpManager>();
-    let remote = match manager
-        .delete_session(&agent_id, &cwd, &native_session_id)
+    let row_id = MetaStore::dismissed_id(agent_id, &cwd_string, native_session_id);
+    let guarded_id = row_id.clone();
+    if store
+        .run(move |store| store.require_delete_ready(&guarded_id))
         .await
+        .is_err()
     {
-        Ok(true) => "deleted",
-        Ok(false) => {
-            logging::info(
-                "acp_client",
-                format_args!(
-                    "session_delete: {agent_id} lacks session/delete; tombstone only ({row_id})"
-                ),
-            );
-            "unsupported"
+        return Err(SessionDeleteFailure::LocalNotRemoved {
+            agent: None,
+            connection_closed: false,
+        });
+    }
+    let attempt = manager
+        .close_and_delete_session(agent_id, cwd, native_session_id, store)
+        .await;
+    let connection_closed = attempt.connection_closed;
+    let remote = match attempt.result {
+        Ok(true) => SessionDeleteAgentResult::Deleted,
+        Ok(false) => SessionDeleteAgentResult::Unsupported,
+        Err(DeleteFailure::NotDispatched) => {
+            return Err(SessionDeleteFailure::LocalNotRemoved {
+                agent: None,
+                connection_closed,
+            });
         }
-        Err(error) => {
-            // Best-effort: the tombstone still prevents resurrection;
-            // surface the failure in the log, not as a hard error.
+        Err(DeleteFailure::Unconfirmed(error)) => {
             logging::warn(
                 "acp_client",
                 format_args!("session_delete remote failed ({row_id}): {error}"),
             );
-            "unconfirmed"
+            if !connection_closed {
+                return Err(SessionDeleteFailure::LocalNotRemoved {
+                    agent: Some(SessionDeleteAgentResult::Unconfirmed),
+                    connection_closed,
+                });
+            }
+            SessionDeleteAgentResult::Unconfirmed
         }
     };
-    let store = app.state::<MetaStore>();
-    store
-        .run(move |store| {
-            store.remove_session(&row_id)?;
-            store.dismiss_session(&row_id)
-        })
-        .await?;
-    Ok(remote)
+    match store
+        .run(move |store| Ok(store.remove_and_dismiss_session(&row_id)))
+        .await
+    {
+        Ok(Ok(())) => Ok(remote),
+        Ok(Err(LocalSessionDeleteError::NotRemoved)) => {
+            Err(SessionDeleteFailure::LocalNotRemoved {
+                agent: Some(remote),
+                connection_closed,
+            })
+        }
+        Ok(Err(LocalSessionDeleteError::Unknown)) | Err(_) => {
+            Err(SessionDeleteFailure::LocalRemovalUnknown {
+                agent: remote,
+                connection_closed,
+            })
+        }
+    }
 }
 
 /// Tombstone an agent-side session so `session/list` stops surfacing it

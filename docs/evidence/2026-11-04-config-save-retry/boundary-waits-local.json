@@ -1,0 +1,217 @@
+{
+  "kind": "RemoveBoundaryFixtureWaitsScopedValidation",
+  "recordedAt": "2026-11-04T16:32:14.052165+00:00",
+  "changedSource": {
+    "path": "src-tauri/src/worktrees/remove_boundary_tests.rs",
+    "beforeSha256": "15ff2743950306f5c3bb9489f608abc15fec1a7eec4c660ba361159e7b7a4492",
+    "afterSha256": "a05782dd23c9b785f1901e9488b2ddb72ca8ba532f15a3be39e371b0d46f009d",
+    "patch": "source.patch",
+    "patchSha256": "ad0414fd7c8cc26a228ac3e3691528bf16a3f476e53bc17ec69790ae8db9c724",
+    "onlyDeltaInListedRustAndBuildMap": [
+      "src-tauri/src/worktrees/remove_boundary_tests.rs"
+    ]
+  },
+  "changes": [
+    {
+      "fqn": "worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent",
+      "phase": "actual asynchronous recover completion after prepare/start",
+      "windowsSeconds": 60,
+      "macSeconds": 20,
+      "previousSeconds": 20,
+      "outerWindowsSecondsUnchanged": 240,
+      "outerMacSecondsUnchanged": 90
+    },
+    {
+      "fqn": "worktrees::remove_boundary_tests::remove_cancelled_retirement_keeps_maintenance_until_worker_returns",
+      "phase": "wait for prepare_remove to enter the retirement callback (rx)",
+      "windowsSeconds": 60,
+      "macSeconds": 10,
+      "previousSeconds": 10,
+      "heldReleaseWaitSecondsUnchanged": 10,
+      "finalCancellationWaitSecondsUnchanged": 20,
+      "outerWindowsSeconds": 240,
+      "outerMacSeconds": 90,
+      "previousOuterSeconds": 90
+    }
+  ],
+  "originalWindowsRed": {
+    "runId": 41853291008,
+    "sourceCommitFromExistingJobMetadata": "69e43d16d582841e71eab2a11ebb81ba9678831f",
+    "rawLog": "output/2026-11-04-config-save-retry/windows-full/run-41853291008/rust-job-final.log",
+    "rawLogSha256": "f3d155d02afba612f16bd07262f7c38a92d70c8f61180a962f896a0b7acf9e18",
+    "passed": 2389,
+    "failed": 2,
+    "ignored": 75,
+    "total": 2466,
+    "libtestSeconds": 3499.97,
+    "wholeCheckStepSeconds": 4805,
+    "timeout": "No job-timeout failure; both child libtests naturally returned failure and outer isolation saw non-success, not its deadline panic.",
+    "first": {
+      "childSeconds": 154.78,
+      "reason": "recycle_tests.rs31 default20s waiting recover still running/unsettled; removal preparation previously reached prepared at48259ms of60000ms budget; restored-target profile already observed ok, final ready and parent replacement assertions not reached."
+    },
+    "second": {
+      "childSeconds": 80.5,
+      "reason": "remove_boundary_tests.rs219 rx recv_timeout10 expired before callback entry; not held recv_timeout10. There is no subphase timing proving which synchronous pre-callback stage was slow or whether another50s will suffice."
+    },
+    "metadataLimit": "Existing rust-job-final.json was an in_progress whole-job snapshot while its Rust step had completed failure; completion/exit/count above comes from the complete raw libtest log.",
+    "outerCheckStepExitCode": 1,
+    "lineNumberConvention": "Public full-run record provides physical LF indexes; original subagent summary preserved in ZIP used Python str.splitlines and differs because of Unicode line separators."
+  },
+  "localValidation": {
+    "fmt": {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "naturalExitCode": 0,
+      "elapsedSeconds": 1.106869,
+      "rawLogSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build": {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "--no-run",
+        "--message-format=json-render-diagnostics"
+      ],
+      "naturalExitCode": 0,
+      "elapsedSeconds": 11.561864,
+      "rawLogSha256": "3120d90d2f1b1321336b672782d8dd5f21419a87adaca1bb5bfaecaee3369a7b"
+    },
+    "mac-two": {
+      "command": [
+        "/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/farfold_lib-505f6bbe58a95c8e",
+        "worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent",
+        "worktrees::remove_boundary_tests::remove_cancelled_retirement_keeps_maintenance_until_worker_returns",
+        "--nocapture",
+        "--test-threads=2"
+      ],
+      "naturalExitCode": 0,
+      "elapsedSeconds": 8.536739,
+      "rawLogSha256": "c3513ff37ed3659a4c67d8bbea8b480fa4785da49d89b5838a3f29e54d98287b"
+    }
+  },
+  "macCases": {
+    "outerPassed": 2,
+    "outerFailed": 0,
+    "outerIgnored": 0,
+    "outerLibtestSeconds": 6.99,
+    "childLibtestSeconds": {
+      "worktrees::remove_boundary_tests::remove_cancelled_retirement_keeps_maintenance_until_worker_returns": 3.88,
+      "worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent": 6.97
+    },
+    "childCompletedMarkers": [
+      "worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent",
+      "worktrees::remove_boundary_tests::remove_cancelled_retirement_keeps_maintenance_until_worker_returns"
+    ],
+    "parentIsolationRetained": true,
+    "outerExactFlag": false,
+    "testThreads": 2,
+    "sameSingleBuildBinary": {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/farfold_lib-505f6bbe58a95c8e",
+      "sha256": "488cfb5438702c76b32fbf6ac1ce4315290ad07ab876fdff00fbbb5bbf25333c",
+      "bytes": 118895200
+    },
+    "binaryBeforeAfterStable": true
+  },
+  "inputs": {
+    "listedCount": 793,
+    "allThreeCommandsSameMap": true,
+    "eachCommandEndpointStable": true,
+    "allListedInputsStillMatchAtSummary": true,
+    "scope": "All src-tauri/src/**/*.rs plus explicitly enumerated Cargo/lock/build.rs/Tauri configuration files if present; not an entire-repository, dependency-installation or cross-platform freeze."
+  },
+  "assertions": "All original assertions retained: replaced-parent rejection plus material bytes; cancelling/maintenance/unsettled, exit/storage denial, retained paths, release/join, cancelled, maintenance cleared, delete_dispatched=false, no recoveries, and storage writable afterward. Shared wait20 and production source/deadlines unchanged.",
+  "notClaimed": [
+    "Windows success after this change: root will perform the unique native run.",
+    "Mac GREEN does not reproduce the Windows RED or exercise the new Windows wait durations.",
+    "No proof of OS or filesystem root cause, nor that60seconds is universally sufficient.",
+    "No full engineering/CI/App/real-Agent/Git operation performed by this subtask; only the one approved test source changed."
+  ],
+  "independentReview": {
+    "reviewType": "independentSourceAndCiReview",
+    "reviewer": "windows_budget_review",
+    "receivedAtUtc": "2026-11-04T16:35:54.602740+00:00",
+    "blockingFindings": [],
+    "scope": [
+      "src-tauri/src/worktrees/remove_boundary_tests.rs",
+      ".github/scripts/windows-launch-prerequisites.ps1",
+      ".github/workflows/windows-launch-prerequisites.yml"
+    ],
+    "result": "Windows waits and parent budget only; all prior assertions/Mac values/production deadlines unchanged; one group/two complete FQNs, threads2, no outer --exact; prior26/45/default/3group5case scope intact. Candidate60s adequacy awaits Windows."
+  },
+  "additionalChecks": {
+    "yaml-format": {
+      "command": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        ".github/workflows/windows-launch-prerequisites.yml"
+      ],
+      "startedAtUtc": "2026-11-04T16:34:29.260111+00:00",
+      "finishedAtUtc": "2026-11-04T16:34:29.591533+00:00",
+      "naturalExitCode": 1,
+      "rawLogSha256": "4070d08542b606caf1114a5ecbd7e04b510ed73f33ff81c91e8368ea601848e2"
+    },
+    "yaml-format-final": {
+      "command": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        ".github/workflows/windows-launch-prerequisites.yml"
+      ],
+      "startedAtUtc": "2026-11-04T16:34:39.985499+00:00",
+      "finishedAtUtc": "2026-11-04T16:34:40.161278+00:00",
+      "naturalExitCode": 0,
+      "rawLogSha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    "tests-clippy": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "--tests",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "startedAtUtc": "2026-11-04T16:34:40.161674+00:00",
+      "finishedAtUtc": "2026-11-04T16:34:47.416304+00:00",
+      "naturalExitCode": 0,
+      "rawLogSha256": "c9b312a31f914563f476505b96763284d04107d13b95626facf466e914cc65d8"
+    }
+  },
+  "additionalChecksNote": "Initial YAML format failed; Prettier formatted only the new choice-list wrapping, final check passed. No failed Clippy attempt; same source Rust byte hash retained.",
+  "ciScope": {
+    "workflow": ".github/workflows/windows-launch-prerequisites.yml",
+    "cohort": "FrozenRetirementResume",
+    "resumeScope": "BoundaryWaits",
+    "expectedGroups": 1,
+    "expectedExecutions": 2,
+    "testThreads": 2,
+    "outerExact": false,
+    "windowsValidation": "pending"
+  },
+  "archive": {
+    "path": "boundary-waits-local-originals.zip",
+    "bytes": 318208,
+    "sha256": "dd8189bdec141aab81cbcc3ac0d0145438af24afa0238e2412c30293590cfa5b",
+    "entries": 30,
+    "manifest": "archive-manifest.json"
+  }
+}

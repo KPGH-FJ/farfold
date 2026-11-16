@@ -1,12 +1,18 @@
 import type { VerifiedFile } from "./file_delivery";
 import type { DocxPreview } from "./docx_types";
-import type { WorkbookCapture, WorkbookPreview } from "./xlsx_types";
+import {
+  XlsxError,
+  type WorkbookCapture,
+  type WorkbookDirectory,
+  type WorkbookPreview,
+} from "./xlsx_types";
+import { samePreviewFile } from "./preview_capture";
 import { readDocxCapture, readDocxPreview } from "./docx_preview";
 import { readWorkbookCapture, readWorkbookPreview } from "./xlsx_preview";
 import { readPptxCapture, readPptxPreview } from "./pptx_preview";
 import type { PptxPreview } from "./pptx_types";
 import {
-  restoredWorkbookSheet,
+  savedWorkbookPosition,
   type PreviewReadingPositionRef,
 } from "./preview_reading_position";
 
@@ -20,6 +26,15 @@ export type PreparedWorkbookPreview = {
   file: VerifiedFile;
   capture: WorkbookCapture;
   value: WorkbookPreview;
+  selectedSheetId?: string;
+};
+export type WorkbookRefreshRecovery = {
+  capture: WorkbookCapture;
+  directory: WorkbookDirectory;
+};
+export type WorkbookRefreshSelection = {
+  capture: WorkbookCapture;
+  sheetId: string;
 };
 export type PreparedOfficePreview =
   PreparedDocxPreview | PreparedWorkbookPreview | PreparedPptxPreview;
@@ -35,6 +50,10 @@ export async function prepareOfficePreview(
   readingPosition: PreviewReadingPositionRef,
   parserSignal: AbortSignal,
   valid: () => boolean,
+  workbook?: {
+    selection?: WorkbookRefreshSelection;
+    onRecovery?: (recovery: WorkbookRefreshRecovery) => void;
+  },
 ): Promise<PreparedOfficePreview> {
   const check = () => {
     if (!valid() || parserSignal.aborted) throw { code: "cancelled" };
@@ -58,14 +77,40 @@ export async function prepareOfficePreview(
     return { kind: "docx", file, value };
   }
   if (!/\.xlsx$/i.test(file.name)) throw { code: "unsupported" };
-  const capture = await readWorkbookCapture(file, captureSignal);
+  const capture =
+    workbook?.selection?.capture ??
+    (await readWorkbookCapture(file, captureSignal));
   check();
-  let value = await readWorkbookPreview(capture, undefined, parserSignal);
-  check();
-  const restored = restoredWorkbookSheet(file, value, readingPosition);
-  if (restored && restored !== value.sheet?.id) {
-    value = await readWorkbookPreview(capture, restored, parserSignal);
+  if (!samePreviewFile(capture.file, file)) throw new XlsxError("changed");
+  const selectedSheetId = workbook?.selection?.sheetId;
+  const saved = savedWorkbookPosition(file, readingPosition);
+  const restoreSheet =
+    !selectedSheetId && saved ? { ...saved.sheet } : undefined;
+  let directory: WorkbookDirectory | undefined;
+  try {
+    const value = await readWorkbookPreview(
+      capture,
+      selectedSheetId,
+      parserSignal,
+      workbook?.onRecovery
+        ? (result) => {
+            directory = result;
+          }
+        : undefined,
+      restoreSheet,
+    );
     check();
+    return {
+      kind: "workbook",
+      file,
+      capture,
+      value,
+      ...(selectedSheetId ? { selectedSheetId } : {}),
+    };
+  } catch (error) {
+    check();
+    if (directory && directory.sheets.length > 1)
+      workbook?.onRecovery?.({ capture, directory });
+    throw error;
   }
-  return { kind: "workbook", file, capture, value };
 }

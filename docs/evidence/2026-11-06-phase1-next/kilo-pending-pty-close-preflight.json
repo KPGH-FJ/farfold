@@ -1,0 +1,46 @@
+{
+  "actions": {
+    "officialDeviceCreatePostAttempts": 0,
+    "officialKiloLaunches": 0,
+    "officialMatchingDevicePollGetAttempts": 0,
+    "productionAppCredentialOrSettingsWrites": 0
+  },
+  "kind": "KiloOfficialPendingPtyClosePreRequestGate",
+  "localNetworkGate": {
+    "endpointsInOrder": [
+      "exactIpv4Loopback",
+      "ipv6LoopbackSamePort",
+      "localNonLoopbackIpv4SamePort",
+      "ipv4LoopbackOtherPort"
+    ],
+    "exactEndpointIsolationEstablished": false,
+    "exactIpv4TcpAddressRule": {
+      "loaded": false,
+      "sandboxExecExit": 65
+    },
+    "independentUnsandboxedControlConnected": [true, true, true, true],
+    "localhostPortRuleConnected": [true, true, true, false],
+    "localhostPortWithExactIpv4Filter": {
+      "loaded": false,
+      "sandboxExecExit": 65
+    },
+    "scope": "Inert connections between owned listeners and a local probe only."
+  },
+  "officialCliVersionTarget": "7.8.1",
+  "openScope": "The official pending device grant and native PTY close were not combined. No account authorization or server-side withdrawal was tested.",
+  "outcome": "blocked-before-official-request",
+  "priorPublicEvidence": {
+    "nativePtyCloseWithSyntheticDevicePending": "docs/evidence/2026-11-06-phase1-next/kilo-native-pty-device-cancel.json",
+    "officialDeviceAuthorizationImplementation": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/kilo-gateway/src/auth/device.ts#L4-L42",
+    "officialDevicePendingThenSyntheticExpiry": "docs/evidence/2026-11-06-phase1-next/kilo-official-cli-live-device-pending.json"
+  },
+  "ptyFixtureGate": {
+    "candidateExecutablesSearchedForExactFixtureName": 2,
+    "candidatesContainingExactFixtureName": 0,
+    "matchesPreviouslyRecordedExecutable": false,
+    "nativeHarnessRebuilt": false,
+    "observedExecutableAtPriorArtifactLocationSha256": "6fefb88ef64bc2b440a44bb2ddd10468a74c48470a26ae7bdde7dbf4adb3a807",
+    "previouslyRecordedTestExecutableSha256": "81b351537fabfe264f46afb26141e6978728a4457a91e0c4c12e38aaa2f5cbfb"
+  },
+  "recordedUtc": "2026-11-07T02:30:31.751397+00:00"
+}

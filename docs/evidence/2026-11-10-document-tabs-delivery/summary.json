@@ -1,0 +1,63 @@
+{
+  "sourceCodeCommit": "b4025636794e3aafbd6977138dc4d978674b7f1a",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "24bbac00b19ce81e87e3bef063ee27b889951fca",
+    "executableSha256": "35e6e14d37d52299c1e4edba33c3e6eb5b41fd1a131c498728461fd2d8d9f12a"
+  },
+  "engineering": {
+    "inputs": 2473,
+    "allSevenPassed": true,
+    "frontendFiles": 744,
+    "frontendPassed": 10122,
+    "rustPassed": 2479,
+    "rustIgnored": 7,
+    "nativeChecksReusedWithExactUnchangedInputs": true
+  },
+  "install": {
+    "independentExactFiveFileReview": true,
+    "normalSaveAndExit": true,
+    "closedRecordsUnchanged": 206312,
+    "duplicateRemoved": true,
+    "priorWorktreeUnknownUnchanged": true
+  },
+  "observations": {
+    "docx": {
+      "retainedOriginalTextAndNoteOnTruncatedReplacement": true,
+      "secondValidRevisionAdopted": true,
+      "originalSha256": "edbdf6fa40ee82b15ec3a579ea28c09ea16d5a8d98ace9b42380abb7e97f7d0d",
+      "newSha256": "bdcd861e2e97d71b7f0f374165cc732cdda9ebbfa0cce711c018bd74ad93eb5c",
+      "noteLinkedToOriginalContentId": true,
+      "initialBusyAndReadingPositionControlledOnly": true
+    },
+    "browser": {
+      "twoLocalTabsObserved": true,
+      "onlySelectedSecondClosed": true,
+      "survivingFirstSelected": true,
+      "exactMetadataRacesControlledOnly": true
+    },
+    "gooseVersionedDelivery": {
+      "previousActualReworkAndCurrentCopyMatch": true,
+      "separateRuns": true,
+      "copyBytes": 59,
+      "copySha256": "fb17007a87f7ba133d02b55b71b6d70fb7e673e537b44aed6afbcf38b8537cbb",
+      "completeCopyUiReceipt": true
+    },
+    "audioKeyboardFocusControlledOnly": true,
+    "currentModelRequests": 0
+  },
+  "localReceiptRoot": "output/2026-11-09-six-hour-stage2",
+  "localReceiptSha256": {
+    "third-final-engineering/result.json": "73fd528febc3e941d2e8269b2235c611f55c6a0bb1b359269d51295f51cf2abf",
+    "formal-third/candidate-review.json": "635223c6245a834aaeb3ee8e20bb51bd516a621d57150cc8e771fb7f53e55411",
+    "formal-third/install.json": "8eabaeeeebd85108730cf3a283079fc2d4f50c68b3ac55d9046367122fceccee",
+    "formal-third/duplicate-cleanup.json": "88a1db576ecb74b227ab943f20b27fdd740bb675b3c98685d3a4d9086044c6cf",
+    "formal-third/actual-document-tabs-delivery.json": "52ae2b78b8b313d9475185643996be6551d6489966867337f689bc6b82fdd278",
+    "formal-third/docx-fixture.json": "b98f6146e952b80553b5254be8704c77e4c6c54865d2b47968db8004f252e87d",
+    "formal-third/docx-swap-failure.json": "9f9bea8a2b8a307e782314517c9f919ade81b247bfd02ed5e2e764b6c69a598c",
+    "formal-third/docx-swap-new.json": "f46e346cfb792aea31d378a70415ddfb26f1091f2e24823de2f8bd56f0ee66c1"
+  }
+}

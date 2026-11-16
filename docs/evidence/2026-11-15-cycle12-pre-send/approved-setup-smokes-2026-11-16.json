@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-16",
+  "timezone": "Asia/Shanghai",
+  "entry": "Installed Farfold 0.1.7 macOS, agent setup, optional short message",
+  "approval": "One test for Qoder Auto and one for Devin SWE-2 Flash Medium using existing service settings",
+  "qoder": {
+    "officialVersion": "1.1.89",
+    "selectedModel": "auto",
+    "trace": "protocol-v1-1794797869340-2.jsonl",
+    "outgoingMethods": ["initialize", "session/new", "session/prompt"],
+    "promptSentAt": "10:58:26.656",
+    "promptWireSequence": 6,
+    "responseWireSequence": 8,
+    "responseAfterMs": 66,
+    "result": "agent error",
+    "displayedError": "[Error] main model \"auto\" is unavailable.",
+    "matchedMarker": false,
+    "visibleTestConversation": "连接测试 · Qoder CLI",
+    "savedDefaultsDigestPrefixBeforeAndAfter": "27675fc14338a113",
+    "completedMembershipUnchanged": true,
+    "vendorDiagnosis": {
+      "locallyRaisedErrorClass": "ModelNotFoundError",
+      "locallyRaisedCode": 403,
+      "catalogReady": true,
+      "catalogEntryCount": 16,
+      "resolverBranch": "selected Auto entry disabled",
+      "providerHttpResponseObserved": false,
+      "causeOfDisabledEntry": "unconfirmed"
+    }
+  },
+  "devin": {
+    "officialVersion": "3000.12.57",
+    "selectedModel": "swe-2-flash-medium",
+    "trace": "protocol-v1-1794797930079-4.jsonl",
+    "outgoingMethods": ["initialize", "session/new", "session/prompt"],
+    "promptSentAt": "10:59:03.464",
+    "promptWireSequence": 42,
+    "responseWireSequence": 53,
+    "responseAfterMs": 1513,
+    "result": "exact assistant marker and successful terminal response",
+    "matchedMarker": true,
+    "visibleTestConversation": "连接测试 · Devin",
+    "savedDefaultsDigestPrefixBeforeAndAfter": "88e851953ac49891",
+    "completedMembershipUnchanged": true
+  }
+}

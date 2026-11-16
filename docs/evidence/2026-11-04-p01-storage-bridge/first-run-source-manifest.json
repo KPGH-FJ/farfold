@@ -1,0 +1,30 @@
+{
+  "kind": "Exact named input-source bytes from the first successful run",
+  "files": {
+    "src-tauri/src/meta_store/recovery_tests.rs": "6a6d43575e0d7ab3ceb0398f896cd4ae99172831a1ef39cf40f6419f279b4c5b",
+    "src/runtime/drafts.ts": "da471eff093aae6ab7e135a2d293e231eb1b314edca07c62a9759a5cd9e59e50",
+    "src/runtime/draft_storage.ts": "a86d7f616f9d91dd06f9ec1e819cf3a524138fecb1efff0b0dc435eeec961e4c",
+    "src/runtime/storage_recovery.ts": "d5b867d99c32ea9c1008f59629127d8285a3c93e891163029f531203a27d1f10",
+    "output/2026-11-04-p01-storage-bridge/frontend-storage-bridge.test.ts": "a214c7dc30257fad518f2dca75eddbe678c8b7de05cf9d72197c4d56c38e3695",
+    "output/2026-11-04-p01-storage-bridge/vitest.config.mts": "9794950a562a973e8f1c7a8e6caad99379b4ec761cc0843eb02fca54d99c5419",
+    "output/2026-11-04-p01-storage-bridge/build-driver.py": "25530f9b6f7eb271b8eb2fcd68521d3b14e702640be51c492da50350f979e28b"
+  },
+  "buildInputHashes": {
+    "before": {
+      "path": "output/2026-11-04-p01-storage-bridge/source-before.json",
+      "sha256": "4e94523dd61ffed499440a060c6742d41e6bbca9c555d2644ccb78e37164531d"
+    },
+    "after": {
+      "path": "output/2026-11-04-p01-storage-bridge/source-after.json",
+      "sha256": "4e94523dd61ffed499440a060c6742d41e6bbca9c555d2644ccb78e37164531d"
+    }
+  },
+  "listedBuildInputs": 807,
+  "completeFrontendTransitiveFreezeClaimed": false,
+  "archive": {
+    "path": "docs/evidence/2026-11-04-p01-storage-bridge/first-run-original-receipts.zip",
+    "sha256": "6845e5489c9c71833444c6302786d1a71a5c0e530296aa1e6af09add970c72cf",
+    "members": 42
+  },
+  "sourcePreservation": "The seven named current files exactly matched the recorded first-run before/after hashes when archived. Later fixture extension is a separate input/result, never substituted into the first run."
+}

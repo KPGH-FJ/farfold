@@ -1,0 +1,174 @@
+{
+  "schema": 1,
+  "preparedAtUtc": "2026-11-05T00:57:47.794300+00:00",
+  "publicationState": "ARCHIVED_CHECKPOINT_EVIDENCE",
+  "runId": 41931045918,
+  "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41931045918",
+  "workflow": ".github/workflows/windows.yml",
+  "sourceHead": "2e23056cc4a3cf50f94a75ee393dd2cc4b0f78bd",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 126927716134,
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success",
+      "sourceHead": "2e23056cc4a3cf50f94a75ee393dd2cc4b0f78bd",
+      "startedAtUtc": "2026-11-04T23:06:51Z",
+      "completedAtUtc": "2026-11-04T23:24:26Z",
+      "seconds": 1055.0
+    },
+    {
+      "id": 126927716594,
+      "name": "rust",
+      "status": "completed",
+      "conclusion": "success",
+      "sourceHead": "2e23056cc4a3cf50f94a75ee393dd2cc4b0f78bd",
+      "startedAtUtc": "2026-11-04T23:06:51Z",
+      "completedAtUtc": "2026-11-05T00:25:23Z",
+      "seconds": 4712.0
+    },
+    {
+      "id": 126962149641,
+      "name": "installer",
+      "status": "completed",
+      "conclusion": "success",
+      "sourceHead": "2e23056cc4a3cf50f94a75ee393dd2cc4b0f78bd",
+      "startedAtUtc": "2026-11-05T00:25:25Z",
+      "completedAtUtc": "2026-11-05T00:48:37Z",
+      "seconds": 1392.0
+    },
+    {
+      "id": 126971769580,
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "success",
+      "sourceHead": "2e23056cc4a3cf50f94a75ee393dd2cc4b0f78bd",
+      "startedAtUtc": "2026-11-05T00:48:39Z",
+      "completedAtUtc": "2026-11-05T00:48:43Z",
+      "seconds": 4.0
+    }
+  ],
+  "frontend": {
+    "filesPassed": 707,
+    "testsPassed": 9506,
+    "testsSkipped": 3,
+    "total": 9509,
+    "typecheckAndBuildSucceeded": true,
+    "rawArchiveMember": "raw/frontend-job.log",
+    "summaryPhysicalLfLines": [1202, 1203]
+  },
+  "rust": {
+    "libraryPassed": 2391,
+    "libraryFailed": 0,
+    "libraryIgnored": 75,
+    "librarySeconds": 3536.62,
+    "mainPassed": 0,
+    "mainFailed": 0,
+    "docPassed": 0,
+    "docFailed": 0,
+    "formatClippyAllTargetsFixtureBuildAndTestJobsSucceeded": true,
+    "rawArchiveMember": "raw/rust-job.log",
+    "librarySummaryPhysicalLfLine": 37971,
+    "mainSummaryPhysicalLfLine": 37977,
+    "docSummaryPhysicalLfLine": 37983,
+    "independentNumericCargoExitReceipt": null,
+    "exitBoundary": "Actual successful Cargo/lib/bin/doc summaries, explicit LASTEXITCODE guards and successful complete native job establish command success. The numeric0 in download receipts belongs to gh API; it is not a separate Cargo process-exit receipt."
+  },
+  "original17": {
+    "nameCount": 17,
+    "passed": 17,
+    "failed": 0,
+    "ignored": 0,
+    "unknown": 0,
+    "reviewArchiveMember": "review/independent-engineering-review.json",
+    "deduplication": "Full FQN outer terminal names; captured child records do not add top-level cases."
+  },
+  "installer": {
+    "jobExecuted": true,
+    "unsignedNsisBuildSucceeded": true,
+    "command": [
+      "corepack",
+      "pnpm",
+      "tauri",
+      "build",
+      "--ci",
+      "--no-sign",
+      "--target",
+      "x86_64-pc-windows-msvc",
+      "--bundles",
+      "nsis",
+      "--",
+      "--locked"
+    ],
+    "rawArchiveMember": "raw/installer-job.log",
+    "noSignPhysicalLfLine": 319,
+    "finishedBundlePhysicalLfLines": [1127, 1128],
+    "serviceArtifact": {
+      "id": 13378180772,
+      "name": "farfold-windows-x64-unsigned",
+      "downloadZipBytes": 12483144,
+      "downloadZipSha256": "37b78fbd6421a42be1f7fdcb96e8b8bf095899ebb529f040ccb54acd5987211b",
+      "serviceDigestMatched": true
+    },
+    "member": {
+      "name": "Farfold_0.1.7_x64-setup.exe",
+      "bytes": 12495697,
+      "sha256": "fffed74275a165556485158610a41eb0cefaa37b18898ff1183e4a5a4ce4e728"
+    },
+    "actualBinaryBytesInPublicZip": false,
+    "extractedOrExecuted": false,
+    "actuallyInstalled": false,
+    "actualUserFlowsTested": false,
+    "codeSigningOrDistributionAccepted": false,
+    "artifactInspectionArchiveMember": "analysis/installer-artifact-inspection.json"
+  },
+  "verification": {
+    "all19CollectorReceiptIntegrityAssertionsPassed": true,
+    "actualGhCommandReceipts": 14,
+    "watchNaturalExitCode": 0,
+    "engineerReader": {
+      "archiveMember": "review/independent-engineering-review.json",
+      "sha256": "3e3fb640c9bb1cc1cac14786e231e134ad50d29e63d6143cfc0a5504593381de",
+      "scope": "engineering and original17; no installer claim"
+    },
+    "finalReader": {
+      "archiveMember": "review/independent-final-review.json",
+      "sha256": "0f4a37830bce6f0a52484c473ed3bf5cb9e6d9cf7e2b1a1c13b4adaef9ef1439",
+      "scope": "actual completed run/jobs, installer/verify raw and artifact/private50 receipts; no installer execution"
+    }
+  },
+  "sourceAndAcceptanceLimits": [
+    "This is the full existing Windows CI workflow on fixed2e only; later functional6f013 or5dfd/new MCP scope work is not covered.",
+    "GitHub run and all four completed-job metadata agree on fixed head. This full workflow does not produce an independent byte-by-byte checkout inventory/sourceMap as the targeted runner does.",
+    "The unsigned NSIS ZIP/service digest/member bytes were checked. It was not extracted, executed or installed; Windows desktop interaction, credentials, permissions, data retention and real Agent/model flows remain untested here.",
+    "No change to production code, test wait budgets, Rust90-minute job capacity, accounts/models or formalMac App was made by this lifecycle task.",
+    "75ignored registrations remain ignored; they are not converted to passed product paths. Full29-agent/eight-standard and151-requirement acceptance is not claimed."
+  ],
+  "originals": {
+    "path": "originals.zip",
+    "bytes": 577041,
+    "sha256": "e8fd3baac2bf0436462c4a8875d01ad0c4896755b1d802b0386c2c69d9d94ce1",
+    "entries": 35,
+    "manifest": "manifest.json",
+    "manifestSha256": "3271d9859760acb2638e3db53b4ec6cd327b72d003ce0d4382032350f1e71e75",
+    "byteExactSelectedOriginals": true,
+    "actualArtifactDownloadZipOrExeIncluded": false,
+    "private50InventoryIsNotArchiveMemberList": true
+  },
+  "privateCollectorResult": {
+    "archiveMember": "analysis/collector-result.json",
+    "sha256": "7af725006e1306ff66a4c4fa0d0528621da81272cd2d8b375cb9651a3ffc8f16"
+  },
+  "rootArchiveReview": {
+    "recordedAtUtc": "2026-11-05T01:07:13.843725+00:00",
+    "actualArchiveMembers": 35,
+    "payloadShaSizesVerified": 34,
+    "utf8NoNul": true,
+    "archiveManifestOriginalSha256": "3271d9859760acb2638e3db53b4ec6cd327b72d003ce0d4382032350f1e71e75",
+    "notClaimed": "Independently captured Cargo numeric exit, fullsource-filemap, installedWindows or newer-source validation.",
+    "publishedManifestByteEqualToArchivedOriginal": true,
+    "publishedManifestSha256": "3271d9859760acb2638e3db53b4ec6cd327b72d003ce0d4382032350f1e71e75"
+  }
+}

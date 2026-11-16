@@ -1,0 +1,54 @@
+{
+  "kind": "Cycle6FiveOfficialSurfaceStaticEvidence",
+  "date": "2026-11-13",
+  "waveUnchanged": [
+    "pi-acp",
+    "codex-acp",
+    "fast-agent",
+    "mistral-vibe",
+    "opencode"
+  ],
+  "actualModelRequestsInThisAudit": 0,
+  "facts": {
+    "pi-acp": "Reviewed official adapter stores MCP declarations without connecting tools; current model unconfirmed.",
+    "codex-acp": "Existing product path retained; affected new sends remain paused under NEW-24.",
+    "fast-agent": "Standard stdio/session overlay exists. Debug full config reaches switchable redaction: current key is not masked; TOKEN/SECRET rename still retains ten characters and LOG_SECRETS can reveal all. Multi-agent helpers and EOF cleanup need bounds. No actual local leak claimed.",
+    "mistral-vibe": "Reviewed legacy saves MCP env in config snapshot when logging/save conditions hold. Discovery closes the first helper; invocation starts another, incompatible with current one-shot listener. Actual local backend unknown; no silent unified switch. Specific single model request already used.",
+    "opencode": "Existing stdio is a development candidate. Dynamic config is process-directory memory; normal Farfold conversations use separate processes and preview closes before independent target. Remote close does not remove MCP; local stop barrier and fresh credentials remain required. Candidate admission and official no-model probe are unfinished."
+  },
+  "limits": [
+    "Static source review does not establish actual webpage tasks for these agents.",
+    "Account/model/authorization constraints remain separate from executable product work.",
+    "This snapshot does not close cycle6 or all29x8."
+  ],
+  "evidence": [
+    {
+      "path": "output/2026-11-12-cycle6/agent-wave/review.json",
+      "sha256": "6e312ef1254bf003b52a7261e7e0166d41b8aa077979b70cf0f47d415ae3d63f"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/agent-wave/fast-agent-browser-review.json",
+      "sha256": "2312bb2b7c98055d6dda914ae2ed95fbf8af4c0604bd5ab9fa420a531c76b155"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/agent-wave/mistral-browser-review.json",
+      "sha256": "bf1e6b55883eaa31fecb3b4527671b87c96216db4e728be142d1b248bab69112"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/agent-wave/opencode-browser-review.json",
+      "sha256": "dd39aa81081c18f8ae001d0e88f99cb88aa9425ee55e9e9ba6c472ac12737b08"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/mistral-browser-independent.json",
+      "sha256": "8827248b4dea6e29ba2b8e700244de1dfdc1858444446dfd8bb8f7990d093105"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/fast-agent-token-rename-review.json",
+      "sha256": "ca35d0fa44f11c08db7fccaf68389b079f4180a9930e3d8604378e00b6766dca"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/cycle-exit.json",
+      "sha256": "2e16382c75a4de56f84ad2842673dc19567d7960abd69be687bfebf7b9bcd2fa"
+    }
+  ]
+}

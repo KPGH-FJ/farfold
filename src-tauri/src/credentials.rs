@@ -329,6 +329,13 @@ pub(crate) fn validate_service_identity(
     expected: &ServiceIdentity,
 ) -> Result<(), String> {
     let _lock = MUTATION.lock().map_err(|_| "API 配置暂时不可用")?;
+    validate_service_identity_stable(store, expected)
+}
+
+fn validate_service_identity_stable(
+    store: &MetaStore,
+    expected: &ServiceIdentity,
+) -> Result<(), String> {
     let item = read(store)?
         .into_iter()
         .find(|c| c.id == expected.id && !c.deleting)
@@ -341,6 +348,35 @@ pub(crate) fn validate_service_identity(
         return Err("此对话的 API 来源或模型已改变，请检查设置".into());
     }
     Ok(())
+}
+
+/// Serialize only the short guard commit with service edits/deletion. Secrets
+/// are not accessed; a later destructive change will see the saved pending row.
+pub(crate) fn with_stable_mcp_source<T>(
+    store: &MetaStore,
+    row: &crate::meta_store::SessionRow,
+    commit: impl FnOnce() -> Result<T, String>,
+) -> Result<T, String> {
+    let _lock = MUTATION.lock().map_err(|_| "API 配置暂时不可用")?;
+    if let Some(source) = row
+        .config_options
+        .as_ref()
+        .and_then(|value| value.get("_farfoldService"))
+    {
+        if source.get("kind").and_then(serde_json::Value::as_str) == Some("configured") {
+            let identity: ServiceIdentity = serde_json::from_value(
+                source
+                    .get("identity")
+                    .cloned()
+                    .ok_or("无法确认此对话的服务来源")?,
+            )
+            .map_err(|_| "无法确认此对话的服务来源")?;
+            validate_service_identity_stable(store, &identity)?;
+        } else if source.get("kind").and_then(serde_json::Value::as_str) != Some("existing") {
+            return Err("无法确认此对话的服务来源".into());
+        }
+    }
+    commit()
 }
 
 // Test requests may read a credential without selecting an Agent or granting it access.
@@ -497,6 +533,8 @@ pub(crate) fn auth_key(
 
 #[cfg(test)]
 mod auth_key_tests;
+#[cfg(test)]
+mod mcp_pending_tests;
 
 fn save(store: &MetaStore, vault: &dyn Vault, mut input: SaveInput) -> Result<View, String> {
     if input.label.trim().is_empty()
@@ -522,6 +560,12 @@ fn save(store: &MetaStore, vault: &dyn Vault, mut input: SaveInput) -> Result<Vi
         None
     };
     let previous = index.map(|i| &pool[i]);
+    if let Some(previous) = previous {
+        store.require_mcp_service_ready(&previous.id)?;
+        for grant in &previous.grants {
+            store.require_mcp_agent_ready(&grant.agent_id)?;
+        }
+    }
     if previous.is_some_and(|previous| previous.purpose.as_deref() == Some("authentication")) {
         return Err("请在对应登录方式中管理此密钥，模型服务需单独保存".into());
     }
@@ -620,15 +664,30 @@ fn apply_with(
     env: &mut HashMap<String, String>,
     vault: &dyn Vault,
 ) -> Result<(), String> {
+    apply_with_names(
+        store,
+        agent_id,
+        env,
+        vault,
+        crate::shell_env::EnvNames::current(),
+    )
+}
+fn apply_with_names(
+    store: &MetaStore,
+    agent_id: &str,
+    env: &mut HashMap<String, String>,
+    vault: &dyn Vault,
+    names: crate::shell_env::EnvNames,
+) -> Result<(), String> {
     for c in read(store)?.iter().filter(|c| !c.deleting) {
         for g in c.grants.iter().filter(|g| g.agent_id == agent_id) {
-            if !g.override_existing && env.contains_key(&g.env_name) {
+            if !g.override_existing && names.contains(env, &g.env_name) {
                 return Err("密钥变量出现新的来源冲突，请在设置中确认使用哪份密钥".into());
             }
             let key = vault
                 .get(&c.secret_ref)
                 .ok_or("无法读取已授权的密钥，请检查系统钥匙串后重试")?;
-            env.insert(g.env_name.clone(), key);
+            names.insert(env, g.env_name.clone(), key);
         }
     }
     Ok(())
@@ -641,9 +700,32 @@ pub(crate) fn apply(
     apply_with(store, agent_id, env, &Keychain)
 }
 
+/// Check grant metadata without opening the vault or resolving a credential.
+pub(crate) fn has_environment_grant(
+    store: &MetaStore,
+    agent_id: &str,
+    names: &[&str],
+) -> Result<bool, String> {
+    let platform = crate::shell_env::EnvNames::current();
+    Ok(read(store)?
+        .iter()
+        .filter(|credential| !credential.deleting)
+        .flat_map(|credential| &credential.grants)
+        .any(|grant| {
+            grant.agent_id == agent_id
+                && names
+                    .iter()
+                    .any(|name| platform.matches(&grant.env_name, name))
+        }))
+}
+
 fn remove(store: &MetaStore, vault: &dyn Vault, id: &str) -> Result<(), String> {
+    store.require_mcp_service_ready(id)?;
     let mut pool = read(store)?;
     let item = pool.iter_mut().find(|c| c.id == id).ok_or("此密钥已移除")?;
+    for grant in &item.grants {
+        store.require_mcp_agent_ready(&grant.agent_id)?;
+    }
     item.grants.clear();
     item.deleting = true;
     let refs = std::iter::once(item.secret_ref.clone())
@@ -699,6 +781,7 @@ async fn revoke_grant(
             let _activity = activity;
             let _configuration = _configuration;
             let _lock = MUTATION.lock().map_err(|_| "密钥设置暂时不可用")?;
+            store.require_mcp_agent_ready(&agent_id)?;
             let mut pool = read(store)?;
             let c = pool.iter_mut().find(|c| c.id == id).ok_or("此密钥已移除")?;
             c.grants
@@ -895,6 +978,31 @@ mod tests {
         assert_eq!(env_b["TOKEN"], "replacement");
         assert_eq!(read(&store).unwrap()[0].grants.len(), 1);
     }
+    #[test]
+    fn windows_grants_require_explicit_override_of_case_variant_sources() {
+        let (_dir, store) = store();
+        let vault = Fake::default();
+        let saved = save(&store, &vault, input(None, "synthetic-selected")).unwrap();
+        legacy_grant(&store, &saved.id, "a", "TOKEN", false);
+        let original = HashMap::from([("token".into(), "synthetic-inherited".into())]);
+        let mut env = original.clone();
+        let names = crate::shell_env::EnvNames::Windows;
+        assert!(apply_with_names(&store, "a", &mut env, &vault, names).is_err());
+        assert_eq!(env, original);
+        let mut pool = read(&store).unwrap();
+        pool.iter_mut()
+            .find(|item| item.id == saved.id)
+            .unwrap()
+            .grants[0]
+            .override_existing = true;
+        write(&store, &pool).unwrap();
+        apply_with_names(&store, "a", &mut env, &vault, names).unwrap();
+        assert_eq!(
+            env,
+            HashMap::from([("TOKEN".into(), "synthetic-selected".into())])
+        );
+    }
+
     #[test]
     fn historical_grants_isolate_same_named_variables_and_revoke_restores_original() {
         let (_dir, store) = store();
@@ -1237,6 +1345,7 @@ pub fn environment_for_launch(
 }
 pub fn revoke_agent(store: &MetaStore, id: &str) -> Result<(), String> {
     let _lock = MUTATION.lock().map_err(|_| "密钥设置暂时不可用")?;
+    store.require_mcp_agent_ready(id)?;
     let mut pool = read(store)?;
     for c in &mut pool {
         c.grants.retain(|g| g.agent_id != id);

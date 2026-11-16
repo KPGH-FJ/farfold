@@ -98,7 +98,7 @@ impl Config {
 }
 // TOML's JSON contract cannot represent null or unsigned values beyond i64.
 // Preserve all supported unknown nested values; do not filter them into a DTO.
-fn supported(value: &Value, depth: usize) -> bool {
+pub(super) fn supported(value: &Value, depth: usize) -> bool {
     if depth > 32 {
         return false;
     }

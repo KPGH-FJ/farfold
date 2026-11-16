@@ -1,0 +1,85 @@
+{
+  "sourceCodeCommit": "1f64ba30a1ce5e29b47fd276a379606d0291de54",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "202267b435c50c179feaf4eb5c49718b1aa3ddb0",
+    "executableSha256": "52ae5d912db66581e8f52200fb8134765add387c66cb459ef0767c599258640f"
+  },
+  "engineering": {
+    "frozenInputs": 2478,
+    "newChecks": ["format", "typecheck", "frontend", "build"],
+    "frontendFiles": 745,
+    "frontendPassed": 10212,
+    "nativeChecksReusedFromThirteenth": ["rust-fmt", "clippy", "rust-test"],
+    "nativeSourceAndLockUnchanged": true,
+    "focusedPassed": 110,
+    "preFixControlledRegressionFailed": true
+  },
+  "install": {
+    "closedDataEntriesIdentical": 206417,
+    "normallyExitedOwnedChildren": 11,
+    "verifiedBrowserHelperIncluded": true,
+    "independentReview": true,
+    "candidateRemoved": true
+  },
+  "formalBrowser": {
+    "sourceCodeCommit": "1f64ba30a1ce5e29b47fd276a379606d0291de54",
+    "observedAtUtc": "2026-11-10T12:30:16.422284+00:00",
+    "priorExactTestConversationReloaded": true,
+    "localFixtureSha256": {
+      "a": "c8b5bdfefde1f27f703663252270afc598325872fe08ce454d8a24c28e810aaa",
+      "b": "de28854dd0a43aa892391686091211dbd25dc33eb4c4ef6081b3840f3ba9ccfb"
+    },
+    "homeEndMovedFocusWithoutSwitching": true,
+    "returnSelectedFocusedPage": true,
+    "closedBUsingKeyboard": true,
+    "afterBClosureFocus": "selected a.html",
+    "afterBClosureNativePageTitle": "P30_PAGE_A",
+    "nextTabFocus": "close a.html",
+    "closedAUsingKeyboard": true,
+    "afterLastClosureFocus": "selected new blank tab",
+    "nextTabAfterLastFocus": "close new blank tab",
+    "onlyBlankTabRemained": true,
+    "modelRequests": 0,
+    "trace": [
+      {
+        "file": "protocol-v1-1794313617400-0.jsonl",
+        "sha256": "0f96010e1572fe9e7a36d24b72e539fb940f534aeae17747a2ce049ba7b3a74a",
+        "outboundAfterInstall": ["initialize", "other", "session/load"]
+      }
+    ]
+  },
+  "formalContentWidth": {
+    "wideWindowScreenshotPixels": [1280, 820],
+    "widthBefore": 510,
+    "afterLeft": 534,
+    "afterRight": 510,
+    "focusRetainedOnSeparatorAfterLeft": true,
+    "reportFragment2Retained": true,
+    "escapeRestoredExactToolContentTrigger": true,
+    "narrowWindowTested": false,
+    "systemZoomTested": false
+  },
+  "formalHttpCancel": {
+    "confirmationRemovedAndReviewExplicitlyExpired": true,
+    "focusRestoredToAddButton": true,
+    "refreshedOfficialConfigReportTestEntryAbsent": true,
+    "beforeAfterConfigBytesEqual": true,
+    "newModelRequests": 0,
+    "inFlightCancellationTested": false
+  },
+  "evidenceFiles": {
+    "output/2026-11-09-six-hour-stage2/fourteenth-engineering/result.json": "e2f9f0d3e13eb10cede048b819ffd0ddaf9e0002fe13a91bcafc6471178e2301",
+    "output/2026-11-09-six-hour-stage2/fourteenth-engineering/native-reuse.json": "8582b4baabb76ed85eceda411f81864495dda79e0a55f4be6d09084288ec32eb",
+    "output/2026-11-09-six-hour-stage2/formal-fourteenth/candidate-review.json": "1a8f49358276f59060f6160cc5878a0badb24eff1f5cf87f42881224ad84c64a",
+    "output/2026-11-09-six-hour-stage2/formal-fourteenth/install.json": "68b27fc2a6300af2e5c4f85782e8ef5114aff5ce70bdb812a2d9efc0f353ee94",
+    "output/2026-11-09-six-hour-stage2/formal-fourteenth/duplicate-cleanup.json": "88a1db576ecb74b227ab943f20b27fdd740bb675b3c98685d3a4d9086044c6cf",
+    "output/2026-11-10-stage2-closeout/p45-browser-close-focus-before.json": "9e798db2db93e3d0c8b205aecd9af8e2948713323da94b60894b85a3f07e2663",
+    "output/2026-11-10-stage2-closeout/p45-browser-close-focus-after.json": "de6ea3635243d73eeedf5662c7bb2c6e21226e64e9944b55343eaef362d01375",
+    "output/2026-11-10-stage2-closeout/p45-mistral-content-width.json": "8311f6e8399a5b1416c3b521816d021abe45495a521089effac449815dad3c0a",
+    "output/2026-11-10-stage2-closeout/p41-http-cancel-after.json": "172053802e239372a418dae201441693665a2f7d24cd95298735fc5ffde7f6e5"
+  }
+}

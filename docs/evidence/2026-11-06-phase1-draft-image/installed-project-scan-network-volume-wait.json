@@ -1,0 +1,45 @@
+{
+  "kind": "InstalledMacOSProjectIndexNetworkVolumeWait",
+  "installedSource": "6ce829c538da454414bd1158ef0c8bbb521b2a20",
+  "installedBinarySha256": "40758ffc653c3de0e7554730bbbc604590267bc4fd95b988edaaab0014f2da73",
+  "observationUtc": "2026-11-07T02:58:28.732990+00:00",
+  "scope": "Already completed owned conversation, one anonymous loopback read-only test mount under its owned empty working directory, actual composer project-file search.",
+  "initialScanAndOneRetryReportedPending": true,
+  "userInterfaceCancelInvokedOnTestScan": true,
+  "exactProjectFileWasListedOrSelected": false,
+  "fixtureBodyGets": 0,
+  "networkVolumeAuthorization": {
+    "observedExactPromptRequestForInstalledFarfold": true,
+    "decisionObservedInExactTrace": false,
+    "changedByTest": false,
+    "protectedSystemUiInspectionRejected": true
+  },
+  "observedProjectScanWorkersWaitingInOpendirOpenAfterUiCancel": 2,
+  "sharedNativeFileReadSlotLimitInInstalledSource": 2,
+  "actualNewExplicitReadAttempted": false,
+  "fixtureListenerExitCode": 0,
+  "testMountStillReportedByMountInventory": false,
+  "ownedUnmountCallStillLiveAtObservation": true,
+  "deferredOwnedFixtureSetupWrapperStopped": true,
+  "originalAndRetainedDraftsQueuesAndFourTapsPreserved": true,
+  "testQueryClearedAndOriginalDraftViewRestored": true,
+  "agentRequests": 0,
+  "rawEvidenceSha256": {
+    "scanRetry": "c84602b35488a6b64f144723f96f097096dee412c132b67940b6b6c2eceae118",
+    "laterFormalProcess": "5518a70432906d6f998cfd5964d470c8ee022a87d63e3e135038e6b45bf19ad8",
+    "ownedUnmount": "c1addc7e00c88487e394c1fe206b74380f071b6be7b74eed55f7fa7f3be4c941",
+    "exactSystemPermissionRequest": "71aa579b2d27c61e9c210bbc49f88f09cf1bbadcab8b05d29f327dc8bb48e3a5"
+  },
+  "limits": [
+    "The chosen test file was never returned by the scan, so pending attachment switch or withdrawal was not exercised.",
+    "The exact system log records a network volume authorization request for Farfold; no corresponding decision was observed in that trace.",
+    "Mount inventory absence does not prove the owned unmount call or either underlying scan has returned."
+  ],
+  "followup": {
+    "ownedUnmountExitWatchMs": 150002,
+    "ownedUnmountExitEventObserved": false,
+    "sameOwnedUnmountProcessStillPresentAfterWatch": true,
+    "exactNetworkVolumeDecisionObserved": false,
+    "rawExactSystemPermissionFollowupSha256": "71aa579b2d27c61e9c210bbc49f88f09cf1bbadcab8b05d29f327dc8bb48e3a5"
+  }
+}

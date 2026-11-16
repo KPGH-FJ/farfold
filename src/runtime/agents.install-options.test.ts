@@ -1,10 +1,17 @@
 import { beforeEach, expect, it, vi } from "vitest";
-import type { AgentCardModel } from "./agents";
+import type { AgentCardModel, AgentRow } from "./agents";
+import {
+  captureProgramAuthentication,
+  currentAuthenticationRequired,
+  pendingProgramAuthenticationChange,
+} from "./authentication";
 
 const h = vi.hoisted(() => ({
   invoke: vi.fn(),
   states: [] as unknown[],
   cursor: 0,
+  refs: [] as { current: unknown }[],
+  refCursor: 0,
 }));
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: h.invoke,
@@ -29,7 +36,7 @@ vi.mock("react", async (original) => ({
   useCallback: (callback: unknown) => callback,
   useMemo: (read: () => unknown) => read(),
   useEffect: () => {},
-  useRef: (current: unknown) => ({ current }),
+  useRef: (current: unknown) => (h.refs[h.refCursor++] ??= { current }),
 }));
 vi.mock("./sessions", () => ({ threads: {} }));
 import { useAgents } from "./agents";
@@ -49,10 +56,12 @@ const card = {
 } as AgentCardModel;
 const render = () => {
   h.cursor = 0;
+  h.refCursor = 0;
   return useAgents();
 };
 beforeEach(() => {
   h.states = [];
+  h.refs = [];
   h.invoke.mockReset().mockImplementation(async (command: string) => {
     if (command === "app_initial_snapshot") return { agents: [] };
     if (command === "catalog_list") return [];
@@ -122,6 +131,103 @@ it("does not apply an installation draft to a registered connection or historica
     agentId: card.id,
     installationId: "older-program",
   });
+});
+
+it("checks existing settings again after selecting a different program and preserves them on a check or failure", async () => {
+  const id = "registry:program-auth-fixture";
+  let selected: AgentRow = {
+    id,
+    name: "Fixture",
+    source: "registry",
+    command: "/program-first",
+    args: ["--acp"],
+    env: [],
+    version: "1.0",
+    handshake: null,
+    createdAt: 1,
+    updatedAt: 1,
+  };
+  let fail = true;
+  h.invoke.mockImplementation(async (command: string) => {
+    if (command === "app_initial_snapshot") return { agents: [selected] };
+    if (command === "catalog_list") return [];
+    if (command === "agent_status") return [];
+    if (command === "agent_installation_select") {
+      if (fail) throw new Error("check failed");
+      selected = { ...selected, command: "/program-second", version: "2.0" };
+    }
+    return null;
+  });
+  const agents = render();
+  await agents.refresh();
+  const before = captureProgramAuthentication(id);
+  before.observe("/project", "AUTH_REQUIRED");
+  selected = {
+    ...selected,
+    handshake: { agentInfo: { version: "1.0" } },
+    updatedAt: 2,
+  };
+  await agents.refresh();
+  expect(currentAuthenticationRequired(id, "/project")).toBe(true);
+  expect(await agents.selectInstallation(id, "second")).toBe(false);
+  expect(currentAuthenticationRequired(id, "/project")).toBe(true);
+  fail = false;
+  expect(await agents.selectInstallation(id, "second")).toBe(true);
+  expect(currentAuthenticationRequired(id, "/project")).toBe(false);
+  before.observe("/project", "AUTH_REQUIRED");
+  expect(currentAuthenticationRequired(id, "/project")).toBe(false);
+});
+
+it("accepts a confirmed same-path selection before a delayed refresh and keeps new auth evidence if that refresh fails", async () => {
+  const id = "registry:program-auth-delayed";
+  const row: AgentRow = {
+    id,
+    name: "Fixture",
+    source: "registry",
+    command: "/same-path",
+    args: ["--acp"],
+    env: [],
+    version: "1.0",
+    handshake: null,
+    createdAt: 1,
+    updatedAt: 1,
+  };
+  let finishSelection!: () => void;
+  let failRefresh!: (reason: Error) => void;
+  const nativeResult = new Promise<void>(
+    (resolve) => (finishSelection = resolve),
+  );
+  const snapshot = new Promise<never>((_, reject) => (failRefresh = reject));
+  let delayRefresh = false;
+  h.invoke.mockImplementation(async (command: string) => {
+    if (command === "app_initial_snapshot")
+      return delayRefresh ? snapshot : { agents: [row] };
+    if (command === "catalog_list" || command === "agent_status") return [];
+    if (command === "agent_select_program") return nativeResult;
+  });
+  const agents = render();
+  await agents.refresh();
+  const old = captureProgramAuthentication(id);
+  old.observe("/project", "AUTH_REQUIRED");
+  delayRefresh = true;
+  const selecting = agents.selectProgram(id, "/same-path");
+  const pending = pendingProgramAuthenticationChange(id);
+  expect(pending).toBeDefined();
+  expect(old.current()).toBe(true);
+  finishSelection();
+  await pending;
+  expect(render().busy[id]).toBe("install");
+  expect(old.current()).toBe(false);
+  expect(currentAuthenticationRequired(id, "/project")).toBe(false);
+  const fresh = captureProgramAuthentication(id);
+  fresh.observe("/project", "AUTH_REQUIRED", undefined, "request");
+  failRefresh(new Error("catalog unavailable"));
+  expect(await selecting).toBe(true);
+  expect(render().busy[id]).toBe(null);
+  delayRefresh = false;
+  await agents.refresh();
+  expect(fresh.current()).toBe(true);
+  expect(currentAuthenticationRequired(id, "/project")).toBe(true);
 });
 
 it("keeps the submitted model choice while cancellation settles and never retries automatically", async () => {

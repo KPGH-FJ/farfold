@@ -56,3 +56,51 @@ it("does not present prior values as current while reconnecting or after a faile
     renderToStaticMarkup(<ThreadUsageDetails thread={thread} />),
   ).toContain("此前收到的数据");
 });
+
+it("separates a nullable single-message report from context and totals without inventing currency or completion", async () => {
+  const { receiveMessageUsage } = await import("../runtime/message_usage");
+  const thread = freshThreadState("one", "fixture", "/fixture", "one");
+  thread.connectionId = "connection";
+  const usage = {
+    messageId: "opaque-id",
+    inputTokens: 12,
+    outputTokens: null,
+    totalTokens: 999,
+    cacheReadTokens: null,
+    cacheWriteTokens: 0,
+    cost: 0.00001,
+    costSource: "estimated",
+    elapsedMs: 0,
+    timeToFirstTokenMs: null,
+    isCompaction: true,
+  };
+  receiveMessageUsage(thread, {
+    kind: "notification",
+    method: "official",
+    params: { sessionId: "one" },
+    presentation: {
+      kind: "messageUsage",
+      connectionId: thread.connectionId,
+      usage,
+    },
+  });
+  const html = renderToStaticMarkup(<ThreadUsageDetails thread={thread} />);
+  expect(html).toContain("最近收到的单条消息报告");
+  expect(html).toContain("不计入上方累计值");
+  expect(html).toContain("999 tokens");
+  expect(html).toContain("0 tokens");
+  expect(html).toContain("0 ms");
+  expect(html).toContain("尚未提供");
+  expect(html).toContain("0.00001（币种未提供）");
+  expect(html).toContain("估算");
+  expect(html).toContain("未与对话中的具体消息关联");
+  expect(html).toContain("不代表整理已完成");
+  expect(html).not.toContain("USD");
+  expect(html).not.toContain("opaque-id");
+  expect(thread.usage).toBeNull();
+  expect(thread.sessionTokens).toBeNull();
+  thread.connectionLost = true;
+  expect(
+    renderToStaticMarkup(<ThreadUsageDetails thread={thread} />),
+  ).not.toContain("999 tokens");
+});

@@ -4,6 +4,10 @@ import type { FileDropEvent } from "../runtime/composer_file_drop";
 const h = vi.hoisted(() => ({
   effects: [] as (() => (() => void) | void)[],
   subscribe: vi.fn(),
+  appliedScale: 1,
+}));
+vi.mock("../runtime/interface_scale_geometry", () => ({
+  getAppliedInterfaceScale: () => h.appliedScale,
 }));
 vi.mock("react", async () => ({
   ...(await vi.importActual("react")),
@@ -19,7 +23,7 @@ import { composerDrafts } from "../runtime/drafts";
 import { draftPersistence } from "../runtime/draft_storage";
 
 const key = "native-file-drop";
-function mount(enabled = true) {
+function mount(enabled = true, platform = "Win32") {
   let callback: (event: { payload: FileDropEvent }) => void;
   let finish: (stop: () => void) => void;
   let fail: () => void;
@@ -47,6 +51,7 @@ function mount(enabled = true) {
   };
   element.ownerDocument.elementFromPoint.mockReturnValue(element);
   vi.stubGlobal("window", { devicePixelRatio: 2 });
+  vi.stubGlobal("navigator", { platform });
   function Probe() {
     useComposerFileDrop({
       key,
@@ -74,17 +79,79 @@ function mount(enabled = true) {
 afterEach(() => {
   h.effects.length = 0;
   h.subscribe.mockReset();
+  h.appliedScale = 1;
   composerDrafts.clear(key);
   draftPersistence.lockInteraction(false);
   vi.unstubAllGlobals();
 });
-it("converts Retina physical coordinates and imports only the hit input", () => {
-  const s = mount();
-  s.send("enter");
-  s.send("drop");
+it.each(["Win32", "Linux x86_64", ""])(
+  "converts physical coordinates and imports only the hit input (%s)",
+  (platform) => {
+    const s = mount(true, platform);
+    s.send("enter");
+    s.send("drop");
+    expect(s.element.ownerDocument.elementFromPoint).toHaveBeenLastCalledWith(
+      110,
+      210,
+    );
+    expect(s.add).toHaveBeenCalledExactlyOnceWith(key, ["/file.txt"]);
+    s.cleanup();
+  },
+);
+it("hit-tests macOS drag points without applying the Retina scale again", () => {
+  const s = mount(true, "MacIntel");
+  const inside = { x: 220, y: 320 };
+  s.send("enter", inside);
+  s.send("drop", inside);
+  s.cleanup();
+  expect
+    .soft(s.element.ownerDocument.elementFromPoint)
+    .toHaveBeenLastCalledWith(220, 320);
+  expect(s.add).toHaveBeenCalledExactlyOnceWith(key, ["/file.txt"]);
+});
+it("rejects a macOS drop outside the input even when its half coordinates would hit", () => {
+  const s = mount(true, "MacIntel");
+  s.send("enter", { x: 220, y: 320 });
+  s.send("drop", { x: 220, y: 420 });
+  s.cleanup();
+  expect
+    .soft(s.element.ownerDocument.elementFromPoint)
+    .toHaveBeenCalledExactlyOnceWith(220, 320);
+  expect(s.add).not.toHaveBeenCalled();
+});
+it("converts AppKit points by the applied main-page zoom without applying Retina twice", () => {
+  h.appliedScale = 1.5;
+  const s = mount(true, "MacIntel");
+  s.send("enter", { x: 330, y: 480 });
+  s.send("drop", { x: 330, y: 480 });
   expect(s.element.ownerDocument.elementFromPoint).toHaveBeenLastCalledWith(
-    110,
-    210,
+    220,
+    320,
+  );
+  expect(s.add).toHaveBeenCalledExactlyOnceWith(key, ["/file.txt"]);
+  s.cleanup();
+});
+it("rechecks the current applied zoom at drop after the layout changes", () => {
+  const s = mount(true, "MacIntel");
+  s.send("enter", { x: 220, y: 320 });
+  h.appliedScale = 1.5;
+  s.send("drop", { x: 330, y: 480 });
+  expect(s.element.ownerDocument.elementFromPoint).toHaveBeenLastCalledWith(
+    220,
+    320,
+  );
+  expect(s.add).toHaveBeenCalledExactlyOnceWith(key, ["/file.txt"]);
+  s.cleanup();
+});
+it("does not multiply Windows page zoom a second time when DPR includes it", () => {
+  h.appliedScale = 1.5;
+  const s = mount(true, "Win32");
+  vi.stubGlobal("window", { devicePixelRatio: 3 });
+  s.send("enter", { x: 660, y: 960 });
+  s.send("drop", { x: 660, y: 960 });
+  expect(s.element.ownerDocument.elementFromPoint).toHaveBeenLastCalledWith(
+    220,
+    320,
   );
   expect(s.add).toHaveBeenCalledExactlyOnceWith(key, ["/file.txt"]);
   s.cleanup();

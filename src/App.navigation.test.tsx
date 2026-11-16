@@ -561,6 +561,93 @@ it.each(["draft", "unrecoverable"])(
   },
 );
 
+it("applies a reviewed profile only to the exact draft, folder and service", () => {
+  const draft = h.draft;
+  const saved = structuredClone(h.choice);
+  const current = {
+    service: null,
+    config: { model: "B", thought_level: "medium" },
+  };
+  call("EmptyState", "onGoSettings", "A", {
+    panel: "model",
+    draftConfiguration: true,
+  });
+  const { applyToDraft, cwd, selection } = component("AgentHub")
+    .preparationContext as {
+    applyToDraft: (value: unknown) => boolean;
+    cwd: string;
+    selection: unknown;
+  };
+  expect(cwd).toBe("/draft-A");
+  expect(selection).toEqual({ service: null, config: saved.config });
+  expect(
+    applyToDraft({
+      ...current,
+      service: { id: "other", model: "B", revision: "r" },
+    }),
+  ).toBe(false);
+  expect(h.choice).toEqual(saved);
+  expect(applyToDraft(current)).toBe(true);
+  const next = component("EmptyState");
+  expect(next.active).toBe(true);
+  expect(next.initialAgentId).toBe("A");
+  expect(next.initialSelection).toEqual(current);
+  expect(h.draft).toBe(draft);
+  expect(h.open).not.toHaveBeenCalled();
+  expect(applyToDraft(current)).toBe(false);
+});
+
+it.each(["generation", "folder", "new review"])(
+  "ignores a draft review that no longer owns the %s",
+  (change) => {
+    const begin = () =>
+      call("EmptyState", "onGoSettings", "A", {
+        panel: "model",
+        draftConfiguration: true,
+      });
+    begin();
+    const context = component("AgentHub").preparationContext as {
+      applyToDraft: (value: unknown) => boolean;
+    };
+    if (change === "generation") h.draftGeneration += 1;
+    if (change === "folder") h.choice.cwd = "/changed";
+    if (change === "new review") {
+      call("AgentHub", "onReturn");
+      begin();
+    }
+    expect(
+      context.applyToDraft({ service: null, config: { model: "B" } }),
+    ).toBe(false);
+    expect(component("AgentHub").active).toBe(true);
+    expect(h.open).not.toHaveBeenCalled();
+  },
+);
+
+it("does not open a draft repair for content replaced while the browser hides", async () => {
+  let acknowledge!: () => void;
+  const closed = new Promise<void>((resolve) => {
+    acknowledge = resolve;
+  });
+  const registration = browserSurfaceGuard.register(() => closed);
+  try {
+    call("EmptyState", "onGoSettings", "A", {
+      panel: "model",
+      draftConfiguration: true,
+    });
+    expect(browserSurfaceGuard.getSnapshot().busy).toBe(true);
+    h.draftGeneration += 1;
+    acknowledge();
+    await vi.waitFor(() =>
+      expect(browserSurfaceGuard.getSnapshot().busy).toBe(false),
+    );
+    expect(component("EmptyState").active).toBe(true);
+  } finally {
+    acknowledge();
+    registration.release();
+    await closed;
+  }
+});
+
 it("restores A's preparation and draft origin after API settings temporarily manages B", () => {
   const originalDraft = h.draft;
   call("EmptyState", "onGoSettings", "A");

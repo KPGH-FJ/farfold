@@ -11,6 +11,8 @@ import {
 } from "./session_projection";
 import { STRINGS } from "./strings";
 import { uiError } from "./ui_error";
+import { selectablePermissionOption } from "./permission_options";
+import { draftPersistence } from "./draft_storage";
 
 interface InteractionReply {
   status: "submitted" | "retryable" | "expired" | "uncertain";
@@ -86,18 +88,23 @@ export class InteractionActions {
     requestId: string,
     optionId: string,
     label: string,
-    allow: boolean,
+    allow: boolean | null,
     remember = false,
   ): void {
     const s = this.get(key);
     const p = s?.pendingPermissions.find((p) => p.requestId === requestId);
+    const interrupted = draftPersistence.captureInteractionInterruption();
     if (
       !s ||
       s.stopping ||
+      interrupted() ||
       !p ||
       p.status !== "pending" ||
       p.decision ||
-      !p.options.some((o) => o.optionId === optionId)
+      !p.options.some(
+        (o) =>
+          o.optionId === optionId && selectablePermissionOption(p.options, o),
+      )
     )
       return;
     const decision = { optionId, label, allow, undoable: remember };
@@ -112,9 +119,9 @@ export class InteractionActions {
           p.status !== "pending"
         )
           return;
-        if (s.stopping) {
-          // A queued local choice must not become a new reply during stop.
-          // Keep the same request so a later explicit decision remains possible.
+        if (s.stopping || interrupted()) {
+          // Stop or an interaction lock interrupts a queued choice. Keep the
+          // request available for a later explicit decision.
           p.decision = null;
           this.publish(s);
           return;
@@ -159,10 +166,9 @@ export class InteractionActions {
     if (!s || !p) return;
     await replyToElicitation(p, action, values, {
       sessionId: s.nativeSessionId,
-      current: () =>
-        !s.stopping &&
-        (!s.stopUnconfirmed || action !== "accept") &&
-        this.current(s, p),
+      current: () => this.current(s, p),
+      canSubmit: () =>
+        !s.stopping && (!s.stopUnconfirmed || action !== "accept"),
       changed: () => this.publish(s),
       remove: (notice) => {
         if (notice) expirePendingRequest(s, p.requestId);

@@ -2,6 +2,7 @@ import { afterEach, expect, it, vi } from "vitest";
 import {
   Children,
   isValidElement,
+  type ComponentProps,
   type ReactElement,
   type ReactNode,
 } from "react";
@@ -30,6 +31,7 @@ vi.mock("../runtime/browser_sharing", async (original) => {
     ready: false,
     queryState: "no_session",
     refresh: noop,
+    connect: noop,
     allow: noop,
     stop: noop,
     respond: noop,
@@ -51,8 +53,10 @@ import { Composer } from "./Composer";
 import {
   threads,
   freshThreadState,
+  type PromptBlock,
   type ThreadState,
 } from "../runtime/sessions";
+import { composerDrafts } from "../runtime/drafts";
 import { preparationFor } from "../runtime/agent_preparation";
 import { STRINGS } from "../runtime/strings";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
@@ -123,6 +127,7 @@ it("blocks an already opened draft at the actual send callback and preserves its
     },
   ];
   const onGoSettings = vi.fn();
+  vi.spyOn(threads, "thread").mockReturnValue(thread);
   const send = vi.spyOn(threads, "send");
   const composer = view(thread, onGoSettings).find(
     (node) => node.type === Composer,
@@ -158,14 +163,48 @@ it.each(["existing-conversation", "other-directory", "api-source"])(
     if (kind === "existing-conversation")
       expect(composer.props.onSend).toBeUndefined();
     else {
+      vi.spyOn(threads, "thread").mockReturnValue(thread);
       const send = vi
         .spyOn(threads, "send")
         .mockResolvedValue({ status: "accepted" });
-      await (composer.props.onSend as (blocks: unknown[]) => Promise<void>)([]);
-      expect(send).toHaveBeenCalledWith(thread.key, []);
+      const key = `session:${thread.key}`;
+      const text = "Original prepared draft";
+      const blocks: PromptBlock[] = [{ type: "text", text }];
+      composerDrafts.update(key, () => ({
+        text,
+        attachments: [],
+        sendPending: true,
+      }));
+      const submitted = composerDrafts.read(key);
+      const onSend = composer.props.onSend as NonNullable<
+        ComponentProps<typeof Composer>["onSend"]
+      >;
+      try {
+        await onSend(blocks, submitted);
+        expect(send).toHaveBeenCalledWith(thread.key, blocks, {
+          key,
+          value: submitted,
+        });
+        expect(send.mock.calls[0]?.[2]?.value).toBe(submitted);
+      } finally {
+        composerDrafts.clear(key);
+      }
     }
   },
 );
+
+it("keeps a prepared draft when the same conversation now owns a different connection", async () => {
+  const thread = freshThreadState("draft-owner", "a", "/original", "draft");
+  thread.identity = "draft";
+  const composer = view(thread).find((node) => node.type === Composer)!;
+  const replacement = { ...thread, connectionId: "replacement" };
+  vi.spyOn(threads, "thread").mockReturnValue(replacement);
+  const send = vi.spyOn(threads, "send");
+  await expect(
+    (composer.props.onSend as (blocks: unknown[]) => Promise<boolean>)([]),
+  ).resolves.toBe(false);
+  expect(send).not.toHaveBeenCalled();
+});
 
 it("observes the actual prepared target while reserving the sole editor for the original first-send path", () => {
   const thread = freshThreadState(

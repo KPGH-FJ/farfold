@@ -68,6 +68,7 @@ export function ConversationExportHost({
   );
   return format === "markdown" ? (
     <ConversationExportDialog
+      key={capture.snapshotId}
       unavailable={unavailable}
       includeLoadedToolDetails={includeDetails}
       text={includeDetails ? capture.detailedMarkdown : capture.markdown}
@@ -78,6 +79,7 @@ export function ConversationExportHost({
     />
   ) : (
     <ConversationArchiveDialog
+      key={capture.snapshotId}
       capture={capture}
       name={name}
       onClose={onClose}

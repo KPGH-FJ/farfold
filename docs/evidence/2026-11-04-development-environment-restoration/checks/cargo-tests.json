@@ -1,0 +1,16 @@
+{
+  "label": "cargo-tests",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-11-04T09:50:52.381197+00:00",
+  "finishedAt": "2026-11-04T09:53:36.960071+00:00",
+  "durationSeconds": 164.579,
+  "exitCode": 0,
+  "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/cargo-tests.log"
+}

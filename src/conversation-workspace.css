@@ -1327,7 +1327,9 @@
 .composer .mp-search,
 .workspace-control-panel .mp-search,
 .composer .mp-opt,
-.workspace-control-panel .mp-opt {
+.workspace-control-panel .mp-opt,
+.workspace-control-picker .mp-search,
+.workspace-control-picker .mp-opt {
   font-family: inherit;
   font-size: 12px;
 }

@@ -34,25 +34,50 @@ export function protectedConfigIds(
   return ids;
 }
 
+export type ConfigBusyReason =
+  | "running"
+  | "submitting"
+  | "configuring"
+  | "reconnecting"
+  | "stopping"
+  | "stopUnconfirmed"
+  | "connectionLost"
+  | "connectionOutcomeUnknown"
+  | "uncertainPrompt"
+  | "openError"
+  | "sourceError"
+  | "unrecoverable"
+  | "historyUnavailable"
+  | "authentication"
+  | "activeWork"
+  | "pendingRequests";
+
+/** Preserve admission order and short-circuit without retaining private values. */
+export function configChangeBusyReason(
+  thread: ThreadState,
+): ConfigBusyReason | null {
+  if (thread.running) return "running";
+  if (thread.submitting) return "submitting";
+  if (thread.configuring) return "configuring";
+  if (thread.reconnecting) return "reconnecting";
+  if (thread.stopping) return "stopping";
+  if (thread.stopUnconfirmed) return "stopUnconfirmed";
+  if (thread.connectionLost) return "connectionLost";
+  if (thread.connectionOutcomeUnknown) return "connectionOutcomeUnknown";
+  if (thread.uncertainPrompt) return "uncertainPrompt";
+  if (thread.openError) return "openError";
+  if (thread.sourceError) return "sourceError";
+  if (thread.unrecoverable) return "unrecoverable";
+  if (thread.historyUnavailable) return "historyUnavailable";
+  if (authActive(authenticationActivity(thread.agentId).getSnapshot()))
+    return "authentication";
+  if (hasActiveWork(thread)) return "activeWork";
+  if (hasPendingRequests(thread)) return "pendingRequests";
+  return null;
+}
+
 export function configChangeBusy(thread: ThreadState): boolean {
-  return Boolean(
-    thread.running ||
-    thread.submitting ||
-    thread.configuring ||
-    thread.reconnecting ||
-    thread.stopping ||
-    thread.stopUnconfirmed ||
-    thread.connectionLost ||
-    thread.connectionOutcomeUnknown ||
-    thread.uncertainPrompt ||
-    thread.openError ||
-    thread.sourceError ||
-    thread.unrecoverable ||
-    thread.historyUnavailable ||
-    authActive(authenticationActivity(thread.agentId).getSnapshot()) ||
-    hasActiveWork(thread) ||
-    hasPendingRequests(thread),
-  );
+  return configChangeBusyReason(thread) !== null;
 }
 
 /** Only currently declared choices may change, after all active work is settled. */

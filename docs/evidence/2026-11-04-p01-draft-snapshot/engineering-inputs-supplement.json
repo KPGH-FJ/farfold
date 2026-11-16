@@ -1,0 +1,236 @@
+{
+  "recordedAt": "2026-11-04T11:03:37.605804+00:00",
+  "initialManifestFiles": 2308,
+  "supplementaryFiles": {
+    "PRODUCT.md": {
+      "sha256": "b7f00e53aa29b9c743766ac7f7f7e321e563f2ea0acb8978cc11b2c61e197c1c",
+      "matchesCommittedBeforeChecks": true
+    },
+    "assets/app-icon.svg": {
+      "sha256": "c36df33e3cba709e5bdeec029a6bf24d43cc61099a8024eaf00d3b434762fc9e",
+      "matchesCommittedBeforeChecks": true
+    },
+    "docs/agent-access-requirements.md": {
+      "sha256": "93413a025f2ef843c5fa0f40dee40834f7b12aa333ed85c8a7972bcb48adee60",
+      "matchesCommittedBeforeChecks": true
+    },
+    "docs/agent-first-release.md": {
+      "sha256": "4359d2a9ee1828b7bcf661b024295dbf47428d62bc4171ca248542c1aee50b2b",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/amp-acp.svg": {
+      "sha256": "40c79d8c7baa04c2fee214cc1c66a9797eb6aa96bec6c5b20c7d12cd66490696",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/antigravity-acp.svg": {
+      "sha256": "d775965ea1f8060538c15f758a3e22487317211fcb6051333b5e023f35aa726f",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/autohand.svg": {
+      "sha256": "6324e552f6c85025642ca9aabf4adddb4bba318a6f9422c7053fd4c610914120",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/claude-acp.png": {
+      "sha256": "4004381309500f25e49a1ae639912ce307ea81da74cc383954a1ac8b9d343fe6",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/cline.svg": {
+      "sha256": "267e6a8fdc37e3ad3ebedf843584ad1b6b0fe62cde28cfa4c5702006184970bb",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/codebuddy-code.svg": {
+      "sha256": "149baa45b9f9370c15f20d599afe381aa138e4fc13acf503f435c571ac93ecf5",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/codex-acp.svg": {
+      "sha256": "3304f6c5797ebce8f5c3d0e0af28e1eb970e81697deaae986466970523e46b96",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/codex.svg": {
+      "sha256": "3304f6c5797ebce8f5c3d0e0af28e1eb970e81697deaae986466970523e46b96",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/cursor.svg": {
+      "sha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/devin.svg": {
+      "sha256": "fe0753d2e3823bc1eb8a37943234fac63733b8c9e8abff0ca0402a6c7ddcd682",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/dimcode.png": {
+      "sha256": "cf76e6ebbf15b6fbbbac070d7f58ded2259c8cbe247e2a06bca8d04cc6a71e77",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/dirac.svg": {
+      "sha256": "b4cb757a69e43b00f3dd49f16935e9bf1d77effd8128c46082e7fcba252c6752",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/factory-droid.svg": {
+      "sha256": "931960821fbafd095221a922ca017676d41fbc67f61b708d325413ad6e0bbec7",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/fast-agent.svg": {
+      "sha256": "42e64a043c56e900dbe34585a7992d8ae83f7796d17601ee3189a9cbb67e111d",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/gemini.svg": {
+      "sha256": "d2b511e4d9a97bb849526646cf1e7705ffa028a52eb53d847c6c3de1e9a40a73",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/github-copilot-cli.svg": {
+      "sha256": "693d7abe6f899646cc2e96856723b45e95f71885a54910b2749f6decdf7e1ee1",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/goose.svg": {
+      "sha256": "9dacb0a0324f958fa6fbc270026526b2ad66ea5d2e01bded474546811218a316",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/grok-build.png": {
+      "sha256": "768cbbf7a7528d6e7b3af8112d7cde43eb6c9c8989ad9b06be8047dae1227463",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/kilo.svg": {
+      "sha256": "13be39ffd7f1a5a4a8162d810b3f0f66ac9a39130fa54b659dd682b207551f21",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/kimchi.svg": {
+      "sha256": "ff28275e151ae37ec2b80d023c5dafd5985ef41a9f061d640e00f669adea2bcd",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/kimi.png": {
+      "sha256": "dbd00e2ad61ea8832ef0b024662a4a8a5d1b66f0599d5d42e1c9688b9d4cfdf6",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/minimax-code.jpg": {
+      "sha256": "05f6002860dd8a9f8b36d3118a672e4dedbdb7b66dca3bec22d39fba47186b21",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/mistral-vibe.svg": {
+      "sha256": "fcc1e2b4b630bf7eab2c12b5228d8e788f8394bba7db3cfcb2bb3d8d7cba9986",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/nova.svg": {
+      "sha256": "8c05dee2525c0cd876845adbccfcb070ce9fe096c9a55d1640a16294bf9f973f",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/opencode.svg": {
+      "sha256": "b60bce4476ce81c772f78313e497b98f9489a67580fd89f39354b527241edbc6",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/pi-acp.svg": {
+      "sha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/pi-color.svg": {
+      "sha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/poolside.svg": {
+      "sha256": "4147f3b13b56114bcfec0d8a6d0d6d027fe117e38ff4ed55853376951c69fe40",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/qoder.svg": {
+      "sha256": "0c131dc20a5c6f8979b20a95787f9a0ddd1fe3531cb3c9620c71b530c732044e",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/qwen-code.svg": {
+      "sha256": "f7e324607c3f657953977d2742fbb8a3a0a354a13736671d27bfb906e9d1f3f2",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/agents/sigit.svg": {
+      "sha256": "58729c87f565e55f665dbaa0385c804db2320e09bc0fe82393f8d7c4e7890c6b",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/brand/farfold-horizontal-dark.svg": {
+      "sha256": "a2e0a699972ff5dd925e12add63a4ac62108f1de91e283d7fbe70da7e9b1d9a5",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/brand/farfold-horizontal-light.svg": {
+      "sha256": "315fe38148712b2e0dc9a00c837d68193efb0854179eb3bc183a0ae8caa713d6",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/brand/mark.svg": {
+      "sha256": "09740d77f9641511153714b3af7151fb6c3316e4ac770c21977cbda41c505d92",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/brand/wordmark.svg": {
+      "sha256": "232cace639b15f0a5276e13083ddc106b1e39c14935024a206dfaf6ecc7cf1e2",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/pdf-preview-notices.txt": {
+      "sha256": "bee444c3efa038b5570533d6484b1ec760e3c1e91de56e69f09a74701b441e69",
+      "matchesCommittedBeforeChecks": true
+    },
+    "public/xlsx-preview-notices.txt": {
+      "sha256": "9bdc604b3cd99d89900068c2fa56803d93c5b1c71837850e7f3499f5d122a2b2",
+      "matchesCommittedBeforeChecks": true
+    },
+    "scripts/acceptance-index.mjs": {
+      "sha256": "2b5da7ec3d9810a00def9d46893ea45899452e7222be8dcd68d065e8922fc04e",
+      "matchesCommittedBeforeChecks": true
+    },
+    "scripts/acceptance-index.test.mjs": {
+      "sha256": "c3284347bf3993255e6038873a6ecf3a8a803ca0b31ecc86402919dcd7346931",
+      "matchesCommittedBeforeChecks": true
+    },
+    "scripts/acceptance-receipts.mjs": {
+      "sha256": "eebb8169fdd53bd0c584cdea00e387a632584eb7db72212c2149c98327d4ad2d",
+      "matchesCommittedBeforeChecks": true
+    },
+    "scripts/acceptance-receipts.seal.test.mjs": {
+      "sha256": "814a7559f2f653217e62d281984551e64cdb1ca061af8178f533aedc63894098",
+      "matchesCommittedBeforeChecks": true
+    },
+    "scripts/acceptance-receipts.test.mjs": {
+      "sha256": "a0d77b1192ae20c60dbaca6f5067403e28c490042e491db0802c99b21fd3f4e5",
+      "matchesCommittedBeforeChecks": true
+    },
+    "scripts/agent-task-reference.mjs": {
+      "sha256": "b946b53c518ca08379bf3a1251886b97aba41904e755da8f30b75f17b1332f6a",
+      "matchesCommittedBeforeChecks": true
+    },
+    "scripts/agent-task-reference.test.mjs": {
+      "sha256": "5500f5dc215d2f0081e9940dde377053700334dd1c6bd9e5874a47a8fb588f44",
+      "matchesCommittedBeforeChecks": true
+    },
+    "scripts/check-model-picker-pointer.mjs": {
+      "sha256": "f80a6d72ef2f2d0c5ea62d083a07988c567f0be1bd885b15ca67590a5b01a30d",
+      "matchesCommittedBeforeChecks": true
+    },
+    "scripts/check-model-picker-reparent.mjs": {
+      "sha256": "fd1fe89bcbccdb1f132671af9ba7ce80f3a3bd2e85715bc1a5496cfef3cba0f0",
+      "matchesCommittedBeforeChecks": true
+    },
+    "scripts/check-project-docs.mjs": {
+      "sha256": "5dac285302bec3ce7e6ec0dc65fc261b4df26f9f4c696ef27a274fe857645d69",
+      "matchesCommittedBeforeChecks": true
+    },
+    "scripts/read-agent-task.mjs": {
+      "sha256": "d62976a608c46203470e932e9dfab2a15998e27d559e8ee7a66f254d43e43662",
+      "matchesCommittedBeforeChecks": true
+    },
+    "scripts/sign-update-metadata.mjs": {
+      "sha256": "fdcba5ab738a8aa79fabcbb6af9e1c2a76b2e40384fddaadbf0597136358c58e",
+      "matchesCommittedBeforeChecks": true
+    },
+    "scripts/sign-update-metadata.test.mjs": {
+      "sha256": "36b88768f53975bac4d18e29e81d1aa96e8d9c0ca1677808e6890cc3eff57e2d",
+      "matchesCommittedBeforeChecks": true
+    },
+    "src-tauri/Info.plist": {
+      "sha256": "c197d441df990f1f545604b3bcd6b7beac6da2e4889ab097912f6fd25f60389a",
+      "matchesCommittedBeforeChecks": true
+    },
+    "src-tauri/capabilities/default.json": {
+      "sha256": "8983a9f23d15bf8b29700d730398ebbb1c21111f232825b4edc88ca287d691c6",
+      "matchesCommittedBeforeChecks": true
+    },
+    "src-tauri/tauri.windows.conf.json": {
+      "sha256": "3a0258343508a3feb53f95763dcfa7268806a340885f9e74acda72cb31af2017",
+      "matchesCommittedBeforeChecks": true
+    }
+  },
+  "comparisonCommit": "d194ff52a9cbb4daa764e57465236b85a0a98336",
+  "scope": "Supplementary prior-validated assets, scripts and authority inputs equal the committed source already used when current checks began. No continuous filesystem immutability or atomic-snapshot claim."
+}

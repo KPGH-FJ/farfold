@@ -152,6 +152,156 @@ it("reports an acknowledged config-only load as missing history without claiming
   harmlessCallsOnly();
 });
 
+it("opens an officially confirmed empty history without sending retained work or dropping configuration guards", async () => {
+  const state = old("confirmed-empty");
+  state.items = [];
+  const queue = state.queued;
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command !== "session_open") return [];
+    const result = loaded(args, {
+      historyEmptyConfirmed: true,
+      configCheck: { status: "blocked", issues: [], current: { choices: [] } },
+    });
+    openingHeader(args, result);
+    args.channel.onmessage({
+      kind: "notification",
+      method: "official-context-notification",
+      params: { sessionId: result.nativeSessionId, update: { original: true } },
+      presentation: {
+        kind: "sessionUsage",
+        connectionId: result.connectionId,
+        usage: {
+          used: 0,
+          contextLimit: 1000000,
+          accumulatedInputTokens: 0,
+          accumulatedOutputTokens: 0,
+          accumulatedCost: null,
+        },
+      },
+    });
+    boundary(args);
+    return result;
+  });
+  const recovered = await open(state);
+  expect(recovered.historyUnavailable).toBeNull();
+  expect(recovered.openError).toBeNull();
+  expect(recovered.items).toEqual([]);
+  expect(recovered.usage).toEqual({ used: 0, size: 1000000 });
+  expect(recovered.queued).toEqual(queue);
+  expect(recovered.configCheck?.status).toBe("blocked");
+  expect(recovered.modelDrift).toBe(true);
+  expect(view(recovered)).not.toContain("对话读取失败");
+  harmlessCallsOnly();
+});
+
+it.each([undefined, false, "true", 1])(
+  "does not accept an unverified empty history (%s)",
+  async (fact) => {
+    const state = old(`unverified-empty-${String(fact)}`);
+    state.items = [];
+    h.invoke.mockImplementation(async (command, args) => {
+      if (command !== "session_open") return [];
+      const result = loaded(args, {
+        historyEmptyConfirmed: fact as boolean,
+        meta: { messageCount: 0, historyEmptyConfirmed: true },
+      });
+      openingHeader(args, result);
+      boundary(args);
+      return result;
+    });
+    await expect(open(state)).rejects.toBeTruthy();
+    expect(state.historyUnavailable?.reason).toBe("empty");
+    harmlessCallsOnly();
+  },
+);
+
+it("does not replace known messages with a confirmed empty result", async () => {
+  const state = old("empty-conflicts-with-old-body");
+  const body = state.items;
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command !== "session_open") return [];
+    const result = loaded(args, { historyEmptyConfirmed: true });
+    openingHeader(args, result);
+    boundary(args);
+    return result;
+  });
+  await expect(open(state)).rejects.toBeTruthy();
+  expect(state.items).toBe(body);
+  expect(state.historyUnavailable?.reason).toBe("empty");
+  harmlessCallsOnly();
+});
+
+it("rejects an empty-history fact that contradicts the actual replay", async () => {
+  const state = old("empty-conflicts-with-replay");
+  state.items = [];
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command !== "session_open") return [];
+    const result = loaded(args, { historyEmptyConfirmed: true });
+    openingHeader(args, result);
+    args.channel.onmessage({
+      update: {
+        sessionUpdate: "user_message_chunk",
+        content: { type: "text", text: "Actual historical message" },
+      },
+    });
+    boundary(args);
+    return result;
+  });
+  await expect(open(state)).rejects.toBeTruthy();
+  expect(state.historyUnavailable?.reason).toBe("unreadable");
+  harmlessCallsOnly();
+});
+
+it.each(["tool_call", "agent_thought_chunk", "future_history"])(
+  "does not classify a %s prefix as confirmed empty",
+  async (sessionUpdate) => {
+    const state = old(`empty-conflicts-${sessionUpdate}`);
+    state.items = [];
+    h.invoke.mockImplementation(async (command, args) => {
+      if (command !== "session_open") return [];
+      const result = loaded(args, { historyEmptyConfirmed: true });
+      openingHeader(args, result);
+      args.channel.onmessage({
+        update: {
+          sessionUpdate,
+          toolCallId: "tool",
+          title: "Tool result",
+          status: "completed",
+          content: { type: "text", text: "Retain this content" },
+        },
+      });
+      boundary(args);
+      return result;
+    });
+    await expect(open(state)).rejects.toBeTruthy();
+    expect(state.historyUnavailable?.reason).toBe("unreadable");
+    harmlessCallsOnly();
+  },
+);
+
+it("does not erase previous tool-only content on an empty retry", async () => {
+  const state = old("old-tool-only");
+  state.items = [];
+  applyUpdate(state, {
+    sessionUpdate: "tool_call",
+    toolCallId: "prior-tool",
+    title: "Prior result",
+    status: "completed",
+  });
+  const body = state.items;
+  expect(body[0]?.kind).toBe("tool");
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command !== "session_open") return [];
+    const result = loaded(args, { historyEmptyConfirmed: true });
+    openingHeader(args, result);
+    boundary(args);
+    return result;
+  });
+  await expect(open(state)).rejects.toBeTruthy();
+  expect(state.items).toBe(body);
+  harmlessCallsOnly();
+});
+
 it("classifies an incomplete local boundary separately and ignores its late replay", async () => {
   vi.useFakeTimers();
   const state = old("missing-marker");

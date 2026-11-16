@@ -1,0 +1,36 @@
+{
+  "baseline": "26eeb69e79524724bb2e0f6e59a712cadb430c53",
+  "installed": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "2eff9a8676ebdb646b8f53b82523528d1aa694ea",
+    "binarySha256": "53393661abdd60cc2c6ec9b72dc086c516ae1a584f72602441e62ca9875f81de"
+  },
+  "candidateInputsMatched": 2634,
+  "protectedRecords": 236586,
+  "protectedDigestBeforeAndAfter": "f6ad715fb3c4c4f31e1fa4c6a02ed6505d2cda41eb1b80701529e328442ac249",
+  "metadataIntegrity": "ok",
+  "duplicateRemoved": true,
+  "amp": {
+    "oldConflictObserved": true,
+    "storedAdapterFilePresent": true,
+    "adapterCredentialContentsAccessed": false,
+    "officialProgramInvokedFromNormalEntry": true,
+    "oldConflictRecurred": false,
+    "actualSelectedVendorCliRunning": true,
+    "vendorAccountCompletionVerified": false,
+    "modelPrompts": 0
+  },
+  "miniMax": {
+    "version": "0.2.7",
+    "officialRegisteredCliHelpExit": 0,
+    "interactiveCommand": "mcode",
+    "configurationVerified": false
+  },
+  "targetedChecks": {
+    "rust": 5,
+    "frontend": 76
+  }
+}

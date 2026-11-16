@@ -51,11 +51,18 @@ export interface BrowserShareInfo {
   revision: number;
   reason: string | null;
   pendingRequest: BrowserReadPendingRequest | null;
+  /** Authoritative connection capability; never inferred from the Agent name. */
+  connectionAvailable?: boolean;
+  connectionReason?: string;
+  connectionId?: string;
 }
 
 type ScopeInput = BrowserSharingScope & { label: string };
 export interface BrowserSharingClient {
   status(input: ScopeInput): Promise<BrowserShareInfo>;
+  connect(
+    input: ScopeInput & { connectionId: string; operationId: string },
+  ): Promise<BrowserShareInfo>;
   allow(
     input: ScopeInput & { expectedPageRevision: number },
   ): Promise<BrowserShareInfo>;
@@ -75,6 +82,7 @@ export function createBrowserSharingClient(
 ): BrowserSharingClient {
   return {
     status: (input) => invoke("browser_share_status", { ...input }),
+    connect: (input) => invoke("browser_share_connect", { ...input }),
     allow: (input) => invoke("browser_share_allow", { ...input }),
     stop: (input) => invoke("browser_share_stop", { ...input }),
     respond: (input) => invoke("browser_share_respond", { ...input }),
@@ -82,7 +90,8 @@ export function createBrowserSharingClient(
   };
 }
 
-export type BrowserSharingOperation = "allow" | "deny" | "stop" | null;
+export type BrowserSharingOperation =
+  "connect" | "allow" | "deny" | "stop" | null;
 export type BrowserSharingQueryState =
   "no_session" | "inactive" | "disconnected" | "checking" | "ready" | "failed";
 
@@ -98,6 +107,7 @@ export interface BrowserSharingSnapshot {
 }
 export interface BrowserSharingModel extends BrowserSharingSnapshot {
   refresh(): Promise<void>;
+  connect(): Promise<void>;
   allow(): Promise<void>;
   stop(): Promise<void>;
   respond(requestId: string, allow: boolean): Promise<void>;
@@ -386,11 +396,13 @@ export class BrowserSharingController {
       if (sequence === this.sequence)
         this.publish({
           error:
-            operation === "stop"
-              ? S.stopFailed
-              : operation === "allow"
-                ? S.allowFailed
-                : S.responseFailed,
+            operation === "connect"
+              ? S.connectFailed
+              : operation === "stop"
+                ? S.stopFailed
+                : operation === "allow"
+                  ? S.allowFailed
+                  : S.responseFailed,
           // The reply may have been applied even when its response was lost.
           // Retain attention until a trusted status resolves the original request.
           ready: false,
@@ -408,10 +420,41 @@ export class BrowserSharingController {
         this.snapshot.queryState !== "ready"
       )
         this.publish({
-          error: operation === "stop" ? S.stopFailed : S.responseFailed,
+          error:
+            operation === "connect"
+              ? S.connectFailed
+              : operation === "stop"
+                ? S.stopFailed
+                : S.responseFailed,
         });
     }
   }
+
+  connect = async () => {
+    const page = this.page;
+    const info = this.snapshot.info;
+    if (
+      !page ||
+      page.phase !== "ready" ||
+      info?.phase !== "unavailable" ||
+      info.label !== page.label ||
+      !info.connectionAvailable ||
+      !info.connectionId ||
+      this.snapshot.pendingRequest
+    )
+      return;
+    // Only an explicit action connects. No reading grant or prompt is sent here.
+    await this.run(
+      "connect",
+      () =>
+        this.client.connect({
+          ...this.input(page.label),
+          connectionId: info.connectionId!,
+          operationId: crypto.randomUUID(),
+        }),
+      "",
+    );
+  };
 
   allow = async () => {
     const page = this.page;
@@ -519,6 +562,7 @@ export function useBrowserSharing(
     queryState: controller && !active ? "inactive" : snapshot.queryState,
     ready: active && snapshot.ready,
     refresh: controller?.refresh ?? noop,
+    connect: controller?.connect ?? noop,
     allow: controller?.allow ?? noop,
     stop: controller?.stop ?? noop,
     respond: controller?.respond ?? noop,

@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-16",
+  "timezone": "Asia/Shanghai",
+  "installedFarfoldCdhash": "f7d18f13d392cc45bd68b90340b8df826a2cbc92",
+  "officialQoderVersion": "1.1.89",
+  "configuration": "User added the model in Qoder CLI through its official /model Custom wizard. Farfold used the existing Agent settings.",
+  "visibleModel": "mimo-v2.6-flash",
+  "readBackNativeModel": "Qoder custom model identifier ending in /mimo-v2.6-flash",
+  "farfoldServiceKind": "existing",
+  "newTestNativeSessionDigest": "c5ad7b1668bc94a1",
+  "savedFarfoldDefaultsDigestBeforeAndAfter": "27675fc14338a113",
+  "trace": "protocol-v1-1794799805417-8.jsonl",
+  "outgoingMethods": ["initialize", "session/new", "session/prompt"],
+  "prompts": 1,
+  "promptSentAt": "11:30:43.711",
+  "terminalResponseAfterPromptMs": 4207,
+  "exactAssistantMarkerMatched": true,
+  "settingsUiOutcome": "短消息测试通过",
+  "priorAutoFailurePreservedAsSeparateSample": true,
+  "coldReopen": {
+    "trace": "protocol-v1-1794800049905-0.jsonl",
+    "normalApplicationQuitAndReopen": true,
+    "nativeSessionDigestBeforeAndAfter": "c5ad7b1668bc94a1",
+    "outgoingMethods": ["initialize", "session/load"],
+    "loadResponseAfterMs": 3107,
+    "originalUserAndAssistantVisible": true,
+    "oldExactAssistantMarkerMatched": true,
+    "modelShown": "mimo-v2.6-flash",
+    "workModeShown": "Default",
+    "serviceShown": "existing",
+    "modelPrompts": 0
+  }
+}

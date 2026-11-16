@@ -1,3 +1,4 @@
+import { clearToolMedia } from "./session_tool_media";
 // In-memory projection of ordered protocol events. No persistence or transport.
 import { roundArtifactCount } from "./artifacts";
 import { hasAsyncTasks, isKnownAsyncTaskUpdate } from "./async_tasks";
@@ -19,11 +20,13 @@ import {
 } from "./completion";
 import { hasAgentReply, roundResult, type RoundResult } from "./round_result";
 import { pauseQueue } from "./queue";
+import { retirePromptSubmission } from "./prompt_admission";
 import { forgetConfigurationPause } from "./configuration_pause";
 import { connectionCloseReason } from "./connection_close";
 import { STRINGS } from "./strings";
 import { forgetSessionIdentity } from "./session_identity_types";
 import { reportedTokens, reportedUsage } from "./session_usage";
+import { forgetSessionCumulativeTokens } from "./session_usage_notification";
 import {
   normalizeMessageAttachment,
   sameOfficialAttachment,
@@ -31,11 +34,14 @@ import {
 import { streamTailItem } from "./session_streams";
 import { appendMessageContentPart } from "./message_content_order";
 import { retainReportedDetails } from "./reported_details";
+import { historyForkHint } from "./history_fork_point";
+import { selectablePermissionOption } from "./permission_options";
 import type {
   ConfigChoice,
   ConfigOptionView,
   PermissionOption,
   PlanEntry,
+  TerminalCommandPermission,
   ThreadItem,
   ThreadState,
   ToolCallView,
@@ -340,15 +346,29 @@ function findToolItem(s: ThreadState, toolCallId: string): number {
   );
 }
 
+function typedToolUpdate(update: Record<string, unknown>): update is Record<
+  string,
+  unknown
+> & {
+  toolCallId: string;
+  status?: string | null;
+} {
+  return (
+    typeof update.toolCallId === "string" &&
+    update.toolCallId.length > 0 &&
+    (update.status == null || typeof update.status === "string")
+  );
+}
+
 function upsertToolCall(
   s: ThreadState,
   update: Record<string, unknown>,
 ): ToolCallView | undefined {
-  const toolCallId = String(update.toolCallId ?? "");
-  if (!toolCallId) {
+  if (!typedToolUpdate(update)) {
     pushRaw(s, update);
     return;
   }
+  const { toolCallId, status } = update;
   sealStreams(s);
   const index = findToolItem(s, toolCallId);
   const call: ToolCallView =
@@ -366,6 +386,11 @@ function upsertToolCall(
               ? 0
               : Date.now(),
         };
+  if (
+    update.sessionUpdate === "tool_call" ||
+    (update.rawOutput !== undefined && update.rawOutput !== null)
+  )
+    clearToolMedia(call);
   if (update.title !== undefined && update.title !== null) {
     call.title = String(update.title);
   }
@@ -375,9 +400,7 @@ function upsertToolCall(
   if (update.kind !== undefined && update.kind !== null) {
     call.kind = String(update.kind);
   }
-  if (update.status !== undefined && update.status !== null) {
-    call.status = String(update.status);
-  }
+  if (typeof status === "string") call.status = status;
   // ACP v1 nullable optional fields treat null like omission. Explicit []
   // still replaces a collection; v2's null-clearing rule does not apply here.
   if (update.locations !== undefined && update.locations !== null) {
@@ -656,12 +679,37 @@ export function applyUpdate(
   s: ThreadState,
   update: unknown,
   envelope?: unknown,
-): void {
+): ToolCallView | undefined {
+  const u = update as Record<string, unknown> | null;
+  if (
+    (u?.sessionUpdate === "tool_call" ||
+      u?.sessionUpdate === "tool_call_update") &&
+    !typedToolUpdate(u)
+  ) {
+    // Keep the original envelope, without assigning any of it to another tool.
+    pushRaw(s, envelope ?? update);
+    return;
+  }
   let projectedTool: ToolCallView | undefined;
   if (isKnownAsyncTaskUpdate(s, update, envelope))
     pushRaw(s, update, "asyncTaskUpdate");
-  else projectedTool = applyUpdateContent(s, update);
+  else {
+    const point = historyForkHint(s, update, envelope);
+    projectedTool = applyUpdateContent(
+      s,
+      point ? { ...u, messageId: point.messageId } : update,
+    );
+    const last = lastItem(s);
+    if (
+      point &&
+      last &&
+      (last.kind === "user" || last.kind === "agent") &&
+      last.messageId === point.messageId
+    )
+      last.historyForkPoint = point;
+  }
   retainReportedDetails(s, update, envelope, projectedTool);
+  return projectedTool;
 }
 
 function applyUpdateContent(
@@ -780,6 +828,7 @@ export function applyTurnEnd(
   event: CompletionEvent,
 ): RoundResult {
   s.sessionTokens = reportedTokens(event.usage);
+  if (s.sessionTokens) forgetSessionCumulativeTokens(s);
   s.running = false;
   s.stopping = false;
   s.stopUnconfirmed = false;
@@ -822,6 +871,7 @@ export function applyTurnEnd(
     status,
     stopReason: event.stopReason,
     error,
+    ...(event.failedWorkCloseAvailable && { failedWorkCloseAvailable: true }),
     diffCount: diffCountInItems(s.items.slice(s.roundItemBase)),
     artifactCount: roundArtifactCount(s),
     artifactToolItemIds: roundToolItemIds(s),
@@ -836,13 +886,13 @@ export function applyTurnEnd(
 
 /** `{kind:"connectionLost"}` — honest unknown outcome, never "done". */
 export function applyConnectionLost(s: ThreadState, reason?: unknown): void {
+  retirePromptSubmission(s);
   forgetSessionIdentity(s);
   loseCompactionObservation(s.items);
   forgetConfigurationPause(s);
   s.connectionOutcomeUnknown = Boolean(
     s.connectionOutcomeUnknown ||
     s.running ||
-    s.submitting ||
     s.stopping ||
     s.stopUnconfirmed ||
     s.activeToolCallIds.length > 0 ||
@@ -858,10 +908,6 @@ export function applyConnectionLost(s: ThreadState, reason?: unknown): void {
   s.connectionCloseReason = connectionCloseReason(reason);
   s.stopping = false;
   s.stopUnconfirmed = false;
-  if (s.submitting && s.queued[0]) {
-    s.uncertainPrompt = s.queued[0];
-    s.identity = "established";
-  }
   clearPendingRequests(s);
   sealStreams(s);
   if (s.running) {
@@ -885,6 +931,32 @@ function roundToolItemIds(s: ThreadState): string[] {
     .map((item) => item.id);
 }
 
+function readTerminalCommand(value: unknown): TerminalCommandPermission | null {
+  if (typeof value !== "object" || value === null || Array.isArray(value))
+    return null;
+  const { program, args, cwd } = value as Record<string, unknown>;
+  if (
+    Object.keys(value).length !== 3 ||
+    typeof program !== "string" ||
+    program.length === 0 ||
+    program.includes("\0") ||
+    typeof cwd !== "string" ||
+    cwd.length === 0 ||
+    cwd.includes("\0") ||
+    !Array.isArray(args)
+  ) {
+    return null;
+  }
+  const argv: unknown[] = [...args];
+  if (
+    !argv.every(
+      (arg): arg is string => typeof arg === "string" && !arg.includes("\0"),
+    )
+  )
+    return null;
+  return { program, args: argv, cwd };
+}
+
 export function applyPermissionRequest(
   s: ThreadState,
   event: {
@@ -892,19 +964,53 @@ export function applyPermissionRequest(
     toolCall: unknown;
     options: unknown;
     request?: unknown;
+    terminalCommand?: unknown;
   },
 ): void {
-  const toolCall = event.toolCall as Record<string, unknown> | null;
+  const terminalCommand =
+    event.terminalCommand === undefined
+      ? undefined
+      : readTerminalCommand(event.terminalCommand);
+  const toolCall =
+    terminalCommand === undefined
+      ? (event.toolCall as Record<string, unknown> | null)
+      : null;
   if (toolCall && typeof toolCall === "object") {
     upsertToolCall(s, toolCall);
   }
-  const options: PermissionOption[] = Array.isArray(event.options)
+  let options: PermissionOption[] = Array.isArray(event.options)
     ? (event.options as Record<string, unknown>[]).map((o) => ({
-        optionId: String(o?.optionId ?? ""),
+        optionId: typeof o?.optionId === "string" ? o.optionId : "",
+        ...(typeof o?.optionId === "string" ? {} : { invalidId: true }),
         name: String(o?.name ?? o?.optionId ?? ""),
         kind: String(o?.kind ?? ""),
       }))
     : [];
+  if (terminalCommand !== undefined) {
+    const singleUse = options.filter(
+      (option) =>
+        option.optionId.trim().length > 0 &&
+        (option.kind === "allow_once" || option.kind === "reject_once") &&
+        selectablePermissionOption(options, option),
+    );
+    const rejection = singleUse.filter(
+      (option) => option.kind === "reject_once",
+    );
+    options =
+      terminalCommand &&
+      options.length === 2 &&
+      singleUse.length === 2 &&
+      rejection.length === 1
+        ? singleUse
+        : rejection;
+    options = options.map((option) => ({
+      ...option,
+      name:
+        option.kind === "allow_once"
+          ? STRINGS.thread.permissionCommand
+          : STRINGS.thread.reject,
+    }));
+  }
   const locations = normalizeLocations(toolCall?.locations);
   if (s.pendingPermissions.some((p) => p.requestId === event.requestId)) return;
   s.pendingPermissions = [
@@ -913,13 +1019,17 @@ export function applyPermissionRequest(
       requestId: event.requestId,
       status: "pending",
       error: null,
+      ...(terminalCommand === undefined ? {} : { terminalCommand }),
       toolCallId:
         typeof toolCall?.toolCallId === "string" ? toolCall.toolCallId : null,
       toolCallSnapshot:
         toolCall && typeof toolCall === "object" && !Array.isArray(toolCall)
           ? structuredClone(toolCall)
           : null,
-      requestSnapshot: structuredClone(event.request),
+      requestSnapshot:
+        terminalCommand === undefined
+          ? structuredClone(event.request)
+          : undefined,
       title: String(toolCall?.title ?? ""),
       kind: String(toolCall?.kind ?? "other"),
       locations,

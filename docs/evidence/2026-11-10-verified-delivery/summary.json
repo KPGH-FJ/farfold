@@ -1,0 +1,56 @@
+{
+  "sourceCodeCommit": "c3a0a0a153d37158f51b24efcfa81cec1c57d7c1",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "ddb51dbfdf6a6ea70664e2ae66030ff03b63a2b5",
+    "executableSha256": "019b9812286252e0c7dcb8b02720e09d46a692a550c30b4a011e201e086da498"
+  },
+  "engineering": {
+    "inputs": 2475,
+    "allSevenPassedFresh": true,
+    "frontendFiles": 744,
+    "frontendPassed": 10181,
+    "rustPassed": 2487,
+    "rustIgnored": 7
+  },
+  "install": {
+    "independentExactFiveFileReview": true,
+    "closedRecordsUnchanged": 206346,
+    "duplicateRemoved": true
+  },
+  "observations": {
+    "png": {
+      "previousFailureInputByteExact": true,
+      "invalidReplacementRejected": true,
+      "oldRedAndNoteRetained": true,
+      "validBlueAdopted": true,
+      "historicalOpinionLinkedToOriginalSha": true
+    },
+    "largeFile": {
+      "existingRealGooseEditCard": true,
+      "size": 1048577,
+      "segmentCount": 10,
+      "firstAndSecondSegmentObserved": true,
+      "wholeCopyByteEqual": true,
+      "sha256": "b9660c11ab707d9b3d4930d744f4ea573a7a0d34ec2751e06a173ec561c19e8f"
+    },
+    "newModelRequests": 0,
+    "deletionControlledOnly": true,
+    "screenshotStageControlledOnly": true,
+    "oldWorktreeUnknownUnchanged": true
+  },
+  "localReceiptRoot": "output/2026-11-09-six-hour-stage2",
+  "localReceiptSha256": {
+    "fifth-engineering/result.json": "5c34960efa56efcc80e5d67e0db2874584e5c889a7fada0fd13338f1916ef4a1",
+    "formal-fifth/candidate-review.json": "014509ce5b5eb3be820ede923395811b2ccdece4c21d0f60f103dd1226fd09ee",
+    "formal-fifth/install.json": "24a8d1aae6d9d5cf45032b8900aa7da41be199a598285416ea6f41efa41e39f0",
+    "formal-fifth/duplicate-cleanup.json": "88a1db576ecb74b227ab943f20b27fdd740bb675b3c98685d3a4d9086044c6cf",
+    "formal-fifth/png-and-large-observation.json": "17f5720f7c2b51efdca3fc1c91ae40cd1b5517aa6a0149e71cf11c83056241c3",
+    "formal-fifth/png-swap-failure.json": "dccab47dbd0d4a1a3ed751d4b989f21efd7855497a9e7b30b527b382af7e3ddb",
+    "formal-fifth/png-swap-new.json": "93c6f9f31d0c8e5a1cbc239cb6131adf39413a4cc1abfb466840910d3dafca4c",
+    "formal-fifth/large-fixture.json": "2404ec483eac42198a2c5ce27ebdba1e35ebfc9e9736fc950736f8af8d5af986"
+  }
+}

@@ -23,6 +23,75 @@ fn fixture() -> AgentRow {
     }
 }
 
+#[test]
+fn authenticated_channel_launch_shapes_are_mac_only_and_not_version_pinned() {
+    for (id, command, args) in [
+        (
+            "registry:fast-agent",
+            "/controlled/venv/bin/fast-agent-acp",
+            vec!["-x"],
+        ),
+        ("registry:mistral-vibe", "/controlled/vibe-acp", vec![]),
+    ] {
+        let mut row = fixture();
+        row.id = id.into();
+        row.command = command.into();
+        row.args = args.into_iter().map(str::to_owned).collect();
+        row.version = Some("future-unpinned-official-release".into());
+        assert_eq!(eligible(&row), cfg!(target_os = "macos"), "{id}");
+    }
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn authenticated_channel_review_never_borrows_bearer_or_other_catalog_shapes() {
+    for (id, command, args, kind) in [
+        (
+            "registry:fast-agent",
+            "/controlled/fast-agent-acp",
+            vec!["-x"],
+            LaunchKind::MachFastAgent,
+        ),
+        (
+            "registry:mistral-vibe",
+            "/controlled/vibe-acp",
+            vec![],
+            LaunchKind::MachMistralVibe,
+        ),
+    ] {
+        let mut row = fixture();
+        row.id = id.into();
+        row.command = command.into();
+        row.args = args.into_iter().map(str::to_owned).collect();
+        assert_eq!(reviewed_launch(&row), Some(kind));
+        assert!(kind.authenticated_channel());
+        for source in ["custom", "discovered", ""] {
+            let mut changed = row.clone();
+            changed.source = source.into();
+            assert_eq!(reviewed_launch(&changed), None);
+        }
+        for command in [
+            "fast-agent-acp",
+            "vibe-acp",
+            "/bin/sh",
+            "/controlled/wrapper",
+        ] {
+            let mut changed = row.clone();
+            changed.command = command.into();
+            assert_eq!(reviewed_launch(&changed), None);
+        }
+        let mut changed = row.clone();
+        changed.id = format!("self-named-{id}");
+        assert_eq!(reviewed_launch(&changed), None);
+        changed = row;
+        changed.args.push("--unreviewed-mode".into());
+        assert_eq!(reviewed_launch(&changed), None);
+    }
+    for kind in [LaunchKind::Binary, LaunchKind::Node, LaunchKind::OpenCode] {
+        assert!(!kind.authenticated_channel());
+    }
+}
+
 struct NodeFixture {
     _directory: tempfile::TempDir,
     root: PathBuf,
@@ -73,6 +142,64 @@ fn reviewed_registry_binary_accepts_both_ids_without_version_pin() {
     row.id = "registry:codex-acp".into();
     row.version = Some("a-later-version-is-not-a-pin-failure".into());
     assert_eq!(reviewed_launch(&row), Some(LaunchKind::Binary));
+}
+
+fn opencode_fixture() -> AgentRow {
+    let mut row = fixture();
+    row.id = "opencode".into();
+    row.source = "discovered".into();
+    row.command = if cfg!(windows) {
+        r"C:\controlled\opencode.exe".into()
+    } else {
+        "/controlled/.opencode/bin/opencode".into()
+    };
+    row.args = vec!["acp".into()];
+    row
+}
+
+#[test]
+fn reviewed_opencode_stdio_shape_is_separate_from_codex_and_not_version_pinned() {
+    let mut row = opencode_fixture();
+    for version in [None, Some("future-unpinned-release".to_owned())] {
+        row.version = version;
+        let launch = reviewed_launch(&row);
+        assert!(
+            launch.is_some(),
+            "the reviewed discovered ACP shape is eligible"
+        );
+        assert_eq!(launch, Some(LaunchKind::OpenCode));
+        assert_ne!(launch, Some(LaunchKind::Binary));
+        assert_ne!(launch, Some(LaunchKind::Node));
+    }
+}
+
+#[test]
+fn opencode_stdio_review_does_not_admit_unreviewed_sources_wrappers_or_flags() {
+    for source in ["custom", "registry", ""] {
+        let mut row = opencode_fixture();
+        row.source = source.into();
+        assert_eq!(reviewed_launch(&row), None);
+    }
+    for id in ["registry:opencode", "self-named-opencode", "codex"] {
+        let mut row = opencode_fixture();
+        row.id = id.into();
+        assert_eq!(reviewed_launch(&row), None);
+    }
+    for args in [
+        vec![],
+        vec!["serve"],
+        vec!["acp", "--print-logs"],
+        vec!["--", "acp"],
+    ] {
+        let mut row = opencode_fixture();
+        row.args = args.into_iter().map(str::to_owned).collect();
+        assert_eq!(reviewed_launch(&row), None);
+    }
+    for command in ["opencode", "/controlled/wrapper", "/bin/sh"] {
+        let mut row = opencode_fixture();
+        row.command = command.into();
+        assert_eq!(reviewed_launch(&row), None);
+    }
 }
 
 #[test]

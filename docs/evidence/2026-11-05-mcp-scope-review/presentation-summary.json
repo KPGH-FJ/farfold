@@ -1,0 +1,600 @@
+{
+  "sourceCommit": "6f01327cb5e47a8da6d8ea424237cab24914b3cd",
+  "userResult": "Fresh settled failed inspections with no review/no dispatched write show the concrete refusal without a false expired-review banner, including collapse/reopen. Actual prior ready reviews still expire/retire safely.",
+  "sourceReview": {
+    "recordedAtUtc": "2026-11-05T00:09:46.982592+00:00",
+    "kind": "fresh-inspection-refusal-presentation-candidate",
+    "baseHead": "c2aa64f1141bd56f7a7ebb45b8ea2fc6cde7ba81",
+    "files": {
+      "src/components/SkillChangeReview.tsx": "1acc0c1089aab54ef7e154c6fb7e0df97d98e39b4b624fb02b59d4443df15eec",
+      "src/runtime/mcp_scope_refusal.wire.test.tsx": "9848ed5e8f1d5efcfcb019bd73aa99e99da259a78f36fff8307c4c6cd3811154",
+      "src/components/SkillChangeReview.mcp.test.tsx": "73d825d6369bd0827b65dae65a10a05af6234bfabdd2ccf81aabc9d9c03afd74"
+    },
+    "unchangedReadOnlyBoundaries": {
+      "src/runtime/skill_management_controller.ts": "d6035b796221f2aa64a678c41d994acfda02b46c604b1c8ad7f97f2c6557307e",
+      "src/runtime/mcp_management_types.ts": "fd314dcd003f12d9b5519af5f0b581ae5fa09cd64ff7d419d521f6c2750e5ebf",
+      "src/runtime/skill_management_types.ts": "e735ff0798d47e41d6e7f68f4c4a9f67f63682c48b08512336b607c62d25eb47",
+      "src/runtime/extension_management_types.ts": "f3f86bd1effdf5fd135f3ec3aa518ea1c169ac2d8c28fdcb2a956369c2a41b95",
+      "src/runtime/skill_management_strings.ts": "e2683ab850e6b8a3395c813a77a2acc129b6d2b995d228a511646908eb5f80ad",
+      "src/runtime/fixtures/mcp-scope-refusals-wire.json": "86b64e140f0281fb69d6315dbbf5bb135994d93f19df5aeff04b126b62a97b22"
+    },
+    "rustDeclaredInputCountUnchanged": 832,
+    "sourcePatchSha256": "b727f70d1484675c4f7b31188bf3c98a1802e2fb8b6e5fa2e40f2d709a24ba7e",
+    "rootCause": "No confirmable review was treated as an expired review. Three actual failed inspect DTOs never contained review; actual controller accept sets reviewRetired=false. Collapse retirement sets that flag true even when no review was ever created, so a flag-only fix is insufficient.",
+    "uiOnlyChange": "Suppress the generic retired summary only for explicit inspect state failed, settled true, original op.review null, writeDispatched false, writeAck none, non-null operation code matching view.error. Keep the existing error paragraph and all admission/unresolved/tracking priority branches. No controller, lifecycle, error-code allowlist or permission change.",
+    "redGreen": {
+      "red": {
+        "passed": 6,
+        "failed": 6,
+        "naturalExitCode": 1,
+        "allFailuresOnlyUnexpectedRetiredSentence": true,
+        "threeActualDtosTimesTwo": [
+          "fresh state",
+          "actual controller retire then render retained request"
+        ]
+      },
+      "green": {
+        "passed": 12,
+        "failed": 0,
+        "naturalExitCode": 0
+      },
+      "testAndActualDtoBytesIdenticalAcrossRedGreen": true,
+      "readyReviewControls": {
+        "expired": "real controller ready view, clock past review deadline, retired text retained and confirm disabled",
+        "retired": "real controller ready view, actual retire, retired text retained and no confirm control"
+      },
+      "ssrBoundary": "Retirement-state rerender is SSR state coverage, not a DOM click. The distinct actualBrowser root-owned raw record separately covers three real collapse/reopen journeys. Ready expiration/retirement controls remain SSR only."
+    },
+    "associated": {
+      "files": 6,
+      "passed": 41,
+      "failed": 0,
+      "naturalExitCode": 0
+    },
+    "checks": {
+      "associated": {
+        "receipt": "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/checks/associated.json",
+        "receiptSha256": "ba2bfa4724310420d73327b784a7b2d6bf649e028237040e62040067206ea356",
+        "naturalExitCode": 0,
+        "command": [
+          "corepack",
+          "pnpm",
+          "exec",
+          "vitest",
+          "run",
+          "src/components/SkillChangeReview.add.test.tsx",
+          "src/components/SkillChangeReview.http.test.tsx",
+          "src/components/SkillChangeReview.remove.test.tsx",
+          "src/components/AgentExtensionInventory.selection-expiry.test.tsx",
+          "src/runtime/skill_management_controller.test.ts",
+          "src/runtime/mcp_management_controller.test.ts"
+        ],
+        "log": "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/checks/associated.log",
+        "logSha256": "c7db8399286bb1f0daf30167b6264b4d77e837130ead9eb1fb785e47a86839b5"
+      },
+      "diff-check": {
+        "receipt": "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/checks/diff-check.json",
+        "receiptSha256": "b5c1631bfc470412bada58c0a6f28596882b42891ef1c11051742b5c741407d5",
+        "naturalExitCode": 0,
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "--",
+          "src/components/SkillChangeReview.tsx",
+          "src/runtime/mcp_scope_refusal.wire.test.tsx",
+          "src/components/SkillChangeReview.mcp.test.tsx"
+        ],
+        "log": "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/checks/diff-check.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "format": {
+        "receipt": "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/checks/format.json",
+        "receiptSha256": "be75d6888377ec85d2d014a4fefc857d96fa340b4502c4f0615a5da897da885a",
+        "naturalExitCode": 0,
+        "command": [
+          "corepack",
+          "pnpm",
+          "exec",
+          "prettier",
+          "--check",
+          "src/components/SkillChangeReview.tsx",
+          "src/runtime/mcp_scope_refusal.wire.test.tsx",
+          "src/components/SkillChangeReview.mcp.test.tsx"
+        ],
+        "log": "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/checks/format.log",
+        "logSha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "green": {
+        "receipt": "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/checks/green.json",
+        "receiptSha256": "d3a68cbb052a7d30d02cb6e864f7d57407e52be724605a332877100fc757eac3",
+        "naturalExitCode": 0,
+        "command": [
+          "corepack",
+          "pnpm",
+          "exec",
+          "vitest",
+          "run",
+          "src/runtime/mcp_scope_refusal.wire.test.tsx",
+          "src/components/SkillChangeReview.mcp.test.tsx"
+        ],
+        "log": "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/checks/green.log",
+        "logSha256": "33bbb34d7cee49ddf18a36c0dca189b637f5cb5fc713e2e658fc71d56425f5a2"
+      },
+      "red": {
+        "receipt": "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/checks/red.json",
+        "receiptSha256": "ce674fdb2132cdd47af4bb5ad8c713c29e8341e3bbfcacafcd970b364064eac1",
+        "naturalExitCode": 1,
+        "command": [
+          "corepack",
+          "pnpm",
+          "exec",
+          "vitest",
+          "run",
+          "src/runtime/mcp_scope_refusal.wire.test.tsx",
+          "src/components/SkillChangeReview.mcp.test.tsx"
+        ],
+        "log": "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/checks/red.log",
+        "logSha256": "b97d5f6d93b0f6f8c874a3f5222e9da12c04723d346972633f04ae8a6f324756"
+      },
+      "typecheck": {
+        "receipt": "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/checks/typecheck.json",
+        "receiptSha256": "cf55b5d17e1e56c5c4a8c252a95a177ed1e64356a370a2894f35358d2ac420f3",
+        "naturalExitCode": 0,
+        "command": ["corepack", "pnpm", "typecheck"],
+        "log": "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/checks/typecheck.log",
+        "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    "sourceFrozen": true,
+    "remaining": [
+      "Root fresh affected frontend batch final result; full four in progress as reported by root",
+      "Installed application/real official configuration adoption, connection and tools remain outside this UI evidence"
+    ],
+    "actualBrowser": {
+      "executionOwner": "root through existing Cua browser, not source_review",
+      "sourceReviewRole": "Read-only raw DOM verification",
+      "raw": {
+        "path": "output/2026-11-05-development-continuation/mcp-browser-ui/browser-refusal-final.json",
+        "sha256": "a876df68b58295689db295aeec6d565489e80f8e48b68963613a783eaaf916d5"
+      },
+      "screenshot": {
+        "path": "output/2026-11-05-development-continuation/mcp-browser-ui/browser-refusal-final.png",
+        "sha256": "0d1f7201128dfd29df6db9a8ecac327d7755a72ced13608ad2b30e6afa549d1c",
+        "reviewScope": "Hash verified; this reader uses direct DOM observations for the semantic claims."
+      },
+      "fixtureSha256": "16a07be9d65890090f658adbf3cce8de69d7a7f7ceb57d149b790d45c33f06be",
+      "observations": [
+        {
+          "step": "project-open",
+          "recordedAt": "2026-11-05T00:07:55.350Z",
+          "focusTag": "H5",
+          "visibleStatuses": [
+            "此 MCP 在项目设置中定义，本次未找到可修改的用户设置；尚未修改。"
+          ],
+          "width": {
+            "client": 732,
+            "scroll": 732
+          },
+          "read": 1,
+          "inspect": 1,
+          "confirm": 0,
+          "native": 0,
+          "deniedCleanupAttempts": 0
+        },
+        {
+          "step": "project-collapsed",
+          "recordedAt": "2026-11-05T00:07:55.646Z",
+          "focusTag": "BUTTON",
+          "visibleStatuses": [],
+          "width": {
+            "client": 732,
+            "scroll": 732
+          },
+          "read": 1,
+          "inspect": 1,
+          "confirm": 0,
+          "native": 0,
+          "deniedCleanupAttempts": 1
+        },
+        {
+          "step": "project-reopened",
+          "recordedAt": "2026-11-05T00:07:55.928Z",
+          "focusTag": "H5",
+          "visibleStatuses": [
+            "此 MCP 在项目设置中定义，本次未找到可修改的用户设置；尚未修改。"
+          ],
+          "width": {
+            "client": 732,
+            "scroll": 732
+          },
+          "read": 1,
+          "inspect": 1,
+          "confirm": 0,
+          "native": 0,
+          "deniedCleanupAttempts": 1
+        },
+        {
+          "step": "inherited-open",
+          "recordedAt": "2026-11-05T00:07:56.214Z",
+          "focusTag": "H5",
+          "visibleStatuses": [
+            "此 MCP 来自继承的设置，本次仅支持修改用户设置；尚未修改。"
+          ],
+          "width": {
+            "client": 732,
+            "scroll": 732
+          },
+          "read": 2,
+          "inspect": 2,
+          "confirm": 0,
+          "native": 0,
+          "deniedCleanupAttempts": 2
+        },
+        {
+          "step": "inherited-collapsed",
+          "recordedAt": "2026-11-05T00:07:56.498Z",
+          "focusTag": "BUTTON",
+          "visibleStatuses": [],
+          "width": {
+            "client": 732,
+            "scroll": 732
+          },
+          "read": 2,
+          "inspect": 2,
+          "confirm": 0,
+          "native": 0,
+          "deniedCleanupAttempts": 3
+        },
+        {
+          "step": "inherited-reopened",
+          "recordedAt": "2026-11-05T00:07:56.782Z",
+          "focusTag": "H5",
+          "visibleStatuses": [
+            "此 MCP 来自继承的设置，本次仅支持修改用户设置；尚未修改。"
+          ],
+          "width": {
+            "client": 732,
+            "scroll": 732
+          },
+          "read": 2,
+          "inspect": 2,
+          "confirm": 0,
+          "native": 0,
+          "deniedCleanupAttempts": 3
+        },
+        {
+          "step": "conflict-open",
+          "recordedAt": "2026-11-05T00:07:57.065Z",
+          "focusTag": "H5",
+          "visibleStatuses": [
+            "同名 MCP 出现在多处设置中，无法确定修改范围；尚未修改。"
+          ],
+          "width": {
+            "client": 732,
+            "scroll": 732
+          },
+          "read": 3,
+          "inspect": 3,
+          "confirm": 0,
+          "native": 0,
+          "deniedCleanupAttempts": 4
+        },
+        {
+          "step": "conflict-collapsed",
+          "recordedAt": "2026-11-05T00:07:57.349Z",
+          "focusTag": "BUTTON",
+          "visibleStatuses": [],
+          "width": {
+            "client": 732,
+            "scroll": 732
+          },
+          "read": 3,
+          "inspect": 3,
+          "confirm": 0,
+          "native": 0,
+          "deniedCleanupAttempts": 5
+        },
+        {
+          "step": "conflict-reopened",
+          "recordedAt": "2026-11-05T00:07:57.632Z",
+          "focusTag": "H5",
+          "visibleStatuses": [
+            "同名 MCP 出现在多处设置中，无法确定修改范围；尚未修改。"
+          ],
+          "width": {
+            "client": 732,
+            "scroll": 732
+          },
+          "read": 3,
+          "inspect": 3,
+          "confirm": 0,
+          "native": 0,
+          "deniedCleanupAttempts": 5
+        }
+      ],
+      "freshAndReopenedEachExactlyOneSpecificReasonNoRetired": true,
+      "collapseButtonAndReopenHeadingFocusRetained": true,
+      "nativeConfirmCalls": 0,
+      "deniedFixtureCleanupCalls": 5,
+      "notAZeroAllPortsClaim": true,
+      "rootReportsOwnedServerAndTabStopped": true,
+      "readyExpiredOrRetiredBrowserNegative": "NOT RUN. Actual controller + component SSR controls only."
+    },
+    "notExecutedBySourceReview": [
+      "full frontend suite",
+      "full seven",
+      "Cargo",
+      "build",
+      "browser or App",
+      "real Agent/account/model",
+      "user configuration or data",
+      "Git mutation"
+    ]
+  },
+  "engineering": {
+    "recordedAtUtc": "2026-11-05T00:11:56.296703+00:00",
+    "commit": "6f01327cb5e47a8da6d8ea424237cab24914b3cd",
+    "files": 2372,
+    "matched": 2372,
+    "mismatch": [],
+    "manifestSha256": "61ce396de8b0ffffaf0d107bf7e8997d57142f7967204432ed4a050cd6908af1",
+    "fullSevenCheckpoint": "603056dd11baea68a438f686ee83f96d89377ba4",
+    "onlyDeltasFromFullSeven": [
+      "src/components/SkillChangeReview.mcp.test.tsx",
+      "src/components/SkillChangeReview.tsx",
+      "src/runtime/mcp_scope_refusal.wire.test.tsx"
+    ],
+    "frontend": {
+      "files": 709,
+      "passed": 9523,
+      "freshCompleteFour": true,
+      "formatFirstExit": 1,
+      "formatCorrectedExit": 0,
+      "formatCorrection": "Only handoff continuation.json indentation; raw first failure kept, excluded from declared2372 source map"
+    },
+    "rust": {
+      "commandsReused": 3,
+      "passed": 2349,
+      "ignored": 7,
+      "reason": "All captured Rust/native/build/dependency inputs unchanged; no new Rust execution or compiled/installed-asset claim."
+    },
+    "notClaimed": [
+      "Seven freshly run commands in this later interval",
+      "Installed app validation",
+      "Windows coverage for new P01/MCP source"
+    ]
+  },
+  "browser": {
+    "observations": 9,
+    "cases": 3,
+    "scope": "Real browser DOM and shared component/controller, byte-identical controlled DTO replay fixture. No installed Tauri, real official CLI, active session adoption, connection or tool-invocation claim.",
+    "statuses": "Exactly one concrete refusal on open/reopen, none while collapsed; no false retired banner. H5/BUTTON/H5 focus and no component horizontal overflow.",
+    "read": 3,
+    "inspect": 3,
+    "confirm": 0,
+    "native": 0,
+    "cleanupAttemptsDenied": 5,
+    "readyExpiredOrRetiredNegativeControl": "SSR only; not actual browser"
+  },
+  "archive": {
+    "path": "presentation-originals.zip",
+    "bytes": 342620,
+    "sha256": "b4c404fe492113757f9e348ea0d71311dc9f37d305bcbbfb9944082cac68bfe8",
+    "files": {
+      "mcp-review-refusal-presentation/README.md": {
+        "sha256": "96c6ed36939ce3fa9a9bf997f7593e02ff1a511437e2df3f26e95d0938a618ac",
+        "bytes": 2548
+      },
+      "mcp-review-refusal-presentation/before/src/components/SkillChangeReview.mcp.test.tsx": {
+        "sha256": "88a67338537e5314e9529f1c36611391cf080093f9155fab163c9fd93dc75e10",
+        "bytes": 3328
+      },
+      "mcp-review-refusal-presentation/before/src/components/SkillChangeReview.tsx": {
+        "sha256": "47f70694de1e9ec05b805574224366359e4ebaf4ed7e05e21888715ebd280bed",
+        "bytes": 13071
+      },
+      "mcp-review-refusal-presentation/before/src/runtime/fixtures/mcp-scope-refusals-wire.json": {
+        "sha256": "86b64e140f0281fb69d6315dbbf5bb135994d93f19df5aeff04b126b62a97b22",
+        "bytes": 5523
+      },
+      "mcp-review-refusal-presentation/before/src/runtime/mcp_scope_refusal.wire.test.tsx": {
+        "sha256": "0291dd85fd0e57cb9177090b78a1dfa2b24ea4939936608cf0cd2fea7edd107b",
+        "bytes": 3994
+      },
+      "mcp-review-refusal-presentation/checks/associated.json": {
+        "sha256": "ba2bfa4724310420d73327b784a7b2d6bf649e028237040e62040067206ea356",
+        "bytes": 750
+      },
+      "mcp-review-refusal-presentation/checks/associated.log": {
+        "sha256": "c7db8399286bb1f0daf30167b6264b4d77e837130ead9eb1fb785e47a86839b5",
+        "bytes": 211
+      },
+      "mcp-review-refusal-presentation/checks/diff-check.json": {
+        "sha256": "b5c1631bfc470412bada58c0a6f28596882b42891ef1c11051742b5c741407d5",
+        "bytes": 538
+      },
+      "mcp-review-refusal-presentation/checks/diff-check.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "mcp-review-refusal-presentation/checks/format.json": {
+        "sha256": "be75d6888377ec85d2d014a4fefc857d96fa340b4502c4f0615a5da897da885a",
+        "bytes": 553
+      },
+      "mcp-review-refusal-presentation/checks/format.log": {
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+        "bytes": 66
+      },
+      "mcp-review-refusal-presentation/checks/green.json": {
+        "sha256": "d3a68cbb052a7d30d02cb6e864f7d57407e52be724605a332877100fc757eac3",
+        "bytes": 500
+      },
+      "mcp-review-refusal-presentation/checks/green.log": {
+        "sha256": "33bbb34d7cee49ddf18a36c0dca189b637f5cb5fc713e2e658fc71d56425f5a2",
+        "bytes": 211
+      },
+      "mcp-review-refusal-presentation/checks/red.json": {
+        "sha256": "ce674fdb2132cdd47af4bb5ad8c713c29e8341e3bbfcacafcd970b364064eac1",
+        "bytes": 497
+      },
+      "mcp-review-refusal-presentation/checks/red.log": {
+        "sha256": "b97d5f6d93b0f6f8c874a3f5222e9da12c04723d346972633f04ae8a6f324756",
+        "bytes": 6112
+      },
+      "mcp-review-refusal-presentation/checks/typecheck.json": {
+        "sha256": "cf55b5d17e1e56c5c4a8c252a95a177ed1e64356a370a2894f35358d2ac420f3",
+        "bytes": 385
+      },
+      "mcp-review-refusal-presentation/checks/typecheck.log": {
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      },
+      "mcp-review-refusal-presentation/final-source/src/components/SkillChangeReview.mcp.test.tsx": {
+        "sha256": "73d825d6369bd0827b65dae65a10a05af6234bfabdd2ccf81aabc9d9c03afd74",
+        "bytes": 4624
+      },
+      "mcp-review-refusal-presentation/final-source/src/components/SkillChangeReview.tsx": {
+        "sha256": "1acc0c1089aab54ef7e154c6fb7e0df97d98e39b4b624fb02b59d4443df15eec",
+        "bytes": 13359
+      },
+      "mcp-review-refusal-presentation/final-source/src/runtime/mcp_scope_refusal.wire.test.tsx": {
+        "sha256": "9848ed5e8f1d5efcfcb019bd73aa99e99da259a78f36fff8307c4c6cd3811154",
+        "bytes": 4735
+      },
+      "mcp-review-refusal-presentation/red-inputs.json": {
+        "sha256": "d75607bb635916d46754d3f9e53a2e44a8273773112c85849ea5d0c10bb66a47",
+        "bytes": 816
+      },
+      "mcp-review-refusal-presentation/red-source/src/components/SkillChangeReview.mcp.test.tsx": {
+        "sha256": "73d825d6369bd0827b65dae65a10a05af6234bfabdd2ccf81aabc9d9c03afd74",
+        "bytes": 4624
+      },
+      "mcp-review-refusal-presentation/red-source/src/components/SkillChangeReview.tsx": {
+        "sha256": "47f70694de1e9ec05b805574224366359e4ebaf4ed7e05e21888715ebd280bed",
+        "bytes": 13071
+      },
+      "mcp-review-refusal-presentation/red-source/src/runtime/fixtures/mcp-scope-refusals-wire.json": {
+        "sha256": "86b64e140f0281fb69d6315dbbf5bb135994d93f19df5aeff04b126b62a97b22",
+        "bytes": 5523
+      },
+      "mcp-review-refusal-presentation/red-source/src/runtime/mcp_scope_refusal.wire.test.tsx": {
+        "sha256": "9848ed5e8f1d5efcfcb019bd73aa99e99da259a78f36fff8307c4c6cd3811154",
+        "bytes": 4735
+      },
+      "mcp-review-refusal-presentation/run-check.py": {
+        "sha256": "6c662c586952cba1e0310ffe97ad1d5c603eed57014efec9650cf925bb26ac2e",
+        "bytes": 1392
+      },
+      "mcp-review-refusal-presentation/source-final.json": {
+        "sha256": "11c70395a04cf535d488a2e8f60f35293125e8921db0dc4804879b0ecf4835f7",
+        "bytes": 633
+      },
+      "mcp-review-refusal-presentation/source.patch": {
+        "sha256": "b727f70d1484675c4f7b31188bf3c98a1802e2fb8b6e5fa2e40f2d709a24ba7e",
+        "bytes": 8604
+      },
+      "mcp-review-refusal-presentation/summary-before-browser-green.json": {
+        "sha256": "16b40d829338ffbe9b2b1f9834851d0ab89a8f91c4850512ee81c4cd4e91868d",
+        "bytes": 7838
+      },
+      "mcp-review-refusal-presentation/summary.json": {
+        "sha256": "60994b7bc06c1fd757b7dfa424db521c35b33a3b200a89397515e2d7359a52bb",
+        "bytes": 12955
+      },
+      "engineering-presentation/checks/build-final.json": {
+        "sha256": "c60ae826542c091706231aa09ed580c7f04563025462c2e358527e27b7b3970d",
+        "bytes": 378
+      },
+      "engineering-presentation/checks/build-final.log": {
+        "sha256": "393dbfcabc2645f55527d8f3595845568812f9ec006622ccd2a151c6f1f90eaa",
+        "bytes": 4984
+      },
+      "engineering-presentation/checks/format-corrected.json": {
+        "sha256": "dc32df0e2e201edb0f1b48ae303ef2578c9efadd2d02eed3a5d979b3bd15742d",
+        "bytes": 396
+      },
+      "engineering-presentation/checks/format-corrected.log": {
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "bytes": 144
+      },
+      "engineering-presentation/checks/format-final.json": {
+        "sha256": "a319d845676979b86eb3d72d09d944a6f0530312d82494bdc8786d2417d2935b",
+        "bytes": 388
+      },
+      "engineering-presentation/checks/format-final.log": {
+        "sha256": "dfed9937a52db2d65f568da5f9d016da870532a1ebce31f621c0622c0c76ae36",
+        "bytes": 301
+      },
+      "engineering-presentation/checks/frontend-final.json": {
+        "sha256": "1093704d0710c99e42d926a9a73961479a9396daa2d0791a4632893c684fa4fa",
+        "bytes": 384
+      },
+      "engineering-presentation/checks/frontend-final.log": {
+        "sha256": "ef523240de2762c76de289c25242b6dd964fc9e9fd03d0af9ea480a3a983ff42",
+        "bytes": 288
+      },
+      "engineering-presentation/checks/typecheck-final.json": {
+        "sha256": "7cf39bca546f1c78f0f7bd2cafff20e57569dfadfff7f1f68b2c28f687fad86e",
+        "bytes": 390
+      },
+      "engineering-presentation/checks/typecheck-final.log": {
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      },
+      "engineering-presentation/collect-inputs.py": {
+        "sha256": "5ea463d492dc40d1f6e39c2488d596131c998149a7215e8cc731914e9071aefb",
+        "bytes": 2324
+      },
+      "engineering-presentation/git-input-binding.json": {
+        "sha256": "f06e9023c33b57c7c0cc6dfaac4b2baf6a3f7d211fcc2eb87bb00977020feed0",
+        "bytes": 1157
+      },
+      "engineering-presentation/preparation.json": {
+        "sha256": "2fb57d30de58e2e166003459869563463238911952e621d7ec1d87821b310daf",
+        "bytes": 480
+      },
+      "engineering-presentation/run-check.py": {
+        "sha256": "6c662c586952cba1e0310ffe97ad1d5c603eed57014efec9650cf925bb26ac2e",
+        "bytes": 1392
+      },
+      "engineering-presentation/run-sequence.py": {
+        "sha256": "a5d4d2075839b0429dc7a43ff99a2c7d04d08e8d6fcf9b05eace49050f6187fc",
+        "bytes": 756
+      },
+      "engineering-presentation/source-after.json": {
+        "sha256": "61ce396de8b0ffffaf0d107bf7e8997d57142f7967204432ed4a050cd6908af1",
+        "bytes": 278982
+      },
+      "engineering-presentation/source-before.json": {
+        "sha256": "61ce396de8b0ffffaf0d107bf7e8997d57142f7967204432ed4a050cd6908af1",
+        "bytes": 278982
+      },
+      "mcp-browser-ui/browser-refusal-final.json": {
+        "sha256": "a876df68b58295689db295aeec6d565489e80f8e48b68963613a783eaaf916d5",
+        "bytes": 17661
+      },
+      "mcp-browser-ui/browser-refusal-final.png": {
+        "sha256": "0d1f7201128dfd29df6db9a8ecac327d7755a72ced13608ad2b30e6afa549d1c",
+        "bytes": 65864
+      },
+      "mcp-browser-ui/fixture.test.html": {
+        "sha256": "0b694a75bcf1d5603772a9d097571f1b1a16b6d8b5248b4bd47e2e698ded3e8b",
+        "bytes": 334
+      },
+      "mcp-browser-ui/fixture.test.tsx": {
+        "sha256": "16a07be9d65890090f658adbf3cce8de69d7a7f7ceb57d149b790d45c33f06be",
+        "bytes": 8022
+      },
+      "mcp-browser-ui/vite.config.mts": {
+        "sha256": "02521f032c6d0da862f6019ab697f6c13a76021324279e5f8bc91147bc553fd4",
+        "bytes": 254
+      },
+      "mcp-browser-ui/server-refusal.log": {
+        "sha256": "47ab1bb178e91a662da265a2bf0877623e84a8efe7f7718a151734a06ea073bf",
+        "bytes": 465
+      }
+    }
+  },
+  "cleanup": "Own temporary browser tab closed, own Vite session32944 Ctrl-C exit130. No App/account/config/data changes."
+}

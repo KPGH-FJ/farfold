@@ -1,0 +1,18 @@
+{
+  "observedAtUtc": "2026-11-07T05:48:02.629194+00:00",
+  "installedSourceCodeCommit": "d3529ff52",
+  "officialDefaultKiloHistoryListReturned": true,
+  "nativeSelfTestRecordSeenAsAlreadyJoined": true,
+  "existingSelfTestOpenedWithoutReimport": true,
+  "savedWorkingDirectory": "/private/tmp/farfold-opencode-cwd-20261024-9f02brue",
+  "independentPathStat": {
+    "errno": 2,
+    "class": "FileNotFoundError"
+  },
+  "installedUiError": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+  "newPrompts": 0,
+  "replacementDirectoryCreated": false,
+  "accountOrModelChanged": false,
+  "desktopAuthorizationCrossVersionVerified": false,
+  "scope": "default official lookup and failed open of existing owned test record; original directory is absent, cause of absence unknown; no Desktop permission decision inferred"
+}

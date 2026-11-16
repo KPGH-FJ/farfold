@@ -1,0 +1,50 @@
+{
+  "beginUtc": "2026-11-06T18:25:50.473+00:00",
+  "source": "existing registry-managed official Kilo ACP",
+  "productionAppOperated": false,
+  "existingSessionUsed": false,
+  "modelOrConfigurationSetterCalls": 0,
+  "modelPrompts": 0,
+  "toolRequests": 0,
+  "approvals": 0,
+  "helperBilling": "not-established",
+  "registeredVersion": "7.8.1",
+  "initializeElapsedMs": 925,
+  "isolatedNativeDatabaseObservedBeforeSession": true,
+  "singleOwnedNewSession": {
+    "elapsedMs": 1901,
+    "nativeMessageCount": 0
+  },
+  "sessionNewModelOptions": {
+    "officialOptionId": "model",
+    "choicesCount": 680,
+    "kiloGatewayChoicesCount": 317,
+    "newFixtureDefaultIsKiloGateway": true,
+    "newFixtureDefaultIsPreviouslyVerifiedUltra": false,
+    "previouslyVerifiedUltraOfferedByKiloGateway": true,
+    "exactAlternativesOffered": {
+      "nvidia/nemotron-3.5-super-vl:free": {
+        "kiloGateway": true,
+        "openRouterDistinctSource": true
+      },
+      "dots-studio/dots-3-note-preview:free": {
+        "kiloGateway": true,
+        "openRouterDistinctSource": false
+      }
+    }
+  },
+  "outcome": "actual-official-session-new-model-options-read",
+  "outbound": {
+    "initialize": 1,
+    "session/new": 1
+  },
+  "lifecycleUpdateTypes": {},
+  "ownedCleanup": {
+    "transportEof": true,
+    "exitCode": 0,
+    "ownProcessGroupGone": true,
+    "signalsSent": 0
+  },
+  "productionNativeDatabaseStatUnchanged": true,
+  "endUtc": "2026-11-06T18:25:53.847+00:00"
+}

@@ -1,0 +1,64 @@
+{
+  "recordedAt": "2026-11-04T11:52:02.187337+00:00",
+  "result": "passed",
+  "frontend": {
+    "files": 1,
+    "tests": 1,
+    "naturalExitCode": 0,
+    "durationSeconds": 1.028,
+    "receipt": {
+      "path": "output/2026-11-04-p01-storage-bridge/vitest-bridge.result.json",
+      "sha256": "13431884b8bd1854f19e77498ae73fba1e6db8e8e9d8c5336df6e118369e2521"
+    }
+  },
+  "nativeBuild": {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "--no-run",
+      "--message-format=json"
+    ],
+    "naturalExitCode": 0,
+    "durationSeconds": 19.384,
+    "listedInputs": 807,
+    "beforeAfterMatch": true,
+    "ignoredDriverVerified": true
+  },
+  "driverName": "meta_store::recovery_tests::explicit_frontend_storage_bridge",
+  "executedBinarySha256": "85a1cbadfb6be250a61e25951f1c6d7e95a77a02316c253c3969a9f78fd46b2d",
+  "exchanges": 8,
+  "sqliteFailure": {
+    "exchange": 4,
+    "nativeProcessExitCode": 0,
+    "responseOk": false,
+    "actualReceipt": "FARFOLD_STORAGE:readOnly:无法读取或保存本机资料"
+  },
+  "observed": [
+    "Seed snapshot reached real temporary SQLite via production MetaStore.",
+    "Actual query_only save refusal reached the unchanged frontend draftPersistence error mapping.",
+    "The old saved snapshot remained equal while newer local input and unsaved state remained in memory.",
+    "Clearing the fixture fault did not itself write; explicit flush retry saved the new input.",
+    "A fresh frontend module loaded the saved new input via another process reopening SQLite.",
+    "All eight driver invocations checked the exact binary hash immediately before executing and naturally exited 0.",
+    "The owned fixture directory was removed after its marker check."
+  ],
+  "scopeLimits": [
+    "Tauri settings transport was replaced by the controlled test bridge; this is not complete Tauri IPC or installed UI.",
+    "Cold read is a frontend module reset and a newly opened SQLite connection in a fresh Rust process, not an installed-app restart.",
+    "Only 807 listed native/common/fixture inputs had before/after hashes; the entire frontend transitive import graph was not independently frozen.",
+    "Directory and marker checks are not atomic; no same-UID malicious replacement/TOCTOU or OS sandbox claim.",
+    "No physical disk-full, Agent/account/network request or actual user data was used.",
+    "The shared target binary was subsequently overwritten after Cargo was released. The original binding is an execution record, not a currently runnable binding. No repeat was performed to restore the old binary."
+  ],
+  "archive": {
+    "path": "docs/evidence/2026-11-04-p01-storage-bridge/first-run-original-receipts.zip",
+    "sha256": "6845e5489c9c71833444c6302786d1a71a5c0e530296aa1e6af09add970c72cf",
+    "verifiedMembers": 42
+  },
+  "independentReview": "status_evidence_review reported no blocking issue for this first eight-exchange run; this text is not an original review log.",
+  "archivalNote": "An earlier metadata-only archival command had a Python syntax error before any writes. The experiment and its original receipts were not rerun or modified."
+}

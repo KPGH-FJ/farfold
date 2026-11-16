@@ -13,6 +13,10 @@ export const AGENT_SETUP_STRINGS = {
   modelMismatch:
     "当前设置与原选择不一致。原选择已保留，请重新选择后再保存或测试。",
   modelAcceptCurrent: "沿用当前设置",
+  draftModelScope: "仅用于这份草稿。请核对当前报告的模型和思考设置。",
+  draftModelUse: "用这些设置返回草稿",
+  draftModelReturn: "返回草稿",
+  draftModelChanged: "当前设置已改变，请重新读取后确认。",
   modelUnprovided: "Agent 未提供可选模型，将沿用它自己的设置。",
   modelPending: "读取选项后可确认模型，也可以保留已有选择稍后尝试。",
   modelReadHint: "读取选项不会发送模型请求。",

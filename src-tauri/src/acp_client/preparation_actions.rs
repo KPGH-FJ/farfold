@@ -18,6 +18,8 @@ use crate::{
     pty::{self, PtyManager},
 };
 
+mod amp_login;
+
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct PreparationAction {
@@ -62,6 +64,29 @@ fn matching_registry_installation(row: &AgentRow, item: &Installation, data: &Pa
     command == registered
         && command.starts_with(&root_canonical)
         && crate::agent_discovery::validate_executable_path(&row.command).is_ok()
+}
+
+fn recorded_installations(store: &MetaStore) -> Result<Vec<Installation>, String> {
+    // Read the existing inventory without granting ownership or writing it.
+    Ok(store
+        .get_setting("installations.v1")?
+        .map(serde_json::from_value)
+        .transpose()
+        .map_err(|_| "无法核对配置程序来源，请重新查看")?
+        .unwrap_or_default())
+}
+
+pub(super) fn has_registry_installation(
+    store: &MetaStore,
+    row: &AgentRow,
+    data: &Path,
+) -> Result<bool, String> {
+    Ok(recorded_installations(store)?
+        .iter()
+        .filter(|item| matching_registry_installation(row, item, data))
+        .take(2)
+        .count()
+        == 1)
 }
 
 fn exact_file(path: &Path) -> bool {
@@ -165,16 +190,13 @@ pub(crate) fn actions_for(
     row: &AgentRow,
     data: &Path,
 ) -> Result<Vec<PreparationAction>, String> {
+    if row.id == amp_login::AGENT {
+        return amp_login::action(store, row, data).map(|action| action.into_iter().collect());
+    }
     let Some(declaration) = super::recipes::terminal_action_declaration(row) else {
         return Ok(vec![]);
     };
-    // Read the existing inventory, without granting ownership or writing it.
-    let items: Vec<Installation> = store
-        .get_setting("installations.v1")?
-        .map(serde_json::from_value)
-        .transpose()
-        .map_err(|_| "无法核对配置程序来源，请重新查看")?
-        .unwrap_or_default();
+    let items = recorded_installations(store)?;
     let mut args = match declaration.launch {
         TerminalActionLaunch::Native { .. } => {
             if !items
@@ -255,7 +277,11 @@ fn run_terminal(
     let scope = manager.reserve_preparation_action(row, &action.command, &action.args)?;
     // Only normal shell/process environment. Do not resolve Agent placeholders,
     // call credentials::apply or load the selected service's Farfold Keychain.
-    let env: Vec<_> = crate::shell_env::command_env().into_iter().collect();
+    let env = crate::shell_env::command_env();
+    if action.id == amp_login::ACTION {
+        amp_login::check_environment(&env)?;
+    }
+    let env: Vec<_> = env.into_iter().collect();
     let sink = auth::terminal_output(
         ownership.output,
         ownership.configuration,

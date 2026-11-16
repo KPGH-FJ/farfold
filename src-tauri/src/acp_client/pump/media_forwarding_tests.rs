@@ -29,6 +29,11 @@ fn forward(params: &[Value], live: bool, retain: bool) -> Observed {
     life.ready().unwrap();
     let forms: PendingElicitations = Default::default();
     let ops = SessionOps {
+        session_tools: crate::acp_client::session_tools::Availability::unavailable(),
+        live_status_enabled: false,
+        tool_media_enabled: false,
+        history_supplement_source: None,
+        configuration_dialect: Default::default(),
         workspace_access: crate::acp_client::workspace_access::Availability::new(None),
         prompt_escrow: Default::default(),
         async_tasks_supported: Arc::new(AtomicBool::new(false)),
@@ -69,7 +74,9 @@ fn forward(params: &[Value], live: bool, retain: bool) -> Observed {
     let mut compactions = CompactionActivity::new(life.clone(), CONNECTION.into(), SESSION.into());
     let mut tasks = Tasks::new(false, CONNECTION.into(), SESSION.into(), life.clone());
     {
+        let live_status = crate::acp_client::live_status::Owner::inactive(&ops, SESSION);
         let mut ctx = DispatchContext {
+            live_status: &live_status,
             session_id: SESSION,
             events: &sink,
             pending: &pending,
@@ -81,6 +88,7 @@ fn forward(params: &[Value], live: bool, retain: bool) -> Observed {
             compactions: &mut compactions,
             async_tasks: &mut tasks,
             prompt_cancelling: false,
+            terminals: None,
         };
         for params in params {
             let message = UntypedMessage::new("session/update", params).unwrap();

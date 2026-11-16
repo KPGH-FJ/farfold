@@ -1,5 +1,19 @@
 export const SESSION_FORK_STRINGS = {
   title: "复制当前对话",
+  pointTitle: "从这条消息分支",
+  pointScope:
+    "保留截至所选消息的完整上下文（包含这条消息），之后的内容不带入。原对话保留。",
+  pointPreview: "所选消息",
+  pointConfirm: "确认创建分支",
+  pointFiles:
+    "文件保持现在的状态，不会回到这条消息时的版本。两个对话的修改会相互影响。",
+  pointUnavailable: "暂时无法从这条消息分支，请重新读取对话后选择其他消息。",
+  pointAmbiguous: "Agent 无法单独区分这条消息的位置，请选择其他消息。",
+  pointContextUnavailable:
+    "这段历史已整理或无法完整继承，暂时不能从此处创建分支。",
+  pointReadFailed: "未能核实完整上下文，本次未创建分支。请稍后再试。",
+  pointMismatch:
+    "新对话已创建，但未能核实所选分支位置。请保留标识，不要重复创建。",
   progress: "查看复制进度",
   result: "查看复制结果",
   scope: "通过 Agent 复制本次处理时保存的完整上下文，原对话保留。",
@@ -28,6 +42,8 @@ export const SESSION_FORK_STRINGS = {
   sourceUnconfirmed: "尚未确认原位置已结束处理，请保留原对话并等待。",
   failedBeforeDispatch: "复制未发送，原对话保持。",
   browserShared: "请先停止网页共享，再复制当前对话。",
+  browserConnected:
+    "网页工具仍连接着当前对话。请关闭并重新打开这段对话，再复制。",
   workDisabled: "请先恢复这条对话的工作，再进行复制。",
   ownerEnded:
     "原对话的连接已结束，复制结果仍未确认；请保留本次结果，勿再次复制。",

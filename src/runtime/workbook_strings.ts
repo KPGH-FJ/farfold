@@ -14,6 +14,8 @@ export const WORKBOOK_STRINGS = {
   layout:
     "每次显示最多 100 行、24 列，尺寸会适配预览。可翻页或输入单元格位置。",
   sheet: "工作表",
+  replacementSheet: "为本次读取另选工作表",
+  replacementSnapshot: "下方仍显示上次成功读取的内容。",
   hidden: "隐藏",
   veryHidden: "深度隐藏",
   showHidden: "显示隐藏行列",

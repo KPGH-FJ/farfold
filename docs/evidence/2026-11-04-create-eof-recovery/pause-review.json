@@ -1,0 +1,74 @@
+{
+  "status": "paused_for_user_review",
+  "recordedAt": "2026-11-04T06:21:29.344122+00:00",
+  "authorization": "User explicitly requested pause at nearest reviewable checkpoint; no new CI or implementation begins until resumed.",
+  "baseCommit": "8e4c9da08a213e4f8b43607aabf1532da4fbe672",
+  "candidateState": "Uncommitted working tree, frozen for review. New lifetime test file is included in attached patch. No candidate commit/push performed after pause request.",
+  "sourcePatch": {
+    "path": "output/2026-11-04-create-eof-recovery/review-candidate.patch",
+    "sha256": "fc285c00595cd79e28d19ab84dc2ef5c47676649ce04f4a99a241f299534a45e",
+    "reversibleCheck": "git apply --reverse --check on current tree; check only, no working-tree mutation"
+  },
+  "sourceFilesSha256": {
+    "src-tauri/src/windows_process.rs": "47f4a8aaa672788b18ed71e1594ed7e3384c7d95597d9a19a7652b8f2306a934",
+    "src-tauri/src/windows_process/current_members.rs": "34cc3ecb583d942fecb53a95b411be1dde91a2f7aa34b59dd314e2e4716c4057",
+    "src-tauri/src/windows_process/current_members_tests.rs": "cdb0f3e191f52bcc0d2828a9bfd647879d98d6f8bf3b667a2afc5943add42693",
+    "src-tauri/src/windows_process/current_members_lifetime_tests.rs": "00ae4ca016cfb75f7a04d5fea7452a41d2e07ea6f2ae16915b3e14b6a2aeffe7",
+    "src-tauri/src/windows_process/diagnostic_tests.rs": "715168486ee959d4aabc9d099bdbca5ceb27695581ba735bac44264ba168ec58",
+    "src-tauri/src/worktrees/git.rs": "8af9a7ecf35ca5fc1e0eab6bff836a78d958d38e82968004ead5a63a835c57cf",
+    "src-tauri/src/worktrees/git_debug_windows.rs": "048172ef4968bc5801e1ab9538ec42df0251044011d6595efaa677ec516a407b",
+    "src-tauri/src/worktrees/git_command_observation_tests.rs": "e1e800afb634cf829108d853da18279911a7adc821135725b02b9dc724d8b181"
+  },
+  "candidateChanges": {
+    "gitPump": "Skip the following polling sleep only after a bounded pass successfully continued actual debug events. Same32event cap,1ms wait, original cancellation/time/input/output checks, original object certificate and owner remain.",
+    "eof": "Keep historical gap. Count only distinct sameJob objects witnessed live using exact WAIT_TIMEOUT and retire only on exact signal. Fixed leader plus complete empty list and two fresh native0/matching Total under same mutex may prove complete retirement. Missing, foreign, failed or changed context remains unconfirmed. No PID history ledger, new worker or Agent/PTY debugger."
+  },
+  "candidateValidation": {
+    "gitPump": "MacGit23passed; alltargetMacClippy passed; actual Windows debug/counter modules isolated test+lib typecheck passed; format/diff and independent source review passed.",
+    "eof": "Actual Windows process ownership/current modules including tests isolated Windows cross-Clippy-Dwarnings passed; format/diff and independent source review passed.",
+    "nativeCandidateExecution": "NOT RUN for latest frozen patch, including four new tests. No claim of fixed EOF or capacity release yet."
+  },
+  "newNativeTests": [
+    "windows_process::current_members::tests::lifetime_tests::complete_live_objects_retire_original_job_without_clearing_historical_gap",
+    "windows_process::current_members::tests::lifetime_tests::reopening_signaled_objects_never_compensates_for_an_unobserved_original_member",
+    "windows_process::current_members::tests::lifetime_tests::missing_or_changed_leader_context_permanently_refuses_lifetime_proof",
+    "windows_process::current_members::tests::lifetime_tests::checked_live_count_overflow_cannot_supply_lifetime_coverage"
+  ],
+  "latestCompletedNative": {
+    "runId": 41779101282,
+    "sourceCommit": "164cd35f0",
+    "groups": 19,
+    "executions": 38,
+    "passed": 23,
+    "failed": 15,
+    "missingReceipts": 0,
+    "succeeded": "Existing-branch creation and archive single/paired, exact Git object certificate,8 lifecycle/7 finite input controls and EOF descendant edge.",
+    "remaining": "EOF standalone originalPID1392 retains historical gap after original reap/Job0;14 other failures are create/recovery wait assertions.",
+    "measuredGitMedianMs": 167,
+    "previousZeroWaitMedianMs": 1009,
+    "preDebuggerBaselineMedianMs": 61,
+    "eofAttribution": "Exact1392 matches retained leader and originalJob. First incomplete native list assigned2/listed1 with held7984/7828; later root signal0/held0/pending0/gaptrue leaves capacity1/work1. Old receipt lacks lifetime Total."
+  },
+  "nativeFull": "Latest actual full41750118511 remains2363pass17fail72ignored; no newfull started.",
+  "independentSystemDiagnostic": {
+    "runId": 41779718695,
+    "actualCases": 4,
+    "allNaturalZero": true,
+    "scope": "Only fixed System32/SysWOW64 cmd policies; no32Git/Agent acceptance or production exception-policy change."
+  },
+  "verificationLimits": [
+    "Frozen candidates and four new tests await real Windows execution.",
+    "Old-object reopen test does not yet separately assert each lookup returned a real object; no claim of four observed native reopen results.",
+    "Local checked counters prevent local overflow; native DWORD full-wrap semantics not documented or covered.",
+    "Source/tests/diagnostic controls are separate from installed Windows UI or real-Agent acceptance."
+  ],
+  "preservation": {
+    "oldAgentRequestsResent": 0,
+    "formalApp": "/Applications/Farfold.app",
+    "formalBinaryMatches168db42e5": true,
+    "formalAppReplacedThisStage": false,
+    "P18": "Qualified unknown/recoverable object,active diff,new refusal and N/O terminal/identity gaps remain separate.",
+    "preexistingUntrackedFiles": "Preserved, not staged or removed."
+  },
+  "resumePoint": "After explicit resume, first native-test the frozen pump/EOF patches and four regressions with original create/recovery/EOF plus affected terminal controls. Repair grounded failures, full batch only when stable; no old Agent request resend."
+}

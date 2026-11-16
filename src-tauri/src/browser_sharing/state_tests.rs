@@ -17,6 +17,7 @@ pub(super) fn session(page: FixedPageReadScope) -> Arc<ToolSession> {
         page: Arc::new(Mutex::new(Some(page))),
         transport: OnceLock::new(),
         state: Mutex::new(ShareState {
+            connection: None,
             phase: READY,
             ready: true,
             ended: false,

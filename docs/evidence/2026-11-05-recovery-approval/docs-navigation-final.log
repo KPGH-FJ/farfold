@@ -1,0 +1,5 @@
+
+> farfold@0.1.7 docs:check /Users/tw/Desktop/farfold
+> node scripts/check-project-docs.mjs
+
+{"originalConditions":151,"currentRows":151,"activePlans":1,"activePlanBytes":4716,"activePlanLines":34,"taskReference":"docs/agent-access-requirements.md","workPackages":16,"referenceSchedulingAuthority":false,"entrypoints":13,"localLinks":499,"localAnchors":6,"progressFrozen":false,"productAcceptanceClaimed":false}

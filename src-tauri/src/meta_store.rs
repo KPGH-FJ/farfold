@@ -13,7 +13,11 @@ use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 mod archive;
+mod custom_agent;
 mod fork;
+mod initial_config;
+pub(crate) use initial_config::InitialConfigError;
+pub(crate) mod mcp_pending;
 pub(crate) mod prompt_templates;
 pub(crate) mod remembered_pages;
 pub(crate) mod schema;
@@ -73,6 +77,12 @@ pub struct SessionRow {
     pub updated_at: i64,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum LocalSessionDeleteError {
+    NotRemoved,
+    Unknown,
+}
+
 /// SQLite-backed metadata store. All access is serialized through a mutex so
 /// the store can be shared as Tauri state from sync command handlers.
 #[derive(Clone)]
@@ -130,6 +140,7 @@ impl MetaStore {
     /// keychain entries or loses the receipts needed to delete owned paths.
     pub fn clear_all(&self) -> Result<(), String> {
         let mut connection = self.lock()?;
+        mcp_pending::ensure_none(&connection)?;
         let transaction = connection
             .transaction()
             .map_err(|_| "无法清除数据".to_string())?;
@@ -188,6 +199,7 @@ impl MetaStore {
     /// Session IDs and credential grants keep referring to the same roster identity.
     pub fn replace_agent_launch(&self, agent: &AgentRow) -> Result<(), String> {
         let connection = self.lock()?;
+        mcp_pending::ensure_agent_ready(&connection, &agent.id)?;
         replace_agent_launch_row(&connection, agent)
     }
 
@@ -242,6 +254,7 @@ impl MetaStore {
         installations: &serde_json::Value,
     ) -> Result<(), String> {
         let mut connection = self.lock()?;
+        mcp_pending::ensure_agent_ready(&connection, &candidate.id)?;
         let transaction = connection
             .transaction_with_behavior(TransactionBehavior::Immediate)
             .map_err(|_| "无法保存程序选择，原设置保持不变")?;
@@ -283,8 +296,9 @@ impl MetaStore {
 
     /// Credential changes must not overwrite launch configuration or cached declarations.
     pub fn set_agent_env(&self, agent_id: &str, env: &[(String, String)]) -> Result<(), String> {
-        let changed = self
-            .lock()?
+        let connection = self.lock()?;
+        mcp_pending::ensure_agent_ready(&connection, agent_id)?;
+        let changed = connection
             .execute(
                 "UPDATE agents SET env = ?2, updated_at = ?3 WHERE id = ?1",
                 params![agent_id, encoded_agent_env(env), now_millis()],
@@ -374,6 +388,7 @@ impl MetaStore {
 
     pub fn remove_agent(&self, agent_id: &str) -> Result<bool, String> {
         let connection = self.lock()?;
+        mcp_pending::ensure_agent_ready(&connection, agent_id)?;
         let deleted = connection
             .execute("DELETE FROM agents WHERE id = ?1", params![agent_id])
             .map_err(|error| format!("cannot remove agent {agent_id}: {error}"))?;
@@ -440,7 +455,7 @@ impl MetaStore {
     }
 
     /// Automatic index updates may fill an empty title, never rename an
-    /// existing one or reapply stale pin/archive metadata from a caller.
+    /// existing one, reapply stale pin/archive metadata, or restore a removed row.
     pub(crate) fn touch_session(&self, session: &SessionRow) -> Result<SessionRow, String> {
         let connection = self.lock()?;
         let title = session
@@ -455,7 +470,8 @@ impl MetaStore {
             .query_row(
                 "INSERT INTO sessions (id, agent_id, cwd, native_session_id, title,
                                    config_options, pinned, archived, created_at, updated_at)
-             VALUES (?1, ?2, ?3, ?4, ?5, ?6, 0, 0, ?7, ?8)
+             SELECT ?1, ?2, ?3, ?4, ?5, ?6, 0, 0, ?7, ?8
+             WHERE NOT EXISTS (SELECT 1 FROM dismissed_sessions WHERE id = ?1)
              ON CONFLICT(id) DO UPDATE SET
                  title = CASE WHEN sessions.title IS NULL OR trim(sessions.title) = ''
                          THEN coalesce(excluded.title, sessions.title) ELSE sessions.title END,
@@ -475,7 +491,56 @@ impl MetaStore {
                 ],
                 row_to_session,
             )
-            .map_err(|_| "未能更新对话，请重试".to_string())
+            .map_err(|error| match error {
+                rusqlite::Error::QueryReturnedNoRows => "这段对话已从列表移除，请先明确加入".into(),
+                _ => "未能更新对话，请重试".into(),
+            })
+    }
+
+    /// Fill a missing baseline on the original index row without reviving a
+    /// removed conversation or overwriting a concurrent configuration save.
+    pub(crate) fn compare_session_config(
+        &self,
+        id: &str,
+        owner: (String, String, String),
+        previous: &serde_json::Value,
+        next: &serde_json::Value,
+    ) -> Result<(), String> {
+        let changed = "对话的已保存设置已变化，请重新检查";
+        let failed = "未能保存确认值，请重试";
+        let (agent, cwd, native) = owner;
+        let mut db = self.lock()?;
+        let transaction = db
+            .transaction_with_behavior(TransactionBehavior::Immediate)
+            .map_err(|_| failed.to_string())?;
+        let stored: String = transaction
+            .query_row(
+                "SELECT config_options FROM sessions WHERE id=?1 AND agent_id=?2 AND cwd=?3
+             AND native_session_id=?4 AND config_options IS NOT NULL",
+                params![id, agent, cwd, native],
+                |row| row.get(0),
+            )
+            .optional()
+            .map_err(|_| failed.to_string())?
+            .ok_or(changed)?;
+        if serde_json::from_str::<serde_json::Value>(&stored)
+            .as_ref()
+            .ok()
+            != Some(previous)
+        {
+            return Err(changed.into());
+        }
+        let rows = transaction
+            .execute(
+                "UPDATE sessions SET config_options=?1 WHERE id=?2 AND agent_id=?3 AND cwd=?4
+             AND native_session_id=?5 AND config_options=?6",
+                params![next.to_string(), id, agent, cwd, native, stored],
+            )
+            .map_err(|_| failed.to_string())?;
+        if rows != 1 {
+            return Err(changed.into());
+        }
+        transaction.commit().map_err(|_| failed.to_string())
     }
 
     pub fn upsert_session(&self, session: &SessionRow) -> Result<(), String> {
@@ -572,18 +637,64 @@ impl MetaStore {
 
     pub fn remove_session(&self, session_id: &str) -> Result<bool, String> {
         let mut connection = self.lock()?;
+        mcp_pending::ensure_absent(&connection, session_id)?;
         let transaction = connection.transaction().map_err(sqlite_receipt)?;
-        let deleted = transaction
-            .execute("DELETE FROM sessions WHERE id = ?1", params![session_id])
-            .map_err(sqlite_receipt)?;
-        transaction
-            .execute(
-                "DELETE FROM settings WHERE key=?1",
-                [remembered_pages::key(session_id)],
-            )
-            .map_err(sqlite_receipt)?;
+        let deleted =
+            Self::remove_session_metadata(&transaction, session_id).map_err(sqlite_receipt)?;
         transaction.commit().map_err(sqlite_receipt)?;
+        Ok(deleted)
+    }
+
+    fn remove_session_metadata(
+        connection: &Connection,
+        session_id: &str,
+    ) -> rusqlite::Result<bool> {
+        let deleted = connection.execute("DELETE FROM sessions WHERE id = ?1", [session_id])?;
+        connection.execute(
+            "DELETE FROM settings WHERE key=?1",
+            [remembered_pages::key(session_id)],
+        )?;
         Ok(deleted > 0)
+    }
+
+    /// Commit the local removal and its history filter together, including when
+    /// the selected item only exists in the Agent's history.
+    pub(crate) fn remove_and_dismiss_session(
+        &self,
+        session_id: &str,
+    ) -> Result<(), LocalSessionDeleteError> {
+        use LocalSessionDeleteError::{NotRemoved, Unknown};
+
+        let mut connection = self.lock().map_err(|_| NotRemoved)?;
+        let tx = connection.transaction().map_err(|_| NotRemoved)?;
+        Self::check_delete_ready(&tx, session_id).map_err(|_| NotRemoved)?;
+        if Self::remove_session_metadata(&tx, session_id)
+            .and_then(|_| Self::insert_dismissal(&tx, session_id))
+            .is_err()
+        {
+            // SQLite can already have rolled back on a statement failure. If
+            // it has not, only a successful rollback proves nothing changed.
+            return Err(if tx.is_autocommit() || tx.rollback().is_ok() {
+                NotRemoved
+            } else {
+                Unknown
+            });
+        }
+        tx.commit().map_err(|_| Unknown)
+    }
+
+    pub(crate) fn require_delete_ready(&self, session_id: &str) -> Result<(), String> {
+        Self::check_delete_ready(&*self.lock()?, session_id)
+    }
+
+    fn check_delete_ready(connection: &Connection, session_id: &str) -> Result<(), String> {
+        mcp_pending::ensure_absent(connection, session_id)?;
+        if let Some(saved) = archive::read_saved_work(connection)?
+            && archive::has_unsent_work(&saved, session_id)?
+        {
+            return Err("此对话还有未发送内容或发送结果待确认，请处理后再删除".into());
+        }
+        Ok(())
     }
 
     // ------------------------------------------------------------------
@@ -602,13 +713,16 @@ impl MetaStore {
     /// Record a tombstone; idempotent.
     pub fn dismiss_session(&self, id: &str) -> Result<(), String> {
         let connection = self.lock()?;
-        connection
-            .execute(
-                "INSERT INTO dismissed_sessions (id, created_at) VALUES (?1, ?2)
-                 ON CONFLICT(id) DO NOTHING",
-                params![id, now_millis()],
-            )
-            .map_err(|error| format!("cannot dismiss session {id}: {error}"))?;
+        Self::insert_dismissal(&connection, id)
+            .map_err(|error| format!("cannot dismiss session {id}: {error}"))
+    }
+
+    fn insert_dismissal(connection: &Connection, id: &str) -> rusqlite::Result<()> {
+        connection.execute(
+            "INSERT INTO dismissed_sessions (id, created_at) VALUES (?1, ?2)
+             ON CONFLICT(id) DO NOTHING",
+            params![id, now_millis()],
+        )?;
         Ok(())
     }
 
@@ -656,6 +770,9 @@ impl MetaStore {
     }
 
     pub fn set_setting(&self, key: &str, value: &serde_json::Value) -> Result<(), String> {
+        if key.starts_with(mcp_pending::PREFIX) {
+            return Err("请通过工具变更核对入口更新此记录".into());
+        }
         let connection = self.lock()?;
         self.ensure_worktree_write_available()?;
         connection

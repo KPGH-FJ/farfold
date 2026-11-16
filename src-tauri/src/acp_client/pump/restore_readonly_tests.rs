@@ -222,23 +222,39 @@ async fn search_read_preview_direct_actor_mode_and_delete_do_not_dispatch() {
         .clone();
     let calls_before = fixture.calls().len();
     for action in ["mode", "delete"] {
-        let (result, receive) = tokio::sync::oneshot::channel();
         let deadline = tokio::time::Instant::now() + Duration::from_secs(5);
-        let command = if action == "mode" {
-            SessionControl::SetMode {
-                mode_id: "fixture-mode".into(),
-                deadline,
-                result,
-            }
+        if action == "mode" {
+            let (result, receive) = tokio::sync::oneshot::channel();
+            control
+                .send(SessionControl::SetMode {
+                    mode_id: "fixture-mode".into(),
+                    deadline,
+                    result,
+                })
+                .unwrap();
+            let result = tokio::time::timeout(Duration::from_secs(5), receive)
+                .await
+                .unwrap()
+                .unwrap();
+            assert!(result.is_err(), "{action} is not read cleanup");
         } else {
-            SessionControl::Delete { deadline, result }
-        };
-        control.send(command).unwrap();
-        let result = tokio::time::timeout(Duration::from_secs(5), receive)
-            .await
-            .unwrap()
-            .unwrap();
-        assert!(result.is_err(), "{action} is not read cleanup");
+            let (result, receive) = tokio::sync::oneshot::channel();
+            control
+                .send(SessionControl::Delete {
+                    deadline,
+                    result,
+                    opening: None,
+                })
+                .unwrap();
+            let result = tokio::time::timeout(Duration::from_secs(5), receive)
+                .await
+                .unwrap()
+                .unwrap();
+            assert_eq!(
+                result,
+                Err(crate::acp_client::mutation::DeleteFailure::NotDispatched)
+            );
+        }
         assert_eq!(
             fixture.calls().len(),
             calls_before,

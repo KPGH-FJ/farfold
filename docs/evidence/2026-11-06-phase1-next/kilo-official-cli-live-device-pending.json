@@ -1,0 +1,163 @@
+{
+  "archiveAndHelperProofSourceSha256": "03910b81ba15d57cb260a295c94a4198683d470b6084ba364c91179852df9680",
+  "archiveIncludesAdjacentWorkerAndConsole": true,
+  "archiveSha256": "d94ab724ce384f9a8e7cda72460c5eb643ed44cb481f80cdd4b7571d005cc0b1",
+  "arrivalsBeforeAnyGuardByInvocation": {
+    "fresh-login": {
+      "device-create": 1,
+      "matching-device-poll": 2,
+      "public-model-catalog": 2
+    },
+    "offline-auth-list": {
+      "public-model-catalog": 1
+    }
+  },
+  "cleanupSignals": 0,
+  "credentialLikeTopLevelFieldPresent": false,
+  "differentProfileAndDatabasePaths": true,
+  "directSystemTlsAndHostnameValidation": true,
+  "endedUtc": "2026-11-07T00:01:41.722970+00:00",
+  "exactLoginPeerConfirmedForDeviceCreate": true,
+  "exactLoginPeerConfirmedForDevicePoll": true,
+  "exactOfflineVersion": "7.8.1",
+  "exactOwnedCliImageParentAndGroupConfirmed": true,
+  "firstLocalGuardFailure": null,
+  "freshLoginOutputMarkers": {
+    "addCredentialIntro": true,
+    "authorizationCodeExpired": true,
+    "challengeInstructionsMatchedOwnedLivePair": true,
+    "failedToAuthorize": true,
+    "failedToInitiateDeviceAuthorization": false,
+    "gitStartupErrorClass": false,
+    "loginSuccessful": false,
+    "permissionDeniedClass": false,
+    "stderrHadBytes": true,
+    "stdoutHadBytes": true,
+    "unexpectedError": false,
+    "waitingForAuthorization": true,
+    "zeroCredentialsReport": false
+  },
+  "freshLoginRootsStillPristine": true,
+  "freshLoginTimedOut": false,
+  "isolatedLoginAuthFileAbsentAfter": true,
+  "kernelPolicyByProfile": {
+    "freshLogin": {
+      "homeDataReadAndWriteDenied": true,
+      "otherReachablePortDenied": true,
+      "ownLoopbackAllowed": true,
+      "ownedScratchWriteAllowed": true,
+      "realBrowserOpenerDenied": true,
+      "registeredBinaryReadable": true
+    },
+    "offline": {
+      "homeDataReadAndWriteDenied": true,
+      "otherReachablePortDenied": true,
+      "ownLoopbackAllowed": true,
+      "ownedScratchWriteAllowed": true,
+      "realBrowserOpenerDenied": true,
+      "registeredBinaryReadable": true
+    }
+  },
+  "kind": "KiloFreshOfficialCliBoundedLiveDeviceChallengeRelay",
+  "knownAlternativeFieldPresence": {
+    "data": false,
+    "deviceCode": false,
+    "device_code": true,
+    "error": false,
+    "expires_in": false,
+    "message": false,
+    "status": false,
+    "success": false,
+    "user_code": true,
+    "verification_uri": false
+  },
+  "liveChallengeShapeAndSafetyConfirmed": true,
+  "liveCreateHttpStatus": 200,
+  "liveCreateJsonObject": true,
+  "livePollHttpStatus": 202,
+  "liveRequestAuthOrCookiesSent": false,
+  "modelPrompts": 0,
+  "nativeLoginExitCode": 1,
+  "nativeLoginLaunches": 1,
+  "officialArchiveRegularMembers": 408,
+  "officialRequiredFieldTypes": {
+    "code": "string",
+    "expiresIn": "number",
+    "verificationUrl": "string"
+  },
+  "officialRequiredTypesMatch": true,
+  "offline-auth-listExit": 0,
+  "offline-auth-listOutputMarkers": {
+    "addCredentialIntro": false,
+    "authorizationCodeExpired": false,
+    "challengeInstructionsMatchedOwnedLivePair": false,
+    "failedToAuthorize": false,
+    "failedToInitiateDeviceAuthorization": false,
+    "gitStartupErrorClass": false,
+    "loginSuccessful": false,
+    "permissionDeniedClass": false,
+    "stderrHadBytes": true,
+    "stdoutHadBytes": true,
+    "unexpectedError": false,
+    "waitingForAuthorization": false,
+    "zeroCredentialsReport": true
+  },
+  "offline-versionExit": 0,
+  "offline-versionOutputMarkers": {
+    "addCredentialIntro": false,
+    "authorizationCodeExpired": false,
+    "challengeInstructionsMatchedOwnedLivePair": false,
+    "failedToAuthorize": false,
+    "failedToInitiateDeviceAuthorization": false,
+    "gitStartupErrorClass": false,
+    "loginSuccessful": false,
+    "permissionDeniedClass": false,
+    "stderrHadBytes": false,
+    "stdoutHadBytes": true,
+    "unexpectedError": false,
+    "waitingForAuthorization": false,
+    "zeroCredentialsReport": false
+  },
+  "offlineAuthListZeroAndAuthFileAbsent": true,
+  "ordinaryHomePreservedBothProfiles": true,
+  "outcome": "fresh-official-cli-live-challenge-pending-then-local-expiry-confirmed",
+  "ownedCliGroupGone": true,
+  "ownedCliGroupGoneAtLeaderExitCheck": true,
+  "ownedTemporaryLayoutAndProfilesRemoved": true,
+  "persistedDeviceCodeOrVerificationUrl": false,
+  "phase": "fresh-login",
+  "priorScratchExactExecutableCount": 0,
+  "priorScratchProfileAbsent": true,
+  "productionDataUsed": false,
+  "proxyUsed": false,
+  "rawOutputRetained": false,
+  "realBrowserOpened": false,
+  "realCredentialsOrAccountUsed": false,
+  "realPollResponseBodyRead": false,
+  "redirectsFollowed": 0,
+  "remoteApprovalDenialOrRevocationAction": false,
+  "remoteGetAttempts": 1,
+  "remotePostAttempts": 1,
+  "responsesByInvocation": {
+    "fresh-login": {
+      "device-create:200": 1,
+      "matching-device-poll:202": 1,
+      "matching-device-poll:410": 1,
+      "public-model-catalog:200": 2
+    },
+    "offline-auth-list": {
+      "public-model-catalog:200": 1
+    }
+  },
+  "sameLoopbackOnlyBothProfiles": true,
+  "scratchExecutableSha256": "ac6b36ebcd5eed45ce172287cebeff6ed0eb27ce8ba3413ebe9814beca8f0dca",
+  "separateOperationSafetyChecks": {
+    "codeOneSafePathSegment": true,
+    "expiryPositiveFiniteInOfficialSecondsCalculation": true,
+    "verificationHttpsRecognizedNoUserInfo": true
+  },
+  "startedUtc": "2026-11-07T00:01:31.704290+00:00",
+  "syntheticLocalExpiryReturned": true,
+  "unknownTopLevelFieldCount": 3,
+  "validatedLiveChallengeForwardedToExactCli": true
+}

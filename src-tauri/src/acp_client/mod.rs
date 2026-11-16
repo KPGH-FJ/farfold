@@ -23,6 +23,8 @@ pub(crate) mod auth_compat;
 pub mod auth_connection;
 pub(crate) mod auth_route;
 pub(crate) mod browser_capability;
+mod browser_process;
+pub(crate) mod browser_uds;
 mod cold_history_open;
 mod compaction_activity;
 pub mod delivery_flow;
@@ -36,16 +38,23 @@ pub(crate) mod first_release;
 pub(crate) mod handshake;
 mod history_admission;
 pub mod history_admission_commands;
+mod history_empty;
+#[cfg(all(test, unix))]
+mod history_empty_tests;
 pub mod history_search;
+mod history_supplement;
 pub mod identity_read;
 mod initialization;
 pub(crate) mod installation_parameters;
 mod lifecycle;
+pub(crate) mod live_status;
 pub mod manager;
 mod model_guard;
 mod mutation;
 mod open_purpose;
 mod operations;
+pub mod original_config;
+mod original_config_backup;
 mod permission_effect;
 mod permission_guard;
 pub mod plugin_management;
@@ -58,20 +67,26 @@ pub mod pump;
 pub(crate) mod recipes;
 mod reported_file_input;
 mod reported_output;
+mod restore_confirmation;
 pub(crate) mod service_config;
 pub mod service_connection;
 mod service_delivery;
 pub mod session;
 pub mod session_commands;
 mod session_config;
+mod session_delete;
 pub mod session_discovery;
 pub mod session_fork;
 pub(crate) mod session_index;
+pub mod session_tool_changes;
+pub mod session_tool_recovery;
+pub mod session_tools;
 pub mod skill_management;
 pub(crate) mod startup_diagnostics;
 pub(crate) mod tap;
 mod terminal_output;
 mod tool_activity;
+mod tool_media;
 pub(crate) mod transient_mcp;
 pub(crate) mod versions;
 
@@ -166,3 +181,6 @@ mod transient_pressure;
 
 #[cfg(test)]
 mod flow_pressure_tests;
+
+#[cfg(all(test, target_os = "macos"))]
+mod tool_terminal_wire_tests;

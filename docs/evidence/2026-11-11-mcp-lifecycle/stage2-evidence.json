@@ -1,0 +1,134 @@
+{
+  "kind": "ScopedStage2AgentEvidence",
+  "recordedAt": "2026-11-11T14:32:14Z",
+  "scope": "本批两个历史文件样本（2026-11-09至11-10）与一个官方程序MCP样本（2026-11-11）的索引补充；标准关联为人工窄关联，原事实与各层边界保留，文字不自动生成八项通过。不是最新剩余条件，当前事实仍以docs/status.md为准。",
+  "observations": [
+    {
+      "id": "mistral-p18-two-fragments-20261110",
+      "agentId": "mistral-vibe",
+      "standardIds": ["S5"],
+      "requirementIds": ["P18"],
+      "scope": "macOS正式安装版；2026-11-10既有Mistral服务的一次真实请求，一份自有合成文本文件。",
+      "sourceCodeCommits": ["97479b1850d931c1eea1135750d61189e12a12a3"],
+      "selection": "既有Mistral服务；mistral-medium-3.5；high。",
+      "summary": "原正式记录确认：一次读取、一次file_system.search_replace（replace_all）；同一工具记录展示第3、18行两片段且分别可读。文件496字节变494字节，其余字节不变。",
+      "limitations": [
+        "仅这一文件和一次编辑，不代表全部工具、P18全项、S5全项或整家通过。",
+        "本次只读复核原件和磁盘；未重新操作正式界面，UI事实保留为原正式记录的观察。",
+        "协议日志只记录事件元数据，不能单独证明工具内容；3次服务操作不推断计费。"
+      ],
+      "evidence": [
+        {
+          "path": "docs/evidence/2026-11-10-stage2-live-mistral/summary.json",
+          "sha256": "b3376236345acdda550aa792877a44616368c71dfa66e9b977bd967e7cb83554"
+        }
+      ],
+      "originalVerification": {
+        "checkedAt": "2026-11-11T13:34:46Z",
+        "originals": [
+          {
+            "path": "output/2026-11-10-stage2-closeout/p18-mistral-multi-fragment/formal-one-shot-result.json",
+            "sha256": "234484b128b2454c297dace61d0d6cfbea579705f9c1a9a458e6351d43da5a37"
+          }
+        ],
+        "observations": [
+          "原JSON摘要与已发表summary一致。",
+          "当前494字节文件摘要仍匹配；反向还原两个专用标记得到原496字节摘要，标记仅在第3、18行。",
+          "当时协议日志前8080字节（67行）摘要与原JSON一致，包含一次session/prompt；当前日志追加4条startup，整文件摘要不同。",
+          "原协议片段已按原字节另存本批output；没有补写历史回执。"
+        ]
+      }
+    },
+    {
+      "id": "goose-p22-rework-copy-20261109",
+      "agentId": "goose",
+      "standardIds": ["S5"],
+      "requirementIds": ["P22"],
+      "scope": "macOS正式安装版；2026-11-09自有文本文件真实返工及后续独立另存，两批记录而非单次连续旅程。",
+      "sourceCodeCommits": [
+        "91dadecc8a521eae79f22cb66c52ea07c18b4760",
+        "b4025636794e3aafbd6977138dc4d978674b7f1a"
+      ],
+      "selection": "返工沿用Goose/OpenRouter；nvidia/nemotron-3-ultra-550b-a55b:free；off。后续另存未发新模型请求。",
+      "summary": "原返工记录确认提出版本意见后完成改写，发送意见与原消息保留原SHA，新稿可读；60字节变59字节。后续正式另存记录确认副本59字节、与返工后的SHA相同，已显示另存完成。",
+      "limitations": [
+        "返工和另存发生在不同批次；不升级为P22所有成功/取消/失败路径、S5全项或整家通过。",
+        "当前可独立重核原记录及返工源文件；另存原JSON未列副本路径，本次无法重新读取副本，不否定原正式另存观察。",
+        "未重做界面操作、冷恢复或真实请求；只保留两份原记录明确覆盖的事实。"
+      ],
+      "evidence": [
+        {
+          "path": "docs/evidence/2026-11-09-presend-visibility/real-reply-and-restore.json",
+          "sha256": "d5658e95d9880fc831aa71abb1eab80fc913d1d985ad99ad5b1285530cb42655"
+        },
+        {
+          "path": "docs/evidence/2026-11-10-document-tabs-delivery/summary.json",
+          "sha256": "02eacd1520e08690af1739b24c644cec199cbd553e6f8140dd9fa68a464841c5"
+        }
+      ],
+      "originalVerification": {
+        "checkedAt": "2026-11-11T13:34:46Z",
+        "originals": [
+          {
+            "path": "output/2026-11-09-phase2-real-use/p21-real-rework.json",
+            "sha256": "c5eba9705d3815f3bbb063f299b55ea3467f6f7551f199abbfab74f75876da1e"
+          },
+          {
+            "path": "output/2026-11-09-six-hour-stage2/formal-third/actual-document-tabs-delivery.json",
+            "sha256": "52ae2b78b8b313d9475185643996be6551d6489966867337f689bc6b82fdd278"
+          }
+        ],
+        "observations": [
+          "返工与另存原JSON摘要均与已发表摘要一致。",
+          "当前返工源文件仍为59字节，SHA与两份原记录一致。",
+          "副本路径和另存协议日志文件名未写入所引原JSON；未为填充索引搜索其他文件或制造回执。"
+        ]
+      }
+    },
+    {
+      "id": "goose-p41-official-mcp-lifecycle-20261111",
+      "agentId": "goose",
+      "standardIds": ["S5"],
+      "requirementIds": ["P41"],
+      "scope": "macOS；Goose 1.52.0官方进程中一项自有无凭据HTTP MCP的新增、撤回和恢复实验，只用新空对话。sourceCodeCommits指所核Goose官方源码，不是Farfold构建；不是Farfold界面验收。",
+      "sourceCodeCommits": ["302b60806639ea9f0ae8f053f49f8bf0e88b26f4"],
+      "selection": "沿用既有OpenRouter/nvidia/nemotron-3-ultra-550b-a55b:free、off、auto，模型请求和实际工具调用均为0。普通用户HOME不变；只在子进程NO_PROXY保留继承值并加入127.0.0.1，系统代理不变；子进程TMPDIR限本次自有目录，出站只准该自有回环端点。",
+      "summary": "R7的20个官方协议请求均有匹配成功回执。精确HTTP项加入后持久配置1→2且报告一项自有工具；核对完整描述和extensionKey后撤回，持久配置2→1、活动报告不再含自有工具，原developer保持。新官方进程在load前可读取持久列表，冷load及空对话fork后未恢复该项；截至两进程正常退出及服务关闭，撤回端点计数保持。原R7总记录passed:false未改写：最后只读核对因WAL存在而SHM缺失停下；随后在自有临时副本核对原记录和四条自有记录，源DB/WAL前后摘要不变，无追加Agent运行。",
+      "limitations": [
+        "仅官方程序、新空对话和此一无凭据HTTP项；未验Farfold当前对话添加/撤回界面或安装流程。",
+        "无模型请求、无实际工具调用，不证明真实服务任务成功或模型采用工具。",
+        "未验指定历史点分支、旧消息/上下文保留；fork依据所核官方处理器和匹配实测回执，握手未声明fork。",
+        "未注入保存失败、回执丢失、在途取消、外部并发修改；认证型MCP、其他传输、其他Agent和Windows未验。",
+        "空mcpServers、配置列表或单个修改成功回执都不能单独证明撤回；端点未重连只限所记录观察区间。",
+        "R1–R6原失败/未知及R7原passed:false保留；后续最终核对不改写原回执，不合成新标准receipt或attempt。",
+        "不提升P41全项、S5全项、整家或全产品验收。"
+      ],
+      "evidence": [
+        {
+          "path": "docs/evidence/2026-11-11-mcp-lifecycle/mcp-lifecycle-summary.json",
+          "sha256": "4a05b734181bb465e93abde6e8930986f4ba4bfc3df70b654e5d68afc2b86ce6"
+        }
+      ],
+      "originalVerification": {
+        "checkedAt": "2026-11-11T14:32:14Z",
+        "originals": [
+          {
+            "path": "output/2026-11-11-mcp-lifecycle/attempt-7-loopback-proxy/receipt.json",
+            "sha256": "55c622b86521eaf17545a531077c8d0b71ef36f59409bb1b275c16ab1a741404"
+          },
+          {
+            "path": "output/2026-11-11-mcp-lifecycle/attempt-7-loopback-proxy/final-observation.json",
+            "sha256": "1f61e7cf9753602817f2a503a3524074c6d211e48edae7262905077ae3995bc3"
+          }
+        ],
+        "observations": [
+          "R7原receipt与追加final-observation两份SHA均与公开摘要一致。",
+          "逐项核对原记录的新增、工具报告、撤回、load前读取、冷load和fork观察为真，模型请求与实际工具调用均为0。",
+          "R7原passed:false和wal-without-existing-shm停点保留；final-observation引用同一未改写原SHA，核原51会话/234消息、R7前含自有记录的53会话及四条自有记录，源DB/WAL前后不变。",
+          "受保护配置元数据与已保存选择保持；未读取或核算秘密配置内容摘要，不声称配置文件逐字节核验。",
+          "本次只读核原件与公开摘要，未读取生产数据库、未启动Agent、未制造或重封标准回执。"
+        ]
+      }
+    }
+  ]
+}

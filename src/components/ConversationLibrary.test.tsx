@@ -224,7 +224,7 @@ it("counts mixed unknown and pending work as needing attention without changing 
 
 it.each([
   ["done", "已完成"],
-  ["stopped", "已停止"],
+  ["stopped", "回复已停止"],
   ["failed", "出错了"],
   ["unknown", "结果未知"],
 ] as const)(

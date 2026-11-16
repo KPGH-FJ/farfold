@@ -1,0 +1,127 @@
+{
+  "recordedAt": "2026-11-04T10:59:36.165086+00:00",
+  "task": "P01 / F with C and K common conditions",
+  "evidenceKind": "reported-from-observed-tool-output",
+  "originalLocalTestLogsSaved": false,
+  "provenance": "RED and GREEN were directly observed in this chat tool output. No original local raw test log was saved at execution time; this JSON is a later factual report, not a reconstructed raw log. Production source was not reverted or retested to manufacture RED evidence.",
+  "problem": "The ordinary version-1 draft parser checked root fields but reconstructed composer and attachment objects without checking their field names. A same-version unknown composer/attachment field was silently dropped; the next ordinary local edit replaced the original saved settings value without that field.",
+  "minimumUserResult": "Unsupported saved composer/attachment fields block hydration and settings writes, retaining the original saved value and later local input. An explicitly retried supported snapshot can then restore other drafts while retaining that later input; no Agent request or send is invoked.",
+  "observations": [
+    {
+      "phase": "red",
+      "toolOutputChunkId": "a8b232",
+      "command": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/runtime/draft_storage.recovery.test.ts"
+      ],
+      "shellExitCode": 1,
+      "testFilesFailed": 1,
+      "testsPassed": 8,
+      "testsFailed": 2,
+      "testsTotal": 10,
+      "vitestDurationSeconds": 0.184,
+      "observedFailure": "Both disk-equality assertions showed the saved unknown field removed after an ordinary local edit and settings_set. The diff specifically removed futureInput or futureSource. This report does not reproduce the raw output."
+    },
+    {
+      "phase": "green",
+      "toolOutputChunkId": "7a43f8",
+      "command": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/runtime/draft_storage.recovery.test.ts",
+        "src/runtime/draft_storage.test.ts",
+        "src/runtime/draft_storage.failure.test.ts",
+        "src/runtime/draft_storage.receipt.test.ts",
+        "src/runtime/draft_attachment_delivery.test.ts",
+        "src/runtime/draft_audio_encoding.test.ts",
+        "src/runtime/docx_draft_recovery.test.ts",
+        "src/runtime/pdf_draft_recovery.test.ts",
+        "src/runtime/xlsx_draft_recovery.test.ts",
+        "src/runtime/storage_restore.preview.test.ts",
+        "src/runtime/storage_restore.visual.test.ts",
+        "src/components/DraftStartup.test.tsx",
+        "src/components/AttachmentRecovery.test.tsx"
+      ],
+      "shellExitCode": 0,
+      "testFilesPassed": 13,
+      "testsPassed": 166,
+      "testsFailed": 0,
+      "vitestDurationSeconds": 3.69
+    },
+    {
+      "phase": "initial-targeted-format",
+      "toolOutputChunkId": "3e046d",
+      "commandText": "corepack pnpm exec prettier --check src/runtime/drafts.ts src/runtime/draft_storage.recovery.test.ts followed by shasum in the same shell",
+      "shellExitCode": 0,
+      "prettierExitCodeDirectlyObserved": false,
+      "observedOutput": "Prettier warned only for draft_storage.recovery.test.ts. The combined shell exited 0 because the later shasum command succeeded; this is not recorded as a passing formatting check."
+    },
+    {
+      "phase": "targeted-format-write",
+      "toolOutputChunkId": "637c9b",
+      "command": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--write",
+        "src/runtime/draft_storage.recovery.test.ts"
+      ],
+      "shellExitCode": 0
+    },
+    {
+      "phase": "targeted-format-final",
+      "toolOutputChunkId": "5a8fef",
+      "command": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "src/runtime/drafts.ts",
+        "src/runtime/draft_storage.recovery.test.ts"
+      ],
+      "shellExitCode": 0,
+      "observedOutput": "All matched files use Prettier code style!"
+    }
+  ],
+  "change": {
+    "files": [
+      {
+        "path": "src/runtime/drafts.ts",
+        "beforeSha256": "4d7babe927ce47851bbc75c9af22e7d57506c248e986c22a56d67ffc16632248",
+        "afterSha256": "96dbe00f05d5dcec8b8f31f58bade9a85c26e95d8a1cef7b85ca106eb3972126",
+        "beforeMatchesRestorationBaseline": true
+      },
+      {
+        "path": "src/runtime/draft_storage.recovery.test.ts",
+        "beforeSha256": "7c1382b72436531d8976c6883d9870f2f083b85da59cc065c071379ef750f73c",
+        "afterSha256": "86ecbc55eaffcbb96eaa8f3211a34886e9e74a5b3d732e02ba36be8fbfea6b6b",
+        "beforeMatchesRestorationBaseline": true
+      }
+    ],
+    "patch": "change.patch",
+    "patchProvenance": "The before text was derived in memory by removing only the recorded additions from current files. Both before SHA-256 values exactly match the pre-change restoration baseline. No original source file was rewritten. The patch is a current concrete code diff, not a raw test log.",
+    "beforeHashReference": "docs/evidence/2026-11-04-development-environment-restoration/baseline.json",
+    "scope": [
+      "Composer field-name checks before any restored content is published.",
+      "Attachment field-name checks while retaining known legacy content/loading/recovered/imageChecked fields as readable but untrusted.",
+      "Two behavior tests require whole-snapshot preservation, no partial hydration, no Agent dispatch, and preservation of later local input through an explicit supported retry."
+    ]
+  },
+  "verificationLimits": [
+    "Tests use synthetic settings_get/settings_set storage; real SQLite read-only/full/corrupt failure and actual disk exhaustion were not exercised by this change.",
+    "The existing cold-recovery evidence is reused only within its original scope; no new installed-app restart or native UI observation was performed.",
+    "No attachment-byte identity or real Agent consumption/attachment resend is established.",
+    "No full engineering suite, typecheck, build, installation, real Agent request, Windows run, or product-wide P01 acceptance was performed by this subtask.",
+    "The source boundary change covers unknown composer and attachment fields, not a claim that every nested schema extension or complete P01 behavior is now verified."
+  ],
+  "handoff": "Stop editing the two source files. Independent source review and the unified full engineering checks are owned by the main agent."
+}

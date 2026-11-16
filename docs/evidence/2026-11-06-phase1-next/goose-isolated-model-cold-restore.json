@@ -1,0 +1,231 @@
+{
+  "kind": "OfficialGooseIsolatedNoPromptModelColdRestore",
+  "startedAtUtc": "2026-11-06T21:11:04.477807+00:00",
+  "gooseSourceCommit": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+  "provider": "openrouter",
+  "originalModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "alternativeModel": "nvidia/nemotron-3.5-super-vl:free",
+  "modelPrompts": 0,
+  "authenticationRequests": 0,
+  "mayQueryOfficialModelCatalog": true,
+  "scope": "Official standalone Goose only. Two owned test sessions and new data/cwd. No installed app or production database modification.",
+  "launches": [
+    {
+      "label": "warm",
+      "sent": [
+        "initialize",
+        "session/new",
+        "_goose/unstable/session/extensions/list",
+        "_goose/unstable/session/extensions/remove",
+        "_goose/unstable/session/extensions/list",
+        "_goose/unstable/tools/list",
+        "session/new",
+        "_goose/unstable/session/extensions/list",
+        "_goose/unstable/session/extensions/remove",
+        "_goose/unstable/session/extensions/list",
+        "_goose/unstable/tools/list",
+        "session/set_config_option"
+      ],
+      "responses": [
+        {
+          "method": "initialize",
+          "ok": true
+        },
+        {
+          "method": "session/new",
+          "ok": true
+        },
+        {
+          "method": "_goose/unstable/session/extensions/list",
+          "ok": true
+        },
+        {
+          "method": "_goose/unstable/session/extensions/remove",
+          "ok": true
+        },
+        {
+          "method": "_goose/unstable/session/extensions/list",
+          "ok": true
+        },
+        {
+          "method": "_goose/unstable/tools/list",
+          "ok": true
+        },
+        {
+          "method": "session/new",
+          "ok": true
+        },
+        {
+          "method": "_goose/unstable/session/extensions/list",
+          "ok": true
+        },
+        {
+          "method": "_goose/unstable/session/extensions/remove",
+          "ok": true
+        },
+        {
+          "method": "_goose/unstable/session/extensions/list",
+          "ok": true
+        },
+        {
+          "method": "_goose/unstable/tools/list",
+          "ok": true
+        },
+        {
+          "method": "session/set_config_option",
+          "ok": true
+        }
+      ],
+      "notifications": {
+        "other_session_update": 4,
+        "config_option_update": 1
+      },
+      "stdinClosed": true,
+      "naturalExit": 0,
+      "childOfHarness": true,
+      "agentVersion": "1.52.0",
+      "scopesChecked": {
+        "A": {
+          "extensions": 0,
+          "tools": 0,
+          "removedInertTom": true
+        },
+        "B": {
+          "extensions": 0,
+          "tools": 0,
+          "removedInertTom": true
+        }
+      },
+      "observedNaturalExit": true
+    },
+    {
+      "label": "cold",
+      "sent": [
+        "initialize",
+        "session/load",
+        "_goose/unstable/session/extensions/list",
+        "_goose/unstable/tools/list",
+        "session/load",
+        "_goose/unstable/session/extensions/list",
+        "_goose/unstable/tools/list"
+      ],
+      "responses": [
+        {
+          "method": "initialize",
+          "ok": true
+        },
+        {
+          "method": "session/load",
+          "ok": true
+        },
+        {
+          "method": "_goose/unstable/session/extensions/list",
+          "ok": true
+        },
+        {
+          "method": "_goose/unstable/tools/list",
+          "ok": true
+        },
+        {
+          "method": "session/load",
+          "ok": true
+        },
+        {
+          "method": "_goose/unstable/session/extensions/list",
+          "ok": true
+        },
+        {
+          "method": "_goose/unstable/tools/list",
+          "ok": true
+        }
+      ],
+      "notifications": {
+        "other_session_update": 4
+      },
+      "stdinClosed": true,
+      "naturalExit": 0,
+      "childOfHarness": true,
+      "agentVersion": "1.52.0",
+      "scopesChecked": {
+        "A": {
+          "extensions": 0,
+          "tools": 0,
+          "removedInertTom": false
+        },
+        "B": {
+          "extensions": 0,
+          "tools": 0,
+          "removedInertTom": false
+        }
+      },
+      "observedNaturalExit": true
+    }
+  ],
+  "steps": {
+    "A": {
+      "sessionIdSha256": "a18b3a355ac778a6100df66410198b634cd76e8a9272654fe0c238fc4bc31b33",
+      "initialModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "coldExactIdModel": "nvidia/nemotron-3.5-super-vl:free"
+    },
+    "B": {
+      "sessionIdSha256": "91a8d3dd049732a3c654e9944bdd2e1eb8a9c20203daa759497443719538a4a2",
+      "initialModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "coldExactIdModel": "nvidia/nemotron-3-ultra-550b-a55b:free"
+    },
+    "warmDatabase": {
+      "A": {
+        "provider": "openrouter",
+        "model": "nvidia/nemotron-3.5-super-vl:free",
+        "mode": "chat",
+        "messages": 0,
+        "cwdMatchesPrivate": true
+      },
+      "B": {
+        "provider": "openrouter",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "mode": "chat",
+        "messages": 0,
+        "cwdMatchesPrivate": true
+      }
+    }
+  },
+  "preflight": {
+    "strictSignature": true,
+    "sameRegisteredBinaryAsFormalChild": true,
+    "arm64": true,
+    "realHomePreserved": true,
+    "ownedEmptyCwdAndRoot": true,
+    "telemetryOffForChild": true,
+    "keychainCommands": 0,
+    "secretsReadOrCopiedByHarness": 0
+  },
+  "result": "pass",
+  "observedGlobalFileMetadataUnchanged": {
+    "config-directory": true,
+    "user-config": true,
+    "user-secret-file": true,
+    "system-config": true,
+    "session-db": true,
+    "session-wal": true
+  },
+  "completedAtUtc": "2026-11-06T21:11:04.771687+00:00",
+  "distinctChildProcesses": true,
+  "independentReview": "Verified exact registered binary and private root, per-conversation empty extension and tool lists, A-only warm setter, two cold loads of the exact saved IDs with no cold setter, zero messages and two child exits with code 0.",
+  "independentReadAfterEof": {
+    "sqliteQuickCheck": "ok",
+    "bothExactSessionModelsMatched": true,
+    "bothOwnedChildrenGone": true,
+    "messages": 0,
+    "sourceReceiptSha256": "2c918ae48d4441ece2c83f8840039df30ada5c56c56e2c8f567c661d402eb4dd"
+  },
+  "rawEvidenceSha256": {
+    "sanitizedOriginal": "6467909862de0d86162d788f4223fec38b64c85cfccfde469f8440dc744cd61f",
+    "exerciseHarness": "e2be9e128836b9d3d484bfdc3901bed89d96249abf5b1c3dce8c5af07a0acdfe"
+  },
+  "scopeLimits": [
+    "Actual standalone official Goose, without launching Farfold or touching its installed state.",
+    "Settings and exact native session IDs were read back without inference. No provider account, billing, or actual reply was verified by this test.",
+    "The official binary may use its ordinary credential mechanism. The harness neither queried Keychain directly nor obtained, copied or logged a secret.",
+    "For the selected existing profile paths the test compared file metadata, not their contents."
+  ]
+}

@@ -4,6 +4,20 @@ use std::path::Path;
 
 use crate::meta_store::AgentRow;
 
+/// Reviewed official Goose ACP launch shape, shared by read-only supplements.
+/// No program authentication, version gate, configuration read or process probe.
+pub(crate) fn goose_acp(agent: &AgentRow) -> bool {
+    let command = Path::new(&agent.command);
+    agent.source == "registry"
+        && agent.id == "registry:goose"
+        && agent.args == ["acp"]
+        && command.is_absolute()
+        && command
+            .file_name()
+            .and_then(|s| s.to_str())
+            .is_some_and(|s| s == "goose" || (cfg!(windows) && s.eq_ignore_ascii_case("goose.exe")))
+}
+
 /// Official @github/copilot 1.0.89 loader forwards argv to this platform export.
 /// Supplement scope only, never an Agent installation/connection version gate.
 /// Source: https://github.com/github/copilot-cli/releases/tag/v1.0.89 and the
@@ -176,6 +190,24 @@ pub(crate) struct TerminalActionDeclaration {
     pub source_url: &'static str,
 }
 
+const CLINE_AUTH_ACTION: TerminalActionDeclaration = TerminalActionDeclaration {
+    id: "configure-model-service",
+    purpose: "service_configuration",
+    agent_id: "registry:cline",
+    version: "3.0.65",
+    launch: TerminalActionLaunch::Npm {
+        package: "cline",
+        bin: "cline",
+        manifest_entry: "./bin/cline",
+        loader: "bin/cline",
+    },
+    launch_args: &["--acp"],
+    action_args: &["auth"],
+    // The 3.0.65 published README documents the interactive setup. The URL
+    // points to that documentation's source directory without widening the match.
+    source_url: "https://github.com/cline/cline/tree/main/apps/cli",
+};
+
 const TERMINAL_ACTIONS: &[TerminalActionDeclaration] = &[
     TerminalActionDeclaration {
         id: "configure-model-service",
@@ -189,24 +221,11 @@ const TERMINAL_ACTIONS: &[TerminalActionDeclaration] = &[
         // only this supplement; it is never a connection or installation gate.
         source_url: "https://github.com/block/goose/blob/v1.52.0/crates/goose-cli/src/commands/configure.rs",
     },
+    CLINE_AUTH_ACTION,
     TerminalActionDeclaration {
-        id: "configure-model-service",
-        purpose: "service_configuration",
-        agent_id: "registry:cline",
-        version: "3.0.65",
-        launch: TerminalActionLaunch::Npm {
-            package: "cline",
-            bin: "cline",
-            manifest_entry: "./bin/cline",
-            loader: "bin/cline",
-        },
-        launch_args: &["--acp"],
-        action_args: &["auth"],
-        // Published cline 3.0.65 README documents this interactive setup; its
-        // CLI and protocol route share ProviderSettingsManager. The repository
-        // URL is a source pointer, not a claim about the current main version or
-        // support for arbitrary providers through the protocol.
-        source_url: "https://github.com/cline/cline/tree/main/apps/cli",
+        version: "3.0.74",
+        source_url: "https://github.com/cline/cline/blob/cli-v3.0.74/docs/cli/cli-reference.mdx",
+        ..CLINE_AUTH_ACTION
     },
 ];
 
@@ -648,3 +667,24 @@ pub(crate) mod tests {
         assert!(declared_for(&row).is_empty());
     }
 }
+
+/// User-authorized official read-only companion, 2026-11-13. This declaration
+/// grants only export of the already-selected history, not an arbitrary sibling.
+/// Public console_scripts metadata and the managed installation receipt must
+/// independently bind both entries. No version or binary digest admission.
+pub(crate) struct HistoryExportDeclaration {
+    pub registry_id: &'static str,
+    pub acp_entry: &'static str,
+    pub companion_entry: &'static str,
+    pub distribution: &'static str,
+    pub acp_import: &'static str,
+    pub companion_import: &'static str,
+}
+pub(crate) const FAST_HISTORY_EXPORT: HistoryExportDeclaration = HistoryExportDeclaration {
+    registry_id: "registry:fast-agent",
+    acp_entry: "fast-agent-acp",
+    companion_entry: "fast-agent",
+    distribution: "fast-agent-mcp",
+    acp_import: "fast_agent.cli.commands.acp",
+    companion_import: "fast_agent.cli.__main__",
+};

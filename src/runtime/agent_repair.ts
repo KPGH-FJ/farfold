@@ -1,6 +1,15 @@
 import type { AgentSetupProgress } from "../components/AgentSetup";
 import type { ThreadState, ConfigOptionView } from "./session_types";
 import { pendingPreparationRead } from "./agent_preparation";
+import {
+  composerDrafts,
+  draftPersistence,
+  newConversationChoice,
+} from "./drafts";
+import { sameConfigurationSnapshot } from "./config_check";
+import { isConfigurationRestoreNotice } from "./configuration_restore_feedback";
+import { STRINGS } from "./strings";
+import type { UiNotice } from "./ui_error";
 
 export function draftPreparationRequired(
   thread: ThreadState | null | undefined,
@@ -30,6 +39,48 @@ export interface AgentRepairRequest {
   panel: AgentRepairPanel;
   needsAuthentication?: boolean;
   sourceContext?: string;
+  draftConfiguration?: boolean;
+}
+
+/** Repair belongs to the unsent draft and the service that opened the review. */
+export function captureDraftConfigurationRepair() {
+  const draft = composerDrafts.read("new");
+  const generation = composerDrafts.generation("new");
+  const choice = structuredClone({ ...newConversationChoice });
+  return (selection: NonNullable<AgentSetupProgress["selection"]>) =>
+    composerDrafts.read("new") === draft &&
+    composerDrafts.generation("new") === generation &&
+    !draft.sendPending &&
+    !draft.pendingConversation &&
+    !draftPersistence.snapshot().interactionLocked &&
+    sameConfigurationSnapshot(choice, newConversationChoice) &&
+    sameConfigurationSnapshot(choice.service, selection.service);
+}
+
+export function newDraftRepairRequest(
+  thread: ThreadState | null,
+  needsAuthentication: boolean,
+  sourceContext: string | undefined,
+  explicitReadRequired: boolean,
+  error: UiNotice | null,
+): AgentRepairRequest {
+  const draftConfiguration =
+    !needsAuthentication &&
+    !explicitReadRequired &&
+    isConfigurationRestoreNotice(error);
+  return {
+    panel:
+      explicitReadRequired ||
+      draftConfiguration ||
+      (!needsAuthentication &&
+        (error?.message === STRINGS.repair.configFailed ||
+          error?.message === STRINGS.repair.confirmConfigFailed))
+        ? "model"
+        : agentRepairPanel(thread, needsAuthentication),
+    needsAuthentication,
+    sourceContext,
+    ...(draftConfiguration ? { draftConfiguration: true } : {}),
+  };
 }
 export interface ConversationRepairContext {
   key: string;

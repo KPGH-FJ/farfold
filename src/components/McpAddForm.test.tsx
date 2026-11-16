@@ -54,6 +54,7 @@ vi.mock("../runtime/skill_management_controller", () => ({
   },
 }));
 import { McpAddForm } from "./McpAddForm";
+import { McpHttpFields } from "./McpHttpFields";
 import { MCP_ADD_STRINGS as S } from "../runtime/mcp_add_strings";
 import { id, snapshot } from "../runtime/mcp_management.test-support";
 let props: ComponentProps<typeof McpAddForm>;
@@ -65,7 +66,14 @@ function nodes(node: ReactNode): ReactElement<Record<string, unknown>>[] {
   const out: ReactElement<Record<string, unknown>>[] = [];
   Children.forEach(node, (c) => {
     if (isValidElement<Record<string, unknown>>(c))
-      out.push(c, ...nodes(c.props.children as ReactNode));
+      out.push(
+        c,
+        ...nodes(
+          c.type === McpHttpFields
+            ? McpHttpFields(c.props as ComponentProps<typeof McpHttpFields>)
+            : (c.props.children as ReactNode),
+        ),
+      );
   });
   return out;
 }

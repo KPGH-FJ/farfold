@@ -1,0 +1,157 @@
+{
+  "kind": "DerivedInputLifecycleBatchFormalAndSelectedUiSummary",
+  "recordedAtUtc": "2026-11-05T11:08:49.111357+00:00",
+  "sourceCommit": "844f0697c83c1e60208b142d4c30e0a5f855910d",
+  "formerFunctionalSource": "38e53a304b10d15c5eb10fecb6b55d922a100357",
+  "status": "delivered_with_explicit_unverified_scope",
+  "controlledAndEngineeringPackage": "summary.json",
+  "engineering": {
+    "freshNaturalZeroCommands": 7,
+    "frontendFiles": 717,
+    "frontendPassed": 9594,
+    "rustPassed": 2391,
+    "rustFailed": 0,
+    "rustIgnored": 7,
+    "completeDeclaredInputs": 2400,
+    "completeProductionInputs": 2396,
+    "freshFixturesIncludedInBothEndpoints": 11,
+    "legacyHelperProjectionProduction": 2385,
+    "legacyHelperProjectionAdmitted": 2388,
+    "sourceBeforeAfterShaEqual": true,
+    "currentModesAndGitIndependentlyVerified": true,
+    "historicalModeEndpointsCaptured": false,
+    "oldRustReuse": false
+  },
+  "formal": {
+    "appPath": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "mainSha256": "2e3d8e5133e3165e3bc20f09a3e378a510082471652055239163ed876a15f091",
+    "candidateBuildCount": 1,
+    "buildNaturalExitCode": 0,
+    "candidateMechanicalChecks": 9,
+    "installedMechanicalChecks": 6,
+    "atomicNewInodeFiles": 5,
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "forcedQuit": false,
+    "automaticRetry": false,
+    "freshClosedStateManifests": {
+      "phases": ["before", "preinstall", "after"],
+      "entriesEach": 206275,
+      "sha256": "7224044e2af9c3e6a748b759c288b1372083e46ec65e1917932276c4c245848c",
+      "equal": true,
+      "scope": "Closed-state interval only; not all data unchanged after startup."
+    },
+    "secondCopiedDatabaseBackupIntegrity": "ok",
+    "exactGeneratedDuplicateAppRemoved": true,
+    "candidateZipRetainedSha256": "7681987a33cf4469094d1804edf1a04524242730be4ed1413d9eb85d4b21177e"
+  },
+  "rootNativeUi": {
+    "current844": {
+      "originalP02AndRetained1AndCwdVisibleAfterColdStartAndReturn": true,
+      "agentStillUnselected": true,
+      "testAttachmentAbsent": true,
+      "metadataIndex": "UI-displayed93 -> existing title prefix UI-displayed1 -> cleared UI-displayed93 -> originaldraft",
+      "noConversationOpenedOrReconnected": true,
+      "noIndexRenameArchiveDeleteRestore": true,
+      "originalObservation": {
+        "path": "output/2026-11-05-input-lifecycle-stage/formal-ui-observation.json",
+        "sha256": "21bd5ca02b914e22a0d69c89d78a7f05bf9a1cf20a39649d1a0df54886ef8634"
+      }
+    },
+    "earlier38e": {
+      "owned1086BytePngLocationAttachment": "Native picker add -> normalquit/coldreview required -> explicitkeep -> removeonlyownreference -> second normalquit/cold no testattachment; originalP02/retained1/cwdvisible.",
+      "originalObservation": {
+        "path": "output/2026-11-05-input-lifecycle-stage/native/observation.json",
+        "sha256": "23cbe60ad00037654a2da0b8940a58a45afb7e5839295daab296bd81901b199a"
+      },
+      "scope": "Location attachment on38e only, not inline-image snapshot, clipboard, pendingqueue transfer, Agent image reading, storage fault or new844 action."
+    },
+    "newRealModelPrompts": 0,
+    "oldRequestsResent": 0,
+    "explicitProviderModelReasoningCredentialPermissionChanges": false,
+    "countBoundary": "Earlier38e UI94 -> freshprequit38e93;844 startup/list/clearedquery93. No cause assigned to prior count changes, no claim this race fix explains or reverses them.",
+    "evidenceBoundary": "Single Root native Cua witness in this conversation; no persisted raw AX/screenshot and no second UI witness.",
+    "countQualification": "These are counts displayed by the interface, not an independent enumeration of complete history or every rendered row. The Root derived observation wording metadata rows is understood in this narrow displayed-count scope."
+  },
+  "independentReaders": {
+    "index": {
+      "path": "output/2026-11-05-input-lifecycle-stage/archive-independent-review/reader-v2.json",
+      "sha256": "3dea33a0c80a98beca46b1edfdc089653b3dce937406e87b96a4fbd237bc71e8"
+    },
+    "control": {
+      "path": "output/2026-11-05-input-lifecycle-stage/recovery-independent-review/reader.json",
+      "sha256": "413dcead378e53052d57b1070d3bf98388fe391b6d358f83fe4a1ebb27323a77"
+    },
+    "engineering": {
+      "path": "output/2026-11-05-input-lifecycle-stage/engineering-independent-review/independent-review.json",
+      "sha256": "23f86c3165b3295f1056d47998fb62e8382d9c9a75462de543007865168a84d0"
+    },
+    "textCapsule": {
+      "path": "output/2026-11-05-input-lifecycle-stage/ownedcapsule-independent-review/reader.json",
+      "sha256": "c840cee4661de0bb0806265cabc7f841d9288016f69194c63c3a02e89bba83a9"
+    },
+    "formalDelivery": {
+      "path": "output/2026-11-05-input-lifecycle-stage/formal-delivery-independent-review/reader.json",
+      "sha256": "aca4473a5a3793a03ab0aef15e1cf74e7e995f8efca8e30b7eefda5be45af6c4"
+    }
+  },
+  "privateOriginalReceipts": {
+    "candidateNatural": {
+      "path": "output/2026-11-05-input-lifecycle-stage/formal-preparation/formal/candidate-natural-completion-v2.json",
+      "sha256": "0dcf08a47a34a7de4a8aed89d45a877ad4227c5f21cbc18f3077585922725532"
+    },
+    "candidate": {
+      "path": "output/2026-11-05-input-lifecycle-stage/formal-preparation/formal/candidate-output/candidate.json",
+      "sha256": "28dddf4f0bb13db6ace912f9474afd1eddeb3a82f22a37bf5e2f60a3fc6d902b"
+    },
+    "candidateMechanicalReader": {
+      "path": "output/2026-11-05-input-lifecycle-stage/formal-preparation/formal/independent/review-v2.json",
+      "sha256": "f7485684409b3cb9f43fed214040fc9ae5f5c9448cb0d33021c571115b0a48b8"
+    },
+    "orderedDelivery": {
+      "path": "output/2026-11-05-input-lifecycle-stage/formal-preparation/formal/root-delivery-completion.json",
+      "sha256": "4ea666d5e85257a75e8de248857e5e9d73ec930067a1d0962711fde2f48aed55"
+    },
+    "atomicInstall": {
+      "path": "output/2026-11-05-input-lifecycle-stage/formal-preparation/formal/install/install-result.json",
+      "sha256": "9e0cfbd64257f98da515106f2629535dba6395d283f4ead0909ec56b3da77ba4"
+    },
+    "installedMechanicalReader": {
+      "path": "output/2026-11-05-input-lifecycle-stage/formal-preparation/formal/install/installed-independent-review-private.json",
+      "sha256": "b78d46464e04364e70a6ccb849b3f1bd3087685dd013a2393f3e41af140b16a3"
+    },
+    "before": {
+      "path": "output/2026-11-05-input-lifecycle-stage/formal-preparation/formal/install/retention-before-receipt.json",
+      "sha256": "1bdc0f3593b2b1e9ada29ed7c5cefbde8d2fee0f9cb3791e236628db6617e483"
+    },
+    "preinstall": {
+      "path": "output/2026-11-05-input-lifecycle-stage/formal-preparation/formal/install/retention-preinstall-receipt.json",
+      "sha256": "f7f95925b634dbc626a50bf6171c1706b4e9ea473c3daa81e31f8a184e344d7b"
+    },
+    "after": {
+      "path": "output/2026-11-05-input-lifecycle-stage/formal-preparation/formal/install/retention-after-receipt.json",
+      "sha256": "e64c997ded1acd6b1305ebbb1e4983df6922063ecc87fdb03f8c5e5f11d9aaf4"
+    },
+    "exactCleanup": {
+      "path": "output/2026-11-05-input-lifecycle-stage/formal-preparation/formal/install/candidate-cleanup.json",
+      "sha256": "0965c3c680407b9968fc7f3da596f9e7e697b9394ecec3d2bb4f2439a29db9a2"
+    }
+  },
+  "remaining": [
+    "Actual installed index race/memberABA was not timing-injected; real autoarchive cause and completeP37 remain unknown.",
+    "No official Agent compaction simultaneous with Config/Mode/Close/Delete; controlled helper/SDK routes do not prove wholecontrolentry/pump, protectedmodel save or permissions effect, or completeNEW29.",
+    "No new completeApp searchpreview/viewauthority revalidation beyond refresh period, inline-image/clipboard/queue-transfer/Agent-read or installed storage-fault coverage.",
+    "B3/Q startup/load root causes, original unknown work/P18 conditions, missing accounts/directories/contracts and NEW24 affected-new-send pause remain.",
+    "Windows parser fix and install/uninstall remain unverified under unchanged account payment/spending availability. No manual retry this batch."
+  ],
+  "scopeUnchanged": {
+    "agents": 29,
+    "standardsEach": 8,
+    "originalRequirementIds": 151,
+    "noWholeProductOrAgentEightStandardAcceptance": true
+  },
+  "publicationBoundary": "Derived facts and private raw receipt hashes only. No userDB, backup, full userdata manifest, rawAX, draft body, PNG or executable copied here. Four earlier Source capsule files remain frozen; this later formal/UI record is separate."
+}

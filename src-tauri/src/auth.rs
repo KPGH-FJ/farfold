@@ -19,6 +19,7 @@ use crate::meta_store::{AgentRow, MetaStore};
 use crate::pty::{self, PtyManager};
 use crate::shell_env;
 
+pub(crate) mod agent_environment;
 pub(crate) mod attempts;
 pub(crate) mod terminal;
 #[cfg(any(target_os = "windows", test))]
@@ -394,30 +395,33 @@ pub(crate) fn environment_for(
     row: &AgentRow,
 ) -> Result<std::collections::HashMap<String, String>, String> {
     let mut env = shell_env::command_env();
-    env.extend(resolve_agent_env(&row.id, &row.env));
+    shell_env::EnvNames::current().extend(&mut env, resolve_agent_env(&row.id, &row.env)?);
     crate::credentials::apply(store, &row.id, &mut env)?;
     Ok(env)
 }
 
-/// Resolve `__keychain__` env placeholders on an agents row to their real
-/// values. Unresolvable entries are dropped — the agent falls back to its
-/// own auth state.
-pub(crate) fn resolve_agent_env(agent_id: &str, env: &[(String, String)]) -> Vec<(String, String)> {
+/// Resolve protected values only inside trusted launch and explicit removal checks.
+pub(crate) fn resolve_agent_env(
+    agent_id: &str,
+    env: &[(String, String)],
+) -> Result<Vec<(String, String)>, String> {
+    resolve_agent_env_with(agent_id, env, &keychain_lookup)
+}
+
+pub(crate) fn resolve_agent_env_with(
+    agent_id: &str,
+    env: &[(String, String)],
+    lookup: &dyn Fn(&str) -> Option<String>,
+) -> Result<Vec<(String, String)>, String> {
     env.iter()
-        .filter_map(|(name, value)| {
+        .map(|(name, value)| {
             if value == KEYCHAIN_MARKER {
-                match keychain_lookup(&keychain_service(agent_id, name)) {
-                    Some(resolved) => Some((name.clone(), resolved)),
-                    None => {
-                        eprintln!(
-                            "[farfold] keychain entry missing for {agent_id}.{name}; \
-                             agent spawns without it"
-                        );
-                        None
-                    }
-                }
+                let value = lookup(&keychain_service(agent_id, name))
+                    .filter(|value| !value.is_empty() && !value.contains('\0'))
+                    .ok_or("无法读取此 Agent 的安全环境变量，请检查系统凭据后重试")?;
+                Ok((name.clone(), value))
             } else {
-                Some((name.clone(), value.clone()))
+                Ok((name.clone(), value.clone()))
             }
         })
         .collect()
@@ -663,7 +667,9 @@ pub async fn auth_run(
     let cwd = attempt
         .setup(crate::acp_client::manager::validate_cwd_async(&cwd))
         .await?;
-    let configuration = attempt.configuration_guard().await?;
+    let configuration = attempt
+        .configuration_guard(&app.state::<MetaStore>())
+        .await?;
     let row = attempt
         .setup(crate::acp_client::manager::require_agent_row(
             &app, &agent_id,
@@ -721,11 +727,9 @@ pub async fn auth_run(
                     attempt,
                 },
                 || {
-                    let mut env: Vec<_> = environment_for(&app.state::<MetaStore>(), &row)?
-                        .into_iter()
-                        .collect();
-                    env.extend(invocation.env);
-                    Ok(env)
+                    let mut env = environment_for(&app.state::<MetaStore>(), &row)?;
+                    shell_env::EnvNames::current().extend(&mut env, invocation.env);
+                    Ok(env.into_iter().collect())
                 },
             )?;
             crate::logging::info(
@@ -747,7 +751,9 @@ pub async fn auth_run(
     attempt
         .setup(ensure_connected(&manager, &store, &row, &cwd))
         .await?;
-    let _configuration = attempt.configuration_guard().await?;
+    let _configuration = attempt
+        .configuration_guard(&app.state::<MetaStore>())
+        .await?;
     let current = attempt
         .setup(crate::acp_client::manager::require_agent_row(
             &app, &agent_id,
@@ -852,7 +858,9 @@ pub async fn agent_logout(
     let cwd = attempt
         .setup(crate::acp_client::manager::validate_cwd_async(&cwd))
         .await?;
-    let configuration = attempt.configuration_guard().await?;
+    let configuration = attempt
+        .configuration_guard(&app.state::<MetaStore>())
+        .await?;
     let row = attempt
         .setup(crate::acp_client::manager::require_agent_row(
             &app, &agent_id,
@@ -868,7 +876,9 @@ pub async fn agent_logout(
     attempt
         .setup(ensure_connected(&manager, &store, &row, &cwd))
         .await?;
-    let _configuration = attempt.configuration_guard().await?;
+    let _configuration = attempt
+        .configuration_guard(&app.state::<MetaStore>())
+        .await?;
     let current = attempt
         .setup(crate::acp_client::manager::require_agent_row(
             &app, &agent_id,
@@ -902,14 +912,46 @@ pub async fn agent_logout(
 
 /// Read one settings value (`None` when unset).
 #[tauri::command]
-pub fn settings_get(app: AppHandle, key: String) -> Result<Option<serde_json::Value>, String> {
-    app.state::<MetaStore>().get_setting(&key)
+pub async fn settings_get(
+    store: tauri::State<'_, MetaStore>,
+    key: String,
+) -> Result<Option<serde_json::Value>, String> {
+    // A read shares the same mutex as saves; never wait for it on the UI thread.
+    store.run(move |store| store.get_setting(&key)).await
 }
 
 /// Write one settings value.
 #[tauri::command]
-pub fn settings_set(app: AppHandle, key: String, value: serde_json::Value) -> Result<(), String> {
-    app.state::<MetaStore>().set_setting(&key, &value)
+pub fn settings_set(
+    store: tauri::State<'_, MetaStore>,
+    key: String,
+    value: serde_json::Value,
+) -> Result<(), String> {
+    store.set_setting(&key, &value)
+}
+
+pub(crate) fn settings_write_awaited_on_exit(key: &str) -> bool {
+    matches!(
+        key,
+        "unsentWork.v1" | "conversationReadState.v1" | "agentSetup.v1"
+    )
+}
+
+// The renderer checks these settings for late writes before normal exit.
+#[tauri::command(rename = "settings_set")]
+async fn exit_settings_set(
+    store: tauri::State<'_, MetaStore>,
+    key: String,
+    value: serde_json::Value,
+) -> Result<(), String> {
+    store
+        .run(move |store| store.set_setting(&key, &value))
+        .await
+}
+
+pub(crate) fn dispatch_exit_settings<R: tauri::Runtime>(invoke: tauri::ipc::Invoke<R>) -> bool {
+    let handler: fn(tauri::ipc::Invoke<R>) -> bool = tauri::generate_handler![exit_settings_set];
+    handler(invoke)
 }
 
 // ---------------------------------------------------------------------------
@@ -1304,14 +1346,21 @@ mod tests {
     }
 
     #[test]
-    fn keychain_placeholder_resolves_or_drops() {
-        // Missing entries are dropped rather than injected empty.
+    fn missing_secure_environment_stops_instead_of_inheriting_shell_credentials() {
         let env = vec![
             ("KEEP".to_string(), "1".to_string()),
-            ("NO_SUCH_KEY_XYZ".to_string(), KEYCHAIN_MARKER.to_string()),
+            ("API_KEY".to_string(), KEYCHAIN_MARKER.to_string()),
         ];
-        let resolved = resolve_agent_env("ghost-agent", &env);
-        assert_eq!(resolved, vec![("KEEP".to_string(), "1".to_string())]);
+        let mut inherited = std::collections::HashMap::from([(
+            "API_KEY".to_string(),
+            "synthetic-other-account".to_string(),
+        )]);
+        let result = resolve_agent_env_with("synthetic-agent", &env, &|_| None)
+            .map(|resolved| inherited.extend(resolved));
+        assert!(
+            result.is_err(),
+            "missing selected secret must stop before process launch"
+        );
     }
 }
 

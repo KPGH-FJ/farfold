@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-11-04T12:38:20.739020+00:00",
+  "runId": 41827378725,
+  "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41827378725",
+  "sourceCommit": "063dd128f543e9a47c169b90bf3eeb889b21f8c7",
+  "workflowConclusion": "failure",
+  "watchNaturalExitCode": 1,
+  "jobs": [
+    {
+      "name": "rust",
+      "conclusion": "failure",
+      "startedAt": "2026-11-04T12:13:19Z",
+      "completedAt": "2026-11-04T12:20:53Z"
+    },
+    {
+      "name": "frontend",
+      "conclusion": "success",
+      "startedAt": "2026-11-04T12:13:19Z",
+      "completedAt": "2026-11-04T12:35:45Z"
+    },
+    {
+      "name": "verify",
+      "conclusion": "failure",
+      "startedAt": "2026-11-04T12:35:48Z",
+      "completedAt": "2026-11-04T12:35:50Z"
+    },
+    {
+      "name": "installer",
+      "conclusion": "skipped",
+      "startedAt": "2026-11-04T12:35:46Z",
+      "completedAt": "2026-11-04T12:35:46Z"
+    }
+  ],
+  "frontend": {
+    "conclusion": "success",
+    "typecheckCompleted": true,
+    "testFilesPassed": 705,
+    "testsPassed": 9456,
+    "testsSkipped": 3,
+    "testsTotal": 9459,
+    "viteBuildCompleted": true,
+    "viteBuildSeconds": 4.44,
+    "jobSeconds": 1346.0,
+    "rawStep": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41827378725/complete-run-logs/frontend/7_Check frontend.txt",
+      "sha256": "e4ab9588cbf8318559e499553ac5ff87fdcdb20b8826ce5468ef0366536ad511"
+    }
+  },
+  "rust": {
+    "conclusion": "failure",
+    "reached": "native all-target Clippy with warnings denied",
+    "error": "clippy::type_complexity in acp_client/lifecycle.rs:213 cfg(test,windows) observer type",
+    "fixtureBuildExecuted": false,
+    "cargoTestExecuted": false,
+    "rustTestsPassedOrFailedCountsClaimed": false,
+    "rawStep": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41827378725/complete-run-logs/rust/7_Check shared Rust and Windows implementation.txt",
+      "sha256": "8f7251bcd2c161de12b10374f46ec096503e2b28fe3a6e1b87d8277e6067a028"
+    },
+    "minimalAliasRepair": "eeac890c3; subsequent native result not part of this attempt"
+  },
+  "installer": {
+    "conclusion": "skipped",
+    "unsignedArtifactProduced": false,
+    "installedOrPublished": false
+  },
+  "verificationScope": "Frontend complete evidence only plus precise Rust lint precondition failure; this attempt does not replace the last actually executed full Rust test baseline41750118511 (2363pass17fail72ignored), and does not supersede selected-run evidence.",
+  "originalFiles": [
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41827378725/complete-run-logs.zip",
+      "sha256": "46b69e132dc09597b2e05746a64ecff8e9b8d41fb85a919523692761ee1da801"
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41827378725/complete-run-logs-fetch.json",
+      "sha256": "db73445f85f6f2e2780b88902109a7be70015e3b496fe8f8cc99a08f99af730e"
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41827378725/run.json",
+      "sha256": "12b1bff00a12060c4a5530ac1b2b06b29b58e124c06a226f5dd3c0fec251c6ec"
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41827378725/watch.log",
+      "sha256": "5a411239f418b9d13015d6116f701232d89b633e74f1de9d05eefd7f98b8c1c9"
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41827378725/watch-result.json",
+      "sha256": "65acf999c59130fd2d287a2b01276e9b5f5065ce1b9cdbd2eca08c8b56fea2e9"
+    }
+  ],
+  "originalsZip": {
+    "path": "docs/evidence/2026-11-04-windows-retirement-resume/full-attempt-41827378725-originals.zip",
+    "sha256": "363f9d9de01268adbf092a50c03b5c8bb9d446c9e4dbbf53f05c39ed399d5625",
+    "entries": 5,
+    "bytes": 105775,
+    "allEntriesByteExactToOriginals": true,
+    "containsOriginalServiceLogsZip": true,
+    "privateHttpHeadersTargetsOtherRunsOrUserDataIncluded": false
+  },
+  "limits": {
+    "fullWindowsProductPassed": false,
+    "29By8Complete": false,
+    "old17RustTestResultsChanged": false
+  }
+}

@@ -18,11 +18,13 @@ fn register(manager: &AcpManager, key: ConnectionKey, state: u8) -> ManagedConne
         account_query: None,
         workspace_access: crate::acp_client::workspace_access::Availability::new(None),
         identity_read: crate::acp_client::identity_read::Availability::new(None),
+        session_tools: crate::acp_client::session_tools::Availability::unavailable(),
         command_tx,
         state: life.state.clone(),
         handshake: Arc::new(OnceLock::new()),
         sessions: Arc::new(Mutex::new(HashMap::new())),
         child_pid: Arc::new(AtomicU32::new(0)),
+        process_identity: Default::default(),
         browser_launch: None,
         mcp_spawn_facts: Arc::new(std::sync::OnceLock::new()),
         life,
@@ -103,6 +105,7 @@ async fn unrelated_directory_or_candidate_does_not_replace_the_exact_absence_che
 #[tokio::test]
 async fn failed_route_lookup_is_not_confirmed_absence() {
     let dir = tempfile::tempdir().unwrap();
+    let store = crate::meta_store::MetaStore::open(&dir.path().join("meta.db")).unwrap();
     let manager = AcpManager::new(dir.path().join("logs"), dir.path().into());
     let connection = register(&manager, key(dir.path()), STATE_READY);
     let sessions = connection.sessions.clone();
@@ -116,8 +119,9 @@ async fn failed_route_lookup_is_not_confirmed_absence() {
     );
     assert!(
         manager
-            .delete_session("close-retry-fixture", dir.path(), "gone")
+            .close_and_delete_session("close-retry-fixture", dir.path(), "gone", &store)
             .await
+            .result
             .is_err(),
         "a failed owner lookup must not fall through to preparation deletion"
     );
@@ -144,12 +148,19 @@ def pending():
  send({'id':100,'method':method,'params':params})
 for line in sys.stdin:
  m=json.loads(line); method=m.get('method')
- if method=='initialize': result={'protocolVersion':1,'agentCapabilities':{'sessionCapabilities':{'close':{}}},'authMethods':[]}
+ if method=='initialize':
+  capabilities={cap:{} for cap in sys.argv[3].split(',') if cap}
+  result={'protocolVersion':1,'agentCapabilities':{'sessionCapabilities':capabilities},'authMethods':[]}
  elif method=='session/new':
   result={'sessionId':'preview','configOptions':[]}
   send({'id':m['id'],'result':result})
   threading.Thread(target=pending,daemon=True).start(); continue
- elif method=='session/close': open(sys.argv[1]+'_closed','w').write('closed'); result={}
+ elif method=='session/close':
+  open(sys.argv[1]+'_closed','w').write('closed')
+  if os.path.exists(sys.argv[1]+'_hold_close'):
+   while not os.path.exists(sys.argv[1]+'_release_close'): time.sleep(.005)
+  result={}
+ elif method=='session/delete': open(sys.argv[1]+'_deleted','w').write('deleted'); result={}
  elif method is None and m.get('id')==100:
   reply=m.get('result',{})
   cancelled=reply.get('action')=='cancel' or reply.get('outcome',{}).get('outcome')=='cancelled'
@@ -172,6 +183,10 @@ struct InteractionFixture {
 
 impl InteractionFixture {
     async fn new(kind: &'static str) -> Self {
+        Self::with_capabilities(kind, "close").await
+    }
+
+    async fn with_capabilities(kind: &'static str, capabilities: &str) -> Self {
         let dir = tempfile::tempdir().unwrap();
         let cwd = dir.path().canonicalize().unwrap();
         let script = cwd.join("pending.py");
@@ -189,6 +204,7 @@ impl InteractionFixture {
                 script.to_string_lossy().into_owned(),
                 marker.to_string_lossy().into_owned(),
                 kind.into(),
+                capabilities.into(),
             ],
             env: vec![],
             version: None,
@@ -379,5 +395,109 @@ async fn auth_cleanup_does_not_touch_another_agents_pending_interaction_with_sam
                 .unwrap()
                 .is_some()
         );
+    }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn delete_preserves_late_interactions_before_any_close_detach_or_delete() {
+    use crate::acp_client::mutation::DeleteFailure;
+
+    for capabilities in ["close,delete", "delete", ""] {
+        for kind in ["permission", "elicitation"] {
+            let f = InteractionFixture::with_capabilities(kind, capabilities).await;
+            f.emit().await;
+            let refused = f
+                .manager
+                .close_and_delete_session(&f.row.id, &f.cwd, "preview", &f.store)
+                .await;
+            assert_eq!(
+                refused.result,
+                Err(DeleteFailure::NotDispatched),
+                "{capabilities}: deletion with pending {kind}"
+            );
+            assert!(!refused.connection_closed);
+            assert!(!f.marker("closed").exists());
+            assert!(!f.marker("deleted").exists());
+            assert!(!f.marker("answered").exists());
+            assert!(f.pending());
+            f.answer();
+            bounded_until(|| f.marker("answered").exists()).await;
+            let admitted = f
+                .manager
+                .close_and_delete_session(&f.row.id, &f.cwd, "preview", &f.store)
+                .await;
+            assert_eq!(admitted.result, Ok(capabilities.contains("delete")));
+            assert!(admitted.connection_closed);
+            assert_eq!(f.marker("closed").exists(), capabilities.contains("close"));
+            assert_eq!(
+                f.marker("deleted").exists(),
+                capabilities.contains("delete")
+            );
+        }
+    }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn close_acknowledges_but_never_deletes_after_work_arrives_during_close() {
+    use crate::acp_client::{
+        session_commands::{SessionDeleteFailure, delete_session_in_scope},
+        session_index::touch_session_row,
+    };
+
+    for protection in ["permission", "elicitation", "draft", "unknown"] {
+        let f = InteractionFixture::with_capabilities(protection, "close,delete").await;
+        let row = touch_session_row(
+            &f.store,
+            &f.row.id,
+            &f.cwd.to_string_lossy(),
+            "preview",
+            Some("Keep original"),
+            None,
+        )
+        .unwrap();
+        std::fs::write(f.marker("hold_close"), []).unwrap();
+        let deletion = delete_session_in_scope(&f.manager, &f.store, &f.row.id, &f.cwd, "preview");
+        tokio::pin!(deletion);
+        tokio::select! {
+            _ = &mut deletion => panic!("a held close must not already settle"),
+            () = bounded_until(|| f.marker("closed").exists()) => {}
+        }
+        if protection == "draft" {
+            f.store
+                .set_setting(
+                    "unsentWork.v1",
+                    &json!({"version":1,"composers":{format!("session:{}", row.id):{
+                        "text":"keep draft","attachments":[]
+                    }},"feedback":{},"queues":{}}),
+                )
+                .unwrap();
+        } else if protection == "unknown" {
+            f.store
+                .set_setting(
+                    "unsentWork.v1",
+                    &json!({"version":1,"composers":{},"feedback":{},"queues":{
+                        &row.id:{"blocks":[],"uncertainIndex":null,"outcomeUnknown":true}
+                    }}),
+                )
+                .unwrap();
+        } else {
+            f.emit().await;
+        }
+        std::fs::write(f.marker("release_close"), []).unwrap();
+        let outcome = deletion.await;
+        assert!(f.marker("closed").exists(), "{protection}");
+        assert!(!f.marker("deleted").exists(), "{protection}");
+        assert!(
+            matches!(
+                outcome,
+                Err(SessionDeleteFailure::LocalNotRemoved {
+                    agent: None,
+                    connection_closed: true
+                })
+            ),
+            "{protection}: close succeeded, but deletion must be refused"
+        );
+        assert_eq!(f.store.get_session(&row.id).unwrap(), Some(row));
+        assert!(f.store.list_dismissed().unwrap().is_empty());
     }
 }

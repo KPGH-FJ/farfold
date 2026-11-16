@@ -10,10 +10,12 @@ const input = wire[0].input as ArchivePrepareInput;
 const ready = wire[0].ready as ArchiveStatus;
 const pending = () => {
   let resolve: (v: unknown) => void = () => {};
-  const promise = new Promise<unknown>((r) => {
+  let reject: (reason: unknown) => void = () => {};
+  const promise = new Promise<unknown>((r, j) => {
     resolve = r;
+    reject = j;
   });
-  return { promise, resolve };
+  return { promise, resolve, reject };
 };
 const flush = async () => {
   for (let i = 0; i < 12; i++) await Promise.resolve();
@@ -109,6 +111,54 @@ it("actual pending start does not block exact cancellation and observing timeout
   await flush();
   expect(jobs.getSnapshot()[0].reply?.state).toBe("cancelling");
 });
+it.each(["late rejection", "invalid reply", "timeout"])(
+  "keeps confirmed cancellation when an earlier start returns %s",
+  async (outcome) => {
+    vi.useFakeTimers();
+    const { api, jobs } = setup(),
+      start = pending();
+    api.file_archive_start.mockReturnValue(start.promise);
+    api.file_archive_cancel.mockResolvedValue({
+      ...ready,
+      state: "cancelling",
+    });
+    api.file_archive_status.mockResolvedValue({
+      ...ready,
+      state: "cancelled",
+      settled: true,
+    });
+    jobs.begin(input);
+    await flush();
+    await jobs.cancel(input.operationId);
+    expect(jobs.getSnapshot()[0]).toMatchObject({
+      phase: "known",
+      reply: { state: "cancelling" },
+      code: null,
+    });
+    if (outcome === "timeout") await vi.advanceTimersByTimeAsync(51);
+    else if (outcome === "late rejection")
+      start.reject({ code: "unavailable" });
+    else start.resolve({ invalid: true });
+    await flush();
+    expect(jobs.getSnapshot()[0]).toMatchObject({
+      phase: "known",
+      reply: { state: "cancelling" },
+      code: null,
+    });
+    expect(jobs.hasUnsettled()).toBe(true);
+    if (outcome === "timeout") {
+      start.resolve({ ...ready, state: "writing" });
+      await flush();
+    }
+    await vi.advanceTimersByTimeAsync(1001);
+    expect(api.file_archive_status).toHaveBeenCalledExactlyOnceWith({
+      operationId: input.operationId,
+      inputSha256: input.inputSha256,
+    });
+    expect(jobs.getSnapshot()[0].reply?.state).toBe("cancelled");
+    expect(jobs.hasUnsettled()).toBe(false);
+  },
+);
 it("bare conflict does not mutate/cancel an existing operation or pretend a terminal result", async () => {
   vi.useFakeTimers();
   const { api, jobs } = setup();

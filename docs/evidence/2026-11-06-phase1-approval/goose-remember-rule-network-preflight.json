@@ -1,0 +1,52 @@
+{
+  "checkedAtUtc": "2026-11-07T01:52:44.724750+00:00",
+  "conclusion": "not_admitted_exact_single_ipv4_loopback_endpoint_not_enforced",
+  "execution": {
+    "credentialAccess": 0,
+    "externalNetworkFromGuard": 0,
+    "loginRequests": 0,
+    "modelOrAgentRequests": 0,
+    "officialGooseLaunched": false,
+    "productionWrites": 0,
+    "standaloneSyntheticGuardOnly": true
+  },
+  "fixtureSha256": {
+    "guard.sb": "7916e7d828634df7d6f3c654d286cca32e227bb49628b95cd7521a3057fdaa21",
+    "guard_controller.py": "32fc24c530c7bb8eb815b30518a83df81bb571ff498e8ec2d98b2a00a4aecc62",
+    "guard_probe.py": "9a7366854fe777b1d37f500adfe852f8a4c77b28a21d0b9a78ada39504f800b7"
+  },
+  "kind": "GoosePermanentPermissionExactLoopbackGuardPreflight",
+  "literalIpv4SbplPolicy": {
+    "exitCode": 65,
+    "syntaxRejected": true
+  },
+  "localNegativeTargets": "controlled listeners on this same workstation only; no external destination",
+  "localhostPortSbplPolicy": {
+    "checks": {
+      "exactEndpoint": true,
+      "insideReadWrite": true,
+      "nonLoopbackLocalAddressDenied": false,
+      "otherLoopbackDenied": true,
+      "otherUdpDenied": true,
+      "outsideExecDenied": true,
+      "outsideReadDenied": true,
+      "outsideWriteDenied": true,
+      "samePortIPv6Denied": false
+    },
+    "tcpStatus": {
+      "otherLoopback": {
+        "connected": false,
+        "errno": 1
+      },
+      "samePortIPv6": {
+        "connected": true,
+        "errno": null
+      },
+      "samePortNonLoopback": {
+        "connected": true,
+        "errno": null
+      }
+    }
+  },
+  "scope": "No permission save, warm/cold test, or formal application acceptance was attempted. The deny tests exercised policy enforcement on owned canaries."
+}

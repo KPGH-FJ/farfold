@@ -9,7 +9,12 @@ import {
 import { PreservedDrafts } from "./PreservedDrafts";
 import { NewConversationLocationBar } from "./NewConversationLocationBar";
 import { useDraftPreparation } from "./useDraftPreparation";
-import { usePreparedComposerOwner } from "./usePreparedComposerOwner";
+import {
+  usePreparedComposerOwner,
+  usePreparedComposerPortal,
+  useSavedPreparedConversation,
+  type PreparedConversationTransition,
+} from "./usePreparedComposerOwner";
 import { useDraftWorkLocation } from "./useDraftWorkLocation";
 import { useDraftSendIntent, type DraftSendIntent } from "./useDraftSendIntent";
 import {
@@ -20,9 +25,11 @@ import { REDESIGN as R } from "../runtime/redesign_strings";
 import { serviceSelectionIsCurrent } from "../runtime/conversation_actions";
 import { createPortal } from "react-dom";
 import { chooseDirectory } from "../runtime/dialogs";
-import { toUiNotice, type UiNotice } from "../runtime/ui_error";
+import type { UiNotice } from "../runtime/ui_error";
 import {
-  configurationRestoreNotice,
+  configurationApplyNotice,
+  configurationPreparationNotice,
+  confirmationFeedback,
   isConfigurationRestoreNotice,
 } from "../runtime/configuration_restore_feedback";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -100,7 +107,7 @@ import {
 } from "../runtime/authentication";
 import { authActive } from "../runtime/auth_activity";
 import {
-  agentRepairPanel,
+  newDraftRepairRequest,
   type AgentRepairRequest,
 } from "../runtime/agent_repair";
 import {
@@ -111,10 +118,8 @@ import {
   PencilLineIcon,
   SlidersHorizontalIcon,
 } from "@phosphor-icons/react";
-
 const suggestionIcons = [AirplaneTiltIcon, PencilLineIcon, BookOpenIcon];
 const NO_HISTORY: ReadonlySet<string> = new Set();
-
 export function EmptyState({
   agents,
   historyAgentIds,
@@ -129,12 +134,16 @@ export function EmptyState({
   active = true,
   onPreparedKey,
   onPreparedComposerOwner,
+  onPreparedSaved,
   composerTarget,
   onRestoreDraft,
+  availableFeedbackOwners,
 }: {
   onRestoreDraft?: (key: string) => Promise<void>;
+  availableFeedbackOwners?: ReadonlySet<string>;
   onPreparedKey?: (key: string | null) => void;
   onPreparedComposerOwner?: (current: (() => boolean) | null) => void;
+  onPreparedSaved?: PreparedConversationTransition;
   composerTarget?: HTMLElement | null;
   header?: ReactNode;
   active?: boolean;
@@ -157,7 +166,6 @@ export function EmptyState({
   const [folder, setFolder] = useState<string | null>(
     newConversationChoice.cwd,
   );
-  // New conversations require an explicit folder, separate from global setup.
   const cwd = folder;
   useEffect(() => {
     newConversationChoice.cwd = folder;
@@ -296,19 +304,16 @@ export function EmptyState({
     !!agentId &&
     authenticationRequired(authentication, agentId, requestCwd, sourceContext);
   const openRepair = () =>
-    onGoSettings(agentId ?? undefined, {
-      panel:
-        explicitReadRequired ||
-        (!needsAuthentication &&
-          (draftError?.message === STRINGS.repair.configFailed ||
-            isConfigurationRestoreNotice(draftError)))
-          ? "model"
-          : agentRepairPanel(draft, needsAuthentication),
-      needsAuthentication,
-      sourceContext,
-    });
-
-  // Explicit selection prepares a draft; failed combinations are not retried automatically.
+    onGoSettings(
+      agentId ?? undefined,
+      newDraftRepairRequest(
+        draft,
+        needsAuthentication,
+        sourceContext,
+        explicitReadRequired,
+        draftError,
+      ),
+    );
   const failedPairRef = useRef<string | null>(null);
   const pendingInquiryAbort = useRef<AbortController | null>(null);
   useEffect(() => {
@@ -609,7 +614,7 @@ export function EmptyState({
             },
           );
           if (!restored || rejectOpened()) return;
-          preparedComposerOwner.open(state.key);
+          preparedComposerOwner.open(state.key, state);
           setDraftKey(state.key);
         })
         .catch((error) => {
@@ -622,10 +627,7 @@ export function EmptyState({
             !(error instanceof DraftArchiveBlockedError)
           ) {
             failedPairRef.current = pair;
-            setDraftError(
-              configurationRestoreNotice(error) ??
-                toUiNotice(error, STRINGS.repair.requestFailed),
-            );
+            setDraftError(configurationPreparationNotice(error));
           }
         })
         .finally(() => {
@@ -660,7 +662,6 @@ export function EmptyState({
     agentId ? work.enabled(agentId) : false,
     unsent.pendingConversation,
   ]);
-
   const modelOption = draft ? modelConfigOption(draft.configOptions) : null;
   const applyingModel = useRef<string | null>(null);
   const caps = promptCapabilities(agents.find((a) => a.id === agentId) ?? null);
@@ -699,7 +700,6 @@ export function EmptyState({
     draft?.configError,
     draftError,
   ]);
-
   const pickProject = async (): Promise<boolean> => {
     if (
       picking ||
@@ -738,7 +738,6 @@ export function EmptyState({
       setPicking(false);
     }
   };
-
   const requireSendSelection = () => {
     if (!mounted.current || !activeRef.current || currentPair.current !== pair)
       throw new Error(STRINGS.repair.sendFailed);
@@ -755,6 +754,8 @@ export function EmptyState({
       throw new Error(STRINGS.repair.sendFailed);
   };
   const send = async (blocks: PromptBlock[], submittedDraft: ComposerDraft) => {
+    const interrupted = draftPersistence.captureInteractionInterruption();
+    if (interrupted()) throw new Error(STRINGS.repair.sendFailed);
     locationOwner.current.retire();
     const authenticationBlocked = (key = draftKey) => {
       if (!agentId) return true;
@@ -773,6 +774,7 @@ export function EmptyState({
     };
     requireSendSelection();
     if (service) await requireCurrentService();
+    if (interrupted()) throw new Error(STRINGS.repair.sendFailed);
     archiveGuard.requireAvailable();
     if (
       !mounted.current ||
@@ -810,7 +812,6 @@ export function EmptyState({
       !sameSource
     )
       throw new Error(STRINGS.repair.sendFailed);
-    // This waits for admission only; the actual agent work continues in the store.
     handedOffKeys.current.add(key);
     let pending: PendingAttempt | undefined;
     try {
@@ -832,6 +833,7 @@ export function EmptyState({
         target,
       );
       if (service) await requireCurrentService();
+      if (interrupted()) throw new Error(STRINGS.repair.sendFailed);
       archiveGuard.requireAvailable();
       if (
         !isCurrentCandidate(agentId) ||
@@ -842,7 +844,7 @@ export function EmptyState({
         throw new Error(STRINGS.repair.sendFailed);
       if (selectionReviewRef.current) throw new Error(R.selectionReview);
       if (readRequired()) throw new Error(C.readRequired);
-      await sendNewConversation(key, blocks);
+      await sendNewConversation(key, blocks, pending);
       finishPendingConversation(
         pending,
         threads.thread(key)?.uncertainPrompt ? "unknown" : "accepted",
@@ -856,6 +858,8 @@ export function EmptyState({
       const failed = threads.thread(key);
       if (
         failed?.identity === "draft" &&
+        (!pending || failed === pending.state) &&
+        (!pending || failed.connectionId === pending.connectionId) &&
         !failed.uncertainPrompt &&
         !failed.items.length &&
         !failed.queued.length
@@ -868,6 +872,7 @@ export function EmptyState({
         )
           void threads.discardDraft(key);
       }
+      if (pending?.returnedToEditor) return false;
       throw error;
     }
     if (preparationIntent.current === sentIntent)
@@ -878,7 +883,6 @@ export function EmptyState({
       if (activeRef.current) onStarted(key);
     }
   };
-
   const agentSendable =
     !archiveBlocked &&
     candidateSelected &&
@@ -919,22 +923,10 @@ export function EmptyState({
     requestSend: () => setSendRequest((value) => value + 1),
     folderCancelled: setFolderCancelled,
   });
-  // Move only the editor's DOM host; preserve its pending work and `new` draft.
-  const [editorRoot] = useState(() =>
-    typeof document === "undefined" ? null : document.createElement("div"),
+  const { editorRoot, editorHome } = usePreparedComposerPortal(
+    composerTarget,
+    active,
   );
-  const editorHome = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const destination = composerTarget ?? editorHome.current;
-    if (!editorRoot || !destination) return;
-    const focused = editorRoot.contains(document.activeElement)
-      ? (document.activeElement as HTMLElement)
-      : null;
-    editorRoot.className = "empty-col";
-    destination.appendChild(editorRoot);
-    if (activeRef.current) focused?.focus({ preventScroll: true });
-  }, [editorRoot, composerTarget]);
-  useEffect(() => () => editorRoot?.remove(), [editorRoot]);
   const presentedDraft = useRef<string | null>(null);
   const workspaceKey =
     draft?.key === draftKey &&
@@ -944,13 +936,23 @@ export function EmptyState({
       ? draftKey
       : null;
   const composerOwner = preparedComposerOwner.current(workspaceKey);
+  useSavedPreparedConversation(
+    draft,
+    composerOwner,
+    preparedComposerOwner,
+    onPreparedSaved,
+    (key) => {
+      handedOffKeys.current.add(key);
+      preparationIntent.current = null;
+      setDraftKey(null);
+    },
+  );
   useEffect(() => {
     presentedDraft.current = workspaceKey;
     onPreparedKey?.(workspaceKey);
     onPreparedComposerOwner?.(composerOwner);
   }, [onPreparedKey, onPreparedComposerOwner, workspaceKey, composerOwner]);
   useEffect(() => () => onPreparedKey?.(null), [onPreparedKey]);
-
   const sendingPaused = Boolean(
     cwd && agentId && work.ready && !work.enabled(agentId),
   );
@@ -966,7 +968,7 @@ export function EmptyState({
     (!connectionAllowed ? A.disconnectedHint : null) ??
     work.error ??
     (sendingPaused ? STRINGS.repair.workOff : null) ??
-    draft?.configError ??
+    confirmationFeedback(draftError, draft?.configError) ??
     (draft?.connectionLost ? STRINGS.thread.connectionIdle : null) ??
     (draft?.sourceError ? STRINGS.service.reconnect : null) ??
     (!agentId
@@ -979,7 +981,6 @@ export function EmptyState({
           ? STRINGS.empty.opening
           : modelReadError);
 
-  // Sending policy never changes whether the selected program is prepared.
   const needsPreparation =
     needsAuthentication ||
     !(preparationComplete && currentAgent && candidateSelected);
@@ -1025,7 +1026,9 @@ export function EmptyState({
     )
       return;
     setChoiceDialog(null);
-    onGoSettings(id);
+    if (choiceDialog === "model" && isConfigurationRestoreNotice(draftError))
+      openRepair();
+    else onGoSettings(id);
   };
   const applyDraftConfig = async (id: string, value: unknown) => {
     const state = draft;
@@ -1070,7 +1073,7 @@ export function EmptyState({
       newConversationChoice.config = expected;
       setDraftError(null);
     } catch (reason) {
-      if (current()) setDraftError({ message: STRINGS.repair.configFailed });
+      if (current()) setDraftError(configurationApplyNotice(reason));
       throw reason;
     } finally {
       if (applyingModel.current === state.key) applyingModel.current = null;
@@ -1227,11 +1230,11 @@ export function EmptyState({
       )}
     </>
   );
-
   const editor = (
     <>
       {onRestoreDraft && (
         <PreservedDrafts
+          availableFeedbackOwners={availableFeedbackOwners}
           onRestore={async (key) => {
             preparationIntent.current = null;
             pendingInquiryAbort.current?.abort();

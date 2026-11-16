@@ -21,6 +21,7 @@ fn fixture(granted: bool) -> (Arc<ToolSession>, BrowserInfo, FixedPageReadScope)
         page: Arc::new(Mutex::new(granted.then(|| scope.clone()))),
         transport: OnceLock::new(),
         state: Mutex::new(ShareState {
+            connection: None,
             phase: READY,
             ready: true,
             ended: false,
@@ -323,6 +324,133 @@ fn p27_screenshot_owner_survives_queued_partial_delivery_until_exact_written_ack
         "old delivery ACK cannot clear a new request"
     );
     acknowledge_empty_result(&mut next, 8);
+}
+
+#[tokio::test]
+async fn p27_implicit_page_change_stops_first_screenshot_after_broker_write() {
+    use super::super::{Control, HandleInner, TransportHandle};
+    use crate::browser_sharing::BrowserSharing;
+    use std::sync::{atomic::AtomicBool, mpsc};
+    use std::time::Duration;
+
+    let (owner, page, scope) = fixture(false);
+    let sharing = BrowserSharing(Arc::new(Mutex::new(vec![owner.clone()])));
+    let (controls, receive_control) = mpsc::channel();
+    let (_completion, completed) = tokio::sync::watch::channel(0);
+    assert!(
+        owner
+            .transport
+            .set(TransportHandle(Arc::new(HandleInner {
+                #[cfg(target_os = "macos")]
+                initialized: Arc::new(AtomicBool::new(false)),
+                #[cfg(target_os = "macos")]
+                listed: Arc::new(AtomicBool::new(false)),
+                #[cfg(target_os = "macos")]
+                multi: None,
+                page: owner.page.clone(),
+                controls,
+                shutdown: Arc::new(AtomicBool::new(false)),
+                completed,
+            })))
+            .is_ok()
+    );
+
+    let mut wire = await_screenshot(&owner, &page, 7);
+    let approved = approve(&owner, &page, &scope, &mut wire);
+    wire.reply(
+        crate::browser_sharing::protocol::snapshot(json!(7), json!({"text":"fixture"})),
+        Some(approved.scope.clone()),
+        false,
+    )
+    .unwrap();
+    // Model a complete broker write with helper stdout still held. The
+    // response has left the broker queue; its original delivery still owns
+    // the screenshot until the helper reports a write or a stop barrier.
+    let queued = wire.packets.pop_front().unwrap();
+    let response: Value = serde_json::from_slice(&queued.bytes).unwrap();
+    assert_eq!(response["message"]["id"], 7);
+    assert_eq!(response["page"], true);
+    assert_eq!(wire.delivery.as_ref().unwrap().number, response["delivery"]);
+    assert!(owner.page.lock().unwrap().is_none());
+
+    let held = owner.operation.lock().await;
+    // Same boundary facts as the native page-change notification: the
+    // captured scope is invalid and the current page has a new revision.
+    scope.revoke();
+    assert!(!approved.scope.is_valid());
+    let mut changed = page.clone();
+    changed.revision += 1;
+    let mut unrelated = changed.clone();
+    unrelated.label = "other-page".into();
+    sharing.page_changed(&unrelated);
+    assert_eq!(owner.info(TASK, &page.label).phase, "reading");
+
+    sharing.page_changed(&changed);
+    assert_eq!(
+        owner.info(TASK, &page.label).phase,
+        "stopping",
+        "the first screenshot still owns a buffered response after a native page change"
+    );
+    assert!(
+        owner
+            .state
+            .lock()
+            .unwrap()
+            .retiring
+            .as_ref()
+            .is_some_and(|retiring| retiring.same_request(&approved.scope))
+    );
+    assert!(matches!(
+        receive_control.try_recv(),
+        Err(mpsc::TryRecvError::Empty)
+    ));
+    drop(held);
+
+    let Control::Quiesce(Some(ack)) =
+        tokio::task::spawn_blocking(move || receive_control.recv_timeout(Duration::from_secs(2)))
+            .await
+            .unwrap()
+            .expect("the page change must reach the existing helper stop path")
+    else {
+        panic!("the stop must keep its confirmation sender")
+    };
+    assert_eq!(owner.info(TASK, &page.label).phase, "stopping");
+    assert!(
+        wire.delivery.is_some(),
+        "quiesce dispatch is not a write ACK"
+    );
+    ack.send(Ok(())).unwrap();
+    let _settled = owner.operation.lock().await;
+    assert_eq!(owner.info(TASK, &page.label).phase, "unshared");
+    assert!(owner.page.lock().unwrap().is_none());
+}
+
+#[test]
+fn p27_page_notification_does_not_treat_request_cancel_as_grant_withdrawal() {
+    let (owner, page, scope) = fixture(false);
+    let sharing = crate::browser_sharing::BrowserSharing(Arc::new(Mutex::new(vec![owner.clone()])));
+    let mut wire = await_screenshot(&owner, &page, 7);
+    let approved = approve(&owner, &page, &scope, &mut wire);
+    wire.reply(
+        crate::browser_sharing::protocol::snapshot(json!(7), json!({"text":"fixture"})),
+        Some(approved.scope.clone()),
+        false,
+    )
+    .unwrap();
+
+    wire.cancel(&approved.id).unwrap();
+    assert!(
+        wire.barrier.is_some(),
+        "request cancel owns its own barrier"
+    );
+    assert!(!approved.scope.is_valid());
+    assert!(approved.scope.grant_is_valid());
+
+    sharing.page_changed(&page);
+    assert_eq!(owner.info(TASK, &page.label).phase, "reading");
+    assert!(owner.state.lock().unwrap().retiring.is_none());
+    wire.finish_stopped_screenshot();
+    assert_eq!(owner.info(TASK, &page.label).phase, "unshared");
 }
 
 #[test]

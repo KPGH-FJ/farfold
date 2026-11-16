@@ -1,0 +1,10 @@
+{
+  "label": "docs-final",
+  "command": ["corepack", "pnpm", "docs:check"],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-11-05T01:15:13.379428+00:00",
+  "finishedAt": "2026-11-05T01:15:13.565248+00:00",
+  "durationSeconds": 0.186,
+  "exitCode": 0,
+  "log": "output/2026-11-05-development-continuation/engineering-dev-server/checks/docs-final.log"
+}

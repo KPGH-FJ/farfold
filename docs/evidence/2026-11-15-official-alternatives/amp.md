@@ -1,0 +1,21 @@
+# Amp 官方替代入口核验
+
+2026-11-15 核对厂商当前文档、Amp External API v2 和 npm 发布的 TypeScript SDK `0.1.0-20261112185908-g97703e7`。本机 PATH 及常见四处安装路径未找到厂商 `amp`。Farfold 的 `registry:amp-acp` 安装目录仅发现适配器文件，未执行。沿用 [c876 正式回执](../2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json) 的认证未完成、原请求结果未知结论。未安装程序、变更账号或凭据、读取私有线程或发模型请求。
+
+| 用户结果             | 已核事实与证据                                                                                                                                                                                                                                                                                  | 尚需验证                                                                                                                                                 |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 发现及读取原历史     | 厂商 CLI 记录了 `amp threads list/search/markdown/export`。完整 JSON 导出限线程创建者。公开 OpenAPI 有 PAT 的 `GET /api/v2/user/threads`、单线程 metadata/messages。工作区级列表等另有权限，不能混作个人入口。                                                                                  | 在正式厂商 CLI 或用户认可的个人只读入口下，以有正文和工具结果的自有旧线程核对目录、身份、原 ID、结构及不完整导出表现。                                   |
+| 继续同一工作并核模型 | 官方 CLI 按 `T-…` 继续，两个 SDK 分别有 `continue`、`continue_thread`，支持选模型/推理与结构化工具事件；TypeScript 响应声明实际 `message.model`。所查 SDK 包确实把续接转成官方 CLI `threads continue`，继承原线程工作目录。                                                                     | 从冷开读正文到同一 ID 实际继续单独留证。校对同线程切换及持久有效；本机厂商程序和原自有样本未核齐。                                                       |
+| 账号与费用           | 官方 CLI 有账号列出与切换，已运行进程保留原启动身份；显式 Key 优先于已保存账号。`GET /api/v2/actor` 可查所传凭据归属。API v2 单线程用量接口明确为带相应范围的 M2M。                                                                                                                             | 分别验证实际运行身份、模型及付费来源。个人授权类型不扩到工作区 M2M，不能由用量、模型标签猜付费方。                                                       |
+| 同一界面审批         | Amp 默认工具无需确认。厂商提供插件 `tool.call`、人工确认及旧权限委派，外部 SDK 的公开事件列出工具、结果与事后拒绝，未找到可直接交 Farfold 响应的结构化审批接口。                                                                                                                                | 核是否有既有官方委派可在原连接传递准确的待审批请求和回执，并证明受控工具在允许前无效果。插件内置对话框、目录适配器流式事件不计已经接通。                 |
+| 停止原任务及实际工具 | TypeScript SDK 的发布源码把 `AbortSignal` 交给本地 CLI 子进程 `spawn`，清理可终止其直接子进程；未观察到独立原线程取消调用。远端执行时本地 CLI 只接收流。厂商 Plugin API 有按原线程 `cancel()` 和状态观察，且明确工具取消后插件仍可继续运行、迟到结果会丢弃。公开 External API v2 未列取消路由。 | SDK 返回取消或本地 CLI 退出不计工具停止。要在有权限的自有无需真实副作用工作中分别验原线程终态、子工作停止及另一会话继续；原任务/插件无法确认时保持未知。 |
+| 原历史节点分支       | 厂商 2026-01-13 明确撤下真分支，替代机制是新线程引用旧线程。目录独立适配器文档说明删除只影响适配器映射，原线程留在 Amp。                                                                                                                                                                        | P11、ARCH-33 保留官方真分支缺口。原线程管理另有官方 CLI/API 途径，按准确身份和授权核验。                                                                 |
+
+**首发判断。** 保留 Amp 待验。发现、读历史、按原 ID 继续和平滑接入现有账号均有厂商候选路线。官方确证无法沿现有公开能力完成真分支。首发必需的跨对话审批、实际停止和费用归属仍有未证路径，现有替代证据不足以判定全链可用或不可实现。若本机可安全使用厂商程序及已指定身份，先做有界自有线程只读核验，再决定是否能做原请求审批和物理停止试验。
+
+原件
+
+- [Amp CLI 账号和运行身份](https://ampcode.com/docs/cli) · [原线程命令](https://ampcode.com/docs/threads) · [CLI 执行与 MCP](https://ampcode.com/docs/cli/execute-mode)
+- [TypeScript SDK](https://ampcode.com/docs/sdk/typescript) · [Python SDK](https://ampcode.com/docs/sdk/python) · [所查 TypeScript SDK 发布物](https://registry.npmjs.org/@ampcode%2Fsdk/0.1.0-20261112185908-g97703e7)
+- [External API](https://ampcode.com/api/external) · [公开 OpenAPI](https://ampcode.com/api/v2/openapi.json)，文档 SHA-256 `12e0122cbd79995d6346a926d15dccc0eb110c81298a28765f4283d83ed77ee6`
+- [插件审批、生命周期与工具](https://ampcode.com/docs/customize/plugins) · [Plugin API](https://ampcode.com/docs/plugin-api) · [厂商撤下真分支公告](https://ampcode.com/news/stick-a-fork-in-it) · [独立适配器 v0.12.0](https://github.com/tao12345666333/amp-acp/blob/v0.12.0/README.md)

@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "scope": "Installed macOS before C11 app update; allowlisted protocol receipts correlated with single UI actions",
+  "appCDHash": "8064235bd1101a04dfec59b5294543fa692f8bd4",
+  "cases": {
+    "cursor-default-history": {
+      "sourceName": "protocol-v1-1794730285501-1.jsonl",
+      "sourceSha256": "b4f35974aaae1b770bbcd5c4b4cded2caff1083ef595416e2a5fbf49f977f7d0",
+      "request": "session/list",
+      "response": "success",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "elapsedMs": 4,
+      "capturedSourceBytes": 2596
+    },
+    "gemini-history-connection": {
+      "sourceName": "protocol-v1-1794730300432-2.jsonl",
+      "sourceSha256": "ae0f9d616c798d5bcd6f5c9c9ec68f9299bdf5996d1b8e212f427ca2623a8e10",
+      "request": "initialize",
+      "response": "success",
+      "requestSequence": 1,
+      "responseSequence": 2,
+      "elapsedMs": 875,
+      "capturedSourceBytes": 2378
+    },
+    "grok-default-history": {
+      "sourceName": "protocol-v1-1794730307040-3.jsonl",
+      "sourceSha256": "9aba624a9beff0de69d53475e4b3e5c02ac61b97c859685e9cd37891a303e2df",
+      "request": "session/list",
+      "response": "success",
+      "requestSequence": 3,
+      "responseSequence": 5,
+      "elapsedMs": 3,
+      "capturedSourceBytes": 2700
+    },
+    "kimchi-default-history": {
+      "sourceName": "protocol-v1-1794730317664-4.jsonl",
+      "sourceSha256": "65b4909fe71a54de4f6ce04d5b1cf1eb9807eb1e83354d52806e5c96929963a0",
+      "request": "session/list",
+      "response": "success",
+      "requestSequence": 5,
+      "responseSequence": 6,
+      "elapsedMs": 7,
+      "capturedSourceBytes": 2808
+    },
+    "nova-default-history": {
+      "sourceName": "protocol-v1-1794730371052-5.jsonl",
+      "sourceSha256": "c78850108f0bdb5812a1c9d0a59268b8d0152a99385b907d1ffde74b0ae6a2e5",
+      "request": "session/list",
+      "response": "success",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "elapsedMs": 112,
+      "capturedSourceBytes": 2595
+    },
+    "cursor-existing-settings": {
+      "sourceName": "protocol-v1-1794730406708-6.jsonl",
+      "sourceSha256": "b37ce9037ba253b440a176fd740b42dada9a51a260ce3f317bf31b788420bec7",
+      "request": "session/new",
+      "response": "success",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "elapsedMs": 21752,
+      "capturedSourceBytes": 9332
+    },
+    "grok-existing-settings": {
+      "sourceName": "protocol-v1-1794730449247-7.jsonl",
+      "sourceSha256": "eed7c75abbe7f7de45960c3153e55fe2b9e6becb0232ed8ed5ba87324a61fd70",
+      "request": "session/new",
+      "response": "auth_required",
+      "requestSequence": 3,
+      "responseSequence": 11,
+      "elapsedMs": 44,
+      "capturedSourceBytes": 3528
+    },
+    "kimchi-existing-settings": {
+      "sourceName": "protocol-v1-1794730494329-8.jsonl",
+      "sourceSha256": "a03fdb4334a55c0c890712e7c71fda965428836d5ed99a23539a8243b8a5e943",
+      "request": "session/new",
+      "response": "success",
+      "requestSequence": 5,
+      "responseSequence": 15,
+      "elapsedMs": 2598,
+      "capturedSourceBytes": 4823
+    },
+    "nova-existing-settings": {
+      "sourceName": "protocol-v1-1794730595969-9.jsonl",
+      "sourceSha256": "2204a38664c21b6fcfa4d24bc0dbceadeeb26face317393372faf50bd698a7e8",
+      "request": "session/new",
+      "response": "auth_required",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "elapsedMs": 101,
+      "capturedSourceBytes": 2872
+    },
+    "gemini-existing-settings": {
+      "sourceName": "protocol-v1-1794730659348-10.jsonl",
+      "sourceSha256": "87b729744d5cb0e33f32e2cfcd30b6f0920f423c18bb2d73726e46a729957758",
+      "request": "session/new",
+      "response": "auth_required",
+      "requestSequence": 3,
+      "responseSequence": 4,
+      "elapsedMs": 2517,
+      "capturedSourceBytes": 2693
+    },
+    "cursor-bounded-echo": {
+      "sourceName": "protocol-v1-1794730406708-6.jsonl",
+      "sourceSha256": "b37ce9037ba253b440a176fd740b42dada9a51a260ce3f317bf31b788420bec7",
+      "request": "session/prompt",
+      "response": "success",
+      "requestSequence": 6,
+      "responseSequence": 52,
+      "elapsedMs": 14041,
+      "capturedSourceBytes": 9332
+    },
+    "kimchi-bounded-echo": {
+      "sourceName": "protocol-v1-1794730494329-8.jsonl",
+      "sourceSha256": "a03fdb4334a55c0c890712e7c71fda965428836d5ed99a23539a8243b8a5e943",
+      "request": "session/prompt",
+      "response": "internal_error",
+      "requestSequence": 18,
+      "responseSequence": 20,
+      "elapsedMs": 2754,
+      "capturedSourceBytes": 4823
+    },
+    "kimchi-exact-original-directory": {
+      "sourceName": "protocol-v1-1794730707183-11.jsonl",
+      "sourceSha256": "4a7eb79e6c694bab60be5892e7e77225e9923fb2061bb1a93d2ab7fc65c18c73",
+      "initialization": "timeout",
+      "listDispatched": false,
+      "childReaped": true,
+      "groupEnded": true,
+      "capturedSourceBytes": 4332
+    },
+    "kimchi-explicit-stop": {
+      "sourceName": "protocol-v1-1794730494329-8.jsonl",
+      "sourceSha256": "a03fdb4334a55c0c890712e7c71fda965428836d5ed99a23539a8243b8a5e943",
+      "request": "session/cancel",
+      "requestSequence": 22,
+      "uiResult": "unknown-no-stop-confirmation",
+      "capturedSourceBytes": 4823
+    }
+  },
+  "ordinaryPrompts": 3,
+  "userOwnedTestThreads": {
+    "cursor": {
+      "nativeSessionIdSha256": "9bc8950b56b18bb7fc98c3171082e2786a355bc1ae0792daa057ab4b96c1f14d",
+      "storedConfigSha256": "098bb4e58f789b69f9f55999c464888a79afde01b663241a66d7b836869f848b"
+    },
+    "kimchi": {
+      "nativeSessionIdSha256": "e40ea8bed8b12556a10b0f451d8516ccbf2e77809c64eb75792df1fe1afcb475",
+      "storedConfigSha256": "30b8ad6410d4d864766521b25014ed58e1d776b8133e78c3a2b1fbd4c61b8624"
+    }
+  },
+  "sessionIndexCount": 21,
+  "defaultListVisibleRows": {
+    "cursor": 1,
+    "gemini": null,
+    "grok": 1,
+    "kimchi": 3,
+    "nova": 0
+  },
+  "originalKimchiFileUnchanged": {
+    "sha256": "92e19e8b0b2e32b78b74bdec6b0efca90b9bba9dc551fd15d9883732c1bb5dc3",
+    "size": 4619,
+    "independentOriginalDirectoryAudit": "exact original file content and stat unchanged; scoped child ended"
+  },
+  "cursorColdContinuation": {
+    "sameNativeIdAndStoredConfig": true,
+    "modelVisible": "Auto",
+    "coldHistoryOriginalPromptAndReplyVisible": true,
+    "followupReusedContextWithoutRepeatingMarker": true,
+    "followupReplyExactSuffix": true,
+    "sourceName": "protocol-v1-1794731192671-0.jsonl",
+    "sourceSha256": "fd6eea4450927c97cfed240a56cfa3117ab3f77e5a84625db1dbca6ee3c52cd4",
+    "loadRequestSequence": 3,
+    "loadResponseSequence": 7,
+    "loadElapsedMs": 10722,
+    "promptRequestSequence": 9,
+    "promptResponseSequence": 26,
+    "promptElapsedMs": 4828,
+    "capturedSourceBytes": 5626
+  },
+  "afterUpdate": {
+    "appCDHash": "4b09349a0311f651a9cdac79954c8e830875ca0a",
+    "binarySha256": "a9daa08326ea25868664274caf169278c2743c18f5244baf392640e4e8f12a6e",
+    "closedRootsSame": true,
+    "closedRootsEntryCount": 206480,
+    "duplicateRemoved": true,
+    "coldUI": {
+      "indexedConversations": 21,
+      "withUnsentContent": 6,
+      "running": 0
+    },
+    "kimchiExactRecheck": {
+      "sourceName": "protocol-v1-1794731656322-0.jsonl",
+      "sourceSha256": "d0f483f9567d817326c58816722e3672a98b566111f82122b93ece824eebb8c6",
+      "capturedSourceBytes": 5015,
+      "elapsedMs": 59991,
+      "timeoutAtInitialize": true,
+      "listDispatched": false,
+      "childAndGroupReaped": true,
+      "originalHistoryHashConfirmedUnchanged": true,
+      "visibleMessage": "连接检查超时，原因尚未确定。请先查看是否有待处理的登录或文件夹访问提示，再检查程序启动设置"
+    }
+  }
+}

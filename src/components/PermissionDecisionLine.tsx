@@ -6,7 +6,7 @@ export function DecisionLine({
   onUndo,
   submitting = false,
 }: {
-  decision: { label: string; allow: boolean; undoable: boolean };
+  decision: { label: string; allow: boolean | null; undoable: boolean };
   onUndo: () => void;
   submitting?: boolean;
 }) {
@@ -25,12 +25,20 @@ export function DecisionLine({
         className={
           submitting || decision.undoable
             ? undefined
-            : decision.allow
+            : decision.allow === true
               ? "ok"
-              : "no"
+              : decision.allow === false
+                ? "no"
+                : undefined
         }
       >
-        {!submitting && !decision.undoable && (decision.allow ? "✓ " : "✗ ")}
+        {!submitting &&
+          !decision.undoable &&
+          (decision.allow === true
+            ? "✓ "
+            : decision.allow === false
+              ? "✗ "
+              : null)}
         {submitting
           ? STRINGS.repair.interactionSubmitting
           : decision.undoable

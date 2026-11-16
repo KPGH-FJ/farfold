@@ -1,5 +1,6 @@
 import { primaryShortcutHeld, usesMacShortcuts } from "./platform_shortcuts";
 import type { PermissionOption } from "./session_types";
+import { selectablePermissionOption } from "./permission_options";
 
 /** Approval shortcuts belong to the visible conversation, never to a control.
  *  Bare Enter/Backspace never decide: every approval needs the platform
@@ -39,5 +40,10 @@ export function permissionShortcut(
       : event.key === "Backspace"
         ? "reject_once"
         : null;
-  return options.find((option) => option.kind === kind) ?? null;
+  return (
+    options.find(
+      (option) =>
+        option.kind === kind && selectablePermissionOption(options, option),
+    ) ?? null
+  );
 }

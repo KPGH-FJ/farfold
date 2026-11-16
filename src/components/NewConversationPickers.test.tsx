@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
 import {
   Children,
   isValidElement,
@@ -9,6 +10,8 @@ import {
 import type { Credential } from "../runtime/credentials";
 import { ErrorNotice } from "./ErrorNotice";
 import { NEW_CONVERSATION_PICKER_STRINGS as S } from "../runtime/new_conversation_picker_strings";
+import { STRINGS } from "../runtime/strings";
+import { ConfigurationConfirmationError } from "../runtime/configuration_restore_feedback";
 
 const h = vi.hoisted(() => ({
   cursor: 0,
@@ -62,6 +65,7 @@ vi.mock("../runtime/credentials", async (original) => ({
 import {
   NewConversationAgentDialog,
   NewConversationModelDialog,
+  newConversationPreparationError,
 } from "./NewConversationPickers";
 import type { AgentCardModel } from "../runtime/agents";
 type Element = ReactElement<Record<string, unknown>>;
@@ -238,6 +242,20 @@ it("blocks stale existing model choices after a preparation failure but keeps an
     service: { id: "service", revision: "r1", model: "api-two" },
     modelValue: null,
   });
+});
+
+it("offers model settings when preparation cannot read a saved choice", async () => {
+  const restoreNotice = {
+    message: STRINGS.repair.savedConfigMissing,
+    savedConfigurationRestore: true,
+  };
+  props.existingOption = null;
+  props.readError = newConversationPreparationError(restoreNotice);
+  await loaded();
+  expect(button(S.currentModel).props.disabled).toBe(true);
+  click(S.checkModelSettings);
+  expect(props.onPrepare).toHaveBeenCalledOnce();
+  expect(props.onApply).not.toHaveBeenCalled();
 });
 
 it("clearing a preparation error exposes confirmed options without applying or retrying anything until a click", async () => {
@@ -490,6 +508,84 @@ it("never applies a stale saved selection; a fresh pick uses the current revisio
   expect(props.onApply).not.toHaveBeenCalled();
 });
 
+it.each(["local", "private-string", "private-object"] as const)(
+  "shows only safe apply feedback for %s failures in the common error surface",
+  async (kind) => {
+    await loaded();
+    const privateCanary = "私密账号目录 PRIVATE_MODEL_KEY_CANARY";
+    const failure =
+      kind === "local"
+        ? new ConfigurationConfirmationError(
+            "FARFOLD_RESTORE_CONFIRM_IDENTITY_READ",
+          )
+        : kind === "private-string"
+          ? privateCanary
+          : { message: privateCanary, toString: () => privateCanary };
+    props.onApply = vi.fn().mockRejectedValue(failure);
+    click("Other");
+    await Promise.resolve();
+    await Promise.resolve();
+    const tree = render();
+    const notice = tree.find((node) => node.type === ErrorNotice);
+    expect(notice?.props.message).toBe(
+      kind === "local" ? STRINGS.repair.confirmConfigFailed : S.applyFailed,
+    );
+    expect(notice?.props.detail).toBe(
+      kind === "local"
+        ? STRINGS.repair.confirmConfigNativeReasons
+            .FARFOLD_RESTORE_CONFIRM_IDENTITY_READ
+        : undefined,
+    );
+    expect(JSON.stringify(notice?.props)).not.toContain(privateCanary);
+    expect(button("Other").props.disabled).toBe(false);
+    expect(props.onClose).not.toHaveBeenCalled();
+    (tree[0].props.onClose as () => void)();
+    expect(props.onClose).toHaveBeenCalledOnce();
+    expect(props.onApply).toHaveBeenCalledOnce();
+  },
+);
+
+it("keeps an apply failure above the scrollable body with 353 model choices", async () => {
+  h.list.mockResolvedValue([]);
+  props.existingOption = {
+    ...props.existingOption!,
+    currentValue: "model-200",
+    options: Array.from({ length: 353 }, (_, index) => ({
+      value: `model-${index}`,
+      name: `Model ${index}`,
+    })),
+  };
+  await loaded();
+  props.onApply = vi
+    .fn()
+    .mockRejectedValue(
+      new ConfigurationConfirmationError(
+        "FARFOLD_RESTORE_CONFIRM_DISPLAYED_CHANGED",
+      ),
+    );
+  click("Model 200");
+  await Promise.resolve();
+  await Promise.resolve();
+  const picker = render()[0];
+  const body = nodes(picker.props.children as ReactNode);
+  expect(body.filter((node) => node.type === "button")).toHaveLength(353);
+  expect(body.some((node) => node.type === ErrorNotice)).toBe(false);
+  const html = renderToStaticMarkup(picker);
+  const search = html.indexOf('class="new-choice-search"');
+  const error = html.indexOf('class="auth-note error-notice"');
+  const scrollable = html.indexOf('class="new-choice-body"');
+  expect(search).toBeGreaterThanOrEqual(0);
+  expect(error).toBeGreaterThan(search);
+  expect(scrollable).toBeGreaterThan(error);
+  expect(html.match(/class="auth-note error-notice"/g)).toHaveLength(1);
+  expect(html).toContain(
+    STRINGS.repair.confirmConfigNativeReasons
+      .FARFOLD_RESTORE_CONFIRM_DISPLAYED_CHANGED,
+  );
+  expect(props.onApply).toHaveBeenCalledOnce();
+  expect(props.onClose).not.toHaveBeenCalled();
+});
+
 it("keeps an apply failure visible and ignores repeat picks while saving", async () => {
   await loaded();
   let reject!: (reason: Error) => void;
@@ -510,8 +606,7 @@ it("keeps an apply failure visible and ignores repeat picks while saving", async
   expect(
     render().some(
       (node) =>
-        node.props.role === "alert" &&
-        text(node.props.children as ReactNode) === "设置未确认",
+        node.type === ErrorNotice && node.props.message === S.applyFailed,
     ),
   ).toBe(true);
   expect(props.onClose).not.toHaveBeenCalled();

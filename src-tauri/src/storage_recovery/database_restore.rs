@@ -3,6 +3,7 @@
 //! released database that may already contain new user writes.
 mod files;
 mod operation;
+mod pending_tools;
 #[cfg(all(test, target_os = "macos"))]
 mod tests;
 mod validate;
@@ -130,6 +131,7 @@ impl State {
         self.pending.is_some() || self.attempted
     }
     pub fn preview(&mut self, path: &Path, source: &Path) -> Result<Preview, Failure> {
+        pending_tools::reject_known_pending(path)?;
         let previous = operation::read_intent(path)?;
         require_record_if_material_exists(path, &previous)?;
         if !supported()

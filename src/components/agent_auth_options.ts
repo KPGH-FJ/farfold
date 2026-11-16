@@ -2,6 +2,7 @@ import type { AccountIdentity, AuthMethodInfo } from "../runtime/agents";
 import type { PreparationAction } from "../runtime/preparation";
 import { authMethodUnavailable } from "../runtime/auth_method";
 import { CONNECTION_STRINGS as R } from "../runtime/r5_auth_strings";
+import { PREPARATION_ACTION_STRINGS as P } from "../runtime/preparation_action_strings";
 import type { ApiConfigurationState } from "../runtime/service_capability";
 import type { AgentConnectionPresentation } from "./agent_auth_types";
 import type { ConnectionOption } from "./AgentConnectionPicker";
@@ -92,8 +93,14 @@ export function authConnectionOptions({
     })),
     ...actions.map((action) => ({
       id: JSON.stringify(["action", action.id]),
-      title: R.serviceTerminal,
-      description: R.terminalHint,
+      title:
+        action.purpose === "account_login"
+          ? P.accountLogin.title
+          : R.serviceTerminal,
+      description:
+        action.purpose === "account_login"
+          ? P.accountLogin.hint
+          : R.terminalHint,
       disabled: false,
     })),
     ...(connection && apiState !== "unsupported"

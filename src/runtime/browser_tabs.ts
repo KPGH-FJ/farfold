@@ -3,6 +3,7 @@ import {
   BrowserWorkspaceSelectionChangedError,
   type BrowserWorkspaceClient,
   type BrowserWorkspacePageClient,
+  type BrowserWorkspaceSelection,
   type BrowserWorkspaceState,
   type BrowserWorkspaceTabsState,
 } from "./browser_workspace";
@@ -36,6 +37,8 @@ export class BrowserTabs {
   private closers = new Map<string, () => Promise<void>>();
   private opening = new Map<string, Promise<BrowserWorkspaceState>>();
   private server: BrowserWorkspaceTabsState;
+  private confirmedSelection?: BrowserWorkspaceSelection;
+  private closedDuringSelection?: Set<string>;
   private snapshot: BrowserTabsSnapshot;
 
   constructor(
@@ -103,8 +106,11 @@ export class BrowserTabs {
       throw new BrowserWorkspaceRetiredError();
     this.server = state;
     const tabs = this.snapshot.tabs.map((tab) => {
-      const page = state.pages.find((page) => page.label === tab.page?.label);
-      return page ? { ...tab, page } : tab;
+      const current = tab.page;
+      if (!current) return tab;
+      const page = state.pages.find((page) => page.label === current.label);
+      // Selection and per-page metadata advance independently.
+      return page && page.revision >= current.revision ? { ...tab, page } : tab;
     });
     // Reservations can be announced before open returns its identity. Never
     // guess which concurrent opener owns one; resolve from the actual reply.
@@ -116,11 +122,30 @@ export class BrowserTabs {
     }
     this.publish({ tabs, ready: true });
   }
-  async refresh() {
+  async refresh(reportFailure = false) {
+    if (this.retired) return;
     const sequence = ++this.refreshSequence;
-    const state = await this.client.tabs({ taskKey: this.taskKey });
-    if (this.retired || sequence !== this.refreshSequence) return;
-    this.accept(state);
+    const current = () => !this.retired && sequence === this.refreshSequence;
+    const confirmedBeforeRead = this.confirmedSelection;
+    try {
+      const state = await this.client.tabs({ taskKey: this.taskKey });
+      if (!current()) return;
+      const confirmed = this.confirmedSelection;
+      // A native switch publishes its new revision before committing the label.
+      if (
+        state.taskKey === this.taskKey &&
+        confirmed?.revision === state.selection.revision &&
+        confirmed.label !== state.selection.label
+      )
+        return;
+      this.accept(state);
+    } catch (error) {
+      if (!current()) return;
+      if (!reportFailure) throw error;
+      // A newer selection acknowledgement supersedes an auxiliary failure.
+      if (this.confirmedSelection === confirmedBeforeRead)
+        this.publish({ failed: true });
+    }
   }
   async start(): Promise<() => void> {
     const sequence = ++this.listenSequence;
@@ -136,7 +161,7 @@ export class BrowserTabs {
           sequence === this.listenSequence &&
           taskKey === this.taskKey
         )
-          void this.refresh().catch(() => this.publish({ failed: true }));
+          void this.refresh(true);
       });
       if (this.retired || sequence !== this.listenSequence) {
         unlisten();
@@ -144,7 +169,7 @@ export class BrowserTabs {
       }
       this.stopListening = unlisten;
       this.listening = true;
-      await this.refresh();
+      await this.refresh(true);
     } catch {
       if (sequence === this.listenSequence) this.publish({ failed: true });
     }
@@ -157,17 +182,39 @@ export class BrowserTabs {
       unlisten?.();
     };
   }
-  private async nativeSelect(label: string | null) {
-    // Resynchronize after a prior close/error. Never turn a stale selection
-    // response into an automatic second request.
-    const current = await this.client.tabs({ taskKey: this.taskKey });
-    this.accept(current);
-    const result = await this.client.select({
-      taskKey: this.taskKey,
-      label,
-      expectedSelected: { ...current.selection },
-    });
-    this.accept(result);
+  private async nativeSelect(requested: string | null | (() => string | null)) {
+    // A page-level close can acknowledge while these selection snapshots are
+    // in flight. Do not rediscover that exact closed owner from an old reply.
+    const closed = new Set<string>();
+    this.closedDuringSelection = closed;
+    const accept = (state: BrowserWorkspaceTabsState) => {
+      if (state.selection.label !== null && closed.has(state.selection.label))
+        throw new BrowserWorkspaceRetiredError();
+      this.accept(
+        closed.size
+          ? { ...state, pages: state.pages.filter((p) => !closed.has(p.label)) }
+          : state,
+      );
+    };
+    try {
+      // Resynchronize after a prior close/error. Never turn a stale selection
+      // response into an automatic second request.
+      const current = await this.client.tabs({ taskKey: this.taskKey });
+      accept(current);
+      const label = typeof requested === "function" ? requested() : requested;
+      const result = await this.client.select({
+        taskKey: this.taskKey,
+        label,
+        expectedSelected: { ...current.selection },
+      });
+      if (result.selection.label !== label)
+        throw new BrowserWorkspaceRetiredError();
+      accept(result);
+      this.confirmedSelection = result.selection;
+      if (this.snapshot.failed) this.publish({ failed: false });
+    } finally {
+      this.closedDuringSelection = undefined;
+    }
   }
   private async change(id: string) {
     const tab = this.tab(id);
@@ -248,6 +295,7 @@ export class BrowserTabs {
       if (closer) await closer();
       else if (page && page.phase !== "closed")
         await this.client.close({ taskKey: this.taskKey, label: page.label });
+      ++this.refreshSequence;
       this.clients.delete(id);
       this.closers.delete(id);
       const tabs = this.snapshot.tabs.filter((tab) => tab.id !== id);
@@ -262,9 +310,14 @@ export class BrowserTabs {
       // Retain the transaction lock through its selection ACK, so a later user
       // choice cannot be overwritten by this close continuation.
       this.publish({ tabs, selected, failed: false });
-      await this.refresh();
-      if (replacingSelected && !this.retired)
-        await this.nativeSelect(this.tab(selected)?.page?.label ?? null);
+      if (replacingSelected) {
+        if (!this.retired)
+          await this.nativeSelect(
+            () => this.tab(selected)?.page?.label ?? null,
+          );
+      } else {
+        void this.refresh().catch(() => {});
+      }
     } catch {
       this.patchTab(id, { closing: false });
       this.publish({ failed: true });
@@ -323,12 +376,21 @@ export class BrowserTabs {
           this.patchTab(id, { opening: false });
           // A rejected create may still leave a backend reservation. Discover its
           // exact identity only after this opener can no longer claim it.
-          void this.refresh().catch(() => this.publish({ failed: true }));
+          void this.refresh(true);
         });
       this.opening.set(id, pending);
       return pending;
     };
     const base = this.client;
+    const acknowledgeClose = (label: string) => {
+      ++this.refreshSequence;
+      this.closedDuringSelection?.add(label);
+      const tab = this.tab(id);
+      if (tab?.page?.label === label) this.patchTab(id, { page: null });
+      // The tab-row close owns its own follow-up. A page-level close or
+      // clear can release its exact owner without waiting for a list read.
+      if (!tab?.closing) void this.refresh().catch(() => {});
+    };
     const client: BrowserWorkspacePageClient = {
       ...base,
       open: (input) => open(() => base.open(input)),
@@ -374,15 +436,11 @@ export class BrowserTabs {
       },
       clearHtmlStorage: async (input) => {
         await base.clearHtmlStorage(input);
-        if (this.tab(id)?.page?.label === input.label)
-          this.patchTab(id, { page: null });
-        await this.refresh();
+        acknowledgeClose(input.label);
       },
       close: async (input) => {
         await base.close(input);
-        if (this.tab(id)?.page?.label === input.label)
-          this.patchTab(id, { page: null });
-        await this.refresh();
+        acknowledgeClose(input.label);
       },
     };
     this.clients.set(id, client);

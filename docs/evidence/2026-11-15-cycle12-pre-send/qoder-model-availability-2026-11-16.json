@@ -1,0 +1,123 @@
+{
+  "date": "2026-11-16",
+  "timezone": "Asia/Shanghai",
+  "registeredAgent": "registry:qoder",
+  "officialVersion": "1.1.89",
+  "formalAutoTest": {
+    "protocolLog": "protocol-v1-1794797869340-2.jsonl",
+    "vendorRun": "2026-11-16T10-57-49-687+08-00-r03gmx-p89063",
+    "outgoingMethods": ["initialize", "session/new", "session/prompt"],
+    "loadedModelSetting": "",
+    "loadedMode": "default",
+    "authClass": "qoder-browser",
+    "promptSentAt": "2026-11-16T10:58:26.656+08:00",
+    "ownerErrorAt": "2026-11-16T10:58:26.699+08:00",
+    "ownerErrorClass": "ModelNotFoundError",
+    "ownerErrorMessage": "main model \"auto\" is unavailable.",
+    "ownerErrorFrame": "Rjt.selectOverride",
+    "ownerInternalCode": 403,
+    "catalogHost": "api2.qoder.sh",
+    "catalogPath": "/algo/api/v2/model/list",
+    "catalogHttpStatus": 200,
+    "lastCatalogResponseAt": "2026-11-16T10:58:02.223+08:00",
+    "catalogItemsReceived": 16,
+    "separateRegionLookup": {
+      "host": "center.qoder.sh",
+      "paths": [
+        "/api/v3/service/region/endpoints",
+        "/api/v5/service/region/endpoints"
+      ],
+      "operation": "syncEndpointAsync",
+      "failureClasses": ["connect", "timeout"],
+      "failureCodes": ["UND_ERR_CONNECT_TIMEOUT", "23"]
+    }
+  },
+  "officialListOnly": {
+    "command": "registered node qodercli.js --list-models",
+    "sameRegisteredProgramAndSelfOwnedWorkingDirectory": true,
+    "vendorRun": "2026-11-16T11-06-04-552+08-00-g0ifo0-p91719",
+    "startedAt": "2026-11-16T11:06:04.317+08:00",
+    "elapsedMilliseconds": 4298,
+    "exitCode": 0,
+    "stdoutBytes": 0,
+    "stderrBytes": 47,
+    "resultAt": "2026-11-16T11:06:08.549+08:00",
+    "result": "Warning: no models available for your account.",
+    "authClass": "saved browser login",
+    "enabledModelsListed": 0,
+    "modelPromptSent": false,
+    "catalogHost": "api3.qoder.sh",
+    "catalogPath": "/algo/api/v2/model/list",
+    "catalogHttpStatus": 200,
+    "catalogResponseAt": "2026-11-16T11:06:08.405+08:00",
+    "catalogItemsReceived": 16,
+    "separateRegionLookup": {
+      "host": "center.qoder.sh",
+      "path": "/api/v5/service/region/endpoints",
+      "operation": "syncEndpointAsync",
+      "failedAt": "2026-11-16T11:06:08.523+08:00",
+      "failureClass": "timeout",
+      "vendorCode": "23"
+    }
+  },
+  "installedBundleReview": {
+    "catalogEnableMapping": "Qoder maps each vendor model record's enable field to enabled. Boolean false, numeric 0 and string 0 are disabled. This mapping receives the result of the vendor models.list endpoint.",
+    "catalogListFilter": "Both CLI --list-models and the ACP available-model list exclude entries with enabled === false.",
+    "autoFailureMapping": "Rjt.selectOverride uses the internal 403 only when the looked-up model exists and enabled is false. It uses 404 for missing or mismatched source when the looked-up model is not disabled.",
+    "limit": "The model-list requests returned HTTP 200 and the Qoder runtime recorded 16 model catalog items during both checks. The region resolution timeouts are a distinct operation and do not establish the reason the returned catalog has no usable models. These records do not identify the specific entitlement, account policy, or vendor environment condition that produced the unavailable entries."
+  },
+  "officialDocumentation": {
+    "modelListAndSelection": "https://docs.qoder.com/cli/model",
+    "authentication": "https://docs.qoder.com/cli/authentication",
+    "customModelWizard": "https://docs.qoder.com/cli/custom-models",
+    "acp": "https://docs.qoder.com/cli/acp"
+  },
+  "nativeModelPickerObservedByUser": {
+    "observedAt": "2026-11-16T11:23:01+08:00",
+    "subscriptionPlanDisplayed": "Free",
+    "availableCreditsDisplayed": 0,
+    "selectedModelDisplayed": "Auto",
+    "autoCreditMultiplierDisplayed": 0.5,
+    "customModelsDisplayed": 0,
+    "disableReasonShown": false
+  },
+  "officialCreditsPolicyReview": {
+    "publishedRules": "Auto consumes credits. Users at zero credits can use a free basic model if it is available to the account; the stated Efficient free offer is for eligible paid users. The screenshot and rules are consistent with unavailable Auto, but give no exact reason for this account's vendor enable flags.",
+    "creditRules": "https://docs.qoder.com/Credits",
+    "availabilityByAccount": "https://docs.qoder.com/qoder/model-selector",
+    "autoCreditUseAndEfficientEligibility": "https://docs.qoder.com/release-notes/lite-model-tier-retirement-notice"
+  },
+  "qwenCodePreviewReview": {
+    "officialAccountAnnouncement": "https://github.com/QwenLM/qwen-code/releases/tag/v1.0.0-preview",
+    "previewFollowupRelease": "https://github.com/QwenLM/qwen-code/releases/tag/v1.0.0-preview.1",
+    "reviewedTag": "v1.0.0-preview.1",
+    "artifact": {
+      "name": "qwen-darwin-arm64.tar.gz",
+      "officialAssets": "https://github.com/QwenLM/qwen-code/releases/expanded_assets/v1.0.0-preview.1",
+      "executableName": "qwen",
+      "buildEntrypoint": "packages/cli/bin.ts",
+      "source": "https://github.com/QwenLM/qwen-code/blob/v1.0.0-preview.1/scripts/build_qwen_bun_binary.ts#L31-L52"
+    },
+    "nativeAcpCommand": "qwen --acp",
+    "startupArgumentSource": "https://github.com/QwenLM/qwen-code/blob/v1.0.0-preview.1/packages/cli/src/startup/determineStartupMode.ts#L59-L76",
+    "startupServerSource": "https://github.com/QwenLM/qwen-code/blob/v1.0.0-preview.1/packages/cli/src/startup/options/acp.ts#L23-L47",
+    "authentication": {
+      "interactivePath": "Qwen Code startup connection dialog or /auth, select Qoder, select account region, then complete Qoder web authorization. Existing browser login may help the web flow but does not replace Qwen Code's device authorization.",
+      "interactiveDocumentation": "https://github.com/QwenLM/qwen-code/blob/v1.0.0-preview/README.md#2-connect-a-model",
+      "interactiveLoginSource": "https://github.com/QwenLM/qwen-code/blob/v1.0.0-preview.1/packages/cli/src/ui/auth/AuthDialog.tsx#L1938-L1947",
+      "acpAuthMethods": [],
+      "acpAuthBoundarySource": "https://github.com/QwenLM/qwen-code/blob/v1.0.0-preview.1/packages/cli/src/acp/acpServer.ts#L215-L258",
+      "storage": "qoder_oauth_creds.json in Qwen Code's global config directory, with one record per region. A normal startup may use a valid Qoder account already in that store. The reviewed route does not read or import standalone Qoder CLI auth storage.",
+      "storageSource": "https://github.com/QwenLM/qwen-code/blob/v1.0.0-preview.1/packages/core/src/qoder/api/credential-store.ts#L25-L57",
+      "existingQwenCodeAuthSource": "https://github.com/QwenLM/qwen-code/blob/v1.0.0-preview.1/packages/cli/src/auth/qoderProviders.ts#L22-L45"
+    },
+    "localRegistration": {
+      "standaloneQoder": "registry:qoder 1.1.89, --acp",
+      "installedQwenCode": "registry:qwen-code 0.24.7, --acp --experimental-skills",
+      "cachedRegistryQwenCode": "registry:qwen-code 0.27.4 stable, --acp --experimental-skills"
+    },
+    "nativePreviewArtifactDownloadedOrLaunched": false,
+    "nativePreviewSignInAttempted": false,
+    "limit": "The official preview supports ACP and offers a separate user sign-in path for a Qoder account. Source review alone cannot establish an available model under the current account, the runtime behavior of the native release, or equivalence to Farfold's standalone Qoder history and launch requirements."
+  }
+}

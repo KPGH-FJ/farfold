@@ -6,7 +6,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 import { threads, normalizeConfigOptions, type PromptBlock } from "./sessions";
 import { sendNewConversation } from "./new_conversation";
-import { composerDrafts, draftPersistence } from "./drafts";
+import { composerDrafts, draftPersistence, parseDraftSnapshot } from "./drafts";
 import { DRAFT_STORAGE_KEY } from "./draft_storage";
 import { STRINGS } from "./strings";
 import { PROMPT_ADMISSION as P } from "./prompt_admission_strings";
@@ -183,6 +183,78 @@ it("admits an explicit first message after work was disabled and restored, while
 });
 afterEach(async () => {
   await draftPersistence.flush();
+});
+
+it("does not offer a first prompt when quit was already cancelled during its pre-offer save", async () => {
+  const state = permissionDraft("quit-before-first-offer");
+  state.permissionState = "ready";
+  const draft = { text: "Keep the first input", attachments: [] };
+  const blocks: PromptBlock[] = [{ type: "text", text: draft.text }];
+  composerDrafts.update("new", () => ({ ...draft, sendPending: true }));
+  const attempt = await rememberPendingConversation(
+    "new",
+    composerDrafts.read("new"),
+    state,
+  );
+  let releaseSave!: () => void;
+  const heldSave = new Promise<void>((resolve) => {
+    releaseSave = resolve;
+  });
+  let writing = false;
+  mock.invoke.mockImplementation(async (command, args) => {
+    if (
+      command === "settings_set" &&
+      args?.key === DRAFT_STORAGE_KEY &&
+      args.value.queues[state.key]?.uncertainIndex === 0 &&
+      !writing
+    ) {
+      writing = true;
+      await heldSave;
+    }
+    return command === "session_prompt"
+      ? { status: "accepted" }
+      : localCommand(command, args);
+  });
+  const sending = Promise.allSettled([sendNewConversation(state.key, blocks)]);
+  const prompts = () =>
+    mock.invoke.mock.calls.filter(([name]) => name === "session_prompt");
+  try {
+    await vi.waitFor(() => expect(writing).toBe(true));
+    expect(state.queued).toEqual([blocks]);
+    expect(state.submitting).toBe(true);
+    expect(prompts()).toEqual([]);
+    // Exercise the final dispatch guard without relying on the separate
+    // exit queue pause to reject this already-preparing request.
+    draftPersistence.acquireInteractionLock()();
+    expect(draftPersistence.snapshot().interactionLocked).toBe(false);
+    releaseSave();
+    const [outcome] = await sending;
+    expect(prompts()).toEqual([]);
+    expect(outcome).toMatchObject({
+      status: "rejected",
+      reason: { message: STRINGS.repair.sendFailed },
+    });
+    expect(state.identity).toBe("draft");
+    expect(state.queued).toEqual([]);
+    expect(state.uncertainPrompt).toBeNull();
+    expect(state.submitting).toBe(false);
+    finishPendingConversation(attempt, "rejected");
+    expect(composerDrafts.read("new")).toMatchObject({
+      ...draft,
+      sendPending: false,
+    });
+    expect(composerDrafts.read("new").pendingConversation).toBeUndefined();
+    const explicit = [{ type: "text" as const, text: "A new explicit send" }];
+    await expect(
+      sendNewConversation(state.key, explicit),
+    ).resolves.toBeUndefined();
+    expect(prompts()).toHaveLength(1);
+    expect(prompts()[0]?.[1]?.content).toEqual(explicit);
+  } finally {
+    releaseSave();
+    await sending;
+    composerDrafts.clear("new");
+  }
 });
 
 it("retains rejected first-message input through the editor error without an extra queued copy", async () => {
@@ -384,3 +456,137 @@ it("keeps an invalid attachment in the first-send editor without dispatch or a f
     mock.invoke.mock.calls.filter(([name]) => name === "session_prompt_cancel"),
   ).toHaveLength(0);
 });
+
+it.each([
+  "exact",
+  "edited",
+  "dispatched",
+  "repeated queue entry",
+  "save refused",
+] as const)(
+  "saves first-send ownership at confirmed exit (%s)",
+  async (scenario) => {
+    const state = permissionDraft(`first-attachment-check-at-quit-${scenario}`);
+    state.connectionId = "first-quit-connection";
+    state.historicalOutcomeUnknown = true;
+    const uri = "file:///controlled/first-quit.txt";
+    const blocks: PromptBlock[] = [
+      { type: "text", text: "first unsent input" },
+      { type: "resource_link", name: "first-quit.txt", uri },
+    ];
+    composerDrafts.update("new", () => ({
+      text: "first unsent input",
+      attachments: [
+        { id: "first-quit", kind: "file", name: "first-quit.txt", uri },
+      ],
+      sendPending: true,
+    }));
+    const attempt = await rememberPendingConversation(
+      "new",
+      composerDrafts.read("new"),
+      state,
+    );
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => (release = resolve));
+    let refuseSave = false;
+    mock.invoke.mockImplementation(async (command, args) => {
+      if (command === "draft_attachment_check") {
+        if (scenario !== "dispatched") await held;
+        return null;
+      }
+      if (command === "session_prompt") {
+        await held;
+        return { status: "unknown" };
+      }
+      if (
+        command === "settings_set" &&
+        args.key === DRAFT_STORAGE_KEY &&
+        refuseSave
+      )
+        throw new Error("fixture handback write failed");
+      return localCommand(command, args);
+    });
+    const sending = sendNewConversation(state.key, blocks, attempt).catch(
+      (error: unknown) => error,
+    );
+    const returns = scenario !== "edited" && scenario !== "dispatched";
+    try {
+      const dispatched = scenario === "dispatched";
+      await vi.waitFor(() =>
+        expect(state.promptSubmission?.dispatched).toBe(dispatched),
+      );
+      if (scenario === "edited")
+        composerDrafts.update("new", (draft) => ({
+          ...draft,
+          text: "newer editor contents",
+        }));
+      if (scenario === "repeated queue entry")
+        await expect(threads.send(state.key, blocks)).resolves.toEqual({
+          status: "queued",
+        });
+      const editor = composerDrafts.read("new");
+      expect(state.identity).toBe("draft");
+      await draftPersistence.flush();
+      const before = structuredClone(settings.get(DRAFT_STORAGE_KEY));
+      const firstWrite = mock.invoke.mock.calls.length;
+      refuseSave = scenario === "save refused";
+      threads.pauseQueuesForExit(true);
+      if (refuseSave) {
+        await expect(draftPersistence.flush()).rejects.toThrow();
+        expect(settings.get(DRAFT_STORAGE_KEY)).toEqual(before);
+        refuseSave = false;
+      }
+      await draftPersistence.flush();
+      const stored = structuredClone(settings.get(DRAFT_STORAGE_KEY));
+      if (returns) {
+        const writes = mock.invoke.mock.calls
+          .slice(firstWrite)
+          .filter(
+            ([command, args]) =>
+              command === "settings_set" && args.key === DRAFT_STORAGE_KEY,
+          )
+          .map(([, args]) => args.value);
+        expect(writes).toEqual(
+          scenario === "save refused" ? [stored, stored] : [stored],
+        );
+      }
+      const cold = parseDraftSnapshot(stored)!;
+      const savedEditor = Object.fromEntries(cold.composers).new;
+      expect
+        .soft(savedEditor)
+        .toMatchObject({ text: editor.text, attachments: editor.attachments });
+      expect.soft(savedEditor.sendPending).toBe(!returns);
+      expect
+        .soft(savedEditor.pendingConversation)
+        .toEqual(
+          returns ? undefined : JSON.parse(JSON.stringify(attempt.target)),
+        );
+      expect(Object.fromEntries(cold.queues)[state.key]).toMatchObject({
+        blocks: returns && scenario !== "repeated queue entry" ? [] : [blocks],
+        uncertainIndex: returns ? null : 0,
+        outcomeUnknown: true,
+      });
+      if (returns)
+        composerDrafts.update("new", (draft) => ({
+          ...draft,
+          text: "after return",
+        }));
+    } finally {
+      release();
+      const result = await sending;
+      if (scenario !== "dispatched") expect(result).toBeInstanceOf(Error);
+      finishPendingConversation(
+        attempt,
+        scenario === "dispatched" ? "unknown" : "rejected",
+      );
+    }
+    if (returns) expect(composerDrafts.read("new").text).toBe("after return");
+    if (scenario === "repeated queue entry")
+      expect(state.queued).toEqual([blocks]);
+    expect(
+      mock.invoke.mock.calls.filter(
+        ([command]) => command === "session_prompt",
+      ),
+    ).toHaveLength(scenario === "dispatched" ? 1 : 0);
+  },
+);

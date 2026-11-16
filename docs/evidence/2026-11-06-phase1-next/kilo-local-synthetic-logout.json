@@ -1,0 +1,82 @@
+{
+  "authAndOrgOverridesAbsent": true,
+  "credentialInitiallyAbsent": true,
+  "endedUtc": "2026-11-06T23:16:34.059875+00:00",
+  "exactOwnedGatewayKeyAbsentAfterLogout": true,
+  "exactVersion": "7.8.1",
+  "externalInferenceRequests": 0,
+  "freshProcessSawExactlyOneGatewayOAuthBefore": true,
+  "freshProcessSawZeroCredentialsAfterLogout": true,
+  "isolatedServerOnlyAcceptedSyntheticAuth": true,
+  "kernelPolicy": {
+    "homeDataReadAndWriteDenied": true,
+    "otherReachablePortDenied": true,
+    "ownLoopbackAllowed": true,
+    "ownedScratchWriteAllowed": true,
+    "realBrowserOpenerDenied": true,
+    "registeredBinaryReadable": true
+  },
+  "kind": "OfficialKiloLocalSyntheticGatewayLogout",
+  "localLogoutAndAfterReadbackOnlyCatalogCalls": true,
+  "localRouteCounts": {
+    "defaults": 1,
+    "deviceCreate": 1,
+    "pollApproved": 1,
+    "pollPending": 1,
+    "profile": 1,
+    "publicCatalog": 2
+  },
+  "modelPrompts": 0,
+  "nativeInvocations": [
+    {
+      "cleanupSignals": 0,
+      "exitCode": 0,
+      "operation": "version-only",
+      "ownedGroupGone": true
+    },
+    {
+      "cleanupSignals": 0,
+      "exitCode": 0,
+      "operation": "one-synthetic-local-device-approval",
+      "ownedGroupGone": true
+    },
+    {
+      "cleanupSignals": 0,
+      "exitCode": 0,
+      "operation": "fresh-native-auth-list-before",
+      "ownedGroupGone": true
+    },
+    {
+      "cleanupSignals": 0,
+      "exitCode": 0,
+      "operation": "one-exact-provider-local-logout",
+      "ownedGroupGone": true
+    },
+    {
+      "cleanupSignals": 0,
+      "exitCode": 0,
+      "operation": "fresh-native-auth-list-after",
+      "ownedGroupGone": true
+    }
+  ],
+  "officialArchiveSha256": "d94ab724ce384f9a8e7cda72460c5eb643ed44cb481f80cdd4b7571d005cc0b1",
+  "officialLogoutSuccessReported": true,
+  "onlySyntheticGatewayOAuthPersistedBeforeLogout": true,
+  "ordinaryHomePreserved": true,
+  "outcome": "official-local-kilo-logout-persisted-and-fresh-list-empty",
+  "ownedFilePermissionAfterLogoutIs600": true,
+  "ownedProfileRemoved": true,
+  "productionAppOrDatabaseUsed": false,
+  "realAccountOperation": false,
+  "realBrowserOpened": false,
+  "realCredentialAccessed": false,
+  "registeredExecutableMatchesOfficialArchive": true,
+  "registeredExecutableSha256": "ac6b36ebcd5eed45ce172287cebeff6ed0eb27ce8ba3413ebe9814beca8f0dca",
+  "remoteRevocationTested": false,
+  "scope": "registered Kilo and synthetic local service using an independently owned profile",
+  "serviceAndCatalogPinnedToFixture": true,
+  "startedUtc": "2026-11-06T23:16:27.513155+00:00",
+  "syntheticChallengeAndLoginSuccessObserved": true,
+  "unrelatedCredentialControlAttempted": false,
+  "upstreamCommit": "4089197545a01bbc9fa8041c1305b3fb0b0f8e66"
+}

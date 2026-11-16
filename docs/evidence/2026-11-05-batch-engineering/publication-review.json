@@ -1,0 +1,432 @@
+{
+  "schema": 1,
+  "kind": "ReadOnlyPublicEvidenceCapsuleReview",
+  "reviewer": "environment_review",
+  "recordedAtUtc": "2026-11-05T00:12:28.653171+00:00",
+  "verdict": "PASS_WITH_EXPLICIT_SCOPE",
+  "blockingFindings": [],
+  "publicFilesAtFinalReview": {
+    "docs/evidence/2026-11-05-batch-engineering/README.md": {
+      "bytes": 3826,
+      "sha256": "d7c5a231303045ff97a642414f589aff0c05938b51293c2da546edd0274563b7"
+    },
+    "docs/evidence/2026-11-05-batch-engineering/summary.json": {
+      "bytes": 15494,
+      "sha256": "42aa605116f23dd3ec1a1a28360eb46a8e4056e161eb330ed455b3fa055cb5c7"
+    },
+    "docs/evidence/2026-11-05-batch-engineering/archive-manifest.json": {
+      "bytes": 37750,
+      "sha256": "d98e84e48f591ff88fa3ddab7d6282e18af876715068e94bed20acbc57776f06"
+    },
+    "docs/evidence/2026-11-05-mcp-scope-review/README.md": {
+      "bytes": 2792,
+      "sha256": "71f4594c3de5b038ec85ace6fcf5aa2cd8d49e00975b3b618a033efdde8b6952"
+    },
+    "docs/evidence/2026-11-05-mcp-scope-review/source-summary.json": {
+      "bytes": 9379,
+      "sha256": "4ed4600c573954ca36f8b68ce5f8fe562ddac5e38af7d04106e79372b3ac2206"
+    },
+    "docs/evidence/2026-11-05-mcp-scope-review/browser-summary.json": {
+      "bytes": 11456,
+      "sha256": "c81cc1219b953836d907c76eb094c0747cae235949b1765057f5ee90b8ffcbe7"
+    },
+    "docs/evidence/2026-11-05-p01-queue-schema/README.md": {
+      "bytes": 1518,
+      "sha256": "d6605869417b2afa5b1caba57f89824185e2308d4d494b21fc11c8fa304f7107"
+    }
+  },
+  "archiveChecks": [
+    {
+      "path": "docs/evidence/2026-11-05-batch-engineering/originals.zip",
+      "bytes": 689270,
+      "sha256": "aad0ccdc80318c3bbdde4638a16bc4f919a4dd89de4f7f7d663d59134b51d6f7",
+      "members": 93,
+      "payloads": 92,
+      "crc": "PASS",
+      "allPayloadSha256AndBytes": "PASS",
+      "embeddedExternalManifestByteEquality": "PASS"
+    },
+    {
+      "path": "docs/evidence/2026-11-05-mcp-scope-review/source-originals.zip",
+      "bytes": 113200,
+      "sha256": "6810d117ea5c0a1064b2a754695944982ed01a63f01a953012689c51124845e9",
+      "members": 91,
+      "payloads": 90,
+      "crc": "PASS",
+      "allPayloadSha256AndBytes": "PASS",
+      "internalManifestCoverage": "EXACT"
+    },
+    {
+      "path": "docs/evidence/2026-11-05-mcp-scope-review/browser-originals.zip",
+      "bytes": 437964,
+      "sha256": "448b87da402191d49cb15ad25909de0ab36868bbece1d5b1443243adef29a402",
+      "members": 42,
+      "payloads": 42,
+      "crc": "PASS",
+      "allPayloadSha256AndBytes": "PASS",
+      "publicSummaryArchiveFilesCoverage": "EXACT"
+    }
+  ],
+  "resolvedPublicationFindings": [
+    {
+      "id": "README_OBSERVATION_PIN",
+      "initialFinding": "Browser observation-summary README pin 131a62... was earlier than archived README a4a6d2....",
+      "resolution": "Public wrapper observationPinBoundary now explicitly distinguishes both historical states; original embedded summary and ZIP unchanged. Values checked against browser.originals and archive.files.",
+      "verified": true
+    },
+    {
+      "id": "SOURCE_CHECKPOINT_TENSE",
+      "initialFinding": "MCP source paragraph described unified checks as still pending beside completed 603/65c results.",
+      "resolution": "README now names the historical source checkpoint and points to later checks below.",
+      "verified": true
+    },
+    {
+      "id": "FOCUS_TENSE",
+      "initialFinding": "603 README described the already completed 65c focus repair as currently in progress.",
+      "resolution": "README now says subsequent focus repair, keeping 603 boundary.",
+      "verified": true
+    }
+  ],
+  "sourceAndCheckConsistency": {
+    "batchCommit": "603056dd11baea68a438f686ee83f96d89377ba4",
+    "batchBeforeAfterMapByteEqual": true,
+    "capturedInputs": 2372,
+    "batchMapSha256": "fdf4d4e2f2fff2817fc78c8f024e7f0500fdd46c69c1acd06ca9ab557bb5e5c5",
+    "firstAttempt": {
+      "actualReceipts": 6,
+      "naturalExitZero": 5,
+      "frontendExit": 1,
+      "frontendFiles": 709,
+      "frontendPass": 9517,
+      "frontendFail": 1,
+      "buildReceiptAbsentAfterFrontendFailure": true
+    },
+    "correction": "032d8a03e34d9bae1c2233dfadedd2d0cfae0c19 removes only unsupported paused:true from the synthetic audio fixture, keeping production guard and existing assertions.",
+    "finalEngineering": {
+      "actualReceipts": 7,
+      "allNaturalExitZero": true,
+      "frontendFiles": 709,
+      "frontendPass": 9518,
+      "rustPass": 2349,
+      "rustFail": 0,
+      "rustIgnored": 7
+    },
+    "mcpSource": {
+      "commit": "aa1b00e733164e69099233996be33e354bf6a6dc",
+      "finalSourceFiles": 9,
+      "publicSourceHashesEqualArchivedFinalMap": true,
+      "nineArchivedFinalSourcesHashMatch": true,
+      "sourceFinalSha256": "7f57f6a2c720371d5fc939ddbca7870f70bd5c355fb15a759499138af7a39c3d",
+      "publicOriginalKeysEqualArchivedRawSummary": true,
+      "duplicateSourceRed": {
+        "pass": 0,
+        "fail": 3,
+        "ignored": 0
+      },
+      "finalWorker": {
+        "pass": 20,
+        "fail": 0,
+        "ignored": 0
+      },
+      "independentBinary": {
+        "pass": 2,
+        "fail": 0,
+        "ignored": 0
+      },
+      "frontend": {
+        "files": 6,
+        "pass": 50
+      }
+    },
+    "focus": {
+      "commit": "65c6c661b688edc5d9c8d458dac7055ee244ca1f",
+      "beforeAfterMapByteEqual": true,
+      "sameMapKeySetAs603": true,
+      "onlyInputDelta": ["src/components/SkillChangeReview.tsx"],
+      "mapSha256": "13e3cf5e60b197132086f8de151533d52cd57273fa7ade0df376ba77aa3a6fd0",
+      "freshFrontendCommands": 4,
+      "freshAllNaturalExitZero": true,
+      "frontendPass": 9518,
+      "rustCommandsReusedFrom603": 3,
+      "notSevenFreshCommandsDuringFocusInterval": true
+    }
+  },
+  "sqliteOriginals": {
+    "vitestNaturalExit": 0,
+    "files": 1,
+    "tests": 1,
+    "driverExchanges": 8,
+    "allEightNaturalExitZero": true,
+    "eachDriverLogPass": 1,
+    "eachDriverLogIgnored": 0,
+    "unsupportedFrontendCalls": ["settings_get", "settings_get"],
+    "unsupportedFrontendSettingsSetCount": 0,
+    "oldLoadSucceeded": false,
+    "supportedFixtureRetryCalls": ["settings_get", "settings_set"],
+    "coldModuleReadCalls": ["settings_get"],
+    "fixtureRemovedResult": true,
+    "cleanupError": null,
+    "scope": "Real production MetaStore on a controlled temporary SQLite fixture plus actual frontend functions, with test transport. GREEN only; supported backup replacement is explicit fixture control."
+  },
+  "browserOriginals": {
+    "publicBrowserObjectEqualsArchivedRawSummary": true,
+    "finalDomObservations": 9,
+    "cases": ["project", "inherited", "conflict"],
+    "phases": ["open", "collapsed", "reopened"],
+    "openAndReopenActualFocus": "H5 MCP 启用偏好",
+    "collapseActualFocus": "BUTTON 查看 MCP 修改状态",
+    "read": 3,
+    "inspect": 3,
+    "confirm": 0,
+    "native": 0,
+    "recordedDeniedCleanupAttempts": 5,
+    "reopenAddsNoCalls": true,
+    "observedViewport": [1280, 720],
+    "observedExpandedComponentHorizontalOverflow": false
+  },
+  "localMarkdownLinks": [
+    {
+      "from": "docs/evidence/2026-11-05-batch-engineering/README.md",
+      "target": "../2026-11-05-mcp-scope-review/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/evidence/2026-11-05-mcp-scope-review/README.md",
+      "target": "source-summary.json",
+      "exists": true
+    },
+    {
+      "from": "docs/evidence/2026-11-05-mcp-scope-review/README.md",
+      "target": "source-originals.zip",
+      "exists": true
+    },
+    {
+      "from": "docs/evidence/2026-11-05-mcp-scope-review/README.md",
+      "target": "browser-summary.json",
+      "exists": true
+    },
+    {
+      "from": "docs/evidence/2026-11-05-mcp-scope-review/README.md",
+      "target": "browser-originals.zip",
+      "exists": true
+    },
+    {
+      "from": "docs/evidence/2026-11-05-p01-queue-schema/README.md",
+      "target": "source-summary.json",
+      "exists": true
+    },
+    {
+      "from": "docs/evidence/2026-11-05-p01-queue-schema/README.md",
+      "target": "source-originals.zip",
+      "exists": true
+    },
+    {
+      "from": "docs/evidence/2026-11-05-p01-queue-schema/README.md",
+      "target": "../2026-11-05-batch-engineering/README.md",
+      "exists": true
+    }
+  ],
+  "limits": [
+    "No Cargo, frontend check, Git operation, SQL, App/UI, Agent or account activity was executed by this review; only the named private review JSON was written.",
+    "Archived source maps were compared as captured evidence; live 2372 files and Git blobs were not re-enumerated in this review.",
+    "External official URLs were not fetched; recorded official upstream snapshots are referenced by source path/commit/hash rather than included in the MCP source ZIP.",
+    "The historical independent-final-review reviewed its original raw evidence; rootArchiveReview and this review separately check the newly assembled ZIP.",
+    "SQLite observations do not establish SQLite RED, readonly/FULL/physical-disk failure, complete Tauri IPC, recovery UI or installed-app restart.",
+    "Browser results cover the actual inline component fixture and specified DOM/focus only, with refused ports; no installed App, official CLI adoption, host Escape, complete accessibility, other viewports or actual backend cancellation success.",
+    "603 and 65c checkpoints do not cover subsequent fresh-failed-inspect presentation changes or later source/docs, installation, real Agent/model operations, complete P01/P39/P41 or all 29 Agents."
+  ],
+  "supplementalPresentationReview": {
+    "recordedAtUtc": "2026-11-05T00:14:18.836261+00:00",
+    "previousPublicCapsuleReviewSha256": "b3cc103fa87c07673b4376e75b0473d8dbec5d6e7e18cea87fa5d4e28c20458a",
+    "verdict": "PASS_WITH_EXPLICIT_SCOPE",
+    "blockingFindings": [],
+    "commit": "6f01327cb5e47a8da6d8ea424237cab24914b3cd",
+    "reviewedFiles": {
+      "output/2026-11-05-development-continuation/engineering-presentation/preparation.json": {
+        "bytes": 480,
+        "sha256": "2fb57d30de58e2e166003459869563463238911952e621d7ec1d87821b310daf"
+      },
+      "output/2026-11-05-development-continuation/engineering-presentation/source-before.json": {
+        "bytes": 278982,
+        "sha256": "61ce396de8b0ffffaf0d107bf7e8997d57142f7967204432ed4a050cd6908af1"
+      },
+      "output/2026-11-05-development-continuation/engineering-presentation/source-after.json": {
+        "bytes": 278982,
+        "sha256": "61ce396de8b0ffffaf0d107bf7e8997d57142f7967204432ed4a050cd6908af1"
+      },
+      "output/2026-11-05-development-continuation/engineering-presentation/git-input-binding.json": {
+        "bytes": 1157,
+        "sha256": "f06e9023c33b57c7c0cc6dfaac4b2baf6a3f7d211fcc2eb87bb00977020feed0"
+      },
+      "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/summary.json": {
+        "bytes": 12955,
+        "sha256": "60994b7bc06c1fd757b7dfa424db521c35b33a3b200a89397515e2d7359a52bb"
+      },
+      "output/2026-11-05-development-continuation/mcp-review-refusal-presentation/source-final.json": {
+        "bytes": 633,
+        "sha256": "11c70395a04cf535d488a2e8f60f35293125e8921db0dc4804879b0ecf4835f7"
+      },
+      "output/2026-11-05-development-continuation/mcp-browser-ui/browser-refusal-final.json": {
+        "bytes": 17661,
+        "sha256": "a876df68b58295689db295aeec6d565489e80f8e48b68963613a783eaaf916d5"
+      },
+      "output/2026-11-05-development-continuation/mcp-browser-ui/fixture.test.tsx": {
+        "bytes": 8022,
+        "sha256": "16a07be9d65890090f658adbf3cce8de69d7a7f7ceb57d149b790d45c33f06be"
+      },
+      "output/2026-11-05-development-continuation/engineering-presentation/checks/format-final.json": {
+        "bytes": 388,
+        "sha256": "a319d845676979b86eb3d72d09d944a6f0530312d82494bdc8786d2417d2935b"
+      },
+      "output/2026-11-05-development-continuation/engineering-presentation/checks/format-final.log": {
+        "bytes": 301,
+        "sha256": "dfed9937a52db2d65f568da5f9d016da870532a1ebce31f621c0622c0c76ae36"
+      },
+      "output/2026-11-05-development-continuation/engineering-presentation/checks/format-corrected.json": {
+        "bytes": 396,
+        "sha256": "dc32df0e2e201edb0f1b48ae303ef2578c9efadd2d02eed3a5d979b3bd15742d"
+      },
+      "output/2026-11-05-development-continuation/engineering-presentation/checks/format-corrected.log": {
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "output/2026-11-05-development-continuation/engineering-presentation/checks/typecheck-final.json": {
+        "bytes": 390,
+        "sha256": "7cf39bca546f1c78f0f7bd2cafff20e57569dfadfff7f1f68b2c28f687fad86e"
+      },
+      "output/2026-11-05-development-continuation/engineering-presentation/checks/typecheck-final.log": {
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "output/2026-11-05-development-continuation/engineering-presentation/checks/frontend-final.json": {
+        "bytes": 384,
+        "sha256": "1093704d0710c99e42d926a9a73961479a9396daa2d0791a4632893c684fa4fa"
+      },
+      "output/2026-11-05-development-continuation/engineering-presentation/checks/frontend-final.log": {
+        "bytes": 288,
+        "sha256": "ef523240de2762c76de289c25242b6dd964fc9e9fd03d0af9ea480a3a983ff42"
+      },
+      "output/2026-11-05-development-continuation/engineering-presentation/checks/build-final.json": {
+        "bytes": 378,
+        "sha256": "c60ae826542c091706231aa09ed580c7f04563025462c2e358527e27b7b3970d"
+      },
+      "output/2026-11-05-development-continuation/engineering-presentation/checks/build-final.log": {
+        "bytes": 4984,
+        "sha256": "393dbfcabc2645f55527d8f3595845568812f9ec006622ccd2a151c6f1f90eaa"
+      }
+    },
+    "checks": {
+      "fiveActualReceiptsForFourRequiredCommands": {
+        "format-final": {
+          "exitCode": 1,
+          "command": ["corepack", "pnpm", "format:check"],
+          "durationSeconds": 28.006
+        },
+        "format-corrected": {
+          "exitCode": 0,
+          "command": ["corepack", "pnpm", "format:check"],
+          "durationSeconds": 25.569
+        },
+        "typecheck-final": {
+          "exitCode": 0,
+          "command": ["corepack", "pnpm", "typecheck"],
+          "durationSeconds": 7.322
+        },
+        "frontend-final": {
+          "exitCode": 0,
+          "command": ["corepack", "pnpm", "test"],
+          "durationSeconds": 38.975
+        },
+        "build-final": {
+          "exitCode": 0,
+          "command": ["corepack", "pnpm", "build"],
+          "durationSeconds": 8.285
+        }
+      },
+      "initialFormatFailure": "Only docs/evidence/2026-11-04-workflow-resume/continuation.json reported; original failure preserved, corrected format command naturally0. This document is outside the declared2372 source map.",
+      "finalFrontendFiles": 709,
+      "finalFrontendTestsPassed": 9523,
+      "finalFrontendFailed": 0,
+      "noTestOrBuildExecutedByThisReader": true
+    },
+    "sourceBoundary": {
+      "beforeAfterMapsByteEqual": true,
+      "capturedInputs": 2372,
+      "manifestSha256": "61ce396de8b0ffffaf0d107bf7e8997d57142f7967204432ed4a050cd6908af1",
+      "bindingReceiptCommit": "6f01327cb5e47a8da6d8ea424237cab24914b3cd",
+      "bindingReceiptMatches": 2372,
+      "bindingReceiptMismatches": [],
+      "sameMapKeysAs603": true,
+      "onlyMapDeltasFrom603": [
+        "src/components/SkillChangeReview.mcp.test.tsx",
+        "src/components/SkillChangeReview.tsx",
+        "src/runtime/mcp_scope_refusal.wire.test.tsx"
+      ],
+      "threeFrozenFrontendHashesMatchArchivedFinalSourcesAndEngineeringMap": true,
+      "rustReuse": {
+        "commands": 3,
+        "fromCommit": "603056dd11baea68a438f686ee83f96d89377ba4",
+        "pass": 2349,
+        "ignored": 7,
+        "capturedRustNativeBuildAndDependencyInputsUnchanged": true,
+        "noFreshRustCommandsClaimed": true
+      },
+      "readerComparedCapturedMapsOnlyDidNotRepeatGitOrHashAllLiveFiles": true
+    },
+    "sourceReviewOriginals": {
+      "summarySha256": "60994b7bc06c1fd757b7dfa424db521c35b33a3b200a89397515e2d7359a52bb",
+      "red": {
+        "pass": 6,
+        "fail": 6,
+        "exit": 1
+      },
+      "green": {
+        "pass": 12,
+        "fail": 0,
+        "exit": 0
+      },
+      "associated": {
+        "files": 6,
+        "pass": 41,
+        "exit": 0
+      },
+      "allThreeReceiptAndLogHashesMatchSummary": true,
+      "twoAffectedTestFilesSameBytesBetweenArchivedRedAndFinalSource": true,
+      "actualDtoFixtureSameSha256": "86b64e140f0281fb69d6315dbbf5bb135994d93f19df5aeff04b126b62a97b22",
+      "historicalRemainingText": "Private source summary records full frontend four as in progress at that checkpoint. Later engineering-presentation receipts supersede that pending observation; raw source summary was not rewritten."
+    },
+    "actualBrowserEvidence": {
+      "rawSha256": "a876df68b58295689db295aeec6d565489e80f8e48b68963613a783eaaf916d5",
+      "observations": 9,
+      "caseByPhase": "project/inherited/conflict each open/collapsed/reopened",
+      "openAndReopenEachExactlyOneCorrectSpecificReason": true,
+      "genericRetiredSentenceAbsentFromAllNineSnapshots": true,
+      "collapsedNoVisibleStatus": true,
+      "openReopenActualFocus": "H5 MCP 启用偏好",
+      "collapsedActualFocus": "BUTTON 查看 MCP 修改状态",
+      "noConfirmButtonInObservedSnapshots": true,
+      "read": 3,
+      "inspect": 3,
+      "confirm": 0,
+      "native": 0,
+      "recordedRefusedCleanupCalls": 5,
+      "notZeroAllPorts": true,
+      "noObservedComponentHorizontalOverflow": true,
+      "fixtureSameSha256": "16a07be9d65890090f658adbf3cce8de69d7a7f7ceb57d149b790d45c33f06be",
+      "actualDomStatusesMatchSourceReviewSummary": true
+    },
+    "limits": [
+      "This is a later UI-only candidate evidence review, distinct from the published603 and65c capsules. It does not retroactively extend their scope.",
+      "Four required frontend checks are complete with one initial format failure plus a successful correction; this is not seven freshly rerun commands. Rust3 reuse is limited to the unchanged captured input dependency boundary.",
+      "No new complete freeze of every transitive environment/input is established; continuation JSON format correction is separately acknowledged.",
+      "Ready review expiration/retirement negative controls are actual controller plus SSR only, not additional browser negatives.",
+      "Actual browser evidence is the controlled inline component fixture with refused ports; it does not establish full Tauri IPC, installed App, host Escape, real official Agent/configuration adoption, MCP connection/tools, other viewports or complete accessibility.",
+      "No network, Cargo, frontend tests, Git action, browser/App control, SQL or user-data access was performed by this reader."
+    ]
+  },
+  "_publicCopy": {
+    "kind": "JSON formatting-normalized copy of private independent receipt; independent findings unchanged",
+    "originalPath": "output/2026-11-05-development-continuation/public-capsule-preparation/root-publication-review.json",
+    "originalSha256": "c32ea87a22c5c46987fa084f2c20343f64df6fd7d2bd862ce7d3ea17056cfc8f"
+  }
+}

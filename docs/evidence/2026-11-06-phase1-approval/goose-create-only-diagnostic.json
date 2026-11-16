@@ -1,0 +1,127 @@
+{
+  "activeListenerIdentitySha256": "9bd0dbc4edb49996151a036d15d1617878715463cad6802aeb43bc4ca75becb5",
+  "allOfficialChildrenNaturallyClosed": true,
+  "binarySha256": "b7a38f3ff1e2d48b34b6550f84cf4104f3f7d797429e1231d1255d0501d47702",
+  "directSignals": 0,
+  "directSqliteEdits": 0,
+  "endedUtc": "2026-11-07T03:58:29.032013+00:00",
+  "error": {
+    "code": -32603,
+    "dataIsString": true,
+    "dataSha256": "a3bab66e9bc1112d5cc377303facec1ae034402565e9e66fd3603e22d285539e",
+    "fixedSourceLabels": {
+      "config_deserialize": false,
+      "config_directory": false,
+      "config_file_read": false,
+      "configuration_missing": false,
+      "context_model": false,
+      "goose_temperature": false,
+      "keyring_access": false,
+      "os_not_found": false,
+      "os_operation_not_permitted": false,
+      "os_permission_denied": false,
+      "url_construction": false
+    },
+    "messageIsStandardInternalError": true,
+    "messageSha256": "b2789feceb19deb130f01b29b1b97279c4131101df4bf8ac885558f5091e3b3a",
+    "stages": {
+      "context_limit": false,
+      "create_agent": false,
+      "create_session": true,
+      "initialize_extensions": false,
+      "reload_session": false,
+      "resolve_model": false,
+      "resolve_provider": false,
+      "setup_provider": false,
+      "update_session": false
+    },
+    "wholeErrorSha256": "a89807e03279bd308c3211d9e821d1cd3faa049ef1eb78cbf79555a10cbde870"
+  },
+  "externalInferenceCalls": 0,
+  "failure": "official-session/new-returned-classified-error",
+  "fixtureFailure": null,
+  "globalChanges": 0,
+  "grantsSent": 0,
+  "guardErrorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "guardExit": 0,
+  "inputComparison": {
+    "differentEnvironment": "Explicit safe child environment instead of copying parent environment; ordinary HOME retained; no original secret passed",
+    "differentMode": {
+      "current": "approve",
+      "prior": "chat"
+    },
+    "differentModel": {
+      "current": "synthetic_local_fixture_id",
+      "prior": "existing_free_id_routed_to_local_mock"
+    },
+    "differentOwnedAbsoluteCwdAndProfile": "Both fresh empty owned directories with GOOSE_PATH_ROOT; no production profile",
+    "guardDeltaFromEarlierSuccessfulFixture": [
+      "deny all network with explicit tested local TCP and UDS exception instead of outbound-only",
+      "deny system sockets and mach lookup",
+      "deny all user homes, private var folders, applications production app and private tmp except owned root",
+      "explicit system Goose config read denial",
+      "deny process fork and unlisted exec"
+    ],
+    "listenerDelta": "New exact active AF_INET loopback listener with both reuse flags zero, kernel owner identity checks",
+    "sameBinaryAndVersion": true,
+    "sameDisabledClientFileAndTerminalCapabilities": true,
+    "sameEmptyMcpAndEnabledExtensionsArrays": true,
+    "sameFixedLiteralIpv4ProviderHostAndFakeOnlyCredential": true,
+    "sameNewPayloadFields": ["cwd", "mcpServers", "_meta.enabledExtensions"],
+    "sameProvider": "openrouter"
+  },
+  "kernelGuard": {
+    "fixedIpv4Connect": true,
+    "homeDirectoryOpenDenied": true,
+    "insideReadWrite": true,
+    "outsideReadDenied": true,
+    "outsideWriteDenied": true,
+    "ownedUnixSocketConnect": true,
+    "udpDenied": true,
+    "unlistedExecDenied": true,
+    "wrongTcpPortDenied": true,
+    "wrongUnixSocketDenied": true
+  },
+  "kind": "OfficialGooseCreateOnlyFailureClassification",
+  "limits": [
+    "All provider replies are synthetic local fixtures, not real model acceptance.",
+    "The network rule is scoped to tested paths; it does not prove every alias endpoint denied.",
+    "Fixed literal IPv4 destination and continuously verified active listener establish endpoint ownership for these requests.",
+    "Permanent permission scope is measured within one isolated Goose profile only; no production permission rules touched."
+  ],
+  "listenerIdentityUnchangedUntilCleanup": true,
+  "localProviderRequestCounts": {},
+  "mcpMethodCounts": {},
+  "method": "Official ACP and a local fixed-endpoint synthetic streaming provider; own Unix-socket read-only MCP fixture",
+  "modelPromptRequests": 0,
+  "officialLaunches": 1,
+  "officialVersion": "1.52.0",
+  "ownedDisposableDataRemoved": true,
+  "permissionReplies": 0,
+  "previousAttemptReceiptSha256": "22cc5259ba3851387ab6e241ed84af2c9c6a31bc709f7779ddc3471bdd56d2df",
+  "priorSuccessfulFixtureSourceSha256": "e85ad8afee71f989dd95f8fdb2aa3b58da8f334a2f9631e03bac446900bbc2e8",
+  "processes": [
+    {
+      "label": "only",
+      "naturalEofExit": 0,
+      "outboundCounts": {
+        "initialize": 1,
+        "session/new": 1
+      },
+      "permissions": [],
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "updateCounts": {}
+    }
+  ],
+  "productionDataAccessByHarness": 0,
+  "productionUiOperations": 0,
+  "productionWrites": 0,
+  "realCredentialAccess": 0,
+  "result": "blocked",
+  "reusedLibrarySha256": "862eaf225a7af3689172a6d739d2d3ffc642b237d8443275339d96a3a892f6e6",
+  "runtimeErrorClassification": "create_session",
+  "scriptSha256": "5879505037737de85a93b83cc5743202c73173c6eab492653bd7f589fe163862",
+  "sourceCommit": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+  "startedUtc": "2026-11-07T03:58:27.877359+00:00",
+  "syntheticPromptTurns": 0
+}

@@ -1,0 +1,10 @@
+{
+  "checkpoint": "ea6c01a9def7e51dcc042b8b8277e5b4989cf65e",
+  "originalTasks": 151,
+  "originalIdsOrderTitlesPackagesCompletionsUnchanged": true,
+  "all16PackageConditionsCommonAndOfficialScopeUnchanged": true,
+  "progressChangesInDocumentOrder": ["P39", "P41", "P01", "P49", "H18"],
+  "lateDeclaredInputChanges": ["docs/agent-access-requirements.md"],
+  "otherDeclaredInputsUnchanged": 2371,
+  "meaning": "Final evidence/progress-only documentation; no claim final documentation ran seven checks or completed whole product acceptance."
+}

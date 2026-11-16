@@ -1,0 +1,61 @@
+{
+  "kind": "StrictConfigurationConfirmationDeliveryBarrierEngineering",
+  "sourceCodeCommit": "091fac1c7dc0ec2ff67747317aa7ff7a25d05b7d",
+  "reviewedDiffSha256": "03da0b240d79016a5b4c2c08aa5cbeeeb4de771a5188e9e3281fbc18de6b77e4",
+  "problem": "The command reply can be ready before the frontend has consumed earlier FIFO configuration events. The strict frontend ready check may therefore refuse a valid manual choice.",
+  "reproduction": "Actual SessionDeliveryFlow plus set/confirmation path reproduces setter reply ready -> consume old blocked -> confirmation reply ready -> consume later queued ready. Old implementation failed with state-not-ready; final implementation succeeds.",
+  "change": "After confirmation reply, wait for the same existing delivery owner to finish a fresh normal pull/ACK pass within the original 30-second operation deadline, then retain every original owner/busy/status/snapshot/value check. No ready-reply overwrite, native change, new RPC or persistent ledger.",
+  "failureBoundaries": [
+    "channel retirement/replacement",
+    "old in-flight null cannot substitute for a post-reply pass",
+    "ACK or synchronous consumption failure",
+    "deadline rejects this waiter without cancelling the Agent or releasing other pauses",
+    "buffered or deferred transport ACK does not prove business consumption",
+    "real ready-then-later-drift still refuses",
+    "configuration guard and draft remain protected on refusal"
+  ],
+  "affectedTestsPassed": 268,
+  "freshFrontend": {
+    "filesPassed": 724,
+    "testsPassed": 9864,
+    "formatExitCode": 0,
+    "typecheckExitCode": 0,
+    "testExitCode": 0
+  },
+  "productionBuild": {
+    "sourceCodeCommit": "091fac1c7dc0ec2ff67747317aa7ff7a25d05b7d",
+    "command": [
+      "corepack",
+      "pnpm",
+      "tauri",
+      "build",
+      "--no-bundle",
+      "--",
+      "--locked"
+    ],
+    "exitCode": 0,
+    "seconds": 162.422,
+    "finishedUtc": "2026-11-07T08:44:32.836453+00:00"
+  },
+  "nativeReuse": {
+    "sourceCodeCommit": "091fac1c7dc0ec2ff67747317aa7ff7a25d05b7d",
+    "nativeSourceDependenciesConfigUnchangedFrom": "809bb88d57d773a547de1bb6cc89fe796be691e8",
+    "changedFrontendFilesReferencedByNativeSource": [],
+    "reusedReceipt": "output/2026-11-07-stage1-formal-acceptance/fresh-model-pause-checks/native.json",
+    "reusedReceiptSha256": "a88cc3d37a9cec972b7733f0e289b9c24e776c339983eaaadc950109c4ffbd31",
+    "previousRustPassed": 2428,
+    "previousRustIgnored": 7,
+    "scope": "Cargo fmt/clippy/test original successful receipts reused for unchanged native sources/dependencies/config; not a fresh native suite. Fresh production build separately embeds changed frontend."
+  },
+  "independentReview": {
+    "approved": true,
+    "receiptSha256": "d34701287fe8e5fb39506825118ca87f7dae596ccf47e8dbeeca7755651141bf"
+  },
+  "originalReceipts": {
+    "engineeringCausality": "output/2026-11-07-stage1-formal-acceptance/confirmation-delivery/engineering-causality.json",
+    "sourceReview": "output/2026-11-07-stage1-formal-acceptance/confirmation-delivery/source-independent-review.json",
+    "frontendChecks": "output/2026-11-07-stage1-formal-acceptance/confirmation-delivery/checks/frontend.json"
+  },
+  "causalityLimit": "The reachable race and fix are proved by a red/green actual-flow regression. Two installed manual model choices, actual next generation and cold recovery passed; no body-level trace proves every historical failure had this timing.",
+  "formalRecheck": "configuration-delivery-installed.json"
+}

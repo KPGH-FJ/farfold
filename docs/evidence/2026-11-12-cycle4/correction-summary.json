@@ -1,0 +1,50 @@
+{
+  "kind": "Cycle4FormalFailureCorrectionAndExternalConfigurationRecovery",
+  "baseCommit": "9a75623e8b977f9269755ab0a26699826247e532",
+  "changes": [
+    "History export count follows official userVisible semantics while retaining every hidden context record and exact child prefix verification.21/16 parent to3/2 child red-green covered.",
+    "An independently changed supported stored tool inventory can be reviewed and explicitly accepted. Same connection second complete digest and original row/config/pending transaction checks remain. Only this pending marker clears; reopen remains explicit; the old operation outcome is not changed."
+  ],
+  "supportedReview": "Complete builtin/platform and credential-free HTTP entries with public / or /mcp addresses. Headers/auth/query/fragment/private paths/unknown fields or unsupported types keep pending; not full MCP management.",
+  "engineering": {
+    "allSevenPassed": true,
+    "productInputsUnchanged": true,
+    "frontendFiles": 765,
+    "frontendPassed": 10594,
+    "rustPassed": 2623,
+    "rustIgnored": 8
+  },
+  "independentReview": "16 changed product files covered by two independent reviews; exact frozen hashes checked by root",
+  "formalStatus": "Pending new installation and same-owned-conversation retest; prior9a failure retained in implementation-summary.json",
+  "retainedTestFailure": "Initial existing lost_inspection fixture exceeded5s. Isolated run and final11-test group passed without timeout changes; cause not established. Final fullRust2623 passed.",
+  "evidence": [
+    {
+      "path": "output/2026-11-12-cycle4/visible-count-fix/source-freeze.json",
+      "sha256": "055b3cb3f29c0b3310e498ce5b3d7a8ef78376cd3f322d3978d8eec3a3a0cdb6"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/visible-count-fix/independent-review.json",
+      "sha256": "84c3d34ec4883414f1abc1c65b07df5ca7f5ee37cde2b262b7530c1b7f84807e"
+    },
+    {
+      "path": "output/2026-11-12-p41-external-recovery/source-manifest.json",
+      "sha256": "e386ed5e0338fd830dee36cfd540f4ee5a07369681d9ec3fecce3ff795c0a53e"
+    },
+    {
+      "path": "output/2026-11-12-p41-external-recovery/validation-summary.json",
+      "sha256": "6b82f7ebeabd993a52dd9775fd4e8a890a206bcd2ceae20ec11cc9fefcd3f7a4"
+    },
+    {
+      "path": "output/2026-11-12-p41-external-recovery/review/independent-review.json",
+      "sha256": "5967ac5416e7768bb205434a3cb590153b6549aef78537d7d4c2e60e3ef3288d"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/review/integration-final.json",
+      "sha256": "535e6868a620b004507333cf5223580634c4034693ec2128ee3e3f0b917dee86"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/engineering-final/result.json",
+      "sha256": "84be4e28de59ef7548e73bd4c4e5bdbaf93fac70696a06420d39fb2102d5899a"
+    }
+  ]
+}

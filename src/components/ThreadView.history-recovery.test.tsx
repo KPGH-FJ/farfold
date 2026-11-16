@@ -14,7 +14,7 @@ import {
   toolActivityState,
   type ThreadState,
 } from "../runtime/sessions";
-import { draftPersistence } from "../runtime/drafts";
+import { composerDrafts, draftPersistence } from "../runtime/drafts";
 import { STRINGS } from "../runtime/strings";
 import { ThreadView } from "./ThreadView";
 
@@ -109,6 +109,161 @@ it("shows one failed-recovery reason beside the input with its actual retry acti
     ),
   ).toBe(false);
 });
+
+const openingFailures = [
+  ["AGENT_INITIALIZE_FAILED", "连接检查未完成，请检查程序或启动设置后重试"],
+  [
+    "AGENT_INITIALIZE_TIMEOUT",
+    "连接检查超时，原因尚未确定。请先查看是否有待处理的登录或文件夹访问提示，再检查程序启动设置",
+  ],
+  ["AGENT_CONNECTION_ENDED", "连接在检查完成前结束，请检查程序后重试"],
+  ["AGENT_START_FAILED", "程序未能启动，请检查程序文件和资料文件夹后重试"],
+  [
+    "AGENT_OPEN_TIMEOUT",
+    "打开对话尚未确认完成，等待已超时。原内容已保留，请先查看是否有待处理的提示。",
+  ],
+  [
+    "AGENT_OPEN_CLOSED",
+    "打开对话尚未确认完成，未能取得结果。原内容已保留，请检查连接后重试。",
+  ],
+] as const;
+
+function retainedOpening(state: ThreadState) {
+  state.queuePaused = "stopped";
+  state.uncertainPrompt = [{ type: "text", text: "Unknown prior request" }];
+  state.stopUnconfirmed = true;
+  state.connectionOutcomeUnknown = true;
+  state.service = {
+    id: "original-service",
+    model: "original-model",
+    fingerprint: "original-fingerprint",
+  };
+  state.serviceContext = "original-service-context";
+  state.configOptions = [
+    {
+      id: "model",
+      category: "model",
+      name: "Model",
+      type: "select",
+      currentValue: "original-model",
+      options: [],
+    },
+  ];
+  state.configCheck = { status: "blocked", current: {}, issues: [] };
+  state.modelDrift = true;
+  const draftKey = `session:${state.key}`;
+  composerDrafts.update(draftKey, () => ({
+    text: "Unsent original draft",
+    attachments: [
+      {
+        id: "retained-file",
+        kind: "file",
+        name: "retained-note.txt",
+        uri: "file:///owned/retained-note.txt",
+      },
+    ],
+  }));
+  return () => ({
+    items: state.items,
+    queued: state.queued,
+    queuePaused: state.queuePaused,
+    uncertainPrompt: state.uncertainPrompt,
+    stopUnconfirmed: state.stopUnconfirmed,
+    connectionOutcomeUnknown: state.connectionOutcomeUnknown,
+    service: state.service,
+    serviceContext: state.serviceContext,
+    configOptions: state.configOptions,
+    configCheck: state.configCheck,
+    modelDrift: state.modelDrift,
+    draft: composerDrafts.read(draftKey),
+  });
+}
+
+it.each(
+  openingFailures.flatMap(([code, message], index) =>
+    [false, true].map((wrapped) => ({ code, message, wrapped, index })),
+  ),
+)(
+  "shows the safe opening stage after actual open rejection: $code, Error wrapper: $wrapped",
+  async ({ code, message, wrapped, index }) => {
+    const state = prior(`opening-stage-${index}-${wrapped}`);
+    const retained = retainedOpening(state);
+    const before = structuredClone(retained());
+    const reason = wrapped ? new Error(code) : code;
+    h.invoke.mockImplementation(async (command) => {
+      if (command === "session_open") throw reason;
+      throw new Error(`Unexpected IPC ${command}`);
+    });
+    await expect(
+      threads.open({
+        agentId: state.agentId,
+        cwd: state.cwd,
+        nativeSessionId: state.nativeSessionId,
+      }),
+    ).rejects.toBe(reason);
+    expect(threads.thread(state.key)).toBe(state);
+    expect(retained()).toEqual(before);
+    expect(state.reconnecting).toBe(false);
+    expect(state.connectionLost).toBe(true);
+    expect(state.openError).toBe(message);
+    const html = render(state);
+    expect(html.split(message)).toHaveLength(2);
+    expect(html).toContain("Preserved prior conversation");
+    expect(html).toContain("Unsent original draft");
+    expect(html).toContain("retained-note.txt");
+    expect(html).not.toContain(code);
+    expect(html).not.toContain(STRINGS.repair.reconnectFailed);
+    expect(html).not.toContain("技术详情");
+    expect(h.invoke.mock.calls.map(([command]) => command)).toEqual([
+      "session_open",
+    ]);
+  },
+);
+
+it.each(openingFailures.map(([code], index) => ({ code, index })))(
+  "keeps untrusted variants of $code behind the original opening fallback",
+  async ({ code, index: codeIndex }) => {
+    const reasons: unknown[] = [
+      `${code}: /private/secret-canary`,
+      `检查结果：${code}: secret-canary`,
+      `prefix:${code}`,
+      `${code}\nsecret-canary`,
+      `${code}\0secret-canary`,
+      `${code} `,
+      new Error(`${code}: secret-canary`),
+      { code, message: "secret-canary" },
+      { toString: () => code },
+      "未知错误：/private/secret-canary",
+    ];
+    for (const [index, reason] of reasons.entries()) {
+      const state = prior(`untrusted-opening-${codeIndex}-${index}`);
+      const retained = retainedOpening(state);
+      const before = structuredClone(retained());
+      h.invoke.mockClear();
+      h.invoke.mockImplementation(async (command) => {
+        if (command === "session_open") throw reason;
+        throw new Error(`Unexpected IPC ${command}`);
+      });
+      await expect(
+        threads.open({
+          agentId: state.agentId,
+          cwd: state.cwd,
+          nativeSessionId: state.nativeSessionId,
+        }),
+      ).rejects.toBe(reason);
+      expect(state.openError).toBe(STRINGS.repair.reconnectFailed);
+      expect(retained()).toEqual(before);
+      const html = render(state);
+      expect(html).not.toContain(code);
+      expect(html).not.toContain("secret-canary");
+      expect(html).not.toContain("/private/");
+      expect(html).not.toContain("技术详情");
+      expect(h.invoke.mock.calls.map(([command]) => command)).toEqual([
+        "session_open",
+      ]);
+    }
+  },
+);
 
 it("keeps the disconnected target's retry beside the input before any retry fails", () => {
   const state = prior("idle-recovery-notice");

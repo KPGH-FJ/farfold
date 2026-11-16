@@ -1,0 +1,25 @@
+{
+  "sourceCommit": "d3529ff521532d0de4b437d9350ea1c962ddde66",
+  "command": [
+    "corepack",
+    "pnpm",
+    "tauri",
+    "build",
+    "--ci",
+    "--no-bundle",
+    "--",
+    "--locked"
+  ],
+  "naturalExitCode": 0,
+  "seconds": 158.06,
+  "appBundleBuilt": false,
+  "appLaunched": false,
+  "installedBinarySha256BeforeAndAfter": "40758ffc653c3de0e7554730bbbc604590267bc4fd95b988edaaab0014f2da73",
+  "releaseBinarySha256Before": "81232677007e79b4e92461d8856c4c2eb3e1874dc6122511669dba628f77bb9b",
+  "releaseBinarySha256After": "8fcff40e33bfd7b60aee1d13b7c2520a49d2adadb56a7c3e459f5506a9070640",
+  "releaseBinaryBytes": 38520368,
+  "availableBytesBefore": 901423104,
+  "availableBytesAfter": 935645184,
+  "buildLogSha256": "60b686eab7b9823620d0106fa1ffbc7f25a72580cf8d72144426c687763f515a",
+  "architecture": "arm64"
+}

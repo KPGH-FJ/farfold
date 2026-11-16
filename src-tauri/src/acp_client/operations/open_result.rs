@@ -1,5 +1,5 @@
 //! Transfer the existing opening ownership to its one result receiver.
-use super::{Operation, execute};
+use super::{OPEN_WAIT_TIMEOUT, Operation, execute_with_timeout_receipt};
 use crate::acp_client::{
     lifecycle::{ConnectionLife, OperationLease},
     pump::{OpenedSession, SessionMap},
@@ -67,7 +67,18 @@ pub(super) async fn execute_open(
     };
     // Unknown and dropped callers keep the same effectful wait. A late success,
     // failed send, or unconsumed delivery all use the same orphan cleanup above.
-    drop(execute(reply, life, operation, deadline, true, settled).await);
+    drop(
+        execute_with_timeout_receipt(
+            reply,
+            life,
+            operation,
+            deadline,
+            true,
+            OPEN_WAIT_TIMEOUT,
+            settled,
+        )
+        .await,
+    );
 }
 
 /// A fork coordinator already owns delivery independently of its IPC caller.

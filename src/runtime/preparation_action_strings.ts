@@ -1,5 +1,13 @@
 export const PREPARATION_ACTION_STRINGS = {
+  draftChanged: "草稿或原设置已改变，请返回草稿重新检查。",
   title: "设置账号与服务",
+  accountLogin: {
+    title: "使用官方程序登录账号",
+    hint: "按所选程序的官方流程登录，使用它保存的账号。",
+    effects:
+      "请按终端提示登录。已有 API 密钥可能仍用于对话，登录后请检查对话的账号来源。",
+    run: "启动登录终端",
+  },
   details: "查看详情",
   inProgress: "配置尚未结束",
   resume: "查看配置进度",

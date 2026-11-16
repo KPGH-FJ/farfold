@@ -1,0 +1,143 @@
+{
+  "sourceCodeCommit": "39fcd882a4127f52999d25492899e53b79212e07",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "267daca51235a82650e53862d4b7c34511d1561a",
+    "executableSha256": "178d2be32445246c722683b6c5f77cd3d904c87490f1e23aa06dd48b9e055401"
+  },
+  "engineeringBaseline": {
+    "reusedBecauseProductSourceUnchanged": true,
+    "sameInstalledVersion": true,
+    "receipt": "docs/evidence/2026-11-10-search-diff-notification-navigation/summary.json"
+  },
+  "independentEvidenceReview": {
+    "nativeNotificationReceiptAndRestoredPreferences": true,
+    "historyWireLabelsAndAttachmentStoredTypes": true
+  },
+  "observations": {
+    "notification": {
+      "source": "39fcd882a4127f52999d25492899e53b79212e07",
+      "ownedGooseSession": "20261109_3",
+      "model": "Nemotron 3 Ultra (free)",
+      "thinking": "off",
+      "sentUtc": "2026-11-10T05:55:28.072Z",
+      "clickedUtc": "2026-11-10T06:00:01.177Z",
+      "systemNotificationVisible": true,
+      "targetConversationObservedAfterClick": true,
+      "userOpenedSystemPanel": true,
+      "oneNewModelRequest": true,
+      "quietTest": true,
+      "savedPreferencesRestored": true,
+      "diagnosticSha256": "96673ad5c7f4291e1edaa669e16a20978cbe25bcf6ef93466ae84c769029d187",
+      "native": {
+        "version": 1,
+        "nativeResultCoverage": "macos_submission_and_callbacks",
+        "frontend": {
+          "kind": "success",
+          "source": "agent",
+          "phase": "submitted",
+          "reason": "submitted",
+          "background": true,
+          "ready": true,
+          "enabled": true,
+          "saving": false
+        },
+        "backend": {
+          "stage": "add",
+          "reason": "add_accepted",
+          "windowVisible": false,
+          "windowFocused": false,
+          "systemPermission": "authorized",
+          "systemAlert": true,
+          "systemSound": true,
+          "soundRequested": false,
+          "nativeInitialized": true,
+          "delegateMatches": true,
+          "bundleMatches": true,
+          "appActive": true,
+          "addResult": "accepted",
+          "errorDomain": null,
+          "errorCode": null,
+          "presentation": "not_observed",
+          "clicked": true
+        }
+      }
+    },
+    "history": {
+      "source": "39fcd882a4127f52999d25492899e53b79212e07",
+      "ownedGooseSession": "20261107_14",
+      "unloadedBefore": true,
+      "otherLoadedConversationExcluded": true,
+      "selected": 1,
+      "scannedReturnedTextSegments": 8,
+      "matchingSegments": 2,
+      "unsearchedReturnedSegments": 0,
+      "openedAssistantMatchInReadOnlySheet": true,
+      "readEndedInUi": true,
+      "sourceSettingsUnconfirmed": true,
+      "protocolLabels": ["initialize", "session/load", "other"],
+      "responseErrors": ["none", "none", "none"],
+      "modelRequests": 0,
+      "logName": "protocol-v1-1794290623235-1.jsonl",
+      "logSha256": "cc1aeb6c9daf13342dd95396f441eae518f929744eb78de783b8a28b95d6c01c"
+    },
+    "attachment": {
+      "source": "39fcd882a4127f52999d25492899e53b79212e07",
+      "ownedGooseSession": "20261109_3",
+      "model": "Nemotron 3 Ultra (free)",
+      "thinking": "off",
+      "sentUtc": "2026-11-10T06:20:58.822Z",
+      "oneExplicitAttachmentOnly": true,
+      "officialReplyObserved": true,
+      "fileSha256": "908cc386ccdc3819a46584fcbfb1df0945471a91a9f1d5e037614f89570969fc",
+      "sourceStillMatchesFixture": true,
+      "filesSelected": 1,
+      "filesSearched": 1,
+      "matchOccurrences": 1,
+      "snippetMatchedExactText": true,
+      "jumpToOriginalAttachmentConfirmed": true,
+      "nativeStoredUserContentTypes": ["text", "text"],
+      "coldReopenTested": false,
+      "windowsTested": false,
+      "logName": "protocol-v1-1794286041866-0.jsonl",
+      "logSha256": "ca559883c6a6f318f9e9dd861c2433b4a6379b9d2afa417b63ee167c1aa717fa",
+      "gooseRequestsInBatchInSameConversation": 2
+    },
+    "attachment-old-history": {
+      "source": "39fcd882a4127f52999d25492899e53b79212e07",
+      "vibeVersion": "2.25.8",
+      "ownedOriginalNativeRecordExists": true,
+      "exactOriginalDirectoryAndLiveCwdMatch": true,
+      "officialScopedListReturnedNoRowsInUi": true,
+      "noImportOrPrompt": true,
+      "existingRecordHasDuplicateCallbackResolution": true,
+      "causalLinkToEmptyListConfirmed": false,
+      "logName": "protocol-v1-1794291057788-4.jsonl",
+      "logSha256": "eb168f31e82f9f10c3d563bad66fa41d657eb58079a0dd1b9b56ed74436fdfa9"
+    },
+    "multi-fragment": {
+      "source": "39fcd882a4127f52999d25492899e53b79212e07",
+      "claudeAcpInstalledVersion": "0.81.2",
+      "officialImplementationSupportsSeveralHunksInOneToolCall": true,
+      "programHandshakeObserved": true,
+      "officialAppReportedSavedChoiceMismatch": true,
+      "previousChoiceRetained": true,
+      "noModelOrCredentialChanges": true,
+      "noPromptOrEdit": true,
+      "formalMultiFragmentSampleProduced": false
+    }
+  },
+  "localReceiptRoot": "output/2026-11-10-eighth-batch",
+  "localReceiptSha256": {
+    "notification-observation.json": "89fefde85ee95cc1aa056b6643b429ec46b438aeb12205dd0c0136c7fa334d4e",
+    "history-observation.json": "f4cc76013c7fe7f4baba0f52bf5cfd4474acd0a1c264220416d8abf0e539e76e",
+    "attachment-observation.json": "74a0d5595ddcc5d74965ab63064b609be28f92443efcce9736c96031c2329185",
+    "attachment-old-history-observation.json": "f3218240fe1f6d1bc793b2a6451771fdf8996710e96e08d60c0a61fe8259ab1c",
+    "multi-fragment-observation.json": "49e36dae900ad2c23d46bf845918aa02b606917f7ae8827aef5d05fb6acf428d",
+    "notification-diagnostics.zip": "96673ad5c7f4291e1edaa669e16a20978cbe25bcf6ef93466ae84c769029d187",
+    "attachment-fixture.json": "0e31e3b588c54cfa373e15b40b1b977afd16b03c6595b28093c26fdb788e4adf"
+  }
+}

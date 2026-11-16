@@ -1,4 +1,9 @@
 import { mcpRemovePort } from "./mcp_remove";
+import { skillPreferenceRemovePort } from "./skill_preference_remove";
+import {
+  skillPreferenceRemoveFailure,
+  type SkillPreferenceRemoveCode,
+} from "./skill_preference_remove_types";
 import { mcpRemoveFailure, type McpRemoveCode } from "./mcp_remove_types";
 import { mcpAddPort } from "./mcp_add";
 import {
@@ -8,15 +13,18 @@ import {
   type McpAddInput,
   type McpAddCode,
 } from "./mcp_add_types";
-import type {
-  InventoryOwner,
-  InventoryResult,
+import {
+  extensionInventory,
+  type InventoryOwner,
+  type InventoryResult,
 } from "./extension_inventory_controller";
+import { sameInventoryExtraRoots } from "./extension_inventory_scope";
 import {
   skillManagementPort,
   type SkillManagementPort,
 } from "./skill_management";
 import { mcpManagementPort } from "./mcp_management";
+import type { SkillChangeScope } from "./skill_management_types";
 import {
   parseExtensionChangeOperation as parseSkillChangeOperation,
   parseExtensionChangeCancellation as parseSkillChangeCancellation,
@@ -29,6 +37,7 @@ import {
   isMcpRequest,
   isAddRequest,
   isRemoveRequest,
+  isSkillPreferenceRemoveRequest,
 } from "./extension_management_types";
 export type { ExtensionChangeTargetOwner as SkillChangeTargetOwner } from "./extension_management_types";
 
@@ -42,8 +51,12 @@ export interface SkillManagementView {
   cancelRequested: boolean;
   trackingReleased: boolean;
   admissionRejected: boolean;
-  error: McpAddCode | McpRemoveCode | null;
+  expiryResolved: boolean;
+  error: McpAddCode | McpRemoveCode | SkillPreferenceRemoveCode | null;
+  // Display only, captured from the review explicitly accepted for this request.
+  confirmedScope: Readonly<SkillChangeScope> | null;
   originalOperation: SkillChangeOperation | null;
+  originalWriteScope: Readonly<SkillChangeScope> | null;
   additionInput: McpAddInput | null;
 }
 const EMPTY: SkillManagementView = Object.freeze({
@@ -56,16 +69,29 @@ const EMPTY: SkillManagementView = Object.freeze({
   cancelRequested: false,
   trackingReleased: false,
   admissionRejected: false,
+  expiryResolved: false,
   error: null,
   additionInput: null,
+  confirmedScope: null,
   originalOperation: null,
+  originalWriteScope: null,
 });
+type ChangeTarget = Pick<
+  SkillChangeTargetOwner,
+  "owner" | "result" | "current" | "changed"
+>;
+type RemovalParent = "mayRemainEmpty" | "preserveSiblings" | null;
+interface LastWrite {
+  request: SkillChangeRequest;
+  operation: SkillChangeOperation;
+  scope: Readonly<SkillChangeScope> | null;
+  port: SkillManagementPort;
+  target: ChangeTarget;
+  removalParent: RemovalParent;
+}
 interface Flight {
   port: SkillManagementPort;
-  target: Pick<
-    SkillChangeTargetOwner,
-    "owner" | "result" | "current" | "changed"
-  >;
+  target: ChangeTarget;
   view: SkillManagementView;
   retired: boolean;
   consumed: boolean;
@@ -74,9 +100,9 @@ interface Flight {
   epoch: number;
   inspection: SkillChangeRequest;
   inspectionRevoked: boolean;
-  confirmation: SkillChangeRequest | null;
+  lastWrite: LastWrite | null;
   reviewDeadline: number | null;
-  removalParent: "mayRemainEmpty" | "preserveSiblings" | null;
+  removalParent: RemovalParent;
   inheritedWrite: Pick<
     SkillChangeOperation,
     "writeDispatched" | "writeAck"
@@ -94,6 +120,7 @@ export class SkillManagementController {
     private mcpPort: SkillManagementPort = mcpManagementPort,
     private addPort: SkillManagementPort = mcpAddPort,
     private removePort: SkillManagementPort = mcpRemovePort,
+    private skillPreferenceRemovalPort: SkillManagementPort = skillPreferenceRemovePort,
   ) {}
   subscribe = (fn: () => void) => {
     this.listeners.add(fn);
@@ -202,9 +229,24 @@ export class SkillManagementController {
       f.reviewDeadline ??= op.review.observedAtMs + op.review.validForMs;
       if (this.now() < f.reviewDeadline) rev = op.review;
     }
+    // A read or an undispatched confirmation never replaces the last actual write.
+    if (
+      op.writeDispatched &&
+      ["setEnabled", "add", "remove"].includes(f.view.request.action)
+    )
+      f.lastWrite = {
+        request: f.view.request,
+        operation: op,
+        scope: f.view.confirmedScope,
+        port: f.port,
+        target: f.target,
+        removalParent: f.removalParent,
+      };
     if (op.writeDispatched) f.target.changed();
     this.publish(f, {
       operation: op,
+      originalOperation: f.lastWrite?.operation ?? null,
+      originalWriteScope: f.lastWrite?.scope ?? null,
       review: rev,
       reviewRetired: !!op.review && !rev,
       unresolved: !op.settled,
@@ -217,17 +259,19 @@ export class SkillManagementController {
     call: () => Promise<unknown>,
     cancellation = false,
     releaseAbsent = false,
-    freshConfirmation = false,
+    freshRequest: "inspect" | "confirm" | null = null,
   ) {
     const epoch = ++f.epoch;
     const timer = setTimeout(() => {
       if (this.attached(f) && f.view.unresolved) {
+        // Losing an older reply still matters, even when a newer check owns UI.
         f.lost = true;
         if (
           ["setEnabled", "add", "remove"].includes(f.view.request?.action ?? "")
         )
           f.target.changed();
-        this.publish(f, { checking: false, error: "timedOut" });
+        if (epoch === f.epoch)
+          this.publish(f, { checking: false, error: "timedOut" });
       }
     }, this.waitMs);
     void Promise.resolve()
@@ -248,7 +292,9 @@ export class SkillManagementController {
               trackingReleased: true,
               error: "unknownRequest",
             });
-          }
+          } else if (epoch === f.epoch)
+            // Only this observation ended; the operation remains unresolved.
+            this.publish(f, { checking: false });
         } else this.accept(f, raw);
       })
       .catch((reason) => {
@@ -256,19 +302,29 @@ export class SkillManagementController {
         if (!this.attached(f) || !f.view.unresolved || epoch !== f.epoch)
           return;
         const code =
-          (f.view.request && isRemoveRequest(f.view.request)
-            ? mcpRemoveFailure(reason)
-            : mcpAddFailure(reason)) ?? "unavailable";
-        // Only these direct, fresh confirm errors are guaranteed before admission.
-        // A timeout/status/other failure cannot be reclassified as an unwritten request.
+          (f.view.request && isSkillPreferenceRemoveRequest(f.view.request)
+            ? skillPreferenceRemoveFailure(reason)
+            : f.view.request && isRemoveRequest(f.view.request)
+              ? mcpRemoveFailure(reason)
+              : mcpAddFailure(reason)) ?? "unavailable";
+        const expiredInventory =
+          freshRequest === "inspect" && code === "inventoryExpired";
+        const rejectedConfirmation =
+          freshRequest === "confirm" &&
+          (code === "reviewExpired" || code === "reviewConsumed");
+        // Only direct refusals from these request paths prove no admission.
+        // A timeout/status/other failure cannot be reclassified as unwritten.
         if (
-          freshConfirmation &&
+          (expiredInventory || rejectedConfirmation) &&
           !f.lost &&
-          !f.view.operation &&
-          (code === "reviewExpired" || code === "reviewConsumed")
+          !f.view.operation
         ) {
           f.retired = true;
           this.dropHttpInput(f);
+          if (expiredInventory) {
+            f.inspectionRevoked = true;
+            f.target.changed();
+          }
           this.publish(f, {
             checking: false,
             unresolved: false,
@@ -279,7 +335,7 @@ export class SkillManagementController {
           });
           return;
         }
-        if (freshConfirmation) f.target.changed();
+        if (freshRequest === "confirm") f.target.changed();
         this.publish(f, { checking: false, error: code });
       });
   }
@@ -313,13 +369,15 @@ export class SkillManagementController {
       this.revokeReview(previous);
     }
     const f: Flight = {
-      port: isRemoveRequest(request)
-        ? this.removePort
-        : isAddRequest(request)
-          ? this.addPort
-          : isMcpRequest(request)
-            ? this.mcpPort
-            : this.port,
+      port: isSkillPreferenceRemoveRequest(request)
+        ? this.skillPreferenceRemovalPort
+        : isRemoveRequest(request)
+          ? this.removePort
+          : isAddRequest(request)
+            ? this.addPort
+            : isMcpRequest(request)
+              ? this.mcpPort
+              : this.port,
       target:
         "input" in target && isHttpInput(target.input)
           ? {
@@ -333,6 +391,8 @@ export class SkillManagementController {
         ...EMPTY,
         request,
         unresolved: true,
+        originalOperation: previous?.lastWrite?.operation ?? null,
+        originalWriteScope: previous?.lastWrite?.scope ?? null,
         additionInput: "input" in target ? target.input : null,
       },
       retired: false,
@@ -342,7 +402,7 @@ export class SkillManagementController {
       epoch: 0,
       inspection: request,
       inspectionRevoked: false,
-      confirmation: null,
+      lastWrite: previous?.lastWrite ?? null,
       reviewDeadline: null,
       inheritedWrite: null,
       removalParent: null,
@@ -358,7 +418,7 @@ export class SkillManagementController {
       });
       return false;
     }
-    this.observe(f, async () => {
+    const inspect = async () => {
       if (!this.current(f) || f.view.cancelRequested) {
         this.dropHttpInput(f);
         this.publish(f, {
@@ -379,7 +439,7 @@ export class SkillManagementController {
           input: f.view.additionInput,
         });
       }
-      if (isRemoveRequest(request))
+      if (isRemoveRequest(request) || isSkillPreferenceRemoveRequest(request))
         return f.port.inspect({
           agentId: request.agentId,
           requestId: request.requestId,
@@ -393,7 +453,8 @@ export class SkillManagementController {
         itemId: request.target.itemId,
         enabled: request.requestedEnabled,
       });
-    });
+    };
+    this.observe(f, inspect, false, false, "inspect");
     return true;
   }
   canConfirm(owner: InventoryOwner, review: SkillChangeReview): boolean {
@@ -425,12 +486,14 @@ export class SkillManagementController {
         request,
         unresolved: true,
         reviewRetired: true,
+        confirmedScope: Object.freeze({ ...review.writeScope }),
+        originalOperation: old.lastWrite?.operation ?? null,
+        originalWriteScope: old.lastWrite?.scope ?? null,
         additionInput: old.view.additionInput,
       },
       dispatched: false,
       epoch: 0,
       lost: false,
-      confirmation: request,
       removalParent: "parentHandling" in review ? review.parentHandling : null,
     };
     this.entries.set(owner.agentId, f);
@@ -458,7 +521,7 @@ export class SkillManagementController {
       },
       false,
       false,
-      true,
+      "confirm",
     );
     return true;
   }
@@ -546,6 +609,33 @@ export class SkillManagementController {
   ) {
     const f = this.entries.get(owner.agentId);
     if (
+      f &&
+      !f.view.expiryResolved &&
+      f.view.admissionRejected &&
+      f.view.error === "inventoryExpired" &&
+      f.view.request?.action === "inspect" &&
+      !f.view.unresolved &&
+      !f.view.operation &&
+      result?.snapshot.complete &&
+      extensionInventory.isCurrentResult(owner, result)
+    ) {
+      const previous = f.target.result.request;
+      if (
+        result.request.requestId !== previous.requestId &&
+        result.request.kind === previous.kind &&
+        result.request.cwd === previous.cwd &&
+        sameInventoryExtraRoots(
+          result.request.extraSkillRoots,
+          previous.extraSkillRoots,
+        )
+      ) {
+        // Only the refused inspection is obsolete. Keep the actual write and
+        // its original readback target, even if the selection owner changed.
+        this.publish(f, { expiryResolved: true });
+        return;
+      }
+    }
+    if (
       f?.target.owner === owner &&
       f.view.request?.action === "inspect" &&
       f.target.result !== result
@@ -553,40 +643,45 @@ export class SkillManagementController {
       this.retire(owner);
   }
   recheck(agentId: string, requestId: string): boolean {
-    const old = this.entries.get(agentId);
+    const old = this.entries.get(agentId),
+      write = old?.lastWrite;
     if (
       !old ||
       old.view.request?.requestId !== requestId ||
       old.view.unresolved ||
-      !old.view.operation?.settled ||
-      !old.view.operation.writeDispatched ||
-      !old.confirmation
+      !write?.operation.settled ||
+      !write.operation.writeDispatched
     )
       return false;
     this.dropHttpInput(old);
+    this.revokeReview(old);
     const request: SkillChangeRequest = Object.freeze({
-      ...old.confirmation,
+      ...write.request,
       requestId: this.uuid(),
       action: "recheck",
-      operationId: old.confirmation.requestId,
+      operationId: write.request.requestId,
     });
     const f: Flight = {
       ...old,
+      port: write.port,
+      target: write.target,
       view: {
         ...EMPTY,
         request,
         unresolved: true,
         reviewRetired: true,
-        additionInput: old.view.additionInput,
-        originalOperation: old.view.originalOperation ?? old.view.operation,
+        originalOperation: write.operation,
+        originalWriteScope: write.scope,
       },
       retired: true,
+      inspectionRevoked: true,
+      removalParent: write.removalParent,
       dispatched: true,
       epoch: 0,
       lost: false,
       inheritedWrite: {
-        writeDispatched: old.view.operation.writeDispatched,
-        writeAck: old.view.operation.writeAck,
+        writeDispatched: write.operation.writeDispatched,
+        writeAck: write.operation.writeAck,
       },
     };
     this.entries.set(agentId, f);

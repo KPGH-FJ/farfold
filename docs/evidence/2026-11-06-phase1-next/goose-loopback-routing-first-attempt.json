@@ -1,0 +1,104 @@
+{
+  "cleanup": {
+    "directSignals": 0,
+    "exitCode": 0,
+    "ownedProcessGroupGone": true,
+    "stdinEof": true
+  },
+  "endedUtc": "2026-11-06T21:37:49.097339+00:00",
+  "existingSessionUsed": false,
+  "externalInferenceCalls": 0,
+  "initialOwnedExtensionScope": {
+    "count": 1,
+    "knownDefaultBuiltin": "developer"
+  },
+  "kernelPolicy": {
+    "differentListeningPortDenied": true,
+    "exactLoopbackAllowed": true,
+    "ordinaryHomeReadDenied": true,
+    "realHomeWritesDeniedBySamePolicy": true
+  },
+  "kind": "registered-official-goose-loopback-request-body",
+  "loopbackRequestCounts": {
+    "getModels": 1,
+    "postCompletions": 4
+  },
+  "observedAcpUpdateCounts": {
+    "agent_message_chunk": 1,
+    "available_commands_update": 1,
+    "session_info_update": 2,
+    "usage_update": 2
+  },
+  "observedOfficialAcpStopReason": "end_turn",
+  "officialAgentVersion": "1.52.0",
+  "officialRegisteredExecutableAndStrictSignatureMatched": true,
+  "ordinaryHomeInherited": true,
+  "outboundAcpCounts": {
+    "_goose/unstable/session/extensions/list": 2,
+    "_goose/unstable/session/extensions/remove": 1,
+    "_goose/unstable/tools/list": 1,
+    "initialize": 1,
+    "session/new": 1,
+    "session/prompt": 1
+  },
+  "outcome": "local-synthetic-acp-reply-not-confirmed",
+  "preflight": {
+    "chatMode": true,
+    "clientFileAndTerminalCapabilitiesDisabled": true,
+    "exactModel": "nvidia/nemotron-3.5-super-vl:free",
+    "extensions": 0,
+    "isolatedSecretFileAbsent": true,
+    "keyringDisabled": true,
+    "nativeMessagesBefore": 0,
+    "noModelPostsBeforePrompt": true,
+    "oneOwnedNativeSession": true,
+    "provider": "openrouter",
+    "telemetryAndSessionNamingDisabled": true,
+    "tools": 0
+  },
+  "productionAppOperated": false,
+  "productionFileMetadataUnchanged": {
+    "config": true,
+    "secrets": true,
+    "sessions": true,
+    "system": true,
+    "wal": true
+  },
+  "promptAttempts": 1,
+  "realKeyReadOrPassedByHarness": false,
+  "removedOnlyKnownDefaultBuiltinInOwnedSession": true,
+  "requestBodyProjection": [
+    {
+      "boundedJson": true,
+      "exactFivePluginDisables": true,
+      "exactLoopbackHost": true,
+      "exactSuperVlFree": true,
+      "fakeAuthOnly": true,
+      "modelRequestBodyKeys": [
+        "messages",
+        "model",
+        "plugins",
+        "provider",
+        "session_id",
+        "stream",
+        "stream_options",
+        "transforms",
+        "usage",
+        "user"
+      ],
+      "noModelFallbackFields": true,
+      "noToolOrHostedToolFields": true,
+      "oneSyntheticUserTextAndOneSystemMessage": false,
+      "onlyForcedMiddleOutTransform": true,
+      "onlyNvidiaNoProviderFallbackAndZeroCaps": true,
+      "requestPathExact": true,
+      "streaming": true,
+      "systemCharacterCount": 1303,
+      "systemNoKnownPrivatePathOrSkillsMarkers": true
+    }
+  ],
+  "sourceCommit": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+  "standaloneOfficialGoose": true,
+  "startedUtc": "2026-11-06T21:37:40.232807+00:00",
+  "temporaryFixtureRemoved": true
+}

@@ -51,6 +51,9 @@ export const SKILL_MANAGEMENT_STRINGS = {
   status: "检查操作状态",
   checking: "正在检查…",
   recheck: "核对修改结果",
+  priorOperation: "此前已发出的修改",
+  priorDirectory: "此前工作文件夹",
+  priorUnknown: "此前修改结果仍未确认；重新审阅不代表此前修改成功。",
   cancel: "请求取消本次操作",
   close: "收起审阅",
   reopen: "查看技能修改状态",
@@ -73,11 +76,18 @@ export const SKILL_MANAGEMENT_STRINGS = {
     cancelled: "本次操作已取消。",
     unknownRequest: "暂时无法核实此前操作；请检查状态或明确结束等待。",
     targetUnavailable: "此前清单已不能用于审阅，请重新查询。",
+    inventoryExpired: "此前清单已失效。请重新检查读取方式，再查询清单。",
     targetChanged: "技能位置或报告已变化，请重新查询并审阅。",
     inventoryIncomplete: "技能读取不完整，无法审阅修改。",
     reviewExpired: "此次审阅已过期，请重新审阅。",
     reviewConsumed: "此次确认已经使用，不能重复修改。",
     configurationUnsupported: "当前配置的修改方式尚未提供。",
+    configurationProjectOnly:
+      "此 MCP 在项目设置中定义，本次未找到可修改的用户设置；尚未修改。",
+    configurationInherited:
+      "此 MCP 来自继承的设置，本次仅支持修改用户设置；尚未修改。",
+    configurationLayerConflict:
+      "同名 MCP 出现在多处设置中，无法确定修改范围；尚未修改。",
     configurationChanged: "配置已变化，请重新审阅。",
     configurationReadOnly: "当前配置不允许本次修改。",
     configurationRejected: "官方程序未接受本次配置修改。",

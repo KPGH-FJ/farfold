@@ -127,17 +127,31 @@ async fn configuration_change_tool_tail_retains_work_after_stop_without_blocking
         .control
         .clone();
     for variant in 0..3 {
-        let (result, receive) = tokio::sync::oneshot::channel();
         let deadline = tokio::time::Instant::now() + Duration::from_secs(2);
+        if variant == 2 {
+            let (result, receive) = tokio::sync::oneshot::channel();
+            control
+                .send(SessionControl::Delete {
+                    deadline,
+                    result,
+                    opening: None,
+                })
+                .unwrap();
+            assert_eq!(
+                receive.await.unwrap(),
+                Err(super::mutation::DeleteFailure::NotDispatched)
+            );
+            continue;
+        }
+        let (result, receive) = tokio::sync::oneshot::channel();
         control
             .send(match variant {
                 0 => SessionControl::Detach { deadline, result },
-                1 => SessionControl::Close {
+                _ => SessionControl::Close {
                     deadline,
                     result,
                     require_idle_interactions: false,
                 },
-                _ => SessionControl::Delete { deadline, result },
             })
             .unwrap();
         assert!(
@@ -250,4 +264,235 @@ async fn tool_activity_is_released_only_with_real_process_termination() {
     next(&rx, "connectionLost");
     connection.life.closed().await.unwrap();
     assert_eq!(connection.life.work.load(Ordering::SeqCst), 0);
+}
+
+#[cfg(unix)]
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn external_peer_exit_emits_ordered_receipts_for_its_owner_only() {
+    exact_peer_end_receipt(b"exit normally").await;
+}
+
+#[cfg(unix)]
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn peer_terminated_by_signal_emits_ordered_receipts_for_its_owner_only() {
+    exact_peer_end_receipt(b"self SIGTERM").await;
+}
+
+#[cfg(unix)]
+async fn exact_peer_end_receipt(exit_kind: &[u8]) {
+    use super::{lifecycle::CloseReason, pump::ProcessEndedReceipt};
+
+    const SELF_EXIT: &str = r#"
+import os, pathlib, signal, threading, time
+def exit_after_fence():
+    fence = pathlib.Path.cwd() / 'fixture-exit'
+    while True:
+        try:
+            action = fence.read_bytes()
+            if action:
+                break
+        except FileNotFoundError:
+            pass
+        time.sleep(0.01)
+    if action == b'self SIGTERM':
+        os.kill(os.getpid(), signal.SIGTERM)
+        raise RuntimeError('fixture did not terminate on SIGTERM')
+    os._exit(0)
+threading.Thread(target=exit_after_fence, daemon=True).start()
+"#;
+
+    enum Observation {
+        Raw(Value),
+        Ended(ProcessEndedReceipt, bool),
+    }
+
+    tokio::time::timeout(Duration::from_secs(15), async {
+        let root = tempfile::tempdir().unwrap();
+        let root_path = root.path().canonicalize().unwrap();
+        let target_cwd = root_path.join("target");
+        let sibling_cwd = root_path.join("sibling");
+        std::fs::create_dir(&target_cwd).unwrap();
+        std::fs::create_dir(&sibling_cwd).unwrap();
+        let (store, manager, row) = fixture(&root_path);
+        let _stop = Stop(manager.clone());
+        std::fs::write(root_path.join("peer.py"), format!("{SELF_EXIT}{PEER}")).unwrap();
+        let (send, mut receive) = tokio::sync::mpsc::unbounded_channel();
+        let mut owners = Vec::new();
+        for (scope, cwd) in [("target", &target_cwd), ("sibling", &sibling_cwd)] {
+            let events = send.clone();
+            let sink: SessionSink = Arc::new(move |event| {
+                let _ = events.send((scope, Observation::Raw(event)));
+            });
+            let opened = manager
+                .open_session(&row, cwd, None, vec![], sink, &store)
+                .await
+                .unwrap();
+            let owner = manager
+                .session_connection(&row.id, cwd, &opened.session_id)
+                .unwrap();
+            let pid = owner.child_pid.load(Ordering::SeqCst);
+            assert_ne!(pid, 0);
+            let receipts = send.clone();
+            owner
+                .sessions
+                .lock()
+                .unwrap()
+                .get_mut(&opened.session_id)
+                .unwrap()
+                .observe_process_end(
+                    &opened.connection_id,
+                    Arc::new(move |receipt| {
+                        let group_alive = crate::supervisor::owned_group_alive(pid);
+                        let _ = receipts.send((scope, Observation::Ended(receipt, group_alive)));
+                    }),
+                )
+                .unwrap();
+            owners.push((opened, owner, pid));
+        }
+        let [
+            (opened, target, target_pid),
+            (sibling_open, sibling, sibling_pid),
+        ] = owners.as_slice()
+        else {
+            unreachable!()
+        };
+        assert_ne!(opened.connection_id, sibling_open.connection_id);
+        assert_ne!(target_pid, sibling_pid);
+
+        let blocks = serde_json::from_value(json!([{"type":"text","text":"start"}])).unwrap();
+        manager
+            .session_prompt(&row.id, &target_cwd, &opened.session_id, blocks)
+            .await
+            .unwrap();
+        manager
+            .session_cancel(&row.id, &target_cwd, &opened.session_id)
+            .await
+            .unwrap();
+        let mut active_tool_observed = false;
+        loop {
+            let (scope, observation) = receive.recv().await.unwrap();
+            let Observation::Raw(event) = observation else {
+                panic!("received a process receipt before the child exit trigger");
+            };
+            assert_ne!(event["kind"], "connectionLost");
+            assert_ne!(event["reason"], "process_ended");
+            if scope != "target" {
+                continue;
+            }
+            assert!(!matches!(
+                event.pointer("/update/status").and_then(Value::as_str),
+                Some("completed" | "failed")
+            ));
+            if event["kind"] == "toolActivity" && event["toolCallIds"] == json!(["a", "b"]) {
+                active_tool_observed = true;
+            }
+            if event["kind"] == "turnEnd" {
+                assert_eq!(event["stopReason"], "cancelled");
+                break;
+            }
+        }
+        assert!(active_tool_observed);
+        assert!(target.life.work.load(Ordering::SeqCst) > 0);
+        assert!(crate::supervisor::owned_group_alive(*target_pid));
+
+        // Only the temporary peer reads this fence and exits or signals itself.
+        // Publish it atomically so the peer cannot read an incomplete action.
+        let exit_fence = target_cwd.join("fixture-exit");
+        let pending_fence = target_cwd.join("fixture-exit.pending");
+        std::fs::write(&pending_fence, exit_kind).unwrap();
+        std::fs::rename(pending_fence, exit_fence).unwrap();
+        let mut ordered = Vec::new();
+        loop {
+            let (scope, observation) = receive.recv().await.unwrap();
+            match observation {
+                Observation::Raw(event) => {
+                    assert!(!matches!(
+                        event.pointer("/update/status").and_then(Value::as_str),
+                        Some("completed" | "failed")
+                    ));
+                    match event["kind"].as_str() {
+                        Some("toolActivity") if event["reason"] == "process_ended" => {
+                            assert_eq!(scope, "target");
+                            assert_eq!(event["toolCallIds"], json!([]));
+                            ordered.push("toolActivity");
+                        }
+                        Some("compactionActivity") if event["reason"] == "process_ended" => {
+                            assert_eq!(scope, "target");
+                            assert_eq!(event["connectionId"], opened.connection_id);
+                            ordered.push("compactionActivity");
+                        }
+                        Some("connectionLost") => {
+                            assert_eq!(scope, "target");
+                            assert_eq!(event["closeReason"], "unexpected");
+                            ordered.push("connectionLost");
+                        }
+                        _ => {}
+                    }
+                }
+                Observation::Ended(receipt, group_alive) => {
+                    assert_eq!(scope, "target");
+                    assert_eq!(receipt.connection_id, opened.connection_id);
+                    assert_eq!(receipt.close_reason, CloseReason::Unexpected);
+                    assert!(!group_alive);
+                    ordered.push("typedReceipt");
+                    break;
+                }
+            }
+        }
+        assert_eq!(
+            ordered,
+            [
+                "toolActivity",
+                "compactionActivity",
+                "connectionLost",
+                "typedReceipt"
+            ]
+        );
+        if exit_kind == b"self SIGTERM" {
+            // The receipts prove termination and cleanup, independent of a
+            // successful command exit for this deliberately signalled peer.
+            target.life.terminated().await;
+            assert!(target.life.finished());
+        } else {
+            target.life.closed().await.unwrap();
+        }
+        let work_at_closed = target.life.work.load(Ordering::SeqCst);
+        assert!(
+            manager
+                .session_connection(&row.id, &target_cwd, &opened.session_id)
+                .is_err()
+        );
+        // Process and registry completion do not join the separately spawned
+        // session pump. It can still be dropping its tool work lease.
+        let release_started = tokio::time::Instant::now();
+        tokio::time::timeout(Duration::from_secs(1), async {
+            while target.life.work.load(Ordering::SeqCst) != 0 {
+                tokio::time::sleep(Duration::from_millis(5)).await;
+            }
+        })
+        .await
+        .expect("local tool work did not release after the exact process ended");
+        eprintln!(
+            "owned-peer-exit work_at_closed={work_at_closed} local_release_ms={}",
+            release_started.elapsed().as_millis()
+        );
+        assert!(crate::supervisor::owned_group_alive(*sibling_pid));
+        let remaining = manager
+            .session_connection(&row.id, &sibling_cwd, &sibling_open.session_id)
+            .unwrap();
+        assert_eq!(remaining.connection_id, sibling_open.connection_id);
+        assert!(Arc::ptr_eq(&remaining.life, &sibling.life));
+        while let Ok((_, observation)) = receive.try_recv() {
+            let Observation::Raw(event) = observation else {
+                panic!("received an extra process receipt");
+            };
+            assert_ne!(event["kind"], "connectionLost");
+            assert_ne!(event["reason"], "process_ended");
+        }
+
+        std::fs::write(sibling_cwd.join("fixture-exit"), b"cleanup").unwrap();
+        sibling.life.closed().await.unwrap();
+    })
+    .await
+    .unwrap();
 }

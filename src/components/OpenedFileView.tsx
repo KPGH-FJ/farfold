@@ -1,4 +1,5 @@
 import { fileBasename } from "../runtime/file_paths";
+import { MAX_IMAGE_BYTES } from "../runtime/image_bytes";
 import type { AttachmentPdfPreviewTarget } from "../runtime/attachment_search_source";
 import { ATTACHMENT_SEARCH_STRINGS } from "../runtime/attachment_search_strings";
 import {
@@ -39,18 +40,32 @@ import {
   type VisualAreaFeedbackSource,
 } from "../runtime/visual_feedback_target";
 import { pptxFailure } from "../runtime/pptx_strings";
+import { workbookFailure } from "../runtime/workbook_strings";
+import { documentFailure } from "../runtime/document_strings";
 import {
+  MAX_INLINE_TEXT_BYTES,
   readTextBlock,
+  supportsTextFilePreview,
   textBlockFailure,
   type TextBlockPreview as TextBlock,
 } from "../runtime/text_block_preview";
 import { TEXT_BLOCK_STRINGS as T } from "../runtime/text_block_strings";
-import { restoredTextBlock } from "../runtime/preview_reading_position";
+import {
+  restoredTextBlock,
+  sameReadingFile,
+} from "../runtime/preview_reading_position";
 import { FILE_COPY_STRINGS as C } from "../runtime/file_copy_strings";
 import { copyFailureCode } from "../runtime/file_copy_types";
 import { fileCopyJobs } from "../runtime/file_copy_jobs";
 import { FileCopyJobsStatus } from "./FileCopyJobsStatus";
 import { VisualFilePreview } from "./VisualFilePreview";
+import {
+  stageVisualReplacement,
+  type DrawnPdfPreview,
+  type ImagePreviewCandidate,
+  type LoadedImagePreview,
+  type PdfPreviewCandidate,
+} from "./visual_file_replacement";
 import { WorkbookFilePreview } from "./WorkbookFilePreview";
 import { DocxFilePreview } from "./DocxFilePreview";
 import { PptxFilePreview } from "./PptxFilePreview";
@@ -63,6 +78,8 @@ import type { PreviewContentStatus } from "../runtime/preview_capture";
 import {
   prepareOfficePreview,
   type PreparedOfficePreview,
+  type WorkbookRefreshRecovery,
+  type WorkbookRefreshSelection,
 } from "../runtime/office_preview_prepare";
 import {
   fileFeedbackDrafts,
@@ -87,6 +104,8 @@ export interface OpenedFileViewProps {
   threadKey: string;
   /** Exact local file selected by the user; never an inferred artifact body. */
   path: string;
+  /** Verified target supplied by the delivery card's large-file handoff. */
+  expectedFile?: VerifiedFile;
   workingDirectory: string;
   active: boolean;
   /** Changes for an explicit new selection, including the same path in another task. */
@@ -107,8 +126,13 @@ type View = {
   textSource?: TextFeedbackSource | null;
   block?: TextBlock;
   visual?: VisualPreview;
+  drawnPdf?: DrawnPdfPreview;
+  pdfCandidate?: PdfPreviewCandidate;
+  loadedImage?: LoadedImagePreview;
+  imageCandidate?: ImagePreviewCandidate;
   pdfSearchTarget?: AttachmentPdfPreviewTarget;
   office?: PreparedOfficePreview;
+  workbookRecovery?: WorkbookRefreshRecovery;
   note?: string;
   pending?: boolean;
 };
@@ -118,70 +142,7 @@ type Operation = {
   valid?: () => boolean;
   parser?: AbortController;
 };
-const MAX_TEXT_BYTES = 1024 * 1024;
-const TEXT_EXTENSIONS = new Set([
-  "md",
-  "markdown",
-  "mdx",
-  "txt",
-  "text",
-  "json",
-  "jsonl",
-  "csv",
-  "tsv",
-  "js",
-  "jsx",
-  "mjs",
-  "cjs",
-  "ts",
-  "tsx",
-  "css",
-  "scss",
-  "sass",
-  "less",
-  "xml",
-  "svg",
-  "yaml",
-  "yml",
-  "toml",
-  "ini",
-  "cfg",
-  "conf",
-  "log",
-  "py",
-  "pyi",
-  "rs",
-  "go",
-  "c",
-  "h",
-  "cc",
-  "cpp",
-  "hpp",
-  "java",
-  "kt",
-  "swift",
-  "m",
-  "mm",
-  "rb",
-  "php",
-  "sh",
-  "bash",
-  "zsh",
-  "fish",
-  "sql",
-  "r",
-  "vue",
-  "svelte",
-  "astro",
-  "tex",
-  "rst",
-  "diff",
-  "patch",
-  "env",
-  "gitignore",
-  "gitattributes",
-  "editorconfig",
-]);
+
 function extension(name: string) {
   return name.toLowerCase().split(".").pop() ?? "";
 }
@@ -200,12 +161,15 @@ function isPresentation(file: VerifiedFile) {
 function isOfficePreview(file: VerifiedFile) {
   return isWorkbook(file) || isDocument(file) || isPresentation(file);
 }
-function isText(file: VerifiedFile) {
+
+function officeReadBusy(
+  file: VerifiedFile,
+  status: PreviewContentStatus | null,
+) {
   return (
-    TEXT_EXTENSIONS.has(extension(file.name)) ||
-    /^(readme|license|licence|copying|notice|makefile|dockerfile)$/i.test(
-      file.name,
-    )
+    status?.file === file &&
+    ((isOfficePreview(file) && Boolean(status.readInFlight)) ||
+      (isWorkbook(file) && status.state === "loading"))
   );
 }
 function sameFile(left: VerifiedFile, right: VerifiedFile) {
@@ -227,10 +191,13 @@ function openFailureNotice(error: unknown): string {
   // rejection, file path or OS error through this recovery view.
   const message = error instanceof Error ? error.message : error;
   if (error && typeof error === "object" && "code" in error)
-    return T.failures[textBlockFailure(error)];
+    return error.code === "redirected"
+      ? S.revisionNotices.redirected
+      : T.failures[textBlockFailure(error)];
   return message === D.checkWaitExpired ||
     message === D.checkBusy ||
-    message === D.unsupportedText
+    message === D.unsupportedText ||
+    message === S.revisionNotices.redirected
     ? message
     : S.failed;
 }
@@ -239,6 +206,7 @@ function openFailureNotice(error: unknown): string {
 export function OpenedFileView({
   threadKey,
   path,
+  expectedFile,
   workingDirectory,
   active,
   selectionKey,
@@ -254,23 +222,26 @@ export function OpenedFileView({
     selectionKey,
     workingDirectory,
     path,
+    expectedFile?.root,
+    expectedFile?.resolvedPath,
   ]);
   const currentProps = useRef({ identity, active, onOpenHtml });
   currentProps.current = { identity, active, onOpenHtml };
   const mounted = useRef(true);
   const operation = useRef<Operation | null>(null);
+  const workbookRangeRevision = useRef(0);
   const blockReadFlight = useRef<Operation | null>(null);
-  const presentationRefresh = useRef<{
+  const officeRefresh = useRef<{
     owner: Operation;
     settled: boolean;
     uncertain: boolean;
   } | null>(null);
-  const presentationRefreshing = () =>
-    presentationRefresh.current?.owner.identity === identity &&
-    !presentationRefresh.current.settled;
-  const presentationUncertain = () =>
-    presentationRefresh.current?.owner.identity === identity &&
-    presentationRefresh.current.uncertain;
+  const officeRefreshing = () =>
+    officeRefresh.current?.owner.identity === identity &&
+    !officeRefresh.current.settled;
+  const officeRefreshUncertain = () =>
+    officeRefresh.current?.owner.identity === identity &&
+    officeRefresh.current.uncertain;
   const [view, setView] = useState<View>({ identity, phase: "loading" });
   const latestView = useRef(view);
   latestView.current = view;
@@ -377,7 +348,12 @@ export function OpenedFileView({
         previous.identity === identity &&
         (previous.phase === "loading" || previous.pending)
           ? refreshing && previous.phase === "ready"
-            ? { ...previous, pending: false }
+            ? {
+                ...previous,
+                pending: false,
+                pdfCandidate: undefined,
+                imageCandidate: undefined,
+              }
             : { identity, phase: "paused" }
           : previous,
       );
@@ -388,6 +364,7 @@ export function OpenedFileView({
     verified?: VerifiedFile,
     preserve = false,
     valid?: () => boolean,
+    workbookSelection?: WorkbookRefreshSelection,
   ): Promise<boolean> {
     if (
       !mounted.current ||
@@ -396,17 +373,14 @@ export function OpenedFileView({
       operation.current ||
       (latestView.current.block && latestBlockStatus.current?.readInFlight) ||
       (latestView.current.file &&
-        isPresentation(latestView.current.file) &&
-        latestOfficeStatus.current?.file === latestView.current.file &&
-        latestOfficeStatus.current.readInFlight)
+        officeReadBusy(latestView.current.file, latestOfficeStatus.current))
     )
       return false;
-    if (presentationRefreshing() || (valid && presentationUncertain()))
-      return false;
+    if (officeRefreshing() || (valid && officeRefreshUncertain())) return false;
     // Only an explicit new read retries an unknown receipt. Visibility and the
     // automatic monitor never make an unfinished read safe to repeat.
-    if (!valid && presentationRefresh.current?.owner.identity === identity)
-      presentationRefresh.current = null;
+    if (!valid && officeRefresh.current?.owner.identity === identity)
+      officeRefresh.current = null;
     if (blockReadFlight.current?.identity === identity) return false;
     const owner: Operation = {
       identity,
@@ -433,13 +407,22 @@ export function OpenedFileView({
     let applied = false;
     let blockAttempt = false;
     let inspected: VerifiedFile | undefined;
+    let workbookRecovery: WorkbookRefreshRecovery | undefined;
     if (!preserve) {
       latestReadiness.current = null;
       setVisualReadiness(null);
     }
     const previous = latestView.current;
-    if (preserve && previous.file && isPresentation(previous.file))
-      presentationRefresh.current = { owner, settled: false, uncertain: false };
+    const oldVisual = preserve ? previous.visual : undefined;
+    const oldDocument =
+      preserve && previous.file && isDocument(previous.file)
+        ? previous.file
+        : undefined;
+    const preservedSource = oldVisual?.file ?? oldDocument;
+    if (preserve && !valid && previous.file && isWorkbook(previous.file))
+      workbookRangeRevision.current++;
+    if (preserve && previous.file && isOfficePreview(previous.file))
+      officeRefresh.current = { owner, settled: false, uncertain: false };
     textScroll.current = textContent.current?.scrollTop ?? textScroll.current;
     setView(
       preserve
@@ -447,24 +430,64 @@ export function OpenedFileView({
         : { identity, phase: "loading" },
     );
     try {
-      const file =
-        verified ?? (await fileDelivery.inspectLink(workingDirectory, path));
+      let file = verified;
+      if (!file && expectedFile) {
+        const check = await fileDelivery.checkRevision(expectedFile, "content");
+        if (check?.kind !== "verified" || !check.file)
+          throw new Error(S.failed);
+        file = check.file;
+      }
+      file ??= await fileDelivery.inspectLink(workingDirectory, path);
       if (!readCurrent()) return false;
+      if (
+        expectedFile &&
+        (file.path !== expectedFile.path ||
+          !sameReadingFile(expectedFile, file))
+      )
+        throw new Error(S.revisionNotices.redirected);
+      if (expectedFile && !supportsTextFilePreview(file.name))
+        throw new Error(S.failed);
       inspected = file;
+      if (preservedSource && !sameReadingFile(preservedSource, file))
+        throw new Error(S.revisionNotices.redirected);
       if (isHtml(file)) {
         setView({ identity, phase: "ready", file, note: S.html });
         currentProps.current.onOpenHtml(file);
       } else if (visualFileKind(file.name)) {
         if (
           visualFileKind(file.name) === "image" &&
-          file.size > 8 * 1024 * 1024
+          file.size > MAX_IMAGE_BYTES
         ) {
+          if (oldVisual) throw new Error(V.limit);
           setView({ identity, phase: "ready", file, note: V.limit });
         } else {
           try {
             const visual = await fileDelivery.readVisual(file);
             if (!readCurrent()) return false;
             if (!sameFile(visual.file, file)) throw new Error("File changed");
+            if (
+              oldVisual?.mimeType === "application/pdf" &&
+              visual.mimeType !== "application/pdf"
+            )
+              throw new Error(V.failed);
+            const readiness = latestReadiness.current;
+            const replacement =
+              oldVisual && readiness?.source === oldVisual && readiness.location
+                ? await stageVisualReplacement(
+                    {
+                      preview: visual,
+                      controller: owner.parser!,
+                      current: readCurrent,
+                    },
+                    readiness.location,
+                    previous.drawnPdf?.surface.slot ??
+                      previous.loadedImage?.surface.slot,
+                    (candidate) =>
+                      setView({ ...previous, pending: true, ...candidate }),
+                  )
+                : undefined;
+            if (replacement && (!readCurrent() || owner.parser?.signal.aborted))
+              return false;
             const exactSearch =
               visual.mimeType === "application/pdf" &&
               searchTarget &&
@@ -479,6 +502,7 @@ export function OpenedFileView({
               phase: "ready",
               file,
               visual,
+              ...replacement,
               pdfSearchTarget: exactSearch ? searchTarget : undefined,
               note:
                 searchTarget && !exactSearch
@@ -493,11 +517,8 @@ export function OpenedFileView({
         }
       } else if (isOfficePreview(file)) {
         if (preserve) {
-          if (
-            isPresentation(file) &&
-            presentationRefresh.current?.owner !== owner
-          )
-            presentationRefresh.current = {
+          if (officeRefresh.current?.owner !== owner)
+            officeRefresh.current = {
               owner,
               settled: false,
               uncertain: false,
@@ -507,11 +528,23 @@ export function OpenedFileView({
             readingPosition,
             owner.parser!.signal,
             () => current(owner),
+            isWorkbook(file)
+              ? {
+                  selection: workbookSelection,
+                  onRecovery: (value) => {
+                    workbookRecovery = value;
+                  },
+                }
+              : undefined,
           );
           if (!current(owner)) return false;
           setView({ identity, phase: "ready", file, office });
         } else setView({ identity, phase: "ready", file });
-      } else if (isText(file) && file.size <= MAX_TEXT_BYTES) {
+      } else if (
+        !expectedFile &&
+        supportsTextFilePreview(file.name) &&
+        file.size <= MAX_INLINE_TEXT_BYTES
+      ) {
         const preview = await fileDelivery.readText(file);
         if (!current(owner)) return false;
         if (!sameFile(preview.file, file)) throw new Error("File changed");
@@ -522,7 +555,7 @@ export function OpenedFileView({
           text: preview.text,
           textSource: createTextFeedbackSource(preview, file),
         });
-      } else if (isText(file)) {
+      } else if (supportsTextFilePreview(file.name)) {
         blockAttempt = true;
         blockReadFlight.current = owner;
         const block = await readTextBlock(
@@ -554,18 +587,26 @@ export function OpenedFileView({
           ? error.code
           : undefined;
       const failureMessage = error instanceof Error ? error.message : error;
-      const ownsPresentation =
-        presentationRefresh.current?.owner === owner &&
+      const retainedPreviewFailure =
+        oldDocument && failureMessage !== S.revisionNotices.redirected
+          ? documentFailure(error)
+          : typeof failureMessage === "string" &&
+              (failureMessage === S.revisionNotices.redirected ||
+                Object.values(V).includes(failureMessage as never))
+            ? failureMessage
+            : undefined;
+      const ownsOfficeRefresh =
+        officeRefresh.current?.owner === owner &&
         mounted.current &&
         currentProps.current.identity === identity;
       if (
-        ownsPresentation &&
+        ownsOfficeRefresh &&
         (code === "readPending" ||
           code === "readBusy" ||
           failureMessage === D.checkWaitExpired ||
           failureMessage === D.checkBusy)
       )
-        presentationRefresh.current!.uncertain = true;
+        officeRefresh.current!.uncertain = true;
       const ownsHiddenBlock =
         blockAttempt &&
         mounted.current &&
@@ -574,7 +615,7 @@ export function OpenedFileView({
       if (
         current(owner) ||
         ownsHiddenBlock ||
-        (ownsPresentation && code !== "cancelled" && !operation.current)
+        (ownsOfficeRefresh && code !== "cancelled" && !operation.current)
       ) {
         if (preserve && previous.block) {
           const status: PreviewContentStatus = {
@@ -591,15 +632,33 @@ export function OpenedFileView({
             ? {
                 ...previous,
                 pending: false,
+                workbookRecovery:
+                  workbookRecovery ??
+                  (workbookSelection ? previous.workbookRecovery : undefined),
                 note: previous.block
-                  ? T.failures[textBlockFailure(error)]
+                  ? code === "redirected" ||
+                    failureMessage === S.revisionNotices.redirected
+                    ? S.revisionNotices.redirected
+                    : T.failures[textBlockFailure(error)]
                   : previous.file && isPresentation(previous.file)
                     ? pptxFailure(error)
-                    : previous.note,
+                    : previous.file && isWorkbook(previous.file)
+                      ? workbookFailure(error)
+                      : preservedSource
+                        ? valid
+                          ? retainedPreviewFailure
+                          : [
+                              S.revisionNotices.refreshFailed,
+                              retainedPreviewFailure,
+                            ]
+                              .filter(Boolean)
+                              .join(" ")
+                        : previous.note,
               }
             : inspected &&
-                isText(inspected) &&
-                (inspected.size > MAX_TEXT_BYTES ||
+                supportsTextFilePreview(inspected.name) &&
+                (expectedFile ||
+                  inspected.size > MAX_INLINE_TEXT_BYTES ||
                   failureMessage === D.unsupportedText)
               ? {
                   identity,
@@ -624,10 +683,9 @@ export function OpenedFileView({
       }
       return false;
     } finally {
-      if (presentationRefresh.current?.owner === owner) {
-        presentationRefresh.current.settled = true;
-        if (!presentationRefresh.current.uncertain)
-          presentationRefresh.current = null;
+      if (officeRefresh.current?.owner === owner) {
+        officeRefresh.current.settled = true;
+        if (!officeRefresh.current.uncertain) officeRefresh.current = null;
         if (mounted.current && currentProps.current.identity === identity)
           setView((latest) => ({ ...latest }));
       }
@@ -708,6 +766,7 @@ export function OpenedFileView({
       view.identity !== identity ||
       view.phase !== "failed" ||
       view.file ||
+      expectedFile ||
       operation.current
     )
       return;
@@ -735,6 +794,8 @@ export function OpenedFileView({
   const shown =
     view.identity === identity ? view : { identity, phase: "loading" as const };
   const file = shown.file;
+  const locationActions = shown.phase === "failed" && !file && !expectedFile;
+  const workbookRecovery = shown.workbookRecovery;
   const disabled =
     !active ||
     shown.pending ||
@@ -921,7 +982,8 @@ export function OpenedFileView({
         (officeStatus?.file === file && officeStatus.state === "ready")),
     blocked:
       Boolean(shown.pending) ||
-      Boolean(presentationRefreshing() || presentationUncertain()) ||
+      Boolean(officeRefreshing() || officeRefreshUncertain()) ||
+      Boolean(workbookRecovery) ||
       Boolean(shown.block && blockStatus?.readInFlight) ||
       blockReadFlight.current?.identity === identity,
     apply: async (next, valid) => {
@@ -975,7 +1037,7 @@ export function OpenedFileView({
                   {S.openHtml}
                 </button>
               )}
-              {(isText(file) ||
+              {(supportsTextFilePreview(file.name) ||
                 shown.text !== undefined ||
                 shown.block ||
                 visualFileKind(file.name) ||
@@ -985,17 +1047,17 @@ export function OpenedFileView({
                   className="btn btn-ghost"
                   disabled={
                     disabled ||
-                    Boolean(presentationRefreshing()) ||
-                    Boolean(
-                      isPresentation(file) &&
-                      officeStatus?.file === file &&
-                      officeStatus.readInFlight,
-                    )
+                    Boolean(officeRefreshing()) ||
+                    officeReadBusy(file, officeStatus)
                   }
                   onClick={() =>
                     void load(
                       undefined,
-                      Boolean(shown.block) || isPresentation(file),
+                      Boolean(shown.block) ||
+                        isPresentation(file) ||
+                        (latestReadiness.current?.source === shown.visual &&
+                          Boolean(latestReadiness.current?.location)) ||
+                        (isOfficePreview(file) && officeReady()),
                     )
                   }
                 >
@@ -1069,7 +1131,7 @@ export function OpenedFileView({
               </button>
             </>
           )}
-          {shown.phase === "failed" && !file && (
+          {locationActions && (
             <>
               <button
                 type="button"
@@ -1114,7 +1176,7 @@ export function OpenedFileView({
           </p>
         )}
       </div>
-      {shown.phase === "failed" && !file && (
+      {locationActions && (
         <p className="artifact-provenance">{T.locationScope}</p>
       )}
       {revisionNotice && (
@@ -1122,7 +1184,7 @@ export function OpenedFileView({
           {S.revisionNotices[revisionNotice]}
         </p>
       )}
-      {file && <FileCopyJobsStatus file={file} />}
+      {file && <FileCopyJobsStatus file={file} active={active} />}
       {shown.block && (
         <TextBlockPreview
           key={`${identity}:${shown.block.file.version}:${shown.block.file.sha256}`}
@@ -1136,8 +1198,12 @@ export function OpenedFileView({
       )}
       {shown.visual && (
         <VisualFilePreview
-          key={`${identity}:${shown.file?.version}`}
+          key={identity}
           preview={shown.visual}
+          drawnPdf={shown.drawnPdf}
+          pdfCandidate={shown.pdfCandidate}
+          loadedImage={shown.loadedImage}
+          imageCandidate={shown.imageCandidate}
           active={active}
           onReadiness={reportVisualReadiness}
           interactionBlocked={Boolean(shown.pending)}
@@ -1154,9 +1220,28 @@ export function OpenedFileView({
           file={file}
           active={active}
           interactionBlocked={Boolean(shown.pending)}
+          rangeRevision={workbookRangeRevision.current}
           readingPosition={readingPosition}
           prepared={
             shown.office?.kind === "workbook" ? shown.office : undefined
+          }
+          replacement={
+            workbookRecovery && {
+              directory: workbookRecovery.directory,
+              onSelect: (sheetId) => {
+                if (
+                  latestView.current.workbookRecovery !== workbookRecovery ||
+                  latestView.current.pending ||
+                  sheetId === workbookRecovery.directory.selectedId ||
+                  !workbookRecovery.directory.sheets.some(
+                    (item) => item.id === sheetId,
+                  )
+                )
+                  return;
+                const { capture } = workbookRecovery;
+                void load(capture.file, true, undefined, { capture, sheetId });
+              },
+            }
           }
           onStatus={reportOfficeStatus}
           onOfficeTargetAvailability={targets.reportOffice}

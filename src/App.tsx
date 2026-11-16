@@ -91,6 +91,7 @@ import {
   draftPreparationRequired,
   draftPreparationSelection,
   conversationRepairContext,
+  captureDraftConfigurationRepair,
   type AgentRepairRequest,
 } from "./runtime/agent_repair";
 
@@ -136,6 +137,10 @@ export default function App() {
     threads.subscribe,
     () => threads.getSnapshot().index,
   );
+  const indexReady = useSyncExternalStore(
+    threads.subscribe,
+    () => threads.getSnapshot().indexReady,
+  );
   const historyAgents = new Set(index.map((row) => row.agentId));
   const currentReadiness = useRef(readyForConversation);
   currentReadiness.current = readyForConversation;
@@ -154,6 +159,7 @@ export default function App() {
       : { kind: "start" },
   );
   const currentView = useRef(view);
+  const draftRepairOwner = useRef<object | null>(null);
   const threadNavigationFocus = useRef<ThreadNavigationFocus | null>(null);
   const [attachmentSearchRequest, setAttachmentSearchRequest] =
     useState<AttachmentSearchRequest | null>(null);
@@ -174,6 +180,7 @@ export default function App() {
     };
   };
   const setView = (next: View, focus: ThreadNavigationFocus | null = null) => {
+    if (next.kind !== "agents") draftRepairOwner.current = null;
     historyReadInterest.current?.abort();
     historyReadInterest.current = null;
     setLoadedSearchRequest(null);
@@ -199,6 +206,10 @@ export default function App() {
     null,
   );
   const [preparedDraftKey, setPreparedDraftKey] = useState<string | null>(null);
+  const availableFeedbackOwners = indexReady
+    ? new Set(index.map((row) => row.id))
+    : undefined;
+  if (preparedDraftKey) availableFeedbackOwners?.add(preparedDraftKey);
   const [preparedComposerOwner, setPreparedComposerOwner] = useState<
     (() => boolean) | null
   >(null);
@@ -273,11 +284,12 @@ export default function App() {
   const [settingsTab, setSettingsTab] = useState<SettingsTab>("general");
   const generalRequestId = useRef(0);
   const [generalRequest, setGeneralRequest] = useState<{
-    kind: "update" | "shortcuts" | "privacy";
+    kind: "update" | "shortcuts" | "privacy" | "notifications";
     request: number;
   } | null>(null);
-  const requestGeneralPanel = (kind: "update" | "shortcuts" | "privacy") =>
-    setGeneralRequest({ kind, request: ++generalRequestId.current });
+  const requestGeneralPanel = (
+    kind: "update" | "shortcuts" | "privacy" | "notifications",
+  ) => setGeneralRequest({ kind, request: ++generalRequestId.current });
   const [settingsMounted, setSettingsMounted] = useState(
     view.kind === "settings",
   );
@@ -413,18 +425,56 @@ export default function App() {
     setView(previous);
     if (historyImport) setImportOpen(true);
   });
-  const openSettings = afterBrowserClose((tab: SettingsTab = "general") => {
-    if (view.kind !== "settings") rememberOrigin();
-    setSettingsTab(tab);
-    setSettingsMounted(true);
-    setView({ kind: "settings" });
-  });
-  const openAgents = afterBrowserClose(
+  const openSettings = afterBrowserClose(
+    (tab: SettingsTab = "general", reminder = false) => {
+      if (view.kind !== "settings") rememberOrigin();
+      setSettingsTab(tab);
+      setSettingsMounted(true);
+      setView({ kind: "settings" });
+      if (reminder) requestGeneralPanel("notifications");
+    },
+  );
+  const openAgentsAfterClose = afterBrowserClose(
     (
       agentId?: string,
       intent: "use" | "manage" = "use",
       repair?: AgentRepairRequest,
+      ownsSelection?: ReturnType<typeof captureDraftConfigurationRepair>,
     ) => {
+      const draftCwd = newConversationChoice.cwd ?? defaultCwd;
+      let applyToDraft: AgentPreparationContext["applyToDraft"];
+      if (repair?.draftConfiguration) {
+        if (
+          currentView.current.kind !== "start" ||
+          repair.panel !== "model" ||
+          !agentId ||
+          agentId !== newConversationChoice.agentId ||
+          !draftCwd ||
+          !ownsSelection?.({
+            service: newConversationChoice.service,
+            config: newConversationChoice.config,
+          })
+        )
+          return;
+        const owner = {};
+        draftRepairOwner.current = owner;
+        applyToDraft = (selection) => {
+          if (
+            draftRepairOwner.current !== owner ||
+            currentView.current.kind !== "agents" ||
+            !ownsSelection(selection) ||
+            unreadyCandidate(agentId)
+          )
+            return false;
+          allowAutomaticConnection(agentId);
+          setNewAgent(agentId);
+          setPreparedSelection(selection);
+          setAgentRequest((revision) => revision + 1);
+          routeHistory.current = [];
+          setView({ kind: "start" });
+          return true;
+        };
+      } else draftRepairOwner.current = null;
       if (view.kind !== "agents") rememberOrigin();
       setHubTarget(agentId ?? null);
       setHubRestoredState(undefined);
@@ -434,16 +484,17 @@ export default function App() {
       originatingDraft.current =
         view.kind === "start" ? composerDrafts.read("new") : null;
       setHubContext(
-        view.kind === "start" && defaultCwd
+        view.kind === "start" && draftCwd
           ? {
               agentId: newConversationChoice.agentId ?? undefined,
-              cwd: newConversationChoice.cwd ?? defaultCwd,
+              cwd: draftCwd,
               locationLabel: newConversationChoice.cwd ?? LIBRARY.ordinary,
               selection: {
                 service: newConversationChoice.service,
                 config: { ...newConversationChoice.config },
               },
               repair,
+              ...(applyToDraft ? { applyToDraft } : {}),
             }
           : view.kind === "thread" &&
               intent === "manage" &&
@@ -473,6 +524,19 @@ export default function App() {
       setView({ kind: "agents" });
     },
   );
+  const openAgents = (
+    agentId?: string,
+    intent?: "use" | "manage",
+    repair?: AgentRepairRequest,
+  ) =>
+    openAgentsAfterClose(
+      agentId,
+      intent,
+      repair,
+      repair?.draftConfiguration && currentView.current.kind === "start"
+        ? captureDraftConfigurationRepair()
+        : undefined,
+    );
   const prepareHistoryAgent = afterBrowserClose(
     (agentId: string | undefined, cwd: string | null) => {
       rememberOrigin(true);
@@ -573,6 +637,15 @@ export default function App() {
         );
       return;
     }
+    // Returning to a failed view is navigation. Only the explicit recovery
+    // action may retry this same conversation and change connection intent.
+    if (
+      existing?.openError &&
+      existing.agentId === row.agentId &&
+      existing.cwd === row.cwd &&
+      (existing.nativeSessionId ?? "") === (row.nativeSessionId ?? "")
+    )
+      return;
     allowAutomaticConnection(row.agentId);
     if (!row.nativeSessionId) {
       threads.markOpenFailed(
@@ -655,6 +728,8 @@ export default function App() {
     },
   );
   const notificationSelection = useRef<(key: string) => void>(() => {});
+  const notificationSettings = useRef<() => void>(() => {});
+  notificationSettings.current = () => openSettings("general", true);
   notificationSelection.current = (key) => {
     // A click is a navigation request, never permission to recover or send.
     if (!threads.getSnapshot().index.some((row) => row.id === key)) return;
@@ -670,10 +745,16 @@ export default function App() {
   useEffect(() => {
     let disposed = false;
     let stop: (() => void) | undefined;
-    void notificationNavigation(async (key) => {
-      await threads.refreshIndex();
-      if (!disposed) notificationSelection.current(key);
-    })
+    void notificationNavigation(
+      async (key) => {
+        await threads.refreshIndex();
+        if (!disposed) notificationSelection.current(key);
+      },
+      undefined,
+      () => {
+        if (!disposed) notificationSettings.current();
+      },
+    )
       .then((off) => {
         if (disposed) off();
         else stop = off;
@@ -979,6 +1060,21 @@ export default function App() {
               active={view.kind === "start" && !paletteOpen && !importOpen}
               onPreparedKey={setPreparedDraftKey}
               onPreparedComposerOwner={observePreparedComposerOwner}
+              onPreparedSaved={(state, move) => {
+                if (
+                  currentView.current.kind !== "start" ||
+                  currentPreparedDraftKey.current !== state.key ||
+                  threads.thread(state.key) !== state ||
+                  state.identity !== "established" ||
+                  browserSurfaceGuard.hasPendingNavigation ||
+                  !move()
+                )
+                  return false;
+                // The displayed workspace stays the same; keep its page and permission.
+                setThreadKey(state.key);
+                setView({ kind: "thread", key: state.key });
+                return true;
+              }}
               composerTarget={draftComposerTarget}
               header={
                 <header className="workspace-topbar start-context">
@@ -991,6 +1087,7 @@ export default function App() {
                 openAgents(agentId, "use", repair)
               }
               onManageServices={() => openSettings("keys")}
+              availableFeedbackOwners={availableFeedbackOwners}
               onRestoreDraft={async (key) => {
                 await composerDrafts.restorePreserved(key);
               }}

@@ -62,6 +62,7 @@ pub(crate) async fn open_session_on_connection(
         mcp.is_some(),
     )?;
     if let Some(id) = &native_session_id {
+        super::super::session_tool_recovery::require_ready(&config_store, id).await?;
         let map = sessions.lock().map_err(|_| "session map lock poisoned")?;
         if map.contains_key(id) {
             return Err(format!("session {id} is already open"));
@@ -69,17 +70,23 @@ pub(crate) async fn open_session_on_connection(
     }
 
     let has_mcp = mcp.is_some();
-    let describe_open_error = |error| {
+    let describe_open_error = |error: agent_client_protocol::Error| {
         if has_mcp {
             super::super::transient_mcp::safe_open_error()
+        } else if error.code == agent_client_protocol::schema::v1::ErrorCode::AuthRequired {
+            "AUTH_REQUIRED".into()
         } else {
-            describe_acp_error(error)
+            // Peer text cannot claim an application-owned opening outcome.
+            "会话未能打开，请重试".into()
         }
     };
 
     let downstream = events;
+    let history_evidence = super::super::history_empty::Evidence::default();
+    let observing_history = history_evidence.clone();
     let interested = operation.observer();
     let events: SessionSink = Arc::new(move |value| {
+        observing_history.observe(&value);
         if interested.interested() {
             downstream(value);
         }
@@ -161,10 +168,24 @@ pub(crate) async fn open_session_on_connection(
                 || cx.send_request_to(Agent, request),
                 events.clone(),
             );
+            let presentation = super::super::live_status::Owner::loading(
+                &ops,
+                &id,
+                purpose,
+                preview_token.as_deref(),
+                &operation,
+            );
             match received
                 .as_mut()
                 .expect("load owns its dispatch state")
-                .while_loading(&id, &mut inbox_rx, &events, pending, &ops, load)
+                .while_loading(
+                    &id,
+                    &mut inbox_rx,
+                    &events,
+                    pending,
+                    (&ops, &presentation),
+                    load,
+                )
                 .await
             {
                 Ok(response) => {
@@ -185,6 +206,102 @@ pub(crate) async fn open_session_on_connection(
         }
     };
 
+    let mut history_empty_confirmed = false;
+    if resumed
+        && purpose == super::super::open_purpose::OpenPurpose::Conversation
+        && ops.live_status_enabled
+    {
+        let source = super::super::live_status::Owner::loading(
+            &ops,
+            &session_id,
+            purpose,
+            preview_token.as_deref(),
+            &operation,
+        );
+        let prefix = received.as_mut().expect("restored session owns its prefix");
+        prefix.drain(
+            &session_id,
+            &mut inbox_rx,
+            &events,
+            pending,
+            (&ops, &source),
+        );
+        if history_evidence.eligible() {
+            history_empty_confirmed = prefix
+                .while_loading(
+                    &session_id,
+                    &mut inbox_rx,
+                    &events,
+                    pending,
+                    (&ops, &source),
+                    super::super::history_empty::read(cx, &ops, &operation, &session_id, cwd),
+                )
+                .await;
+            prefix.drain(
+                &session_id,
+                &mut inbox_rx,
+                &events,
+                pending,
+                (&ops, &source),
+            );
+        }
+    }
+
+    // Supplement only an ordinary restored conversation, within this exact
+    // opening and before the existing actor/complete-marker handoff.
+    if resumed
+        && purpose == super::super::open_purpose::OpenPurpose::Conversation
+        && preview_token.is_none()
+        && let (Some(source), Some(token)) = (&ops.history_supplement_source, &opening_token)
+    {
+        let presentation =
+            super::super::live_status::Owner::loading(&ops, &session_id, purpose, None, &operation);
+        let prefix = received.as_mut().expect("restored session owns its prefix");
+        prefix.drain(
+            &session_id,
+            &mut inbox_rx,
+            &events,
+            pending,
+            (&ops, &presentation),
+        );
+        let result = prefix
+            .while_loading(
+                &session_id,
+                &mut inbox_rx,
+                &events,
+                pending,
+                (&ops, &presentation),
+                super::super::history_supplement::read(
+                    source.clone(),
+                    &config_store,
+                    cwd,
+                    &session_id,
+                    &response,
+                    &operation,
+                    &ops.life,
+                ),
+            )
+            .await;
+        prefix.drain(
+            &session_id,
+            &mut inbox_rx,
+            &events,
+            pending,
+            (&ops, &presentation),
+        );
+        if operation.interested()
+            && ops.life.state.load(Ordering::SeqCst) == super::super::lifecycle::READY
+        {
+            events(super::super::history_supplement::event(
+                result,
+                token,
+                &ops.connection_id,
+                &session_id,
+                &cwd.to_string_lossy(),
+            ));
+        }
+    }
+
     if !resumed {
         let row_id = super::super::session_index::session_row_id(
             &config_store.agent_id,
@@ -200,7 +317,9 @@ pub(crate) async fn open_session_on_connection(
         }
     }
     let mut warnings = Vec::new();
-    let mut configuration = super::super::session_config::SessionConfig::from_response(&response);
+    let dialect = ops.configuration_dialect;
+    let mut configuration =
+        super::super::session_config::SessionConfig::from_connection(&response, dialect);
     let mut config_state = configuration.options();
     let mut permission_guard = super::super::permission_guard::PermissionGuard::new(
         config_store.verified_permission_option,
@@ -218,15 +337,17 @@ pub(crate) async fn open_session_on_connection(
         return Err("恢复后请重新选择并确认权限".into());
     }
     let initial_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
-    let protected_ids = super::super::model_guard::ModelGuard::new(
+    let protected_ids = super::super::model_guard::ModelGuard::for_connection(
         config_state.as_ref().unwrap_or(&Value::Null),
         recorded_config.as_ref(),
         resumed,
+        dialect,
     )
     .protected_ids();
     if resumed
         && config_options.iter().any(|(id, _)| {
             matches!(id.as_str(), "model" | "thought_level" | "reasoning_effort")
+                || dialect.is_vibe_thinking(id)
                 || initial_models.contains(id)
                 || protected_ids.contains(id)
         })
@@ -289,16 +410,35 @@ pub(crate) async fn open_session_on_connection(
         config_store.validate_model(config_state.as_ref().unwrap_or(&Value::Null))?;
     }
     config_store.validate_service().await?;
-    let mut model_guard = super::super::model_guard::ModelGuard::new(
+    let mut model_guard = super::super::model_guard::ModelGuard::for_connection(
         config_state.as_ref().unwrap_or(&Value::Null),
         recorded_config.as_ref(),
         resumed,
+        dialect,
     );
     if configuration.has_invalid_options() {
         model_guard.change_unknown();
     }
     let mut deferred_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
     if let Some(received) = received.as_mut() {
+        if purpose == super::super::open_purpose::OpenPurpose::Conversation
+            && recorded_config.is_none()
+        {
+            let presentation = super::super::live_status::Owner::loading(
+                &ops,
+                &session_id,
+                purpose,
+                preview_token.as_deref(),
+                &operation,
+            );
+            received.drain(
+                &session_id,
+                &mut inbox_rx,
+                &events,
+                pending,
+                (&ops, &presentation),
+            );
+        }
         let (models, invalid) = std::mem::take(&mut received.deferred).apply(&mut configuration);
         deferred_models.extend(models);
         config_state = configuration.options();
@@ -335,7 +475,10 @@ pub(crate) async fn open_session_on_connection(
         .as_mut()
         .map(|offer| offer.bind_route(&session_id))
         .transpose()?;
-    let mcp_requests = mcp_lease.as_ref().map(|lease| lease.requests());
+    let mcp_requests = mcp_lease
+        .as_ref()
+        .map(|lease| lease.requests())
+        .unwrap_or_default();
     sessions
         .lock()
         .map_err(|_| "session map lock poisoned")?
@@ -347,6 +490,10 @@ pub(crate) async fn open_session_on_connection(
                 preview_token,
                 workspace: Some(Vec::new()),
                 browser_unavailable,
+                tools_report: Arc::new(super::super::session_tools::Slot::new(
+                    &control_tx,
+                    &response,
+                )),
                 control: control_tx,
                 events: events.clone(),
                 process_ended_sink: None,
@@ -354,6 +501,7 @@ pub(crate) async fn open_session_on_connection(
                 prompt_store: config_store.store.clone(),
                 _guard: guard,
                 _mcp_lease: mcp_lease,
+                browser_requests: mcp_requests.clone(),
                 _retention: retention.registered(),
             },
         );
@@ -378,7 +526,7 @@ pub(crate) async fn open_session_on_connection(
         permission_guard,
         config_store,
         opening,
-        mcp_requests,
+        Some(mcp_requests),
         received,
     ));
 
@@ -386,13 +534,16 @@ pub(crate) async fn open_session_on_connection(
         .await
         .map_err(|_| "会话未能打开，请重试".to_string())??;
     opening_route.delivered = true;
-    if let Some(options) = &ready.options {
+    if dialect == super::super::session_config::Dialect::Standard
+        && let Some(options) = &ready.options
+    {
         response["configOptions"] = options.clone();
     }
     if let Some(mcp) = mcp.take() {
         mcp.finish_opening();
     }
     Ok(OpenedSession {
+        history_empty_confirmed: history_empty_confirmed && history_evidence.eligible(),
         identity,
         purpose,
         connection_id,

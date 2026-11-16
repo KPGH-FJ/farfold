@@ -1,0 +1,71 @@
+{
+  "recordedAt": "2026-11-04T11:58:11.767004+00:00",
+  "result": "passed",
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "--config",
+    "output/2026-11-04-p01-storage-bridge/vitest.config.mts"
+  ],
+  "naturalExitCode": 0,
+  "durationSeconds": 1.227,
+  "frontendFiles": 1,
+  "frontendTests": 1,
+  "nativeExchanges": 10,
+  "binarySha256": "92ac1fe549be6ac8f8f8a41037fb4a07dbde1c99239c088c124c6b833e1103ea",
+  "newCargoInvocations": 0,
+  "listedInputEndpoints": 1409,
+  "inputChangesAtEndpoints": [],
+  "realSqliteReadonlyResponses": [4, 6],
+  "exitCoordinator": {
+    "exitBlocked": true,
+    "exitLeaseReleased": true,
+    "renderedReadOnlyError": true,
+    "requests": [
+      [
+        "app_exit_after_save",
+        {
+          "token": 74
+        }
+      ]
+    ],
+    "nativeExitExecuted": false
+  },
+  "observed": [
+    "The actual DraftStartup save-before-exit listener was invoked in the controlled hook/event harness.",
+    "Production MetaStore query_only refusal reached actual draftPersistence and actual DraftStartup saveAndExit.",
+    "No app_exit_after_save request was recorded after failure; the actual draft persistence exit lease released, the rendered alert element contained the read-only message, newer local text and the old real SQLite setting remained.",
+    "Clearing the fixture fault did not itself save. Clicking the actual rendered retry button caused the successful eighth native exchange before exactly one app_exit_after_save request with token74 was recorded.",
+    "The native exit command was never executed. Harness unmount released its remaining lease; a new frontend module then read the edited value through another process reopening SQLite."
+  ],
+  "scopeLimits": [
+    "Controlled React hooks/events and Tauri transport replacement; no browser DOM/AX, complete Tauri IPC, installed UI or native application exit proof.",
+    "Preparation/unread-metadata stores, file-copy/archival jobs and Agent activity were stubbed to inactive state. This case does not prove all exit blockers or queue safety.",
+    "Cold read is a module reset plus a new Rust process/SQLite connection, not an installed-app restart.",
+    "No physical disk-full, actual appData, HOME, credentials, account, Agent or network operation.",
+    "Path/marker checks and source endpoint captures are non-atomic; same-UID adversarial replacement and continuous freeze are not claimed.",
+    "Reused the source agent actual native binary and its recorded boundary. The earlier bridge 807-input compile freeze is not inherited by this later binary."
+  ],
+  "originalFirstRunUntouched": {
+    "archiveSha256": "6845e5489c9c71833444c6302786d1a71a5c0e530296aa1e6af09add970c72cf",
+    "run": "run-ZFev0q",
+    "exchanges": 8
+  },
+  "archive": {
+    "path": "docs/evidence/2026-11-04-p01-storage-bridge/exit-run-original-receipts.zip",
+    "sha256": "42050bbcf9b641cdf47de9dab5f66be4b89225e7f14949818b9f26edd6a084f4",
+    "verifiedMembers": 51
+  },
+  "rawResult": {
+    "path": "output/2026-11-04-p01-storage-bridge/run-vCXKoP/result.json",
+    "sha256": "cd02eaebcabd8f65227277f1f34781148e3c10147b7aedd5bb778ce639e737ad"
+  },
+  "rawVitestReceipt": {
+    "path": "output/2026-11-04-p01-storage-bridge/vitest-exit-bridge.result.json",
+    "sha256": "9baafd13c0a0e586f848d0e9fa5c6ec1836dda9a9bf79b64724f4e00df69a6fd"
+  },
+  "independentReview": "Requested from status_evidence_review for the changed fixture and new outcome; not represented as a new raw review log."
+}

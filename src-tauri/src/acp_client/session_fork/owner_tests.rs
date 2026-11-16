@@ -24,8 +24,10 @@ fn state() -> (Arc<SourceFork>, Arc<ConnectionLife>, OpenReservations) {
         source_released: false,
         session: None,
         reason: Some("source_close_failed"),
+        history_point: None,
     };
     let state = Arc::new(SourceFork {
+        open_token: "owned-open".into(),
         busy: AtomicBool::new(true),
         result: Mutex::new(result.clone()),
         updated: watch::channel(result).0,

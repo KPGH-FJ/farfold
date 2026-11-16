@@ -1,0 +1,60 @@
+{
+  "kind": "Phase1ActualModelEvidenceReadOnly",
+  "checkedDateBeijing": "2026-11-07",
+  "scope": "Official local records matched to existing owned test evidence. No new prompts, requests, account or service changes, installed app interaction, or storage writes. Session IDs, response bodies and account details omitted.",
+  "kilo": {
+    "evidenceLayer": "installed formal conversation, independent official native assistant record",
+    "test": "original conversation continuation in the existing phase-one evidence",
+    "assistantEventUtc": "2026-11-06T08:56:39.519Z",
+    "exactAssistantMarkerMatchesBetweenSealedBeforeAndAfterObservations": 1,
+    "assistantParentWasUserInSameNativeConversation": true,
+    "matchingFarfoldIndexRecords": 1,
+    "savedExistingService": true,
+    "savedModelMatchesNativeAssistantModel": true,
+    "nativeAssistantProviderId": "kilo",
+    "nativeAssistantModelId": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "nativeAssistantFinish": "stop",
+    "nativeAssistantCompletionTimePresent": true,
+    "notEstablished": [
+      "gateway upstream routing",
+      "new model switch and its cold recovery"
+    ],
+    "publicEvidence": "README.md"
+  },
+  "goose": {
+    "evidenceLayer": "installed formal conversation, independent official provider request and streamed response log",
+    "test": "successful sibling B in the existing same-Agent isolation test",
+    "formalPromptUtc": "2026-11-06T11:32:55.145Z",
+    "formalTurnEndUtc": "2026-11-06T11:33:15.463Z",
+    "exactOwnedSessionAndWindowLogMatches": 1,
+    "nativeSessionProviderConfiguration": "OpenRouter",
+    "officialOutboundModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "officialLoggedModelConfigurationMatches": true,
+    "concatenatedProviderResponseTextContainsTheExactOwnedSiblingMarker": true,
+    "providerUsageRecordPresent": true,
+    "providerLogWriteEndWithinFiveMillisecondsOfFormalTurnEnd": true,
+    "responseModelOrProviderFieldObserved": false,
+    "notEstablished": [
+      "specific upstream response model or host",
+      "model of the earlier formal history continuation",
+      "new model switch and its cold recovery"
+    ],
+    "publicEvidence": "../2026-11-06-phase1-isolation/README.md"
+  },
+  "githubCopilot": {
+    "evidenceLayer": "current Farfold manager with real official Agent and isolated storage, independent official native assistant record",
+    "test": "successful sibling B in the existing scoped-close diagnostic",
+    "assistantEventUtc": "2026-11-06T15:59:01.708Z",
+    "exactAssistantMarkerMatchesInOwnedDiagnosticWorkspace": 1,
+    "exactUserPromptMatchesInThatNativeConversation": 1,
+    "preflightModelSelection": "Auto",
+    "nativeAssistantModelReported": "mai-code-1.1-flash",
+    "nativeAssistantProviderFieldObserved": false,
+    "notEstablished": [
+      "model routing for other Auto turns",
+      "installed scoped-close interface",
+      "new model switch and its cold recovery"
+    ],
+    "publicEvidence": "../2026-11-06-stopped-work-recovery/README.md"
+  }
+}

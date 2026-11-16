@@ -1,0 +1,142 @@
+{
+  "scope": "P41 current-conversation HTTP MCP management and pending recovery",
+  "implementationBaseCommit": "d8de4c7f82ba8c3556e08c33ef25d82fad46548f",
+  "implementationCommit": "f44c42248b441516272713d98cd5047110c12f36",
+  "formalAtThisRecord": "f44c42248b441516272713d98cd5047110c12f36",
+  "installed": true,
+  "actualToolCalls": 0,
+  "allSevenPassed": true,
+  "frontend": {
+    "files": 754,
+    "passed": 10446
+  },
+  "rust": {
+    "passed": 2566,
+    "failed": 0,
+    "ignored": 8
+  },
+  "sourceSha256": {
+    "src-tauri/src/acp_client/manager.rs": "972a1094634ea4b88a74c6301b2b48dfcf266f53fd36a2f51da5ab830411f14e",
+    "src-tauri/src/acp_client/mod.rs": "3a61f7c79fe9dfc3051b1944b0e7aa6079980dcbb4e5829e10606d59f00178a0",
+    "src-tauri/src/acp_client/operations.rs": "a97878f3e0a7bb8d1126f8df0bd2eeaaf54ecb64e2521afce7624422b0aac689",
+    "src-tauri/src/acp_client/pump.rs": "569da3eeb1ed309b252b151b705a27eab278f7066dd34d8fc3e095157855abdc",
+    "src-tauri/src/acp_client/pump/control.rs": "9fffdb478211a60982bf1cf69662394593a43a0647a0e941f0a20c1af8dadb0c",
+    "src-tauri/src/acp_client/pump/open.rs": "462e8b73c5a4b8ee6849e6931f9e5bd911851fbf564f9ed008e02182c43b3c2a",
+    "src-tauri/src/acp_client/pump/prompt.rs": "edd8e1e0e12c7a7c7b938874257ab9a183f0917b85de4461046b06e87b004918",
+    "src-tauri/src/acp_client/session.rs": "37c1b8c34f3fc69964afb5c2a9867d20ae40e055159f381c515a6d638e320954",
+    "src-tauri/src/acp_client/session_commands.rs": "676694a6948963123613584f9ada9fadeedf70ef8c728064520b9a389c29141c",
+    "src-tauri/src/acp_client/session_fork/coordinator.rs": "1f1960b0b709412e94a5b534e4805fbc97ae5a2f1ed353c4dba6e7c99e2e6fd7",
+    "src-tauri/src/acp_client/session_tool_changes.rs": "dac7485dbeab48aeaced3f56cf0faa3f78c9f820a0e77258ae25ff991fb7fa3c",
+    "src-tauri/src/acp_client/session_tool_changes/actor.rs": "1138110e852912b24204302abc4a7e5bd5ceedb2647800e09f0ea436a4352aa9",
+    "src-tauri/src/acp_client/session_tool_changes/commands.rs": "6e94c62412e7bd72de6a623e44b6127355d153f18eded4c724dc364f321b70c8",
+    "src-tauri/src/acp_client/session_tool_changes/inventory.rs": "55605bf55962752cef9ed202da091351696477ed60edeaee7230ae41d5be81b4",
+    "src-tauri/src/acp_client/session_tool_changes/peer.py": "d435c75b975b2ebb597fec05a897b13389491b2f6aa4c5b7f10efa02993efa71",
+    "src-tauri/src/acp_client/session_tool_changes/slot.rs": "f29afdaeca8bfbfe0afec7bb34688de8826b4bd063a19d288cc11c84d7c0227e",
+    "src-tauri/src/acp_client/session_tool_changes/tests.rs": "7d8f9b39e9a77c3349ee3bf28e3b01be22f8d557ff7fffdc532faf784f166b4c",
+    "src-tauri/src/acp_client/session_tool_changes/types.rs": "ffec1d0bfacf50305db3cb7598f9e0dc25966af0e3b8537fc046bc7e8a86dc56",
+    "src-tauri/src/acp_client/session_tool_changes/wire_tests.rs": "67e89cf4b3089efbfa6499980cf31405bf850e027b8614d2d04bbe7900119985",
+    "src-tauri/src/acp_client/session_tool_recovery.rs": "9b24865aa9a87e4b21c134452e668f37e9356cc785faf3c3959f8d7e898f9a48",
+    "src-tauri/src/acp_client/session_tool_recovery/peer.py": "e39af58a146c24b96ff08ce147208057157f9bd5304d5d89cde040185b475002",
+    "src-tauri/src/acp_client/session_tool_recovery/tests.rs": "99d725634f070dfd373770ddc2db7b830afbb6048b4bb14e162b7652f2745c83",
+    "src-tauri/src/acp_client/session_tool_recovery/types.rs": "37f971c31c0dcaf619c31f632a5e2879208f4c85080a39255945c9d8048dbca3",
+    "src-tauri/src/acp_client/session_tools.rs": "e35a8d3a28355e709be084827db62a2d32fa7573c0342f9c05315aaf5c1a24e1",
+    "src-tauri/src/acp_client/session_tools/availability.rs": "084b9f85f207ab943789c4538e05179725563509393f93aa8b55b268e6cd8fd4",
+    "src-tauri/src/acp_client/session_tools/availability_test_support.rs": "664045a95be63f8ccdc9b06e7be622fb7b68cbfd66308f8f01956584bbc90dbd",
+    "src-tauri/src/acp_client/session_tools/dispatch.rs": "461e07de74bc9fe673c1f9fdf1b105c3e1c563b97611d5fed6aadf8051d466c5",
+    "src-tauri/src/acp_client/session_tools/types.rs": "8035a0b2da863755e41e81d52e5131c9c8d61967472667724e53b578664f7ebd",
+    "src-tauri/src/acp_client/skill_management/mcp_http_url.rs": "dfe8e569f4f3b5bde085dd1b6b11bb3563cd05dc2746d5f8859cdb3e1f4527f2",
+    "src-tauri/src/acp_client/skill_management/mod.rs": "809ae144f1a4958c936c554bd5fdc44cffa724748c2e021246ebdfcbdfe3d2a9",
+    "src-tauri/src/agent_install.rs": "f5a325b473b21f12db916bd1fc06e701ababc4241a51c25cebfbfd4c744af416",
+    "src-tauri/src/auth.rs": "ffbdd18cccfcc5b8c953c0e34bbd766f1e33e4308ce751b3e5071ed70a80f7c6",
+    "src-tauri/src/auth/agent_environment.rs": "8b39b2e0ff69d04f4d0a1e48849f540b2b3b0b0a998bd378396c2dd7777231b7",
+    "src-tauri/src/auth/attempts.rs": "0eb271df49802cba38f608b5faba057cf2e357405f8d0f099fc53a401a064504",
+    "src-tauri/src/auth/copilot_tests.rs": "ab3e5b1dc77c238884367ddf3382fdc04fb717b120d86333427702e17a5910e9",
+    "src-tauri/src/auth/terminal/tests.rs": "aadf0e6ce602e6bbde4873055fc1f532cef19f5ac0ab267d284497ff9353ece0",
+    "src-tauri/src/credentials.rs": "8d2cc89260c36fdab9c32b59fc17abdc027f5ab746d334ac2f0f1f01381902b1",
+    "src-tauri/src/credentials/mcp_pending_tests.rs": "e47656df0314eb5afeaea1fbe480cecea2c82d11df8748b239542206bd372216",
+    "src-tauri/src/data_reset.rs": "e356660a669e4ec4201e6a0a01db2006f536fef2c1ee90f47c8f35089ee43ea3",
+    "src-tauri/src/installations.rs": "fe3b62819fde82523e3f86bb7f1d95ef4cc13e794445c36b3aa30a2afc569a77",
+    "src-tauri/src/lib.rs": "d6d9d16429ae107406f03846506e79ae92abc1e433efd104da92cc429db98367",
+    "src-tauri/src/manual_auth.rs": "81a7fd405b0980a9378e7f8232c25a144b616e82edc66fcf72553a04d8568833",
+    "src-tauri/src/meta_store.rs": "22f768b4b840600cf97f49d7dcd5f92c21c35ea19761c159b39c40d8f554212c",
+    "src-tauri/src/meta_store/mcp_pending.rs": "9464016c6b555c7de382cf25343dcb07112b4b18b38472b26110c45499c457bc",
+    "src-tauri/src/meta_store/mcp_pending_tests.rs": "cd576d52a33d244aca9b5256d67332fcd611fcc11f1608b1b4ec868f1821a5d8",
+    "src-tauri/src/storage_recovery/database_restore.rs": "94b19790e1972dd60b656a969d0c2c127a425fc8f490775bf7d7e29e2b5cf30e",
+    "src-tauri/src/storage_recovery/database_restore/operation.rs": "ee9de59e50cbee04ec71385934d45f165f85a21a967078d161685839ae61be5d",
+    "src-tauri/src/storage_recovery/database_restore/pending_tools.rs": "def1fefc63fd2cd315e0547cbb8f592cf689fcd6ea9dd51fced8b01d3007b8a1",
+    "src/components/McpAddForm.http-progress.test.tsx": "b3b38758ccc4f857ce51eed6363657d9f25f76b1c2f4a76b842f9206e96abaa9",
+    "src/components/McpAddForm.test.tsx": "b21b68bd4d8e31867e545a36ca27086f2668c53348b493a8f641512c288cddaa",
+    "src/components/McpAddForm.tsx": "28a21663be55865c15be437f5ff0549ee65b41307d465aa89850d46e32362b02",
+    "src/components/McpHttpFields.tsx": "c0b8f21a2f86f74f583afa0ed0488eaa3dcc06d043445517fc3f0584d154bb2d",
+    "src/components/SessionToolManagement.test.tsx": "a0d73bda01a94b50a48a0b90afa2702ad0ba4421e2c1e9b6728867efa58816f6",
+    "src/components/SessionToolManagement.tsx": "4debef9e5033c4d135d82b550151c38ef4964626af75b845136b59878ab4d191",
+    "src/components/SessionToolRecovery.tsx": "0bc0918e95ffdefc7b505f657f5b3f276f6cfefee5631002984769b1bd46291c",
+    "src/components/SessionToolsDialog.css": "5d5d3690af5bb47f9d271897bf2a836470a3b0fdec86914307daa57911f89df6",
+    "src/components/SessionToolsDialog.tsx": "86fe4c6decf4276d7ddfbd2289dc8ffa0c9444b0052f6408dbb6dbb141904c74",
+    "src/components/ThreadView.tsx": "0f44f7ee7bfef572cb8293ca93d563d07cecdb6e1e36345ca418d78eeecfe8af",
+    "src/runtime/error_strings.ts": "6a5de4a1cacfb0463ee7952d67f435ca0ac3db51ac61d55985abbdac51c2e4ec",
+    "src/runtime/session_recovery.ts": "de592c88eec9c779675e08471efd12005c1b388a8c4bd5f09fe263901dee7b79",
+    "src/runtime/session_tool_change.test-support.ts": "10db828fd6bb4443ec17fd8b9605fd84e25c0ca2b83956e17bb900dec87e0dd4",
+    "src/runtime/session_tool_change.ts": "0e8b019fe5b7c936bddec2fba91ed2718cc0c87aad6ed2e748e71b96135cacb0",
+    "src/runtime/session_tool_change_controller.test.ts": "0d4ae11ed09c63e5500ebe619c26ae00ef595a4951a14d5b416cb2f08c406e7d",
+    "src/runtime/session_tool_change_controller.ts": "348704c4a541998c1a642a59c545d3d3c08d85b16dcf8806f9f714f1fe482b51",
+    "src/runtime/session_tool_change_guard.ts": "284fec6907a00027f75688c310ad1693b52d196984bb0ba892290d00ae43b285",
+    "src/runtime/session_tool_change_guards.test.ts": "0aa9191f5511c3222b1021dea359092c49c34946f3f4276bc2e704a9182ad87e",
+    "src/runtime/session_tool_change_guards.ts": "61a215ae56db87b1b46da44c9336cebffeb3b76b7bf2a6e84911cc308acb1e03",
+    "src/runtime/session_tool_change_strings.ts": "e63e89d69fc3ca98947f7d627b7003cc80791b5ee85366f9310447951eec45b2",
+    "src/runtime/session_tool_change_types.test.ts": "71e7c9efbf4879ad6edd717bb93f4f89d408881f1ff0387c1830b2702f4b563b",
+    "src/runtime/session_tool_change_types.ts": "74c7c5d21a572f327a15c939f82dac28509a0451736901967288b00c88b2e005",
+    "src/runtime/session_tool_recovery.test.ts": "8d189982db10ae12f6913e297cc041039e98ad01c796b0736a8ec6de85181a55",
+    "src/runtime/session_tool_recovery_controller.ts": "c29eabdc8666e2474dd20263326cc1a7f72e94787491c56650571c296adc6fc5",
+    "src/runtime/session_tool_recovery_strings.ts": "a324e8a7ca4784a96df0c9755641ea67c44c9a87da8909b9bc48fc5db98a43bf",
+    "src/runtime/session_tool_recovery_types.ts": "ff2b629d8ce0f62a77b29e613beba06edba48d9d7d96b5f6b70dc1cdbef73850",
+    "src/runtime/session_tools_strings.ts": "5e1c4c12103af7f7cdd46a41d0b8ca8992e9aee9b9ad0d794b84759ebfdbce6c",
+    "src/runtime/session_tools_types.test.ts": "628aef546900074c065d8addc2b08263443e7c2e9ebbceaf30bdf789a257079b",
+    "src/runtime/session_tools_types.ts": "9c0857cdc01ae5237ab437c90f153dc3cd0e11695b4528460f897ab23c22214e",
+    "src/runtime/session_types.ts": "b51a3308af01a0fa771c622406e019429dfcef25f7646a9a0757eb75ba16102f",
+    "src/runtime/sessions.ts": "953a5b2f553d3b207b81409fadd5395e09d994a3284be262f9b3cc305e961e3b",
+    "src/runtime/storage_database_restore.ts": "5014f953c2360e2721ac32b55424a701b3ad3b8c342e47df75ac10ef21ab416e",
+    "src/runtime/ui_error.ts": "26e0cccf6c8d4af5259ea4b902535ace1a17e553e32eb677e89a05cf5a6a1075"
+  },
+  "engineering": {
+    "path": "output/2026-11-12-four-hour-mcp/engineering-ui/result.json",
+    "sha256": "1ddf5586f3c50e8caf1ffcd037d68113c222904cc2274283c83543ed46213b87",
+    "allSevenPassed": true
+  },
+  "independentReview": {
+    "path": "output/2026-11-12-four-hour-mcp/review/independent-final.json",
+    "sha256": "75f6b1488d18c30fee24f52d93095557c79b6dc77a611576bcaedeedcf64ede6"
+  },
+  "render": [
+    {
+      "path": "output/2026-11-12-four-hour-mcp/render/webkit-run5-result.json",
+      "sha256": "13537c790c9b44acf35c2b2f87cdd71f51cac28dde53b8023a7197a630abed75",
+      "checks": 99
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/render/chromium-run5-result.json",
+      "sha256": "6b858523b2f36e82490635b614fa7edf5b8201632bb2f0f78920a88e3da542c7",
+      "checks": 99
+    }
+  ],
+  "focus": {
+    "path": "output/2026-11-12-four-hour-mcp/render/webkit-focus2-result.json",
+    "sha256": "0c1a0d928df9346af128eab1512fa67ff657587d2c561d4ff76cab9b0cfaa7e5"
+  },
+  "originalFailedEngineering": {
+    "path": "output/2026-11-12-four-hour-mcp/engineering/result.json",
+    "sha256": "0818cf028a834f1f48f575b8c7f5ebd76d255eeb6bc130d78b7479b4e385ae81"
+  },
+  "remaining": [
+    "Followup empty-dialog and saved-copy fixes not yet installed. Real selected-model tool call and formal history restoration remain unverified.",
+    "External full configuration drift remains pending; no arbitrary adoption flow.",
+    "Other agents, Windows, full P41 and 29x8 remain open."
+  ],
+  "actualModelRequests": 0,
+  "firstFormalPass": {
+    "path": "docs/evidence/2026-11-12-current-session-mcp/first-formal-pass.json",
+    "sha256": "b8ed9337d7dc7661462bd500975e0c6f033cc7c6ccff37274ea54c2e263f5b8b",
+    "toolManagement": "failed empty-conversation admission; followup repair not yet installed",
+    "fileDelivery": "failed same-name retains bytes/opinion; new59Bcopy success, missing direct savedcopy action"
+  }
+}

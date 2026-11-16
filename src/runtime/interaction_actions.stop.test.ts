@@ -10,6 +10,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { InteractionActions } from "./interaction_actions";
 import { freshThreadState } from "./session_projection";
+import { StopConfirmation } from "./stop_confirmation";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ElicitationCard } from "../components/ElicitationCard";
@@ -222,6 +223,75 @@ it("does not accept a late URL opener result after stopping becomes unknown", as
   expect(invoke).not.toHaveBeenCalled();
   expect(state.pendingElicitations[0]).toBe(question);
 });
+
+it.each(["waiting", "unconfirmed"] as const)(
+  "applies an already issued form reply while its owner's stop is %s",
+  async (stopStatus) => {
+    const { state } = setup();
+    const sibling = freshThreadState("other", "agent", "/work", "native-b");
+    const question = state.pendingElicitations[0];
+    const otherQuestion = { ...question, requestId: "question-b" };
+    sibling.pendingElicitations = [otherQuestion];
+    const actions = new InteractionActions(
+      (key) =>
+        key === state.key ? state : key === sibling.key ? sibling : undefined,
+      vi.fn(),
+    );
+    let respond!: (reply: { status: "submitted" }) => void;
+    vi.mocked(invoke).mockReturnValueOnce(
+      new Promise((resolve) => (respond = resolve)),
+    );
+    const answer = actions.respondElicitation(
+      state.key,
+      question.requestId,
+      "accept",
+      question.values,
+    );
+    const stop = new StopConfirmation();
+    let rejectStop!: (error: Error) => void;
+    const stopping = stop.cancel(
+      state,
+      () => state,
+      vi.fn(),
+      () => new Promise<void>((_, reject) => (rejectStop = reject)),
+    );
+    try {
+      const sent = {
+        sessionId: state.nativeSessionId,
+        requestId: question.requestId,
+        action: "accept",
+        content: question.values,
+      };
+      expect(invoke).toHaveBeenCalledExactlyOnceWith(
+        "session_elicitation_respond",
+        sent,
+      );
+      expect(question.status).toBe("submitting");
+      expect(state.stopping).toBe(true);
+      if (stopStatus === "unconfirmed") {
+        rejectStop(new Error("fixture stop dispatch refused"));
+        await stopping;
+        expect(state.stopping).toBe(false);
+        expect(state.stopUnconfirmed).toBe(true);
+      }
+      respond({ status: "submitted" });
+      await answer;
+      expect.soft(state.pendingElicitations).toEqual([]);
+      expect(sibling.pendingElicitations[0]).toBe(otherQuestion);
+      expect(otherQuestion.status).toBe("pending");
+      expect(state.stopping).toBe(stopStatus === "waiting");
+      expect(state.stopUnconfirmed).toBe(stopStatus === "unconfirmed");
+      expect(invoke).toHaveBeenCalledExactlyOnceWith(
+        "session_elicitation_respond",
+        sent,
+      );
+    } finally {
+      rejectStop(new Error("fixture stop dispatch refused"));
+      respond({ status: "submitted" });
+      await Promise.all([answer, stopping]);
+    }
+  },
+);
 
 it.each(["form", "url"] as const)(
   "keeps explicit negative actions reachable for %s while acceptance is disabled",

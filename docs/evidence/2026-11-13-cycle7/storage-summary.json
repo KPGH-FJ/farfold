@@ -1,0 +1,45 @@
+{
+  "outcome": "completed",
+  "removed": 5862,
+  "scope": "Exact regular Mach-O MH_OBJECT rcgu.o, >1h old, single link; no source/archive/app/data/cache directory removal",
+  "availableBefore": 2549043200,
+  "availableAfter": 15435911168,
+  "fourNamedProtectedFilesHashEqual": true,
+  "protected": [
+    "/Users/tw/Desktop/farfold/.git/index",
+    "/Users/tw/Desktop/farfold/.git/HEAD",
+    "/Users/tw/Desktop/farfold/docs/evidence/2026-11-04-create-eof-recovery/debugger-system-native.json",
+    "/Applications/Farfold.app/Contents/MacOS/farfold"
+  ],
+  "limits": "No full data/config/history rehash; deletion scope independently constrained to exact old compiler objects. Free-space values apply only to this observation.",
+  "records": [
+    {
+      "path": "output/2026-11-13-cycle7/storage/cleanup.py",
+      "sha256": "2da757a259608eb1dca89649ee00e1aba3329e23466f92b3f48b007cd6fc25dc"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/storage/exact-plan.json",
+      "sha256": "c64de951517e18d86dc27dcab086a153c83ea250ee85f582d0d6c0cc1fdad2d1"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/storage/review-r1.json",
+      "sha256": "0e3a15ba5b901ac2f1ff7f146cf3b36ed13fb60adb4fb57ca772a661c62c76ef"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/storage/review.json",
+      "sha256": "456d02f9f10cfaefc5a32107850ea9aaae4b6d56d66c2ff578faca4767a8e526"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/storage/deletion-journal.jsonl",
+      "sha256": "1cde499d27faf2fa2c20415b2d9f2d039f3a84e227a13edbf7f8ee0e59e03771"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/storage/result.json",
+      "sha256": "7bcd33160d5a82d045f70e71a1388d02d23c2e19bc11e4de65aa96c2049dd68e"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/storage/pre-execution-stops.json",
+      "sha256": "67f172cfed86b32709005766fd65364dc1e46c600db4d7ab4f7980753b3fe62a"
+    }
+  ]
+}

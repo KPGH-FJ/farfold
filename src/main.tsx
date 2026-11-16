@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "@xterm/xterm/css/xterm.css";
 import App from "./App";
+import { InterfaceScaleProvider } from "./components/InterfaceScale";
 import { DraftStartup } from "./components/DraftStartup";
 import { StorageStartup } from "./components/StorageRecovery";
 import "./styles.css";
@@ -18,7 +19,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <StorageStartup>
       <DraftStartup>
-        <App />
+        <InterfaceScaleProvider>
+          <App />
+        </InterfaceScaleProvider>
       </DraftStartup>
     </StorageStartup>
   </StrictMode>,

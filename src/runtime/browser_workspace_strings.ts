@@ -78,6 +78,8 @@ export const BROWSER_WORKSPACE_STRINGS = {
   retryClose: "重试关闭",
   resizeFailed: "网页位置同步失败，已停止显示。请重新打开。",
   readFailed: "未能读取当前网页，请稍后重试。",
+  readProtected:
+    "页面含密码或验证码等受保护输入，本次未读取网页文字。请改用不含这些输入的公开页面。",
   readChanged: "网页已变化，请重新读取文字快照。",
   listenFailed: "无法确认网页状态，请关闭后重新打开。",
   boundsMissing: "网页区域尚不可见，请展开内容栏后重试。",

@@ -27,3 +27,36 @@ pub(super) fn idle(
                 .any(|v| v.session_id == ctx.session_id && v.lease.belongs_to(&ctx.ops.life))
         })
 }
+
+/// A completed observer may reconnect to the same operation, never repeat its mutation.
+pub(super) fn repeat(
+    command: SessionControl,
+    prior: Option<&Arc<super::super::session_fork::SourceFork>>,
+) -> Option<SessionControl> {
+    if let SessionControl::Fork {
+        request,
+        result,
+        deadline,
+    } = command
+    {
+        if let Some(prior) = prior.filter(|prior| prior.operation_matches(&request.operation_id)) {
+            let value = if prior.request_matches(&request) {
+                Ok(prior.clone())
+            } else {
+                Err(super::super::session_fork::AdmissionFailure::rejected(
+                    "point_unavailable",
+                ))
+            };
+            let _ = result.send(value);
+            None
+        } else {
+            Some(SessionControl::Fork {
+                request,
+                result,
+                deadline,
+            })
+        }
+    } else {
+        Some(command)
+    }
+}

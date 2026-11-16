@@ -1,0 +1,53 @@
+{
+  "requirementId": "P11",
+  "formalSource": "091fac1c7dc0ec2ff67747317aa7ff7a25d05b7d",
+  "status": "not-implemented-not-accepted",
+  "farfoldImplemented": "Only official copying of current complete context. Historical-point capability, message-bound point representation, shared UI action and fork request parameter are absent.",
+  "officialGooseScope": {
+    "sourceCommit": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+    "forkCutoff": "Official ACP conversationBefore passes an integer timestamp; truncate removes messages with created_timestamp >= cutoff.",
+    "precisionBoundary": "New message constructors use second-resolution timestamps; timestamp-only cutoff cannot distinguish arbitrary same-time message nodes. A different internal database helper is not an exposed ACP operation.",
+    "sources": [
+      "https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/session/session_manager.rs#L2617",
+      "https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose-provider-types/src/conversation/message.rs#L1031"
+    ]
+  },
+  "runtimeUiObservation": {
+    "sample": "Current assistant message extension-fields detail exposes official goose.created and goose.messageId.",
+    "boundary": "Latest retained fields are not a validated node selector. No proof of live/replay ID identity, native-row mapping or exact fork is claimed."
+  },
+  "requiredImplementationBoundary": "Any implementation must obtain official point metadata with the corresponding message in acp_client, retain raw envelopes, expose only verified capabilities to shared UI, and preserve existing ownership/unknown-outcome safeguards. Local display time, fabricated IDs and a new persistent event/locator ledger are not substitutes.",
+  "evidence": [
+    {
+      "path": "output/2026-11-07-cycle4-mcp-config/p11-official-gap.json",
+      "sha256": "f935e2ada9ced47a7ce8ef281b585c7ebb3cdf54cac664519a512b3122880fba"
+    },
+    {
+      "path": "output/2026-11-07-cycle4-mcp-config/p11-ui-node-observation.json",
+      "sha256": "17f36b55fc69189029e84a68d13c1508ad0a3a2ec832813de57fd9d1be1fb143"
+    },
+    {
+      "path": "output/2026-11-07-cycle4-mcp-config/p11-codex-round-branch-design.json",
+      "sha256": "d26b21c0849977b35dfb586ac1b8a2988e0a3f2b2682af7d6007361ad653d3bc"
+    },
+    {
+      "path": "output/2026-11-07-cycle4-mcp-config/p11-point-support-qualification.json",
+      "sha256": "e8b255654d12b9408328b7bb4a2c1cb8e3a58086344fe9435cac325f82ce79d9"
+    }
+  ],
+  "actions": {
+    "newAgentRequests": 0,
+    "forkRequests": 0,
+    "configurationWrites": 0,
+    "productSourceChanges": 0
+  },
+  "latestReviewDate": "2026-11-08",
+  "implementationReviewedAtCommit": "6de9c2010ce57ad9d1f8731c06e5e7e02d1f2544",
+  "officialCodexScope": {
+    "fixedSourceCommit": "b1b8490cd165c18626dc3fe83836cdacdef94cd3",
+    "airV1Semantics": "Official messageId resolves to its containing completed turn; inclusive whole-turn fork, not arbitrary within-turn cutoff.",
+    "currentSupportLimit": "Ordinary fork:{} advertisement and reviewed official launch shape do not confirm adoption of this request metadata. Current-copy success can be indistinguishable from ignored metadata; response and visible replay do not provide a complete cutoff proof.",
+    "hostGap": "Existing raw events/projection preserve official messageId, but capability/selected-item/request wiring remains absent. Unknown point semantics stay unavailable; no unsafe probe, invented echo, version pin or binary-hash gate is added.",
+    "forkRequests": 0
+  }
+}

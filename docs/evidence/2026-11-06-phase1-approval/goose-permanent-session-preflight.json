@@ -1,0 +1,69 @@
+{
+  "activeListenerIdentitySha256": "f95ef978268a3bc8e8e1a31bd4d4d2bee99ce0202e7bdd3c0e0effe7b3f1335e",
+  "actualReadToolCounts": {},
+  "allOfficialChildrenNaturallyClosed": true,
+  "binarySha256": "b7a38f3ff1e2d48b34b6550f84cf4104f3f7d797429e1231d1255d0501d47702",
+  "directSignals": 0,
+  "directSqliteEdits": 0,
+  "endedUtc": "2026-11-07T03:54:41.849917+00:00",
+  "externalInferenceCalls": 0,
+  "failure": "official-method-rejected-session/new",
+  "fixtureFailure": null,
+  "globalChanges": 0,
+  "grantsSent": 0,
+  "guardErrorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "guardExit": 0,
+  "kernelGuard": {
+    "fixedIpv4Connect": true,
+    "homeDirectoryOpenDenied": true,
+    "insideReadWrite": true,
+    "outsideReadDenied": true,
+    "outsideWriteDenied": true,
+    "ownedUnixSocketConnect": true,
+    "udpDenied": true,
+    "unlistedExecDenied": true,
+    "wrongTcpPortDenied": true,
+    "wrongUnixSocketDenied": true
+  },
+  "kind": "OfficialGooseSyntheticDurablePermission",
+  "limits": [
+    "All provider replies are synthetic local fixtures, not real model acceptance.",
+    "The network rule is scoped to tested paths; it does not prove every alias endpoint denied.",
+    "Fixed literal IPv4 destination and continuously verified active listener establish endpoint ownership for these requests.",
+    "Permanent permission scope is measured within one isolated Goose profile only; no production permission rules touched."
+  ],
+  "listenerIdentityUnchangedUntilCleanup": true,
+  "localProviderRequestCounts": {},
+  "mcpMethodCounts": {},
+  "method": "Official ACP and a local fixed-endpoint synthetic streaming provider; own Unix-socket read-only MCP fixture",
+  "observedBinarySha256": "b7a38f3ff1e2d48b34b6550f84cf4104f3f7d797429e1231d1255d0501d47702",
+  "officialErrorCode": -32603,
+  "officialLaunches": 1,
+  "officialVersion": "1.52.0",
+  "ownedDisposableDataRemoved": true,
+  "preflightNoApplicationBytes": true,
+  "processes": [
+    {
+      "label": "warm",
+      "naturalEofExit": 0,
+      "outboundCounts": {
+        "initialize": 1,
+        "session/new": 1
+      },
+      "permissions": [],
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "updateCounts": {}
+    }
+  ],
+  "productionDataAccessByHarness": 0,
+  "productionUiOperations": 0,
+  "productionWrites": 0,
+  "realCredentialAccess": 0,
+  "result": "blocked",
+  "scriptSha256": "862eaf225a7af3689172a6d739d2d3ffc642b237d8443275339d96a3a892f6e6",
+  "sourceCommit": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+  "startedUtc": "2026-11-07T03:54:40.540875+00:00",
+  "strictSignatureVerified": true,
+  "syntheticPromptTurns": 0,
+  "validatedRequestBodies": []
+}

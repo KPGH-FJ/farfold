@@ -232,6 +232,7 @@ docs/archive/2026-10-09-before-capability-hardening/
 # Preserve exact pre-alignment documents and immutable original conditions.
 docs/archive/2026-10-17-documentation-alignment/**
 !docs/archive/2026-10-17-documentation-alignment/INDEX.md
+docs/archive/2026-11-09-progress-alignment/status-history.md
 
 # Frozen raw browser observations, already hashed in the XLSX evidence receipts.
 docs/evidence/2026-10-09-capability-hardening/xlsx/browser/browser-first.json
@@ -354,3 +355,14 @@ docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/installatio
 
 # Preserve the generated migration-cleanup receipt exactly as recorded.
 docs/maintenance/2026-11-02-migration-cleanup/plan-summary.json
+
+# Preserve the original generated scope and independent cleanup review receipts.
+docs/maintenance/2026-11-04-download-cache-cleanup/final-review.json
+docs/maintenance/2026-11-04-download-cache-cleanup/pre-deletion-review-2.json
+docs/maintenance/2026-11-04-download-cache-cleanup/pre-deletion-review.json
+docs/maintenance/2026-11-04-migration-cleanup/final-review.json
+docs/maintenance/2026-11-04-migration-cleanup/plan-summary.json
+docs/maintenance/2026-11-04-migration-cleanup/pre-deletion-review.json
+
+# Preserve the already hashed fifteenth-batch receipt; its captured formatting is evidence.
+docs/evidence/2026-11-11-stage2-fifteenth-batch/summary.json

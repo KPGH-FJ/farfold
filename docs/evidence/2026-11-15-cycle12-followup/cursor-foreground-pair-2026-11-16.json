@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-16",
+  "timezone": "Asia/Shanghai",
+  "installedFarfoldCdhash": "f7d18f13d392cc45bd68b90340b8df826a2cbc92",
+  "agent": "Cursor",
+  "version": "2026.11.13",
+  "source": "existing",
+  "modelShownInBoth": "Auto",
+  "firstAttempt": {
+    "clineTraceWithInternalError": "protocol-v1-1794800920062-3.jsonl",
+    "aWaitingForApprovalTrace": "protocol-v1-1794801590451-8.jsonl",
+    "bNoPromptBeforeQueueTimeoutTrace": "protocol-v1-1794801624731-9.jsonl",
+    "appRetainedDraft": true,
+    "aCancelledBeforeCommandApproval": true,
+    "appExitNamedClineAsUnknown": true,
+    "clineConnectionClosedAndOwnedGroupEndedAt": "12:03:01.640",
+    "normalQuitAndRelaunchRetainedBDraft": true
+  },
+  "retest": {
+    "aNativeSessionDigest": "292123690aafcb77",
+    "bNativeSessionDigest": "db96ba11207394e9",
+    "aTrace": "protocol-v1-1794801847981-1.jsonl",
+    "bTrace": "protocol-v1-1794801818662-0.jsonl",
+    "separateDirectories": true,
+    "oneNonpersistentApprovalPerCommand": true,
+    "bothShellsAndChildrenObservedAt": "12:04:53.488",
+    "stopClickedForAAt": "12:05:05.072",
+    "sessionCancelSentOnlyForAAt": "12:05:05.171",
+    "bothAProcessesGoneWhileBothBProcessesStillAliveAt": "12:05:05.240",
+    "aUiReportedToolOutcomeUnknown": true,
+    "bCompletionFileCreatedAtObservation": "12:05:30.102",
+    "bToolExitCodeShown": 0,
+    "bTerminalResponseAt": "12:05:41.173",
+    "bExactAssistantMarkerMatched": true,
+    "aCompletionFileStillAbsentAfterNaturalRunWindow": true,
+    "scope": "two foreground commands and their shell children"
+  }
+}

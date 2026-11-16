@@ -1,0 +1,233 @@
+{
+  "recordedAt": "2026-11-04T14:12:14.794943+00:00",
+  "runId": 41841306844,
+  "runAttempt": 1,
+  "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41841306844",
+  "sourceCommit": "96c0f902becb84718e38fc61280b0c92e3dee043",
+  "functionalSource": "aeb0dc491dbea76003aad988d86b675034b837ad",
+  "result": "passed-selected-scope",
+  "watch": {
+    "invocations": 1,
+    "intervalSeconds": 30,
+    "ghNaturalExitCode": 0,
+    "wrapperNaturalExitCode": 0,
+    "elapsedSeconds": 1007.277887
+  },
+  "native": {
+    "groups": 5,
+    "passed": 18,
+    "failed": 0,
+    "ignored": 0,
+    "allNamesUnique": true,
+    "groupsDetail": [
+      {
+        "name": "open-wait-replies",
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "naturalExitCode": 0,
+        "elapsedSeconds": 0.10203,
+        "actualNames": [
+          "acp_client::wait::tests::replies_yield_and_distinguish_timeout_from_closed",
+          "acp_client::wait::tests::typed_reply_classifies_only_outer_oneshot_failures"
+        ]
+      },
+      {
+        "name": "open-reply-diagnostics",
+        "passed": 3,
+        "failed": 0,
+        "ignored": 0,
+        "naturalExitCode": 0,
+        "elapsedSeconds": 0.031539,
+        "actualNames": [
+          "acp_client::session::open_reply_tests::open_reply_closed_is_fixed_without_a_remote_error",
+          "acp_client::session::open_reply_tests::open_reply_keeps_delayed_success_and_inner_manager_errors",
+          "acp_client::session::open_reply_tests::open_reply_timeout_is_fixed_and_late_receipt_returns_to_sender"
+        ]
+      },
+      {
+        "name": "open-delivery-ownership",
+        "passed": 9,
+        "failed": 0,
+        "ignored": 0,
+        "naturalExitCode": 0,
+        "elapsedSeconds": 5.790822,
+        "actualNames": [
+          "acp_client::lifecycle_tests::open_delivery_tests::cold_admission_timeout_holds_slot_until_real_reap",
+          "acp_client::lifecycle_tests::open_delivery_tests::cold_admission_unconsumed_delivery_holds_slot_until_real_reap",
+          "acp_client::lifecycle_tests::open_delivery_tests::open_delivery_abandoned_caller_keeps_native_reservation_until_actual_process_reaping",
+          "acp_client::lifecycle_tests::open_delivery_tests::open_delivery_buffered_success_is_owned_until_consumed_or_dropped",
+          "acp_client::lifecycle_tests::open_delivery_tests::open_delivery_failure_releases_both_reservations_before_actual_reply",
+          "acp_client::lifecycle_tests::open_delivery_tests::open_delivery_receiver_drops_during_notification_retains_identity_until_reaping",
+          "acp_client::lifecycle_tests::open_delivery_tests::open_delivery_success_releases_both_reservations_before_actual_reply",
+          "acp_client::lifecycle_tests::open_delivery_tests::open_delivery_timeout_keeps_native_reservation_until_actual_process_reaping",
+          "acp_client::lifecycle_tests::open_delivery_tests::open_delivery_unstarted_expired_or_closed_queue_never_sends_load"
+        ]
+      },
+      {
+        "name": "open-result-reservation",
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "naturalExitCode": 0,
+        "elapsedSeconds": 0.015214,
+        "actualNames": [
+          "acp_client::operations::open_result::tests::open_delivery_closing_retains_reservation_until_process_completion"
+        ]
+      },
+      {
+        "name": "fork-owner-preservation",
+        "passed": 3,
+        "failed": 0,
+        "ignored": 0,
+        "naturalExitCode": 0,
+        "elapsedSeconds": 0.02485,
+        "actualNames": [
+          "acp_client::session_fork::owner_tests::fork_observer_keeps_open_identity_after_all_delivery_and_pump_owners_drop",
+          "acp_client::session_fork::owner_tests::fork_observer_retires_on_whole_operation_finish_while_parent_stays_live",
+          "acp_client::session_fork::owner_tests::fork_observer_source_release_does_not_end_pending_destination_after_parent_reap"
+        ]
+      }
+    ]
+  },
+  "frontend": {
+    "files": [
+      {
+        "path": "src/components/threadview.history-recovery.test.tsx",
+        "passed": 34,
+        "actualNames": [
+          "shows one failed-recovery reason beside the input with its actual retry action",
+          "shows the safe opening stage after actual open rejection: 'AGENT_INITIALIZE_FAILED', Error wrapper: false",
+          "shows the safe opening stage after actual open rejection: 'AGENT_INITIALIZE_FAILED', Error wrapper: true",
+          "shows the safe opening stage after actual open rejection: 'AGENT_INITIALIZE_TIMEOUT', Error wrapper: false",
+          "shows the safe opening stage after actual open rejection: 'AGENT_INITIALIZE_TIMEOUT', Error wrapper: true",
+          "shows the safe opening stage after actual open rejection: 'AGENT_CONNECTION_ENDED', Error wrapper: false",
+          "shows the safe opening stage after actual open rejection: 'AGENT_CONNECTION_ENDED', Error wrapper: true",
+          "shows the safe opening stage after actual open rejection: 'AGENT_START_FAILED', Error wrapper: false",
+          "shows the safe opening stage after actual open rejection: 'AGENT_START_FAILED', Error wrapper: true",
+          "shows the safe opening stage after actual open rejection: 'AGENT_OPEN_TIMEOUT', Error wrapper: false",
+          "shows the safe opening stage after actual open rejection: 'AGENT_OPEN_TIMEOUT', Error wrapper: true",
+          "shows the safe opening stage after actual open rejection: 'AGENT_OPEN_CLOSED', Error wrapper: false",
+          "shows the safe opening stage after actual open rejection: 'AGENT_OPEN_CLOSED', Error wrapper: true",
+          "keeps untrusted variants of 'AGENT_INITIALIZE_FAILED' behind the original opening fallback",
+          "keeps untrusted variants of 'AGENT_INITIALIZE_TIMEOUT' behind the original opening fallback",
+          "keeps untrusted variants of 'AGENT_CONNECTION_ENDED' behind the original opening fallback",
+          "keeps untrusted variants of 'AGENT_START_FAILED' behind the original opening fallback",
+          "keeps untrusted variants of 'AGENT_OPEN_TIMEOUT' behind the original opening fallback",
+          "keeps untrusted variants of 'AGENT_OPEN_CLOSED' behind the original opening fallback",
+          "keeps the disconnected target's retry beside the input before any retry fails",
+          "offers a safe same-conversation configuration recheck (blocked: false)",
+          "offers a safe same-conversation configuration recheck (blocked: true)",
+          "keeps source and unknown-execution facts with the single failed-recovery action",
+          "keeps history reading's dedicated retry without duplicating its failed reason",
+          "shows the complete displayed confirmation snapshot by ID without changing options or sending",
+          "keeps the exact unsupported-history reason without offering an impossible reconnect (Error wrapper: false)",
+          "keeps the exact unsupported-history reason without offering an impossible reconnect (Error wrapper: true)",
+          "keeps unknown or temporary failures retryable: \"Transport closed\"",
+          "keeps unknown or temporary failures retryable: \"请求失败，暂不能确认是否不支持恢复\"",
+          "keeps unknown or temporary failures retryable: {\"code\":\"UNKNOWN\",\"message\":\"Restore failed\"}",
+          "does not claim unread history was preserved when a cold open has no load capability",
+          "does not revive an unknown tool from a lost connection after unsupported recovery",
+          "keeps a restored unknown model blocked and offers a separate new conversation",
+          "opens only an explicit fresh draft without moving old history or queued work"
+        ]
+      },
+      {
+        "path": "src/runtime/ui_error.test.ts",
+        "passed": 17,
+        "actualNames": [
+          "presents only the fixed explanation for AGENT_INITIALIZE_FAILED",
+          "presents only the fixed explanation for AGENT_INITIALIZE_TIMEOUT",
+          "presents only the fixed explanation for AGENT_CONNECTION_ENDED",
+          "presents only the fixed explanation for AGENT_START_FAILED",
+          "presents only the fixed explanation for AGENT_OPEN_TIMEOUT",
+          "presents only the fixed explanation for AGENT_OPEN_CLOSED",
+          "presents only the fixed explanation for AGENT_WORK_DIRECTORY_UNAVAILABLE",
+          "rejects decorated or embedded AGENT_INITIALIZE_FAILED without exposing its payload",
+          "rejects decorated or embedded AGENT_INITIALIZE_TIMEOUT without exposing its payload",
+          "rejects decorated or embedded AGENT_CONNECTION_ENDED without exposing its payload",
+          "rejects decorated or embedded AGENT_START_FAILED without exposing its payload",
+          "rejects decorated or embedded AGENT_OPEN_TIMEOUT without exposing its payload",
+          "rejects decorated or embedded AGENT_OPEN_CLOSED without exposing its payload",
+          "rejects decorated or embedded AGENT_WORK_DIRECTORY_UNAVAILABLE without exposing its payload",
+          "keeps unknown diagnostics behind the caller's fallback",
+          "retains authentication and short app-authored error explanations",
+          "keeps startup explanations free of product-forbidden terminology"
+        ]
+      }
+    ],
+    "passed": 51,
+    "failed": 0,
+    "pending": 0,
+    "todo": 0,
+    "typecheckNaturalExitCode": 0,
+    "testNaturalExitCode": 0,
+    "runnerNaturalExitCode": 0,
+    "nodeVersion": "v22.22.3",
+    "pnpmVersion": "9.15.0"
+  },
+  "powerShellNativeParse": {
+    "scripts": 4,
+    "parseErrors": 0,
+    "source": "Actual Windows Language.Parser.ParseFile receipts; no local pwsh execution."
+  },
+  "sourceMap": {
+    "entries": 2301,
+    "beforeAfterRawSha256": "f7ae56bca8d2483033e62bdafdc5238646d01c189cd987fb0129d66f18a821f7",
+    "sameBeforeAfter": true,
+    "fixedCommitByteBinding": {
+      "checkout-LF-to-CRLF": 2266,
+      "exact-committed-bytes": 35
+    },
+    "unmatched": [],
+    "onlyCommittedChangesVsAeb": [
+      ".github/scripts/windows-launch-prerequisites.ps1",
+      ".github/scripts/windows-selected-build.ps1",
+      ".github/workflows/windows-launch-prerequisites.yml"
+    ],
+    "exactScopedCommitMembership": true
+  },
+  "executables": {
+    "testBinarySha256": "7918091e6cbaa234dc8abd9c0b832abc238133215f7fa7f0454840641f044aea",
+    "fixtureSha256": "7c0ac71dc48e1d106e75b39ed06019f269211dd566177d486276224c1a45c1a1",
+    "allReceiptPinsMatch": true,
+    "testBinaryPathMatchesActualCargoArtifact": true,
+    "executableBytesUploaded": false,
+    "scope": "Actual Windows Get-FileHash values cross-linked across build/phase/case receipts; not recomputed from downloaded executable bytes."
+  },
+  "timing": {
+    "workflowCreatedToUpdatedSeconds": 1069.0,
+    "jobElapsedSeconds": 1065.0,
+    "buildBindingPhaseElapsedSeconds": 912.820166,
+    "frontendPhaseElapsedSeconds": 56.417586,
+    "watchElapsedSeconds": 1007.277887,
+    "cargoCompletionLines": [
+      {
+        "log": "test-build.stderr.log",
+        "completionLines": [
+          "Finished `test` profile [unoptimized + debuginfo] target(s) in 12m 00s"
+        ]
+      },
+      {
+        "log": "fixture-build.stderr.log",
+        "completionLines": [
+          "Finished `dev` profile [unoptimized + debuginfo] target(s) in 2m 57s"
+        ]
+      }
+    ]
+  },
+  "originals": {
+    "filename": "windows-open-failure-41841306844-originals.zip",
+    "sha256": "8edbc63599f57f2857ed569e55dc54722e53e0e39334a5fbe53f4fa01a131d4e",
+    "bytes": 497985,
+    "members": 14,
+    "innerArtifactGitHubDigestVerified": true
+  },
+  "limits": [
+    "Only fixed96c Windows hosted library regressions, selected51frontend tests and typecheck. No whole-Windows suite, application package/install or real Agent acceptance.",
+    "The AEB Git source uses LF; the actual Windows disk source map remains its own CRLF-aware receipt and is not replaced by LF hashes.",
+    "Executable SHA values were cross-linked from actual Windows Get-FileHash receipts; executable bytes were not uploaded for independent local rehash.",
+    "This run predates subsequent five-failure test fixes and is not evidence for their source.",
+    "One local metadata-only audit duration parse failed on7-digit Windows timestamps, then was corrected without changing originals or repeating CI/tests."
+  ]
+}

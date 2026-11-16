@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { isAbsoluteFilePath } from "./file_paths";
+import { isAbsoluteFilePath, localFileUriPath } from "./file_paths";
 import type { ToolCallView } from "./session_types";
 import { presentedToolKind } from "./tool_file_input";
 
@@ -52,6 +52,8 @@ export interface DeliveryReceipt {
   size: number;
   sha256: string;
   sourceVersion: string | null;
+  /** Publication-time destination identity; absent in older in-memory receipts. */
+  destinationFile?: VerifiedFile;
 }
 
 function plainPath(path: unknown): path is string {
@@ -65,24 +67,7 @@ function plainPath(path: unknown): path is string {
 
 /** Only an explicit local file URI, never a web URL or a path in prose. */
 export function localResourcePath(uri: string): string | null {
-  if (typeof uri !== "string") return null;
-  try {
-    const url = new URL(uri);
-    if (
-      url.protocol !== "file:" ||
-      (url.hostname && url.hostname !== "localhost") ||
-      url.username ||
-      url.password ||
-      url.search ||
-      url.hash
-    )
-      return null;
-    const decoded = decodeURIComponent(url.pathname);
-    const path = /^\/[a-z]:\//i.test(decoded) ? decoded.slice(1) : decoded;
-    return isAbsoluteFilePath(path) && plainPath(path) ? path : null;
-  } catch {
-    return null;
-  }
+  return localFileUriPath(uri);
 }
 
 /** Keep distinct report sources; repeated fields are not additional provenance. */

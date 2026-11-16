@@ -11,6 +11,53 @@ import { additionalModelRows } from "./ModelConfigRows";
 import { isReasoningOption } from "./ReasoningControl";
 import type { ConfigOptionView } from "../runtime/session_types";
 
+export function agentSetupModelHeading(
+  draftReview: boolean,
+  apiChoice: boolean,
+) {
+  return (
+    <>
+      <h3>{R.chooseModel}</h3>
+      <p className="agent-setup-subtitle">
+        {draftReview
+          ? M.draftModelScope
+          : apiChoice
+            ? R.serviceModelHint
+            : M.managementHint}
+      </p>
+    </>
+  );
+}
+
+export function modelReadStatus(
+  connected: boolean,
+  reading: boolean,
+  failed: boolean,
+  read: boolean,
+  hasModel: boolean,
+) {
+  if (!connected) return M.modelConnect;
+  if (reading) return M.modelReading;
+  if (failed) return M.modelFailed;
+  if (!read) return M.modelPending;
+  return hasModel ? M.modelReady : M.modelUnprovided;
+}
+
+export function agentSetupModelSourceNotice(
+  message: string,
+  action: string,
+  onAction: () => void,
+) {
+  return (
+    <div role="alert" className="agent-setup-notice">
+      <p>{message}</p>
+      <button className="btn btn-ghost" onClick={onAction}>
+        {action}
+      </button>
+    </div>
+  );
+}
+
 /** Step 2 review of a repaired conversation's recorded configuration. */
 export function agentSetupModelReview({
   conversation,

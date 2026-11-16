@@ -1,0 +1,123 @@
+{
+  "sourceCodeCommit": "e1762610ba368f071c3cd07a4a82e874bcb2af72",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "52c021665ea4a2255267d656ee25bf9f3d8df068",
+    "executableSha256": "e5a8a40685fa49d0089d1cdc52322922973e6be07418d766050aaa8fb501bb8f"
+  },
+  "engineering": {
+    "allSevenPassed": true,
+    "frozenInputs": 2478,
+    "indexHtmlIndependentlyVerified": true,
+    "frontendFiles": 745,
+    "frontendPassed": 10216,
+    "rustPassed": 2501,
+    "rustExistingIgnored": 7,
+    "restrictedEnvironmentFailures": 8,
+    "allEightPassedOnHost": true
+  },
+  "install": {
+    "closedDataEntriesIdentical": 206420,
+    "normallyExitedOwnedChildren": 1,
+    "independentReview": true,
+    "candidateRemoved": true
+  },
+  "formalToolReport": {
+    "existingOwnedGooseConversation": true,
+    "nativeConversationLoaded": true,
+    "scope": "对话扩展配置报告",
+    "keyboardActivatedRead": true,
+    "scopeConfirmedAfterSelection": true,
+    "reportCount": 7,
+    "reportStatusExposedInNativeAccessibilityTree": "程序本次返回 7 项扩展配置。",
+    "statusSeparateFromVisualReportHeading": true,
+    "sourceAndConnectionUnknownPreserved": true,
+    "afterReplyFocus": "重新读取",
+    "afterEscapeFocus": "原对话操作",
+    "actualVoiceOverSpeechVerified": false,
+    "modelRequests": 0,
+    "trace": {
+      "file": "protocol-v1-1794358390555-0.jsonl",
+      "sha256": "41dfb565c86260aca0ea930fe327fc542b49d2b87bd57e045ef148ec6e0ddc12",
+      "outboundEvents": [
+        "initialize",
+        "session/load",
+        "other"
+      ]
+    }
+  },
+  "audioPolicy": {
+    "exactCspInInstalledExecutable": true,
+    "mediaDirective": "media-src 'self' data: blob:",
+    "genuineAgentAudioPlayed": false,
+    "controlledNativeMedia": {
+      "oldBlobPlayback": "blocked by media-src",
+      "newBlobPlayback": "ended",
+      "bothDataControls": "ended"
+    }
+  },
+  "mistralHistoryPoint": {
+    "installedStaticVersions": [
+      "Mistral Vibe 2.25.8",
+      "ACP 0.11"
+    ],
+    "officialAnchor": "_meta.messageId",
+    "userMessageOnly": true,
+    "forkResponseEchoesSelectedPoint": false,
+    "actualForkRequests": 0
+  },
+  "evidenceFiles": {
+    "output/2026-11-09-six-hour-stage2/fifteenth-engineering/result.json": "1218469722745d71b5de90da506c964447fc3c2ffb217240122294f57099ce48",
+    "output/2026-11-09-six-hour-stage2/fifteenth-final-engineering/result.json": "b676ed5961d889b29aae774a7b0f4b43915b9ca822ffae3e1d93db491f3aaed6",
+    "output/2026-11-09-six-hour-stage2/fifteenth-final-engineering/frontend.log": "ed412de646cc25286be44615dcc687011a7a7cd62b203b5d6dcc60d3f3fc9c74",
+    "output/2026-11-09-six-hour-stage2/fifteenth-final-engineering/rust-test.log": "f8a5a84fcbab9f56d9a9cb0b276f83b8c235d259c017eeb802e1bab9a6a7fc72",
+    "output/2026-11-09-six-hour-stage2/formal-fifteenth/source-freeze.json": "1c5cf0de1984830b96ca53b15bb62b089ab0b34425c5dd30e4fe2349da299236",
+    "output/2026-11-09-six-hour-stage2/formal-fifteenth/candidate-review.json": "639a5b9b9d017ebb0a1a19e12ad37ed61fdfbc532756bbf2231bfea76efeaeb6",
+    "output/2026-11-09-six-hour-stage2/formal-fifteenth/install.json": "347a1ff9689411251c8754608c0dd4f6e44bc3fc653988e5fd23193ed4c2302c",
+    "output/2026-11-09-six-hour-stage2/formal-fifteenth/normal-exit.json": "7145ba181cfea2ec9afb9219162cb75d27b0fa9390563ece8995810940ed3cd9",
+    "output/2026-11-09-six-hour-stage2/formal-fifteenth/duplicate-cleanup.json": "88a1db576ecb74b227ab943f20b27fdd740bb675b3c98685d3a4d9086044c6cf",
+    "output/2026-11-09-six-hour-stage2/formal-fifteenth/formal-observation.json": "ee6d1b8f8334b07ee7373ca8abd117b86d5d69892929a342e51ec6a49884d81c",
+    "output/2026-11-10-stage2-closeout/p13-audio-csp/receipt.json": "59feb95e38bec0580107c7e1592b191cba83afb53d4f18b4217f837c60a1b810",
+    "output/2026-11-10-stage2-closeout/p13-audio-csp/native-csp-contrast-v2.json": "96448e7f06dd7c21eb8db575117641afeaccddcc0174983982069535ae6fc9b1",
+    "output/2026-11-11-stage2-resume/p11-mistral-point.json": "7294223df21121d203d53047196e9e1df21f90bb8d90ffcd2602615ea3ae4cc4",
+    "output/2026-11-09-six-hour-stage2/formal-fifteenth/formal-voiceover-user-check.json": "b660f9e630b8640f6c358dbbb0f871072d795857c20b2cb0ae90efe3ee5f98ec",
+    "output/2026-11-09-six-hour-stage2/formal-fifteenth/formal-voiceover-all-tools-retest.json": "7da5cab353aa24c2e2e5291a0fed4c5457cfd01a52aa72994800e6378842dda7"
+  },
+  "formalToolReportVoiceOverFollowup": {
+    "recordedOnSameInstalledSource": true,
+    "reportReadStartedUtc": "2026-11-11T05:18:30.083000+00:00",
+    "initialUserStatementLaterWithdrawn": "程序本次返回 7 项扩展配置",
+    "afterActivationKeyboardFocus": "重新读取",
+    "originalVoiceOverSettingRestored": true,
+    "modelRequests": 0,
+    "coveredPath": "Goose conversation extension configuration report re-read",
+    "speechTimingIndependentlyVerifiedBySystemLog": false,
+    "correction": {
+      "supersedesDocsCommit": "5715681c3",
+      "initialUserConfirmationWithdrawn": true,
+      "userReportedHearingTargetAnnouncement": false,
+      "actualVoiceOverSpeechVerified": false,
+      "voiceOverMainProcessId": 81921,
+      "voiceOverMainProcessExitUtc": "2026-11-11T05:18:21.666406+00:00",
+      "voiceOverMainProcessExitCode": 0,
+      "voiceOverMainProcessLifetimeMs": 812,
+      "voiceOverQuickstartRunningAtRead": true
+    }
+  },
+  "formalToolReportVoiceOverRetest": {
+    "readStartedUtc": "2026-11-11T05:33:51.538000+00:00",
+    "scope": "全部工具",
+    "previousResultVisible": false,
+    "normalVoiceOverRunningBeforeAndAfterRead": true,
+    "nativeAccessibilityStatus": "程序本次返回 17 项工具信息。",
+    "focusAfterRead": "重新读取",
+    "systemSpeechActivityAfterRead": true,
+    "userHeardSpeechIncludingFarfold": true,
+    "reportResultAnnouncementVerified": false,
+    "voiceOverRestoredOff": true,
+    "modelRequests": 0
+  }
+}

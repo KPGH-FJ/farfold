@@ -10,10 +10,13 @@ import type {
   PptxSlideAnchor,
 } from "./file_feedback_anchor";
 import { formatVisualAreaPercent } from "./visual_area_coordinates";
+import { WORKSPACE_STRINGS as W } from "./workspace_strings";
 
 export const FEEDBACK_STRINGS = {
   saved: (count: number) => `未发送的文件意见（${count}）`,
   previous: "其他内容版本的意见",
+  unavailableOwner: (count: number) => `找不到原对话的文件意见（${count}）`,
+  unavailableOwnerHint: "可复制保留的意见。每条意见仍对应当时查看的内容。",
   retained:
     "意见仍对应当时查看的内容。可加入输入框，也可以复制；不会自动发送。",
   version: (index: number) => `保留的意见 ${index + 1}`,
@@ -21,6 +24,8 @@ export const FEEDBACK_STRINGS = {
   copy: "复制意见",
   copied: "意见已复制。",
   copyFailed: "复制未完成，请重试。",
+  reportChecking: "正在核对意见对应的内容…",
+  reportUnavailable: "未能核对意见对应的内容，请重新打开这份内容。",
   added: "意见已加入这条对话的输入框，尚未发送。",
   textRange: (
     startLine: number,
@@ -43,6 +48,13 @@ export const FEEDBACK_STRINGS = {
 } as const;
 
 export function fileFeedbackText(entry: SavedFileFeedback): string {
+  const fragment = /^reported-fragment-sha256-v1:([1-9]\d*):[0-9a-f]{64}$/.exec(
+    entry.contentId ?? "",
+  );
+  const report =
+    entry.scope === "fragment" && fragment
+      ? `，${W.reportFragment(Number(fragment[1]))}`
+      : "";
   const side = entry.selection?.side === "before" ? "修改前" : "修改后";
   const lines = entry.selection
     ? `${entry.selection.line}${entry.selection.endLine && entry.selection.endLine !== entry.selection.line ? `–${entry.selection.endLine}` : ""}`
@@ -82,5 +94,5 @@ export function fileFeedbackText(entry: SavedFileFeedback): string {
     entry.anchor?.kind === "pptx-slide" ||
     entry.anchor?.kind === "image-area" ||
     entry.anchor?.kind === "pdf-area";
-  return `关于 ${exactOpinion ? JSON.stringify(entry.path) : entry.path}（当时查看的内容${location ? `，${location}` : ""}）：\n${disk ? `${V.version(disk.sha256)}\n` : ""}${exactOpinion ? entry.text : entry.text.trim()}${disk ? `\n\n${V.verifyVersion}` : ""}`;
+  return `关于 ${exactOpinion ? JSON.stringify(entry.path) : entry.path}（当时查看的内容${report}${location ? `，${location}` : ""}）：\n${disk ? `${V.version(disk.sha256)}\n` : ""}${exactOpinion ? entry.text : entry.text.trim()}${disk ? `\n\n${V.verifyVersion}` : ""}`;
 }

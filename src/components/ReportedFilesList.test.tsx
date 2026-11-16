@@ -124,6 +124,29 @@ it("renders candidate provenance without automatic file actions; explicit click 
     true,
   );
 });
+it.each(["pending step", "unavailable scope"] as const)(
+  "omits completed file provenance for %s",
+  (scope) => {
+    applyUpdate(props.thread, {
+      sessionUpdate: "tool_call",
+      toolCallId: "unfinished",
+      kind: "execute",
+      status: "pending",
+      locations: [{ path: "not-reported.txt" }],
+    });
+    props.scopeId =
+      scope === "pending step"
+        ? props.thread.items.at(-1)!.id
+        : "missing-scope";
+    const { nodes: rendered, tree } = render();
+    const markup = renderToStaticMarkup(tree);
+    expect(markup).toContain(
+      scope === "pending step" ? S.empty : S.unavailable,
+    );
+    expect(markup).not.toContain(S.note);
+    expect(fileButtons(rendered)).toHaveLength(0);
+  },
+);
 it("never treats visibility or default first row as user selection", () => {
   props.active = false;
   let result = render();

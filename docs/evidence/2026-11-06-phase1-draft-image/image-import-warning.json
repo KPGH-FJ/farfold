@@ -1,0 +1,28 @@
+{
+  "installedSource": "6ce829c5",
+  "scope": "Previously completed owned Copilot test conversation, native macOS picker, one generated PNG replaced at the same path after a decoding failure.",
+  "invalid": {
+    "draftTextPreserved": true,
+    "rejectedBytesKeptInOwnedDraft": true,
+    "unreadableAttachmentRetainedByName": true,
+    "originalDraftAndRetainedAndQueuesUnchanged": true,
+    "transportUnchanged": true
+  },
+  "replacement": {
+    "reselectedValidImageMatchesExactBytes": true,
+    "draftTextPreserved": true,
+    "originalDraftAndRetainedAndQueuesUnchanged": true,
+    "transportUnchanged": true
+  },
+  "invalidFixtureBytes": 80,
+  "validFixtureBytes": 178,
+  "readErrorShownForInvalidInput": true,
+  "replacementThumbnailVisible": true,
+  "previousReadErrorStillVisibleAfterSuccessfulReplacement": true,
+  "ownedTestInputRemoved": true,
+  "originalDraftAndRetainedAndQueuesUnchangedAfterCleanup": true,
+  "transportByteIdenticalAfterCleanup": true,
+  "newPrompts": 0,
+  "invalidFixtureSha256": "406a58992d5503cdfabe39556fe007fc37a05c1151c6079d06ee01972dc770c7",
+  "validFixtureSha256": "20f3e4cd07f361207a3247e0bda62e67bde5746cabe3762eee99c4831f069033"
+}

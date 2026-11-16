@@ -1,0 +1,263 @@
+import { beforeEach, expect, it, vi } from "vitest";
+import type { ComposerDraft, ConversationChoice } from "./drafts";
+import { REDESIGN } from "./redesign_strings";
+
+const h = vi.hoisted(() => ({ invoke: vi.fn() }));
+vi.mock("@tauri-apps/api/core", () => ({ invoke: h.invoke }));
+
+beforeEach(() => {
+  vi.resetModules();
+  h.invoke.mockReset();
+});
+
+const key = "saved-new:fixture";
+const activeChoice: ConversationChoice = {
+  agentId: "current-agent",
+  cwd: "/fixture/current",
+  service: null,
+  config: {},
+};
+const retained: ComposerDraft = {
+  text: "retained draft",
+  attachments: [
+    {
+      id: "retained-file",
+      kind: "file",
+      name: "retained.txt",
+      uri: "file:///fixture/retained.txt",
+      deliveryMode: "location",
+    },
+  ],
+  savedChoice: {
+    ...activeChoice,
+    agentId: "retained-agent",
+    cwd: "/fixture/retained",
+  },
+};
+
+function deferred() {
+  let resolve!: () => void;
+  const promise = new Promise<void>((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
+}
+
+it.each(["later input", "later choice", "another conversation"] as const)(
+  "keeps %s when a retained-draft restore waits for an earlier save",
+  async (change) => {
+    const started = deferred();
+    const release = deferred();
+    const beforeText = change === "later choice" ? "" : "active draft";
+    let disk: unknown = {
+      version: 1,
+      composers: {
+        [key]: retained,
+        ...(beforeText ? { new: { text: beforeText, attachments: [] } } : {}),
+      },
+      choice: activeChoice,
+      feedback: {},
+      queues: {},
+    };
+    let writes = 0;
+    h.invoke.mockImplementation(
+      async (command: string, args: { key: string; value?: unknown }) => {
+        expect(args.key).toBe("unsentWork.v1");
+        if (command === "settings_get") return structuredClone(disk);
+        expect(command).toBe("settings_set");
+        if (++writes === 1) {
+          started.resolve();
+          await release.promise;
+        }
+        disk = structuredClone(args.value);
+      },
+    );
+    const d = await import("./drafts");
+    await d.draftPersistence.load();
+    d.newConversationChoice.config = { thinking: true };
+    await started.promise;
+
+    const restoring = Promise.allSettled([
+      d.composerDrafts.restorePreserved(key),
+    ]);
+    if (change === "later input") {
+      d.composerDrafts.update("new", (draft) => ({
+        ...draft,
+        text: "newer unsent input",
+      }));
+    } else if (change === "later choice") {
+      d.newConversationChoice.agentId = "newer-agent";
+    } else {
+      d.composerDrafts.update("session:other", () => ({
+        text: "unrelated unsent input",
+        attachments: [],
+      }));
+    }
+    release.resolve();
+    const [result] = await restoring;
+    await d.draftPersistence.flush();
+
+    if (change === "another conversation") {
+      expect(result).toEqual({ status: "fulfilled", value: true });
+      expect(d.composerDrafts.read("new").text).toBe(retained.text);
+      expect(d.composerDrafts.read("session:other").text).toBe(
+        "unrelated unsent input",
+      );
+      expect(
+        d.composerDrafts.preserved().map(([, draft]) => draft.text),
+      ).toEqual([beforeText]);
+      return;
+    }
+    const text = change === "later input" ? "newer unsent input" : "";
+    const agentId =
+      change === "later choice" ? "newer-agent" : activeChoice.agentId;
+    expect(d.composerDrafts.read("new").text).toBe(text);
+    expect(d.newConversationChoice.agentId).toBe(agentId);
+    expect(result).toMatchObject({
+      status: "rejected",
+      reason: { message: REDESIGN.draftChanged },
+    });
+
+    vi.resetModules();
+    const cold = await import("./drafts");
+    await cold.draftPersistence.load();
+    expect(cold.composerDrafts.read("new").text).toBe(text);
+    expect(cold.newConversationChoice.agentId).toBe(agentId);
+    expect(cold.composerDrafts.preserved()).toHaveLength(1);
+    expect(cold.composerDrafts.preserved()[0]).toMatchObject([key, retained]);
+  },
+);
+
+it.each(["later input", "cancelled quit"] as const)(
+  "requires another preservation confirmation after %s during the first save",
+  async (change) => {
+    const started = deferred();
+    const release = deferred();
+    const before = { text: "initial unsent draft", attachments: [] };
+    const newer = { ...before, text: "newer unsent draft" };
+    let disk: unknown = {
+      version: 1,
+      composers: { new: before, [key]: retained },
+      choice: activeChoice,
+      feedback: {},
+      queues: {},
+    };
+    let writes = 0;
+    h.invoke.mockImplementation(
+      async (command: string, args: { key: string; value?: unknown }) => {
+        expect(args.key).toBe("unsentWork.v1");
+        if (command === "settings_get") return structuredClone(disk);
+        expect(command).toBe("settings_set");
+        if (++writes === 1) {
+          started.resolve();
+          await release.promise;
+        }
+        disk = structuredClone(args.value);
+      },
+    );
+    const d = await import("./drafts");
+    await d.draftPersistence.load();
+    const preservedBefore = structuredClone(d.composerDrafts.preserved());
+    d.newConversationChoice.config = { thinking: true };
+    await started.promise;
+
+    const confirming = Promise.allSettled([
+      d.composerDrafts
+        .preserveNew()
+        .then((ticket) => d.composerDrafts.clearPreservedNew(ticket)),
+    ]);
+    if (change === "later input") {
+      d.composerDrafts.update("new", () => newer);
+    } else {
+      const cancelQuit = d.draftPersistence.acquireInteractionLock();
+      cancelQuit();
+    }
+    release.resolve();
+
+    const [result] = await confirming;
+    expect.soft(result).toMatchObject({
+      status: "rejected",
+      reason: { message: REDESIGN.draftChanged },
+    });
+    await d.draftPersistence.flush();
+    const expected = change === "later input" ? newer : before;
+    expect(d.composerDrafts.read("new")).toMatchObject(expected);
+    expect(d.composerDrafts.preserved()).toEqual(preservedBefore);
+
+    vi.resetModules();
+    const cold = await import("./drafts");
+    await cold.draftPersistence.load();
+    expect(cold.composerDrafts.read("new")).toMatchObject(expected);
+    expect(cold.composerDrafts.preserved()).toEqual(preservedBefore);
+
+    const retry = await cold.composerDrafts.preserveNew();
+    cold.composerDrafts.clearPreservedNew(retry);
+    await cold.draftPersistence.flush();
+    expect(cold.composerDrafts.read("new").text).toBe("");
+    expect(
+      cold.composerDrafts.preserved().map(([, draft]) => draft.text),
+    ).toEqual([retained.text, expected.text]);
+  },
+);
+
+it("ignores a second restore of the same retained draft while its new value is being saved", async () => {
+  const restoreWriteStarted = deferred();
+  const releaseRestoreWrite = deferred();
+  const originalText = "previous unsent input";
+  let disk: unknown = {
+    version: 1,
+    composers: {
+      new: { text: originalText, attachments: [] },
+      [key]: retained,
+    },
+    choice: activeChoice,
+    feedback: {},
+    queues: {},
+  };
+  let held = false;
+  h.invoke.mockImplementation(
+    async (command: string, args: { key: string; value?: typeof disk }) => {
+      expect(args.key).toBe("unsentWork.v1");
+      if (command === "settings_get") return structuredClone(disk);
+      expect(command).toBe("settings_set");
+      const composers = (
+        args.value as { composers: Record<string, ComposerDraft> }
+      ).composers;
+      if (!held && composers.new?.text === retained.text) {
+        held = true;
+        restoreWriteStarted.resolve();
+        await releaseRestoreWrite.promise;
+      }
+      disk = structuredClone(args.value);
+    },
+  );
+
+  const d = await import("./drafts");
+  await d.draftPersistence.load();
+  expect(await d.composerDrafts.restorePreserved(key)).toBe(true);
+  await restoreWriteStarted.promise;
+  expect(d.composerDrafts.read("new").text).toBe(retained.text);
+  expect(d.composerDrafts.preserved().map(([savedKey]) => savedKey)).toContain(
+    key,
+  );
+
+  const repeated = d.composerDrafts.restorePreserved(key);
+  releaseRestoreWrite.resolve();
+  expect.soft(await repeated).toBe(false);
+  await d.draftPersistence.flush();
+  expect
+    .soft(d.composerDrafts.preserved().map(([, draft]) => draft.text))
+    .toEqual([originalText]);
+
+  vi.resetModules();
+  const cold = await import("./drafts");
+  await cold.draftPersistence.load();
+  expect(cold.composerDrafts.read("new")).toMatchObject({
+    text: retained.text,
+    attachments: retained.attachments,
+  });
+  expect(cold.newConversationChoice).toMatchObject(retained.savedChoice!);
+  expect(
+    cold.composerDrafts.preserved().map(([, draft]) => draft.text),
+  ).toEqual([originalText]);
+});

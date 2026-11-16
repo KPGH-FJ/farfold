@@ -1,0 +1,76 @@
+{
+  "recordedAt": "2026-11-11T12:06:09.808930+00:00",
+  "sourceCommit": "92e052a672c403c16d81ced7a3e0c9d5cc45155a",
+  "installedIdentity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "c925f372fd423663c63f7f011153b41378d2e0df"
+  },
+  "binarySha256": "0832bcb608862d87acf5dce6df86a8751072c8885045b3845c7613d598605e20",
+  "installation": {
+    "dataEntries": 206420,
+    "dataRootsUnchangedBeforeLaunch": true,
+    "beforeLogicalSha256": "9966590203db33099a1ab962250c5ddbed588039ba0618f79ec8d49e4346f0c7",
+    "afterLogicalSha256": "9966590203db33099a1ab962250c5ddbed588039ba0618f79ec8d49e4346f0c7",
+    "candidateRemoved": true
+  },
+  "evidenceSha256": {
+    "source-freeze.json": "f0125ad2a07ceaf3a74a45c8520db2dc7c6ec8c4d855da394e97e09c3e0eda21",
+    "candidate.json": "50c13f8167b4562df149af11a6e2543f26430f0d09e1c911ef23707f4f395983",
+    "candidate-review.json": "7a0fcd7d38f94ffae1f14be3323c96fd7bc8c83cd00162f6642bbc657df7abd3",
+    "release-build.json": "fb40513a550a0a7bd7e82d551ad326f9bafbc6fed9302d3264905bb20fe42f3c",
+    "bundle.json": "ebc943234273ecd14d60ea97a8cd8a1636640748f4c51d237c1b9a26f416d003",
+    "install.json": "93abc725a7ffc2e1076fdb772b57b03613c169bde5117e963e74c9d72dcc9386",
+    "duplicate-cleanup.json": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+  },
+  "nativeUI": {
+    "method": "CUA visible AX and screenshot observations in this chat; summaries below, no standalone screenshot file exported",
+    "window": [1280, 820],
+    "launch": "normal workbench visible; existing four conversations and 29 Agents displayed",
+    "checks": [
+      {
+        "case": "password-input",
+        "observation": "secure text field and masked dots visible for synthetic value"
+      },
+      {
+        "case": "cross-section-duplicate",
+        "observation": "环境变量 FARFOLD_SYNTHETIC_TOKEN 重复，请只保留一行。; command remained empty, no registration"
+      },
+      {
+        "case": "ordinary-reserved-value",
+        "observation": "ORDINARY=__keychain__ rejected: 此值保留给安全环境变量，请改用安全输入。"
+      },
+      {
+        "case": "three-secret-rows",
+        "observation": "three fields rendered in scrollable body; Cancel/Add footer remained visible"
+      },
+      {
+        "case": "keyboard-footer",
+        "observation": "Tab from ordinary textarea reached Cancel, then Add; Shift+Tab and Return opened unsaved confirmation"
+      },
+      {
+        "case": "keep-and-reopen",
+        "observation": "temporary keep returned focus to custom entry; reopen restored name, secure name, masked value, three rows and ordinary text"
+      },
+      {
+        "case": "escape-and-discard",
+        "observation": "Escape showed unsaved confirmation; discarding this synthetic draft then reopening showed empty fields and one secret row"
+      }
+    ],
+    "quit": "Cmd+Q showed existing work-location unknown-result warning; Save and Exit was selected; CUA observed App quit and exact process scan now empty",
+    "boundaries": [
+      "No custom Agent registration or real Agent/model request",
+      "No actual credential entered via UI; synthetic value stayed in unsent form",
+      "No production database restoration or deliberate fault injection",
+      "Resize drag had no observed effect: installed smaller size not verified; controlled browser 900x620 checks separate",
+      "Initial typeText altered typed characters; observed actual values were corrected with paste before duplicate validation",
+      "Masked presence on reopening does not independently prove exact secret bytes; exact native vault equality was separately tested"
+    ]
+  },
+  "afterUI": {
+    "officialBundleUnchanged": true,
+    "officialProcesses": []
+  }
+}

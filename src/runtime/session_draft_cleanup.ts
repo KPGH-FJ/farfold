@@ -7,6 +7,8 @@ function emptyDraft(s: ThreadState) {
     s.identity === "draft" &&
     !s.submitting &&
     !s.running &&
+    !s.configuring &&
+    !s.sessionToolRecoveryRequired &&
     !s.queued.length &&
     !s.items.length &&
     !hasPendingRequests(s) &&

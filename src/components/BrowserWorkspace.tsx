@@ -58,6 +58,13 @@ export function BrowserWorkspace({
     tabs.getSnapshot,
     tabs.getSnapshot,
   );
+  const visible = props.active && props.visible !== false;
+  const tabList = useRef<HTMLDivElement>(null);
+  const closeFocus = useRef<{
+    id: string;
+    button: HTMLButtonElement;
+    cancel: () => void;
+  } | null>(null);
   const prefix = useId();
   const [rememberedRequest, setRememberedRequest] = useState<{
     tabId: string;
@@ -83,7 +90,30 @@ export function BrowserWorkspace({
     onVisibilityChange,
   });
   callbacks.current = { onOwnersChange, onStateChange, onVisibilityChange };
-  tabs.setActive(props.active && (props.visible ?? true));
+  tabs.setActive(visible);
+  useLayoutEffect(() => () => closeFocus.current?.cancel(), [tabs, visible]);
+  useLayoutEffect(() => {
+    const pending = closeFocus.current;
+    if (!visible || !pending || state.changing) return;
+    pending.cancel();
+    const { button } = pending;
+    const doc = button.ownerDocument;
+    const focused = doc.activeElement;
+    if (
+      !doc.hasFocus() ||
+      (focused !== button &&
+        focused !== doc.body &&
+        focused !== doc.documentElement)
+    )
+      return;
+    const target = state.tabs.some((tab) => tab.id === pending.id)
+      ? button
+      : tabList.current?.querySelector<HTMLButtonElement>(
+          '[role="tab"][aria-selected="true"]',
+        );
+    if (target?.isConnected && !target.disabled && target !== focused)
+      target.focus();
+  }, [state, visible]);
   useEffect(() => {
     ++lifetime.current;
     let live = true;
@@ -117,6 +147,30 @@ export function BrowserWorkspace({
   useEffect(() => {
     callbacks.current.onStateChange?.(page);
   }, [page]);
+  function closeTab(id: string, button: HTMLButtonElement) {
+    const now = tabs.getSnapshot();
+    if (!visible || now.changing || !now.tabs.some((tab) => tab.id === id))
+      return;
+    closeFocus.current?.cancel();
+    const doc = button.ownerDocument;
+    if (doc.activeElement === button) {
+      const cancel = () => {
+        doc.removeEventListener("focusin", moved, true);
+        closeFocus.current = null;
+      };
+      const moved = (event: FocusEvent) => {
+        if (
+          event.target !== button &&
+          event.target !== doc.body &&
+          event.target !== doc.documentElement
+        )
+          cancel();
+      };
+      closeFocus.current = { id, button, cancel };
+      doc.addEventListener("focusin", moved, true);
+    }
+    void tabs.close(id);
+  }
   const suspended = state.changing || state.failed || !state.ready;
   return (
     <div className="browser-workspace-tabs-shell">
@@ -124,6 +178,7 @@ export function BrowserWorkspace({
         <>
           <div className="browser-workspace-tabs-row">
             <div
+              ref={tabList}
               role="tablist"
               aria-label={S.tabs}
               className="browser-workspace-tabs"
@@ -156,6 +211,9 @@ export function BrowserWorkspace({
               {state.tabs.map((tab, index) => {
                 const title =
                   tab.page?.localFileName || tab.page?.url || S.newTab;
+                const closeBusy = state.changing || tab.closing;
+                const holdCloseFocus =
+                  closeBusy && closeFocus.current?.id === tab.id;
                 return (
                   <div className="browser-workspace-tab" key={tab.id}>
                     <button
@@ -176,8 +234,9 @@ export function BrowserWorkspace({
                       className="browser-workspace-tab-close"
                       aria-label={S.closeTab(title)}
                       title={S.close}
-                      disabled={state.changing || tab.closing}
-                      onClick={() => void tabs.close(tab.id)}
+                      disabled={closeBusy && !holdCloseFocus}
+                      aria-disabled={holdCloseFocus || undefined}
+                      onClick={(event) => closeTab(tab.id, event.currentTarget)}
                     >
                       <XIcon size={12} aria-hidden="true" />
                     </button>

@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-16",
+  "timezone": "Asia/Shanghai",
+  "app": {
+    "version": "0.1.7",
+    "cdhash": "f7d18f13d392cc45bd68b90340b8df826a2cbc92"
+  },
+  "devin": {
+    "officialVersion": "3000.12.57",
+    "source": "existing",
+    "model": "swe-2-flash-medium",
+    "modeShown": "Code",
+    "originalSample": "连接测试 · Devin",
+    "nativeSessionDigestBeforeAndAfter": "3ed50a82d7a5b031",
+    "previousAppAndOwnedAgentProcessesObservedExited": true,
+    "coldEntry": "Farfold sidebar, same indexed conversation after application quit and reopen",
+    "originalUserAndAssistantVisible": true,
+    "trace": "protocol-v1-1794798337221-0.jsonl",
+    "loadRequestSequence": 3,
+    "loadResultAfterMs": 36,
+    "newSessions": 0,
+    "autoPromptsBeforeManualAction": 0,
+    "manualPromptSequence": 50,
+    "manualPromptAskedForOriginalMarkerWithoutGivingIt": true,
+    "assistantMatchedOriginalMarker": true,
+    "terminalResponseSequence": 61,
+    "terminalResponseAfterPromptMs": 1181,
+    "officialList": {
+      "trace": "protocol-v1-1794798429053-1.jsonl",
+      "sameExplicitOriginalWorkingDirectory": true,
+      "exactOriginalShownAlreadyAdded": true,
+      "newCopies": 0,
+      "modelPrompts": 0
+    }
+  },
+  "goose": {
+    "officialVersion": "1.59.1",
+    "source": "existing",
+    "nativeProviderRecorded": "openrouter",
+    "model": "nvidia/nemotron-3.5-super-vl:free",
+    "thinkingEffort": "off",
+    "originalSampleMarker": "FF_C8_B_20261115",
+    "nativeSessionDigestBeforeAndAfter": "dd7e8272572e66bb",
+    "coldEntry": "Farfold global search by original test title",
+    "originalUserAndAssistantVisible": true,
+    "trace": "protocol-v1-1794798505193-3.jsonl",
+    "loadRequestSequence": 3,
+    "loadResultAfterMs": 44,
+    "newSessions": 0,
+    "autoPromptsBeforeManualAction": 0,
+    "manualPromptSequence": 16,
+    "manualPromptAskedForPreviousReplyWithoutGivingIt": true,
+    "assistantMatchedOriginalReply": true,
+    "terminalResponseSequence": 59,
+    "terminalResponseAfterPromptMs": 45085,
+    "officialList": {
+      "trace": "protocol-v1-1794798463968-2.jsonl",
+      "sameExplicitOriginalWorkingDirectory": true,
+      "exactOriginalShownAlreadyAdded": true,
+      "newCopies": 0,
+      "modelPrompts": 0
+    }
+  }
+}

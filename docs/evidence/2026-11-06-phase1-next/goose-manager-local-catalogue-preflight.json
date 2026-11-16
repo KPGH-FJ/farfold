@@ -1,0 +1,40 @@
+{
+  "kind": "OfficialGooseWithIsolatedFarfoldManagerLocalCataloguePreflight",
+  "date": "2026-11-07",
+  "gooseVersion": "1.52.0",
+  "isolatedManagerExecutableSha256": "1a4ccf6b6962dfa915d8f4f9ebe3ff2dec9a86cba9a4c55bcf841ffd5858b051",
+  "sanitizedHarnessReceiptSha256": "fa7ad3361ef4c2acae10e4fc725ef8a7b21eedaa24b9930b5d4250d33ac41277",
+  "isolation": {
+    "exactCopiedOfficialExecutableAndStrictSignaturesVerified": true,
+    "onlyExactLoopbackPortAllowed": true,
+    "productionProfileReadAndWriteDeniedByPolicy": true,
+    "actualWriteToOutsideInertSentinelDenied": true,
+    "keychainMachServicesDenied": true,
+    "ownedProfileAndTmpWritable": true,
+    "realCredentialsOrAccountUsed": false,
+    "isolatedCredentialFileCreated": false
+  },
+  "observed": {
+    "versionCommandExit": 0,
+    "versionCommandUsesPinnedLeadingSpaceFormat": true,
+    "initializeAccepted": 2,
+    "freshOwnedSessionNewRequests": 2,
+    "nativeRowsReadBackWithOpenRouterAndBaselineUltra": 2,
+    "localCatalogueRequests": 1,
+    "nativeInventoryRefreshPersistedBothIntendedModels": true,
+    "firstResponseAndRefreshTimestampWithinSameMillisecond": true,
+    "firstResponseBytesLargerThanSecond": 563,
+    "modelPrompts": 0,
+    "authenticationRequests": 0,
+    "configurationSetters": 0,
+    "coldLoads": 0,
+    "childReapedAndGroupEnded": 2,
+    "forceKillRequested": false,
+    "runnerExit": 101
+  },
+  "wireReceiptSha256": [
+    "ff8ce75773bb7b25d2fd12e3347c1ea6f1170ee15cdae2ae855e6d8350e70798",
+    "76d65d991f26266c722285c938ad5e738c21d5824a3fa2e47882be33066dcf28"
+  ],
+  "remainingCondition": "The first opened session supplied configuration options, but the combined check for exact current provider/model, both offered models and manager readiness failed. The built-in catalogue and asynchronous refresh support a pre-refresh-menu explanation. The millisecond receipt and count-only envelope cannot prove the menu or readiness predicate. Record each field as a separate sanitized assertion before attempting a setter or cold load. No inference about Goose cold reconciliation or installed behavior follows."
+}

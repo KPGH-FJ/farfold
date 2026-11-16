@@ -1,0 +1,34 @@
+{
+  "kind": "InstalledDocxDraftRejectsReplacedSourceBeforeConfirmation",
+  "date": "2026-11-07",
+  "platform": "macOS arm64",
+  "installedSource": "6ce829c5",
+  "scope": "One owned synthetic attachment in an existing completed Copilot test conversation.",
+  "before": {
+    "fileBytes": 1195,
+    "fileSha256": "0f6d5eae8a7d5d26e807eff7a9823a21bd93997a3f19e03295f753e3465399fd",
+    "approvedTextUtf8Bytes": 338,
+    "approvedTextSha256": "048c431c490b19e78153e05f9fe51cfcd15c606c5438d0993e6b9b15c86febf3"
+  },
+  "afterExplicitRereadAndConfirmation": {
+    "fileBytes": 1869,
+    "fileSha256": "964c01b4f2b8ac1e85fe54839b7a6812090c64f5100a0b70c471c97a15d6e5da",
+    "approvedTextUtf8Bytes": 321,
+    "approvedTextSha256": "2b3a208b04ab642b7e290f1f964684e49482f60fe222bd320734d6720a7f4a42"
+  },
+  "observed": {
+    "originalTextShownInSecondPreviewBeforeReplacement": true,
+    "replacedAfterPreviewAtSamePathAndDeviceWithDifferentInode": true,
+    "staleConfirmationMessage": "文件已变化，请重新读取并确认文字后再发送。",
+    "oldApprovedTextAndEntireDraftUnchangedOnRejection": true,
+    "explicitRereadShowedReplacementOnly": true,
+    "sameAttachmentAfterNewConfirmation": true,
+    "newSourceVersionAndTextVerifiedThroughIndependentRead": true,
+    "syntheticDraftAndAttachmentRemoved": true,
+    "originalDraftAndOtherUnsentWorkPreserved": true,
+    "retainedDraftCount": 1,
+    "protectedAndTargetProtocolTapsUnchanged": 4,
+    "newAgentRequests": 0
+  },
+  "boundary": "Warm installed preview confirmation and persisted draft metadata only. Agent receipt, cold reopening and database write failure were outside this run."
+}

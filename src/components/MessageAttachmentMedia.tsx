@@ -10,10 +10,12 @@ export function MessageAttachmentMedia({
   media,
   name,
   onFailure,
+  onFocusedFailure,
 }: {
   media: Media;
   name: string;
   onFailure(): void;
+  onFocusedFailure?(element: HTMLElement): void;
 }) {
   const node = useRef<HTMLImageElement | HTMLAudioElement | null>(null);
   const owner = useRef({ live: false, failed: false });
@@ -64,6 +66,12 @@ export function MessageAttachmentMedia({
     // first, clear only its source, then let the parent release its exact lease.
     current.failed = true;
     node.current = null;
+    if (
+      onFocusedFailure &&
+      element.tagName === "AUDIO" &&
+      element.ownerDocument.activeElement === element
+    )
+      onFocusedFailure(element);
     retire(element);
     onFailure();
   };

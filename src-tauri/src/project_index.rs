@@ -2,8 +2,15 @@
 //! No watcher, saved index, file identity ledger or Agent-side configuration.
 use crate::acp_client::manager::validate_cwd;
 use serde::Serialize;
-use std::path::Path;
+use std::{
+    path::Path,
+    sync::{
+        Arc,
+        atomic::{AtomicBool, Ordering},
+    },
+};
 use tauri::Webview;
+use tokio::sync::Semaphore;
 #[path = "project_index_read.rs"]
 mod read;
 #[path = "project_index_requests.rs"]
@@ -11,6 +18,8 @@ mod requests;
 #[path = "project_index_scan.rs"]
 mod scan;
 pub use scan::ProjectFiles;
+
+static SCAN_ADMISSION: Semaphore = Semaphore::const_new(1);
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 pub struct Failure {
@@ -41,6 +50,28 @@ async fn observe<T: Send + 'static>(
             })
         })?
 }
+async fn observe_scan<T: Send + 'static>(
+    requests: &Arc<requests::Requests>,
+    request_id: String,
+    operation: impl FnOnce(String, &AtomicBool) -> Result<T, Failure> + Send + 'static,
+) -> Result<T, Failure> {
+    let (lease, permit) = requests.begin_with(&request_id, || {
+        SCAN_ADMISSION
+            .try_acquire()
+            .map_err(|_| Failure::new("readBusy"))
+    })?;
+    observe(move || {
+        // A cancelled or unobserved scan may still be in the OS. It retains
+        // this limit so a rescan cannot take the remaining shared read slot.
+        let _permit = permit;
+        let lease = lease;
+        if lease.flag.load(Ordering::Acquire) {
+            return Err(Failure::new("cancelled"));
+        }
+        operation(request_id, &lease.flag)
+    })
+    .await
+}
 #[tauri::command]
 pub async fn project_files(
     webview: Webview,
@@ -48,18 +79,14 @@ pub async fn project_files(
     request_id: String,
 ) -> Result<ProjectFiles, Failure> {
     caller(&webview)?;
-    // Register synchronously, before waiting for worker admission. A cancelled
-    // request is never restarted during its observation/retention period.
-    let lease = requests::shared().begin(&request_id)?;
-    observe(move || {
-        let lease = lease;
-        if lease.flag.load(std::sync::atomic::Ordering::Acquire) {
-            return Err(Failure::new("cancelled"));
-        }
-        let root = validate_cwd(&cwd).map_err(|_| Failure::new("unreadable"))?;
-        scan::scan(&root, request_id, &lease.flag, scan::Limits::default())
-        // lease lives in this real worker, including after IPC wait expires.
-    })
+    observe_scan(
+        &requests::shared(),
+        request_id,
+        move |request_id, cancel| {
+            let root = validate_cwd(&cwd).map_err(|_| Failure::new("unreadable"))?;
+            scan::scan(&root, request_id, cancel, scan::Limits::default())
+        },
+    )
     .await
 }
 #[derive(Debug, Serialize)]

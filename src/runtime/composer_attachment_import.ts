@@ -7,6 +7,7 @@ import {
 import { fileBasename, filePathUri } from "./file_paths";
 import { composerDrafts, type DraftAttachment } from "./drafts";
 import { draftPersistence } from "./draft_storage";
+import { IMAGE_BYTES_STRINGS } from "./image_bytes";
 import {
   IMAGE_INPUT_STRINGS,
   clipboardImageCandidate,
@@ -15,7 +16,7 @@ import {
   validateDraftImage,
 } from "./draft_images";
 
-type Report = (message: string) => void;
+type Report = (message: string, failedImageId?: string) => void;
 
 /** Saving waits only for unfinished input that still belongs to this draft.
  * Withdrawing input does not cancel its underlying read. The actual task still
@@ -165,8 +166,28 @@ export async function addPickedAttachments(
         const candidate = await selectedImageCandidate(
           attachment.uri!,
           imageEnabled,
-        );
-        if (!work.present(attachment)) continue;
+        ).catch((error) => {
+          const message = imageInputError(error);
+          // Only these fixed native outcomes establish a bitmap before reading
+          // all its bytes. An interrupted classifier establishes no file type.
+          const knownImage =
+            imageEnabled &&
+            (message === IMAGE_BYTES_STRINGS.tooLarge ||
+              message === IMAGE_INPUT_STRINGS.changed ||
+              message === IMAGE_INPUT_STRINGS.sourceUnreadable ||
+              message === IMAGE_INPUT_STRINGS.sourceCheckPending);
+          if (
+            work.patch(attachment, {
+              ...(knownImage
+                ? { kind: "image", deliveryMode: undefined }
+                : { imageClassificationFailed: true }),
+              loading: false,
+            })
+          )
+            report(message, attachment.id);
+          return undefined;
+        });
+        if (candidate === undefined || !work.present(attachment)) continue;
         if (!candidate) {
           work.patch(attachment, {
             loading: false,
@@ -207,7 +228,7 @@ export async function addPickedAttachments(
             imageChecked: undefined,
           })
         )
-          report(imageInputError(error));
+          report(imageInputError(error), attachment.id);
       } finally {
         work.done(attachment);
       }
@@ -262,7 +283,7 @@ export function addClipboardImages(
             imageChecked: undefined,
           })
         )
-          report(imageInputError(error));
+          report(imageInputError(error), attachment.id);
       } finally {
         work.done(attachment);
       }

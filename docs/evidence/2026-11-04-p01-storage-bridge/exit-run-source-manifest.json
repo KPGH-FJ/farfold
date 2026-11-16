@@ -1,0 +1,38 @@
+{
+  "kind": "New exit-coordinator fixture input; original first-run inputs remain separately archived",
+  "files": {
+    "src-tauri/src/meta_store/recovery_tests.rs": "6a6d43575e0d7ab3ceb0398f896cd4ae99172831a1ef39cf40f6419f279b4c5b",
+    "src-tauri/src/meta_store.rs": "a9944f7508a2582e2a1b82839a000259b8625bfe3175af96ca567b92afccddc2",
+    "src-tauri/src/storage_recovery/error.rs": "2507beccdf0c3a60b509fb0342c4821d2ea20af4078726bc48b47dadd1377d57",
+    "src/components/DraftStartup.tsx": "cfc318ba341a25c47b8ae6de6919f46df2166e4eddda17fca184ad30c708837d",
+    "src/runtime/drafts.ts": "da471eff093aae6ab7e135a2d293e231eb1b314edca07c62a9759a5cd9e59e50",
+    "src/runtime/draft_storage.ts": "a86d7f616f9d91dd06f9ec1e819cf3a524138fecb1efff0b0dc435eeec961e4c",
+    "src/runtime/storage_recovery.ts": "d5b867d99c32ea9c1008f59629127d8285a3c93e891163029f531203a27d1f10",
+    "vitest.config.ts": "33de2e6955f3800f85a9ff8405af78cc455f39be85d2ef6afd31791c40102ae3",
+    "output/2026-11-04-p01-storage-bridge/frontend-storage-bridge.test.ts": "f1ebd78920e80182fb0108c4848df21873516442ba54a6ca96367da38ad3d673",
+    "output/2026-11-04-p01-storage-bridge/vitest.config.mts": "0476d03e3e12e3556a6f3f6801848a2e6c5522dd478c5e3fafa3e5836b50eb36",
+    "output/2026-11-04-p01-storage-bridge/build-driver.py": "25530f9b6f7eb271b8eb2fcd68521d3b14e702640be51c492da50350f979e28b"
+  },
+  "listedEndpointInputs": 1409,
+  "beforeAfterEqual": true,
+  "sourceEndpoints": {
+    "before": {
+      "path": "output/2026-11-04-p01-storage-bridge/exit-source-before.json",
+      "sha256": "5dd23ec4c5bb5b9a2304c7edfc76ea587756c87fc981950b02a8d57b310268ca"
+    },
+    "after": {
+      "path": "output/2026-11-04-p01-storage-bridge/exit-source-after.json",
+      "sha256": "043a00375d106e0e35bb910ca77cc81e6e82db62c4be1421d5bccccddf771d7d"
+    }
+  },
+  "binaryBinding": {
+    "path": "output/2026-11-04-p01-storage-bridge/driver-binding-exit.json",
+    "sha256": "6db3ae98fb386c9e056fa2a7808c78004e4ecad5cabc3c8b0ec99725b765aa39"
+  },
+  "producerNativeBoundary": "Only the source agent own recorded native inputs/build provenance are inherited, not the original bridge 807-input build freeze. No new Cargo invocation.",
+  "archive": {
+    "path": "docs/evidence/2026-11-04-p01-storage-bridge/exit-run-original-receipts.zip",
+    "sha256": "42050bbcf9b641cdf47de9dab5f66be4b89225e7f14949818b9f26edd6a084f4",
+    "verifiedMembers": 51
+  }
+}

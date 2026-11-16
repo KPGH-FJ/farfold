@@ -17,17 +17,41 @@ export function parseEnvLines(text: string): {
   env: Record<string, string>;
   error: string | null;
 } {
-  const env: Record<string, string> = {};
+  const env: Record<string, string> = Object.create(null);
   for (const line of text.split("\n")) {
-    const trimmed = line.trim();
-    if (!trimmed) continue;
-    const eq = trimmed.indexOf("=");
+    if (!line.trim()) continue;
+    const eq = line.indexOf("=");
     if (eq <= 0) return { env: {}, error: CUSTOM_AGENT.envMissingName };
-    const name = trimmed.slice(0, eq).trim();
+    const name = line.slice(0, eq).trim();
     if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name))
       return { env: {}, error: CUSTOM_AGENT.envInvalid };
-    if (name in env) return { env: {}, error: CUSTOM_AGENT.envDuplicate(name) };
-    env[name] = trimmed.slice(eq + 1);
+    if (Object.hasOwn(env, name))
+      return { env: {}, error: CUSTOM_AGENT.envDuplicate(name) };
+    const value = line.slice(eq + 1);
+    if (value === "__keychain__")
+      return { env: {}, error: CUSTOM_AGENT.envReserved };
+    env[name] = value;
+  }
+  return { env, error: null };
+}
+
+export function parseSecretEntries(
+  entries: { name: string; value: string }[],
+  ordinary: Record<string, string>,
+): { env: Record<string, string>; error: string | null } {
+  const env: Record<string, string> = Object.create(null);
+  for (const entry of entries) {
+    if (!entry.name && !entry.value) continue;
+    const name = entry.name.trim();
+    if (
+      !/^[A-Za-z_][A-Za-z0-9_]*$/.test(name) ||
+      !entry.value.trim() ||
+      /[\x00-\x1f\x7f-\x9f]/.test(entry.value)
+    )
+      return { env: {}, error: CUSTOM_AGENT.secretInvalid };
+    if (Object.hasOwn(ordinary, name) || Object.hasOwn(env, name))
+      return { env: {}, error: CUSTOM_AGENT.envDuplicate(name) };
+    env[name] = entry.value;
   }
   return { env, error: null };
 }
@@ -48,6 +72,9 @@ export function CustomAgentDialog({
   const [command, setCommand] = useState(retained?.command ?? "");
   const [args, setArgs] = useState(retained?.args ?? "");
   const [envText, setEnvText] = useState(retained?.envText ?? "");
+  const [secretEntries, setSecretEntries] = useState(
+    retained?.secretEntries ?? [{ name: "", value: "" }],
+  );
   const [confirmExit, setConfirmExit] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [attempted, setAttempted] = useState(false);
@@ -67,10 +94,12 @@ export function CustomAgentDialog({
       ? CUSTOM_AGENT.commandInvalid
       : null;
   const parsed = parseEnvLines(envText);
-  const valid = !nameError && !commandError && !parsed.error;
+  const protectedEnv = parseSecretEntries(secretEntries, parsed.env);
+  const valid =
+    !nameError && !commandError && !parsed.error && !protectedEnv.error;
   const close = () => {
     if (pending.current) return;
-    if (hasCustomAgentDraft({ name, command, args, envText }))
+    if (hasCustomAgentDraft({ name, command, args, envText, secretEntries }))
       setConfirmExit(true);
     else {
       customAgentDraft.clear();
@@ -111,7 +140,13 @@ export function CustomAgentDialog({
             <button
               className="btn btn-ghost"
               onClick={() => {
-                customAgentDraft.keep({ name, command, args, envText });
+                customAgentDraft.keep({
+                  name,
+                  command,
+                  args,
+                  envText,
+                  secretEntries,
+                });
                 onClose();
               }}
             >
@@ -143,6 +178,9 @@ export function CustomAgentDialog({
                   command: command.trim(),
                   args: args.split("\n").filter(Boolean),
                   env: parsed.env,
+                  ...(Object.keys(protectedEnv.env).length
+                    ? { secretEnv: protectedEnv.env }
+                    : {}),
                 });
                 if (alive.current && agentId) {
                   customAgentDraft.clear();
@@ -212,6 +250,78 @@ export function CustomAgentDialog({
               />
             </label>
             <p className="auth-note">{CUSTOM_AGENT.argsHint}</p>
+            <fieldset className="custom-agent-secrets" disabled={submitting}>
+              <legend>{CUSTOM_AGENT.secretEnv}</legend>
+              {secretEntries.map((entry, index) => (
+                <div key={index}>
+                  <label>
+                    {CUSTOM_AGENT.secretName}
+                    <input
+                      value={entry.name}
+                      aria-invalid={attempted && !!protectedEnv.error}
+                      autoComplete="off"
+                      spellCheck={false}
+                      onChange={(event) =>
+                        setSecretEntries(
+                          secretEntries.map((item, i) =>
+                            i === index
+                              ? { ...item, name: event.target.value }
+                              : item,
+                          ),
+                        )
+                      }
+                    />
+                  </label>
+                  <label>
+                    {CUSTOM_AGENT.secretValue}
+                    <input
+                      type="password"
+                      value={entry.value}
+                      aria-invalid={attempted && !!protectedEnv.error}
+                      autoComplete="new-password"
+                      spellCheck={false}
+                      onChange={(event) =>
+                        setSecretEntries(
+                          secretEntries.map((item, i) =>
+                            i === index
+                              ? { ...item, value: event.target.value }
+                              : item,
+                          ),
+                        )
+                      }
+                    />
+                  </label>
+                  {secretEntries.length > 1 && (
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      onClick={() =>
+                        setSecretEntries(
+                          secretEntries.filter((_, i) => i !== index),
+                        )
+                      }
+                    >
+                      {CUSTOM_AGENT.removeSecret}
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() =>
+                  setSecretEntries([...secretEntries, { name: "", value: "" }])
+                }
+              >
+                {CUSTOM_AGENT.addSecret}
+              </button>
+              <p className="auth-note">{CUSTOM_AGENT.secretHint}</p>
+              {attempted && protectedEnv.error && (
+                <p role="alert" className="workspace-error">
+                  {protectedEnv.error}
+                </p>
+              )}
+            </fieldset>
             <label>
               {CUSTOM_AGENT.env}
               <textarea
@@ -244,7 +354,7 @@ export function CustomAgentDialog({
             >
               {CUSTOM_AGENT.cancel}
             </button>
-            <button className="btn btn-primary" disabled={!valid || submitting}>
+            <button className="btn btn-primary" disabled={submitting}>
               {submitting ? CUSTOM_AGENT.adding : CUSTOM_AGENT.add}
             </button>
           </footer>

@@ -147,6 +147,29 @@ async fn configuration_change_failed_save_retries_source_and_guard_together() {
     let saved = stored(&context);
     assert_eq!(saved["_farfoldService"]["identity"]["model"], "b");
     assert_eq!(saved["choices"], guard.record()["choices"]);
+    let confirmed_options = options("farfold_fixture/b", "medium");
+    let permissions = PermissionGuard::new(false, &confirmed_options, false);
+    let snapshot = configuration_snapshot(
+        confirmed_options.clone(),
+        true,
+        &guard,
+        &context,
+        &permissions,
+    );
+    assert_eq!(snapshot["configOptions"], confirmed_options);
+    assert_eq!(snapshot["configOptionsModern"], true);
+    assert_eq!(
+        snapshot["configCheck"],
+        serde_json::to_value(guard.check()).unwrap()
+    );
+    assert_eq!(
+        snapshot["service"],
+        serde_json::to_value(identity(&context)).unwrap()
+    );
+    assert_eq!(snapshot["service"]["model"], "b");
+    assert_eq!(snapshot["permissionConfigId"], Value::Null);
+    assert_eq!(snapshot["permissionState"], "ready");
+    assert_eq!(snapshot["permissionEffect"], Value::Null);
     let restored = ModelGuard::new(&options("farfold_fixture/b", "medium"), Some(&saved), true);
     assert!(restored.admissible());
 }

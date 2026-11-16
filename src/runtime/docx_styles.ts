@@ -6,6 +6,7 @@ import {
   type DocxWarningCode,
 } from "./docx_types";
 import { DocxPackage } from "./docx_package";
+import { wordThemeColor } from "./docx_theme_color";
 import {
   A,
   W,
@@ -115,7 +116,8 @@ export class DocxStyles {
     const raw = attr(n, valueName);
     let value =
       raw && /^[\da-f]{6}$/i.test(raw) ? "#" + raw.toUpperCase() : undefined;
-    const themeName = attr(n, "themeColor") ?? attr(n, "themeFill");
+    const fill = valueName === "fill";
+    const themeName = attr(n, fill ? "themeFill" : "themeColor");
     if (themeName) {
       const aliases: Record<string, string> = {
         dark1: "dk1",
@@ -128,26 +130,16 @@ export class DocxStyles {
       value = this.theme.get(aliases[themeName] ?? themeName);
     }
     if (value) {
-      const tint = attr(n, "themeTint") ?? attr(n, "themeFillTint"),
-        shade = attr(n, "themeShade") ?? attr(n, "themeFillShade");
-      if (tint || shade) {
+      const tint = attr(n, fill ? "themeFillTint" : "themeTint"),
+        shade = attr(n, fill ? "themeFillShade" : "themeShade");
+      if (themeName && (tint !== undefined || shade !== undefined)) {
         const variant = tint ?? shade!;
-        if (!/^[\da-f]{2}$/i.test(variant) || (tint && shade)) {
+        if (!/^[\da-f]{2}$/i.test(variant)) {
           this.warn("unsupportedFormatting");
           return value;
         }
-        const amount = parseInt(variant, 16) / 255;
-        value =
-          "#" +
-          [1, 3, 5]
-            .map((at) => {
-              const c = parseInt(value!.slice(at, at + 2), 16);
-              return Math.round(tint ? c + (255 - c) * amount : c * amount)
-                .toString(16)
-                .padStart(2, "0");
-            })
-            .join("")
-            .toUpperCase();
+        // Word gives tint precedence when both modifiers are present.
+        value = wordThemeColor(value, variant, tint !== undefined);
       }
       return value;
     }
@@ -155,6 +147,13 @@ export class DocxStyles {
       this.warn("unsupportedFormatting");
     if (themeName) this.warn("unsupportedFormatting");
     return undefined;
+  }
+  shading(n: DocxXml): string | undefined {
+    const pattern = val(n) ?? "clear";
+    if (pattern === "nil") return undefined;
+    if (pattern === "solid") return this.color(n, "color");
+    if (pattern !== "clear") this.warn("unsupportedFormatting");
+    return this.color(n, "fill");
   }
   runProperties(
     n: DocxXml | undefined,
@@ -195,9 +194,7 @@ export class DocxStyles {
           break;
         }
         case "shd":
-          result.background = this.color(p, "fill");
-          if (val(p) && !["clear", "nil", "solid"].includes(val(p)!))
-            this.warn("unsupportedFormatting");
+          result.background = this.shading(p);
           break;
         case "u": {
           const v = val(p) ?? "single";

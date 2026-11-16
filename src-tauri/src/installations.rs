@@ -10,6 +10,8 @@ use tauri::{AppHandle, Manager};
 static MUTATION: std::sync::Mutex<()> = std::sync::Mutex::new(());
 const KEY: &str = "installations.v1";
 #[cfg(test)]
+mod secure_environment_tests;
+#[cfg(test)]
 mod startup_parameter_tests;
 #[cfg(test)]
 mod uninstall_history_tests;
@@ -522,13 +524,26 @@ pub async fn agent_installation_uninstall(
     agent_id: String,
     installation_id: String,
 ) -> Result<(), String> {
+    let activity = crate::managed_update::activity()?;
     let _guard = crate::install_job::configuration_guard(&agent_id).await;
     crate::agent_install::release_connections(&app, &agent_id).await?;
-    tauri::async_runtime::spawn_blocking(move || {
+    uninstall_owned(activity, move || {
         let _guard = _guard;
         let store = app.state::<MetaStore>();
         let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
         remove_installed(&store, &data, &agent_id, &installation_id)
+    })
+    .await
+}
+
+// The admitted worker owns its permit even if the IPC observer disappears.
+async fn uninstall_owned(
+    activity: crate::managed_update::ActivityPermit,
+    operation: impl FnOnce() -> Result<(), String> + Send + 'static,
+) -> Result<(), String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let _activity = activity;
+        operation()
     })
     .await
     .map_err(|_| "卸载未完成，请重试".to_string())?
@@ -539,7 +554,23 @@ pub(crate) fn remove_installed(
     agent_id: &str,
     installation_id: &str,
 ) -> Result<(), String> {
+    remove_installed_with_lookup(
+        store,
+        data,
+        agent_id,
+        installation_id,
+        &crate::auth::keychain_lookup,
+    )
+}
+fn remove_installed_with_lookup(
+    store: &MetaStore,
+    data: &Path,
+    agent_id: &str,
+    installation_id: &str,
+    lookup: &dyn Fn(&str) -> Option<String>,
+) -> Result<(), String> {
     let _lock = MUTATION.lock().map_err(|_| "程序清单暂时不可用")?;
+    store.require_mcp_agent_ready(agent_id)?;
     let mut items = read(store)?;
     let item = items
         .iter()
@@ -565,11 +596,18 @@ pub(crate) fn remove_installed(
         .collect();
     // Missing means a previous removal succeeded but metadata persistence failed.
     if root.symlink_metadata().is_ok() {
+        let _environment = crate::auth::agent_environment::read_guard()?;
         for row in store.list_agents()? {
+            let environment = crate::auth::resolve_agent_env_with(&row.id, &row.env, lookup)
+                .map_err(
+                    |_| "无法核对安全环境变量中的程序路径，程序已保留，请检查系统凭据后重试",
+                )?;
             if std::iter::once(row.command.as_str())
                 .chain(row.args.iter().map(String::as_str))
-                .chain(row.env.iter().map(|(_, v)| v.as_str()))
                 .any(|p| program_under_root(p, &root))
+                || environment
+                    .iter()
+                    .any(|(name, value)| environment_program_under_root(name, value, &root))
             {
                 return Err("另一个接入仍在使用此程序，请先更换其程序".into());
             }
@@ -619,6 +657,19 @@ fn launch_under_root<'a>(
         .into_iter()
         .chain(args)
         .any(|path| program_under_root(path, root))
+}
+
+fn environment_program_under_root(name: &str, value: &str, root: &Path) -> bool {
+    if crate::shell_env::EnvNames::current().matches(name, "PATH") {
+        // PATH has platform-defined list syntax. Do not guess that arbitrary
+        // option/secret strings are path lists or persist their parsed contents.
+        std::env::split_paths(value).any(|path| {
+            path.to_str()
+                .is_some_and(|value| program_under_root(value, root))
+        })
+    } else {
+        program_under_root(value, root)
+    }
 }
 
 fn program_under_root(value: &str, root: &Path) -> bool {
@@ -682,6 +733,16 @@ mod program_directory_tests;
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn remove_installed(
+        store: &MetaStore,
+        data: &Path,
+        agent_id: &str,
+        installation_id: &str,
+    ) -> Result<(), String> {
+        super::remove_installed_with_lookup(store, data, agent_id, installation_id, &|_| {
+            Some("synthetic-credential-value".into())
+        })
+    }
 
     pub(super) fn candidate_fixture(store: &MetaStore, root: &Path) -> (AgentRow, ProgramReceipt) {
         std::fs::create_dir_all(root).unwrap();

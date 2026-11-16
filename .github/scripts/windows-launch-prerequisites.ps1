@@ -1,6 +1,7 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery', 'FrozenRetirementResume', 'OpenFailureDiagnostics', 'McpScope', 'RecoveryApproval', 'SharedManagement')][string]$Cohort = 'LaunchPrerequisites',
+  [ValidateSet('All', 'Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal', 'Frontend', 'FullRunFailures', 'BoundaryWaits')][string]$Phase = 'All'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -30,10 +31,240 @@ function Confirm-Inputs {
       (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -cne $selection.fixtureSha256) {
     throw 'Selected Windows test executable or fixture changed'
   }
+  if ($Cohort -cin @('OpenFailureDiagnostics', 'McpScope', 'RecoveryApproval', 'SharedManagement')) {
+    $frontendRequired = if ($Cohort -ceq 'SharedManagement') {
+      @('src/components/PermissionMeaning.test.tsx', 'src/runtime/skill_management.retained-write.test.tsx', 'src/runtime/skill_management_controller.ts', 'src/runtime/skill_management_strings.ts', 'src/components/SkillChangeReview.tsx', 'src-tauri/src/acp_client/skill_management/mod.rs', 'src-tauri/src/acp_client/skill_management/shared_scope_tests.rs', 'src-tauri/src/acp_client/pump.rs', 'src-tauri/src/acp_client/pump/restore_config.rs', 'src-tauri/src/acp_client/pump/restore_pending_tests.rs', 'src-tauri/src/acp_client/pump/restore_tests.rs', 'src-tauri/src/acp_client/mutation/restore_tests.rs')
+    } elseif ($Cohort -ceq 'RecoveryApproval') {
+      @('src/runtime/permission_options.test.tsx', 'src/runtime/opening_permissions.test.ts', 'src/runtime/sessions.recovery-user-work.test.ts', 'src/components/Composer.send-ownership.test.tsx')
+    } elseif ($Cohort -ceq 'McpScope') {
+      @('src/runtime/mcp_scope_refusal.wire.test.tsx', 'src/components/SkillChangeReview.mcp.test.tsx', 'src/runtime/draft_storage.queue-schema.test.ts', 'src/runtime/fixtures/mcp-scope-refusals-wire.json', 'src/components/SkillChangeReview.tsx')
+    } else { @('src/runtime/ui_error.test.ts', 'src/components/ThreadView.history-recovery.test.tsx') }
+    foreach ($required in $frontendRequired + @('package.json', 'pnpm-lock.yaml', 'tsconfig.json', 'tsconfig.app.json', 'tsconfig.node.json', 'vite.config.ts', 'vitest.config.ts', 'index.html')) {
+      if (-not $sourceMap.ContainsKey($required)) { throw "Selected frontend input missing: $required" }
+    }
+    foreach ($path in $sourceMap.Keys) {
+      if ((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() -cne $sourceMap[$path]) {
+        $sourceLabel = if ($Cohort -ceq 'SharedManagement') { 'shared-management' } elseif ($Cohort -ceq 'RecoveryApproval') { 'recovery/approval' } elseif ($Cohort -ceq 'McpScope') { 'MCP' } else { 'open-failure' }
+        throw "Selected $sourceLabel source changed: $path"
+      }
+    }
+  }
 }
 
 Confirm-Inputs
-$groups = if ($Cohort -ceq 'RemoveFixtures') {
+$allowedPhases = if ($Cohort -ceq 'FrozenRetirementResume') {
+  @('Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal', 'FullRunFailures', 'BoundaryWaits')
+} elseif ($Cohort -cin @('OpenFailureDiagnostics', 'McpScope', 'RecoveryApproval', 'SharedManagement')) {
+  @('All', 'Frontend')
+} else { @('All') }
+if ($Phase -cnotin $allowedPhases) {
+  throw 'Selected cohort does not accept this diagnostic phase'
+}
+if ($Cohort -cin @('OpenFailureDiagnostics', 'McpScope', 'RecoveryApproval', 'SharedManagement') -and $Phase -ceq 'Frontend') {
+  $receiptPrefix = if ($Cohort -ceq 'SharedManagement') { 'shared-management' } elseif ($Cohort -ceq 'RecoveryApproval') { 'recovery-approval' } elseif ($Cohort -ceq 'McpScope') { 'mcp-scope' } else { 'open-failure' }
+  $expectedFrontendTests = if ($Cohort -ceq 'SharedManagement') { 20 } elseif ($Cohort -ceq 'RecoveryApproval') { 28 } elseif ($Cohort -ceq 'McpScope') { 15 } else { 51 }
+  $testFiles = if ($Cohort -ceq 'SharedManagement') {
+      @('src/components/PermissionMeaning.test.tsx', 'src/runtime/skill_management.retained-write.test.tsx')
+    } elseif ($Cohort -ceq 'RecoveryApproval') {
+    @('src/runtime/permission_options.test.tsx', 'src/runtime/opening_permissions.test.ts', 'src/runtime/sessions.recovery-user-work.test.ts', 'src/components/Composer.send-ownership.test.tsx')
+  } elseif ($Cohort -ceq 'McpScope') {
+    @('src/runtime/mcp_scope_refusal.wire.test.tsx', 'src/components/SkillChangeReview.mcp.test.tsx', 'src/runtime/draft_storage.queue-schema.test.ts')
+  } else { @('src/runtime/ui_error.test.ts', 'src/components/ThreadView.history-recovery.test.tsx') }
+  $reportPath = Join-Path $raw ($receiptPrefix + '-frontend.vitest.json')
+  if (Test-Path -LiteralPath $reportPath) { throw 'Selected frontend report already exists' }
+  $started = [DateTime]::UtcNow.ToString('o')
+  $typecheckExit = $null
+  $testExit = $null
+  $nodeVersion = $null
+  $pnpmVersion = $null
+  $actualFiles = @()
+  $actualTests = 0
+  $exactFiles = $false
+  $exactAllPassed = $false
+  $sourceInputsStable = $false
+  $failure = $null
+  $frontendExit = 1
+  try {
+    $nodeVersion = (& node --version | Out-String).Trim()
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to read the selected Node version' }
+    $pnpmVersion = (& corepack pnpm --version | Out-String).Trim()
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to read the selected pnpm version' }
+    & corepack pnpm typecheck 1> (Join-Path $raw ($receiptPrefix + '-typecheck.stdout.log')) 2> (Join-Path $raw ($receiptPrefix + '-typecheck.stderr.log'))
+    $typecheckExit = [int]$LASTEXITCODE
+    & corepack pnpm exec vitest run @testFiles --reporter=json "--outputFile=$reportPath" 1> (Join-Path $raw ($receiptPrefix + '-frontend.stdout.log')) 2> (Join-Path $raw ($receiptPrefix + '-frontend.stderr.log'))
+    $testExit = [int]$LASTEXITCODE
+    $report = Get-Content -LiteralPath $reportPath -Raw -ErrorAction Stop | ConvertFrom-Json
+    $files = @($report.testResults)
+    $expectedFiles = @($testFiles | ForEach-Object { [IO.Path]::GetFullPath((Join-Path $PWD $_)).Replace('\', '/').ToLowerInvariant() })
+    $actualFiles = @($files | ForEach-Object { [IO.Path]::GetFullPath($_.name).Replace('\', '/').ToLowerInvariant() })
+    $exactFiles = $actualFiles.Count -eq $testFiles.Count -and @($expectedFiles | Where-Object { $_ -cnotin $actualFiles }).Count -eq 0
+    $cases = @($files | ForEach-Object { $_.assertionResults })
+    $actualTests = $cases.Count
+    $exactAllPassed = $testExit -eq 0 -and $exactFiles -and $report.success -eq $true -and
+      $report.numTotalTests -eq $expectedFrontendTests -and $report.numPassedTests -eq $expectedFrontendTests -and $report.numFailedTests -eq 0 -and
+      $report.numPendingTests -eq 0 -and $report.numTodoTests -eq 0 -and $actualTests -eq $expectedFrontendTests -and
+      @($files | Where-Object { $_.status -cne 'passed' }).Count -eq 0 -and
+      @($cases | Where-Object { $_.status -cne 'passed' }).Count -eq 0
+    if ($typecheckExit -ne 0 -or -not $exactAllPassed) { throw "Selected frontend checks failed or did not execute the exact $($testFiles.Count) files and $expectedFrontendTests tests" }
+    $frontendExit = 0
+  } catch {
+    $failure = $_.Exception.Message
+    Write-Output $failure
+  } finally {
+    try { Confirm-Inputs; $sourceInputsStable = $true } catch { $failure = $_.Exception.Message; $frontendExit = 1 }
+    $rawHashes = [ordered]@{}
+    foreach ($name in @(($receiptPrefix + '-typecheck.stdout.log'), ($receiptPrefix + '-typecheck.stderr.log'), ($receiptPrefix + '-frontend.stdout.log'), ($receiptPrefix + '-frontend.stderr.log'), ($receiptPrefix + '-frontend.vitest.json'))) {
+      $path = Join-Path $raw $name
+      if (Test-Path -LiteralPath $path -PathType Leaf) {
+        $rawHashes[$name] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash
+        if ($name -cne ($receiptPrefix + '-frontend.vitest.json')) { Get-Content -LiteralPath $path }
+      }
+    }
+    [ordered]@{
+      sourceHead = $ExpectedHead; cohort = $Cohort; phase = $Phase
+      startedAtUtc = $started; finishedAtUtc = [DateTime]::UtcNow.ToString('o')
+      nodeVersion = $nodeVersion; pnpmVersion = $pnpmVersion
+      typecheckNaturalExitCode = $typecheckExit; testNaturalExitCode = $testExit
+      expectedFiles = $testFiles; actualFiles = $actualFiles; expectedTests = $expectedFrontendTests; actualTests = $actualTests
+      exactFiles = $exactFiles; exactAllPassed = $exactAllPassed
+      allReturned = $null -ne $typecheckExit -and $null -ne $testExit
+      sourceInputsStable = $sourceInputsStable; failure = $failure; runnerExitCode = $frontendExit
+      selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+      inputsAfterSha256 = $selection.inputsAfterSha256
+      testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+      rawFileSha256 = $rawHashes; productOrAllWindowsComplete = $false
+    } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw ($receiptPrefix + '-Frontend.result.json')) -Encoding utf8
+  }
+  exit $frontendExit
+}
+$groups = if ($Cohort -ceq 'SharedManagement') {
+  @{
+    name = 'shared-management-worker'; filter = 'acp_client::skill_management::shared_scope_tests::'; exact = $false; threads = 1
+    names = @(
+      'acp_client::skill_management::shared_scope_tests::management_enablement_claim_blocks_another_known_installation',
+      'acp_client::skill_management::shared_scope_tests::management_addition_claim_blocks_another_known_installation',
+      'acp_client::skill_management::shared_scope_tests::management_removal_claim_blocks_another_known_installation',
+      'acp_client::skill_management::shared_scope_tests::management_inspect_and_recheck_keep_existing_read_admission',
+      'acp_client::skill_management::shared_scope_tests::management_cancelled_unknown_worker_keeps_family_claim_until_actual_finish'
+    )
+  }
+  @{
+    name = 'restore-first-poll'; filter = 'acp_client::pump::restore_pending_tests::'; exact = $false; threads = 2
+    names = @(
+      'acp_client::pump::restore_pending_tests::changed_permission_blocks_unstarted_restore',
+      'acp_client::pump::restore_pending_tests::closed_restore_owner_does_not_poll_pending_request',
+      'acp_client::pump::restore_pending_tests::received_busy_work_blocks_unstarted_restore',
+      'acp_client::pump::restore_pending_tests::received_model_drift_blocks_unstarted_restore',
+      'acp_client::pump::restore_pending_tests::removed_requested_choice_blocks_unstarted_restore',
+      'acp_client::pump::restore_pending_tests::started_restore_keeps_its_original_future_after_drift',
+      'acp_client::pump::restore_pending_tests::unchanged_pending_restore_is_polled'
+    )
+  }
+  @{
+    name = 'restore-configuration'; filter = 'acp_client::pump::restore_tests::'; exact = $false; threads = 2
+    names = @(
+      'acp_client::pump::restore_tests::configuration_restore_async_task_busy_blocks_automatic_mutation',
+      'acp_client::pump::restore_tests::configuration_restore_async_task_terminal_still_allows_saved_selection',
+      'acp_client::pump::restore_tests::configuration_restore_confirmed_replay_save_failure_keeps_baseline_and_never_ready',
+      'acp_client::pump::restore_tests::configuration_restore_last_reply_followed_by_drift_never_publishes_stale_ready',
+      'acp_client::pump::restore_tests::configuration_restore_load_defaults_replays_model_then_saved_thought_on_same_session',
+      'acp_client::pump::restore_tests::configuration_restore_post_reply_model_drift_blocks_after_receiving_it',
+      'acp_client::pump::restore_tests::configuration_restore_post_reply_thought_drift_blocks_after_receiving_it',
+      'acp_client::pump::restore_tests::configuration_restore_rejected_or_wrong_reply_keeps_saved_baseline_and_blocks_prompt',
+      'acp_client::pump::restore_tests::flow_load_configuration_before_long_prefix_reaches_original_reply_without_losing_raw_events',
+      'acp_client::pump::restore_tests::readonly::import_preview_keeps_the_existing_saved_choice_restore',
+      'acp_client::pump::restore_tests::readonly::search_read_preview_direct_actor_config_is_never_dispatched',
+      'acp_client::pump::restore_tests::readonly::search_read_preview_direct_actor_mode_and_delete_do_not_dispatch',
+      'acp_client::pump::restore_tests::readonly::search_read_preview_fifo_task_stop_never_dispatches',
+      'acp_client::pump::restore_tests::readonly::search_read_preview_keeps_missing_and_existing_source_distinct_without_injection',
+      'acp_client::pump::restore_tests::readonly::search_read_preview_keeps_saved_source_validation_before_load',
+      'acp_client::pump::restore_tests::readonly::search_read_preview_never_restores_or_saves_the_saved_choice'
+    )
+  }
+  @{
+    name = 'restore-owner-deadline'; filter = 'acp_client::mutation::restore_tests::'; exact = $false; threads = 1
+    names = @(
+      'acp_client::mutation::restore_tests::configuration_restore_continuation_closed_caller_never_polls_next_request',
+      'acp_client::mutation::restore_tests::configuration_restore_continuation_expired_before_dispatch_never_polls_next_request'
+    )
+  }
+} elseif ($Cohort -ceq 'McpScope') {
+  @{
+    name = 'mcp-scope-worker'; filter = 'acp_client::skill_management::mcp_tests::'; exact = $false; threads = 1
+    names = @(
+      'acp_client::skill_management::mcp_tests::mcp_fixed_exchange_preserves_unknown_config_and_reports_no_connection_claim',
+      'acp_client::skill_management::mcp_tests::mcp_inherited_or_project_same_name_refuses_without_write',
+      'acp_client::skill_management::mcp_tests::mcp_scope_project_only_is_precise_and_never_writes',
+      'acp_client::skill_management::mcp_tests::mcp_scope_inherited_is_precise_and_never_writes',
+      'acp_client::skill_management::mcp_tests::mcp_scope_cross_layer_conflict_is_precise_and_never_writes',
+      'acp_client::skill_management::mcp_tests::mcp_scope_untrusted_sources_keep_the_generic_refusal',
+      'acp_client::skill_management::mcp_tests::mcp_scope_disabled_project_source_does_not_block_the_user_review',
+      'acp_client::skill_management::mcp_tests::mcp_scope_user_only_unknown_source_metadata_keeps_existing_review',
+      'acp_client::skill_management::mcp_tests::mcp_scope_duplicate_same_user_source_keeps_generic_refusal',
+      'acp_client::skill_management::mcp_tests::mcp_scope_duplicate_user_source_changed_snapshot_keeps_generic_refusal',
+      'acp_client::skill_management::mcp_tests::mcp_scope_duplicate_user_default_profile_keeps_generic_refusal',
+      'acp_client::skill_management::mcp_tests::mcp_postwrite_failures_never_become_cancelled_or_verified',
+      'acp_client::skill_management::mcp_tests::mcp_acknowledged_readback_change_is_mismatch_and_refusal_is_rejected',
+      'acp_client::skill_management::mcp_tests::mcp_ready_inventory_cancel_revokes_existing_review',
+      'acp_client::skill_management::mcp_tests::mcp_actual_serialized_wire_from_production_fixed_exchange',
+      'acp_client::skill_management::mcp_tests::mcp_postget_filter_drift_cannot_verify_the_reviewed_target',
+      'acp_client::skill_management::mcp_tests::mcp_http_profile_literal_names_default_enabled_and_unrelated_values_are_preserved',
+      'acp_client::skill_management::mcp_tests::mcp_initial_user_and_reported_enabled_mismatch_cannot_issue_a_plan'
+    )
+  }
+} elseif ($Cohort -ceq 'RecoveryApproval') {
+  @{
+    name = 'recovery-approval-worker'; filter = 'acp_client::permission_request_tests::'; exact = $false; threads = 1
+    names = @(
+      'acp_client::permission_request_tests::permission_request_preserves_full_params_and_compatibility_fields',
+      'acp_client::permission_request_tests::ambiguous_permission_option_cannot_consume_the_original_responder'
+    )
+  }
+} elseif ($Cohort -ceq 'OpenFailureDiagnostics') {
+  $wait = 'acp_client::wait::tests::'
+  @{
+    name = 'open-wait-replies'; filter = $wait; exact = $false
+    names = @(
+      "${wait}typed_reply_classifies_only_outer_oneshot_failures",
+      "${wait}replies_yield_and_distinguish_timeout_from_closed"
+    )
+  }
+  $reply = 'acp_client::session::open_reply_tests::'
+  @{
+    name = 'open-reply-diagnostics'; filter = $reply; exact = $false
+    names = @(
+      "${reply}open_reply_timeout_is_fixed_and_late_receipt_returns_to_sender",
+      "${reply}open_reply_closed_is_fixed_without_a_remote_error",
+      "${reply}open_reply_keeps_delayed_success_and_inner_manager_errors"
+    )
+  }
+  $delivery = 'acp_client::lifecycle_tests::open_delivery_tests::'
+  @{
+    name = 'open-delivery-ownership'; filter = $delivery; exact = $false
+    names = @(
+      "${delivery}open_delivery_success_releases_both_reservations_before_actual_reply",
+      "${delivery}open_delivery_failure_releases_both_reservations_before_actual_reply",
+      "${delivery}open_delivery_receiver_drops_during_notification_retains_identity_until_reaping",
+      "${delivery}open_delivery_buffered_success_is_owned_until_consumed_or_dropped",
+      "${delivery}open_delivery_timeout_keeps_native_reservation_until_actual_process_reaping",
+      "${delivery}open_delivery_abandoned_caller_keeps_native_reservation_until_actual_process_reaping",
+      "${delivery}open_delivery_unstarted_expired_or_closed_queue_never_sends_load",
+      "${delivery}cold_admission_unconsumed_delivery_holds_slot_until_real_reap",
+      "${delivery}cold_admission_timeout_holds_slot_until_real_reap"
+    )
+  }
+  $test = 'acp_client::operations::open_result::tests::open_delivery_closing_retains_reservation_until_process_completion'
+  @{ name = 'open-result-reservation'; filter = $test; exact = $true; names = @($test) }
+  $fork = 'acp_client::session_fork::owner_tests::'
+  @{
+    name = 'fork-owner-preservation'; filter = $fork; exact = $false
+    names = @(
+      "${fork}fork_observer_keeps_open_identity_after_all_delivery_and_pump_owners_drop",
+      "${fork}fork_observer_retires_on_whole_operation_finish_while_parent_stays_live",
+      "${fork}fork_observer_source_release_does_not_end_pending_destination_after_parent_reap"
+    )
+  }
+} elseif ($Cohort -ceq 'RemoveFixtures') {
   $test = 'worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material'
   @{ name = 'recovery-material-identity'; filter = $test; exact = $true; names = @($test) }
   $test = 'worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification'
@@ -58,7 +289,30 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
   foreach ($test in $tests.GetEnumerator()) {
     @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
   }
-} elseif ($Cohort -cin @('CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery')) {
+} elseif ($Cohort -cin @('CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery', 'FrozenRetirementResume')) {
+  if ($Cohort -ceq 'FrozenRetirementResume') {
+    # Run the four frozen candidate regressions first, without changing their
+    # assertions or reopening the separate historical-gap challenge cohort.
+    $lifetime = 'windows_process::current_members::tests::lifetime_tests::'
+    $tests = [ordered]@{
+      'lifetime-complete-retirement' = "${lifetime}complete_live_objects_retire_original_job_without_clearing_historical_gap"
+      'lifetime-missing-object-refused' = "${lifetime}reopening_signaled_objects_never_compensates_for_an_unobserved_original_member"
+      'lifetime-leader-context-refused' = "${lifetime}missing_or_changed_leader_context_permanently_refuses_lifetime_proof"
+      'lifetime-count-overflow-refused' = "${lifetime}checked_live_count_overflow_cannot_supply_lifetime_coverage"
+    }
+    foreach ($test in $tests.GetEnumerator()) {
+      @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+    }
+    $terminal = 'platform_tests::windows_conpty::'
+    $tests = [ordered]@{
+      'terminal-manager-python' = "${terminal}actual_manager_with_valid_windows_python_is_bounded"
+      'terminal-manager-no-reply-close' = "${terminal}manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup"
+      'terminal-raw-cursor-reply' = "${terminal}raw_conpty_replies_only_to_an_observed_query"
+    }
+    foreach ($test in $tests.GetEnumerator()) {
+      @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+    }
+  }
   if ($Cohort -ceq 'CreateEofChallenge') {
     $test = 'windows_process::current_members::tests::gap_shadow_tests::native_zero_empty_window_never_precedes_untracked_exact_target_signal'
     @{ name = 'job-gap-shadow-challenge'; filter = $test; exact = $true; names = @($test); ignored = $true }
@@ -79,7 +333,7 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
       'worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved'
     )
   }
-  if ($Cohort -cin @('CreateEofChallenge', 'GitCompletionRecovery')) {
+  if ($Cohort -cin @('CreateEofChallenge', 'GitCompletionRecovery', 'FrozenRetirementResume')) {
     $parallel = @(
       'worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved',
       'acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases'
@@ -91,7 +345,7 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
     'worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved'
   )
   @{ name = 'archive-create-paired'; filter = $archivePair; exact = $false; threads = 2; names = $archivePair }
-  if ($Cohort -ceq 'GitCompletionRecovery') {
+  if ($Cohort -cin @('GitCompletionRecovery', 'FrozenRetirementResume')) {
     $test = 'windows_process::debug_certificate::tests::certificate_requires_every_distinct_original_object_signal'
     @{ name = 'git-complete-object-certificate'; filter = $test; exact = $true; names = @($test) }
     $test = 'acp_client::active_prompt_tests::eof_descendant_tests::actual_eof_descendant_exit_edge_isolated'
@@ -321,7 +575,270 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
     names = @('worktrees::windows_git::launch_matrix_tests::owned_same_program_known_config_extended_plain_observations_preserve_original_owner')
   }
 ) }
+if ($Cohort -ceq 'FrozenRetirementResume') {
+  $retirementGroups = @('lifetime-complete-retirement', 'lifetime-missing-object-refused', 'lifetime-leader-context-refused', 'lifetime-count-overflow-refused', 'acp-eof-retirement', 'acp-eof-descendant-edge')
+  $gitGroups = @('git-complete-object-certificate', 'git-original-owner-lifecycle', 'git-finite-input')
+  $terminalGroups = @('terminal-manager-python', 'terminal-manager-no-reply-close', 'terminal-raw-cursor-reply')
+  $groupNames = @($groups | ForEach-Object { $_.name })
+  $plannedExecutions = @($groups | ForEach-Object { $_.names.Count } | Measure-Object -Sum).Sum
+  if ($groups.Count -ne 26 -or @($groupNames | Select-Object -Unique).Count -ne 26 -or $plannedExecutions -ne 45) {
+    throw 'Resumed frozen candidate inventory changed'
+  }
+  $selectedGroupNames = switch ($Phase) {
+    'Retirement' { $retirementGroups }
+    'GitControls' { $gitGroups }
+    'Terminal' { $terminalGroups }
+    'CreateTiming' { 'create-existing-branch' }
+    'CreateUnfinished' { 'create-official-config-aliases', 'create-cold-location', 'create-storage-failure', 'create-new-branch' }
+    'CreateRecovery' { $groupNames | Where-Object { $_ -cnotin ($retirementGroups + $gitGroups + $terminalGroups) } }
+  }
+  $groups = @($groups | Where-Object { $_.name -cin $selectedGroupNames })
+  if ($Phase -ceq 'CreateUnfinished') {
+    # Only the nine actual failures from41818072244. The other original tests
+    # keep their existing cohort selection; no passing sibling is added here.
+    $remainingTests = [ordered]@{
+      'recovery-orphan-roots' = 'worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline'
+      'recovery-confirmation-reflog' = 'worktrees::remove_boundary_tests::remove_confirmation_rechecks_reflog_evidence_even_same_root_set'
+      'recovery-confirmation-corrupt' = 'worktrees::remove_boundary_tests::remove_confirmation_rejects_corrupt_bundle_and_keeps_source'
+      'recovery-cold-dispatched' = 'worktrees::remove_boundary_tests::remove_cold_dispatched_record_survives_next_intent_and_reconciles_exact_absence'
+      'recovery-cold-contract' = 'worktrees::remove_boundary_tests::remove_cold_contract_rejects_misaligned_recovery_and_duplicate_ids'
+    }
+    $groups += @(foreach ($test in $remainingTests.GetEnumerator()) {
+      @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+    })
+  }
+  if ($Phase -ceq 'FullRunFailures') {
+    # Exactly the five distinct failures observed before full41830692244 was
+    # cancelled. Preserve the ordinary cohort and its paired selections.
+    $history = 'acp_client::history_search::tests::real_cancel_keeps_worker_scope_and_budget_until_owned_process_exit'
+    $recoveries = @(
+      'worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts',
+      'worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline'
+    )
+    $parentBudgets = @(
+      'worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest',
+      'worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material'
+    )
+    # Worktree --exact invocations are the isolated child entrypoint. Keep the
+    # full-suite parent wrapper active, including contention between fixtures.
+    $groups = @(
+      @{ name = 'history-cancel-pid-publication'; filter = $history; exact = $true; names = @($history) },
+      @{ name = 'recovery-running-waits'; filter = $recoveries; exact = $false; threads = 2; names = $recoveries },
+      @{ name = 'recovery-parent-budgets'; filter = $parentBudgets; exact = $false; threads = 2; names = $parentBudgets }
+    )
+  }
+  if ($Phase -ceq 'BoundaryWaits') {
+    # Exactly the two failures from full41853291008. Keep both isolated parent
+    # wrappers active, including contention between their owned repositories.
+    $boundaries = @(
+      'worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent',
+      'worktrees::remove_boundary_tests::remove_cancelled_retirement_keeps_maintenance_until_worker_returns'
+    )
+    $groups = @(
+      @{ name = 'removal-boundary-waits'; filter = $boundaries; exact = $false; threads = 2; names = $boundaries }
+    )
+  }
+  $expectedGroups = @{ Retirement = 6; GitControls = 3; CreateRecovery = 14; CreateTiming = 1; CreateUnfinished = 9; Terminal = 3; FullRunFailures = 3; BoundaryWaits = 1 }[$Phase]
+  $expectedExecutions = @{ Retirement = 6; GitControls = 16; CreateRecovery = 20; CreateTiming = 1; CreateUnfinished = 9; Terminal = 3; FullRunFailures = 5; BoundaryWaits = 2 }[$Phase]
+  if ($groups.Count -ne $expectedGroups -or @($groups | ForEach-Object { $_.names.Count } | Measure-Object -Sum).Sum -ne $expectedExecutions) {
+    throw 'Resumed phase selection incomplete'
+  }
+}
+if ($Cohort -ceq 'OpenFailureDiagnostics') {
+  $expectedGroups = 5
+  $expectedExecutions = 18
+  $selectedNames = @($groups | ForEach-Object { $_.names })
+  if ($groups.Count -ne $expectedGroups -or $selectedNames.Count -ne $expectedExecutions -or @($selectedNames | Sort-Object -Unique).Count -ne $expectedExecutions) {
+    throw 'Selected open-failure native cohort incomplete'
+  }
+}
+if ($Cohort -ceq 'McpScope') {
+  $expectedGroups = 1
+  $expectedExecutions = 18
+  $expectedNames = @($groups | ForEach-Object { $_.names })
+  if (@($groups).Count -ne 1 -or $expectedNames.Count -ne 18 -or @($expectedNames | Sort-Object -Unique).Count -ne 18) { throw 'Selected MCP native cohort incomplete' }
+  $listArgs = @('acp_client::skill_management::mcp_tests::', '--list', '--color=never')
+  $listStdout = Join-Path $raw 'mcp-scope-list.stdout.log'
+  $listStderr = Join-Path $raw 'mcp-scope-list.stderr.log'
+  $listStarted = [DateTime]::UtcNow.ToString('o')
+  $listExit = $null
+  $actualNames = @()
+  $exactNames = $false
+  $listPassed = $false
+  $listStable = $false
+  $listFailure = $null
+  try {
+    Confirm-Inputs
+    & $binary @listArgs 1> $listStdout 2> $listStderr
+    $listExit = [int]$LASTEXITCODE
+    $listText = [IO.File]::ReadAllText($listStdout)
+    $actualNames = @([regex]::Matches($listText, '(?m)^(?<name>\S+): test\r?$') | ForEach-Object { $_.Groups['name'].Value })
+    $exactNames = $actualNames.Count -eq 18 -and @($actualNames | Sort-Object -Unique).Count -eq 18 -and
+      @($expectedNames | Where-Object { $_ -cnotin $actualNames }).Count -eq 0
+    $listPassed = $listExit -eq 0 -and $exactNames -and $listText -match '(?m)^18 tests, 0 benchmarks\r?$'
+    if (-not $listPassed) { throw 'Selected MCP list did not return exactly the expected 18 native tests' }
+  } catch {
+    $listFailure = $_.Exception.Message
+    $listPassed = $false
+  } finally {
+    try { Confirm-Inputs; $listStable = $true } catch { $listFailure = $_.Exception.Message; $listPassed = $false }
+    $listHashes = [ordered]@{}
+    foreach ($path in @($listStdout, $listStderr)) {
+      if (Test-Path -LiteralPath $path -PathType Leaf) {
+        $listHashes[[IO.Path]::GetFileName($path)] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash
+        Get-Content -LiteralPath $path
+      }
+    }
+    $listRunnerExit = if ($listPassed) { 0 } else { 1 }
+    [ordered]@{
+      sourceHead = $ExpectedHead; cohort = $Cohort; phase = 'List'; argv = $listArgs
+      startedAtUtc = $listStarted; finishedAtUtc = [DateTime]::UtcNow.ToString('o')
+      naturalExitCode = $listExit; expectedNames = $expectedNames; actualNames = $actualNames; exactNames = $exactNames
+      allReturned = $null -ne $listExit; exactAllPassed = $listPassed; sourceInputsStable = $listStable
+      failure = $listFailure; runnerExitCode = $listRunnerExit; rawFileSha256 = $listHashes
+      selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+      inputsAfterSha256 = $selection.inputsAfterSha256
+      testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+      productOrAllWindowsComplete = $false
+    } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw 'mcp-scope-List.result.json') -Encoding utf8
+  }
+  if (-not $listPassed) { throw 'Selected MCP list failed; raw list receipt retained' }
+}
+if ($Cohort -ceq 'RecoveryApproval') {
+  $expectedGroups = 1
+  $expectedExecutions = 2
+  $expectedNames = @($groups | ForEach-Object { $_.names })
+  if (@($groups).Count -ne 1 -or $expectedNames.Count -ne 2 -or @($expectedNames | Sort-Object -Unique).Count -ne 2) { throw 'Selected recovery/approval native cohort incomplete' }
+  $listArgs = @('acp_client::permission_request_tests::', '--list', '--color=never')
+  $listStdout = Join-Path $raw 'recovery-approval-list.stdout.log'
+  $listStderr = Join-Path $raw 'recovery-approval-list.stderr.log'
+  $listStarted = [DateTime]::UtcNow.ToString('o')
+  $listExit = $null
+  $actualNames = @()
+  $exactNames = $false
+  $listPassed = $false
+  $listStable = $false
+  $listFailure = $null
+  try {
+    Confirm-Inputs
+    & $binary @listArgs 1> $listStdout 2> $listStderr
+    $listExit = [int]$LASTEXITCODE
+    $listText = [IO.File]::ReadAllText($listStdout)
+    $actualNames = @([regex]::Matches($listText, '(?m)^(?<name>\S+): test\r?$') | ForEach-Object { $_.Groups['name'].Value })
+    $exactNames = $actualNames.Count -eq 2 -and @($actualNames | Sort-Object -Unique).Count -eq 2 -and
+      @($expectedNames | Where-Object { $_ -cnotin $actualNames }).Count -eq 0
+    $listPassed = $listExit -eq 0 -and $exactNames -and $listText -match '(?m)^2 tests, 0 benchmarks\r?$'
+    if (-not $listPassed) { throw 'Selected recovery/approval list did not return exactly the expected 2 native tests' }
+  } catch {
+    $listFailure = $_.Exception.Message
+    $listPassed = $false
+  } finally {
+    try { Confirm-Inputs; $listStable = $true } catch { $listFailure = $_.Exception.Message; $listPassed = $false }
+    $listHashes = [ordered]@{}
+    foreach ($path in @($listStdout, $listStderr)) {
+      if (Test-Path -LiteralPath $path -PathType Leaf) {
+        $listHashes[[IO.Path]::GetFileName($path)] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash
+        Get-Content -LiteralPath $path
+      }
+    }
+    $listRunnerExit = if ($listPassed) { 0 } else { 1 }
+    [ordered]@{
+      sourceHead = $ExpectedHead; cohort = $Cohort; phase = 'List'; argv = $listArgs
+      startedAtUtc = $listStarted; finishedAtUtc = [DateTime]::UtcNow.ToString('o')
+      naturalExitCode = $listExit; expectedNames = $expectedNames; actualNames = $actualNames; exactNames = $exactNames
+      allReturned = $null -ne $listExit; exactAllPassed = $listPassed; sourceInputsStable = $listStable
+      failure = $listFailure; runnerExitCode = $listRunnerExit; rawFileSha256 = $listHashes
+      selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+      inputsAfterSha256 = $selection.inputsAfterSha256
+      testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+      productOrAllWindowsComplete = $false
+    } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw 'recovery-approval-List.result.json') -Encoding utf8
+  }
+  if (-not $listPassed) { throw 'Selected recovery/approval list failed; raw list receipt retained' }
+}
+if ($Cohort -ceq 'SharedManagement') {
+  $expectedGroups = 4
+  $expectedExecutions = 30
+  $expectedNames = @($groups | ForEach-Object { $_.names })
+  if (@($groups).Count -ne 4 -or @($groups | ForEach-Object { $_.name } | Sort-Object -Unique).Count -ne 4 -or $expectedNames.Count -ne 30 -or @($expectedNames | Sort-Object -Unique).Count -ne 30) { throw 'Selected shared-management and restore native cohort incomplete' }
+  $listArgs = @('acp_client::', '--list', '--color=never')
+  $listStdout = Join-Path $raw 'shared-management-list.stdout.log'
+  $listStderr = Join-Path $raw 'shared-management-list.stderr.log'
+  $listStarted = [DateTime]::UtcNow.ToString('o')
+  $listExit = $null
+  $catalogNames = @()
+  $catalogSummaryCount = $null
+  $catalogComplete = $false
+  $groupSelections = @()
+  $actualNames = @()
+  $disjointGroups = $false
+  $exactSelectedUnion = $false
+  $exactNames = $false
+  $listPassed = $false
+  $listStable = $false
+  $listFailure = $null
+  try {
+    Confirm-Inputs
+    & $binary @listArgs 1> $listStdout 2> $listStderr
+    $listExit = [int]$LASTEXITCODE
+    $listText = [IO.File]::ReadAllText($listStdout)
+    $catalogNames = @([regex]::Matches($listText, '(?m)^(?<name>\S+): test\r?$') | ForEach-Object { $_.Groups['name'].Value })
+    $catalogSummary = @([regex]::Matches($listText, '(?m)^(?<tests>\d+) tests?, 0 benchmarks?\r?$'))
+    if ($catalogSummary.Count -eq 1) { $catalogSummaryCount = [int]$catalogSummary[0].Groups['tests'].Value }
+    $catalogComplete = $catalogSummary.Count -eq 1 -and $catalogSummaryCount -eq $catalogNames.Count -and
+      $catalogNames.Count -ge 30 -and @($catalogNames | Sort-Object -Unique).Count -eq $catalogNames.Count -and
+      @($catalogNames | Where-Object { -not $_.StartsWith('acp_client::', [StringComparison]::Ordinal) }).Count -eq 0
+    $groupSelections = @(foreach ($group in $groups) {
+      # All four commands use libtest's case-sensitive substring filter, no --exact/--skip/--ignored.
+      if ($group.exact -or $group.ignored -or $null -ne $group.skip) { throw 'Selected shared-management discovery does not accept unreviewed filter flags' }
+      $matchedNames = @($catalogNames | Where-Object { $_.Contains([string]$group.filter, [StringComparison]::Ordinal) })
+      $groupExact = $matchedNames.Count -eq $group.names.Count -and
+        @($matchedNames | Sort-Object -Unique).Count -eq $group.names.Count -and
+        @($group.names | Where-Object { $_ -cnotin $matchedNames }).Count -eq 0
+      [ordered]@{
+        name = $group.name; filter = $group.filter; exact = $false; threads = $group.threads
+        expectedNames = $group.names; actualNames = $matchedNames; exactNames = $groupExact
+      }
+    })
+    $actualNames = @($groupSelections | ForEach-Object { $_.actualNames })
+    $disjointGroups = $actualNames.Count -eq @($actualNames | Sort-Object -Unique).Count
+    $exactSelectedUnion = $actualNames.Count -eq 30 -and @($actualNames | Sort-Object -Unique).Count -eq 30 -and
+      @($expectedNames | Where-Object { $_ -cnotin $actualNames }).Count -eq 0
+    $exactNames = $catalogComplete -and $groupSelections.Count -eq 4 -and
+      @($groupSelections | Where-Object { $_.exactNames -ne $true }).Count -eq 0 -and $disjointGroups -and $exactSelectedUnion
+    $listPassed = $listExit -eq 0 -and $exactNames
+    if (-not $listPassed) { throw 'Selected shared-management catalog did not match all four filters and the exact 30-test union' }
+  } catch {
+    $listFailure = $_.Exception.Message
+    $listPassed = $false
+  } finally {
+    try { Confirm-Inputs; $listStable = $true } catch { $listFailure = $_.Exception.Message; $listPassed = $false }
+    $listHashes = [ordered]@{}
+    foreach ($path in @($listStdout, $listStderr)) {
+      if (Test-Path -LiteralPath $path -PathType Leaf) {
+        $listHashes[[IO.Path]::GetFileName($path)] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash
+        Get-Content -LiteralPath $path
+      }
+    }
+    $listRunnerExit = if ($listPassed) { 0 } else { 1 }
+    [ordered]@{
+      sourceHead = $ExpectedHead; cohort = $Cohort; phase = 'List'; argv = $listArgs
+      startedAtUtc = $listStarted; finishedAtUtc = [DateTime]::UtcNow.ToString('o')
+      naturalExitCode = $listExit; expectedNames = $expectedNames; actualNames = $actualNames; exactNames = $exactNames
+      catalogNames = $catalogNames; catalogCount = $catalogNames.Count; catalogSummaryCount = $catalogSummaryCount; catalogComplete = $catalogComplete
+      groupSelections = $groupSelections; disjointGroups = $disjointGroups; exactSelectedUnion = $exactSelectedUnion
+      allReturned = $null -ne $listExit; exactAllPassed = $listPassed; sourceInputsStable = $listStable
+      failure = $listFailure; runnerExitCode = $listRunnerExit; rawFileSha256 = $listHashes
+      selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+      inputsAfterSha256 = $selection.inputsAfterSha256
+      testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+      productOrAllWindowsComplete = $false
+    } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'shared-management-List.result.json') -Encoding utf8
+  }
+  if (-not $listPassed) { throw 'Selected shared-management list failed; raw list receipt retained' }
+}
 $failures = @()
+$completedGroups = @()
 foreach ($group in $groups) {
   Confirm-Inputs
   $threads = $group.threads ?? 1
@@ -352,6 +869,7 @@ foreach ($group in $groups) {
   [ordered]@{
     sourceHead = $ExpectedHead
     cohort = $Cohort
+    phase = $Phase
     selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
     testBinarySha256 = $selection.testBinarySha256
     fixtureSha256 = $selection.fixtureSha256
@@ -369,7 +887,79 @@ foreach ($group in $groups) {
   } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw ($group.name + '.json')) -Encoding utf8
   Get-Content -LiteralPath $stdout
   Get-Content -LiteralPath $stderr
+  $completedGroups += [ordered]@{ name = $group.name; naturalExitCode = $exit; expectedTests = $group.names.Count; passed = $success }
   if (-not $success) { $failures += $group.name }
+}
+if ($Cohort -ceq 'FrozenRetirementResume') {
+  Confirm-Inputs
+  [ordered]@{
+    sourceHead = $ExpectedHead; cohort = $Cohort; phase = $Phase
+    expectedGroups = $expectedGroups; expectedExecutions = $expectedExecutions
+    completedGroups = $completedGroups.Count; groups = $completedGroups
+    allReturned = $completedGroups.Count -eq $expectedGroups
+    exactAllPassed = $completedGroups.Count -eq $expectedGroups -and $failures.Count -eq 0
+    testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+    sourceInputsStable = $true; productOrAllWindowsComplete = $false
+  } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw ("resume-$Phase.result.json")) -Encoding utf8
+}
+if ($Cohort -ceq 'OpenFailureDiagnostics') {
+  Confirm-Inputs
+  [ordered]@{
+    sourceHead = $ExpectedHead; cohort = $Cohort; phase = $Phase
+    expectedGroups = $expectedGroups; expectedExecutions = $expectedExecutions
+    completedGroups = $completedGroups.Count; groups = $completedGroups
+    allReturned = $completedGroups.Count -eq $expectedGroups
+    exactAllPassed = $completedGroups.Count -eq $expectedGroups -and $failures.Count -eq 0
+    testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+    selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+    inputsAfterSha256 = $selection.inputsAfterSha256
+    sourceInputsStable = $true; productOrAllWindowsComplete = $false
+  } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw 'open-failure-All.result.json') -Encoding utf8
+}
+if ($Cohort -ceq 'McpScope') {
+  Confirm-Inputs
+  [ordered]@{
+    sourceHead = $ExpectedHead; cohort = $Cohort; phase = $Phase
+    expectedGroups = $expectedGroups; expectedExecutions = $expectedExecutions
+    completedGroups = $completedGroups.Count; groups = $completedGroups
+    allReturned = $completedGroups.Count -eq $expectedGroups
+    exactAllPassed = $completedGroups.Count -eq $expectedGroups -and $failures.Count -eq 0
+    testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+    selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+    inputsAfterSha256 = $selection.inputsAfterSha256
+    listResultSha256 = (Get-FileHash -LiteralPath (Join-Path $raw 'mcp-scope-List.result.json') -Algorithm SHA256).Hash
+    sourceInputsStable = $true; productOrAllWindowsComplete = $false
+  } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw 'mcp-scope-All.result.json') -Encoding utf8
+}
+if ($Cohort -ceq 'RecoveryApproval') {
+  Confirm-Inputs
+  [ordered]@{
+    sourceHead = $ExpectedHead; cohort = $Cohort; phase = $Phase
+    expectedGroups = $expectedGroups; expectedExecutions = $expectedExecutions
+    completedGroups = $completedGroups.Count; groups = $completedGroups
+    allReturned = $completedGroups.Count -eq $expectedGroups
+    exactAllPassed = $completedGroups.Count -eq $expectedGroups -and $failures.Count -eq 0
+    testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+    selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+    inputsAfterSha256 = $selection.inputsAfterSha256
+    listResultSha256 = (Get-FileHash -LiteralPath (Join-Path $raw 'recovery-approval-List.result.json') -Algorithm SHA256).Hash
+    sourceInputsStable = $true; productOrAllWindowsComplete = $false
+  } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw 'recovery-approval-All.result.json') -Encoding utf8
+}
+if ($Cohort -ceq 'SharedManagement') {
+  Confirm-Inputs
+  [ordered]@{
+    sourceHead = $ExpectedHead; cohort = $Cohort; phase = $Phase
+    expectedGroups = $expectedGroups; expectedExecutions = $expectedExecutions
+    completedGroups = $completedGroups.Count; groups = $completedGroups
+    allReturned = $completedGroups.Count -eq $expectedGroups
+    exactAllPassed = $completedGroups.Count -eq $expectedGroups -and $failures.Count -eq 0
+    testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+    selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+    inputsAfterSha256 = $selection.inputsAfterSha256
+    listResultSha256 = (Get-FileHash -LiteralPath (Join-Path $raw 'shared-management-List.result.json') -Algorithm SHA256).Hash
+    sourceInputsStable = $true; productOrAllWindowsComplete = $false
+  } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw 'shared-management-All.result.json') -Encoding utf8
 }
 if ($failures.Count -gt 0) {
   throw ('Selected checks did not pass: ' + ($failures -join ', '))

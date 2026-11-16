@@ -5,18 +5,23 @@ use agent_client_protocol::{Agent, ConnectionTo, Dispatch, UntypedMessage};
 use serde_json::{Value, json};
 
 use super::{
+    model_guard::ModelGuard,
     operations::Operation,
     pump::{describe_acp_error, parse_config_value},
 };
 
 pub(crate) const LEGACY_MODEL_ID: &str = "__farfold_legacy_model";
 mod deferred;
+mod vibe;
 pub(crate) use deferred::Deferred;
+pub(crate) use vibe::Dialect;
+pub(super) use vibe::THINKING_ID;
 
 const UNCONFIRMED: &str = "Agent 未确认所选模型，请检查后重试";
 
 #[derive(Clone, Default)]
 pub(crate) struct SessionConfig {
+    dialect: Dialect,
     options: Option<Value>,
     models: Option<Value>,
     revision: u64,
@@ -31,6 +36,7 @@ pub(crate) struct ConfigRequest {
     value: Value,
     legacy: bool,
     revision: u64,
+    saw_protected_change: bool,
 }
 
 fn allows_legacy(options: Option<&Value>) -> bool {
@@ -47,10 +53,19 @@ fn allows_legacy(options: Option<&Value>) -> bool {
 }
 
 impl SessionConfig {
+    #[cfg(test)]
     pub(crate) fn from_response(response: &Value) -> Self {
+        Self::from_connection(response, Dialect::default())
+    }
+
+    pub(crate) fn from_connection(response: &Value, dialect: Dialect) -> Self {
         Self {
-            options: response.get("configOptions").cloned(),
+            options: response
+                .get("configOptions")
+                .cloned()
+                .map(|options| dialect.options(options)),
             models: response.get("models").cloned(),
+            dialect,
             ..Self::default()
         }
     }
@@ -127,6 +142,21 @@ impl SessionConfig {
                 return Err(UNCONFIRMED.into());
             }
         } else {
+            if self.dialect.is_vibe_thinking(id)
+                && !self
+                    .modern_options()
+                    .and_then(Value::as_array)
+                    .is_some_and(|entries| {
+                        entries.iter().any(|entry| {
+                            entry["id"] == id
+                                && entry["options"].as_array().is_some_and(|options| {
+                                    options.iter().any(|option| option["value"] == *value)
+                                })
+                        })
+                    })
+            {
+                return Err(UNCONFIRMED.into());
+            }
             parse_config_value(value)?;
         }
         Ok(ConfigRequest {
@@ -134,6 +164,7 @@ impl SessionConfig {
             value: value.clone(),
             legacy,
             revision: self.revision,
+            saw_protected_change: false,
         })
     }
 
@@ -185,9 +216,36 @@ impl SessionConfig {
             if !reply.is_array() {
                 return Err(UNCONFIRMED.into());
             }
-            self.options = Some(reply);
+            self.options = Some(self.dialect.options(reply));
+            if self.has_invalid_options() {
+                return Err(UNCONFIRMED.into());
+            }
         }
         self.options().ok_or_else(|| UNCONFIRMED.into())
+    }
+
+    /// An already observed protected change may contradict this full reply.
+    /// Check before replacing the current options or permitting a local save.
+    pub(crate) fn complete_choice(
+        &mut self,
+        request: &ConfigRequest,
+        reply: Value,
+        prior: &ModelGuard,
+        observed: &ModelGuard,
+    ) -> Result<Value, String> {
+        if !request.saw_protected_change {
+            return self.complete(request, reply);
+        }
+        let current = observed.current_value();
+        let mut candidate = self.clone();
+        let options = candidate.complete(request, reply)?;
+        let mut reported = prior.clone();
+        reported.observe(&options);
+        if reported.current_value() != current {
+            return Err("设置结果尚未确认，请重新检查此对话".into());
+        }
+        *self = candidate;
+        Ok(options)
     }
 
     fn configuration_update(dispatch: &Dispatch) -> Option<&Value> {
@@ -209,7 +267,10 @@ impl SessionConfig {
         let update = Self::configuration_update(dispatch)?;
         match update.get("sessionUpdate").and_then(Value::as_str) {
             Some("config_option_update") => {
-                self.options = Some(update.get("configOptions").cloned().unwrap_or(Value::Null));
+                self.options = Some(
+                    self.dialect
+                        .options(update.get("configOptions").cloned().unwrap_or(Value::Null)),
+                );
                 if self.has_invalid_options() {
                     self.invalid_options_revision = self.revision + 1;
                 } else {
@@ -235,6 +296,14 @@ impl SessionConfig {
 }
 
 impl ConfigRequest {
+    /// Keep this fact for the lifetime of the one pending request, including
+    /// when a later observation returns to the original protected values.
+    pub(crate) fn observe_choices(&mut self, prior: &ModelGuard, current: &ModelGuard) {
+        if !self.legacy && !self.saw_protected_change {
+            self.saw_protected_change = current.current_value() != prior.current_value();
+        }
+    }
+
     pub(crate) fn send(
         &self,
         cx: &ConnectionTo<Agent>,

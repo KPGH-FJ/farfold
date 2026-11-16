@@ -148,7 +148,7 @@ impl MetaStore {
                 affected += 1;
                 if let Some(v) = &saved {
                     blocked |=
-                        super::archive::has_unsent_work(v, row).map_err(|_| "unknownDrafts")?;
+                        super::archive::has_unsent_work(v, &row.id).map_err(|_| "unknownDrafts")?;
                     if let (Ok(cwd), Some(native)) =
                         (Path::new(&row.cwd).canonicalize(), &row.native_session_id)
                     {
@@ -160,7 +160,7 @@ impl MetaStore {
                             native,
                         );
                         known_rows.insert(alias.id.clone());
-                        blocked |= super::archive::has_unsent_work(v, &alias)
+                        blocked |= super::archive::has_unsent_work(v, &alias.id)
                             .map_err(|_| "unknownDrafts")?;
                         for p in ["session:", "queue-edit:", "resend:"] {
                             known.insert(format!("{p}{}", alias.id));

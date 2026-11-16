@@ -100,7 +100,7 @@ afterEach(async () => {
 });
 
 it.each(["toolCallId", "title"] as const)(
-  "keeps ordered opaque input, approvals and actual cancellation after live %s conversion failure",
+  "keeps ordered opaque input, approvals and actual cancellation after an invalid live %s",
   async (field) => {
     const state = await threads.open({
       agentId: `channel-${field}`,
@@ -248,7 +248,8 @@ it("keeps the TypeError history boundary without re-projecting the delivered bod
   const bad = {
     update: {
       sessionUpdate: "tool_call",
-      toolCallId: JSON.parse('{"toString":null,"valueOf":null}'),
+      toolCallId: "malformed-tool-title",
+      title: JSON.parse('{"toString":null,"valueOf":null}'),
     },
   };
   expect(reader.push(bad)).toBe("consumed");

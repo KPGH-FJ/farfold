@@ -1,0 +1,35 @@
+{
+  "sourceCommit": "077b4b988abff80ee9bf686512e253a51ed3f2da",
+  "scope": "Real DraftStartup and draftPersistence, real macOS hidden nonpersistent WebKit, actual Tauri event and settings commands, temporary SQLite, owned harness textarea and programmatic clicks.",
+  "eventCount": 27,
+  "strictOrderingAndBoundaryChecks": 18,
+  "traceSha256": "64686a41874b83e0ed0873f01789a227dbb2bc16ad5f4c20684f1c6b28d21b48",
+  "realTauriEventListener": true,
+  "realDraftStartupRenderedSavedDraft": true,
+  "firstExitStayCompletedWhileWritePending": true,
+  "secondExitReportedSaveFailureAndKeptEditedInput": true,
+  "independentReadWhileLockedMatchedOldDraft": true,
+  "retryUsedActualComponentControlAfterUnlock": true,
+  "acceptedExitCommands": 1,
+  "actualNativeExitEvents": 1,
+  "independentReadAtExitAckMatchesNativeExitAndPostExitColdRead": true,
+  "offlineValidatorCorrection": "Original process exited 0. Offline verification includes the serializer’s sendPending:false field.",
+  "probeSourceSha256": {
+    "rust": "96b6f068adf8c17670679b5632161ef6ec465f64dad499f1c37edee9d7bb723d",
+    "frontendEntry": "c0e0d8eee90eee17667a303030d6b4878bf46e15ba8918ba89083376fb1ac61c"
+  },
+  "scopeLimits": [
+    "Harness supplies the isolated textarea and programmatic clicks.",
+    "Quit initiated by the harness, without system Dock/Apple Event.",
+    "No launch of the formal Farfold installation, actual Composer, or Agent."
+  ],
+  "nativeChildExitCodeFromOriginalLauncher": 0,
+  "originalLauncherExitCode": 1,
+  "correctedOfflineVerificationExitCode": 0,
+  "originalLauncherReceipt": {
+    "recordedAtUtc": "2026-11-06T19:51:11.798Z",
+    "toolChunk": "da7be0",
+    "traceEventLineSha256": "d925e16e9da2dbfca76994995bbf78fd20d0620a2313037c88cd2c7aae215cbd",
+    "observedChildExitBeforeAssertion": true
+  }
+}

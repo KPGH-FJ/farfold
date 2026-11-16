@@ -281,7 +281,19 @@ fn real_cancel_keeps_worker_scope_and_budget_until_owned_process_exit() {
             scope,
             move |_, job| {
                 let mut cmd = Command::new(crate::platform_tests::python());
-                cmd.args(["-u","-c","import os,sys,signal,time;signal.signal(signal.SIGTERM,signal.SIG_IGN);sys.stdin.readline();open(sys.argv[1],'w').write(str(os.getpid()));time.sleep(30)"]).arg(owned_marker);
+                cmd.args([
+                    "-u",
+                    "-c",
+                    r#"import os,sys,signal,time
+signal.signal(signal.SIGTERM,signal.SIG_IGN)
+sys.stdin.readline()
+with open(sys.argv[1]+'.pending','w') as marker:
+ marker.write(str(os.getpid()))
+os.replace(sys.argv[1]+'.pending',sys.argv[1])
+time.sleep(30)
+"#,
+                ])
+                .arg(owned_marker);
                 run_selected(job, 0, cmd).and_then(|read| read.publish(job, 0))
             },
         ));
@@ -304,7 +316,11 @@ fn real_cancel_keeps_worker_scope_and_budget_until_owned_process_exit() {
         assert!(gate.update().is_err());
         assert!(
             manager
-                .reserve_preparation_action(&source.agent, &source.agent.command, &source.agent.args)
+                .reserve_preparation_action(
+                    &source.agent,
+                    &source.agent.command,
+                    &source.agent.args
+                )
                 .is_err()
         );
         assert_eq!(crate::platform_tests::process_check(pid), 0);
@@ -318,7 +334,11 @@ fn real_cancel_keeps_worker_scope_and_budget_until_owned_process_exit() {
         assert!(gate.update().is_ok());
         assert!(
             manager
-                .reserve_preparation_action(&source.agent, &source.agent.command, &source.agent.args)
+                .reserve_preparation_action(
+                    &source.agent,
+                    &source.agent.command,
+                    &source.agent.args
+                )
                 .is_ok()
         );
         assert!(inventory::execution::acquire().is_ok());

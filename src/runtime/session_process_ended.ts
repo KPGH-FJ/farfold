@@ -76,9 +76,15 @@ export class ProcessEndedChannel extends Channel<unknown> {
       return;
     }
     if (this.current(state.key) !== state) return;
-    state.processEndedConnectionId = ended.connectionId;
     this.ended = null;
     this.onmessage = () => {};
+    // An explicit close can already have applied the same reaping receipt.
+    if (
+      state.connectionLost &&
+      state.processEndedConnectionId === ended.connectionId
+    )
+      return;
+    state.processEndedConnectionId = ended.connectionId;
     this.apply(state.key, {
       kind: "connectionLost",
       closeReason: ended.closeReason,

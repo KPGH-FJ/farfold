@@ -1,0 +1,176 @@
+{
+  "recordedAtUtc": "2026-11-04T23:35:29.947220+00:00",
+  "kind": "McpScopeRefusalCandidate",
+  "userResult": "Existing MCP enablement inspection distinguishes trusted project-only, inherited non-user settings and different-source same-name conflicts; unknown, inconsistent or repeated same-source reports retain the generic refusal. No write is dispatched.",
+  "requirements": ["P39", "P41"],
+  "originalConditionsUnchanged": true,
+  "files": {
+    "src-tauri/src/acp_client/extension_inventory/types.rs": "c25338f11289e8749dd01a16a0f443101ee034a0429e76003ce4ccdb1fb329fa",
+    "src-tauri/src/acp_client/skill_management/mcp_plan.rs": "dd3de7b4246bc8186e3fa9394adffbf6c7f98ebcb844e09fe8b4761967703eda",
+    "src-tauri/src/acp_client/skill_management/mcp_tests.rs": "50363013e63cc3573e9bb0e2749694ac1748dad773bb53f7de3fad743ab22a98",
+    "src-tauri/src/acp_client/skill_management/mcp_peer.py": "652aedc405f51902eca5851f3470e23219bf692f3e8c8ca8bac446fa5109ffe7",
+    "src/runtime/skill_management_types.ts": "e735ff0798d47e41d6e7f68f4c4a9f67f63682c48b08512336b607c62d25eb47",
+    "src/runtime/skill_management_strings.ts": "e2683ab850e6b8a3395c813a77a2acc129b6d2b995d228a511646908eb5f80ad",
+    "src/runtime/mcp_management_types.ts": "fd314dcd003f12d9b5519af5f0b581ae5fa09cd64ff7d419d521f6c2750e5ebf",
+    "src/runtime/mcp_scope_refusal.wire.test.tsx": "0291dd85fd0e57cb9177090b78a1dfa2b24ea4939936608cf0cd2fea7edd107b",
+    "src/runtime/fixtures/mcp-scope-refusals-wire.json": "86b64e140f0281fb69d6315dbbf5bb135994d93f19df5aeff04b126b62a97b22"
+  },
+  "sourceFinalSha256": "7f57f6a2c720371d5fc939ddbca7870f70bd5c355fb15a759499138af7a39c3d",
+  "implementation": {
+    "productionFiles": 5,
+    "testAndWireFiles": 4,
+    "classificationOnlyOnPreviouslyRefusedUniqueCheck": true,
+    "userOnlySuccessPathPreservedIncludingOpaqueUserSourceMetadata": true,
+    "trustedSourceSubset": [
+      "user(file,profile?)",
+      "project(dotCodexFolder)",
+      "system(file)",
+      "packagedDefaults(file)"
+    ],
+    "duplicateSourceIdentity": "Official metadata type/path/profile only; absent/null User profile both mean default. Version/config are not source identity. No filesystem/symlink/alias guarantee or probing is added.",
+    "unchanged": [
+      "user-only mutation authority",
+      "same_scope/expectedVersion/readback/quoting",
+      "cancel/actual worker ownership and cleanup",
+      "opaque configuration/secret preservation",
+      "current sessionApplicability remains unverified"
+    ],
+    "frontend": "Shared existing controller/UI. Only failed MCP inspect receipts may carry the new no-write reasons; write/cancel or other domain receipts are rejected. Codes combine during parsing to avoid existing module-initialization cycles."
+  },
+  "redGreen": {
+    "originalScopeRed": {
+      "passed": 0,
+      "failed": 3,
+      "receipt": "red.json",
+      "reason": "Actual worker reached no-write/source-byte/secret assertions and then failed because all three distinct cases had the old generic code."
+    },
+    "initialGreen": {
+      "passed": 3,
+      "failed": 0,
+      "receipt": "green.json",
+      "testByteBoundary": "Same case/assertions; Rust formatting changed test bytes between this first RED/GREEN. No byte-identical fixture claim for this pair."
+    },
+    "duplicateSourceRed": {
+      "passed": 0,
+      "failed": 3,
+      "receipt": "duplicate-source-red.json",
+      "cases": [
+        "same User source twice",
+        "same source with different version/config",
+        "default User profile missing versus null"
+      ],
+      "reason": "Actual worker wrongly reported cross-source conflict after proving no write/preserved source bytes.",
+      "exactRedSourceSnapshot": "duplicate-red-source/",
+      "hashManifest": "duplicate-red-inputs.json"
+    },
+    "duplicateGreen": {
+      "includedIn": "rust-worker-final-v2.json",
+      "passed": 3,
+      "failed": 0,
+      "testAndPeerByteIdenticalToDuplicateRed": true
+    },
+    "candidateImportCycle": {
+      "receipt": "frontend-final.json",
+      "testFilesFailed": 1,
+      "testFilesPassed": 5,
+      "testsPassed": 42,
+      "reason": "New eager code array import reached existing cycle: SKILL_CHANGE_CODES was not iterable. Fixed by constructing the MCP-only combined allowlist during parsing.",
+      "correctedReceipt": "frontend-final-cycle-fixed.json",
+      "notABaselineProductRed": true
+    }
+  },
+  "finalValidation": {
+    "rustMcpWorker": {
+      "passed": 20,
+      "failed": 0,
+      "ignored": 0,
+      "receipt": "rust-worker-final-v2.json",
+      "includes": [
+        "precise refusals3",
+        "untrusted sources4variants",
+        "disabled source does not block user review",
+        "unknown User metadata preserves existing review",
+        "cancel before facts ends actual child/lease with0write",
+        "duplicate source precision3",
+        "existing write/readback/secret/cancellation regression"
+      ]
+    },
+    "rustIndependentFinalBinary": {
+      "passed": 2,
+      "failed": 0,
+      "receipt": "rust-independent-final-v2.json"
+    },
+    "frontend": {
+      "files": 6,
+      "passed": 50,
+      "failed": 0,
+      "receipt": "frontend-final-v2.json",
+      "wire": "src/runtime/fixtures/mcp-scope-refusals-wire.json",
+      "wireIsUnmodifiedPublicDtosFromFinalWorker": true,
+      "noWriteFalseClaimCounterexamples": 6
+    },
+    "clippyAllTargets": "clippy-final-v2.json",
+    "rustFmt": "fmt-final-v2.json",
+    "targetedFrontendFormat": "format-frontend-v2.json",
+    "diffCheck": "Actual git diff --check on the9owned files exited0 during final binding; no standalone command receipt is claimed.",
+    "fullTypecheckAndSevenCommands": "Not run by this line; root owns the stable-batch checks."
+  },
+  "binaryHandoff": {
+    "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/farfold_lib-505f6bbe58a95c8e",
+    "sha256": "a142ea5449dce3fc96c7e746d117eb7198a06c2460c1c03ac95f31987304edd7",
+    "ignoredDriverListed": "meta_store::recovery_tests::explicit_frontend_storage_bridge",
+    "beforeAfterSame": true
+  },
+  "cargoReleased": true,
+  "reviewedOfficialFacts": {
+    "commit": "b412ff32c417f855c2b2d1581b77058eed87c84b",
+    "sources": [
+      {
+        "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server-protocol/src/protocol/v2/config.rs",
+        "sha256": "8187edb07de0259f5a96927ca69b749a7ba9049062bf2ef2eb1ff9c7d8696447",
+        "lines": [35, 109],
+        "fact": "Known source metadata contains packagedDefaults/system/User.file+optional profile/Project.dotCodexFolder. This is source-provenance evidence, not selected-Agent version pin."
+      },
+      {
+        "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/config_manager_service.rs",
+        "sha256": "cb5e0862e3402aed6349d870f4a8b38472ad1835edd906f797ea1e3aeeac8209",
+        "lines": [218, 237],
+        "fact": "The reviewed write service compares provided filePath to active user config path and rejects other paths as ConfigLayerReadonly."
+      }
+    ]
+  },
+  "officialOpenAIDocsRead": {
+    "appServer": "https://learn.chatgpt.com/docs/app-server",
+    "configBasics": "https://learn.chatgpt.com/docs/config-file/config-basic",
+    "facts": "Project layers exist and need trust. MCP status list/tools/auth and one-server/thread parameters are documented, but this record does not establish no startup side effects or same-current-ACP app-server ownership. No status call, reload, connection or tool invocation performed.",
+    "rawPageBodyArchived": false
+  },
+  "evidenceBoundary": "Real Farfold registry/exchange/process, synthetic official-wire Python peer and own temporary layer JSON files/SQLite. Frontend substitutes delivery with captured actual DTOs and runs the actual controller/common render. Not a real official Agent/CLI/config mutation, installed UI, current ACP adoption or complete P39/P40/P41 result. No query/account/model/user configuration/private HOME/browser permission or Git mutation.",
+  "remaining": [
+    "Actual selected official configuration adoption",
+    "MCP connection/tools proof on that route",
+    "Other operations/Agents/platforms and original P39/P40/P41 conditions"
+  ],
+  "sourceCommit": "aa1b00e733164e69099233996be33e354bf6a6dc",
+  "independentReview": {
+    "kind": "transcribed-independent-source-and-evidence-review",
+    "reviewer": "environment_review",
+    "blockingFindings": [],
+    "recordedAtUtc": "2026-11-04T23:38:21.254874+00:00",
+    "finalSourceMapSha256": "7f57f6a2c720371d5fc939ddbca7870f70bd5c355fb15a759499138af7a39c3d",
+    "notes": [
+      "Known User success path is unchanged; only the old nonunique refusal branch gets specific diagnosis.",
+      "Same known metadata source reported twice stays generic, even different version/config; absent/null User profile means the same default source.",
+      "MCP-only failed inspection accepts the new codes; no write/review/observation/adoption authority follows.",
+      "Actual worker and captured public DTOs are bounded synthetic-peer evidence, not an official CLI run or installed UI."
+    ],
+    "testsExecutedByReviewer": false
+  },
+  "originals": {
+    "path": "source-originals.zip",
+    "bytes": 113200,
+    "sha256": "6810d117ea5c0a1064b2a754695944982ed01a63f01a953012689c51124845e9",
+    "entries": 91,
+    "manifest": "manifest.json"
+  }
+}

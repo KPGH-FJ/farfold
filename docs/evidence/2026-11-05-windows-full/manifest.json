@@ -1,0 +1,484 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-11-05T00:57:47.738650+00:00",
+  "runId": 41931045918,
+  "sourceHead": "2e23056cc4a3cf50f94a75ee393dd2cc4b0f78bd",
+  "publicScope": "Selected UTF-8 JSON/text originals and actual scoped reviews only; no binary payload.",
+  "publicActualMembersExcludingThisManifest": [
+    {
+      "path": "INDEX.txt",
+      "bytes": 845,
+      "sha256": "42357dcc4068fdc826acae3877d7d0fe1dbb3b3402a5183a05e84cd4de2a58d7",
+      "origin": {
+        "role": "derived public capsule index"
+      }
+    },
+    {
+      "path": "analysis/collector-result.json",
+      "bytes": 28047,
+      "sha256": "7af725006e1306ff66a4c4fa0d0528621da81272cd2d8b375cb9651a3ffc8f16",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/result.json",
+        "role": "original collector result;19integrity assertions, not19commands",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "analysis/installer-artifact-inspection.json",
+      "bytes": 692,
+      "sha256": "5da185284b0edd305f26979a71ee92d2ab4194ed097521e0e3b34df8060ce48a",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/installer-artifact-inspection.json",
+        "role": "original metadata-only artifact inspection; binary excluded",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "provenance/dispatch.json",
+      "bytes": 716,
+      "sha256": "48ca2eca10a44c8a48b13926df56b808da544748ead3ac4e1e714359f3495d8f",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/dispatch.json",
+        "role": "original fixed-dispatch collector record",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "provenance/private-50-file-manifest.json",
+      "bytes": 10984,
+      "sha256": "54702947e1552a796c99406f81eb7e912e37a232d328637c41d9604190fcafe7",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/raw-manifest.json",
+        "role": "original private50inventory; not this archive member list",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "raw/artifacts-completed.json",
+      "bytes": 751,
+      "sha256": "7525f48e60c10d70a2ee2a08527028fcdd99cc75ac9875ec18102c83eb47e04c",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/artifacts-completed.stdout",
+        "role": "original CLI/provider JSON or text stream",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "raw/dispatch-url.txt",
+      "bytes": 60,
+      "sha256": "395a8c4782e08f947d7148344a79df18dab8ee5c8259f6c18e47bbd9a3e9789f",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/dispatch.stdout",
+        "role": "original CLI/provider JSON or text stream",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "raw/frontend-job.log",
+      "bytes": 162515,
+      "sha256": "61181c4c5664d181c1c1dff4ceb6a58f10178e4464cc6d746fa754d1f02383f5",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/frontend-job-final.stdout",
+        "role": "original CLI/provider JSON or text stream",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "raw/installer-job.log",
+      "bytes": 81057,
+      "sha256": "2d44567136e83dfaa09cd6251f91da0f15387733d2d52e71d9173847a9b6f9b3",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/installer-job-final.stdout",
+        "role": "original CLI/provider JSON or text stream",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "raw/jobs-completed.json",
+      "bytes": 9986,
+      "sha256": "54180640a505bf12f4e8c120dbe7a8f65b4b9c3d5acf8ac5b451f2823ab95a8b",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/jobs-completed.stdout",
+        "role": "original CLI/provider JSON or text stream",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "raw/preflight-in-progress.json",
+      "bytes": 36,
+      "sha256": "a2790a384d7d281e7395679000c35d27768d89dbd7052f725b8f4688beb59915",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/in-progress-preflight.stdout",
+        "role": "original CLI/provider JSON or text stream",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "raw/preflight-queued.json",
+      "bytes": 36,
+      "sha256": "a2790a384d7d281e7395679000c35d27768d89dbd7052f725b8f4688beb59915",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/queued-preflight.stdout",
+        "role": "original CLI/provider JSON or text stream",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "raw/preflight-remote-ref.json",
+      "bytes": 434,
+      "sha256": "28375a85e3ecdcc277c4bcef91de958ca086124f6fa93775a6555d77b34cddcb",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/remote-branch-preflight.stdout",
+        "role": "original CLI/provider JSON or text stream",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "raw/run-completed.json",
+      "bytes": 11739,
+      "sha256": "5f2e3c8ce590f916ce3dffda8311c2d90baace5635785025a3500c135e822607",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/run-completed.stdout",
+        "role": "original CLI/provider JSON or text stream",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "raw/run-initial.json",
+      "bytes": 11736,
+      "sha256": "a633574a6b782d2c6a8fc9c9e288f3d3fede23f86b74b111c31bc849e13006bb",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/run-initial.stdout",
+        "role": "original CLI/provider JSON or text stream",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "raw/rust-job.log",
+      "bytes": 6236316,
+      "sha256": "2011503170fc06cb7ae91558858cce91fc208779e89842f9edbb4fbce0687877",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/rust-job-final.stdout",
+        "role": "original CLI/provider JSON or text stream",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "raw/verify-job.log",
+      "bytes": 2242,
+      "sha256": "5b8dda21723f413040df591daf07de2f6f72e9c60d0c431ff3ef5a958b19e758",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/verify-job-final.stdout",
+        "role": "original CLI/provider JSON or text stream",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "raw/watch.log",
+      "bytes": 332701,
+      "sha256": "ba684b616d105c777489dc9ad5f72fbbf6bc6e24728b5d1be6087cded7f8e0a9",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/watch.stdout",
+        "role": "original CLI/provider JSON or text stream",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/artifacts-completed.result.json",
+      "bytes": 802,
+      "sha256": "3b7566998f332327f6bd8c83e950a4fa3b4394f8098148c2a9e08c7121ac1d4e",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/artifacts-completed.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/dispatch.result.json",
+      "bytes": 759,
+      "sha256": "38b2f057c8e48692d06cd2efcf65897883a5ec5dd0a49081108de0811e7f159b",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/dispatch.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/frontend-job-final.result.json",
+      "bytes": 779,
+      "sha256": "390f548f90778b78ddb19a886a4751acaaf28d442f7b978fed76e4a023b993e4",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/frontend-job-final.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/in-progress-preflight.result.json",
+      "bytes": 817,
+      "sha256": "a7c20e93f10e20ca5a2234247577f440cb4cf7817b50ecc9060347dc9bb21ef2",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/in-progress-preflight.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/installer-artifact.result.json",
+      "bytes": 784,
+      "sha256": "511a157e7e7bd86a17728c7bed0ddc42a51a34a1d67e5939dc3eaada653c5e1a",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/installer-artifact.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/installer-job-final.result.json",
+      "bytes": 787,
+      "sha256": "96b27a2519f84b6fa127dbe38a139def52a4739e1e76bc2d357ed603223fc728",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/installer-job-final.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/jobs-completed.result.json",
+      "bytes": 781,
+      "sha256": "a188c3599c1083cca97b941d13860be338eeaabc94e7dbf52c26859080befb84",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/jobs-completed.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/queued-preflight.result.json",
+      "bytes": 802,
+      "sha256": "bb3a06b83f8459859137e00ae07826ea88416fd4c158317e82559e85a016dbf7",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/queued-preflight.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/remote-branch-preflight.result.json",
+      "bytes": 805,
+      "sha256": "5fbb10a70607370faf5d49cb8a892768afd5bac7b4690c1e04903b15a6b8ee89",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/remote-branch-preflight.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/run-completed.result.json",
+      "bytes": 762,
+      "sha256": "3ec8b914204e995e786c76dc1d84dc9281bde04dd382a16bbc5d0f863a1e937a",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/run-completed.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/run-initial.result.json",
+      "bytes": 757,
+      "sha256": "29a619f1904d38627ba233c46faa20c95620a5748e73b215d2b4cac459ec2bea",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/run-initial.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/rust-job-final.result.json",
+      "bytes": 772,
+      "sha256": "8263eeeb7529961abe3b6277ef826c43bd171fc7a4f98e5ba63d7cf12fbdb705",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/rust-job-final.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/verify-job-final.result.json",
+      "bytes": 780,
+      "sha256": "8e6366be6053588a1128c02b8ba75a0d7506a680c0ca38f74fe1f014544546e9",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/verify-job-final.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "receipts/watch.result.json",
+      "bytes": 750,
+      "sha256": "721a41957b4ce7356f1340af175d92dd69182bfad49e2b178f11e2c2b3996f8e",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/watch.result.json",
+        "role": "original actual CLI command receipt; exit number applies to that gh command only",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "review/independent-engineering-review.json",
+      "bytes": 18635,
+      "sha256": "3e3fb640c9bb1cc1cac14786e231e134ad50d29e63d6143cfc0a5504593381de",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/independent-engineering-review.json",
+        "role": "actual separate reader: engineering/original17 scope",
+        "byteExact": true
+      }
+    },
+    {
+      "path": "review/independent-final-review.json",
+      "bytes": 15636,
+      "sha256": "0f4a37830bce6f0a52484c473ed3bf5cb9e6d9cf7e2b1a1c13b4adaef9ef1439",
+      "origin": {
+        "privatePath": "output/2026-11-05-development-continuation/windows-full/independent-final-review.json",
+        "role": "actual separate reader: completed metadata/installer/artifact/private50 scope",
+        "byteExact": true
+      }
+    }
+  ],
+  "publicActualMemberCountIncludingThisManifest": 35,
+  "privateInventory": {
+    "archiveMember": "provenance/private-50-file-manifest.json",
+    "declaredPrivateFileCount": 50,
+    "actualIncludedSourceFilesFromThatSnapshot": 31,
+    "actualExcludedFilesFromThatSnapshot": 19,
+    "sha256": "54702947e1552a796c99406f81eb7e912e37a232d328637c41d9604190fcafe7",
+    "meaning": "This unchanged private inventory is not a claim that all50files are archived."
+  },
+  "privateSnapshotExclusions": [
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/artifacts-completed.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/await-state-change.py",
+      "bytes": 1866,
+      "sha256": "e0773d5b8e01476de721edfcc23fdb7f44cec063d126b54a74f9e8680c0a68a8",
+      "reason": "Operational collector/wait helper source; not necessary for the completed JSON/text receipt capsule."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/completed-check-jobs-summary.json",
+      "bytes": 1427,
+      "sha256": "9b48d1d36e1b403e6dcd771077fa782406222aefba2fa750980a7097ee4d693a",
+      "reason": "Earlier partial summary while installer was pending; superseded by final collector and completed original metadata."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/dispatch.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/frontend-job-final.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/in-progress-preflight.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/installer-artifact.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/installer-artifact.stdout",
+      "bytes": 12483144,
+      "sha256": "37b78fbd6421a42be1f7fdcb96e8b8bf095899ebb529f040ccb54acd5987211b",
+      "reason": "Actual downloaded installer artifact ZIP, containing the EXE. Binary bytes expressly excluded; only service/member digests and independent review are published."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/installer-job-final.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/jobs-completed.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/observation-cursor.json",
+      "bytes": 3574,
+      "sha256": "e77d307639db3cfd3a00b85eea27740ca0d7783f9428669982159662380524c4",
+      "reason": "Transient local watch cursor; final raw watch and actual completion receipt are included."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/queued-preflight.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/remote-branch-preflight.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/request-once.py",
+      "bytes": 1128,
+      "sha256": "cf0c84912a097d5f4af8be160cfdb442ed40d5218e85e88c887def7634ac3958",
+      "reason": "Operational collector/wait helper source; not necessary for the completed JSON/text receipt capsule."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/run-completed.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/run-initial.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/rust-job-final.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/verify-job-final.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    },
+    {
+      "privatePath": "output/2026-11-05-development-continuation/windows-full/watch.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Empty CLI error stream; its0-byte size and SHA remain in the original command receipt/private inventory. Omitted to avoid redundant empty members."
+    }
+  ],
+  "additionalActualFinalReaderNotInOlder50Snapshot": {
+    "archiveMember": "review/independent-final-review.json",
+    "bytes": 15636,
+    "sha256": "0f4a37830bce6f0a52484c473ed3bf5cb9e6d9cf7e2b1a1c13b4adaef9ef1439"
+  },
+  "actualClientCommandReceiptCount": 14,
+  "collectorReceiptIntegrityAssertionCount": 19,
+  "actualArtifactZipAndExeIncluded": false,
+  "memberTypes": "UTF-8 JSON and text, including original ANSI text streams; no executable/container binary members.",
+  "sourceMapClaimed": false,
+  "independentNumericCargoExitReceiptClaimed": false,
+  "lineNumberConvention": "one-based physical LF boundaries, CR retained in original bytes"
+}

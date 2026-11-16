@@ -1,0 +1,261 @@
+{
+  "completedAt": "2026-11-04T09:56:15.722438+00:00",
+  "sourceHead": "8e4c9da08a213e4f8b43607aabf1532da4fbe672",
+  "worktreeScope": "Current macOS arm64 worktree, including preserved uncommitted Windows candidate files; Windows-only code is not executed by these host checks.",
+  "engineeringSevenPassed": true,
+  "engineeringChecks": [
+    {
+      "label": "frontend-format-final",
+      "command": ["corepack", "pnpm", "format:check"],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T09:54:32.294834+00:00",
+      "finishedAt": "2026-11-04T09:55:00.688541+00:00",
+      "durationSeconds": 28.394,
+      "exitCode": 0,
+      "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/frontend-format-final.log"
+    },
+    {
+      "label": "frontend-typecheck",
+      "command": ["corepack", "pnpm", "typecheck"],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T09:49:09.201308+00:00",
+      "finishedAt": "2026-11-04T09:49:26.227690+00:00",
+      "durationSeconds": 17.026,
+      "exitCode": 0,
+      "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/frontend-typecheck.log"
+    },
+    {
+      "label": "frontend-tests",
+      "command": ["corepack", "pnpm", "test"],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T09:49:09.199721+00:00",
+      "finishedAt": "2026-11-04T09:49:53.082704+00:00",
+      "durationSeconds": 43.883,
+      "exitCode": 0,
+      "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/frontend-tests.log"
+    },
+    {
+      "label": "frontend-build",
+      "command": ["corepack", "pnpm", "build"],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T09:49:34.008066+00:00",
+      "finishedAt": "2026-11-04T09:49:55.603329+00:00",
+      "durationSeconds": 21.595,
+      "exitCode": 0,
+      "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/frontend-build.log"
+    },
+    {
+      "label": "cargo-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T09:47:30.042352+00:00",
+      "finishedAt": "2026-11-04T09:47:31.221659+00:00",
+      "durationSeconds": 1.179,
+      "exitCode": 0,
+      "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/cargo-fmt.log"
+    },
+    {
+      "label": "cargo-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T09:50:11.604640+00:00",
+      "finishedAt": "2026-11-04T09:50:39.042494+00:00",
+      "durationSeconds": 27.438,
+      "exitCode": 0,
+      "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/cargo-clippy.log"
+    },
+    {
+      "label": "cargo-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T09:50:52.381197+00:00",
+      "finishedAt": "2026-11-04T09:53:36.960071+00:00",
+      "durationSeconds": 164.579,
+      "exitCode": 0,
+      "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/cargo-tests.log"
+    }
+  ],
+  "testCounts": {
+    "frontendFiles": 704,
+    "frontendPassed": 9450,
+    "rustPassed": 2335,
+    "rustFailed": 0,
+    "rustIgnored": 6,
+    "ignoredTestsWereNotEnabled": true
+  },
+  "additionalChecks": {
+    "pnpm-install": {
+      "label": "pnpm-install",
+      "command": ["corepack", "pnpm", "install", "--frozen-lockfile"],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T09:47:17.846750+00:00",
+      "finishedAt": "2026-11-04T09:48:34.287614+00:00",
+      "durationSeconds": 76.44,
+      "exitCode": 0,
+      "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/pnpm-install.log"
+    },
+    "cargo-fetch": {
+      "label": "cargo-fetch",
+      "command": [
+        "cargo",
+        "fetch",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T09:47:30.042243+00:00",
+      "finishedAt": "2026-11-04T09:48:05.376490+00:00",
+      "durationSeconds": 35.333,
+      "exitCode": 0,
+      "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/cargo-fetch.log"
+    },
+    "tauri-info": {
+      "label": "tauri-info",
+      "command": ["corepack", "pnpm", "exec", "tauri", "info"],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T09:49:01.015088+00:00",
+      "finishedAt": "2026-11-04T09:49:19.200672+00:00",
+      "durationSeconds": 18.185,
+      "exitCode": 0,
+      "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/tauri-info.log"
+    },
+    "docs-check": {
+      "label": "docs-check",
+      "command": ["corepack", "pnpm", "docs:check"],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T09:49:35.167204+00:00",
+      "finishedAt": "2026-11-04T09:49:35.462080+00:00",
+      "durationSeconds": 0.293,
+      "exitCode": 0,
+      "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/docs-check.log"
+    },
+    "vite-dev-smoke": {
+      "label": "vite-dev-smoke",
+      "command": [
+        "node",
+        "docs/evidence/2026-11-04-development-environment-restoration/dev-smoke.mjs"
+      ],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T09:52:21.531611+00:00",
+      "finishedAt": "2026-11-04T09:52:22.366973+00:00",
+      "durationSeconds": 0.835,
+      "exitCode": 0,
+      "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/vite-dev-smoke.log"
+    },
+    "desktop-build": {
+      "label": "desktop-build",
+      "command": [
+        "cargo",
+        "build",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T09:53:55.784735+00:00",
+      "finishedAt": "2026-11-04T09:53:59.679250+00:00",
+      "durationSeconds": 3.894,
+      "exitCode": 0,
+      "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/desktop-build.log"
+    }
+  },
+  "developmentBinaryArchitecture": "src-tauri/target/debug/farfold: Mach-O 64-bit executable arm64",
+  "developmentServer": {
+    "requests": [
+      {
+        "path": "/",
+        "status": 200
+      },
+      {
+        "path": "/src/main.tsx",
+        "status": 200
+      }
+    ],
+    "closedAfterProbe": true,
+    "port1420Released": true
+  },
+  "preservation": {
+    "sourceAndLockFilesChecked": 2260,
+    "sourceAndLockChanges": [],
+    "rawCleanupReceiptCount": 6,
+    "rawCleanupReceiptChanges": [],
+    "formalBinarySha256": "e3eccba47c505ba0118b5de3679872810eca5d26775b1ae228ca7e11c918f2da",
+    "formalBinaryMatchesBefore": true,
+    "formalApplicationReplaced": false
+  },
+  "changes": [
+    "Restored JS dependencies with pnpm 9.15.0 and --frozen-lockfile.",
+    "Fetched locked Cargo dependencies and regenerated native build caches.",
+    "Added six exact raw cleanup receipt paths to .prettierignore, preserving original evidence bytes.",
+    "Updated current environment status and added this evidence directory."
+  ],
+  "retainedInitialFailure": {
+    "receipt": "checks/frontend-format.json",
+    "exitCode": 1,
+    "cause": "Six pre-existing original cleanup review/scope receipts were not excluded from formatting.",
+    "resolution": "Six exact exclusions; no source or directory-wide exemption."
+  },
+  "environmentNotes": [
+    "macOS 27.0, Apple M6, arm64, 16 GiB RAM.",
+    "Node 22.22.3, pnpm 9.15.0, Rust/Cargo 1.96.0.",
+    "Command Line Tools and SDK 15.5 successfully compiled this project; full Xcode remains absent.",
+    "Tauri info exits 0 but reports absent full Xcode and optional unused JS plugin counterparts.",
+    "Existing LLVM-MinGW payload remains available by absolute path; Windows targets are installed.",
+    "Vite production build retains its large-chunk advisory."
+  ],
+  "diskFreeBytesAfterBuild": 85513830400,
+  "verificationLimits": [
+    "No desktop application UI or real Agent request was started.",
+    "No installed application replacement or public signing/notarization.",
+    "No Windows native candidate execution, Windows UI acceptance, or new CI run.",
+    "The existing 17 Windows full-suite failures and four unexecuted new Windows tests remain open.",
+    "No 29-agent eight-standard product acceptance or long-running resource claim.",
+    "Hash checks cover the listed files, not an atomic filesystem snapshot or live user-data byte identity."
+  ],
+  "remainingFeatureWorkStatus": "paused; user authorized environment restoration and engineering checks only",
+  "documentationCheckAfterStatusUpdate": {
+    "label": "docs-check-final",
+    "command": ["corepack", "pnpm", "docs:check"],
+    "cwd": "/Users/tw/Desktop/farfold",
+    "startedAt": "2026-11-04T09:56:24.561898+00:00",
+    "finishedAt": "2026-11-04T09:56:24.707725+00:00",
+    "durationSeconds": 0.146,
+    "exitCode": 0,
+    "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/docs-check-final.log"
+  },
+  "independentReview": {
+    "reviewer": "/root/environment_review",
+    "result": "passed",
+    "verified": [
+      "Seven actual exit codes and raw test counts.",
+      "2260 listed source and lock hashes equal baseline.",
+      "Six original cleanup receipt hashes unchanged.",
+      "Installed main program hash unchanged.",
+      "Exactly six file exclusions with no directory or wildcard expansion.",
+      "Vite HTTP results and port release."
+    ],
+    "limits": "No desktop UI, real Agent, Windows execution or product acceptance claim."
+  }
+}

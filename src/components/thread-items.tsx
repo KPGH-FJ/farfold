@@ -1,4 +1,5 @@
 import { usesMacShortcuts } from "../runtime/platform_shortcuts";
+import { selectablePermissionOption } from "../runtime/permission_options";
 import {
   compareLines,
   comparisonFor,
@@ -34,6 +35,7 @@ import { MessageMediaVisibility } from "./message-media-visibility";
 import type {
   PermissionOption,
   PlanEntry,
+  TerminalCommandPermission,
   ToolCallView,
   ToolContent,
 } from "../runtime/sessions";
@@ -578,10 +580,15 @@ export function RawBlock({
 
 /* ── 审批卡 ── */
 
-function optionLabel(option: PermissionOption): string {
+function optionLabel(
+  option: PermissionOption,
+  isTerminalCommand: boolean,
+): string {
   switch (option.kind) {
     case "allow_once":
-      return STRINGS.thread.approve;
+      return isTerminalCommand
+        ? STRINGS.thread.permissionApproveCommandOnce
+        : STRINGS.thread.approve;
     case "allow_always":
       return STRINGS.thread.approveRemember;
     case "reject_once":
@@ -627,11 +634,52 @@ function permissionSubtitle(
   }
 }
 
+function visibleCommandValue(value: string): string {
+  return JSON.stringify(value).replace(
+    /[\p{Cc}\p{Z}\p{Default_Ignorable_Code_Point}]/gu,
+    (character) =>
+      character === " "
+        ? character
+        : `\\u{${character.codePointAt(0)?.toString(16)}}`,
+  );
+}
+
+function TerminalCommandInput({
+  program,
+  args,
+  cwd,
+}: TerminalCommandPermission) {
+  return (
+    <div className="tool-input">
+      <div className="step-locs">{STRINGS.thread.inputProgram}</div>
+      <pre className="step-text" data-find-block>
+        {visibleCommandValue(program)}
+      </pre>
+      <div className="step-locs">{STRINGS.thread.inputArguments}</div>
+      <pre className="step-text" data-find-block>
+        {args.length === 0
+          ? STRINGS.thread.inputNoArguments
+          : args.map((arg, index) => (
+              <code key={index}>
+                {visibleCommandValue(arg)}
+                {index + 1 < args.length ? "\n" : ""}
+              </code>
+            ))}
+      </pre>
+      <div className="step-locs">{STRINGS.thread.inputCwd}</div>
+      <pre className="step-text" data-find-block>
+        {visibleCommandValue(cwd)}
+      </pre>
+    </div>
+  );
+}
+
 export function ApprovalCard({
   title,
   kind,
   locations,
   rawInput,
+  terminalCommand,
   options,
   onPick,
   disabled = false,
@@ -642,10 +690,12 @@ export function ApprovalCard({
   kind: string;
   locations: { path: string }[];
   rawInput?: unknown;
+  terminalCommand?: TerminalCommandPermission | null;
   options: PermissionOption[];
   onPick: (option: PermissionOption) => void;
   disabled?: boolean;
 }) {
+  const isTerminalCommand = terminalCommand !== undefined;
   const ordered = [...options].sort((a, b) => {
     const rank = (k: string) => (k.startsWith("allow") ? 0 : 1);
     return rank(a.kind) - rank(b.kind);
@@ -656,23 +706,42 @@ export function ApprovalCard({
         <i />
         {statusLabel ?? T.approval}
       </div>
-      <div className="ap-title">{title || STRINGS.thread.permissionOther}</div>
-      <div className="ap-sub">{permissionSubtitle(kind, locations)}</div>
-      <ToolInput input={rawInput} showMissing />
+      <div className="ap-title">
+        {isTerminalCommand
+          ? STRINGS.thread.permissionCommand
+          : title || STRINGS.thread.permissionOther}
+      </div>
+      {terminalCommand ? (
+        <TerminalCommandInput {...terminalCommand} />
+      ) : isTerminalCommand ? (
+        <p className="ap-sub" role="status">
+          {STRINGS.thread.permissionCommandDetailsUnavailable}
+        </p>
+      ) : (
+        <>
+          <div className="ap-sub">{permissionSubtitle(kind, locations)}</div>
+          <ToolInput input={rawInput} showMissing />
+        </>
+      )}
+      {options.some(
+        (option) => !selectablePermissionOption(options, option),
+      ) && <p role="status">{STRINGS.thread.permissionOptionsUnavailable}</p>}
       <div className="ap-actions">
-        {ordered.map((option) => {
+        {ordered.map((option, index) => {
           const kbd = optionKbd(option);
-          const label = optionLabel(option);
+          const label = optionLabel(option, isTerminalCommand);
           return (
             <button
-              key={option.optionId}
+              key={`${index}:${option.optionId}`}
               type="button"
               className={optionClass(option)}
-              disabled={disabled}
+              disabled={
+                disabled || !selectablePermissionOption(options, option)
+              }
               onClick={() => onPick(option)}
             >
               <span>{label}</span>
-              {option.name && option.name !== label && (
+              {!isTerminalCommand && option.name && option.name !== label && (
                 <small className="permission-option-detail">
                   {option.name}
                 </small>

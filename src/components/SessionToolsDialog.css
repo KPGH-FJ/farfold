@@ -1,0 +1,123 @@
+.workspace-dialog[open]:has(.session-tools-context) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.workspace-dialog:has(.session-tools-context) > .workspace-dialog-title,
+.workspace-dialog:has(.session-tools-context) > footer {
+  flex-shrink: 0;
+}
+.workspace-dialog:has(.session-tools-context) > .workspace-dialog-body {
+  min-height: 0;
+  overflow-y: auto;
+}
+.workspace-dialog:has(.session-tools-context)
+  > footer
+  > .btn-primary[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: default;
+  filter: none;
+}
+.session-tools-announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.session-tools-context {
+  overflow-wrap: anywhere;
+  color: var(--ink-2);
+  font-size: 13px;
+}
+.session-tools-report {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.session-tools-note {
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.session-tools-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.session-tools-filter select {
+  max-width: 100%;
+}
+.session-tools-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: min(44vh, 360px);
+  overflow-y: auto;
+  border-top: 1px solid var(--line);
+}
+.session-tools-items > li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+.session-tools-items strong {
+  font-size: 13px;
+}
+.session-tools-items p,
+.session-tools-items summary {
+  font-size: 12px;
+}
+.session-tools-description {
+  white-space: pre-wrap;
+  unicode-bidi: plaintext;
+}
+.session-tool-management {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+.session-tool-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.session-tool-review dd {
+  margin-inline-start: 0;
+  margin-block-end: 10px;
+  overflow-wrap: anywhere;
+}
+
+/* Recovery shares the transcript's remaining space with the composer. Keep
+   its actions outside the one scrollable review, including in the dialog. */
+.session-tool-recovery {
+  min-height: 0;
+  max-height: min(40vh, 360px);
+  flex-shrink: 0;
+}
+.transcript .col > .session-tool-recovery {
+  max-height: min(100%, 40vh, 360px);
+}
+.session-tool-recovery-content {
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.session-tool-recovery-content > * {
+  flex-shrink: 0;
+}
+.session-tool-recovery .session-tools-items {
+  max-height: none;
+  overflow: visible;
+}
+.session-tool-recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex-shrink: 0;
+}

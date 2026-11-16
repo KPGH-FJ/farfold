@@ -1,0 +1,27 @@
+{
+  "kind": "InstalledStoppedToolStateAcrossArtifactScopes",
+  "date": "2026-11-07",
+  "platform": "macOS arm64",
+  "installedSource": "6ce829c5",
+  "scope": "One already-loaded, exact synthetic Copilot approval-and-stop sample previously used for the stopped-tool Markdown export check.",
+  "observed": {
+    "replyStoppedWithUnconfirmedSteps": true,
+    "stepCount": 1,
+    "messageStepState": "等待处理",
+    "singleStepCommandState": "等待处理",
+    "roundCommandState": "等待处理",
+    "singleStepReportedFileCount": 0,
+    "roundReportedFileCount": 0,
+    "bothEmptyFileScopesShowedCompletedProvenanceNote": true,
+    "actualOutputBodyVisible": false,
+    "noFileOrCommandActionTaken": true,
+    "sameAppAndExistingChildren": true,
+    "existingOpenProtocolTapsUnchanged": 7,
+    "protectedOldTapsUnchanged": 3,
+    "originalDraftAndStoredWorkPreserved": true,
+    "retainedDraftCount": 1,
+    "originalDraftViewRestored": true,
+    "targetActivityStillUnresolved": true
+  },
+  "boundary": "Read-only view of the old installed presentation. A waiting label and empty output do not prove the tool is running, stopped, or complete."
+}

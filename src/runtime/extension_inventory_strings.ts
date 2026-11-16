@@ -68,7 +68,7 @@ export const EXTENSION_INVENTORY_STRINGS = {
   auth: "认证报告",
   details: "范围与未验证事项",
   scope: "按所选工作文件夹单独查询配置，不代表当前对话的设置。",
-  unavailableLists: "具体工具清单尚未提供。",
+  unavailableLists: "此处未提供具体工具清单。",
   limits:
     "本次未检查服务器连接、具体工具调用或当前对话是否生效；配置来源文件与配置层级未报告。",
   sideEffects:

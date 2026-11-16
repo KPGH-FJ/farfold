@@ -1,0 +1,219 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-11-04T11:52:10.460715+00:00",
+  "scope": "Source/fixture follow-up to run41818072244: Windows creation test setup waits use bounded60s, Mac waits and all original terminal assertions stay; production deadlines, debugger scheduling and process-retirement proof unchanged. No native Windows execution in these local checks.",
+  "macCheck": {
+    "buildCommand": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "--no-run",
+      "--message-format=json"
+    ],
+    "buildExitCode": 0,
+    "sameBinaryExactTests": [
+      "worktrees::tests::creates_exact_new_branch_preserves_original_index_dirty_ignored_and_disables_hook",
+      "worktrees::manager::tests::cold_old_location_and_material_ids_cannot_start_new_filesystem_work",
+      "worktrees::manager::tests::real_git_completion_followed_by_storage_failure_keeps_files_and_can_recover_metadata_only",
+      "worktrees::config_compatibility_tests::official_boolean_aliases_preserve_checkout_and_do_not_reject_an_ordinary_repository"
+    ],
+    "actualPassed": 4,
+    "failed": 0,
+    "ignored": 0,
+    "testSeconds": 3.52,
+    "testBinarySha256": "92ac1fe549be6ac8f8f8a41037fb4a07dbde1c99239c088c124c6b833e1103ea",
+    "listedInputsUnchanged": true,
+    "binaryUnchanged": true,
+    "result": {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-local/result.json",
+      "sha256": "95c2de06b6a4d35ef6728ac580fbb26bbcbf70d6d5c739f3c4b198d9b47bb394"
+    }
+  },
+  "windowsCrossCheck": {
+    "target": "x86_64-pc-windows-gnu",
+    "clippyWarningsDenied": true,
+    "commands": [
+      {
+        "name": "actual-debug-test-modules-r2",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--offline",
+          "--locked",
+          "--manifest-path",
+          "/Users/tw/Desktop/farfold/output/2026-11-04-windows-retirement-resume/create-wait-observation-cross/Cargo.toml",
+          "--target",
+          "x86_64-pc-windows-gnu",
+          "--lib",
+          "--tests",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "naturalExitCode": 0,
+        "log": "actual-debug-test-modules-r2.log",
+        "sha256": "33426553576fc8feffad5016c64010d92ea100d5013acb806c64df1d14685f85"
+      },
+      {
+        "name": "actual-original-example-r2",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--offline",
+          "--locked",
+          "--manifest-path",
+          "/Users/tw/Desktop/farfold/output/2026-11-04-windows-retirement-resume/create-wait-observation-cross/Cargo.toml",
+          "--target",
+          "x86_64-pc-windows-gnu",
+          "--example",
+          "actual-windows-process-fixture",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "naturalExitCode": 0,
+        "log": "actual-original-example-r2.log",
+        "sha256": "baecd4490677327bf071f8d23885e9bd223c9601f2ddcb77a47e5a52addee60a"
+      }
+    ],
+    "actualModules": "git_debug_windows.rs and git_command_observation_tests.rs, including cfg(test) timers and caller method signature",
+    "stubbedPort": "Original Job certificate query is a nonexecuted stub in the small check harness. The complete worktree executor/app is not compiled by this target.",
+    "actualExample": "Original src-tauri/examples/windows_process_fixture.rs and its production ownership modules, without source copying or new allow-unused-imports; const alias warning absent.",
+    "dependenciesMatchMainLock": true,
+    "nativeLinkOrExecution": false,
+    "sourceInputsStable": true,
+    "initialFailure": "Generated harness token replacement corrupted its constant name; original failure result/log preserved. Corrected only generated stub; both subsequent targets naturally0.",
+    "result": {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-cross/result-r2.json",
+      "sha256": "c07550723f9278486d124073b8642cbe098efb3b05fbe09bafa3b457f154aa4d"
+    }
+  },
+  "checkedSourceInputsSha256": {
+    "src-tauri/src/windows_process.rs": "450dbc54de096a5124dbadff297f4ccbb06053471d274fe294105c5ba75fee62",
+    "src-tauri/src/worktrees/git.rs": "12260a349a96243d3cf778757cad7a42896fb489f9f646507d11224fc061381d",
+    "src-tauri/src/worktrees/git_command_observation_tests.rs": "03790db1b3665968edbcbd2ed576b55eb36cde359c5cb63423e7f0ed27ccb61a",
+    "src-tauri/src/worktrees/git_debug_windows.rs": "97b8b25e280a4519800383a250ef418fa7ba2802a63d3e328e9739c6dbfe597a",
+    "src-tauri/src/worktrees/manager_tests.rs": "91fc86e532bbc67dc0ca4ebc88b2dd5dfa2904f36a34e27504d9e423286334ae",
+    "src-tauri/src/worktrees/recycle_tests.rs": "f9b18d1e784ecf8127499f91dc5aade44c02315d48cf37e85784edd8463b1e85",
+    "src-tauri/src/worktrees/tests.rs": "d27e19d5c27afee45cab8033cdff468e45c6a03420584ee353b9c3d75ecee870",
+    ".github/scripts/windows-launch-prerequisites.ps1": "fa8e0120be044fbd0bb4ac32d627b5be83367f902ee0cd06b62b62304b7ad1b4",
+    ".github/workflows/windows-launch-prerequisites.yml": "e3e1e874352fcad784d16403a48ef159cd1c3959cbd2cf7d468e188204d8076a",
+    "src-tauri/src/windows_process/current_members.rs": "34cc3ecb583d942fecb53a95b411be1dde91a2f7aa34b59dd314e2e4716c4057",
+    "src-tauri/src/windows_process/debug_certificate.rs": "eee78abdc87af7d49578439ab98b85f11cb071b073790db02c8d7f211d958083",
+    "src-tauri/src/windows_process/stdout_handoff.rs": "9434ecfb4f54dbebf44133778d31f5b3b75540b9f6c40574c525566c72812947",
+    "src-tauri/examples/windows_process_fixture.rs": "f98db4625e630b1a06d4624f7fd499cf89b6bc10c6e0372aed894cc1ed6e2978",
+    "src-tauri/examples/windows_process_fixture/git_job_probe.rs": "4468ac0ba612dafc64d2930fc96f2946954e26a3f616a7e3a71294944c0ba208",
+    "src-tauri/examples/windows_process_fixture/manual_privileges.rs": "4d49ecef3d49f0ace27274c058443f8a66f617d1d926077845034c0465d4af9d"
+  },
+  "originalFiles": [
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-local/build.stdout.jsonl",
+      "zipEntry": "create-wait-observation-local/build.stdout.jsonl",
+      "sha256": "b33bf2d35df2ec2f1ba4300e582c2e45f237a6ee56337141f8a70fb4d07b4967",
+      "bytes": 376358
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-local/build.stderr.log",
+      "zipEntry": "create-wait-observation-local/build.stderr.log",
+      "sha256": "b66c5b0a62a66f7af834317d44b6d4062cbab4dfc9966b6dbe5343a8a06b0f68",
+      "bytes": 139
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-local/inputs-before.json",
+      "zipEntry": "create-wait-observation-local/inputs-before.json",
+      "sha256": "62b9e333896f12d9f895756565441db0bad648702f2d62bb5a224625f7c0113d",
+      "bytes": 1041
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-local/inputs-after.json",
+      "zipEntry": "create-wait-observation-local/inputs-after.json",
+      "sha256": "62b9e333896f12d9f895756565441db0bad648702f2d62bb5a224625f7c0113d",
+      "bytes": 1041
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-local/result.json",
+      "zipEntry": "create-wait-observation-local/result.json",
+      "sha256": "95c2de06b6a4d35ef6728ac580fbb26bbcbf70d6d5c739f3c4b198d9b47bb394",
+      "bytes": 1227
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-local/tests.stdout.log",
+      "zipEntry": "create-wait-observation-local/tests.stdout.log",
+      "sha256": "bfd37f27baf8341bbe0e331de774901c3f7cef25d269a2d91dbbe9771cf686cc",
+      "bytes": 599
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-local/tests.stderr.log",
+      "zipEntry": "create-wait-observation-local/tests.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-cross/Cargo.toml",
+      "zipEntry": "create-wait-observation-cross/Cargo.toml",
+      "sha256": "9d2303c6f37ea95866491fae02c9594032e7ad3452dddc5b07b17136021b6876",
+      "bytes": 808
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-cross/Cargo.lock",
+      "zipEntry": "create-wait-observation-cross/Cargo.lock",
+      "sha256": "cf4cc26df28a63080cdff67f79334baeb60ae8cb9237282732c85b53f2ad88ef",
+      "bytes": 3110
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-cross/src/lib.rs",
+      "zipEntry": "create-wait-observation-cross/src/lib.rs",
+      "sha256": "297df0a7b33a037665b5d3538cb040582d3b1608acc97ff81dec040d75d282aa",
+      "bytes": 964
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-cross/actual-debug-test-modules.log",
+      "zipEntry": "create-wait-observation-cross/actual-debug-test-modules.log",
+      "sha256": "781b652359526eb9303a76f82784e27a12edb3b7bc6476407a98c467b664f75d",
+      "bytes": 856
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-cross/result.json",
+      "zipEntry": "create-wait-observation-cross/result.json",
+      "sha256": "54ae4defd8ab025efdf50bc865409eed2081a770b187acded5dd2769c74ea1c6",
+      "bytes": 3744
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-cross/actual-debug-test-modules-r2.log",
+      "zipEntry": "create-wait-observation-cross/actual-debug-test-modules-r2.log",
+      "sha256": "33426553576fc8feffad5016c64010d92ea100d5013acb806c64df1d14685f85",
+      "bytes": 231
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-cross/actual-original-example-r2.log",
+      "zipEntry": "create-wait-observation-cross/actual-original-example-r2.log",
+      "sha256": "baecd4490677327bf071f8d23885e9bd223c9601f2ddcb77a47e5a52addee60a",
+      "bytes": 231
+    },
+    {
+      "path": "output/2026-11-04-windows-retirement-resume/create-wait-observation-cross/result-r2.json",
+      "zipEntry": "create-wait-observation-cross/result-r2.json",
+      "sha256": "c07550723f9278486d124073b8642cbe098efb3b05fbe09bafa3b457f154aa4d",
+      "bytes": 4399
+    }
+  ],
+  "originalsZip": {
+    "path": "docs/evidence/2026-11-04-windows-retirement-resume/create-wait-observation-local-originals.zip",
+    "sha256": "6aa5055d658d0f36c877e947fbfd6f7b20b544eece9e95d50cb8756a496a938c",
+    "entries": 15,
+    "bytes": 38959,
+    "allEntriesByteExactToListedOriginalFiles": true,
+    "testBinaryTargetOtherRunsAndUserDataIncluded": false
+  },
+  "limits": {
+    "fullEngineeringRepeated": false,
+    "windowsNativePassedClaimed": false,
+    "fullWindows17FailuresChanged": false,
+    "installedMacAppUpdatedByThisLine": false,
+    "nextSelectedNativeExecutions": 10,
+    "previous45ExecutionsRerunClaimed": false
+  }
+}

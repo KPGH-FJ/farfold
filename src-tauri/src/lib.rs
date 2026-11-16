@@ -29,6 +29,7 @@ mod file_delivery_commands;
 mod file_read_check;
 mod install_job;
 mod installations;
+mod interface_scale;
 mod lifemodel;
 mod logging;
 #[cfg(target_os = "macos")]
@@ -94,6 +95,28 @@ fn activate_existing_instance(app: &AppHandle) {
 
 fn should_stop_agents(event: &tauri::RunEvent) -> bool {
     matches!(event, tauri::RunEvent::Exit)
+}
+
+fn dispatch_storage_command<R: tauri::Runtime>(
+    invoke: tauri::ipc::Invoke<R>,
+    dispatch: impl FnOnce(tauri::ipc::Invoke<R>) -> bool,
+) -> bool {
+    let storage = invoke
+        .message
+        .webview_ref()
+        .app_handle()
+        .try_state::<storage_recovery::StorageRecoveryState>();
+    if !storage.is_some_and(|state| state.allows(invoke.message.command())) {
+        invoke.resolver.reject("本机资料尚未就绪，请先完成资料恢复");
+        return true;
+    }
+    if invoke.message.command() == "settings_set"
+        && matches!(invoke.message.payload(), tauri::ipc::InvokeBody::Json(payload)
+            if payload.get("key").and_then(serde_json::Value::as_str).is_some_and(auth::settings_write_awaited_on_exit))
+    {
+        return auth::dispatch_exit_settings(invoke);
+    }
+    dispatch(invoke)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -181,15 +204,6 @@ pub fn run() {
                 invoke.resolver.reject("此页面不能操作应用");
                 return true;
             }
-            let storage = invoke
-                .message
-                .webview_ref()
-                .app_handle()
-                .try_state::<storage_recovery::StorageRecoveryState>();
-            if !storage.is_some_and(|state| state.allows(invoke.message.command())) {
-                invoke.resolver.reject("本机资料尚未就绪，请先完成资料恢复");
-                return true;
-            }
             let handler: fn(tauri::ipc::Invoke<tauri::Wry>) -> bool = tauri::generate_handler![
                 audio_preview::audio_preview_available,
                 audio_preview::audio_preview_decode,
@@ -208,6 +222,7 @@ pub fn run() {
                 storage_recovery::storage_recovery_database_cancel,
                 storage_recovery::storage_recovery_database_restart,
                 browser_sharing::browser_share_status,
+                browser_sharing::browser_share_connect,
                 browser_sharing::browser_share_allow,
                 browser_sharing::browser_share_respond,
                 browser_sharing::browser_share_stop,
@@ -267,6 +282,8 @@ pub fn run() {
                 acp_client::workspace_access::decision::session_workspace_access_decide,
                 acp_client::session_commands::session_set_config,
                 acp_client::session_commands::session_confirm_config,
+                acp_client::original_config::acp_review_original_session_config,
+                acp_client::original_config::acp_confirm_original_session_config,
                 acp_client::session_commands::session_set_mode,
                 acp_client::session_commands::session_permission_respond,
                 acp_client::session_commands::session_elicitation_respond,
@@ -282,6 +299,10 @@ pub fn run() {
                 acp_client::session_discovery::session_import_commit,
                 acp_client::session_discovery::session_import_close,
                 acp_client::session_commands::session_close,
+                acp_client::session_commands::session_check_unapproved_stopped_close,
+                acp_client::session_commands::session_close_unapproved_stopped,
+                acp_client::session_commands::prepare_failed_work_close,
+                acp_client::session_commands::close_failed_work,
                 acp_client::session_commands::session_detach_for_config_check,
                 acp_client::session_commands::session_touch,
                 acp_client::session_commands::session_meta_rename,
@@ -339,6 +360,8 @@ pub fn run() {
                 desktop_notifications::desktop_notifications_get,
                 desktop_notifications::desktop_notifications_set,
                 desktop_notifications::desktop_notification_submit,
+                desktop_notifications::desktop_notification_test,
+                interface_scale::interface_scale_apply,
                 desktop_notifications::desktop_notification_withdraw,
                 desktop_notifications::desktop_notification_take_pending,
                 pty::pty_spawn,
@@ -362,6 +385,18 @@ pub fn run() {
                 acp_client::skill_management::agent_skill_change_status,
                 acp_client::skill_management::agent_skill_change_cancel,
                 acp_client::skill_management::agent_skill_change_recheck,
+                acp_client::skill_management::skill_preference_remove::agent_skill_preference_remove_inspect,
+                acp_client::skill_management::skill_preference_remove::agent_skill_preference_remove_confirm,
+                acp_client::skill_management::skill_preference_remove::agent_skill_preference_remove_status,
+                acp_client::skill_management::skill_preference_remove::agent_skill_preference_remove_cancel,
+                acp_client::skill_management::skill_preference_remove::agent_skill_preference_remove_recheck,
+                acp_client::session_tools::session_tools_read,
+                acp_client::session_tools::session_tools_status,
+                acp_client::session_tool_changes::session_tool_change_start,
+                acp_client::session_tool_changes::session_tool_change_status,
+                acp_client::session_tool_changes::session_tool_change_items,
+                acp_client::session_tool_recovery::session_tool_recovery_inspect,
+                acp_client::session_tool_recovery::session_tool_recovery_confirm,
                 acp_client::skill_management::mcp::agent_mcp_change_inspect,
                 acp_client::skill_management::mcp::agent_mcp_change_confirm,
                 acp_client::skill_management::mcp::agent_mcp_change_status,
@@ -428,7 +463,7 @@ pub fn run() {
                 performance_trace::host_performance_origin,
                 performance_trace::host_performance_sample,
             ];
-            handler(invoke)
+            dispatch_storage_command(invoke, handler)
         })
         .build(context)
         .expect("failed to build Farfold")

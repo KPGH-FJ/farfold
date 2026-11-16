@@ -6,6 +6,13 @@ import {
   type McpRemoveReview,
 } from "./mcp_remove_types";
 import {
+  parseSkillPreferenceRemoveOperation,
+  parseSkillPreferenceRemoveCancellation,
+  type SkillPreferenceRemoveRequest,
+  type SkillPreferenceRemoveOperation,
+  type SkillPreferenceRemoveReview,
+} from "./skill_preference_remove_types";
+import {
   parseMcpAddOperation,
   parseMcpAddCancellation,
   freezeMcpAddInput,
@@ -40,14 +47,23 @@ import {
   type McpChangeReview,
 } from "./mcp_management_types";
 export type ExtensionChangeRequest =
-  SkillChangeRequest | McpChangeRequest | McpAddRequest | McpRemoveRequest;
+  | SkillChangeRequest
+  | McpChangeRequest
+  | McpAddRequest
+  | McpRemoveRequest
+  | SkillPreferenceRemoveRequest;
 export type ExtensionChangeOperation =
   | SkillChangeOperation
   | McpChangeOperation
   | McpAddOperation
-  | McpRemoveOperation;
+  | McpRemoveOperation
+  | SkillPreferenceRemoveOperation;
 export type ExtensionChangeReview =
-  SkillChangeReview | McpChangeReview | McpAddReview | McpRemoveReview;
+  | SkillChangeReview
+  | McpChangeReview
+  | McpAddReview
+  | McpRemoveReview
+  | SkillPreferenceRemoveReview;
 interface TargetOwnerBase {
   owner: InventoryOwner;
   result: InventoryResult;
@@ -58,6 +74,7 @@ export type ExtensionChangeTargetOwner = TargetOwnerBase &
   (
     | { item: InventoryItem | SkillInventoryItem; requestedEnabled?: boolean }
     | { kind: "mcpRemoval"; item: InventoryItem }
+    | { kind: "skillPreferenceRemoval"; item: SkillInventoryItem }
     | {
         kind: "mcpAddition";
         inputId: string;
@@ -65,6 +82,11 @@ export type ExtensionChangeTargetOwner = TargetOwnerBase &
         httpAvailable?: boolean;
       }
   );
+export function isSkillPreferenceRemoveRequest(
+  r: ExtensionChangeRequest,
+): r is SkillPreferenceRemoveRequest {
+  return "kind" in r.target && r.target.kind === "skillPreferenceRemoval";
+}
 export function isRemoveRequest(
   r: ExtensionChangeRequest,
 ): r is McpRemoveRequest {
@@ -80,25 +102,29 @@ export function parseExtensionChangeOperation(
   raw: unknown,
   r: ExtensionChangeRequest,
 ): ExtensionChangeOperation {
-  return isRemoveRequest(r)
-    ? parseMcpRemoveOperation(raw, r)
-    : isAddRequest(r)
-      ? parseMcpAddOperation(raw, r)
-      : isMcpRequest(r)
-        ? parseMcpChangeOperation(raw, r)
-        : parseSkillChangeOperation(raw, r);
+  return isSkillPreferenceRemoveRequest(r)
+    ? parseSkillPreferenceRemoveOperation(raw, r)
+    : isRemoveRequest(r)
+      ? parseMcpRemoveOperation(raw, r)
+      : isAddRequest(r)
+        ? parseMcpAddOperation(raw, r)
+        : isMcpRequest(r)
+          ? parseMcpChangeOperation(raw, r)
+          : parseSkillChangeOperation(raw, r);
 }
 export function parseExtensionChangeCancellation(
   raw: unknown,
   r: ExtensionChangeRequest,
 ): ExtensionChangeOperation | null {
-  return isRemoveRequest(r)
-    ? parseMcpRemoveCancellation(raw, r)
-    : isAddRequest(r)
-      ? parseMcpAddCancellation(raw, r)
-      : isMcpRequest(r)
-        ? parseMcpChangeCancellation(raw, r)
-        : parseSkillChangeCancellation(raw, r);
+  return isSkillPreferenceRemoveRequest(r)
+    ? parseSkillPreferenceRemoveCancellation(raw, r)
+    : isRemoveRequest(r)
+      ? parseMcpRemoveCancellation(raw, r)
+      : isAddRequest(r)
+        ? parseMcpAddCancellation(raw, r)
+        : isMcpRequest(r)
+          ? parseMcpChangeCancellation(raw, r)
+          : parseSkillChangeCancellation(raw, r);
 }
 export function requestForTarget(
   t: ExtensionChangeTargetOwner,
@@ -115,6 +141,34 @@ export function requestForTarget(
     !result.snapshot.complete
   )
     return null;
+  if ("kind" in t && t.kind === "skillPreferenceRemoval") {
+    const item = t.item;
+    if (
+      result.request.kind !== "skills" ||
+      result.snapshot.source !== "officialAppServer" ||
+      result.snapshot.items[item.id] !== item ||
+      !item.name ||
+      !["user", "repo"].includes(item.origin) ||
+      item.pluginReported ||
+      item.enablement.availability !== "reviewable"
+    )
+      return null;
+    return Object.freeze({
+      agentId: owner.agentId,
+      requestId,
+      action: "inspect",
+      cwd: result.request.cwd,
+      requestedEnabled: null,
+      operationId: null,
+      target: Object.freeze({
+        kind: "skillPreferenceRemoval",
+        inventoryRequestId: result.request.requestId,
+        itemId: item.id,
+        name: item.name,
+        origin: item.origin as "user" | "repo",
+      }),
+    });
+  }
   if ("kind" in t && t.kind === "mcpRemoval") {
     const item = t.item;
     if (
@@ -231,6 +285,16 @@ export function confirmedRequest(
   requestId: string,
 ): ExtensionChangeRequest {
   // Both the exact review object and its target were validated before this point.
+  if (isSkillPreferenceRemoveRequest(old)) {
+    if (review.mutation !== "removeSkillPathPreference")
+      throw { code: "invalidOutput" };
+    return {
+      ...old,
+      requestId,
+      action: "remove",
+      target: Object.freeze({ ...review.target }),
+    };
+  }
   if (isRemoveRequest(old)) {
     if (review.mutation !== "removeDisabledMcp")
       throw { code: "invalidOutput" };

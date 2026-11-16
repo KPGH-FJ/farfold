@@ -20,11 +20,18 @@ export function MessageAudioCompatibility({
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [audio, setAudio] = useState<CompatibleAudio | null>(null);
+  const controls = useRef<HTMLDivElement>(null);
   const owner = useRef<{
     live: boolean;
     operation: AbortController | null;
     audio: CompatibleAudio | null;
   }>({ live: false, operation: null, audio: null });
+  const retainControlFocus = () => {
+    const group = controls.current;
+    const active = group?.ownerDocument.activeElement;
+    if (active && active !== group && group?.contains(active))
+      group.focus({ preventScroll: true });
+  };
   useEffect(() => {
     const current = owner.current;
     current.live = true;
@@ -51,6 +58,7 @@ export function MessageAudioCompatibility({
     if (!current.live || current.operation || !available) return;
     const operation = new AbortController();
     current.operation = operation;
+    retainControlFocus();
     setPending(true);
     setStatus(null);
     try {
@@ -64,6 +72,7 @@ export function MessageAudioCompatibility({
         return;
       }
       current.audio = value;
+      if (value) retainControlFocus();
       setAudio(value);
     } catch (error) {
       if (
@@ -77,26 +86,35 @@ export function MessageAudioCompatibility({
     } finally {
       if (current.live && current.operation === operation) {
         current.operation = null;
+        retainControlFocus();
         setPending(false);
       }
     }
   };
   const cancel = () => {
+    retainControlFocus();
     owner.current.operation?.abort();
     owner.current.operation = null;
     setPending(false);
     setStatus(S.audioCompatibilityCancelled);
   };
   return (
-    <div>
+    <div
+      ref={controls}
+      tabIndex={-1}
+      role="group"
+      aria-label={S.audioCompatibility}
+    >
       {audio ? (
         <>
           <p role="status">{S.audioCompatibilityReady}</p>
           <MessageAttachmentMedia
             media={{ kind: "audio", src: audio.src }}
             name={name}
+            onFocusedFailure={retainControlFocus}
             onFailure={() => {
               // MessageAttachmentMedia retires the source before this releases its lease.
+              retainControlFocus();
               audio.dispose();
               owner.current.audio = null;
               setAudio(null);

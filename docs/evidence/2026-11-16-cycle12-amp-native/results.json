@@ -1,0 +1,32 @@
+{
+  "baseline": "c4fdacdb4193af3a7f39c7063a91684574e2c6b7",
+  "installed": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "859d88875f896ef81cbc11f6a9d846b165da6c59",
+    "binarySha256": "6b14f355eb9c28642a42d8f6b0182d391e8206b85e481c5025feeef37f9b90d5"
+  },
+  "productInputsMatched": 2634,
+  "protectedRecords": 236586,
+  "protectedDigest": "c3469f8baf77f4baa8b64b8b20042a8b5a24bd0a6794347e4d391ed2b6f5f8f4",
+  "metadataIntegrity": "ok",
+  "duplicateAppRemoved": true,
+  "program": {
+    "registryId": "amp-acp",
+    "adapterVersion": "0.9.0",
+    "officialCliVersion": "0.0.1790740844-g023754",
+    "inspectedArgument": ["login"],
+    "originalSetupStillVisible": true,
+    "explicitStartVisible": true,
+    "accountLoginInvokedByAgent": false,
+    "vendorAccountVerified": false
+  },
+  "checks": {
+    "frontendAllPassed": 10951,
+    "rustPreparationFinalPassed": 16,
+    "strictReleaseClippy": true,
+    "docsOriginalConditions": 151
+  }
+}

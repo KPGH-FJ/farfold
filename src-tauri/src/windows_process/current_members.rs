@@ -22,12 +22,18 @@ struct Member {
     pid: u32,
     handle: Handle,
     admitted: bool,
+    counted_live: bool,
 }
 pub(super) struct Current {
     held: Vec<Member>,
     pending: Vec<u32>,
     coverage_gap: bool,
     observation_unknown: bool,
+    complete_empty: bool,
+    counted_leader: Option<u32>,
+    observed_live: u32,
+    retired_live: u32,
+    count_invalid: bool,
     #[cfg(test)]
     first_incomplete: Option<(&'static str, Option<u32>)>,
 }
@@ -41,6 +47,10 @@ pub(super) struct CurrentObservation {
     coverage_gap: bool,
     observation_unknown: bool,
     admitted_pids: Vec<u32>,
+    observed_live: u32,
+    retired_live: u32,
+    count_invalid: bool,
+    complete_empty: bool,
 }
 enum Lookup {
     Gone,
@@ -64,6 +74,10 @@ impl Current {
             coverage_gap: self.coverage_gap,
             observation_unknown: self.observation_unknown,
             admitted_pids,
+            observed_live: self.observed_live,
+            retired_live: self.retired_live,
+            count_invalid: self.count_invalid,
+            complete_empty: self.complete_empty,
         }
     }
     pub(super) fn new() -> io::Result<Self> {
@@ -78,6 +92,11 @@ impl Current {
             pending,
             coverage_gap: false,
             observation_unknown: false,
+            complete_empty: false,
+            counted_leader: None,
+            observed_live: 0,
+            retired_live: 0,
+            count_invalid: false,
             #[cfg(test)]
             first_incomplete: None,
         })
@@ -124,6 +143,21 @@ impl Current {
     pub(super) fn query_unknown(&mut self) {
         self.observation_unknown = true;
     }
+    /// A scalar count of distinct original objects, not PID history. An object
+    /// can first become counted only while its exact handle is NOT signaled.
+    /// Once retired on its exact signal, reopening that same old object can
+    /// never make it count again. Genuine PID reuse has a different live object.
+    pub(super) fn completely_retired_live(&self, leader: u32) -> Option<u32> {
+        (self.coverage_gap
+            && self.counted_leader == Some(leader)
+            && !self.count_invalid
+            && !self.observation_unknown
+            && self.complete_empty
+            && self.held.is_empty()
+            && self.pending.is_empty()
+            && self.observed_live == self.retired_live)
+            .then_some(self.observed_live)
+    }
     fn incomplete(&mut self, associated: Option<u32>, _reason: &'static str) -> bool {
         #[cfg(test)]
         // The first transition into the existing sticky gap is the relevant
@@ -144,6 +178,14 @@ impl Current {
         snapshot: impl FnOnce() -> io::Result<Listed>,
         mut lookup: impl FnMut(u32) -> io::Result<Lookup>,
     ) -> bool {
+        self.complete_empty = false;
+        match (self.counted_leader, leader) {
+            (None, Some(pid)) => self.counted_leader = Some(pid),
+            (Some(fixed), Some(pid)) if fixed == pid => {}
+            // Missing/changing leader context cannot provide lifetime coverage.
+            // This does not change ordinary no-gap completion or clear a gap.
+            _ => self.count_invalid = true,
+        }
         self.observation_unknown = associated.is_none();
         if self.poll_held(job).is_err() {
             return self.incomplete(associated, "held-before-resolution");
@@ -164,6 +206,7 @@ impl Current {
             Ok(value) => value,
             Err(_) => return self.incomplete(associated, "snapshot"),
         };
+        let complete_empty = listed.ids().is_empty();
         // Every newly listed candidate fits the finite pending array. A full
         // held array defers opens, retaining candidates rather than discarding
         // an object or silently accepting a partial observation.
@@ -180,6 +223,7 @@ impl Current {
             self.observation_unknown = true;
             return true;
         }
+        self.complete_empty = complete_empty;
         self.unknown() || !self.held.is_empty()
     }
     fn resolve_pending(&mut self, mut lookup: impl FnMut(u32) -> io::Result<Lookup>) {
@@ -200,6 +244,7 @@ impl Current {
                         pid,
                         handle,
                         admitted: false,
+                        counted_live: false,
                     });
                     self.pending.swap_remove(index);
                 }
@@ -233,9 +278,28 @@ impl Current {
             }
             match unsafe { WaitForSingleObject(member.handle.0, 0) } {
                 WAIT_OBJECT_0 => {
+                    if member.counted_live {
+                        match self.retired_live.checked_add(1) {
+                            Some(count) if count <= self.observed_live => self.retired_live = count,
+                            _ => self.count_invalid = true,
+                        }
+                    }
                     self.held.swap_remove(index);
                 }
                 WAIT_TIMEOUT => {
+                    if !member.counted_live
+                        && !self.count_invalid
+                        && self
+                            .counted_leader
+                            .is_some_and(|leader| member.pid != leader)
+                    {
+                        if let Some(count) = self.observed_live.checked_add(1) {
+                            self.observed_live = count;
+                            member.counted_live = true;
+                        } else {
+                            self.count_invalid = true;
+                        }
+                    }
                     index += 1;
                 }
                 _ => {

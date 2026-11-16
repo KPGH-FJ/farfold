@@ -1,0 +1,192 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-11-04T16:58:37.008408+00:00",
+  "runId": 41869099411,
+  "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41869099411",
+  "sourceHead": "fc1c297a1e191fa58b3b563874cf7bd8e6d446ba",
+  "cohort": "FrozenRetirementResume",
+  "scope": "BoundaryWaits",
+  "conclusion": "success",
+  "status": "completed",
+  "actualDifferentTestCases": 2,
+  "actualGroups": 1,
+  "actualCases": [
+    {
+      "fqn": "worktrees::remove_boundary_tests::remove_cancelled_retirement_keeps_maintenance_until_worker_returns",
+      "outerResult": "ok",
+      "groupNaturalExitCode": 0,
+      "capturedChildSeconds": 78.75,
+      "completedMarker": {
+        "archiveMember": "artifact/removal-boundary-waits.stdout.log",
+        "physicalLfLine": 416
+      },
+      "childSuccessProvenByActualParentAssertions": true
+    },
+    {
+      "fqn": "worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent",
+      "outerResult": "ok",
+      "groupNaturalExitCode": 0,
+      "capturedChildSeconds": 127.84,
+      "completedMarker": {
+        "archiveMember": "artifact/removal-boundary-waits.stdout.log",
+        "physicalLfLine": 1247
+      },
+      "childSuccessProvenByActualParentAssertions": true
+    }
+  ],
+  "group": {
+    "name": "removal-boundary-waits",
+    "argv": [
+      "worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent",
+      "worktrees::remove_boundary_tests::remove_cancelled_retirement_keeps_maintenance_until_worker_returns",
+      "--show-output",
+      "--test-threads=2",
+      "--color=never"
+    ],
+    "naturalExitCode": 0,
+    "actualParentCases": [
+      {
+        "name": "worktrees::remove_boundary_tests::remove_cancelled_retirement_keeps_maintenance_until_worker_returns",
+        "result": "ok"
+      },
+      {
+        "name": "worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent",
+        "result": "ok"
+      }
+    ],
+    "actualParentSummary": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2464 filtered out; finished in 127.86s",
+    "summaryReference": {
+      "archiveMember": "artifact/removal-boundary-waits.stdout.log",
+      "physicalLfLine": 1255
+    },
+    "startedAtUtc": "2026-11-04T16:50:54.4073973Z",
+    "finishedAtUtc": "2026-11-04T16:53:02.4053875Z",
+    "reportedLibtestSeconds": 127.86
+  },
+  "sourceBinding": {
+    "mappedFiles": 849,
+    "beforeAfterEqual": true,
+    "gitSourceMatchForms": {
+      "exactGitBlob": 3,
+      "CRLFCheckout": 846
+    },
+    "inputsBeforeSha256": "a581e8664cd7360adfaa809d36e0f7575d94ddc93412fd6e41bdbad3655e9d5f",
+    "inputsAfterSha256": "a581e8664cd7360adfaa809d36e0f7575d94ddc93412fd6e41bdbad3655e9d5f",
+    "binaryRemoteReportedSha256": "4994A4DAEE20002F1A15A1617B8031E0F03D50540857F5F09526E520A802EFE6",
+    "fixtureRemoteReportedSha256": "A8C4BFEE59C34A28A07122E928F9CEB525B4C4C00A9C1A9E33DB673CD17547FC",
+    "binaryUploaded": false,
+    "downloadedBinaryRehashPerformed": false,
+    "selectedBuildNaturalExitCode": 0,
+    "testBuildNaturalExitCode": 0,
+    "fixtureBuildNaturalExitCode": 0,
+    "all4NativePowerShellParseFileChecksPassed": true,
+    "allGroupsUseSameBinaryFixtureAndSelection": true,
+    "expectedSourceBindingArchiveMember": "analysis/expected-source-binding.json"
+  },
+  "nativeBuild": {
+    "startedAtUtc": "2026-11-04T16:38:00.5291202Z",
+    "finishedAtUtc": "2026-11-04T16:50:51.8936209Z",
+    "syntaxChecks": [
+      {
+        "path": ".github/scripts/windows-selected-build.ps1",
+        "sha256": "d526292bc993dab84d28999783c79f6f35e736b49d5ae2314831a5132afddffe",
+        "parseErrors": []
+      },
+      {
+        "path": ".github/scripts/windows-stdio-eof.ps1",
+        "sha256": "cab3b257bedcbcd9b85fe9ac79b64eddb301e4ab39505095a087d92f924da4df",
+        "parseErrors": []
+      },
+      {
+        "path": ".github/scripts/windows-stdout-controls.ps1",
+        "sha256": "fe85466a5e975823cebc92cf25dc92326485c8ae9eafaa97783721ee4dd86030",
+        "parseErrors": []
+      },
+      {
+        "path": ".github/scripts/windows-launch-prerequisites.ps1",
+        "sha256": "cc51f8fd6d26165d1b38fecc7b96312935c31e5d8bd212f147f03c874e1b495f",
+        "parseErrors": []
+      }
+    ]
+  },
+  "watch": {
+    "command": [
+      "gh",
+      "run",
+      "watch",
+      "41869099411",
+      "--exit-status",
+      "--interval",
+      "30"
+    ],
+    "naturalExitCode": 0,
+    "logSha256": "62eed59b09b9ef6fac2052db378e728ffaa757321aa74a0e90433e96b9b0f857",
+    "completionReceiptArchiveMember": "watch/watch-result.json",
+    "additionalWatchStarted": false
+  },
+  "job": {
+    "id": 126710990968,
+    "name": "selected",
+    "startedAtUtc": "2026-11-04T16:37:14Z",
+    "completedAtUtc": "2026-11-04T16:53:07Z",
+    "elapsedSeconds": 953.0,
+    "conclusion": "success",
+    "testStep": {
+      "name": "Two removal boundary waits from the completed full run",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 20,
+      "started_at": "2026-11-04T16:50:52Z",
+      "completed_at": "2026-11-04T16:53:02Z"
+    },
+    "finalReceiptStep": {
+      "name": "Require all resumed phases to have executed exactly and passed",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 21,
+      "started_at": "2026-11-04T16:53:02Z",
+      "completed_at": "2026-11-04T16:53:03Z"
+    }
+  },
+  "verification": {
+    "allChecksPassed": true,
+    "checkCount": 42,
+    "archiveMember": "analysis/native-verification.json",
+    "localVerifierCorrectionsRetained": "analysis/verification-harness-corrections.json",
+    "boundary": "This collector performed read-only mechanical checks of fixed-source native receipts, raw logs and Git blobs. A separate reviewer has not yet reviewed this publication."
+  },
+  "priorFailureAndLimits": {
+    "priorCompleteRun": 41853291008,
+    "priorSource": "69e43d16d582841e71eab2a11ebb81ba9678831f",
+    "priorLibrary": {
+      "passed": 2389,
+      "failed": 2,
+      "ignored": 75
+    },
+    "sameSourceFullSuitePassed": false,
+    "meaning": "The two names that failed in the prior full run passed here under the modified test-fixture waits and parent budget. No full run onfc is established by this selected result.",
+    "macFormalSourceStill": "aeb0dc491dbea76003aad988d86b675034b837ad",
+    "newFunctionalSourceInstalled": false,
+    "installerBuiltOrInstalled": false,
+    "productOr29By8Complete": false,
+    "newModelsOrAccountsTested": false,
+    "timingBoundary": "Selected whole-case times do not identify the previously slow pre-callback phase, prove60s universally sufficient, or measure a production performance improvement.",
+    "cargoExitBoundary": "Build/test natural exits are the recorded native command receipts. No separate exact Cargo101, selected-test child OS receipt or downloaded executable rehash is invented."
+  },
+  "originals": {
+    "path": "boundary-waits-native-41869099411-originals.zip",
+    "bytes": 506404,
+    "sha256": "b526a6bd192088929e4259d52849f7449c8663a537b86aafcab548133353b4f6",
+    "entries": 51,
+    "manifestMember": "manifest.json",
+    "byteExact": true,
+    "serviceArtifact": {
+      "id": 13345625026,
+      "name": "farfold-windows-launch-prerequisites-41869099411-1",
+      "bytes": 124517,
+      "sha256": "2b2b916a2daf78ccfa8e8229c61f65aa5a6c583cc5915ada100857ca8a12e93e",
+      "serviceDigestMatched": true
+    },
+    "rawJobLogSha256": "d8fcdd1b22842223ebf97a7960a9704dcd3cca4d8f52cc5a6ea997478f86c3d4"
+  }
+}

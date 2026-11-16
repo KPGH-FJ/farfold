@@ -1,0 +1,47 @@
+{
+  "sourceCommit": "65819a2d1546d8344a71f74e35672566e7cca148",
+  "warmTraceSha256": "09307625693f364ecc6b832f7fcdd0acbc8c4d3d535972fb5c5301b1d62635ce",
+  "coldTraceSha256": "852f3068b03d4b978508a5a6be69a319dbc6423cd3ee563acd2634656e015498",
+  "warmEventCount": 30,
+  "coldEventCount": 16,
+  "orderingSteps": 22,
+  "pngByteLength": 76,
+  "realComposer": true,
+  "switchDuringActualWebKitImageReadKeptOtherDraftUnchanged": true,
+  "realSaveFailurePreservedEditorAndPriorDiskText": true,
+  "explicitRetryAndNativeExitPreservedBothDraftsAndExactPng": true,
+  "coldNativeLaunchReopenedBothDraftsAndExactPng": true,
+  "agentRequests": 0,
+  "scopeLimits": [
+    "Hidden nonpersistent WebKit and private database, without launching the formal app.",
+    "Real Composer and DraftStartup with synthetic paste, switch and quit actions.",
+    "No system picker, physical clipboard, Dock quit or live Agent.",
+    "The fixture selects between two draft keys without using the installed conversation sidebar.",
+    "The settings error was produced by a real SQLite BEGIN IMMEDIATE lock; no real user storage was opened."
+  ],
+  "confirmedProcessExitCodes": {
+    "warm": 0,
+    "cold": 0
+  },
+  "nativeExitCount": {
+    "warm": 1,
+    "cold": 1
+  },
+  "syntheticInputSourceSha256": {
+    "frontend": "9efc9f5d433146c681d45b5650fc6fd9522dcc15aa80b11656f0f31ac1e76791",
+    "nativeHarness": "1db70d2275ed19c60d9c6a40bf08cc07876491652b8d8fef750c9069dbd2e9ec",
+    "nativeContext": "3b4658ab67f67ab00a4149a512b99ccc1577843103c94bc96339fb08884a1042",
+    "validator": "199eac38351db6a8f15560d35ff0fb5a888e76c77ea2ee7bc9cb93d2e21b7273",
+    "testExecutable": "68519371d1b14b849cfc0921f3be2e06923d6ab0c54321fa52817ff89edda5e4"
+  },
+  "initialHarnessFailure": {
+    "traceSha256": "632f10775d554ef10165ba7f5ee2a6a9e5ec925394807584ac9618000fc17d63",
+    "reason": "The fixture queried its mode before isolated draft recovery had completed.",
+    "resolvedBy": "Waited until the actual Composer had rendered the saved draft before querying fixture mode."
+  },
+  "independentOrderingCheck": {
+    "lockedWriteDispatchedBeforeFirstQuitAndCancel": true,
+    "coldProcessIssuedNoSettingsWrite": true,
+    "eachProcessSubmittedExactlyOneExitConfirmation": true
+  }
+}

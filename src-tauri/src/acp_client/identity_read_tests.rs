@@ -439,24 +439,31 @@ async fn identity_read_closed_delivery_keeps_scope_and_rejects_config_confirmati
     std::fs::write(f.cwd.join("hold"), "").unwrap();
     let mut read = Box::pin(f.read(&c));
     tokio::select! {_=&mut read=>panic!("held identity finished"),_=until(||f.cwd.join("identity-started").exists())=>{}}
-    let (send, receive) = oneshot::channel();
-    c.sessions
-        .lock()
-        .unwrap()
-        .get("owned-identity")
-        .unwrap()
-        .control
-        .send(super::super::pump::SessionControl::ConfirmConfig {
-            displayed: Value::Null,
-            restore_selection: Some(json!({"model":"a"})),
-            deadline: tokio::time::Instant::now() + Duration::from_secs(1),
-            result: send,
-        })
-        .unwrap();
-    assert_eq!(
-        receive.await.unwrap().unwrap_err(),
-        ReadError::from(Code::Busy).message
-    );
+    for restore in [true, false] {
+        let (send, receive) = oneshot::channel();
+        c.sessions
+            .lock()
+            .unwrap()
+            .get("owned-identity")
+            .unwrap()
+            .control
+            .send(super::super::pump::SessionControl::ConfirmConfig {
+                connection_id: None,
+                displayed: Value::Null,
+                restore_selection: restore.then(|| json!({"model":"PRIVATE_SELECTED_CANARY"})),
+                deadline: tokio::time::Instant::now() + Duration::from_secs(1),
+                result: send,
+            })
+            .unwrap();
+        assert_eq!(
+            receive.await.unwrap().unwrap_err(),
+            if restore {
+                "FARFOLD_RESTORE_CONFIRM_IDENTITY_READ".into()
+            } else {
+                ReadError::from(Code::Busy).message.to_owned()
+            }
+        );
+    }
     assert!(f.manager.reserve_account_change(&f.row.id).is_err());
     // Withdraw the local read interest, not its external operation.
     drop(read);

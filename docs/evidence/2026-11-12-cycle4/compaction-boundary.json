@@ -1,0 +1,76 @@
+{
+  "kind": "ScopedCompactionInterfaceAndProtectionReview",
+  "scope": "Read-only review of four relevant registered versions, fixed official source bytes, production protection and existing targeted tests. Not a 29-Agent sweep or new acceptance run.",
+  "decision": "No reproducible product defect established. Keep the common implementation and the specific unverified conditions.",
+  "agents": [
+    {
+      "agent": "Goose",
+      "registeredVersion": "1.52.0",
+      "officialRef": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+      "control": "Official declared /compact; self-managed context providers may reject it.",
+      "sourceLifecycle": "Manual command returns ordinary text; no compaction_update/compaction_summary_chunk producer was found in the inspected ACP implementation. Optional status and usage do not supply reliable per-compaction identity and terminal.",
+      "commonHandling": "Ordinary prompt admission and original response rendering apply. Never infer a typed terminal from reply wording, usage decrease or prompt end.",
+      "actualEvidence": {
+        "path": "docs/evidence/2026-11-07-cycle4-management/goose-compact-installed.json",
+        "sha256": "d83ecec0f17049781ac34a840e33bb7087fbbca0e9c7a2292ef21727926d589e"
+      },
+      "actualScope": "Installed 091fac1 command and same-conversation recall succeeded: three sends, no tools/cancel, Ultra free/off. Current stored structure matches the official behavior; no pre-compaction physical snapshot or captured typed lifecycle. Content-free tap cannot establish runtime typed-event absence.",
+      "remaining": "Typed start/terminal and separately continuing activity lack a producer on this inspected route. Full failure/cancel, context-result and preservation conditions remain open. Repeating this text-only sample would not resolve the interface gap.",
+      "newRequestAllowedInThisSlice": false
+    },
+    {
+      "agent": "Mistral Vibe",
+      "registeredVersion": "2.25.8",
+      "officialRef": "7c19608af06f6c61d63f8f7a5c3430da73fba2ab",
+      "control": "Official declared /compact with optional instructions; empty history returns text without starting compaction.",
+      "sourceLifecycle": "Nonempty manual command generates one UUID, emits tool_call in_progress, awaits app_server.compact, then emits tool_call_update completed. AppServerResponseError emits failed and propagates the error. These are typed tool events, not compaction_update.",
+      "commonHandling": "Existing generic tool_activity and tool rendering protect the identified activity. No English-title matching or Agent-specific UI is needed.",
+      "actualEvidence": {
+        "path": "docs/evidence/2026-10-24-agent-acceptance/new29-mistral-manual-compact-summary.json",
+        "sha256": "832b3342196b48df97e45bc4a2eeb1eff9e04a4593e360e33e08fa1a6021db08"
+      },
+      "actualScope": "Installed 65a25cc saw one associated tool card progress then result/end, and an unsent probe offered queuing: two narrow positives, one incomplete busy-configuration observation. No raw tool identity/status or SDK terminal was captured. Later separate busy-configuration evidence does not rewrite this original incomplete case.",
+      "remaining": "Exact current wire lifecycle, failure/cancel, retained draft/queue, shared maintenance and post-request activity remain separate. Selected executable/source equivalence is unproven. Source does not upgrade UI records into protocol proof.",
+      "requestRestriction": "The specifically authorized single Mistral request has been consumed; no further compact/model request this round.",
+      "newRequestAllowedInThisSlice": false
+    },
+    {
+      "agent": "Codex",
+      "registeredVersion": "1.13.1",
+      "officialRef": "v1.13.1",
+      "control": "Official adapter runCompact uses thread/compact/start and correlates thread/turn/item events.",
+      "sourceLifecycle": "With client session.compaction capability, contextCompaction item start/completion produces compaction_update. Legacy thread/compacted completion-only handling is deduplicated. Failure/cancellation closes unfinished activity explicitly.",
+      "commonHandling": "Farfold declares the official capability and consumes the raw typed patches through its common tracker, display and protection.",
+      "remaining": "No new exact selected account/model official lifecycle sample. Source support is not installed end-to-end acceptance.",
+      "requestRestriction": "NEW-24 Codex sending remains paused.",
+      "newRequestAllowedInThisSlice": false
+    },
+    {
+      "agent": "Claude Agent",
+      "registeredVersion": "0.81.2",
+      "officialRef": "v0.81.2",
+      "control": "Official adapter consumes SDK compacting/compact_result/compact_boundary, with typed mode for clients declaring compaction.",
+      "sourceLifecycle": "Compacting starts activity; successful result/boundary completes, failure reports failed, unfinished cancellation remains explicit. PostCompact summary is distinct from full history. Synthetic tool fallback is for clients without typed capability.",
+      "commonHandling": "Existing common typed compaction handling can consume these events; no branded component or inferred terminal.",
+      "remaining": "Current usable account, selected model and exact official lifecycle sample are not established.",
+      "requestRestriction": "Do not assume a usable account/model from registration metadata.",
+      "newRequestAllowedInThisSlice": false
+    }
+  ],
+  "claimLimits": {
+    "fullARCH36": false,
+    "fullNEW29": false,
+    "wholeAgentsAccepted": 0,
+    "tokenSavingsClaimed": false,
+    "newAcceptanceGateOrQueue": false
+  },
+  "evidence": {
+    "path": "output/2026-11-12-mcp-recovery/compaction/interface-protection-matrix.json",
+    "sha256": "532c3dea0774d98a47bc437b53d9b41382be3215c629e67b7a843960dcf4c60b",
+    "officialSources": {
+      "path": "output/2026-11-12-mcp-recovery/compaction/official-source-verification.json",
+      "sha256": "82e46d638da03e5453a2130f8bf840258c68f7b884f35a24c4796d4a3b177727"
+    }
+  },
+  "checks": "Current production compaction/tool activity protection reviewed; no new grounded defect or new model test. Existing shared tests also ran in the batch seven checks; that remains controlled evidence."
+}

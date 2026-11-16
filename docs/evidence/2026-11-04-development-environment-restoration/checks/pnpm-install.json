@@ -1,0 +1,10 @@
+{
+  "label": "pnpm-install",
+  "command": ["corepack", "pnpm", "install", "--frozen-lockfile"],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-11-04T09:47:17.846750+00:00",
+  "finishedAt": "2026-11-04T09:48:34.287614+00:00",
+  "durationSeconds": 76.44,
+  "exitCode": 0,
+  "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/pnpm-install.log"
+}

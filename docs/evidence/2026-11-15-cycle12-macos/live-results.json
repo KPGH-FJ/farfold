@@ -1,0 +1,422 @@
+{
+  "schemaVersion": 1,
+  "priorAppCDHash": "4b09349a0311f651a9cdac79954c8e830875ca0a",
+  "ordinaryRequests": 6,
+  "streams": {
+    "cursor-file-and-stop": {
+      "sourceName": "protocol-v1-1794732112038-2.jsonl",
+      "sourceSha256": "02941d08dc95a1e44e41f0cfe7b36989579230478aeef6ebb6f3da78cce4ccd0",
+      "capturedSourceBytes": 24328,
+      "messages": [
+        {
+          "ts": 1794732112043,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1
+        },
+        {
+          "ts": 1794732112539,
+          "dir": "out",
+          "event": "session/new",
+          "wireSequence": 3
+        },
+        {
+          "ts": 1794732159281,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 6
+        },
+        {
+          "ts": 1794732848093,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 76
+        },
+        {
+          "ts": 1794732884258,
+          "dir": "in",
+          "event": "session/request_permission",
+          "wireSequence": 124
+        },
+        {
+          "ts": 1794732974345,
+          "dir": "out",
+          "event": "session/cancel",
+          "wireSequence": 146
+        }
+      ],
+      "responses": [
+        {
+          "ts": 1794732112539,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794732127093,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 4,
+          "error": "none"
+        },
+        {
+          "ts": 1794732174841,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 75,
+          "error": "none"
+        },
+        {
+          "ts": 1794732914206,
+          "dir": "out",
+          "event": "response",
+          "wireSequence": 125,
+          "error": "none"
+        },
+        {
+          "ts": 1794732974350,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 147,
+          "error": "none"
+        }
+      ]
+    },
+    "dirac-existing-test": {
+      "sourceName": "protocol-v1-1794732268844-4.jsonl",
+      "sourceSha256": "97a40225bf43377be5712eb1210f717b31373497ba9bcde28fb8235d49cb6988",
+      "capturedSourceBytes": 13915,
+      "messages": [
+        {
+          "ts": 1794732268845,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1
+        },
+        {
+          "ts": 1794732269504,
+          "dir": "out",
+          "event": "session/new",
+          "wireSequence": 3
+        },
+        {
+          "ts": 1794732315425,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 7
+        }
+      ],
+      "responses": [
+        {
+          "ts": 1794732269504,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794732271191,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 4,
+          "error": "none"
+        },
+        {
+          "ts": 1794732332839,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 69,
+          "error": "none"
+        }
+      ]
+    },
+    "poolside-existing-test": {
+      "sourceName": "protocol-v1-1794732352086-6.jsonl",
+      "sourceSha256": "554b0d3f1272c81d30ddee249e97e977f8902f180c8d7444e631123705edc258",
+      "capturedSourceBytes": 5657,
+      "messages": [
+        {
+          "ts": 1794732352088,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1
+        },
+        {
+          "ts": 1794732352115,
+          "dir": "out",
+          "event": "session/new",
+          "wireSequence": 3
+        },
+        {
+          "ts": 1794732377405,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 6
+        }
+      ],
+      "responses": [
+        {
+          "ts": 1794732352114,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794732359678,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 4,
+          "error": "none"
+        },
+        {
+          "ts": 1794732379441,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 8,
+          "error": "protocol",
+          "protocolErrorClass": "internal_error"
+        }
+      ]
+    },
+    "qwen-existing-test": {
+      "sourceName": "protocol-v1-1794732431142-8.jsonl",
+      "sourceSha256": "0cca91dc507a1c968a04632f8e33f84b49f2095cbc8bcbcaef3081c06ffe29b6",
+      "capturedSourceBytes": 6237,
+      "messages": [
+        {
+          "ts": 1794732431143,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1
+        },
+        {
+          "ts": 1794732431774,
+          "dir": "out",
+          "event": "session/new",
+          "wireSequence": 3
+        },
+        {
+          "ts": 1794732473614,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 6
+        },
+        {
+          "ts": 1794732677918,
+          "dir": "out",
+          "event": "session/cancel",
+          "wireSequence": 7
+        }
+      ],
+      "responses": [
+        {
+          "ts": 1794732431773,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794732431796,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 4,
+          "error": "none"
+        },
+        {
+          "ts": 1794732677925,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 8,
+          "error": "none"
+        }
+      ]
+    },
+    "cline-history-connection": {
+      "sourceName": "protocol-v1-1794732594510-9.jsonl",
+      "sourceSha256": "8d1ef5bcd0a1aed80b7e6325ea19459aab9b5c31da11965b753c885257ae27c1",
+      "capturedSourceBytes": 3196,
+      "messages": [
+        {
+          "ts": 1794732594512,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1
+        }
+      ],
+      "responses": []
+    },
+    "devin-default-list": {
+      "sourceName": "protocol-v1-1794732608874-10.jsonl",
+      "sourceSha256": "d2d242ddafe2a5c68e104a33c0cb06a005761159c0ffda30132169087ee8e7cf",
+      "capturedSourceBytes": 13648,
+      "messages": [
+        {
+          "ts": 1794732608886,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1
+        },
+        {
+          "ts": 1794732610991,
+          "dir": "out",
+          "event": "session/list",
+          "wireSequence": 3
+        }
+      ],
+      "responses": [
+        {
+          "ts": 1794732610990,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794732610993,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 8,
+          "error": "none"
+        }
+      ]
+    },
+    "devin-owned-history": {
+      "sourceName": "protocol-v1-1794732637938-11.jsonl",
+      "sourceSha256": "5a926c17a64dce06c55381057ccdc5ec742504a3c602ad7422dd39abf0d22662",
+      "capturedSourceBytes": 12297,
+      "messages": [
+        {
+          "ts": 1794732637943,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1
+        },
+        {
+          "ts": 1794732640000,
+          "dir": "out",
+          "event": "session/load",
+          "wireSequence": 3
+        }
+      ],
+      "responses": [
+        {
+          "ts": 1794732639999,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794732640004,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 10,
+          "error": "protocol",
+          "protocolErrorClass": "other"
+        }
+      ]
+    },
+    "opencode-owned-control": {
+      "sourceName": "protocol-v1-1794732855496-12.jsonl",
+      "sourceSha256": "c8dd8cba7f03ab76f35be5961ade0ba572176d03d62bcd1e1042e8c255a3df58",
+      "capturedSourceBytes": 10501,
+      "messages": [
+        {
+          "ts": 1794732855497,
+          "dir": "out",
+          "event": "initialize",
+          "wireSequence": 1
+        },
+        {
+          "ts": 1794732855750,
+          "dir": "out",
+          "event": "session/load",
+          "wireSequence": 3
+        },
+        {
+          "ts": 1794732974351,
+          "dir": "out",
+          "event": "session/prompt",
+          "wireSequence": 36
+        }
+      ],
+      "responses": [
+        {
+          "ts": 1794732855750,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 2,
+          "error": "none"
+        },
+        {
+          "ts": 1794732856126,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 34,
+          "error": "none"
+        },
+        {
+          "ts": 1794733058683,
+          "dir": "in",
+          "event": "response",
+          "wireSequence": 49,
+          "error": "none"
+        }
+      ]
+    }
+  },
+  "cursorFile": {
+    "originalUnchanged": true,
+    "byteExact": true,
+    "resultBytes": 152,
+    "resultSha256": "526199571440b8b97d49b6f611fe8e0e263f063e93aa2b294b6b88a9ec014c4b",
+    "openedViaFarfoldArtifacts": true
+  },
+  "cursorStop": {
+    "approvedOnce": true,
+    "cancelAtMs": 1794732974345,
+    "uiTurnStopped": true,
+    "uiToolCompleted": true,
+    "sameShellAndChildAliveAfterStop": true,
+    "laterNaturalCompletionAtNs": 1794733034548718768,
+    "controlDispatchedAfterStop": true,
+    "controlCompleted": true,
+    "parallelIsolationObserved": false
+  },
+  "otherLiveResults": {
+    "dirac": "reply-present-extra-text-failed-exact-test",
+    "poolside": "internal-error-outcome-unknown",
+    "qwen": "no-reply-over-200s-then-explicit-stop-confirmed",
+    "cline": "connection-ended-before-initialize",
+    "devin": "default-list-empty-exact-original-load-failed"
+  },
+  "modelAndServiceSelectionsPreserved": true,
+  "sourceScope": "Fixed allowlisted protocol metadata and UI observations. Process details in local benchmark receipts.",
+  "afterUpdate": {
+    "appCDHash": "77fb03ec0c2e336c4d9024e7b18ffe93f624daff",
+    "binarySha256": "ac7f73b97bc676ba0ec87b4340ccbaca442a1e085b4e5f2b084c0819066ade7a",
+    "retiredOldVisible": 12,
+    "retiredNewVisible": 0,
+    "retiredRegistrationsPreserved": 12,
+    "activeChooserRowsSelectedIndividually": 28,
+    "allSelectedRowsOfferHistoryEntry": true,
+    "indexCount": 25,
+    "unsentCount": 6,
+    "currentRunningCount": 0,
+    "rootsSame": true,
+    "rootEntryCount": 206480,
+    "diracCold": {
+      "sameIdAndStoredConfigWorkingLocation": true,
+      "reportOriginalTextVisible": true,
+      "shownModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "shownReasoning": "Medium",
+      "outboundPrompts": 0,
+      "sourceName": "protocol-v1-1794733369197-0.jsonl",
+      "sourceSha256": "c3141bfd675a36e368b1912d9a2c83a41dab52b17240394b81320f3970c30a13",
+      "capturedSourceBytes": 11598
+    }
+  }
+}

@@ -1,0 +1,2 @@
+FARFOLD_COPY_VERSION_A_20261109
+Exact old displayed bytes.

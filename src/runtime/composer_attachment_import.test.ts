@@ -19,6 +19,7 @@ import {
   prepareDraftAttachments,
 } from "./draft_attachments";
 import { IMAGE_INPUT_STRINGS } from "./draft_images";
+import { FILE_DELIVERY_STRINGS } from "./file_delivery_strings";
 import { IMAGE_BYTES_STRINGS } from "./image_bytes";
 import {
   PNG_IMAGE_TEST_DATA,
@@ -106,8 +107,70 @@ it("retains invalid bounded image data and its selected source while reporting a
       },
     ],
   });
-  expect(report).toHaveBeenCalledExactlyOnceWith(IMAGE_BYTES_STRINGS.invalid);
+  expect(report).toHaveBeenCalledExactlyOnceWith(
+    IMAGE_BYTES_STRINGS.invalid,
+    composerDrafts.read(key).attachments[0]!.id,
+  );
 });
+
+it.each([
+  "unrecognized image probe failure",
+  "附件已无法读取，请重新选择或移除",
+])(
+  "does not infer bitmap type from an ambiguous probe failure or filename (%s)",
+  async (failure) => {
+    h.invoke.mockRejectedValue(failure);
+    const report = vi.fn();
+    await addPickedAttachments(key, ["/chosen.png"], true, report);
+    const attachment = composerDrafts.read(key).attachments[0]!;
+    expect(attachment).toMatchObject({
+      kind: "file",
+      deliveryMode: "location",
+      imageClassificationFailed: true,
+      uri: "file:///chosen.png",
+      loading: false,
+    });
+    expect(report).toHaveBeenCalledExactlyOnceWith(
+      IMAGE_INPUT_STRINGS.invalid,
+      attachment.id,
+    );
+  },
+);
+
+it.each([
+  [FILE_DELIVERY_STRINGS.checkWaitExpired, true],
+  [FILE_DELIVERY_STRINGS.checkBusy, false],
+] as const)(
+  "does not send a file location if its image check failed (%s, read: %s)",
+  async (failure, read) => {
+    h.invoke.mockRejectedValueOnce(failure).mockResolvedValue(null);
+    await addPickedAttachments(
+      key,
+      ["/chosen/possibly-image.txt"],
+      read,
+      vi.fn(),
+    );
+    const draft = composerDrafts.read(key);
+    expect(draft.text).toBe("keep my text");
+    expect(draft.attachments[0]).toMatchObject({
+      kind: "file",
+      uri: "file:///chosen/possibly-image.txt",
+      loading: false,
+      imageClassificationFailed: true,
+    });
+    const message = IMAGE_INPUT_STRINGS.classificationFailed;
+    await expect(
+      prepareDraftAttachments(draft.attachments, true),
+    ).rejects.toThrow(message);
+    expect(() =>
+      attachmentPromptBlocks(draft.text, draft.attachments, true),
+    ).toThrow(message);
+    expect(h.invoke).toHaveBeenCalledExactlyOnceWith("draft_attachment_image", {
+      uri: "file:///chosen/possibly-image.txt",
+      read,
+    });
+  },
+);
 
 it("discards a late read after its draft is cleared without adding it to later input or another conversation", async () => {
   let finish!: (value: unknown) => void;
@@ -155,7 +218,10 @@ it("keeps refused clipboard contents as unsent data and never starts the browser
     ],
   });
   expect(image).not.toHaveBeenCalled();
-  expect(report).toHaveBeenCalledExactlyOnceWith(IMAGE_BYTES_STRINGS.invalid);
+  expect(report).toHaveBeenCalledExactlyOnceWith(
+    IMAGE_BYTES_STRINGS.invalid,
+    composerDrafts.read(key).attachments[0]!.id,
+  );
   expect(h.invoke).not.toHaveBeenCalled();
 });
 

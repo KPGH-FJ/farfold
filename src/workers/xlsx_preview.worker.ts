@@ -40,7 +40,9 @@ globalThis.onmessage = (
     }
     globalThis.postMessage({
       kind: "ready",
-      workbook: parseWorkbook(event.data),
+      workbook: parseWorkbook(event.data, (directory) =>
+        globalThis.postMessage({ kind: "directory", directory }),
+      ),
     });
   } catch (error) {
     globalThis.postMessage({

@@ -1,0 +1,188 @@
+{
+  "kind": "Phase1FormalScopedToolApproval",
+  "formalSource": "dbe23bb6ea3eaa714205b4290f32cafffe1218f9",
+  "formalBinarySha256": "b8f3b2cf7c10fa08c23a64f25ba2fc73048bacbf6ea340f54ab80cc6f2a7bfe3",
+  "platform": "macOS arm64 27.0 (26A425)",
+  "privateEvidenceRoot": "output/2026-11-06-phase1-approval",
+  "copilot": {
+    "caseA": {
+      "action": "deny",
+      "request": "path access to exact executable",
+      "nativeDecision": "denied-interactively-by-user",
+      "nativeToolSuccess": false,
+      "toolOutputPresent": false,
+      "idleAfter": true
+    },
+    "caseB": {
+      "action": "allow_once",
+      "request": "exact local shell builtin printf",
+      "nativeDecision": "approved",
+      "nativeToolSuccess": true,
+      "toolOutputMarkerMatched": true,
+      "shellExitCode": 0,
+      "idleAfter": true
+    },
+    "wire": {
+      "counts": {
+        "session/prompt:out": 2,
+        "session/update:in": 13,
+        "session/request_permission:in": 2,
+        "response:out": 2,
+        "response:in": 2
+      },
+      "startMs": 1793957218654,
+      "endMs": 1793957268025,
+      "ref": {
+        "path": "copilot-approval-wire.private.json",
+        "bytes": 2585,
+        "sha256": "74d1ef891dc058718ac635e978bcaeb354e09f622f01e8806b63f0747dff2ce2"
+      }
+    },
+    "nativeReconciliation": {
+      "path": "copilot-neutral-approval-native-reconciliation.private.json",
+      "bytes": 6252,
+      "sha256": "95a861adcb60089b23a05b5b0e0c6dd9be8e8f3c6f2f9ca20813f19b6b8424d5"
+    },
+    "original": {
+      "selectedModel": "Auto",
+      "farfoldSavedModelMissing": true,
+      "nativeToolStarts": 12,
+      "matchingCompletions": 11,
+      "unmatchedTool": "apply_patch",
+      "matchedPermissionDecision": "cancelled",
+      "historicalTargetAbsentAfterStop": true,
+      "sameToolCompletionReceiptPresent": false,
+      "promptRetried": false,
+      "reconciliation": {
+        "path": "copilot-original-tool-reconciliation.private.json",
+        "bytes": 4607,
+        "sha256": "17400bd75ff3a69534503ead1bf9bf4932e6a106d690654c0683be13eb5758ac"
+      },
+      "exactCurrentReplayStatusCaptured": false
+    }
+  },
+  "kilo": {
+    "action": "allow_once",
+    "toolOutputMarkerMatched": true,
+    "idleAfter": true,
+    "wire": {
+      "counts": {
+        "session/prompt:out": 1,
+        "session/update:in": 10,
+        "session/request_permission:in": 1,
+        "response:out": 1,
+        "response:in": 1
+      },
+      "startMs": 1793957335138,
+      "endMs": 1793957362624,
+      "ref": {
+        "path": "kilo-approval-wire.private.json",
+        "bytes": 1786,
+        "sha256": "e1f48a39068bf0bb2a4c2a914a6d5977d879d18204e20674c8786b387d9fa6a8"
+      }
+    }
+  },
+  "goose": {
+    "action": "reject_once",
+    "modeBefore": "auto",
+    "modeAfter": "approve",
+    "modeChangeOnlyInOwnedTestConversation": true,
+    "explicitToolDenialOutput": true,
+    "idleAfter": true,
+    "modeWire": {
+      "counts": {
+        "session/set_config_option:out": 1,
+        "session/update:in": 1,
+        "response:in": 1
+      },
+      "startMs": 1793957576659,
+      "endMs": 1793957576715,
+      "ref": {
+        "path": "goose-mode-wire.private.json",
+        "bytes": 535,
+        "sha256": "12b1d4b49adba03fe8a795b904923c56d71bb08e15f0bf8cc8b81aa4877f5ab0"
+      }
+    },
+    "approvalWire": {
+      "counts": {
+        "session/prompt:out": 1,
+        "session/update:in": 28,
+        "session/request_permission:in": 1,
+        "response:out": 1,
+        "response:in": 1
+      },
+      "startMs": 1793957619820,
+      "endMs": 1793957642076,
+      "ref": {
+        "path": "goose-approval-wire.private.json",
+        "bytes": 3838,
+        "sha256": "a5544203c5607a844693a1d2ad16eacc397c613181a91e5f2eb2b0ded391e500"
+      }
+    }
+  },
+  "storageFailure": {
+    "formalFaultInjected": false,
+    "prerequisite": "isolated macOS graphical test account or instance with separate app data; do not launch concurrently on this Mac"
+  },
+  "preservation": {
+    "emptyOwnedFolderBeforeAndAfter": true,
+    "originalDraftAndLocationRestored": true,
+    "retainedDrafts": 1,
+    "oldRequestsReplayed": 0,
+    "formalAppReplaced": false,
+    "sourceChanged": false
+  },
+  "firstWave": {
+    "fullyAccepted": 0,
+    "total": 3,
+    "approvalCasesObserved": 6,
+    "newPrompts": 6,
+    "permanentApprovalSelected": false,
+    "coldPermissionPersistenceVerified": false
+  },
+  "parallelApproval": {
+    "sameOwnedEmptyDirectory": true,
+    "bothWaitingInUi": true,
+    "kiloRejectedWhileGooseRemainedPending": true,
+    "kiloExplicitToolDenial": true,
+    "kiloStdoutMarkerPresent": false,
+    "gooseAllowedOnce": true,
+    "gooseExactToolOutput": true,
+    "bothIdle": true,
+    "distinctTaps": true,
+    "wires": {
+      "goose": {
+        "counts": {
+          "session/prompt:out": 1,
+          "session/update:in": 26,
+          "session/request_permission:in": 1,
+          "response:out": 1,
+          "response:in": 1
+        },
+        "startMs": 1793957855792,
+        "endMs": 1793957928282
+      },
+      "kilo": {
+        "counts": {
+          "session/prompt:out": 1,
+          "session/request_permission:in": 1,
+          "session/update:in": 4,
+          "response:out": 1,
+          "response:in": 1
+        },
+        "startMs": 1793957885529,
+        "endMs": 1793957901343
+      }
+    },
+    "ref": {
+      "path": "parallel-wire.private.json",
+      "bytes": 5223,
+      "sha256": "74519651e5aad639c7794914ac1020828d0d78f83df3239938675c5327d5c619"
+    }
+  },
+  "uiObservations": {
+    "path": "ui-observations.private.json",
+    "bytes": 964,
+    "sha256": "96dca0ffa44cf154ea0aa4a8604b2abba9a4ddbc6f975935c2bd82543e3888a0"
+  }
+}

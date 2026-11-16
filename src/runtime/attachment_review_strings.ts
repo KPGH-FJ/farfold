@@ -15,5 +15,7 @@ export const ATTACHMENT_REVIEW = {
   checking: "正在核对…",
   done: "附件已核对，已保留你的选择。",
   changed: "内容已变化，请关闭后重新核对。原内容已保留。",
+  imageChanged:
+    "图片文件与已保存内容不同。请恢复原文件，或移除此附件后重新选择图片。",
   unreadable: (name: string) => `无法读取“${name}”，请取消勾选或重新选择附件。`,
 } as const;

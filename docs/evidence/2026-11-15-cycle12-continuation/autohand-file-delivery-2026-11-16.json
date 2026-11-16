@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-16",
+  "timezone": "Asia/Shanghai",
+  "installedFarfoldCdhash": "f7d18f13d392cc45bd68b90340b8df826a2cbc92",
+  "agent": "Autohand Code",
+  "version": "0.9.11",
+  "modelShown": "fantail",
+  "serviceKind": "existing",
+  "nativeSessionDigest": "83805f5b86de34fd",
+  "normalEntry": "新对话 → 专用工作文件夹 → Autohand Code → 发送",
+  "trace": "protocol-v1-1794801432063-6.jsonl",
+  "promptCount": 1,
+  "promptSentAt": "11:57:34.301",
+  "writePermission": {
+    "requestedAt": "11:57:52.367",
+    "target": "result.md",
+    "uiDecision": "Allow Once",
+    "decidedAt": "11:58:03.572"
+  },
+  "terminalReplyAt": "11:58:16.973",
+  "uiShowsCompleted": true,
+  "outputOpenedInFarfold": "本轮产物 → 查看文件 result.md",
+  "sourceFile": {
+    "name": "source.md",
+    "sizeBytes": 113,
+    "sha256BeforeAndAfter": "aa838a334bbc0919f6e3072decf00f17e92b3823609cab38945a5eace515577c"
+  },
+  "outputFile": {
+    "name": "result.md",
+    "sizeBytes": 133,
+    "sha256": "7447d072c5dfec803d46578396a0ba7059da5d175f1ef8a3fd9b895b92d13111",
+    "separateConfirmedAndPendingSections": true,
+    "originalOwnersAndDatesPreserved": true,
+    "contentVerifiedInFarfoldAndOnDisk": true
+  }
+}

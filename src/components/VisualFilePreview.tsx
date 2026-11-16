@@ -4,6 +4,7 @@ import {
   IMAGE_INPUT_STRINGS,
   validateDraftImage,
 } from "../runtime/draft_images";
+import { IMAGE_BYTES_STRINGS } from "../runtime/image_bytes";
 import { renderPdfPage } from "../runtime/pdf_preview";
 import { validPdfPage } from "../runtime/file_feedback_anchor";
 import type { AttachmentPdfPreviewTarget } from "../runtime/attachment_search_source";
@@ -25,7 +26,52 @@ import {
   type VisualAreaDisplay,
   type VisualAreaCallbacks,
 } from "./VisualAreaSelection";
+import type {
+  DrawnPdfPreview,
+  ImagePreviewCandidate,
+  LoadedImagePreview,
+  PdfPreviewCandidate,
+} from "./visual_file_replacement";
+export type {
+  DrawnPdfPreview,
+  PdfPreviewCandidate,
+} from "./visual_file_replacement";
 import "./VisualFilePreview.css";
+
+function stopWhenHidden(controller: AbortController) {
+  if (typeof document === "undefined") return;
+  const check = () => {
+    if (document.visibilityState === "hidden") controller.abort();
+  };
+  check();
+  document.addEventListener("visibilitychange", check);
+  return () => document.removeEventListener("visibilitychange", check);
+}
+
+function previewFailure(error: unknown) {
+  const message = error instanceof Error ? error.message : undefined;
+  if (message === IMAGE_INPUT_STRINGS.decodeBusy) return S.busy;
+  if (message === IMAGE_INPUT_STRINGS.decodeWaitExpired) return S.timeout;
+  if (
+    message === IMAGE_BYTES_STRINGS.tooLarge ||
+    message === IMAGE_BYTES_STRINGS.tooManyPixels
+  )
+    return S.limit;
+  return message && Object.values(S).includes(message as never)
+    ? message
+    : S.failed;
+}
+
+function pdfRenderWidth(container: HTMLDivElement | null) {
+  // The selection stage has no intrinsic width while its canvas is hidden.
+  const style = container ? getComputedStyle(container) : null;
+  const width = container
+    ? container.clientWidth -
+      (Number.parseFloat(style?.paddingLeft ?? "0") || 0) -
+      (Number.parseFloat(style?.paddingRight ?? "0") || 0)
+    : 800;
+  return Math.max(1, width) * Math.min(window.devicePixelRatio || 1, 2);
+}
 
 export function VisualFilePreview({
   preview,
@@ -33,6 +79,10 @@ export function VisualFilePreview({
   onReadiness,
   readingPosition,
   initialPdfPage,
+  pdfCandidate,
+  drawnPdf,
+  imageCandidate,
+  loadedImage,
   interactionBlocked = false,
   onVisualTargetAvailability,
   onVisualTargetConfirm,
@@ -43,12 +93,19 @@ export function VisualFilePreview({
   interactionBlocked?: boolean;
   readingPosition?: PreviewReadingPositionRef;
   initialPdfPage?: AttachmentPdfPreviewTarget;
+  pdfCandidate?: PdfPreviewCandidate;
+  drawnPdf?: DrawnPdfPreview;
+  imageCandidate?: ImagePreviewCandidate;
+  loadedImage?: LoadedImagePreview;
   onReadiness?: (value: VisualPreviewReadiness) => void;
 }) {
-  const canvas = useRef<HTMLCanvasElement | null>(null);
+  const initialCanvas = useRef<HTMLCanvasElement | null>(null);
+  const canvas = drawnPdf?.surface.canvas ?? initialCanvas;
+  const adoptedCanvas = useRef<HTMLCanvasElement | null>(null);
   const viewport = useRef<HTMLDivElement | null>(null);
   const current = useRef<AbortController | null>(null);
-  const imageElement = useRef<HTMLImageElement>(null);
+  const initialImage = useRef<HTMLImageElement>(null);
+  const imageElement = loadedImage?.surface.image ?? initialImage;
   const [display, setDisplay] = useState<VisualAreaDisplay | null>(null);
   const displayOwner = useRef<VisualAreaDisplay | null>(null);
   const clearDisplay = () => {
@@ -57,8 +114,38 @@ export function VisualFilePreview({
   };
   const report = useRef(onReadiness);
   report.current = onReadiness;
-  const source = useRef({ preview, active, interactionBlocked });
-  source.current = { preview, active, interactionBlocked };
+  const source = useRef({
+    preview,
+    active,
+    interactionBlocked,
+    drawnPdf,
+    loadedImage,
+  });
+  source.current = {
+    preview,
+    active,
+    interactionBlocked,
+    drawnPdf,
+    loadedImage,
+  };
+  const publishImage = (
+    element: HTMLImageElement | null,
+    owner: AbortController,
+  ) => {
+    if (element && element.naturalWidth > 0 && element.naturalHeight > 0) {
+      const next: VisualAreaDisplay = {
+        kind: "image",
+        preview,
+        owner,
+        element,
+        pixelWidth: element.naturalWidth,
+        pixelHeight: element.naturalHeight,
+      };
+      displayOwner.current = next;
+      setDisplay(next);
+    }
+    report.current?.({ source: preview, location: { kind: "image" } });
+  };
   const [requested, setRequested] = useState<{
     source: VisualPreview;
     page: number;
@@ -101,9 +188,12 @@ export function VisualFilePreview({
     url: string;
     source: VisualPreview;
     owner: AbortController;
+    mountedSource?: true;
   } | null>(null);
   useLayoutEffect(() => {
     const operation = new AbortController();
+    const element = canvas.current;
+    const mountedImage = imageElement.current;
     current.current = operation;
     clearDisplay();
     report.current?.({ source: preview, location: null });
@@ -135,51 +225,71 @@ export function VisualFilePreview({
       const pdf = preview.mimeType === "application/pdf";
       if (!pdf) {
         checkedVisualPreviewMetadata(preview.file, preview);
-        const result = await validateDraftImage(
-          preview.data,
-          preview.mimeType ?? "",
-          preview.file.size,
-        );
-        if (owns())
+        if (
+          owns() &&
+          loadedImage?.preview === preview &&
+          loadedImage.element === mountedImage &&
+          mountedImage.complete &&
+          mountedImage.naturalWidth > 0 &&
+          mountedImage.naturalHeight > 0 &&
+          mountedImage.getAttribute("src") === loadedImage.url
+        ) {
           setImage({
-            url: `data:${result.mimeType};base64,${result.data}`,
+            url: loadedImage.url,
             source: preview,
             owner: operation,
+            mountedSource: true,
           });
+          publishImage(mountedImage, operation);
+        } else {
+          const result = await validateDraftImage(
+            preview.data,
+            preview.mimeType ?? "",
+            preview.file.size,
+          );
+          if (owns())
+            setImage({
+              url: `data:${result.mimeType};base64,${result.data}`,
+              source: preview,
+              owner: operation,
+            });
+        }
       } else {
         checkedVisualPreviewMetadata(preview.file, preview);
-        if (!owns() || !canvas.current) return;
-        // The optional selection stage is fit-content and has no intrinsic
-        // width while its canvas is hidden. Measure the stable content pane.
-        const container = viewport.current;
-        const style = container ? getComputedStyle(container) : null;
-        const width = container
-          ? container.clientWidth -
-            (Number.parseFloat(style?.paddingLeft ?? "0") || 0) -
-            (Number.parseFloat(style?.paddingRight ?? "0") || 0)
-          : 800;
-        await renderPdfPage(
-          () => checkedVisualPreview(preview.file, preview).bytes,
-          canvas.current,
-          page,
-          Math.max(1, width) * Math.min(window.devicePixelRatio || 1, 2),
-          operation.signal,
-          (total, actual = page) => {
-            if (owns() && validPdfPage(actual, total)) {
-              renderedPage = actual;
-              renderedPages = total;
-              setPages(total);
-            }
-          },
-          restorePage,
-        );
+        if (!owns() || !element) return;
+        const ready = (total: number, actual = page) => {
+          if (owns() && validPdfPage(actual, total)) {
+            renderedPage = actual;
+            renderedPages = total;
+            setPages(total);
+          }
+        };
+        if (
+          drawnPdf?.preview === preview &&
+          drawnPdf.element === element &&
+          adoptedCanvas.current !== element &&
+          element.width > 0 &&
+          element.height > 0
+        ) {
+          adoptedCanvas.current = element;
+          ready(drawnPdf.pageCount, drawnPdf.page);
+        } else {
+          await renderPdfPage(
+            () => checkedVisualPreview(preview.file, preview).bytes,
+            element,
+            page,
+            pdfRenderWidth(viewport.current),
+            operation.signal,
+            ready,
+            restorePage,
+          );
+        }
       }
       if (owns()) {
         if (pdf && renderedPages === null) throw new Error(S.failed);
         setState("ready");
         setMessage(S.snapshot);
         if (pdf) {
-          const element = canvas.current;
           if (element && element.width > 0 && element.height > 0) {
             const next: VisualAreaDisplay = {
               kind: "pdf",
@@ -219,32 +329,151 @@ export function VisualFilePreview({
       setImage(null);
       report.current?.({ source: preview, location: null });
       setState("failed");
-      setMessage(
-        error instanceof Error &&
-          error.message === IMAGE_INPUT_STRINGS.decodeBusy
-          ? S.busy
-          : error instanceof Error &&
-              Object.values(S).includes(error.message as never)
-            ? error.message
-            : S.failed,
-      );
+      setMessage(previewFailure(error));
     });
     return () => {
       clearDisplay();
       operation.abort();
-      if (canvas.current) {
-        canvas.current.width = 0;
-        canvas.current.height = 0;
+      if (element) {
+        element.width = 0;
+        element.height = 0;
       }
+      if (loadedImage && mountedImage === loadedImage.element)
+        mountedImage.removeAttribute("src");
       if (current.current === operation) {
         current.current = null;
         report.current?.({ source: preview, location: null });
       }
     };
-  }, [preview, active, page, restorePage, readingPosition, searchCurrent]);
+  }, [
+    preview,
+    active,
+    page,
+    restorePage,
+    readingPosition,
+    searchCurrent,
+    drawnPdf,
+    loadedImage,
+  ]);
+  useLayoutEffect(() => {
+    if (!pdfCandidate) return;
+    const {
+      preview: next,
+      surface,
+      page,
+      controller,
+      current,
+      settle,
+    } = pdfCandidate;
+    const element = surface.canvas.current;
+    if (!active || !current()) {
+      controller.abort();
+      return;
+    }
+    if (!element) {
+      settle(new Error(S.failed));
+      return;
+    }
+    element.width = 0;
+    element.height = 0;
+    const stop = stopWhenHidden(controller);
+    void (async () => {
+      checkedVisualPreviewMetadata(next.file, next);
+      let location: { page: number; pageCount: number } | undefined;
+      await renderPdfPage(
+        () => checkedVisualPreview(next.file, next).bytes,
+        element,
+        page,
+        pdfRenderWidth(viewport.current),
+        controller.signal,
+        (pageCount, actual = page) => {
+          if (validPdfPage(actual, pageCount))
+            location = { page: actual, pageCount };
+        },
+        true,
+      );
+      if (!current() || controller.signal.aborted) throw new Error(S.cancelled);
+      if (!location || !element.width || !element.height)
+        throw new Error(S.failed);
+      settle({ element, ...location });
+    })().catch((error: unknown) =>
+      settle(error instanceof Error ? error : new Error(S.failed)),
+    );
+    return () => {
+      stop?.();
+      controller.abort();
+      // The winning surface is reused by the displayed page's own effect.
+      const displayed = source.current;
+      if (
+        !displayed.active ||
+        displayed.preview !== next ||
+        displayed.drawnPdf?.surface !== surface ||
+        displayed.drawnPdf.element !== element ||
+        surface.canvas.current !== element
+      ) {
+        element.width = 0;
+        element.height = 0;
+      }
+    };
+  }, [active, pdfCandidate]);
+  useLayoutEffect(() => {
+    if (!imageCandidate) return;
+    const {
+      preview: next,
+      surface,
+      controller,
+      current,
+      settle,
+    } = imageCandidate;
+    const element = surface.image.current;
+    if (!active || !current()) {
+      controller.abort();
+      return;
+    }
+    if (!element) {
+      settle(new Error(S.failed));
+      return;
+    }
+    const stop = stopWhenHidden(controller);
+    void (async () => {
+      if (controller.signal.aborted) throw new Error(S.cancelled);
+      checkedVisualPreviewMetadata(next.file, next);
+      const image = await validateDraftImage(
+        next.data,
+        next.mimeType ?? "",
+        next.file.size,
+        element,
+      );
+      const url = `data:${image.mimeType};base64,${image.data}`;
+      if (
+        !current() ||
+        controller.signal.aborted ||
+        surface.image.current !== element
+      )
+        throw new Error(S.cancelled);
+      if (element.getAttribute("src") !== url || !element.complete)
+        throw new Error(S.failed);
+      settle({ element, url });
+    })().catch((error: unknown) => settle(new Error(previewFailure(error))));
+    return () => {
+      stop?.();
+      controller.abort();
+      const displayed = source.current;
+      if (
+        !displayed.active ||
+        displayed.preview !== next ||
+        displayed.loadedImage?.surface !== surface ||
+        displayed.loadedImage.element !== element ||
+        surface.image.current !== element
+      )
+        element.removeAttribute("src");
+    };
+  }, [active, imageCandidate]);
   const pdf = preview.mimeType === "application/pdf";
   const actionOwner = current.current;
   const displayedOperation = image?.owner ?? null;
+  const visibleImage =
+    image?.source === preview && state === "ready" && active ? image : null;
   const ownsImage = () =>
     active &&
     source.current.active &&
@@ -256,57 +485,58 @@ export function VisualFilePreview({
   const pixels = (
     <>
       {" "}
-      {pdf && (
+      {pdf && [
         <canvas
+          key={drawnPdf?.surface.slot ?? 0}
           ref={canvas}
           hidden={state !== "ready" || !active}
           aria-label={
             pages === null ? "PDF 预览" : S.page(displayedPage, pages)
           }
-        />
-      )}
-      {image && image.source === preview && state === "ready" && active && (
-        <img
-          ref={imageElement}
-          src={image.url}
-          alt={preview.file.name}
-          onLoad={() => {
-            if (ownsImage()) {
-              const element = imageElement.current;
-              if (
-                element &&
-                element.naturalWidth > 0 &&
-                element.naturalHeight > 0
-              ) {
-                const next: VisualAreaDisplay = {
-                  kind: "image",
-                  preview,
-                  owner: displayedOperation!,
-                  element,
-                  pixelWidth: element.naturalWidth,
-                  pixelHeight: element.naturalHeight,
-                };
-                displayOwner.current = next;
-                setDisplay(next);
+        />,
+        pdfCandidate && (
+          <canvas
+            key={pdfCandidate.surface.slot}
+            ref={pdfCandidate.surface.canvas}
+            hidden
+          />
+        ),
+      ]}
+      {!pdf && [
+        (visibleImage || loadedImage) && (
+          <img
+            key={loadedImage?.surface.slot ?? 0}
+            ref={imageElement}
+            hidden={!visibleImage}
+            src={visibleImage?.mountedSource ? undefined : visibleImage?.url}
+            alt={preview.file.name}
+            onLoad={() => {
+              if (ownsImage() && !image?.mountedSource)
+                publishImage(imageElement.current, displayedOperation!);
+            }}
+            onError={() => {
+              if (ownsImage()) {
+                clearDisplay();
+                displayedOperation?.abort();
+                if (image?.mountedSource)
+                  imageElement.current?.removeAttribute("src");
+                setImage(null);
+                setState("failed");
+                setMessage(S.failed);
+                report.current?.({ source: preview, location: null });
               }
-              report.current?.({
-                source: preview,
-                location: { kind: "image" },
-              });
-            }
-          }}
-          onError={() => {
-            if (ownsImage()) {
-              clearDisplay();
-              displayedOperation?.abort();
-              setImage(null);
-              setState("failed");
-              setMessage(S.failed);
-              report.current?.({ source: preview, location: null });
-            }
-          }}
-        />
-      )}
+            }}
+          />
+        ),
+        imageCandidate && (
+          <img
+            key={imageCandidate.surface.slot}
+            ref={imageCandidate.surface.image}
+            hidden
+            alt=""
+          />
+        ),
+      ]}
     </>
   );
   return (

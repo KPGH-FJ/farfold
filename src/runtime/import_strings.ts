@@ -1,5 +1,17 @@
 export const IMPORT_STRINGS = {
   title: "带入已有对话",
+  knownTitle: "按对话标识读取",
+  knownHint:
+    "已知 Agent 提供的对话标识时，选择原文件夹并读取。先核对真实内容，再决定是否加入。",
+  knownId: "对话标识",
+  knownFolder: "原文件夹（必选）",
+  knownFolderMissing: "请选择这条对话原来的文件夹。",
+  knownRead: "读取这条对话",
+  knownAdd: "加入这条对话",
+  knownAdded: "这条对话已加入，可以从对话列表打开。",
+  knownAlreadyAdded: "这条对话已在列表中，请从已有对话打开。",
+  knownInvalid: "请填写对话标识并选择原文件夹。",
+
   stepsLabel: "带入步骤",
   steps: ["选择 Agent", "查找对话", "选择并加入"],
   chooseHeading: "从哪个 Agent 带入？",

@@ -1,0 +1,46 @@
+{
+  "authenticateInvocations": 0,
+  "endedUtc": "2026-11-06T22:15:35.930468+00:00",
+  "exactPublishedPackageCheckedReadOnly": true,
+  "existingSessionUsed": false,
+  "kernelPolicy": {
+    "actualHomeReadDenied": true,
+    "allNetworkRuleObservedOnKnownLoopback": true,
+    "keychainMachLookupDeniedByKernelCheck": true,
+    "outsideFixtureWriteDenied": true,
+    "pinnedPublicArtifactAncestorsMetadataOnlyVerified": true
+  },
+  "kind": "official-copilot-standalone-native-offline-sdk-status",
+  "loginInvocations": 0,
+  "logoutInvocations": 0,
+  "modelPrompts": 0,
+  "noCredentialReadOrPassedByHarness": true,
+  "ordinaryHomeInherited": true,
+  "ordinaryHomeMetadataTraversalPermitted": true,
+  "outcome": "owned-official-stdout-ended",
+  "productionAppOperated": false,
+  "quotaRequests": 0,
+  "registryDeclaredVersion": "1.0.89",
+  "runtimeExecutableSha256": "8d0688397633cd3a123467c0352bbfa10885653db39664cb898e96d40e0bc342",
+  "runtimeLibrarySha256": "1bfe6116a462c54d1f76aaafee48e58090b74568d4a464f22ec342f0b3895a71",
+  "sdkCleanup": {
+    "exitCode": 1,
+    "groupGone": true,
+    "outbound": {
+      "connect": 1
+    },
+    "ownedSignals": 0,
+    "stdinEof": true
+  },
+  "sdkStderrCategoriesOnly": [],
+  "startedUtc": "2026-11-06T22:15:34.913266+00:00",
+  "temporaryFixtureRemoved": true,
+  "watchedRealFileMetadataUnchanged": {
+    "copilotCacheTop": true,
+    "copilotConfiguration": true,
+    "ghConfig": true,
+    "kiloAuth": true,
+    "kiloNativeDb": true,
+    "packageManifest": true
+  }
+}

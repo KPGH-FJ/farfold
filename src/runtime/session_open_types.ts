@@ -9,6 +9,8 @@ export interface OpenResult {
   workspaceAccess?:
     import("./workspace_access_types").WorkspaceAccessCapability | null;
   identityRead?: import("./session_identity_types").IdentityReadSupport | null;
+  sessionToolInventory?:
+    import("./session_tools_types").SessionToolInventoryCapability | null;
   /** Canonicalized cwd — session keys must be built from this. */
   cwd: string;
   configOptions: unknown;
@@ -17,6 +19,8 @@ export interface OpenResult {
   models?: unknown;
   meta?: unknown;
   resumed: boolean;
+  /** Current official empty-history fact verified by the owning backend open. */
+  historyEmptyConfirmed?: boolean;
   warnings: string[];
   configCheck?: ConfigCheck;
   permissionConfigId?: string;
@@ -24,4 +28,5 @@ export interface OpenResult {
   permissionEffect?: unknown;
   service?: import("./credentials").ServiceIdentity | null;
   serviceContext?: string | null;
+  serviceModelValue?: string;
 }

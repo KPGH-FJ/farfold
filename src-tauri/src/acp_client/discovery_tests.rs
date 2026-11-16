@@ -22,8 +22,13 @@ for line in sys.stdin:
   reply(m,{'protocolVersion':1,'agentCapabilities':caps,'authMethods':[]})
  elif method=='session/list':
   with open(os.path.join(base,'list-requests'),'a') as f: f.write(json.dumps(p)+'\n')
-  if p.get('cursor')=='failure': send({'id':m['id'],'error':{'code':-32603,'message':'listing failed'}})
-  elif p.get('cursor')=='next': reply(m,{'sessions':[{'sessionId':'second','cwd':'/missing/history-location'}]})
+  cursor=p.get('cursor')
+  failures={'failure':(-32603,'listing failed'),'startup-text':(-32603,'AGENT_INITIALIZE_TIMEOUT'),
+            'auth-text':(-32603,'AUTH_REQUIRED'),'auth-code':(-32000,'fixture authentication required')}
+  if cursor in failures:
+   code,message=failures[cursor]
+   send({'id':m['id'],'error':{'code':code,'message':message}})
+  elif cursor=='next': reply(m,{'sessions':[{'sessionId':'second','cwd':'/missing/history-location'}]})
   else: reply(m,{'sessions':[{'sessionId':'first','cwd':base,'title':'Original history'}],'nextCursor':'next'})
  elif method in ('session/new','session/load'):
   with open(os.path.join(base,'open-requests'),'ab') as f: f.write((method+'\n').encode('utf-8'))
@@ -416,23 +421,31 @@ async fn explicit_discovery_sends_global_cursor_and_preserves_remote_failure() {
         .manager
         .discover_session_page(&f.agent.id, &f.cwd, None, None)
         .await
-        .unwrap()
         .unwrap();
     assert!(can_load);
-    assert_eq!(first["sessions"][0]["sessionId"], "first");
+    assert_eq!(first.unwrap()["sessions"][0]["sessionId"], "first");
     let (next, _) = f
         .manager
         .discover_session_page(&f.agent.id, &f.cwd, None, Some("next".into()))
         .await
-        .unwrap()
         .unwrap();
-    assert_eq!(next["sessions"][0]["cwd"], "/missing/history-location");
-    assert!(
-        f.manager
-            .discover_session_page(&f.agent.id, &f.cwd, None, Some("failure".into()))
-            .await
-            .is_err()
+    assert_eq!(
+        next.unwrap()["sessions"][0]["cwd"],
+        "/missing/history-location"
     );
+    for (cursor, expected) in [
+        ("failure", "Agent 未返回有效的对话列表，请重试"),
+        ("startup-text", "Agent 未返回有效的对话列表，请重试"),
+        ("auth-text", "Agent 未返回有效的对话列表，请重试"),
+        ("auth-code", "AUTH_REQUIRED"),
+    ] {
+        let error = f
+            .manager
+            .discover_session_page(&f.agent.id, &f.cwd, None, Some(cursor.into()))
+            .await
+            .unwrap_err();
+        assert_eq!(error, expected);
+    }
     let requests: Vec<Value> = std::fs::read_to_string(f.cwd.join("list-requests"))
         .unwrap()
         .lines()
@@ -449,13 +462,15 @@ async fn explicit_discovery_sends_global_cursor_and_preserves_remote_failure() {
         .connect(&unsupported.agent, &unsupported.cwd, &unsupported.store)
         .await
         .unwrap();
+    let (page, can_load) = unsupported
+        .manager
+        .discover_session_page(&unsupported.agent.id, &unsupported.cwd, None, None)
+        .await
+        .unwrap();
+    assert!(page.is_none());
     assert!(
-        unsupported
-            .manager
-            .discover_session_page(&unsupported.agent.id, &unsupported.cwd, None, None)
-            .await
-            .unwrap()
-            .is_none()
+        can_load,
+        "a missing list declaration must not hide explicit load support"
     );
     assert!(!unsupported.cwd.join("list-requests").exists());
     unsupported

@@ -1,5 +1,6 @@
 import { expect, it, vi } from "vitest";
 import { freshThreadState, normalizeConfigOptions } from "./session_projection";
+import { openedThreadState } from "./session_open_state";
 import {
   configurationRestoreIntent,
   mirroredConfigurationChoice,
@@ -8,6 +9,12 @@ import {
 
 function state() {
   const value = freshThreadState("owned", "chosen", "/controlled", "native");
+  value.service = {
+    id: "selected",
+    model: "chosen-model",
+    fingerprint: "source",
+  };
+  value.serviceModelValue = "chosen-model";
   value.configOptions = normalizeConfigOptions([
     {
       id: "model",
@@ -71,6 +78,56 @@ it("uses the explicit service model rather than a default notification and requi
     (item) => item.id !== "model",
   );
   expect(configurationRestoreIntent(value, {}, "chosen-model")).toEqual({});
+});
+it("restores the exact model value confirmed for the selected API connection", () => {
+  const logicalModel = "vendor/example:free";
+  const service = {
+    id: "selected",
+    model: logicalModel,
+    fingerprint: "source",
+  };
+  const wireModel = `farfold_${"a".repeat(64)}/${logicalModel}`;
+  const alternative = `farfold_${"b".repeat(64)}/${logicalModel}`;
+  const result = {
+    cwd: "/controlled",
+    nativeSessionId: "native",
+    service,
+    serviceModelValue: wireModel,
+    resumed: false,
+    warnings: [],
+    configOptions: [
+      {
+        id: "model",
+        category: "model",
+        name: "Model",
+        type: "select",
+        currentValue: wireModel,
+        options: [{ value: wireModel, name: "Chosen" }],
+      },
+    ],
+  };
+  const input = { agentId: "chosen", cwd: result.cwd, service };
+  const value = openedThreadState(input, result, null);
+  const missingMapping = openedThreadState(
+    input,
+    { ...result, serviceModelValue: undefined },
+    null,
+  );
+  expect(() =>
+    configurationRestoreIntent(missingMapping, {}, logicalModel),
+  ).toThrow();
+  expect(configurationRestoreIntent(value, {}, logicalModel)).toEqual({
+    model: wireModel,
+  });
+  expect(
+    configurationRestoreIntent(value, { model: wireModel }, logicalModel),
+  ).toEqual({ model: wireModel });
+  expect(() =>
+    configurationRestoreIntent(value, { model: alternative }, logicalModel),
+  ).toThrow();
+  expect(() => configurationRestoreIntent(value, {}, "other/model")).toThrow();
+  value.configOptions[0].currentValue = alternative;
+  expect(() => configurationRestoreIntent(value, {}, logicalModel)).toThrow();
 });
 it.each(["thought-only", "service-model"])(
   "confirms the original %s intent without a setter",

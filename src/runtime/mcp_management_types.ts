@@ -5,6 +5,7 @@ import type {
   SkillChangeRequestKey,
   SkillChangeRecheckInput,
 } from "./skill_management_types";
+import { SKILL_CHANGE_CODES } from "./skill_management_types";
 import { validInventoryId } from "./extension_inventory_types";
 import {
   invalid,
@@ -19,6 +20,11 @@ import {
   cancelledOperation,
 } from "./extension_change_validation";
 // MCP preference DTO: safe metadata only; no public write authority.
+const SCOPE_REFUSALS = [
+  "configurationProjectOnly",
+  "configurationInherited",
+  "configurationLayerConflict",
+] as const;
 export type McpTransport = "stdio" | "streamableHttp";
 export type McpChangeAction = "inspect" | "setEnabled" | "recheck";
 export type McpChangeTarget = {
@@ -265,10 +271,10 @@ export function parseMcpChangeOperation(
   const parsedTarget = target(v.target, expected),
     rev = v.review === null ? null : review(v.review, expected),
     obs = v.observation === null ? null : observation(v.observation, expected);
-  return {
-    ...expected,
-    target: parsedTarget,
-    ...lifecycle(v, expected, {
+  const status = lifecycle(
+    v,
+    expected,
+    {
       hasReview: !!rev,
       hasObservation: !!obs,
       matching: obs?.configuration === "matching" && obs.mcp === "matching",
@@ -276,7 +282,18 @@ export function parseMcpChangeOperation(
         obs?.configuration === "different" ||
         obs?.mcp === "different" ||
         obs?.mcp === "missing",
-    }),
+    },
+    [...SKILL_CHANGE_CODES, ...SCOPE_REFUSALS],
+  );
+  if (
+    SCOPE_REFUSALS.some((code) => code === status.code) &&
+    (expected.action !== "inspect" || status.state !== "failed")
+  )
+    invalid();
+  return {
+    ...expected,
+    target: parsedTarget,
+    ...status,
     review: rev,
     observation: obs,
   };

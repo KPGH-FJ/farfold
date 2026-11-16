@@ -1,7 +1,8 @@
 //! Structured app log in the resolved per-user log directory. macOS preserves
 //! `~/Library/Logs/Farfold`; Windows uses Tauri's app_log_dir for this identifier.
 //!
-//! One line per event: timestamp, level, known component and message size only. The file rotates
+//! One line per event: timestamp, level, known component and message size or
+//! a fixed diagnostic classification. The file rotates
 //! once it exceeds 5 MB, keeping the current file plus two backups
 //! (`.1`, `.2`). Diagnostics only — never read back at runtime.
 //!
@@ -35,6 +36,42 @@ impl Level {
             Self::Error => "ERROR",
         }
     }
+}
+
+#[cfg(target_os = "macos")]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum BrowserScreenshotFailure {
+    BeforePageStructure,
+    ClosedRootInspectionUnavailable,
+    SystemCaptureFailed,
+    ImageLimit,
+    EncodingFailed,
+    AfterPageStructure,
+}
+
+#[cfg(target_os = "macos")]
+impl BrowserScreenshotFailure {
+    fn labels(self) -> (&'static str, &'static str) {
+        match self {
+            Self::BeforePageStructure => ("before_capture", "page_structure"),
+            Self::ClosedRootInspectionUnavailable => {
+                ("before_capture", "closed_root_inspection_unavailable")
+            }
+            Self::SystemCaptureFailed => ("capture", "system_capture_failed"),
+            Self::ImageLimit => ("capture", "image_limit"),
+            Self::EncodingFailed => ("capture", "encoding_failed"),
+            Self::AfterPageStructure => ("after_capture", "page_structure"),
+        }
+    }
+}
+
+enum LogFields<'a> {
+    Message {
+        module: &'a str,
+        bytes: usize,
+    },
+    #[cfg(target_os = "macos")]
+    BrowserScreenshotFailure(BrowserScreenshotFailure),
 }
 
 fn now_millis() -> i64 {
@@ -158,6 +195,16 @@ impl AppLog {
     }
 
     fn write(&mut self, level: Level, module: &str, message: &str) {
+        self.write_fields(
+            level,
+            LogFields::Message {
+                module,
+                bytes: message.len(),
+            },
+        );
+    }
+
+    fn write_fields(&mut self, level: Level, fields: LogFields<'_>) {
         let now = now_millis();
         let today = date_stamp(now);
         if today != self.date {
@@ -170,16 +217,24 @@ impl AppLog {
         if self.written >= LOG_FILE_CAP {
             self.rotate();
         }
-        let line = format!(
-            "[{}] [{}] [{}] bytes={}\n",
-            timestamp(now),
-            level.label(),
-            match module {
-                "app" | "auth" | "diagnostics" | "supervisor" | "acp_client" | "pty" => module,
-                _ => "other",
-            },
-            message.len()
-        );
+        let timestamp = timestamp(now);
+        let level = level.label();
+        let line = match fields {
+            LogFields::Message { module, bytes } => {
+                let module = match module {
+                    "app" | "auth" | "diagnostics" | "supervisor" | "acp_client" | "pty" => module,
+                    _ => "other",
+                };
+                format!("[{timestamp}] [{level}] [{module}] bytes={bytes}\n")
+            }
+            #[cfg(target_os = "macos")]
+            LogFields::BrowserScreenshotFailure(failure) => {
+                let (stage, category) = failure.labels();
+                format!(
+                    "[{timestamp}] [{level}] [browser_screenshot] stage={stage} category={category}\n"
+                )
+            }
+        };
         // Flush every line: the logger lives in a `static` that never
         // drops at process exit, so buffered bytes would be lost.
         if self.file.write_all(line.as_bytes()).is_ok() && self.file.flush().is_ok() {
@@ -229,6 +284,15 @@ pub(crate) fn warn(module: &str, message: impl std::fmt::Display) {
     log(Level::Warn, module, message);
 }
 
+#[cfg(target_os = "macos")]
+pub(crate) fn record_browser_screenshot_failure(failure: BrowserScreenshotFailure) {
+    if let Ok(mut guard) = slot().lock()
+        && let Some(log) = guard.as_mut()
+    {
+        log.write_fields(Level::Warn, LogFields::BrowserScreenshotFailure(failure));
+    }
+}
+
 pub(crate) fn error(module: &str, message: impl std::fmt::Display) {
     log(Level::Error, module, message);
 }
@@ -273,5 +337,30 @@ mod tests {
             std::fs::read_to_string(legacy).unwrap(),
             "legacy log kept locally"
         );
+    }
+
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn screenshot_diagnostics_write_fixed_fields_to_the_existing_log() {
+        let dir = tempfile::tempdir().unwrap();
+        let mut log = AppLog::open(dir.path()).unwrap();
+        log.write(
+            Level::Warn,
+            "browser_screenshot",
+            "P27_TEST_UNTRUSTED_WEBKIT_ERROR",
+        );
+        log.write_fields(
+            Level::Warn,
+            LogFields::BrowserScreenshotFailure(BrowserScreenshotFailure::SystemCaptureFailed),
+        );
+        let path = AppLog::path_for(dir.path(), &log.date);
+        let current = std::fs::read_to_string(path).unwrap();
+        let mut lines = current.lines().map(|line| line.split_once("] ").unwrap().1);
+        assert_eq!(lines.next(), Some("[WARN] [other] bytes=31"));
+        assert_eq!(
+            lines.next(),
+            Some("[WARN] [browser_screenshot] stage=capture category=system_capture_failed")
+        );
+        assert_eq!(lines.next(), None);
     }
 }

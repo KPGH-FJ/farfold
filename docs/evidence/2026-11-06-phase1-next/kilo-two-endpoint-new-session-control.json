@@ -1,0 +1,90 @@
+{
+  "approvalRequests": 0,
+  "archiveIncludesAdjacentWorkerAndConsole": true,
+  "archiveSha256": "d94ab724ce384f9a8e7cda72460c5eb643ed44cb481f80cdd4b7571d005cc0b1",
+  "authCalls": 0,
+  "endedUtc": "2026-11-07T01:34:16.505965+00:00",
+  "exactOfficialAcpAndCloseList": true,
+  "exactOwnedChildImageParentAndGroup": true,
+  "exactPreviouslyProvenLifecycleInitializeTemplateUsed": true,
+  "explicitFixedIpv4AndNoMdns": true,
+  "inertFilePolicyDecision": {
+    "insideExistingRead": "allow",
+    "insideExistingWrite": "allow",
+    "outsideExistingWrite": "deny"
+  },
+  "isolatedAuthFileAbsent": true,
+  "kind": "OfficialKiloScopedActiveRouteReleaseTwoExactLoopbackEndpoints",
+  "localHttpRouteCategories": {
+    "rejected-unrecognized": 1,
+    "served-openrouter-models": 1,
+    "served-public-catalogue": 1
+  },
+  "localHttpRouteCounts": {
+    "localCatalogue": 2,
+    "rejectedUnexpectedLocalRequest": 1
+  },
+  "modelPrompts": 0,
+  "newIsolatedDatabaseAbsentBeforeAcpLaunch": true,
+  "officialArchiveRegularMembers": 408,
+  "officialProfile": {
+    "complete": true,
+    "markers": {
+      "agentsListSettled": true,
+      "commandsListSettled": true,
+      "configReadSettled": true,
+      "defaultModelResolutionReached": true,
+      "directoryLoaderSettled": true,
+      "directorySnapshotCompleted": true,
+      "initializeProfileControl": true,
+      "newSessionSuccessful": true,
+      "officialListenerSettled": true,
+      "providerListSettled": true,
+      "sessionCreateAttemptedAndSettled": true,
+      "skillsListSettled": true
+    },
+    "truncated": false
+  },
+  "offlineOfficialVersion7_8_1": true,
+  "outboundMethodCounts": {
+    "initialize": 1,
+    "session/new": 1
+  },
+  "outcome": "cleanup-auth-or-no-egress-gate-unconfirmed",
+  "ownedChildMachAndProfileIsolation": {
+    "homeCredentialReadPolicyDenied": true,
+    "insideExistingFileReadableAndWritable": true,
+    "keychainMachDenied": true,
+    "managedKiloConfigReadPolicyDenied": true,
+    "outsideExistingFileWriteDenied": true,
+    "unrelatedMachControlAllowed": true
+  },
+  "ownedCleanup": {
+    "exitCode": 0,
+    "processGroupGone": true,
+    "signals": 0,
+    "stdinEof": true
+  },
+  "ownedTemporaryLayoutRemoved": true,
+  "productionDataUsed": false,
+  "rawProtocolPayloadsRetained": false,
+  "realCredentialsOrAccountUsed": false,
+  "remoteRequests": 0,
+  "scratchExecutableSha256": "ac6b36ebcd5eed45ce172287cebeff6ed0eb27ce8ba3413ebe9814beca8f0dca",
+  "startedUtc": "2026-11-07T01:34:12.234382+00:00",
+  "toolRequests": 0,
+  "twoExactListenerPolicyControls": {
+    "allDiagnosticSocketApplicationBytes": 0,
+    "childOwnerAndSingleFixedIpv4ListenerVerifiedBeforeAnyRpc": true,
+    "exactOfficialListenerAllowedAndDifferentReachablePortDenied": true,
+    "relayAllowedAndDifferentReachablePortDenied": true
+  },
+  "verifiedKernelIsolation": {
+    "homeDataReadAndWriteDenied": true,
+    "otherReachablePortDenied": true,
+    "ownLoopbackAllowed": true,
+    "ownedScratchWriteAllowed": true,
+    "realBrowserOpenerDenied": true,
+    "registeredBinaryReadable": true
+  }
+}

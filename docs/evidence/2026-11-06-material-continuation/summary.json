@@ -1,0 +1,324 @@
+{
+  "kind": "MaterialContinuationControlledTextEvidenceCapsule",
+  "state": "FROZEN_CANDIDATE_FOR_INDEPENDENT_SAFETY_REVIEW",
+  "preparedAtUtc": "2026-11-06T03:50:36.359955+00:00",
+  "sourceCommit": "adf80c9e524e39780d6b9ac3329ce1fd93fd7feb",
+  "parent": "d19611f408253b5d824d2b3deaabdb11c18b099b",
+  "ownedSourceFiles": {
+    "src/components/MessageContent.tsx": "8551eb88fda4884bbcd97e43a206a2e8f5d2ee6173c9ff3038ba4b3f515863e2",
+    "src/runtime/message_audio_compatibility.ts": "5336952bdba4beafaf6cc364219e32a7bf8e617e3c32821677a04f57f299220e",
+    "src/components/MessageContent.audio-compatibility.test.tsx": "36d8bd0babaa0205be50265cde6c5157673547941f91bd59bb7445e7643a7394",
+    "src/runtime/draft_storage.ts": "f47b02ff3fce613eb1beb32f95ed65533ba4c84b531b9a362d939c829c3f3bf4",
+    "src/runtime/composer_attachment_import.ownership.test.ts": "fe39206610ae65231e268db42c72fcf6c6b4aadc36fcf5ed6524271bde2b70e0",
+    "src/runtime/browser_tabs.ts": "b265787a06253d45785b6934a44cc399de05e5c98b44ca6b17cf14f7369a90bf",
+    "src/runtime/browser_tabs.test.ts": "4a16fb72c56a43d3641a8ac12ec0221b14bca3972bbb5c042206905fed070954",
+    "src/components/WorkbookFilePreview.tsx": "dce3da941d186c9ecf1b966f4e468ff0aa9540bdda9584ee34a4cc8c5015cc27",
+    "src/components/WorkbookFilePreview.feedback.test.tsx": "2675d7f300da7fe5658546203dfe1faa2edf8cce407e15bc8b2bbae1d3458ae3"
+  },
+  "attachmentAutosave": {
+    "requirements": ["P01"],
+    "behavior": "The serialized writer drains pending owned attachments before every new snapshot capture. The old complete snapshot stays authoritative while a newer live read is unresolved. Withdrawal releases the existing ownership wait, and late File bytes cannot be applied.",
+    "initialRed": {
+      "passed": 0,
+      "failed": 2,
+      "naturalExitCode": 1,
+      "filteredOut": 9,
+      "fixture": "Earlier diagnostic fixture, distinct from final seal"
+    },
+    "finalSealed": {
+      "red": {
+        "passed": 0,
+        "failed": 2,
+        "naturalExitCode": 1
+      },
+      "green": {
+        "passed": 2,
+        "failed": 0,
+        "naturalExitCode": 0
+      },
+      "filteredOutEach": 9,
+      "sameFixtureBytes": true
+    },
+    "related": {
+      "files": 15,
+      "passed": 131,
+      "failed": 0,
+      "skipped": 0,
+      "includesFinalTwo": true
+    },
+    "redObservation": "The old write loop persisted newer text plus the image placeholder without bytes, set isSaved true, and wrote twice before the live input settled.",
+    "qualification": "Read completion round-trips the newer text and image bytes through the production parser. Withdrawal saves the replacement text before the actual File finishes. The following late data does not reappear or write again.",
+    "implementation": {
+      "path": "output/2026-11-06-material-continuation/draft/implementation-summary.json",
+      "sha256": "b2b046aeee731251dbbe1967022808adf0671b26be545242e6f0f40eef07a0ba",
+      "bytes": 9472
+    },
+    "independentReader": {
+      "path": "output/2026-11-06-material-continuation/draft-independent-review/reader.json",
+      "sha256": "85bef2212efafd374b97d635dc42343394418d50ea647328197ced180c9cf10b",
+      "bytes": 13868
+    },
+    "boundary": "Actual importer, writer and parser, self-owned Node File bytes, controlled decoder and settings IPC. No real SQLite, application restart, physical cancellation, installed clipboard action or abrupt-exit claim."
+  },
+  "audioCompatibilityAdmission": {
+    "requirements": ["P13"],
+    "behavior": "After playback failure, only audio admitted by the existing byte budget with native-compatible bare ADTS or FLAC prefix reaches the existing compatibility action. PCM WAVE and ID3-wrapped ADTS keep ordinary retry. The action repeats the eligibility check before native conversion.",
+    "sealedFour": {
+      "red": {
+        "passed": 2,
+        "failed": 2,
+        "naturalExitCode": 1
+      },
+      "green": {
+        "passed": 4,
+        "failed": 0,
+        "naturalExitCode": 0
+      },
+      "sameFixtureBytes": true
+    },
+    "related": {
+      "files": 11,
+      "passed": 97,
+      "failed": 0,
+      "includesSealedFour": true
+    },
+    "source": {
+      "path": "output/2026-11-06-material-continuation/media/source-final.json",
+      "sha256": "0d037883334c8d8f24913832bec7091aa9bc3ab30bfc556ae304cd6f4be89859",
+      "bytes": 1375
+    },
+    "independentReader": {
+      "path": "output/2026-11-06-material-continuation/media-independent-review/reader.json",
+      "sha256": "a23516d7811cbc2dfd04cd7406733acdfa3f95d660d62d5804e4cadb266210bb",
+      "bytes": 6151
+    },
+    "boundary": "Production message admission and SSR with controlled playback failure, substitute nested compatibility control and associated cases. The actual native guard was inspected in source. No device playback, installed decoder, real audio recovery or performance measurement in this evidence."
+  },
+  "spreadsheetSheetRecovery": {
+    "requirements": ["P16", "P20"],
+    "behavior": "After a failed or explicitly paused sheet read, the existing selector can choose another sheet from the retained verified workbook capture. It retains current preview and feedback ownership. A late cancelled read cannot replace the newer selected sheet.",
+    "sealedTwo": {
+      "red": {
+        "passed": 0,
+        "failed": 2,
+        "naturalExitCode": 1
+      },
+      "green": {
+        "passed": 2,
+        "failed": 0,
+        "naturalExitCode": 0
+      },
+      "filteredOutEach": 29,
+      "sameFixtureBytes": true
+    },
+    "related": {
+      "files": 9,
+      "passed": 208,
+      "failed": 0,
+      "skipped": 0,
+      "includesSealedTwo": true
+    },
+    "qualification": "The original fixtures already have a verified sheet directory. Both cases reuse one whole-file capture and can create feedback for the recovered sheet while old feedback cannot confirm.",
+    "implementation": {
+      "path": "output/2026-11-06-material-continuation/document/implementation-summary.json",
+      "sha256": "bfe0a4e8fd04c21be72c0c5e497202d862457e991fe90e9741f916cdf21535d7",
+      "bytes": 6282
+    },
+    "independentReader": {
+      "path": "output/2026-11-06-material-continuation/document-independent-review/reader.json",
+      "sha256": "53d1427e342902aa4fafc27cd473638067353a1b615887ab03e57a7e4d3a5848",
+      "bytes": 10141
+    },
+    "boundary": "Real WorkbookFilePreview handlers and lifecycle, controlled hook harness and capture/parser. No installed UI, native IPC, real Office, before-first-success recovery or completed P22 journey."
+  },
+  "tabSelectionAcknowledgement": {
+    "requirements": ["P30"],
+    "behavior": "After a successful explicit native select receipt, a delayed read with the same revision and conflicting prior label cannot replace it. Later matching-label metadata is still applied.",
+    "sealedThirtyOne": {
+      "red": {
+        "passed": 30,
+        "failed": 1,
+        "naturalExitCode": 1
+      },
+      "green": {
+        "passed": 31,
+        "failed": 0,
+        "naturalExitCode": 0
+      },
+      "sameFixtureBytes": true
+    },
+    "related": {
+      "files": 14,
+      "passed": 250,
+      "failed": 0,
+      "skipped": 0,
+      "includesSealedThirtyOne": true
+    },
+    "qualification": "The RED assertion observes the tab presentability state after the delayed snapshot. The exact show port call is a GREEN assertion. Native source proves the two snapshot shapes, while their callback delivery is controlled here.",
+    "implementation": {
+      "path": "output/2026-11-06-material-continuation/browser/implementation-summary.json",
+      "sha256": "14dc3f458d2ac77e0a0e30132536da90f138b0f0822bd955cd3dba20104dc258",
+      "bytes": 7544
+    },
+    "independentReader": {
+      "path": "output/2026-11-06-material-continuation/browser-independent-review/reader.json",
+      "sha256": "462b8416f062ed5111f3f75e4c44a2a759ecd6615790e779129f8187eec3c7d9",
+      "bytes": 5889
+    },
+    "boundary": "Actual BrowserTabs and page scope with a controlled native port. No measured installed IPC order, real native WebView, sharing revocation or actual P27 screenshot delivery."
+  },
+  "freshMacEngineering": {
+    "counts": {
+      "sourceInputs": 2405,
+      "frontendFiles": 721,
+      "frontendPassed": 9630,
+      "rustPassed": 2401,
+      "rustIgnored": 7
+    },
+    "scope": {
+      "freshCommands": 7,
+      "fullDeclaredInputs": 2405,
+      "fullProductionInputs": 2401,
+      "explicitAuthorityConfigInputs": 4,
+      "freshFixtureInputs": 11,
+      "ownedChangedSourceTestFiles": 9
+    },
+    "sourceCheckpoint": {
+      "path": "output/2026-11-06-material-continuation/source-commit.json",
+      "sha256": "60a049186e16dab59925c816465c9fe035837799e4569d93170a5035bc3481b7",
+      "bytes": 1388
+    },
+    "report": {
+      "path": "output/2026-11-06-material-continuation/engineering-result.json",
+      "sha256": "0c41043680df2f0e2b8088413ab61ef114a6709721da683a1bab5e09f14e6c6e",
+      "bytes": 5539
+    },
+    "independentReader": {
+      "path": "output/2026-11-06-material-continuation/engineering-independent-review/reader.json",
+      "sha256": "dca5cfc420c88d9baac91053e239f0f917229fc11969a64cd686c3911840d13d",
+      "bytes": 24714
+    },
+    "originalInputMaps": [
+      {
+        "path": "output/2026-11-06-material-continuation/engineering/source-before.json",
+        "sha256": "b58c1dfc772cfa328dfd586d61d4d766828c990708a4dda520bfbe86e9028572"
+      },
+      {
+        "path": "output/2026-11-06-material-continuation/engineering/source-after.json",
+        "sha256": "b58c1dfc772cfa328dfd586d61d4d766828c990708a4dda520bfbe86e9028572"
+      }
+    ],
+    "commands": [
+      {
+        "log": "format-final.log",
+        "naturalExitCode": 0,
+        "argv": ["corepack", "pnpm", "format:check"],
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "receipt": {
+          "path": "output/2026-11-06-material-continuation/engineering/checks/format-final.json",
+          "sha256": "110b7818f4dc2079fd38fb697fb503fcc753a81b0977734aa12c36668b25c93f"
+        }
+      },
+      {
+        "log": "typecheck-final.log",
+        "naturalExitCode": 0,
+        "argv": ["corepack", "pnpm", "typecheck"],
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "receipt": {
+          "path": "output/2026-11-06-material-continuation/engineering/checks/typecheck-final.json",
+          "sha256": "006e71ab1490bbc9ad761b550bf8f3598fee88fd5934409245322ccdee59b5c6"
+        }
+      },
+      {
+        "log": "frontend-final.log",
+        "naturalExitCode": 0,
+        "argv": ["corepack", "pnpm", "test"],
+        "sha256": "279a44629f6426d5d14861897884b77470bb39fedfacf2504fb875427e8cfc26",
+        "receipt": {
+          "path": "output/2026-11-06-material-continuation/engineering/checks/frontend-final.json",
+          "sha256": "0c77b0165700f2fe2ba5dec91f719fcd7cc27d70cca807df5387f84ad8a6bedf"
+        }
+      },
+      {
+        "log": "build-final.log",
+        "naturalExitCode": 0,
+        "argv": ["corepack", "pnpm", "build"],
+        "sha256": "8bf1848c407606a5004b8c61ae30700f9a043ad4b323599d032fc8284ca8375a",
+        "receipt": {
+          "path": "output/2026-11-06-material-continuation/engineering/checks/build-final.json",
+          "sha256": "1d9828332251a1a7ff11dcdf99cdd2055c5b15302641ccbccf4745c4961ec36f"
+        }
+      },
+      {
+        "log": "cargo-fmt.log",
+        "naturalExitCode": 0,
+        "argv": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "receipt": {
+          "path": "output/2026-11-06-material-continuation/engineering/checks/cargo-fmt.json",
+          "sha256": "c8fbc34fbf9b35fee0345a0cbc21035dbf6777881cd251c9f0aad0723d111f4d"
+        }
+      },
+      {
+        "log": "clippy.log",
+        "naturalExitCode": 0,
+        "argv": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "sha256": "a16685927daa0790a2b357e2b56df170e7bad259186d3c802d6d441422dfd0cf",
+        "receipt": {
+          "path": "output/2026-11-06-material-continuation/engineering/checks/clippy.json",
+          "sha256": "76b81f4ba8bb570c894c57ade13c52d80fb2481544aa718b8395203c3f65fc25"
+        }
+      },
+      {
+        "log": "rust-full.log",
+        "naturalExitCode": 0,
+        "argv": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "sha256": "f7bc98762363339d5c1a1b1339a7807bed05bfabcf03ebfa64cbb2729e0db524",
+        "receipt": {
+          "path": "output/2026-11-06-material-continuation/engineering/checks/rust-full.json",
+          "sha256": "2293ef0b112e24e0327b1320520c14923bfe05dc6189a6af4841c8286087bc69"
+        }
+      }
+    ],
+    "qualification": "Seven fresh natural-zero macOS commands. Independent reader checked the fixed commit and all declared byte/mode endpoints. Seven Rust ignores remain excluded from passes. Build retains the Vite chunk-size advisory."
+  },
+  "publicationBoundary": {
+    "exactOriginalTextFiles": 129,
+    "derivedMembers": [
+      "README.md",
+      "summary.json",
+      "text-allowlist.json",
+      "safety-check.json"
+    ],
+    "excluded": [
+      "Entire native/ and native-file/ paths, raw AX and UI records, actual file observations, screenshots and user input",
+      "All DB files, copies, backups, user-draft content, retention or user-data manifests",
+      "Formal build/installation tool inputs, parameters, process records, installed payloads and binary CI archives",
+      "Binary fixtures themselves, credentials, account material, and Windows results"
+    ],
+    "formalOrUiResultsIncluded": false,
+    "windowsResultsIncluded": false,
+    "qualification": "Original bytes of controlled source and check text. Packaging checks are separate from independent capsule safety review. No complete P01, P13, P16, P20, P27, P30 or 29-Agent acceptance."
+  }
+}

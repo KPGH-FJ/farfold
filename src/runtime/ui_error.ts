@@ -1,6 +1,15 @@
 import { STRINGS } from "./strings";
 import { ERROR_STRINGS } from "./error_strings";
 
+export function isSessionToolChangePending(reason: unknown): boolean {
+  return (
+    reason === "SESSION_TOOL_CHANGE_PENDING" ||
+    (reason instanceof Error &&
+      reason.name === "Error" &&
+      reason.message === "SESSION_TOOL_CHANGE_PENDING")
+  );
+}
+
 /** Exact app-owned directory error only, never an arbitrary diagnostic or path. */
 export function workDirectoryError(reason: unknown): string | undefined {
   return String(reason).replace(/^Error: /, "") ===
@@ -8,14 +17,20 @@ export function workDirectoryError(reason: unknown): string | undefined {
     ? ERROR_STRINGS.workDirectoryUnavailable
     : undefined;
 }
-/** Only present short app-authored, user-language errors; never raw transport diagnostics. */
-export function uiError(reason: unknown, fallback: string): string {
-  const raw = String(reason);
-  const directory = workDirectoryError(reason);
-  if (directory) return directory;
-  // Only exact app-authored codes are eligible; payloads and decorated codes
-  // remain behind the caller's fallback rather than exposing transport text.
-  switch (raw.replace(/^Error: /, "")) {
+
+/** Exact app-owned opening codes only; unknown objects and diagnostics stay private. */
+export function agentOpenError(reason: unknown): string | undefined {
+  if (isSessionToolChangePending(reason))
+    return ERROR_STRINGS.sessionToolChangePending;
+  const code =
+    typeof reason === "string"
+      ? reason.replace(/^Error: /, "")
+      : reason instanceof Error &&
+          reason.name === "Error" &&
+          typeof reason.message === "string"
+        ? reason.message
+        : undefined;
+  switch (code) {
     case "AGENT_INITIALIZE_FAILED":
       return ERROR_STRINGS.agentInitializeFailed;
     case "AGENT_INITIALIZE_TIMEOUT":
@@ -24,12 +39,37 @@ export function uiError(reason: unknown, fallback: string): string {
       return ERROR_STRINGS.agentConnectionEnded;
     case "AGENT_START_FAILED":
       return ERROR_STRINGS.agentStartFailed;
+    case "AGENT_OPEN_TIMEOUT":
+      return ERROR_STRINGS.agentOpenTimeout;
+    case "AGENT_OPEN_CLOSED":
+      return ERROR_STRINGS.agentOpenClosed;
+    case "AGENT_OPEN_WAIT_CANCELLED":
+      return ERROR_STRINGS.agentOpenWaitCancelled;
   }
-  if (/AGENT_(?:INITIALIZE_|CONNECTION_|START_|WORK_DIRECTORY_)/i.test(raw))
+}
+
+export function confirmedPromptError(code: string): string | undefined {
+  if (code === "AUTH_REQUIRED") return STRINGS.access.authRequired;
+  if (code === "PROMPT_MODEL_PROVIDER_CREDITS_EXHAUSTED")
+    return ERROR_STRINGS.modelProviderCreditsExhausted;
+}
+
+/** Only present short app-authored, user-language errors; never raw transport diagnostics. */
+export function uiError(reason: unknown, fallback: string): string {
+  const raw = String(reason);
+  const directory = workDirectoryError(reason);
+  if (directory) return directory;
+  // Only exact app-authored codes are eligible; payloads and decorated codes
+  // remain behind the caller's fallback rather than exposing transport text.
+  const opening = agentOpenError(reason);
+  if (opening) return opening;
+  if (
+    /AGENT_(?:INITIALIZE_|CONNECTION_|START_|OPEN_|WORK_DIRECTORY_)/i.test(raw)
+  )
     return fallback;
-  if (raw.replace(/^Error:\s*/, "") === "AUTH_REQUIRED")
-    return STRINGS.access.authRequired;
   const text = raw.replace(/^Error:\s*/, "");
+  const promptError = confirmedPromptError(text);
+  if (promptError) return promptError;
   return /^[\u3400-\u9fff]/.test(text) &&
     text.length <= 180 &&
     !/[\r\n]|runtime|host|acp|原生|绑定|代次|投影|占用|session|turn|构建|引用|对账|沉降|上游|sidecar|adapter|json|握手|envelope/i.test(

@@ -128,13 +128,13 @@ export function ReportedFilesList({
         <strong>{S.title}</strong>
         {files && <span>{S.count(files.length)}</span>}
       </header>
-      <p className="reported-files-note">{S.note}</p>
       {files === null ? (
         <p role="status">{S.unavailable}</p>
       ) : files.length === 0 ? (
         <p role="status">{S.empty}</p>
       ) : (
         <>
+          <p className="reported-files-note">{S.note}</p>
           <ul className="reported-files-rows">
             {files
               .slice(

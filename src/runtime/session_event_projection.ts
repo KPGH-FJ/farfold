@@ -1,11 +1,17 @@
+import {
+  receiveToolMedia,
+  rememberToolMediaSource,
+} from "./session_tool_media";
 import { invoke } from "@tauri-apps/api/core";
-import { observeAuthentication } from "./authentication";
+import { threadProgramAuthentication } from "./authentication";
 import { observeDesktopNotification } from "./desktop_notifications";
 import { appendToolOutput } from "./artifacts";
 import { receiveFileInput } from "./tool_file_input";
 import { applyConfigCheck, type ConfigCheck } from "./config_check";
 import { receiveAsyncTasks } from "./async_tasks";
 import { receiveWorkActivity } from "./session_work_activity";
+import { receiveProgramStatus } from "./program_status";
+import { receiveMessageUsage } from "./message_usage";
 import { hasActiveFork, receiveForkActivity } from "./session_fork_activity";
 import { replacePermissionEffect } from "./permission_effect";
 import { retainReportedDetails } from "./reported_details";
@@ -14,7 +20,8 @@ import { conversationReadState } from "./conversation_read_state";
 import { pauseQueue, removeQueued } from "./queue";
 import { STRINGS } from "./strings";
 import { forgetSessionIdentity } from "./session_identity_types";
-import type { ThreadState } from "./session_types";
+import { receiveSessionUsage } from "./session_usage_notification";
+import type { ThreadState, ToolContent } from "./session_types";
 import type { PromptRequestOwner } from "./prompt_admission";
 import {
   applyUpdate,
@@ -36,6 +43,7 @@ export interface SessionEventEffects {
   owns(): boolean;
   promptOwner(): PromptRequestOwner | undefined;
   configurationChanging(): boolean;
+  configurationOptionsReceived?(): void;
   receiveConfigCheck(check: ConfigCheck): boolean;
   finishActivity(): void;
   permissionChanged(): void;
@@ -57,17 +65,57 @@ export function applySessionEvent(
   effects?: SessionEventEffects,
   activityConnectionId?: string,
 ): void {
+  const media = receiveToolMedia(s, event, effects?.owns, activityConnectionId);
+  if (media) {
+    if (live && effects?.owns()) {
+      conversationReadState.receiveToolMedia(
+        s.key,
+        media.priorReadableContent,
+        media.call.content,
+      );
+      effects.emit();
+    }
+    return;
+  }
   if (!event || typeof event !== "object") return;
   const e = event as Record<string, unknown>;
+  if (
+    [
+      "toolMedia",
+      "historyToolSupplement",
+      "historyToolSupplementStatus",
+    ].includes(String(e.kind)) &&
+    !hasOwnUpdate(e)
+  ) {
+    pushRaw(s, e);
+    effects?.emit();
+    return;
+  }
+  if (receiveSessionUsage(s, e, effects?.owns, activityConnectionId)) {
+    if (live && effects?.owns()) effects.emit();
+    return;
+  }
+  // Recognized live-only hints cannot be smuggled into history by an own
+  // `update` field. The original envelope has already traversed the event bus.
+  if (receiveProgramStatus(s, e, live, effects?.owns, activityConnectionId)) {
+    if (live && effects?.owns()) effects.emit();
+    return;
+  }
+  if (receiveMessageUsage(s, e, effects?.owns, activityConnectionId)) {
+    if (live && effects?.owns()) effects.emit();
+    return;
+  }
   const updateEnvelope = hasOwnUpdate(e);
   const kind = updateEnvelope ? undefined : e.kind;
   const endingOwner = kind === "turnEnd" ? effects?.promptOwner() : undefined;
-  // Validate before notifications or projection can treat an ending as ours.
+  // Validate before projection can treat work evidence as ours.
   // Unknown Agent envelopes and foreign receipts remain raw observations.
   if (
-    kind === "turnEnd" &&
-    (Object.hasOwn(e, "sessionId") ||
-      (endingOwner && !endingOwner.ending(e.promptReceiptId)))
+    ((kind === "turnEnd" || kind === "toolActivity") &&
+      Object.hasOwn(e, "sessionId")) ||
+    (kind === "turnEnd" &&
+      endingOwner &&
+      !endingOwner.ending(e.promptReceiptId))
   ) {
     pushRaw(s, e);
     effects?.emit();
@@ -76,6 +124,7 @@ export function applySessionEvent(
   if (effects)
     observeDesktopNotification(s, updateEnvelope ? {} : e, live, effects.owns);
   if (kind === "configOptions") {
+    effects?.configurationOptionsReceived?.();
     if (!effects?.configurationChanging())
       replaceConfigOptions(
         s,
@@ -114,6 +163,7 @@ export function applySessionEvent(
       toolCall: e.toolCall,
       options: e.options,
       request: e.request,
+      terminalCommand: e.terminalCommand,
     });
   } else if (kind === "turnEnd") {
     const owner = endingOwner;
@@ -128,6 +178,8 @@ export function applySessionEvent(
       error: typeof e.error === "string" ? e.error : undefined,
       failure: e.failure,
       usage: e.usage,
+      failedWorkCloseAvailable:
+        live && owner && e.failedWorkCloseAvailable === true ? true : undefined,
     });
     if (owner) {
       if (
@@ -138,16 +190,17 @@ export function applySessionEvent(
           "refusal",
           "cancelled",
         ].includes(String(e.stopReason))
-      )
+      ) {
+        // A known terminal reason confirms delivery before IPC settles.
+        owner.confirmDelivery();
         owner.end();
-      else {
+      } else {
         s.connectionOutcomeUnknown = true;
         pauseQueue(s, "uncertain");
       }
     }
     if (effects && e.error === "AUTH_REQUIRED")
-      observeAuthentication(
-        s.agentId,
+      threadProgramAuthentication(s)?.observe(
         s.cwd,
         e.error,
         s.serviceContext,
@@ -160,8 +213,7 @@ export function applySessionEvent(
       e.stopReason === "end_turn" &&
       (result === "reply" || result === "tool")
     )
-      observeAuthentication(
-        s.agentId,
+      threadProgramAuthentication(s)?.observe(
         s.cwd,
         undefined,
         s.serviceContext,
@@ -211,6 +263,16 @@ export function applySessionEvent(
     if (!isHistoryMarkerShape(e)) pushRaw(s, e);
   } else if (updateEnvelope || e.update !== undefined) {
     if (
+      [
+        "config_option_update",
+        "current_model_update",
+        "current_mode_update",
+      ].includes(
+        String((e.update as { sessionUpdate?: unknown } | null)?.sessionUpdate),
+      )
+    )
+      effects?.configurationOptionsReceived?.();
+    if (
       (e.update as { sessionUpdate?: unknown } | null)?.sessionUpdate ===
       "config_option_update"
     ) {
@@ -220,8 +282,41 @@ export function applySessionEvent(
       effects?.emit();
       return;
     }
+    const updateCallId = (e.update as { toolCallId?: unknown } | null)
+      ?.toolCallId;
+    const previousTool =
+      typeof updateCallId === "string"
+        ? s.items.find(
+            (item) =>
+              item.kind === "tool" && item.call.toolCallId === updateCallId,
+          )
+        : undefined;
+    const previousContent: readonly ToolContent[] =
+      previousTool?.kind === "tool" ? previousTool.call.content : [];
     try {
-      applyUpdate(s, e.update, e);
+      const call = applyUpdate(s, e.update, e);
+      rememberToolMediaSource(
+        s,
+        e,
+        call,
+        effects?.owns,
+        activityConnectionId,
+        previousContent,
+      );
+      if (
+        call &&
+        live &&
+        effects?.owns() &&
+        e.sessionId === s.nativeSessionId &&
+        !s.connectionLost &&
+        (activityConnectionId === undefined ||
+          activityConnectionId === s.connectionId)
+      )
+        conversationReadState.receiveToolMedia(
+          s.key,
+          previousContent,
+          call.content,
+        );
     } catch (error) {
       // A local conversion of ordinary Agent JSON must not strand Tauri's
       // ordered Channel index. Keep the entire envelope as opaque data.

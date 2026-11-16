@@ -1,0 +1,280 @@
+{
+  "kind": "P11HistoricalPointInterfaceReadOnlyReview",
+  "recordedAt": "2026-11-04T16:56:55.902035+00:00",
+  "originalCondition": "From a selected historical node, use an official fork surface to obtain a new native session with the complete context up to that node; keep the original and state settings/file effects. Current-context copying, a UI entry, or a single-message draft is not this result.",
+  "decisions": [
+    {
+      "id": "official-point-interfaces-exist",
+      "status": "confirmed-by-public-source-not-execution",
+      "lockedStandard": {
+        "client": "agent-client-protocol2.2.0",
+        "schema": "agent-client-protocol-schema1.9.1 v1",
+        "hasHistoricalSelector": false,
+        "metaIsExtensionOnly": true
+      },
+      "codex": {
+        "officialTag": "v1.13.1",
+        "commit": "b1b8490cd165c18626dc3fe83836cdacdef94cd3",
+        "source": "codex-acp-v1.13.1-src-SessionFork.ts",
+        "request": "session/fork _meta.jetbrains.air.fork {version:1,messageId,messageFingerprint?,messageOccurrence?}",
+        "translation": "Official item ID -> containing native turn ID -> thread/fork lastTurnId. This is a turn-level selector, not an exact inner-turn message cutoff; actual context behavior was not executed.",
+        "noPointBehavior": "Absent/unrecognized fork object or version yields no lastTurnId: latest/current-context fork.",
+        "validButMissingPoint": "A parsed nonempty message ID with no resolved containing turn and no successful optional fingerprint resolution raises invalidParams before threadFork.",
+        "knownVersionInvalidPoint": "Version1 empty/missing/non-string messageId raises invalidParams; a valid nonempty ID with no resolved turn/fingerprint match also raises invalidParams before threadFork."
+      },
+      "claude": {
+        "officialTag": "v0.81.2",
+        "commit": "5dbb453c63a89746627799b2b06b31ba01a1b674",
+        "source": "claude-agent-acp-v0.81.2-src-fork-session.ts",
+        "request": "session/fork _meta.jetbrains.air.fork {version:1,messageId,messageFingerprint?,messageOccurrence?}",
+        "translation": "Live official mapping, SDK active history or full official entries resolve ACP message ID to native UUID, then SDK forkSession(upToMessageId). The observed SDK declaration says inclusive. The inspected helper does not call query; no SDK/adapter runtime or process behavior was executed.",
+        "noPointBehavior": "Unsupported version or empty/missing messageId yields no point and takes latest/full fork. Other malformed types are not generalized as this fallback.",
+        "validButMissingPoint": "Point not resolved to UUID raises invalidParams before SDK fork."
+      },
+      "installedPublicCandidates": {
+        "codexAcp": "1.13.1",
+        "adjacentCodexPackage": "0.156.1",
+        "declaredCodexDependency": "^0.156.1",
+        "claudeAcp": "0.81.2",
+        "claudeSdk": "0.3.280",
+        "pointImplementationSeenInLocalPublicCode": true,
+        "currentSelectedRegistrationEstablished": false,
+        "savedCodexPathOverrideEstablished": false,
+        "actuallyUsedVersionInThisReviewEstablished": false
+      }
+    },
+    {
+      "id": "standard-fork-is-not-safe-point-negotiation",
+      "status": "confirmed-interface-gap-for-generic-enablement",
+      "reason": "Standard fork:{} and opaque messageId metadata do not establish adoption of a requested historical point. Inspected implementations contain latest fallback paths for unsupported/missing extension metadata. Inspected success objects do not provide an authoritative selected-point echo; this is a missing usable observation, not a new protocol/acceptance requirement.",
+      "currentFarfold": "Only forkCurrentContext is exposed and no point is sent. Current clientInfo is farfold; its existing AIR metadata declares sessionFailure/asyncTasks, which is not a historical-point capability.",
+      "unsafeActionsRejected": [
+        "Do not enable arbitrary registered agents from fork:true plus messageId alone.",
+        "Do not probe with an invalid point; an old adapter could create a genuine latest fork.",
+        "Do not pin versions or validate Agent binary SHA as a new generic compatibility rule.",
+        "Do not use local ThreadItem.id in place of optional official messageId.",
+        "Do not silently fall back to current-context copy when a requested historical point is unsupported."
+      ],
+      "capabilitySourceScope": {
+        "claude": "Pinned v0.81.2 acp-agent.ts2322-2361 advertises fork:{}.",
+        "codex": "Additional main commit519c2671bfe8266b7625b1cebde7657b5f6d1303, package2.5.0, CodexAcpServer.ts824-829/2025-2029. Not the pinned v1.13.1 source or actually used endpoint."
+      }
+    }
+  ],
+  "minimumMissingConditions": [
+    "A supported selected route whose official point semantics can be established without treating unknown meta as success; current generic ACP fork marker/result alone lacks that assurance. Installed package evidence is not yet bound to the current saved registration/overrides or actual initialized endpoint.",
+    "An eligible completed historical node with authoritative Agent message identity, exact same native-session/connection/service owner, and a known point granularity. Codex must not claim exact inner-turn message cuts.",
+    "A controlled positive/negative proof for that selected route preserving original context, excluding later context, retaining settings/permission/file-effect boundaries and handling failure/unknown without duplicate fork; real P11 sample/continuation remains untested."
+  ],
+  "boundedNextExperimentCandidate": {
+    "outcome": "not_run",
+    "sdkVersion": "0.3.280",
+    "staticObservation": "A supplied SessionStore branch exists, but whole-module top-level initialization effects were not fully closed. This does not establish that the module actually reads credentials.",
+    "counts": {
+      "sdkModuleImports": 0,
+      "sdkRuntimeCalls": 0,
+      "queryCalls": 0,
+      "agentProcesses": 0,
+      "modelRequests": 0,
+      "nativeForksCreated": 0
+    },
+    "cases": {
+      "selectedNodeInclusive": "not_run",
+      "unknownNodeBehavior": "not_run",
+      "sourceSessionUnchanged": "not_run"
+    },
+    "boundary": "No SDK import/runtime/query/Agent/model/fork was executed; no new isolation, HOME change or upstream extraction/patch followed. This optional experiment boundary is not a new P11 gate.",
+    "rawArchiveMember": "raw/sdk-session-store-experiment/summary.json"
+  },
+  "fileEffects": "The observed SDK declaration describes UUID remapping/parent-chain preservation and no copied file-history undo snapshots. This is declaration evidence, not executed file behavior; branching conversation context does not itself establish project copying/rollback. Settings/shared cwd/fresh permission effects remain to verify.",
+  "officialReferences": [
+    {
+      "repo": "codex-acp",
+      "tag": "v1.13.1",
+      "commit": "b1b8490cd165c18626dc3fe83836cdacdef94cd3",
+      "api": "https://api.github.com/repos/agentclientprotocol/codex-acp/git/ref/tags/v1.13.1"
+    },
+    {
+      "repo": "claude-agent-acp",
+      "tag": "v0.81.2",
+      "commit": "5dbb453c63a89746627799b2b06b31ba01a1b674",
+      "api": "https://api.github.com/repos/agentclientprotocol/claude-agent-acp/git/ref/tags/v0.81.2"
+    }
+  ],
+  "officialSourceFiles": [
+    {
+      "file": "codex-acp-v1.13.1-src-SessionFork.ts",
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/b1b8490cd165c18626dc3fe83836cdacdef94cd3/src/SessionFork.ts",
+      "commit": "b1b8490cd165c18626dc3fe83836cdacdef94cd3",
+      "bytes": 5849,
+      "sha256": "afeed77c24eeed5eed28fe090f0c229633cba44fb3a34584f1cce5bbd36023af",
+      "naturalFetchExitCode": 0,
+      "accessedAtUtc": "2026-11-04T16:42:42.161663+00:00",
+      "fullSourceIncluded": false
+    },
+    {
+      "file": "codex-acp-v1.13.1-package.json",
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/b1b8490cd165c18626dc3fe83836cdacdef94cd3/package.json",
+      "commit": "b1b8490cd165c18626dc3fe83836cdacdef94cd3",
+      "bytes": 3835,
+      "sha256": "21ad8f19e81d9c65ff32c48161de14235e91d30626cd32e05856875ae0f48b8a",
+      "naturalFetchExitCode": 0,
+      "accessedAtUtc": "2026-11-04T16:42:42.788850+00:00",
+      "fullSourceIncluded": false
+    },
+    {
+      "file": "claude-agent-acp-v0.81.2-src-fork-session.ts",
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/claude-agent-acp/5dbb453c63a89746627799b2b06b31ba01a1b674/src/fork-session.ts",
+      "commit": "5dbb453c63a89746627799b2b06b31ba01a1b674",
+      "bytes": 7864,
+      "sha256": "9e114a6b9296901c3025a277ca1a833d87b35c15d0409053afee44006254f66f",
+      "naturalFetchExitCode": 0,
+      "accessedAtUtc": "2026-11-04T16:42:43.556365+00:00",
+      "fullSourceIncluded": false
+    },
+    {
+      "file": "claude-agent-acp-v0.81.2-src-acp-agent.ts",
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/claude-agent-acp/5dbb453c63a89746627799b2b06b31ba01a1b674/src/acp-agent.ts",
+      "commit": "5dbb453c63a89746627799b2b06b31ba01a1b674",
+      "bytes": 496283,
+      "sha256": "d5d12e6c204fc9aa0dd36a29c3211308d13cb82f167728230cab031ca4fdf7be",
+      "naturalFetchExitCode": 0,
+      "accessedAtUtc": "2026-11-04T16:42:45.119429+00:00",
+      "fullSourceIncluded": false
+    },
+    {
+      "file": "claude-agent-acp-v0.81.2-package.json",
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/claude-agent-acp/5dbb453c63a89746627799b2b06b31ba01a1b674/package.json",
+      "commit": "5dbb453c63a89746627799b2b06b31ba01a1b674",
+      "bytes": 2374,
+      "sha256": "babacb99324687f02d54f0894c6ebdab1240fa057e4c325464f3390b93ea8a65",
+      "naturalFetchExitCode": 0,
+      "accessedAtUtc": "2026-11-04T16:42:45.659743+00:00",
+      "fullSourceIncluded": false
+    },
+    {
+      "file": "codex-src-CodexAcpServer.ts",
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/519c2671bfe8266b7625b1cebde7657b5f6d1303/src/CodexAcpServer.ts",
+      "commit": "519c2671bfe8266b7625b1cebde7657b5f6d1303",
+      "packageVersionObserved": "2.5.0",
+      "bytes": 288992,
+      "sha256": "bb695e546182ffb633548052b3a61c757d25256ebe356de960a85606a460596e",
+      "naturalFetchExitCode": 0,
+      "accessedAtUtc": "2026-11-04T16:40:21.126262+00:00",
+      "fullSourceIncluded": false,
+      "scope": "Additional main-source capability/response observation. Not the v1.13.1 tag source or actual selected endpoint."
+    }
+  ],
+  "localReviewMap": {
+    "file": "local-source-at-review.json",
+    "sha256": "b6babf2df491d68412d829fd4af3ffa3da6f6fa468825781ddbdd320a00dfd39",
+    "scope": "Read-source snapshot only; not a build/test or whole-repository stability proof."
+  },
+  "limitations": [
+    "No source/Git/Cargo/App/account/config/model/history/real sending operation performed. Only project/source, public official source and public package installation metadata/code were read.",
+    "No Agent executable invoked and no Agent binary SHA compatibility check. Version/commit identifiers are evidence provenance, not a proposed version pin.",
+    "No point fork, invalid-point probe, child session or SDK mutation executed. P11 remains open.",
+    "Two urllib reads were incomplete; observation notes distinguish those fetch failures from product evidence. Bounded curl sources completed0.",
+    "The optional SDK memory-store runtime cases were not executed because the whole-module authorized effects boundary was not established. No claim is made that SDK module initialization actually accessed accounts."
+  ],
+  "publicStatus": "Official point interfaces found by source inspection; P11 remains open. No UI entry or actual point execution.",
+  "currentFarfoldSourcePaths": [
+    {
+      "path": "src/runtime/session_projection.ts",
+      "lines": [167, 679, 682, 685],
+      "fact": "Top-level official messageId becomes the optional view message identity."
+    },
+    {
+      "path": "src/runtime/reported_details.ts",
+      "lines": [113, 118],
+      "fact": "Unknown metadata is retained opaquely; it is not executable fork authority."
+    },
+    {
+      "path": "src/runtime/session_fork_types.ts",
+      "lines": [4, 5],
+      "fact": "Only forkCurrentContext is exposed."
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_fork.rs",
+      "lines": [33, 39, 43, 354, 371, 429],
+      "fact": "Current capability/admission/IPC have no historical target selector."
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_fork/coordinator.rs",
+      "lines": [91, 106],
+      "fact": "Serializes current-context official request parameters without a point."
+    },
+    {
+      "path": "src/runtime/session_fork.ts",
+      "lines": [113, 144, 458],
+      "fact": "Existing owner/no-retry/delivery controller can be reused after a supported selected historical route is established."
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "lines": [258, 467, 948, 986],
+      "fact": "Current message action passes text/attachments rather than a point target."
+    },
+    {
+      "path": "src/App.tsx",
+      "lines": [763, 765, 773, 809],
+      "fact": "Current message action seeds a new draft; it is not complete-context branching."
+    },
+    {
+      "path": "src-tauri/src/acp_client/failures.rs",
+      "lines": [7],
+      "fact": "sessionFailure/asyncTasks declaration is not historical-point support."
+    }
+  ],
+  "unknownMetadataBoundary": "Unknown _meta values are retained as opaque reported details. They are not globally discarded or promoted to historical-point support. The current message action seeds text/attachments into a new draft.",
+  "minimalPossibleImplementationPath": "After establishing a safe selected official route, use the current-view official messageId and same native-session/connection/service ownership in one shared node action; reuse current idle/configuration/delivery/no-retry ownership. Check target/support before serializing the official selected point in acp_client. Do not reinterpret local item.id or silently downgrade an unsupported requested point to current copying. Source proposal only; not implemented.",
+  "licenseFacts": {
+    "adapters": [
+      {
+        "package": "@agentclientprotocol/codex-acp",
+        "version": "1.13.1",
+        "declaredSpdx": "Apache-2.0",
+        "manifestSha256": "21ad8f19e81d9c65ff32c48161de14235e91d30626cd32e05856875ae0f48b8a",
+        "repository": "git+https://github.com/agentclientprotocol/codex-acp.git"
+      },
+      {
+        "package": "@agentclientprotocol/claude-agent-acp",
+        "version": "0.81.2",
+        "declaredSpdx": "Apache-2.0",
+        "manifestSha256": "babacb99324687f02d54f0894c6ebdab1240fa057e4c325464f3390b93ea8a65",
+        "repository": "git+https://github.com/agentclientprotocol/claude-agent-acp.git"
+      }
+    ],
+    "sdk": {
+      "package": "@anthropic-ai/claude-agent-sdk",
+      "version": "0.3.280",
+      "licenseEstablishedInThisRecord": false,
+      "adapterLicenseDoesNotEstablishSdkLicense": true
+    },
+    "sameCommitLicenseOrNoticeTextsObserved": false,
+    "fullLicenseOrNoticeTextsIncluded": false,
+    "boundary": "Only small attributed review excerpts, factual metadata and fixed source references are included. Same-commit LICENSE/NOTICE files were not fetched. No full external module/repository or SDK source is copied and no relicensing is asserted."
+  },
+  "httpAndReadProvenance": "Existing curl process exit0 and body hashes are recorded. HTTP headers were not saved, so HTTP200 is not asserted. Incomplete reads have observation notes, not archived complete failed responses.",
+  "independentReview": {
+    "interfaceOnlyInputSha256": "c5a37ea89ec14869ad0a2b4dd138758e088ef49dcc76b5a9a1c6762528037c81",
+    "updatedInputWithSdkStopSha256": "f93ff656c657d560ad687cd414fc6cdc6c4bec85a5ce4b4147bbbd663331e45a",
+    "sdkStopSummarySha256": "8560ae94529dec4cb17b80cca4af447ac893dd7d5f6b3d72db92a91ebfe41a64",
+    "independentReview": "Core conclusions supported. Distinguish unsupported extension/version fallback from a valid unresolved ID; separate Codex main capability/response observation from fixed tag helper source. SDK optional experiment remains not_run.",
+    "originalInputsUnchanged": true,
+    "httpCaution": "Existing curl process exit0 and body hashes are recorded. HTTP headers were not saved, so HTTP200 is not asserted. Incomplete reads have observation notes, not archived complete failed responses.",
+    "scope": "No new network, Cargo, Agent, App, account, Git or product/CI source operation during this independent publication review."
+  },
+  "publicPackageObservationArchiveMember": "derived/installed-public-candidates.json",
+  "localSourceBindingsArchiveMember": "derived/local-farfold-bindings.json",
+  "sourceArchivePolicy": "Only bounded attributed excerpts and references are public. Full fixed source bodies and installed-code observations remain private, identified by SHA256; no complete upstream module/repository or SDK source included.",
+  "originals": {
+    "path": "interface-originals.zip",
+    "bytes": 15549,
+    "sha256": "276a8e27d0f248c4f5205ebfa2bead47d1cb72623a3875d901c9ef9e251ec82b",
+    "entries": 17,
+    "manifest": "manifest.json",
+    "selectedRawFilesByteExact": true,
+    "sourceExcerptsAreDerived": true,
+    "completeExternalModulesIncluded": false
+  }
+}

@@ -12,6 +12,9 @@ interface PullPause {
   ready: Promise<void>;
   resume(): void;
 }
+interface DrainWaiter {
+  finish(error?: Error): void;
+}
 /** A wake contains no Agent body. A single owned pull runs at a time; its
  * receipt releases transport storage, not history/React ownership or task work. */
 export class SessionDeliveryFlow {
@@ -21,10 +24,41 @@ export class SessionDeliveryFlow {
   private retired = false;
   private lastSequence = 0n;
   private paused?: PullPause;
+  private consume?: (event: unknown) => DeliveryTransfer;
+  private waiters = new Set<DrainWaiter>();
   constructor(
     private agentId: string,
     private openToken: string,
   ) {}
+
+  /** Finish a normal pull/ACK pass started after this call. A command reply
+   * never substitutes for the synchronously consumed configuration events. */
+  settle(deadline: number): Promise<void> {
+    const remaining = deadline - performance.now();
+    const consume = this.consume;
+    if (this.retired || !this.queueId || !consume || remaining <= 0)
+      return Promise.reject(new Error("delivery unavailable"));
+    return new Promise((resolve, reject) => {
+      const waiter: DrainWaiter = {
+        finish: (error) => {
+          if (!this.waiters.delete(waiter)) return;
+          clearTimeout(timer);
+          if (error || performance.now() >= deadline)
+            reject(error ?? new Error("delivery deadline"));
+          else resolve();
+        },
+      };
+      const timer = setTimeout(
+        () => waiter.finish(new Error("delivery deadline")),
+        remaining,
+      );
+      this.waiters.add(waiter);
+      // A pre-command in-flight null cannot prove that the later ready event
+      // was consumed. Reuse the normal wake loop for a fresh pull pass.
+      this.wakeAgain = true;
+      if (!this.running) void this.drain(consume);
+    });
+  }
 
   /** Pause only the next native pull. The current body and its receipt still
    * finish, and no payload is held here. Each caller resumes only its own
@@ -76,7 +110,10 @@ export class SessionDeliveryFlow {
       return true;
     }
     this.wakeAgain = true;
-    if (!this.running) void this.drain(consume);
+    if (!this.running) {
+      this.consume = consume;
+      void this.drain(consume);
+    }
     return true;
   }
   private args() {
@@ -162,10 +199,14 @@ export class SessionDeliveryFlow {
       }
     } finally {
       this.running = false;
+      if (!this.retired) for (const waiter of this.waiters) waiter.finish();
     }
   }
   dispose() {
     this.retired = true;
+    for (const waiter of this.waiters)
+      waiter.finish(new Error("delivery retired"));
+    this.consume = undefined;
     const paused = this.paused;
     this.paused = undefined;
     paused?.resume();

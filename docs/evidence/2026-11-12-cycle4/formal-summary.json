@@ -1,0 +1,293 @@
+{
+  "kind": "Cycle4FormalInstalledCloseout",
+  "observedAtUtc": "2026-11-12T07:08:15.538184+00:00",
+  "installedSourceCommit": "699b4efd111658a9cd53e03d4f8c8ff9b4d1d2ee",
+  "application": "/Applications/Farfold.app",
+  "platform": "macOS arm64",
+  "cdhash": "81a5b08294debe997b6c358e950f3abbf9b055e3",
+  "scope": "第2阶段第4周期本批能力交付完成；不是151条或29家八项验收完成。",
+  "mcpRecovery": {
+    "case": "Goose自有HTTP初始化失败后，外部官方接口增加另一自有HTTP工具；原待核查记录保留到最新安装版。",
+    "passed": [
+      "完整8项设置可滚动审阅，自有HTTP项完整地址与底部确认按钮可见，并实际点击确认",
+      "明确接纳当前设置后不自动连接；手动重开才连接自有端点",
+      "实际读取18项活动工具含唯一自有工具；撤回后保存设置及活动工具均确认移除，重新读取17项",
+      "同一原对话完成历史分支与冷开父/子对话，存活撤回端点计数始终不变",
+      "闭库副本核对待核查标记1→0，原消息及配置选择保留"
+    ],
+    "boundary": "仅本次无凭据公开根路径/mcp HTTP类型。程序型、带凭据HTTP/SSE及其他不支持配置仍需实现或补验；不统称外部阻塞。一次未分类POST被夹具拒绝，未保留method，不宣称零tools/call尝试；夹具无可执行工具，本轮零工具执行、零模型请求。此前正式真实调用证据另见原记录。"
+  },
+  "historicalPointBranch": {
+    "parent": "20261109_3",
+    "child": "20261112_2",
+    "selectedMessage": "gen-1794220801-ETWJLDeUPp43o4epN4yK",
+    "parentRawMessages": 21,
+    "childRawMessages": 3,
+    "childVisibleMessages": 2,
+    "passed": [
+      "正式UI确认后官方创建一次分支并打开成功",
+      "冷开子对话仅显示指定消息前缀；冷开原对话完整后续历史和6条未发送文件意见仍在",
+      "全部旧消息行hash保持；唯一新增对话及3条消息精确对应预期前缀",
+      "父子provider/ModelConfig/mode相同，保存选项hash保持，13个工作文件hash保持"
+    ],
+    "boundary": "未发送子对话新请求；不证明其他Agent。时间分界不明确、已压缩前缀等不支持路径维持明确拒绝。官方load可改会话元数据和扩展外层顺序，不宣称所有会话行字节不变。"
+  },
+  "cumulativeUsage": {
+    "actualInput": 49537,
+    "actualOutput": 1369,
+    "total": "尚未提供",
+    "nativeSavedValuesMatch": true,
+    "boundary": "原对话既有官方累计值的正式冷开显示；未推断总和、费用变化或token节省。"
+  },
+  "protection": {
+    "installDataEntriesUnchanged": 206420,
+    "allOldNativeMessageRowsUnchanged": true,
+    "workFilesUnchanged": 13,
+    "savedChoicesAndProtectedConfigUnchanged": true,
+    "normalApplicationExitObserved": true,
+    "ownedEndpointsNormallyStopped": true,
+    "duplicateCandidateRemoved": true
+  },
+  "engineering": {
+    "allSevenPassed": true,
+    "productInputsUnchanged": true,
+    "frontendFiles": 765,
+    "frontendPassed": 10594,
+    "rustPassed": 2626,
+    "rustIgnored": 8,
+    "checks": [
+      {
+        "name": "format",
+        "command": ["corepack", "pnpm", "format:check"],
+        "exitCode": 0,
+        "seconds": 34.21,
+        "finishedAtUtc": "2026-11-12T06:44:14.817361+00:00",
+        "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      {
+        "name": "typecheck",
+        "command": ["corepack", "pnpm", "typecheck"],
+        "exitCode": 0,
+        "seconds": 8.683,
+        "finishedAtUtc": "2026-11-12T06:44:23.501884+00:00",
+        "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      {
+        "name": "test",
+        "command": ["corepack", "pnpm", "test"],
+        "exitCode": 0,
+        "seconds": 43.587,
+        "finishedAtUtc": "2026-11-12T06:45:07.089168+00:00",
+        "logSha256": "21b31c27aa6b98f6e63e22a3ace9f3893bcf7c31ab8ee1c5517c02d0e3cab4cb"
+      },
+      {
+        "name": "build",
+        "command": ["corepack", "pnpm", "build"],
+        "exitCode": 0,
+        "seconds": 9.094,
+        "finishedAtUtc": "2026-11-12T06:45:16.183254+00:00",
+        "logSha256": "4caa6207a7b0314c1451a4ded19000511bb6ecd0d022fcf1cf763580f79b8294"
+      },
+      {
+        "name": "cargo-fmt",
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0,
+        "seconds": 1.537,
+        "finishedAtUtc": "2026-11-12T06:43:42.144699+00:00",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "clippy",
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "seconds": 5.053,
+        "finishedAtUtc": "2026-11-12T06:43:47.198096+00:00",
+        "logSha256": "1cb9533facbe18bb1b0cd5848edec294df0bd983a45b7fa66320579f115a0a92"
+      },
+      {
+        "name": "cargo-test",
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "exitCode": 0,
+        "seconds": 168.668,
+        "finishedAtUtc": "2026-11-12T06:46:35.866859+00:00",
+        "logSha256": "d46b2e10499c682539edafa0f9334faef9be01b8cb74adadb51ff73d0c14a1aa"
+      }
+    ]
+  },
+  "retainedFailures": [
+    "初次正式历史分支暴露message_count含义不符，已修为可见消息计数；红→绿及原失败保留。",
+    "官方load扩展集合外层顺序变化造成严格比较误报，已仅规范该已知无序集合；嵌套、数量、内容、模型及消息条件保持严格。",
+    "正式长列表确认按钮不可见，已修正滚动与操作区，并在正式版实际确认。",
+    "外部CLI夹具因off表示新增字段及错误tools/list期望而失败，原失败及精确差异保留；不记作产品缺陷或整体夹具通过。",
+    "首次闭库selected整对象相等断言失败，因为sourceNativeIds合理新增子对话；修正为旧ID保留+仅预期新ID，其余选项精确相等。"
+  ],
+  "remaining": [
+    "技能安装、处理中取消及其他失败组合未覆盖；已有P39/P40无模型失败保护窄例另列。",
+    "其他Agent/工具类型的接线、整理终态和高级事件仍有开发及实测缺口。",
+    "Mistral单次授权已用、NEW-24受影响发送暂停、Windows额度/Kilo条件等原限制保持。",
+    "首波整家八项仍0/3，首发29家和151条原条件不变。"
+  ],
+  "evidence": [
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/install.json",
+      "sha256": "84e66ec3ea3aa666e942c3898f63139f007d0be7893b9d253645cb26163e1ed6"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/duplicate-cleanup.json",
+      "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/closed-verification.json",
+      "sha256": "5faef42f8c2002336cbc2e42a3010d233fc08bc857d4809abe7ecf47e5b69ad6"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/recovery-runtime-observation.json",
+      "sha256": "50369b4dfa09d0a95662ccf24e8d2c08318883a6c1ce46c34e7baa68f2c0cac6"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/endpoint-after-accept-before-reopen.json",
+      "sha256": "3b2d1a01752317a044879655da366861b87854a4d8f3c7d8ce6f3fa572231a1a"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/endpoint-retired.json",
+      "sha256": "53e8ad6a9198146fabc5ec849f78475a109cb92fb3901c6dc898017f972995d8"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/endpoint-after-cold.json",
+      "sha256": "b26302ba2c0c0c216aadbff8441f39e2e58b069bd9a955bb67c0880314e0abbb"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/ui01-pending.txt",
+      "sha256": "3feeb5f5b503f709c5e9f4aa69930e89d449a648733b3e49b21b145445c2d9ac"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/ui02-review.txt",
+      "sha256": "f7ef5e335470b4349e8684d6c1f96e08538283f5190a60609e309775e40a36eb"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/ui03-review-scrolled.txt",
+      "sha256": "34aebb1c8534312c9d0a3b0a5f7d9987741e81d30e371cf5183d3d9dd849176a"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/review-visible.png",
+      "sha256": "68095da20af5e8235083b6b759ac23f111b599bc4f847eab53182fb20b095fcc"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/review-last-and-actions.png",
+      "sha256": "d7f8d67ec33cd73b76f23f03d432497ff3b3d6d346962f615dc9e43d9669472c"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/ui04-accepted.txt",
+      "sha256": "75f6896fcd7bed6640f1838ddc217ab494308a4bb6c13e9dec08df6f125cae90"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/ui05-reopened.txt",
+      "sha256": "435648e8e4bab5bd99a189f3ff344481960aab132d6cd3e66ccb2d2ef5cce8e6"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/ui06-active-tools.txt",
+      "sha256": "02ba8a1d0ca72e04235a1f50d1f2f7a1354d66c475351df7a8ee50c378464a51"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/ui07-withdrawal.txt",
+      "sha256": "a7f7b4c75d478ca21b4bb1c47fdd8aace4b01db1e5d760bb4025f534e0995c84"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/ui08-withdrawn-report.txt",
+      "sha256": "048e34e498b20d60714aeb81eb1adeb1290b34f14690b24b51c05546d6256b47"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/ui09-point-review.txt",
+      "sha256": "44f466d312dc1cbf4b4699b93a05532930ac739549b8b8792b002e94d5eefe77"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/ui10-point-result.txt",
+      "sha256": "18962d383de1d0b73dbb70ccb8eeef9cd720c75d69a6153f7716ae5e167ef0f2"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/ui11-child.txt",
+      "sha256": "1ed697f2f7b21da0fbef972508885b122f8c3160e5ab5f17d31141659dcd59a3"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/ui12-parent-retained.txt",
+      "sha256": "fd3eabbebd20b4cbed256868916379a06d2f8c929717ccb4d52c023ffb1dea90"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/cold02-child.txt",
+      "sha256": "73b3ebb3fd79bd3f44eb16a8b6a9a1d1cecdf18a3fa352af26fecc087303842a"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/cold03-parent.txt",
+      "sha256": "1879cf715c2dca9f7fd0cadb99f95bfff47fbe3eb58120b8a95ede07943f9420"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/cold04-usage.txt",
+      "sha256": "985de8a3ffdc9dfb6d8a88eb328336d4fbae6f2e40bfb6796836960f1247ea7d"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-repair/cold06-exited.json",
+      "sha256": "fb77012f597923d1db4a06e21a35969a5f5280eb47672752bba89dcc6dfc78d4"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-final/before-repair.json",
+      "sha256": "ba2866e5ab427d79fe21f342ea92954158c3fe820bbc8f75c1fa5cc19bc2e262"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-final/final.json",
+      "sha256": "759da8a529f5a9890ec1f29df85a91972365a5281a30938ddfe5615e039cf775"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-final/cold-final.json",
+      "sha256": "6f57ef61dddc9a6787934ad4dcca9bec510cd1ae5392841ebb3e4974e430dc36"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-final/external-observation-addendum.json",
+      "sha256": "6a45d1fd9dfe26fc41f559ad46fd9a6b55bc7da74c30539717775da70df79d32"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-final/success-server.json",
+      "sha256": "c3e63ab11d449d848f43a5dd127c6e32393cc380740d40d22a09aefa596ddd8a"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/formal-final/fail-server.json",
+      "sha256": "e120e6282bab0bc7a0f6109114ad0dfbe96322f46b2d1d11b7120d4d11518685"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/engineering-closeout/result.json",
+      "sha256": "82b2866b613ed351cb45a2f84ca045c1ea5142d5710090ae8864aa52720ea274"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/review/integration-closeout.json",
+      "sha256": "12517a2eff1e694333562d4c69f30e300b36566912beecf061e28af861fc10b6"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/review/final-evidence-review.json",
+      "sha256": "78f39f8b0bdf484c1ffe6e4a4bdff9fc55274f2cd8279f04a13d9e1b20bab11c"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/review/final-source-unchanged.json",
+      "sha256": "23516ea4d2cbc875c337026dec1311386decb724740c2688b06063229d07c678"
+    }
+  ]
+}

@@ -15,6 +15,7 @@ use std::{
 };
 
 pub const MODE: &str = "--farfold-browser-mcp-helper";
+pub const MACH_MODE: &str = "--farfold-browser-mcp-channel";
 pub const CAPABILITY_ENV: &str = "FARFOLD_BROWSER_CAPABILITY";
 const TIMEOUT: Duration = Duration::from_secs(1);
 const INPUT_LIMIT: usize = 65_536;
@@ -26,7 +27,17 @@ const CONTROL_FRAMES: usize = 256;
 /// None selects normal startup. Some must immediately exit without app setup.
 pub fn run_if_requested() -> Option<i32> {
     let mut args = env::args_os().skip(1);
-    if args.next().as_deref() != Some(OsStr::new(MODE)) {
+    let mode = args.next();
+    if mode.as_deref() == Some(OsStr::new(MACH_MODE)) {
+        // This route never reads/removes a bearer environment variable. On an
+        // unsupported OS it exits as a failed private helper, not an app launch.
+        #[cfg(target_os = "macos")]
+        let result = mach_args(&mut args).and_then(|(name, pid)| run_mach(&name, pid));
+        #[cfg(not(target_os = "macos"))]
+        let result: Result<i32, ()> = Err(());
+        return Some(result.unwrap_or(1));
+    }
+    if mode.as_deref() != Some(OsStr::new(MODE)) {
         return None;
     }
     let capability = env::var_os(CAPABILITY_ENV);
@@ -52,6 +63,36 @@ pub fn run_if_requested() -> Option<i32> {
         Worker::new(stream, input).run()
     })();
     Some(result.unwrap_or(1))
+}
+
+#[cfg(target_os = "macos")]
+fn mach_args(args: &mut impl Iterator<Item = std::ffi::OsString>) -> Result<(String, u32), ()> {
+    let name = args.next().ok_or(())?.into_string().map_err(|_| ())?;
+    let raw_pid = args.next().ok_or(())?.into_string().map_err(|_| ())?;
+    if args.next().is_some()
+        || name.is_empty()
+        || name.len() > 255
+        || name.contains('\0')
+        || raw_pid.is_empty()
+        || !raw_pid.bytes().all(|byte| byte.is_ascii_digit())
+    {
+        return Err(());
+    }
+    let pid = raw_pid.parse::<u32>().map_err(|_| ())?;
+    if pid == 0 || pid > i32::MAX as u32 {
+        return Err(());
+    }
+    // Exact public service-name validation belongs to mach_channel::connect.
+    Ok((name, pid))
+}
+
+#[cfg(target_os = "macos")]
+pub(super) fn run_mach(name: &str, broker_pid: u32) -> Result<i32, ()> {
+    let stream = super::mach_channel::connect(name, broker_pid)?;
+    // The rendezvous is fully authenticated before touching MCP stdin.
+    let input = helper_io::prepare().map_err(|_| ())?;
+    stream.set_nonblocking(true).map_err(|_| ())?;
+    Worker::new(stream, input).run()
 }
 
 struct ControlFrame {
@@ -833,3 +874,7 @@ mod tests {
 #[cfg(all(test, windows))]
 #[path = "helper_windows_input_tests.rs"]
 mod windows_input_tests;
+
+#[cfg(all(test, target_os = "macos"))]
+#[path = "helper_mach_tests.rs"]
+mod mach_tests;

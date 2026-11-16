@@ -1,11 +1,13 @@
 import { STRINGS } from "./strings";
 import type { RoundResult } from "./round_result";
+import { confirmedPromptError } from "./ui_error";
 
 export interface CompletionEvent {
   stopReason?: string;
   error?: string;
   failure?: unknown;
   usage?: unknown;
+  failedWorkCloseAvailable?: true;
 }
 
 /** A normal end receipt alone does not prove an answer or tool result arrived. */
@@ -33,9 +35,7 @@ export function completion(event: CompletionEvent): {
     ? (typeof category === "string" && failureText[category]) ||
       STRINGS.repair.requestFailed
     : event.error
-      ? event.error === "AUTH_REQUIRED"
-        ? STRINGS.access.authRequired
-        : STRINGS.repair.requestFailed
+      ? (confirmedPromptError(event.error) ?? STRINGS.repair.requestFailed)
       : event.stopReason === "refusal"
         ? STRINGS.repair.rejected
         : event.stopReason === "max_tokens" ||

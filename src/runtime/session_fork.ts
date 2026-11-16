@@ -1,5 +1,9 @@
 import { SessionDeliveryObserver } from "./session_delivery_observer";
 import { invoke } from "@tauri-apps/api/core";
+import {
+  bindProgramAuthentication,
+  threadProgramAuthentication,
+} from "./authentication";
 import { OwnedSessionChannel } from "./session_channels";
 import {
   configurationInputBusy,
@@ -15,9 +19,24 @@ import type { ForkOperation, ForkResult } from "./session_fork_types";
 import { SESSION_FORK_STRINGS as S } from "./session_fork_strings";
 import type { ThreadState } from "./session_types";
 import type { IndexRow } from "./sessions";
+import {
+  hasHistoryForkPoint,
+  sameHistoryForkPoint,
+  type HistoryForkPoint,
+} from "./history_fork_point";
 
-export function forkBlockReason(thread: ThreadState): string | undefined {
-  if (!thread.sessionOperations?.forkCurrentContext) return S.unsupported;
+export function forkBlockReason(
+  thread: ThreadState,
+  historyPoint?: HistoryForkPoint,
+): string | undefined {
+  if (
+    historyPoint
+      ? !thread.sessionOperations?.forkHistoricalPoint
+      : !thread.sessionOperations?.forkCurrentContext
+  )
+    return S.unsupported;
+  if (historyPoint && !hasHistoryForkPoint(thread, historyPoint))
+    return S.pointUnavailable;
   if (
     thread.identity !== "established" ||
     !thread.connectionId ||
@@ -110,11 +129,21 @@ export class SessionForks {
     return true;
   }
 
-  start(key: string): Promise<ThreadState | undefined> {
+  start(
+    key: string,
+    historyPoint?: HistoryForkPoint,
+  ): Promise<ThreadState | undefined> {
     const active = this.requests.get(key);
-    if (active) return active.promise;
+    if (active)
+      return sameHistoryForkPoint(
+        this.ports.thread(key)?.forkOperation?.historyPoint,
+        historyPoint,
+      )
+        ? active.promise
+        : Promise.resolve(undefined);
     const parent = this.ports.thread(key);
-    if (!parent || forkBlockReason(parent)) return Promise.resolve(undefined);
+    if (!parent || forkBlockReason(parent, historyPoint))
+      return Promise.resolve(undefined);
     const operation: ForkOperation = {
       operationId: crypto.randomUUID(),
       connectionId: parent.connectionId!,
@@ -122,6 +151,7 @@ export class SessionForks {
       status: "pending",
       sourceReleased: false,
       indexed: false,
+      ...(historyPoint ? { historyPoint: { ...historyPoint } } : {}),
     };
     this.retire(parent);
     parent.forkOperation = operation;
@@ -316,6 +346,7 @@ export class SessionForks {
           result.parentConnectionId !== operation.connectionId ||
           result.parentSessionId !== operation.parentSessionId ||
           result.cwd !== parent.cwd ||
+          !sameHistoryForkPoint(result.historyPoint, operation.historyPoint) ||
           !["ready", "created_unavailable", "unknown", "rejected"].includes(
             result.status,
           ) ||
@@ -392,6 +423,7 @@ export class SessionForks {
           opened,
           this.ports.rows().find((row) => row.id === key)?.title,
         );
+        bindProgramAuthentication(state, threadProgramAuthentication(parent));
         this.ports.install(state, channel, replay.acceptedPermissionChanges);
         boundKey = key;
         transferOwner();
@@ -438,7 +470,10 @@ export class SessionForks {
       await draftPersistence.flush();
       if (
         !current() ||
-        forkBlockReason({ ...parent, forkOperation: undefined }) ||
+        forkBlockReason(
+          { ...parent, forkOperation: undefined },
+          operation.historyPoint,
+        ) ||
         !sameConfigurationSnapshot(baseline, {
           check: parent.configCheck,
           options: parent.configOptions,
@@ -461,6 +496,9 @@ export class SessionForks {
         parentSessionId: operation.parentSessionId,
         connectionId: operation.connectionId,
         operationId: operation.operationId,
+        ...(operation.historyPoint
+          ? { historyPoint: operation.historyPoint }
+          : {}),
         openToken,
         admissionChannel: admission?.channel,
         channel,

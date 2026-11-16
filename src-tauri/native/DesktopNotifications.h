@@ -22,6 +22,6 @@ void ff_notifications_set_diagnostic(FFNotificationDiagnostic diagnostic);
 // Only the explicit user-enable path may pass request=true.
 bool ff_notifications_settings(bool request, void *context, FFNotificationSettings reply);
 bool ff_notifications_submit(const char *identifier, const char *target,
-                             const char *body, bool sound, void *context,
+                             const char *body, bool sound, bool explicitTest, void *context,
                              FFNotificationSubmitted reply);
 void ff_notifications_remove(const char *identifier);

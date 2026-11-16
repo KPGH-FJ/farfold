@@ -1,0 +1,2354 @@
+{
+  "schemaVersion": 1,
+  "agentCount": 28,
+  "cellCount": 224,
+  "explicitStatuses": {
+    "准备未齐": 28,
+    "有记录": 92,
+    "入口有证": 28,
+    "受阻": 11,
+    "分项通过": 12,
+    "未测": 28,
+    "连接实测失败": 1,
+    "实测分项通过": 7,
+    "本轮未覆盖": 1,
+    "前台停止分项通过": 1,
+    "原样本实测失败": 1,
+    "本轮短测失败": 3,
+    "自有进程停止通过": 1,
+    "原正文已读": 3,
+    "实测失败": 1,
+    "未确认": 3,
+    "结果未知": 1,
+    "默认列表为空": 2
+  },
+  "rows": [
+    {
+      "agentId": "amp-acp",
+      "runtime": "登记版本 0.9.0",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n本轮实测：目前程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。",
+          "remaining": "终端成功退出不等于认证；当前同来源完整准备及回返。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧真实样本认证要求和结果未知。",
+          "remaining": "官方个人身份、有效服务及费用归属；不重发旧请求。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "当前所选登记无 list/load/resume。官方制造商 CLI/SDK 有原历史路径，但本机所核常见路径无该独立 CLI。",
+          "remaining": "精确可用厂商程序和获准自有原线程；不能以适配器进程运行判读回。",
+          "sources": ["docs/evidence/2026-11-15-official-alternatives/amp.md"],
+          "status": null
+        },
+        "S4": {
+          "observed": "历史 Medium 仅档位，不证明具体模型。",
+          "remaining": "同原请求采用配置和实际模型。",
+          "sources": ["docs/evidence/2026-11-15-official-alternatives/amp.md"],
+          "status": null
+        },
+        "S5": {
+          "observed": "旧单次真实请求需要认证；公开替代事件目前未证明可回传结构化工具审批。",
+          "remaining": "合法原服务、真实任务及原授权回执。",
+          "sources": ["docs/evidence/2026-11-15-official-alternatives/amp.md"],
+          "status": null
+        },
+        "S6": {
+          "observed": "缺当前双任务隔离证据。",
+          "remaining": "先确认两个自有任务的官方原身份和精准归属。",
+          "sources": ["docs/evidence/2026-11-15-official-alternatives/amp.md"],
+          "status": null
+        },
+        "S7": {
+          "observed": "旧结果未知，所核 SDK 只传本地取消，不能证明远端工具结束。",
+          "remaining": "厂商可验证原线程/工具停止，保留既有未知。",
+          "sources": ["docs/evidence/2026-11-15-official-alternatives/amp.md"],
+          "status": null
+        },
+        "S8": {
+          "observed": "已有设置完成与请求认证提示是两个真实阶段。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "正常入口应落实明确原因和可恢复步骤。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Amp"
+    },
+    {
+      "agentId": "antigravity-acp",
+      "runtime": "登记版本 1.2.1",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "已有设置返回认证要求，当前登记披露四类接入方式\n本轮实测：目前程序可执行，登记版本 1.2.1。登记所存握手版本 1.2.1。",
+          "remaining": "沿用户选定的官方授权完成准备及取消返回",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "官方 auth_required，暂无已核可用的本人账号或服务",
+          "remaining": "取得当前官方认证条件或可读原样本，再用既有选择验证",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "受阻"
+        },
+        "S3": {
+          "observed": "默认范围返回空列表",
+          "remaining": "可归属样本及同原标识正文、续答",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "分项通过"
+        },
+        "S4": {
+          "observed": "无本项实际验收样本",
+          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S5": {
+          "observed": "无本项实际验收样本",
+          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S6": {
+          "observed": "未运行双对话变更、审批或停止",
+          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S7": {
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复",
+          "remaining": "取得独立工作样本并核停止终态、原对象恢复与无重发",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S8": {
+          "observed": "账号条件不足时保留四类官方入口，不误报成功\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "在实际授权及文件审批中复验反馈",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Antigravity"
+    },
+    {
+      "agentId": "autohand",
+      "runtime": "登记版本 0.2.1",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "可打开现行登记的 Autohand 账号入口，已有设置明确要求认证\n本轮实测：目前程序可执行，登记版本 0.2.1。登记所存握手版本 0.2.1。",
+          "remaining": "以用户可用官方账号完成认证并核取消返回",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "已有设置返回官方 auth_required，未登录或换号",
+          "remaining": "取得当前官方认证条件或可读原样本，再用既有选择验证",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "受阻"
+        },
+        "S3": {
+          "observed": "默认范围返回空列表",
+          "remaining": "已归属原对象、正文与依赖原上下文的续答",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "分项通过"
+        },
+        "S4": {
+          "observed": "无本项实际验收样本",
+          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S5": {
+          "observed": "无本项实际验收样本",
+          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S6": {
+          "observed": "未运行双对话变更、审批或停止",
+          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S7": {
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复",
+          "remaining": "取得独立工作样本并核停止终态、原对象恢复与无重发",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S8": {
+          "observed": "显示所选 Agent 的需登录及后续入口\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "以当前版本验证授权取消与正向工作链路",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Autohand"
+    },
+    {
+      "agentId": "claude-acp",
+      "runtime": "登记版本 0.81.2",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "装机握手成功，旧状态明确提示未登录并呈现订阅与 Console。\n本轮实测：目前程序可执行，登记版本 0.81.2。登记所存握手版本 0.81.2。",
+          "remaining": "当前实际原选择和正常准备/取消。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "未确认可用原账号或所选模型；旧正式设置声明可读但保存选择未确认。",
+          "remaining": "由用户选择合法来源后，验证身份、计费及隔离。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
+            "docs/evidence/2026-11-10-notification-and-selected-search/README.md"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "登记声明 list/load/resume，无可安全归属旧样本。",
+          "remaining": "确权及真实读回与续接。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
+            "docs/evidence/2026-11-10-notification-and-selected-search/README.md"
+          ],
+          "status": null
+        },
+        "S4": {
+          "observed": "旧官方模型声明能显示，保存基线不一致。",
+          "remaining": "确切原设置、真实生效和重启。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
+            "docs/evidence/2026-11-10-notification-and-selected-search/README.md"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "旧多片段实测未取得，不当做已支持的使用结果。",
+          "remaining": "实时工作工具及审批需要已有可用原选择。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
+            "docs/evidence/2026-11-10-notification-and-selected-search/README.md"
+          ],
+          "status": null
+        },
+        "S6": {
+          "observed": "未见当前双任务证据。",
+          "remaining": "实际独立审批停止及设置。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
+            "docs/evidence/2026-11-10-notification-and-selected-search/README.md"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "未见当前实际停止与同原恢复的闭环。",
+          "remaining": "有可用原来源后验停止、草稿、附件、待发。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
+            "docs/evidence/2026-11-10-notification-and-selected-search/README.md"
+          ],
+          "status": null
+        },
+        "S8": {
+          "observed": "旧登录/准备呈现有观察。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "当前一致入口及作用域、具体失败或恢复。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Claude"
+    },
+    {
+      "agentId": "cline",
+      "runtime": "登记版本 3.0.65",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "旧程序连接和三类认证方式曾展示；旧同版空白连接有超时。\n本轮实测：目前程序可执行，登记版本 3.0.65。登记所存握手版本 3.0.65。",
+          "remaining": "当前正常准备、模型选项和取消返回。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧真实请求返回 internal_error，认证/服务原因未定。",
+          "remaining": "读取同一已有设置及账号身份/费用正证。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "10/06 A 自有失败对话 ID、原目录及原保存消息文件均确认。该版无列表，官方 load 需认证，并在原 ID 启动自己的会话管理器。\n本轮实测：当前正式历史入口连接在检查完成前结束，未向程序发列表或正文。",
+          "remaining": "核程序就绪或恢复同选安装，才读已归属样本。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
+            "output/2026-10-09-fourth-install/metadata-before.sqlite3",
+            "docs/evidence/2026-10-08-ui-coverage-audit/full-review/screenshots/U001-library-start.ax.txt",
+            "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L232-L304",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "连接实测失败"
+        },
+        "S4": {
+          "observed": "6日旧界面确认改免费模型，但当前持久选择显示另一原值。此版 load 用当前 provider 所选而非每会话存档。",
+          "remaining": "沿当前保存选择，确认是否可用及真正生效，不凭旧标签换模型。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
+            "output/2026-10-09-fourth-install/metadata-before.sqlite3",
+            "docs/evidence/2026-10-08-ui-coverage-audit/full-review/screenshots/U001-library-start.ax.txt",
+            "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L232-L304"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "旧首轮 internal_error；无真实成功短答或完整工具链。",
+          "remaining": "同源真实答复、工具与结果。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md"
+          ],
+          "status": null
+        },
+        "S6": {
+          "observed": "没有当前双任务实证。",
+          "remaining": "分开实际权限、模型和停止。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "旧初始化超时受控回收，原草稿保留；没有真实任务停止正例。",
+          "remaining": "子执行实际结束及原草稿待发恢复。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md"
+          ],
+          "status": null
+        },
+        "S8": {
+          "observed": "旧失败后空队列恢复入口曾不可达。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "正规入口当前复核，失败/超时类型分别留存。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Cline"
+    },
+    {
+      "agentId": "codebuddy-code",
+      "runtime": "登记版本 2.160.0",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "历史正式启动与设置有观察，当前登记可执行。\n本轮实测：目前程序可执行，登记版本 2.160.0。登记所存握手版本 未报告。",
+          "remaining": "正式重核原已有设置、取消返回和准备全链。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧样本沿原已有设置实答。",
+          "remaining": "实际身份、服务费用归属及换号隔离待证。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "旧成功正文样本的原临时目录缺失。10/06 A 自有目录与原 ID 可确认，11/13 同对象正式读取约120秒失败。",
+          "remaining": "沿旧失败保留，等有变化或另一确权历史，完整读回与续答未证。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
+            "output/2026-11-13-cycle67-closure/formal/verification-progress.json",
+            "output/2026-10-09-fourth-install/metadata-before.sqlite3",
+            "docs/evidence/2026-10-08-ui-coverage-audit/full-review/screenshots/U001-library-start.ax.txt"
+          ],
+          "status": null
+        },
+        "S4": {
+          "observed": "旧 Hy4/High 和冷回读未知设置保护有观察，非当前实际后端证明。",
+          "remaining": "同对话设置变更、请求与冷开实际生效。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "旧真答、文件复制/返工和单次审批有有限正例。",
+          "remaining": "当前实际交付、已有技能和其他适用工具路径。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json"
+          ],
+          "status": null
+        },
+        "S6": {
+          "observed": "未找到当前版跨任务实证。",
+          "remaining": "两个并行真实任务的审批、设置和停止作用域。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "旧在途停止精确子进程仍活；旧暂停队列、草稿及附件保留有观察。",
+          "remaining": "证明实际终止及原对象安全恢复。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json"
+          ],
+          "status": null
+        },
+        "S8": {
+          "observed": "11/13 正式读取失败，旧版丢焦点已在共用修复中处理。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "当前同动作和全入口真实可用性，别依据旧失败猜认证。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
+            "output/2026-11-13-cycle67-closure/formal/verification-progress.json",
+            "output/2026-10-09-fourth-install/metadata-before.sqlite3",
+            "docs/evidence/2026-10-08-ui-coverage-audit/full-review/screenshots/U001-library-start.ax.txt",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "CodeBuddy"
+    },
+    {
+      "agentId": "codex-acp",
+      "runtime": "当前本机登记 ID codex，登记和保存握手 1.13.1；已保存 gpt-6-astra / ultra / Agent；当前无本地索引。",
+      "liveAction": "只跑配置与官方历史的只读、且仅打开已查实归属的原样本。NEW-24 涉及的发送保持暂停，待官方完整文件/网络范围设置、采用和恢复证据。",
+      "standards": {
+        "S1": {
+          "observed": "旧正式已有设置、官方服务交付路径及首发有窄证；保存握手有 API key、登录和设备授权声明。\n本轮实测：目前程序可执行，登记版本 1.13.1。登记所存握手版本 1.13.1。",
+          "remaining": "当前认证、全部服务路径和取消继续尚无全项结果。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-11-03-conversation-controls/control-formal-summary.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧 6 Astra/Ultra 首发成功；本次仅核到保存选择和已登记途径。",
+          "remaining": "没有当前实际身份、费用、账户退出/换号证明。",
+          "sources": ["docs/agent-first-release.md"],
+          "status": null
+        },
+        "S3": {
+          "observed": "旧冷开能进入原对象但返回模型漂移，发送保护仍阻止续接。",
+          "remaining": "需可确认原配置、正文完整性及同 ID 上下文续答；受 NEW-24 影响部分暂停。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-11-03-conversation-controls/control-formal-summary.json",
+            "docs/status.md"
+          ],
+          "status": null
+        },
+        "S4": {
+          "observed": "原保存 gpt-6-astra/ultra 已核；旧实际首发正例与冷开漂移反例各自保留。",
+          "remaining": "确认原设置实际作用与恢复范围，不能以旧提交 ACK 判当前安全。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/agent-access-requirements.md",
+            "docs/status.md"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "正式只读管理曾对本机停用 HTTP 条目完成加、核查、移除，未发模型请求。",
+          "remaining": "实际采用、真实权限范围和工作能力仍待，受影响新发送暂停。",
+          "sources": ["docs/status.md", "docs/agent-access-requirements.md"],
+          "status": null
+        },
+        "S6": {
+          "observed": "无当前相同版本的实际并行配置、审批和停止隔离确证。",
+          "remaining": "在权限条件明确后按各原对象实测，保持旧未知。",
+          "sources": ["docs/status.md", "docs/agent-access-requirements.md"],
+          "status": null
+        },
+        "S7": {
+          "observed": "前批界面冷开漂移和权限未知会要求修复或阻止发送。",
+          "remaining": "当前停止、任务实际结束/恢复及附件回读各自实测。",
+          "sources": ["docs/agent-first-release.md", "docs/status.md"],
+          "status": null
+        },
+        "S8": {
+          "observed": "已见正式原模型漂移反馈及暂停发送。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "统一准备和错误恢复只是已核窄证，不能算整项。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-11-03-conversation-controls/control-formal-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Codex"
+    },
+    {
+      "agentId": "cursor",
+      "runtime": "登记版本 2026.09.28",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "读取已有设置成功，保存的 Auto／Agent 下短请求真实成功\n本轮实测：目前程序可执行，登记版本 2026.09.28。登记所存握手版本 未报告。",
+          "remaining": "实测取消准备后回原位置，以及其他适用接入方式",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "复用已有设置实际成功生成两次回复",
+          "remaining": "真实账号身份、付费权益、退出换号与其作用范围未验",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "分项通过"
+        },
+        "S3": {
+          "observed": "自有原会话冷开读回正文，再用同原 ID 依赖前文准确续答",
+          "remaining": "默认列表另一条未归属；继续验官方发现/导入的实际目标与范围",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "分项通过"
+        },
+        "S4": {
+          "observed": "Auto 配置冷开保持，同一保存配置摘要下成功续答",
+          "remaining": "实际模型/推理选项切换、作用范围及恢复未验",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "分项通过"
+        },
+        "S5": {
+          "observed": "工作台中两条有界文本请求实答\n本轮实测：沿原 Auto 完成真实文件返工，152 字节逐字节核准，原件保持。从「本轮产物」能打开。另一条命令实际出现审批，点允许一次才运行。",
+          "remaining": "技能、更多真实任务及拒绝分支仍待实际样本。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "实测分项通过"
+        },
+        "S6": {
+          "observed": "未运行双对话变更、审批或停止\n本轮实测：OpenCode 对照在目标停止后才发出，且独立完成，未在点击时覆盖两条均在途。",
+          "remaining": "需两条实际同时在途并留精确进程归属。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "本轮未覆盖"
+        },
+        "S7": {
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n本轮实测：一次取消后 Farfold 显示已停止和步骤已结束，同一 shell 与 sleep 仍继续，约一分钟后自然写下完成标记。\n2026.11.13 Auto 前台复验，正式按钮后 380 毫秒已观察到原 Shell 与 sleep 同时退出，55 秒后没有完成标记。界面步骤结果未知。 正常退出后冷开同一对话，原服务与 Auto 保持，明确短消息正确报回首条独有记号。原请求未自动重发。",
+          "remaining": "后台受监视 Shell 的精确终止、同时在途隔离及工具实时终态仍开放，旧版失败保留。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-15-cycle12-followup/README.md"
+          ],
+          "status": "前台停止分项通过"
+        },
+        "S8": {
+          "observed": "正常入口显示正确原历史及实际回复\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "等待、审批、执行中停止和错误返回完整链路仍需实测",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Cursor"
+    },
+    {
+      "agentId": "devin",
+      "runtime": "登记版本 3000.11.3",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "旧安装连接成功，早期短测观察到认证要求。\n本轮实测：目前程序可执行，登记版本 3000.11.3。登记所存握手版本 0.0.0-dev。",
+          "remaining": "今日沿已有设置读回并核完整准备及回返。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/agent-first-release.md",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "历史沿 SWE-2/High 实答。",
+          "remaining": "当前可用原身份和费用归属未核。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/agent-first-release.md"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "10/06 A 的标题、已存目录和确切 ID 可匹配；原范围正式查找为空，11/13 手动失败为另一 ID。\n本轮实测：当前默认列表为空；按与旧失败不同的已归属原标识和原目录实际读取，正文未返回。",
+          "remaining": "需确认该对象可通过厂商入口读取，取得同原正文再续答。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
+            "output/2026-11-13-cycle67-closure/formal-focus/verification.json",
+            "output/2026-10-09-fourth-install/metadata-before.sqlite3",
+            "docs/evidence/2026-10-08-ui-coverage-audit/full-review/screenshots/U001-library-start.ax.txt",
+            "https://docs.devin.ai/cli/reference/commands",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "原样本实测失败"
+        },
+        "S4": {
+          "observed": "旧 SWE-2/High/Code 与冷恢复窄例。",
+          "remaining": "选项变更和真实生效，重开原选择与实际费用。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/agent-first-release.md"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "旧正式有实际读/写/返工与原输入哈希核对。",
+          "remaining": "当前工具审批、已配置技能及交付闭环。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/agent-first-release.md"
+          ],
+          "status": null
+        },
+        "S6": {
+          "observed": "未取得当前双对话互不干扰证据。",
+          "remaining": "实际并行及独立审批停止。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/agent-first-release.md"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "旧单次停止只限样本；持续与未知处理未齐。",
+          "remaining": "确认 Agent 子任务停止、权限和草稿待发恢复。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/agent-first-release.md"
+          ],
+          "status": null
+        },
+        "S8": {
+          "observed": "旧回复被扩展状态拆段；空列表和另一按 ID 失败均有边界。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "当前已证原样本的正负界面及错误下一步。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
+            "output/2026-11-13-cycle67-closure/formal-focus/verification.json",
+            "output/2026-10-09-fourth-install/metadata-before.sqlite3",
+            "docs/evidence/2026-10-08-ui-coverage-audit/full-review/screenshots/U001-library-start.ax.txt",
+            "https://docs.devin.ai/cli/reference/commands",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Devin"
+    },
+    {
+      "agentId": "dimcode",
+      "runtime": "登记版本 0.5.16",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "已安装，空会话返回 internal_error，当前握手没有认证方法\n本轮实测：目前程序可执行，登记版本 0.5.16。登记所存握手版本 0.5.16。",
+          "remaining": "明确该发行的可用配置；厂商新版终端入口属于不同输入",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "本机已有设置未能打开，具体原因与账号身份未知",
+          "remaining": "取得当前官方认证条件或可读原样本，再用既有选择验证",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "受阻"
+        },
+        "S3": {
+          "observed": "默认范围成功返回空列表",
+          "remaining": "有效原工作位置、正文与沿原会话续答",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "分项通过"
+        },
+        "S4": {
+          "observed": "无本项实际验收样本",
+          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S5": {
+          "observed": "无本项实际验收样本",
+          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S6": {
+          "observed": "未运行双对话变更、审批或停止",
+          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S7": {
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复",
+          "remaining": "取得独立工作样本并核停止终态、原对象恢复与无重发",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S8": {
+          "observed": "界面显示会话未能打开，不误报成功\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "查明原失败后验证正确准备及其他流程反馈",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "DimCode"
+    },
+    {
+      "agentId": "dirac",
+      "runtime": "登记版本 0.5.21",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "当前登记可执行，旧安装有实际免费模型回复。\n本轮实测：目前程序可执行，登记版本 0.5.21。登记所存握手版本 0.5.21。",
+          "remaining": "从正式已有设置核完整准备与回返。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/dirac-formal-c876-ack-summary.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧来源报告 OpenRouter，明确免费 Nemotron；身份未核。\n本轮实测：沿所选已有服务用免费 Nemotron / Medium 发一次，有真实回复。",
+          "remaining": "账号身份、权益和换号防串扰待实际核对。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/dirac-formal-c876-ack-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "实测分项通过"
+        },
+        "S3": {
+          "observed": "旧近期成功样本目录缺失。10/06 A 原目录和 runtime 配置文件仍在。旧版本曾回放回复但完整用户正文未证。 所装版本成功加载还会写回同 ID 的 Agent 配置。\n本轮实测：新版冷开同一自建原标识，原回复可读，模型与目录保持。",
+          "remaining": "另验正常发现准确旧线程及同一原对象续答。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
+            "output/2026-10-09-fourth-install/metadata-before.sqlite3",
+            "docs/evidence/2026-10-08-ui-coverage-audit/full-review/screenshots/U001-library-start.ax.txt",
+            "https://github.com/dirac-run/dirac/blob/v0.5.21/cli/src/agent/DiracAgent.ts#L1345-L1453",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "实测分项通过"
+        },
+        "S4": {
+          "observed": "旧 Medium/Thinking Off 原选择和实际请求有观察。\n本轮实测：冷开保留已保存免费 Nemotron 与 Medium，原选择一致。",
+          "remaining": "同一对话主动切换及实际采用待验。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/dirac-formal-c876-ack-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "实测分项通过"
+        },
+        "S5": {
+          "observed": "既有免费模型实答和文件写入样本，回复有杂字/重试，另一旧例多一个可见步骤。\n本轮实测：单次短消息有正文，回合完成，实际多回一段，精确短消息验收失败。",
+          "remaining": "需合格实际回复、工具审批与文件任务。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/dirac-formal-c876-ack-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "本轮短测失败"
+        },
+        "S6": {
+          "observed": "旧独立样本存在；没有当前双任务完整归属证据。",
+          "remaining": "核并行设置、授权、停止一致性。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
+            "output/2026-10-09-fourth-install/metadata-before.sqlite3",
+            "docs/evidence/2026-10-08-ui-coverage-audit/full-review/screenshots/U001-library-start.ax.txt",
+            "https://github.com/dirac-run/dirac/blob/v0.5.21/cli/src/agent/DiracAgent.ts#L1345"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "旧文件全拒/停止且未改有窄例，0.5.17 冷开曾失败。",
+          "remaining": "当前精确任务停止、原历史/草稿恢复和待发保护。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/dirac-formal-c876-ack-summary.json"
+          ],
+          "status": null
+        },
+        "S8": {
+          "observed": "旧回复重试与冷开失败均有证据。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "当前准确回读、失败原因和下一步。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/dirac-formal-c876-ack-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Dirac"
+    },
+    {
+      "agentId": "factory-droid",
+      "runtime": "登记版本 0.230.0",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "受管程序可执行且旧安装连接通过，旧模型读取出现认证需求。\n本轮实测：目前程序可执行，登记版本 0.230.0。登记所存握手版本 0.230.0。",
+          "remaining": "原账户完整准备及失败回返。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧 GPT-6 Sol/High 产生401界面及 internal_error。",
+          "remaining": "先按当前原配置核实际认证与费用来源，不能由旧 HTTP 字样推全局状态。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "当前握手声明 list/load/resume，旧专属未知样本无可靠终态。",
+          "remaining": "只检查独立确权且无旧未知工作的原样本。",
+          "sources": ["docs/evidence/2026-11-13-cycle7/wave7-followup.json"],
+          "status": null
+        },
+        "S4": {
+          "observed": "旧 GPT-6 Sol/High 仅标签与请求路径。",
+          "remaining": "真实已确认配置、模型生效及重启。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "旧真实请求失败且结果不明。",
+          "remaining": "原来源可用后另取独立安全真实任务及工具审批。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json"
+          ],
+          "status": null
+        },
+        "S6": {
+          "observed": "没有当前独立双任务通过。",
+          "remaining": "实际归属及范围，保护旧未知。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "旧请求和停止回执都没有确认终态。",
+          "remaining": "不可重发同一旧请求，凭原证补查及另取实际停止样本。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json"
+          ],
+          "status": null
+        },
+        "S8": {
+          "observed": "旧 unknown 没有作为成功记录，保留原状态。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "正式版同类当前可靠提示与可恢复路径。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Factory Droid"
+    },
+    {
+      "agentId": "fast-agent",
+      "runtime": "登记及握手 0.10.1。唯一已保存 FF_FAST_WEB_20… 原目录仍在，保存选项模型为空；前次自有回执精确报告 codexplan / codexresponses / gpt-5.6-sol。",
+      "liveAction": "先正式冷开同一自有网页测试并展开原 PNG、原正文，零发送。不能用旧 alias 或菜单替代当前明确选择。实际终端停止需先落通用官方委托与原请求权限归属。",
+      "standards": {
+        "S1": {
+          "observed": "所选正式程序已有准备、连接和真实窄首发。\n本轮实测：目前程序可执行，登记版本 0.10.1。登记所存握手版本 0.10.1。",
+          "remaining": "当前具体后端与资源选择、完整认证取消仍待。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-11-13-cycle7/fast-page-summary.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "一次正式原记录报告 codexplan→codexresponses / gpt-5.6-sol；当前原会话选择未露出模型/身份。",
+          "remaining": "当前账户和计费、退出换号未证；alias 的默认 high 不算官方确认。",
+          "sources": ["docs/evidence/2026-11-13-cycle7/fast-page-summary.json"],
+          "status": null
+        },
+        "S3": {
+          "observed": "官方批准的同安装只读 export 叠加普通冷开，正式回读原正文、工具、PNG。",
+          "remaining": "官方列表范围、当前同原 ID 实际继续和其他对象仍需分别验证。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/history-supplement-summary.json",
+            "docs/evidence/2026-11-13-cycle7/fast-page-summary.json"
+          ],
+          "status": null
+        },
+        "S4": {
+          "observed": "原实际后端明确一次，当前 Farfold 保存选择为空，不伪造可选模型及思考档。",
+          "remaining": "本安装提供的可改能力、真实效应与恢复仍待。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/fast-page-summary.json",
+            "docs/evidence/2026-11-13-cycle7/history-supplement-summary.json"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "正式一次公开网页两层许可与同调用 90,330 字节 PNG 交付。",
+          "remaining": "完整原生工具、文件编辑、技能及真实审批能力仍分项验证。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/fast-page-summary.json",
+            "docs/status.md"
+          ],
+          "status": null
+        },
+        "S6": {
+          "observed": "官方 0.10.1 委托终端受控双会话，目标结束与另一路保持有证据。",
+          "remaining": "当前未启用该正式路由，实际并发与归属仍待。",
+          "sources": [
+            "docs/evidence/2026-11-15-official-alternatives/fast-agent.md"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "旧正式点停后自有进程约 8.47 秒仍活着。当前可用官方委托路径受控有窄证。\n本轮实测：0.10.1 走本机正式 Farfold 的官方逐次审批，实际启动归属应用的 Shell 和 sleep。点停后 273 毫秒内观察两者均退出，60 秒后无完成标记。界面步骤终态仍未知。",
+          "remaining": "正式双任务隔离、停止后冷续答、实时工具终态及非客户端自管范围待验。",
+          "sources": [
+            "docs/evidence/2026-10-06-macos-batch1/installed-843-results.json",
+            "docs/evidence/2026-11-15-official-alternatives/fast-agent.md",
+            "docs/evidence/2026-11-15-cycle12-fast-approved/README.md"
+          ],
+          "status": "自有进程停止通过"
+        },
+        "S8": {
+          "observed": "正式冷开能显示旧工具截图，从普通入口无需识别导出命令。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "新旧失败及未知停止真实提示与更多准备反馈待验。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/history-supplement-summary.json",
+            "docs/evidence/2026-11-15-official-alternatives/fast-agent.md",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "fast-agent"
+    },
+    {
+      "agentId": "gemini",
+      "runtime": "登记版本 0.62.0",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "已安装，沿已有设置收到认证要求，当前 Gemini API key 不能直接输入\n本轮实测：目前程序可执行，登记版本 0.62.0。登记所存握手版本 0.62.0。",
+          "remaining": "确认用户选择的官方可执行认证方式、取消、返回",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "https://github.com/google-gemini/gemini-cli/pull/29463",
+            "https://github.com/google-gemini/gemini-cli/pull/30112",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "官方 auth_required，未登录或换号，无已核可用授权",
+          "remaining": "取得当前官方认证条件或可读原样本，再用既有选择验证",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "https://github.com/google-gemini/gemini-cli/pull/29463",
+            "https://github.com/google-gemini/gemini-cli/pull/30112"
+          ],
+          "status": "受阻"
+        },
+        "S3": {
+          "observed": "现装未声明列表，保留按标识入口但未加载旧正文",
+          "remaining": "需包含官方历史安全修复的适用版本、明确认证和自有样本",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "https://github.com/google-gemini/gemini-cli/pull/29463",
+            "https://github.com/google-gemini/gemini-cli/pull/30112"
+          ],
+          "status": "受阻"
+        },
+        "S4": {
+          "observed": "无本项实际验收样本",
+          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "https://github.com/google-gemini/gemini-cli/pull/29463",
+            "https://github.com/google-gemini/gemini-cli/pull/30112"
+          ],
+          "status": "未测"
+        },
+        "S5": {
+          "observed": "无本项实际验收样本",
+          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "https://github.com/google-gemini/gemini-cli/pull/29463",
+            "https://github.com/google-gemini/gemini-cli/pull/30112"
+          ],
+          "status": "未测"
+        },
+        "S6": {
+          "observed": "未运行双对话变更、审批或停止",
+          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "https://github.com/google-gemini/gemini-cli/pull/29463",
+            "https://github.com/google-gemini/gemini-cli/pull/30112"
+          ],
+          "status": "未测"
+        },
+        "S7": {
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复",
+          "remaining": "取得独立工作样本并核停止终态、原对象恢复与无重发",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "https://github.com/google-gemini/gemini-cli/pull/29463",
+            "https://github.com/google-gemini/gemini-cli/pull/30112"
+          ],
+          "status": "未测"
+        },
+        "S8": {
+          "observed": "正常入口如实显示未提供列表、账号尚需准备\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "后续核认证和已知 ID 正向路径",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "https://github.com/google-gemini/gemini-cli/pull/29463",
+            "https://github.com/google-gemini/gemini-cli/pull/30112",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Gemini"
+    },
+    {
+      "agentId": "github-copilot-cli",
+      "runtime": "登记及 npm-loader 包 1.0.89，保存握手 1.0.107。全局保存 Auto / Agent。当前 Farfold 索引为 0。",
+      "liveAction": "正式历史列表指定仍存在的 output/2026-10-06-real-use，按官方原 ID 去认 FARFOLD_COPILOT_A_20261006。当前已有设置及原 Auto 仅在实际核合后做一次自有短测；版本以当次握手判定。",
+      "standards": {
+        "S1": {
+          "observed": "旧 1.0.89 真实打开官方登录、暂离和取消；1.0.106 另有实际登录终端和空凭据拒绝受控检查。\n本轮实测：目前程序可执行，登记版本 1.0.89。登记所存握手版本 1.0.107。",
+          "remaining": "当前实际运行版本和完整准备链、正式取消及有效登录待各回执。",
+          "sources": [
+            "docs/evidence/2026-10-01-agent-copilot-login/installed.md",
+            "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。",
+          "remaining": "当前身份、实际计费、退出换号与范围保护不能用旧版证明。",
+          "sources": [
+            "docs/evidence/2026-11-06-phase1-followup/README.md",
+            "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "旧正式从目录精确发现原 ID、读回正文并按 Auto 依赖原前文续答。\n本轮实测：正常入口找到自建原条目，核到原问题和原回复。当前返回 Auto，原选择无法确认，预览只读，零发送。",
+          "remaining": "核实原账号、模型与同一原对象实际续答。",
+          "sources": [
+            "docs/evidence/2026-11-06-phase1-copilot-list/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/copilot-formal-e954-history-continuation-summary.json",
+            "docs/evidence/2026-11-15-cycle12-followup/README.md"
+          ],
+          "status": "原正文已读"
+        },
+        "S4": {
+          "observed": "正式旧 Auto 原选择及实际回复均已有证据，原生模型曾为 gpt-6-luna；历史菜单只提供 Auto。",
+          "remaining": "须以当前声明核模型选择及恢复，不能视为可切换多个模型或思考档。",
+          "sources": [
+            "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
+            "docs/evidence/2026-11-06-cycle-01/agent-conditions.json"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "旧正式同自测一次审批拒绝，一次批准且固定命令有专用标记与退出码。",
+          "remaining": "当前文件、技能和权限的完整真实链路未实测。",
+          "sources": ["docs/evidence/2026-11-06-phase1-approval/README.md"],
+          "status": null
+        },
+        "S6": {
+          "observed": "旧 1.0.107 正式同目录 A 明确停止并单独关闭，B 的命令及管道保持并完成。",
+          "remaining": "当前注册运行身份还需核准；其他并行配置和权限组合分别验。",
+          "sources": [
+            "docs/evidence/2026-11-07-stage1-formal-acceptance/copilot-close-installed.json",
+            "docs/evidence/2026-11-06-phase1-isolation/README.md"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "旧有界 shell 与 sleep 实际提前结束，正式未知标记和草稿冷开保持，旧同 ID 工具无终态。",
+          "remaining": "当前版本验证、原工具终态和更多断线/队列场景仍开。",
+          "sources": [
+            "docs/evidence/2026-11-06-phase1-isolation/README.md",
+            "docs/evidence/2026-11-07-stage1-formal-acceptance/copilot-close-installed.json"
+          ],
+          "status": null
+        },
+        "S8": {
+          "observed": "旧正式显示回复已停和工具待确认；当时实际导出把工具写成等待中。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "当前正式同类文件/反馈需要归属明确样本，旧表现不是当前结论。",
+          "sources": [
+            "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json",
+            "docs/evidence/2026-11-06-phase1-copilot-list/README.md",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "GitHub Copilot"
+    },
+    {
+      "agentId": "goose",
+      "runtime": "当前登记、握手均 1.59.1。现有 C8 B 保存 OpenRouter 免费 Super VL / off；旧停止样本保存免费 Ultra / off。",
+      "liveAction": "已有完成且目录存在的 FF_C8_B_20261115 可冷开，保持原保存配置，确需补同 ID 续答时发一次无工具短问。避开仍未知的旧停止对象；前次物理停止证据按原范围复用。",
+      "standards": {
+        "S1": {
+          "observed": "正式更新到 1.59.1，旧 67 会话与 312 消息 ID 保持。旧配置终端有暂离、取消和重查样本。\n本轮实测：目前程序可执行，登记版本 1.59.1。登记所存握手版本 1.59.1。",
+          "remaining": "当前安装的全部准备回路及各认证入口未覆盖。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle7-goose-retest/README.md",
+            "docs/agent-first-release.md",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧 OpenRouter 免费样本按原请求核到已有默认工作区及账单 $0.00。C8 Super VL 为既有实际选择。",
+          "remaining": "当前新连接的身份、计费来源、真实退出换号及共享范围未全验。",
+          "sources": [
+            "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
+            "docs/evidence/2026-11-15-cycle8-observation/README.md"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "前批原对象从正式版找到、正文读回并在原对话续接。旧 1.52.0 官方隔离分页有 50+1 的分项。",
+          "remaining": "当前 1.59.1 需按同一合成原对象核认，旧 Sonnet 与目录/分页组合另留。",
+          "sources": [
+            "docs/evidence/2026-10-24-agent-acceptance/goose-formal-625158ab-history-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/goose-formal-c876-context-continuation-summary.json",
+            "docs/evidence/2026-11-15-cycle7-goose-retest/README.md"
+          ],
+          "status": null
+        },
+        "S4": {
+          "observed": "前批同既有服务正式保存 Super VL→Ultra，另有 Super VL 实际调用、冷开原历史保持证据。C8 B 仍保存 Super VL/off。",
+          "remaining": "当前配置及失败或未知时保护需只对变化分项补证，不改用户选择。",
+          "sources": [
+            "docs/evidence/2026-11-06-phase1-next/installed-goose-model-candidate.json",
+            "docs/evidence/2026-11-07-stage1-formal-acceptance/goose-second-model-installed.json",
+            "docs/evidence/2026-11-15-cycle8-observation/README.md"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "正式许可拒绝与批准、公开网页读取/PNG、实际文件返工及另存均有窄样本。C8 共享文件夹读取完成。",
+          "remaining": "当前版本各原工具、文件、提问及技能真实采用仍未齐。",
+          "sources": [
+            "docs/evidence/2026-11-06-phase1-approval/README.md",
+            "docs/evidence/2026-11-12-cycle6/README.md",
+            "docs/evidence/2026-11-15-cycle8-observation/README.md",
+            "docs/status.md"
+          ],
+          "status": null
+        },
+        "S6": {
+          "observed": "正式跨 Goose/Kilo 审批隔离与 OpenCode 停止时 Goose 持续运行都已有实际分项。",
+          "remaining": "当前所选原对象对并行配置、审批、停止与共享状态的组合仍需逐项限范围。",
+          "sources": [
+            "docs/evidence/2026-11-06-phase1-approval/README.md",
+            "docs/evidence/2026-11-15-cycle7-acceptance/README.md",
+            "docs/evidence/2026-11-15-cycle8-observation/README.md"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "1.59.1 停止时 shell 和 sleep 都消失，冷开保留未知，零重发。旧 1.52.0 有子进程继续的反例。",
+          "remaining": "没有实时同工具终态，不能把物理结束用于补该 UI 回执或泛化到所有工具。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle7-goose-retest/README.md",
+            "docs/evidence/2026-11-15-cycle7-acceptance/README.md"
+          ],
+          "status": null
+        },
+        "S8": {
+          "observed": "正式版明确显示回复已停止而工具待确认、旧模式等原信息保留。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "只覆盖已核入口、停止和冷开反馈。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle7-goose-retest/README.md",
+            "docs/evidence/2026-11-12-cycle6/README.md",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Goose"
+    },
+    {
+      "agentId": "grok-build",
+      "runtime": "登记版本 1.0.46",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "已安装，沿已有设置进入官方 Grok 登录提示\n本轮实测：目前程序可执行，登记版本 1.0.46。登记所存握手版本 未报告。",
+          "remaining": "用户所选认证及可靠的取消返回",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "官方 auth_required，当前保存选项未证明账号可用",
+          "remaining": "取得当前官方认证条件或可读原样本，再用既有选择验证",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "受阻"
+        },
+        "S3": {
+          "observed": "默认范围一条记录，归属未确认",
+          "remaining": "先归属用户授权的样本，再核正文和原对话续答",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "分项通过"
+        },
+        "S4": {
+          "observed": "无本项实际验收样本",
+          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S5": {
+          "observed": "无本项实际验收样本",
+          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S6": {
+          "observed": "未运行双对话变更、审批或停止",
+          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S7": {
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复",
+          "remaining": "取得独立工作样本并核停止终态、原对象恢复与无重发",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S8": {
+          "observed": "未归属列表与用户需登录分开显示\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "在当前发行真实工作和权限链路复验反馈",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Grok Build"
+    },
+    {
+      "agentId": "kilo",
+      "runtime": "当前登记、握手均 7.8.1，已保存已有 Kilo Gateway 免费 Ultra / none / code；当前无 Farfold 索引。",
+      "liveAction": "可先正式读取已有设置，确认原免费 Ultra 不漂移后新自有目录短测。旧缺失目录不复造，按列表匹配可确认的旧对象。历史 Dots3 测试不允许本轮自行切换。",
+      "standards": {
+        "S1": {
+          "observed": "旧正式登录启动/取消及 ZIP 连接有窄证；官方真实设备挑战和受控关闭已验证。\n本轮实测：目前程序可执行，登记版本 7.8.1。登记所存握手版本 7.8.1。",
+          "remaining": "当前正式完整准备/终端退出与真实账号授权尚未覆盖。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-11-06-phase1-next/kilo-native-pty-device-cancel.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "正式旧已有 Gateway 实际短答，官方本机记录给出提供方及模型；受控匿名冷开 Dots3 报费用 0。",
+          "remaining": "当前已有账号的有效身份与账单、退出换号需明确对象与结果。",
+          "sources": [
+            "docs/evidence/2026-11-06-phase1-next/README.md",
+            "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "旧正式原桌面对象发现、正文及依赖前文续答通过；另一旧临时对象明确因目录缺失拒绝。",
+          "remaining": "跨正式签名桌面授权另有依赖；当前没有本地索引。",
+          "sources": [
+            "docs/evidence/2026-10-24-agent-acceptance/kilo-formal-e954-history-continuation-summary.json",
+            "docs/evidence/2026-11-06-cycle-01/agent-conditions.json"
+          ],
+          "status": null
+        },
+        "S4": {
+          "observed": "旧正式同会话切 Dots3 并实际回复，冷开显示原 Dots3/Instant，之后恢复原 Ultra/None。切回后零发送。",
+          "remaining": "当前样本沿保存 Ultra/None 核对，不将历史切回证据扩大为新实际请求。",
+          "sources": [
+            "docs/evidence/2026-11-07-stage1-formal-acceptance/kilo-model-installed.json",
+            "docs/evidence/2026-11-06-phase1-next/installed-kilo-model-switch-restore.json"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "旧批准工具取得唯一输出，拒绝时没有该次输出，其他 Agent 的审批不受影响。",
+          "remaining": "旧文件失败保留，当前文件/权限及技能实际采用范围未齐。",
+          "sources": [
+            "docs/evidence/2026-11-06-phase1-approval/README.md",
+            "docs/evidence/2026-10-24-agent-acceptance/kilo-formal-5b31-owned-file-summary.json"
+          ],
+          "status": null
+        },
+        "S6": {
+          "observed": "7.8.1 旧正式同目录双会话实际停止隔离；同官方进程的单会话 close 另有受控结果。",
+          "remaining": "其他真实配置与服务共享、正在执行的具体子进程不从受控 close 推断。",
+          "sources": [
+            "docs/evidence/2026-11-06-phase1-isolation/README.md",
+            "docs/evidence/2026-11-06-cycle-01/agent-conditions.json"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "旧 A 明确停止且同目录 B 完成，旧目录缺失时没有造空会话。",
+          "remaining": "实际工具子进程、原终态和当前版本暂停恢复需继续留证。",
+          "sources": [
+            "docs/evidence/2026-11-06-phase1-isolation/README.md",
+            "docs/evidence/2026-11-06-cycle-01/agent-conditions.json"
+          ],
+          "status": null
+        },
+        "S8": {
+          "observed": "正式旧目录缺失反馈保留原对象；旧模型、审批和停止入口已有分项。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "当前入口实测与失败下一步完整性待核。",
+          "sources": [
+            "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Kilo"
+    },
+    {
+      "agentId": "kimchi",
+      "runtime": "登记版本 1.3.0",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "已有设置成功并能按原 Nemotron 3 Ultra FP4 尝试短消息\n本轮实测：目前程序可执行，登记版本 1.3.0。登记所存握手版本 1.3.0。",
+          "remaining": "原短请求 internal_error，仍缺可真实开工种类、取消和返回",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "准备空会话成功，帐号权益未由模型结果确认",
+          "remaining": "实际账号身份、权益与换号范围",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "分项通过"
+        },
+        "S3": {
+          "observed": "默认列表三条；已归属旧原目录两次仅在 initialize 超时，未发列表",
+          "remaining": "查明连接初始化条件，从原范围核正文与续答，避免重探未变失败",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "受阻"
+        },
+        "S4": {
+          "observed": "已有原模型显式可选并发出请求，官方返回 internal_error",
+          "remaining": "成功实答、实际模型生效、切换和冷开恢复",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "分项通过"
+        },
+        "S5": {
+          "observed": "单次真实短测试收到 internal_error",
+          "remaining": "可用同服务原设置后的完整工作及实际审批",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "实测失败"
+        },
+        "S6": {
+          "observed": "未运行双对话变更、审批或停止",
+          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S7": {
+          "observed": "正式版单次停止未收到停止确认，保持未知且未自动重发",
+          "remaining": "取得原 task 可信终态并验证停止后原工作恢复",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+          ],
+          "status": "未确认"
+        },
+        "S8": {
+          "observed": "新版将同一原目录初始化超时准确反馈，未误判为列表成功\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "正向工作链路和真实审批需继续验",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Kimchi"
+    },
+    {
+      "agentId": "minimax-code",
+      "runtime": "登记版本 0.2.7",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "已安装，沿已有设置到模型页，界面保留原选项且禁用不一致的保存\n本轮实测：目前程序可执行，登记版本 0.2.7。登记所存握手版本 0.2.7。",
+          "remaining": "确认可用原模型与实际配置，再验证准备结果与返回",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "已有设置成功创建用于准备的空会话",
+          "remaining": "确认真实账号、服务权益及账号切换范围",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "分项通过"
+        },
+        "S3": {
+          "observed": "默认列表及正式版复查命中可识别的旧测试标题\n本轮实测：用户开放全部原历史后，默认官方列表找到现存原目录的一条原对话并读回正文。旧配置未核，因此只读。",
+          "remaining": "核实原模型及服务后实际续答同一条对话。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-followup/accounts-and-api.md"
+          ],
+          "status": "原正文已读"
+        },
+        "S4": {
+          "observed": "当前显示 MiniMax-M3 thinking，保存的模型与该选项不一致，已留原选择",
+          "remaining": "按用户明确选择确认模型，验真实请求、切换和重启恢复",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "受阻"
+        },
+        "S5": {
+          "observed": "本轮零模型消息，无当前正例，旧短回复结果未知",
+          "remaining": "先有可信授权和模型，留真实文件、提问与权限证据",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S6": {
+          "observed": "未运行双对话变更、审批或停止",
+          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S7": {
+          "observed": "旧自建请求仍未知，本轮未重试或改变该对象",
+          "remaining": "取得原可信终态，再补独立的开始、停止和恢复",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未确认"
+        },
+        "S8": {
+          "observed": "原选择不一致时提示并阻止保存，列表零导入\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "实际模型恢复后复验完整反馈",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "MiniMax"
+    },
+    {
+      "agentId": "mistral-vibe",
+      "runtime": "当前登记、保存握手 2.25.8；两条自有原会话目录均在，保存 Mistral Medium 3.5 / High。",
+      "liveAction": "现只用 FF_MISTRAL_WEB… 既有原对话冷开读同调用截图或查看既有合成文件结果。具体原单次及追加单次授权已用，零新增模型；旧初始化超时输入未变时不重复。",
+      "standards": {
+        "S1": {
+          "observed": "旧已有设置加载并得到所选模型、原目录冷看也有正例。\n本轮实测：目前程序可执行，登记版本 2.25.8。登记所存握手版本 2.25.8。",
+          "remaining": "当前实际认证与准备取消全链未齐，曾有原目录初始化超时。",
+          "sources": [
+            "docs/evidence/2026-10-24-agent-acceptance/mistral-formal-cb43-history-discovery-summary.json",
+            "docs/status.md",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧正式选定 Medium 3.5/High 有实际回复；当前沿原服务保存，没有新核实的账号和额度。",
+          "remaining": "原额度及真实身份/计费来源待确认，现许可不覆盖新请求。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
+            "docs/status.md"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "旧原对象发现和依赖前文续答各有证据；16ee 真实冷开重新展开原工具图片。",
+          "remaining": "旧连接检查超时对象原因未定；当前截图恢复与原 ID 续答范围不互相替代。",
+          "sources": [
+            "docs/evidence/2026-10-24-agent-acceptance/mistral-formal-c876-context-continuation-summary.json",
+            "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json"
+          ],
+          "status": null
+        },
+        "S4": {
+          "observed": "所选 Medium 3.5/High 实际回复和正式只读显示有证。",
+          "remaining": "实际同会话切换成功及冷开采用未全验，不能越过原选择保护。",
+          "sources": [
+            "docs/evidence/2026-11-10-stage2-live-mistral/summary.json",
+            "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
+            "docs/status.md"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "正式两片段真实编辑、43 字节返工另存、公开页 PNG 同次返回并 ZIP 核对。",
+          "remaining": "技能实际管理入口、完整工具/文件、在途权限和其他失败路径未齐。",
+          "sources": [
+            "docs/evidence/2026-11-10-stage2-live-mistral/summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/p22-formal-c876-versioned-rework-summary.json",
+            "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json"
+          ],
+          "status": null
+        },
+        "S6": {
+          "observed": "未找到当前正式同 Agent 双任务实际归属隔离的完整证据。",
+          "remaining": "需要原服务可测及受控独立目录，再验实际审批/停止的并行后果。",
+          "sources": [
+            "docs/status.md",
+            "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "旧 cb43 精确自有命令在自然截止前实际消失。",
+          "remaining": "当前停止、旧止后恢复和未知结果所需终态未全验。",
+          "sources": [
+            "docs/evidence/2026-10-24-agent-acceptance/mistral-formal-cb43-owned-stop-summary.json",
+            "docs/status.md"
+          ],
+          "status": null
+        },
+        "S8": {
+          "observed": "正式冷开图片可显示并逐字节导出；来源未确认的旧对象仍保护发送。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "当前完整设置、通知、错误与恢复体验仍按路径补验。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
+            "docs/status.md",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Mistral Vibe"
+    },
+    {
+      "agentId": "nova",
+      "runtime": "登记版本 1.1.49",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "当前登记展示 Nova Setup 终端入口，已有设置返回需认证\n本轮实测：目前程序可执行，登记版本 1.1.49。登记所存握手版本 1.0.0。",
+          "remaining": "用户选用官方可用方式，完成认证与取消返回",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-10-22-common-capability-closeout/preserved-evidence/arch44/remaining-conditions-audit/final-condition-classification.json",
+            "https://agentclientprotocol.com/protocol/v1/tool-calls#requesting-permission",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "官方 auth_required，无已核该版本可用本人账号",
+          "remaining": "取得当前官方认证条件或可读原样本，再用既有选择验证",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-10-22-common-capability-closeout/preserved-evidence/arch44/remaining-conditions-audit/final-condition-classification.json",
+            "https://agentclientprotocol.com/protocol/v1/tool-calls#requesting-permission"
+          ],
+          "status": "受阻"
+        },
+        "S3": {
+          "observed": "默认范围返回空，当前未找到归属样本",
+          "remaining": "明确账号及同原目录和 ID，实际加载与续答",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-10-22-common-capability-closeout/preserved-evidence/arch44/remaining-conditions-audit/final-condition-classification.json",
+            "https://agentclientprotocol.com/protocol/v1/tool-calls#requesting-permission"
+          ],
+          "status": "分项通过"
+        },
+        "S4": {
+          "observed": "无本项实际验收样本",
+          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-10-22-common-capability-closeout/preserved-evidence/arch44/remaining-conditions-audit/final-condition-classification.json",
+            "https://agentclientprotocol.com/protocol/v1/tool-calls#requesting-permission"
+          ],
+          "status": "未测"
+        },
+        "S5": {
+          "observed": "当前选定发行公开实现的 V1 权限方法与官方 ACP V1 对应方法不同，实际回执未测",
+          "remaining": "厂商兼容接法和实际权限与结果",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-10-22-common-capability-closeout/preserved-evidence/arch44/remaining-conditions-audit/final-condition-classification.json",
+            "https://agentclientprotocol.com/protocol/v1/tool-calls#requesting-permission"
+          ],
+          "status": "受阻"
+        },
+        "S6": {
+          "observed": "未运行双对话变更、审批或停止",
+          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-10-22-common-capability-closeout/preserved-evidence/arch44/remaining-conditions-audit/final-condition-classification.json",
+            "https://agentclientprotocol.com/protocol/v1/tool-calls#requesting-permission"
+          ],
+          "status": "未测"
+        },
+        "S7": {
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复",
+          "remaining": "取得独立工作样本并核停止终态、原对象恢复与无重发",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-10-22-common-capability-closeout/preserved-evidence/arch44/remaining-conditions-audit/final-condition-classification.json",
+            "https://agentclientprotocol.com/protocol/v1/tool-calls#requesting-permission"
+          ],
+          "status": "未测"
+        },
+        "S8": {
+          "observed": "正确区分空列表、需认证与终端入口\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "认证及权限实际工作就绪后核正向反馈",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-10-22-common-capability-closeout/preserved-evidence/arch44/remaining-conditions-audit/final-condition-classification.json",
+            "https://agentclientprotocol.com/protocol/v1/tool-calls#requesting-permission",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Nova"
+    },
+    {
+      "agentId": "opencode",
+      "runtime": "本机登记 ID opencode，显示登记版本 1.18.31，保存握手及前次官方程序实测 2.2.7。当前新稿全局选择仍 Big Pickle；C8 A 明确保存 Xiaomi MiMo v2.6 Flash。",
+      "liveAction": "从已完成自有 FF_C8_A_20261115 冷开并核原 Xiaomi MiMo v2.6 Flash / Build，补一条原会话短问或工作交付时仍沿原选择。避免新稿 Big Pickle 的旧额度失败；FF_C8_HISTORY1000_SYNTHETIC 无保存选择，仅只读。",
+      "standards": {
+        "S1": {
+          "observed": "旧正式自定义程序与原实际配置、新对话、明确保存原服务有窄证。\n本轮实测：目前程序可执行，登记版本 1.18.31。登记所存握手版本 2.2.7。",
+          "remaining": "当前程序与账号准备全链及取消继续仍要原条件实际结果。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-11-12-cycle6/README.md",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧 Big Pickle 原生报免费额度已用尽。后来既有 Xiaomi MiMo 实际请求成功并有原回执。",
+          "remaining": "底层原账户身份、费用、退出换号和多服务影响尚未全验。",
+          "sources": [
+            "docs/status.md",
+            "docs/evidence/2026-11-13-cycle7/history-supplement-summary.json",
+            "docs/evidence/2026-11-15-cycle8-observation/README.md"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "原对象实际再次找到并用前文续答，另有 1000 条合成官方历史正常发现、带入和搜索。",
+          "remaining": "现有自有活动对象可补冷开；合成无配置长历史不能当可续答。",
+          "sources": [
+            "docs/evidence/2026-10-24-agent-acceptance/opencode-formal-e954-history-continuation-summary.json",
+            "docs/evidence/2026-11-15-cycle7-acceptance/README.md",
+            "docs/evidence/2026-11-15-cycle8-observation/README.md"
+          ],
+          "status": null
+        },
+        "S4": {
+          "observed": "原 Xiaomi MiMo 已实际回复并始终沿保存模型；旧 Big Pickle 额度失败与新服务分开保留。",
+          "remaining": "同一原会话空闲切换、失败和冷开恢复其他正式组合仍待，不擅改原模型。",
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/history-supplement-summary.json",
+            "docs/evidence/2026-11-15-cycle8-observation/README.md"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "正式真实网页许可、图片工具、原生提问、文件读写及正常产出均有确切样本。\n本轮实测：沿旧 MiMo v2.6 Flash／Build，待发显式继续后只出站一次。自有命令生成对照完成标记，界面完成。",
+          "remaining": "还需与目标任务同时运行时重复隔离验收。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-observation/README.md",
+            "docs/evidence/2026-11-15-cycle7-goose-retest/README.md",
+            "docs/evidence/2026-11-15-cycle7-p47-hearing/README.md",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "实测分项通过"
+        },
+        "S6": {
+          "observed": "并行两个实际会话共享同一 Git base，独立标记；准确停止 OpenCode 后 Goose 继续。",
+          "remaining": "当前同 Agent 双会话、多配置及独立审批隔离仍需精确样本。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle7-acceptance/README.md",
+            "docs/evidence/2026-11-15-cycle8-observation/README.md"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "实际目标 shell/sleep 结束同时另一任务继续；另有原生提问跨真实休眠且同轮继续，单次原请求。",
+          "remaining": "其他中断类型、忙态停止恢复及配置漂移不能自动扩大。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle7-acceptance/README.md",
+            "docs/evidence/2026-11-15-cycle8-observation/README.md"
+          ],
+          "status": null
+        },
+        "S8": {
+          "observed": "真实中断通知送达并原对话定位、未知保护，纯图未读单独实测。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "最新版其他失败、冷开后反馈与准备正常入口仍逐项核。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle7-p47-p46/README.md",
+            "docs/evidence/2026-11-15-cycle7-final-validation/README.md",
+            "docs/status.md",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "OpenCode"
+    },
+    {
+      "agentId": "pi-acp",
+      "runtime": "当前本机登记 ID pi，为 pi-acp 0.0.34，同安装 Pi 0.87.1，当前无本地索引。",
+      "liveAction": "正式列表只读找原工作目录 output/2026-10-06-real-use 的 FARFOLD_PI_A_20261006_1632。旧 P32 已确权且目录仍存在；新增模型请求需先证当前原提供服务，网站任务须等官方 SDK 正式接线。",
+      "standards": {
+        "S1": {
+          "observed": "旧正式已有设置、官方程序准备与回选窄证；当前登记声明 terminal login。\n本轮实测：目前程序可执行，登记版本 0.0.34。登记所存握手版本 0.0.34。",
+          "remaining": "当前程序/服务准备、取消后继续与真实登录均未全验。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-11-15-official-alternatives/pi.md",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧正式请求返回 402 或无助手正文；P32 原正文结果显示来源未确认。",
+          "remaining": "确认实际账户或免登录来源与当前可用服务，不由菜单猜计费或认证。",
+          "sources": [
+            "docs/evidence/2026-10-24-agent-acceptance/configuration-preparation-failures-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/p32-pi-formal-e9-selected-user-body-summary.json"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "一个自有会话曾用正式 P32 读取 23 个可见文本块，10 个命中，用户正文命中。\n本轮实测：正常入口找到并读回自建原正文与原回复。原模型和推理级别无法确认，只读且零发送。",
+          "remaining": "核实原服务、模型与推理配置，从实际选用的官方入口冷开同源续答。",
+          "sources": [
+            "docs/evidence/2026-10-24-agent-acceptance/p32-pi-formal-e9-selected-user-body-summary.json",
+            "docs/evidence/2026-11-15-cycle12-followup/README.md"
+          ],
+          "status": "原正文已读"
+        },
+        "S4": {
+          "observed": "历史 DeepSeek/off 可读；当前保存 OpenRouter 免费 Ultra，属于另一配置。",
+          "remaining": "新版原选择、实际请求及冷恢复没有因旧记录补通过。",
+          "sources": [
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-11-15-official-alternatives/pi.md"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "当前登记的官方桥未转发 MCP，不能完成网页工具。官方 SDK 已受控验证注册/授权和撤回。",
+          "remaining": "SDK 正式接线、真实工具回执、文件、审批与技能待验。",
+          "sources": [
+            "docs/evidence/2026-11-15-official-alternatives/pi.md",
+            "docs/status.md"
+          ],
+          "status": null
+        },
+        "S6": {
+          "observed": "官方 SDK 受控双会话隔离已有证据。",
+          "remaining": "当前 Farfold 已装版本无真实双任务隔离通过证据。",
+          "sources": ["docs/evidence/2026-11-15-official-alternatives/pi.md"],
+          "status": null
+        },
+        "S7": {
+          "observed": "官方 SDK 受控支持按原会话控制，现登记版的真实停止与恢复未证。",
+          "remaining": "实际子任务结束、官方终态和草稿保护须分开验。",
+          "sources": ["docs/evidence/2026-11-15-official-alternatives/pi.md"],
+          "status": null
+        },
+        "S8": {
+          "observed": "正式 P32 可展示原用户命中和来源未知；配置错误保持未通过。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "完整统一入口及实际失败恢复提示待核。",
+          "sources": [
+            "docs/evidence/2026-10-24-agent-acceptance/p32-pi-formal-e9-selected-user-body-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/configuration-preparation-failures-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Pi"
+    },
+    {
+      "agentId": "poolside",
+      "runtime": "登记版本 1.0.16",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "当前登记可执行，旧正式可进入既有设置及真实请求。\n本轮实测：目前程序可执行，登记版本 1.0.16。登记所存握手版本 1.0.16。",
+          "remaining": "正式现有设置可用性与取消返回。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧已有设置原选 Laguna-S-2.1 / Max 实答。\n本轮实测：读取已有设置成功，已选原 Laguna 模型及 Max 可读。",
+          "remaining": "一次模型请求内部错误，尚需可实际回复的原服务及账号身份。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "实测分项通过"
+        },
+        "S3": {
+          "observed": "旧正式找回、正文、同原对象续答均有确切实证；原目录现已不存在。",
+          "remaining": "另一真实同源自有目录及原对象，或准备同源新样本后冷开。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json"
+          ],
+          "status": null
+        },
+        "S4": {
+          "observed": "旧原配置和模型/推理标签恢复观察。",
+          "remaining": "保持原选择，验证实际选择切换、请求作用和冷开。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "旧短答成功；工具审批和实际工作交付仍待。\n本轮实测：原 Laguna／Max 的新短测返回内部错误，无成功回复。",
+          "remaining": "原服务的成功结果、实际权限及工具待验。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "本轮短测失败"
+        },
+        "S6": {
+          "observed": "未见跨任务实际隔离证据。",
+          "remaining": "按实际模型和作用范围验证。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "旧冷回读有效，仅该原对象。\n本轮实测：原新建测试在退出时仍列结果未知，未重发或改为完成。",
+          "remaining": "待该请求可信终态及实际停止测试。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "结果未知"
+        },
+        "S8": {
+          "observed": "旧正常入口有回读后继续正例。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "当前状态尚未复测，实际失败与返回入口。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Poolside"
+    },
+    {
+      "agentId": "qoder",
+      "runtime": "登记版本 0.2.14",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "旧安装和一条正常真实短答，当前可执行。\n本轮实测：目前程序可执行，登记版本 0.2.14。登记所存握手版本 0.2.14。",
+          "remaining": "当前同源设置，认证和取消回返。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧短答证明当次来源可工作，保存值不含明确模型。",
+          "remaining": "当前身份和授权范围，按已有设置实际可用时才发。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "旧短答对应原目录不存在，冷开失败另有记录。\n本轮实测：当前本机默认官方列表实际返回空。",
+          "remaining": "从官方范围再定位有效原 ID 和目录，核正文和续答。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json",
+            "docs/evidence/2026-11-15-cycle12-followup/accounts-and-api.md"
+          ],
+          "status": "默认列表为空"
+        },
+        "S4": {
+          "observed": "当前仅保存 mode=default。",
+          "remaining": "显式模型实际可选和真实生效，冷开同选择。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "旧成功短答范围窄。",
+          "remaining": "当前工具与文件交付、权限和技能。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json"
+          ],
+          "status": null
+        },
+        "S6": {
+          "observed": "未见实际并行完整观察。",
+          "remaining": "并行模型、权限和停止分别归属。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "旧一次完成有回执，旧冷开失败保留。",
+          "remaining": "真实中断停止与草稿、附件、待发恢复。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json"
+          ],
+          "status": null
+        },
+        "S8": {
+          "observed": "旧短答成功和冷开失败分列。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "当前失败反馈、正常本地权限和回返。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Qoder"
+    },
+    {
+      "agentId": "qwen-code",
+      "runtime": "登记版本 0.24.7",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "登记 0.24.7、握手自报 0.25.0，旧正式设置终端返回可重新连接。\n本轮实测：目前程序可执行，登记版本 0.24.7。登记所存握手版本 0.24.7。",
+          "remaining": "当前已保存设置的实际可用性及取消。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "旧 10/6 读取模型曾需要认证；已保存 qwen3.6-plus(openai) 与默认，未确认当前身份。",
+          "remaining": "沿原来源核认证与有效请求，不能改服务。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json"
+          ],
+          "status": null
+        },
+        "S3": {
+          "observed": "旧正式查找并回读，草稿42字节及附件名称保持；原目录已不存在。",
+          "remaining": "另取同来源自有样本并建立真实续答，核完整正文。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json"
+          ],
+          "status": null
+        },
+        "S4": {
+          "observed": "旧同设置新空稿和读回标签窄例。",
+          "remaining": "实际同对话请求、显式变更和重启配置。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json"
+          ],
+          "status": null
+        },
+        "S5": {
+          "observed": "旧本地附件审核有限正例，不能当模型真实使用附件。\n本轮实测：当前原模型短请求出站，超过 200 秒无正文。",
+          "remaining": "需能真实完成的模型和工作样本。",
+          "sources": [
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-52aa-local-attachment-review-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "本轮短测失败"
+        },
+        "S6": {
+          "observed": "旧同设置新空稿独立保留原稿与附件。",
+          "remaining": "同家真实双任务并行及互不串扰。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json"
+          ],
+          "status": null
+        },
+        "S7": {
+          "observed": "旧重开原草稿与附件名不丢。\n本轮实测：对等待无回复的原测试点击一次停止，原回合随后明确显示已停止。",
+          "remaining": "尚需实际运行工具及另一任务并行证明实际停止。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "实测分项通过"
+        },
+        "S8": {
+          "observed": "已有流程及显示回返分项。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "当前入口交互、真实错误结果与完整结论。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle8-intake/README.md",
+            "docs/agent-first-release.md",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
+            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "Qwen"
+    },
+    {
+      "agentId": "sigit",
+      "runtime": "登记版本 1.5.11",
+      "liveAction": null,
+      "standards": {
+        "S1": {
+          "observed": "沿已有设置读取成功并显示该安装的模型选项\n本轮实测：目前程序可执行，登记版本 1.5.11。登记所存握手版本 1.5.11。",
+          "remaining": "核真实账号和已确认的原服务选项",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+          ],
+          "status": "准备未齐"
+        },
+        "S2": {
+          "observed": "已有设置在当前登记成功创建用于准备的空会话",
+          "remaining": "身份、权益及账号范围未核",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "分项通过"
+        },
+        "S3": {
+          "observed": "同一已归属原目录查找成功但为空\n本轮实测：当前本机默认官方列表实际返回空。",
+          "remaining": "从官方范围再定位有效原 ID、目录和原服务，核正文和续答。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-followup/accounts-and-api.md"
+          ],
+          "status": "默认列表为空"
+        },
+        "S4": {
+          "observed": "当前选项显示 Onde，旧自测为本地 HuggingFace",
+          "remaining": "确认既有模型与官方读取影响，在同源测试实际请求与恢复",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "受阻"
+        },
+        "S5": {
+          "observed": "无本项实际验收样本",
+          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S6": {
+          "observed": "未运行双对话变更、审批或停止",
+          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未测"
+        },
+        "S7": {
+          "observed": "旧结果仍未知，无新发送或复查证实原请求已停",
+          "remaining": "以原任务自有确证或另建可观察独立工作测停止恢复",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+          ],
+          "status": "未确认"
+        },
+        "S8": {
+          "observed": "可区分模型选项已读与身份未读，空列表没有假记录\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "remaining": "核可用服务和旧原对象后验反馈",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+          ],
+          "status": "入口有证"
+        }
+      },
+      "name": "siGit"
+    }
+  ]
+}

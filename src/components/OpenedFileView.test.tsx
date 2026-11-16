@@ -134,6 +134,7 @@ vi.mock("react", async (original) => {
 });
 
 import { OpenedFileView, type OpenedFileViewProps } from "./OpenedFileView";
+import type { PdfPreviewCandidate } from "./VisualFilePreview";
 import { TEXT_BLOCK_STRINGS as T } from "../runtime/text_block_strings";
 import { FILE_OPEN_STRINGS as S } from "../runtime/file_open_strings";
 import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
@@ -726,6 +727,82 @@ it("routes large Markdown to an explicit source fragment, retaining verified fil
   expect(h.open).not.toHaveBeenCalled();
 });
 
+it.each(["native refusal", "mismatched reply"])(
+  "refuses another canonical target before reading a handed-off large file (%s)",
+  async (outcome) => {
+    const expectedFile = largeBlock().file;
+    const different = { ...expectedFile, resolvedPath: "/work/different.md" };
+    h.inspectLink.mockResolvedValue(different);
+    h.readBlock.mockResolvedValue({ ...largeBlock(), file: different });
+    if (outcome === "native refusal")
+      h.checkRevision.mockRejectedValueOnce({ code: "redirected" });
+    else
+      h.checkRevision.mockResolvedValueOnce({
+        kind: "verified",
+        file: different,
+      });
+    render({ ...props, expectedFile });
+    await drain();
+    expect(h.checkRevision).toHaveBeenCalledExactlyOnceWith(
+      expectedFile,
+      "content",
+    );
+    expect(h.inspectLink).not.toHaveBeenCalled();
+    expect(h.readBlock).not.toHaveBeenCalled();
+    expect(render().html).toContain(S.revisionNotices.redirected);
+    expect(button(S.retry)).toBeDefined();
+    expect(button(T.openLocation)).toBeUndefined();
+    expect(button(T.revealLocation)).toBeUndefined();
+  },
+);
+
+it("accepts a new version of the same canonical target on a large-file handoff", async () => {
+  const fresh = largeBlock("v2");
+  const expectedFile = largeBlock().file;
+  h.checkRevision.mockResolvedValueOnce({ kind: "verified", file: fresh.file });
+  h.readBlock.mockResolvedValue(fresh);
+  render({ ...props, expectedFile });
+  await vi.waitFor(() => expect(render().html).toContain(fresh.text));
+  expect(h.checkRevision).toHaveBeenCalledExactlyOnceWith(
+    expectedFile,
+    "content",
+  );
+  expect(h.inspectLink).not.toHaveBeenCalled();
+  expect(h.readBlock).toHaveBeenCalledExactlyOnceWith(fresh.file, 0, true);
+  expect(button(T.save)).toBeDefined();
+});
+
+it("keeps a segmented handoff on the protected block reader when the verified target shrinks", async () => {
+  const expectedFile = largeBlock().file;
+  const fresh = { ...largeBlock("v2"), blockCount: 1, endsMidLine: false };
+  fresh.file = { ...fresh.file, size: fresh.byteEnd };
+  h.checkRevision.mockResolvedValueOnce({ kind: "verified", file: fresh.file });
+  h.readBlock.mockResolvedValue(fresh);
+  h.readText.mockResolvedValue({
+    file: fresh.file,
+    text: "whole read should not run",
+  });
+  render({ ...props, expectedFile });
+  await drain();
+  expect(h.readText).not.toHaveBeenCalled();
+  expect(h.readBlock).toHaveBeenCalledExactlyOnceWith(fresh.file, 0, true);
+  expect(render().html).toContain(fresh.text);
+  expect(button(T.save)).toBeDefined();
+});
+
+it("does not open a live page from a nontext reply to a segmented handoff", async () => {
+  const expectedFile = largeBlock().file;
+  h.checkRevision.mockResolvedValueOnce({
+    kind: "verified",
+    file: { ...expectedFile, name: "page.html" },
+  });
+  render({ ...props, expectedFile });
+  await vi.waitFor(() => expect(button(S.retry)).toBeDefined());
+  expect(props.onOpenHtml).not.toHaveBeenCalled();
+  expect(h.readText).not.toHaveBeenCalled();
+  expect(h.readBlock).not.toHaveBeenCalled();
+});
+
 it("keeps the original path and retries after inspection failure", async () => {
   h.inspectLink.mockRejectedValueOnce(new Error("sensitive backend details"));
   render();
@@ -1255,12 +1332,24 @@ it("keeps old-version page opinions after refresh and rejects old-source readine
   const old = Object.values(fileFeedbackDrafts.entries(props.threadKey))[0];
   const next = { ...visualReceipt, version: "v2", sha256: "b".repeat(64) };
   h.inspectLink.mockResolvedValue(next);
-  h.readVisual.mockResolvedValue({
+  const replacement = {
     file: next,
     mimeType: "application/pdf",
     data: btoa("%PDF-1"),
-  });
+  };
+  h.readVisual.mockResolvedValue(replacement);
   click(S.refresh);
+  await drain();
+  const staged = render().nodes.find((n) => n.props.preview)!;
+  expect(staged.props.preview).toBe(visual.props.preview);
+  const candidate = staged.props.pdfCandidate as PdfPreviewCandidate;
+  expect(candidate.preview).toBe(replacement);
+  expect(candidate.page).toBe(2);
+  candidate.settle({
+    element: { width: 40, height: 30 } as HTMLCanvasElement,
+    page: 2,
+    pageCount: 3,
+  });
   await drain();
   render();
   reportPage(visual, { kind: "pdf", page: 3, pageCount: 3 });

@@ -35,6 +35,7 @@ function model(
     notice: "",
     ready: true,
     refresh: vi.fn(async () => {}),
+    connect: vi.fn(async () => {}),
     allow: vi.fn(async () => {}),
     stop: vi.fn(async () => {}),
     respond: vi.fn(async () => {}),
@@ -74,6 +75,40 @@ it("explains unavailable tooling without claiming every Agent lacks support", ()
   expect(html).toContain("disabled");
 });
 
+it("offers connection separately from page permission only when backend capability is present", () => {
+  const sharing = model("unavailable");
+  sharing.info = {
+    ...sharing.info!,
+    connectionAvailable: true,
+    connectionId: "owned",
+  };
+  const html = renderToStaticMarkup(
+    <BrowserShareControls page={page} sharing={sharing} />,
+  );
+  expect(html).toContain("连接网页工具");
+  expect(html).toContain("连接工具后，再决定是否允许读取");
+  expect(html).not.toContain("disabled");
+  expect(html).not.toContain("aria-expanded");
+  expect(html).not.toContain("已允许");
+  expect(sharing.connect).not.toHaveBeenCalled();
+  expect(sharing.allow).not.toHaveBeenCalled();
+});
+
+it("shows an in-flight connection without claiming permission or permitting another action", () => {
+  const sharing = model("unavailable", { operation: "connect" });
+  sharing.info = {
+    ...sharing.info!,
+    connectionAvailable: true,
+    connectionId: "owned",
+  };
+  const html = renderToStaticMarkup(
+    <BrowserShareControls page={page} sharing={sharing} />,
+  );
+  expect(html).toContain("正在连接网页工具");
+  expect(html).toContain("disabled");
+  expect(html).not.toContain("已允许");
+});
+
 it("offers retry only for confirmed stop failure and never claims it has stopped", () => {
   const html = renderToStaticMarkup(
     <BrowserShareControls page={page} sharing={model("stop_failed")} />,
@@ -82,6 +117,50 @@ it("offers retry only for confirmed stop failure and never claims it has stopped
   expect(html).toContain("停止尚未确认");
   expect(html).not.toContain("已停止");
   expect(html).not.toContain("disabled");
+});
+
+it.each([
+  ["connection_busy", "请等待当前工作结束"],
+  ["connection_changed", "对话连接已变化"],
+  ["saved_conversation_required", "请先打开已保存的对话"],
+  ["tool_change_pending", "请先检查工具设置"],
+  ["status_failed", "未能确认读取权限"],
+  ["connection_pending", "正在连接网页工具"],
+  ["connection_unknown", "连接结果尚未确认"],
+])(
+  "explains authoritative connection blocker %s without offering an automatic retry",
+  (reason, message) => {
+    const sharing = model("unavailable");
+    sharing.info = {
+      ...sharing.info!,
+      reason: "source_not_reviewed",
+      connectionReason: reason,
+      connectionAvailable: false,
+    };
+    const html = renderToStaticMarkup(
+      <BrowserShareControls page={page} sharing={sharing} />,
+    );
+    expect(html).toContain(message);
+    expect(html).not.toContain("尚未核实");
+    expect(html).toContain("disabled");
+    expect(sharing.connect).not.toHaveBeenCalled();
+    expect(html).toContain("重新检查");
+  },
+);
+
+it("shows an unknown connection as uncertain even if its transport still reports preparing", () => {
+  const sharing = model("preparing");
+  sharing.info = {
+    ...sharing.info!,
+    connectionReason: "connection_unknown",
+    connectionAvailable: false,
+  };
+  const html = renderToStaticMarkup(
+    <BrowserShareControls page={page} sharing={sharing} />,
+  );
+  expect(html).toContain("连接结果尚未确认");
+  expect(html).toContain("重新检查");
+  expect(html).not.toContain("正在接通");
 });
 
 it("directs a pending tool request to the conversation instead of a second grant", () => {

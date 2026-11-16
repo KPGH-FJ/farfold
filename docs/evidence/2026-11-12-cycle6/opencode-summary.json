@@ -1,0 +1,496 @@
+{
+  "kind": "Cycle6 OpenCode implementation and official no-model evidence summary",
+  "atUtc": "2026-11-12T17:06:05.365746+00:00",
+  "sourceCommit": "a5a5f0e93a2203d8caed8fec9eb93490c80f9070",
+  "status": "Implemented and installed a5a5f0e93; official no-model lifecycle and formal connection/permission/new-draft cold start verified. Real OpenCode page/model tool output remains unverified.",
+  "implementation": {
+    "sourceFileCount": 10,
+    "sourceFiles": [
+      {
+        "path": "src-tauri/src/acp_client/browser_capability.rs",
+        "sha256": "0bba738fc1a11c6b253b3ab43118c00ab2bdc17ae750cb04de61cfd0e2ff8243",
+        "lines": 151
+      },
+      {
+        "path": "src-tauri/src/acp_client/browser_capability_tests.rs",
+        "sha256": "0068cddb6ed738ea2ee7b36670ea3fd487b0c91b067349f87b3a06c9ea5dbbcb",
+        "lines": 338
+      },
+      {
+        "path": "src-tauri/src/acp_client/manager.rs",
+        "sha256": "73a2b58f15e307d4a48d4a3c2ef4e7bbd66881d067bf52b85778da6a53cc3f28",
+        "lines": 1303
+      },
+      {
+        "path": "src-tauri/src/acp_client/process.rs",
+        "sha256": "7297a2a29723d2bd4b5359fbcb8a1e0c4eca3c9f48bcbf18c7022d950cc29d78",
+        "lines": 546
+      },
+      {
+        "path": "src-tauri/src/acp_client/process_mcp_tests.rs",
+        "sha256": "df9d65fb7dcf869177938ad1cf04ad0eaccc136af658663bc486aa01d7bf1ebd",
+        "lines": 296
+      },
+      {
+        "path": "src-tauri/src/acp_client/session.rs",
+        "sha256": "ac7a33435b310c93bc1418bdc9afc79b5c4582adc74db70f9174b7953b4bde9a",
+        "lines": 1472
+      },
+      {
+        "path": "src-tauri/src/acp_client/session_fork_wire_tests.rs",
+        "sha256": "3d2f00a14854e4b1d552e7532e7a3c71a00a6e26eae7178fd478f9bb5922d15e",
+        "lines": 1156
+      },
+      {
+        "path": "src-tauri/src/acp_client/transient_mcp.rs",
+        "sha256": "e02b66442fd48eb65dffab7c7656d9ec657e03417290c959d6e9340281d67764",
+        "lines": 491
+      },
+      {
+        "path": "src-tauri/src/acp_client/transient_mcp_route_tests.rs",
+        "sha256": "c34728c716a7fb0570b3fb3b284e4f8f86ddd3c75fda05cc9ddcd1bb7da7a301",
+        "lines": 786
+      },
+      {
+        "path": "src-tauri/src/acp_client/transient_mcp_opencode_tests.rs",
+        "sha256": "f8a69a4a23e180724f7de1a1c1d48a70f7a3b59190ca1ed3010f2cbb925d87da",
+        "lines": 270
+      }
+    ],
+    "changes": [
+      "Independent OpenCode launch kind accepts the reviewed discovered source and exact acp command shape, with actual launch identity and environment facts. No executable content hash or version gate.",
+      "Effective automatic heap snapshots or unreviewed nonempty OTEL diagnostic export prevent browser capability delivery; original environment and settings remain unchanged. Only booleans and launch kind are retained.",
+      "Changed source/arguments or same-name different entrypoint cannot borrow an old offer. Existing per-conversation process ownership, helper readiness, page grants and late-output barriers remain.",
+      "Controlled same-directory and fork tests preserve source preview isolation, close-before-independent-open and fresh destination ownership. They are not official OpenCode fork acceptance."
+    ],
+    "loggingLimit": "Normal level/print/profile source paths were reviewed; no universal claim about arbitrary plugins, future diagnostics, all logging modes or Windows runtime."
+  },
+  "verification": {
+    "targetedPassed": 49,
+    "targetedGroups": [
+      {
+        "passed": 18,
+        "receipt": {
+          "path": "output/2026-11-12-cycle6/backend/opencode/capability-green-r2.json",
+          "sha256": "28672789f00ef1b7581fde5ca9b4a5807c5fb5665f9a522c15732844418b6991"
+        },
+        "log": {
+          "path": "output/2026-11-12-cycle6/backend/opencode/capability-green-r2.log",
+          "sha256": "1c62c84d339640a1cdb47a3e79b1b62f4563aef9c556d42bbe40d52296a416d5"
+        }
+      },
+      {
+        "passed": 9,
+        "receipt": {
+          "path": "output/2026-11-12-cycle6/backend/opencode/spawn-green-r2.json",
+          "sha256": "f3857181011f09b20c368eabb3b15a87f1ee3d5fd7e72e2d071d515979050026"
+        },
+        "log": {
+          "path": "output/2026-11-12-cycle6/backend/opencode/spawn-green-r2.log",
+          "sha256": "fe95974405b8280ac1158566ad3c51c87ce9eb0e3b9c5a576209157f12e8b6b8"
+        }
+      },
+      {
+        "passed": 19,
+        "receipt": {
+          "path": "output/2026-11-12-cycle6/backend/opencode/route-diagnosed.json",
+          "sha256": "f8133b0f2df89adbd745d619b8bc5b81e3ff85088ce339fb9d92f92e1554a8dc"
+        },
+        "log": {
+          "path": "output/2026-11-12-cycle6/backend/opencode/route-diagnosed.log",
+          "sha256": "fe54b241773096d93cb4de926a9be00f4dcca7cb6f2f6584eb1f575be295bba2"
+        }
+      },
+      {
+        "passed": 2,
+        "receipt": {
+          "path": "output/2026-11-12-cycle6/backend/opencode/fork-final-r3.json",
+          "sha256": "bd2a40622ea82bcb4ed008c3e73b85fdbe9949bf155ff31b9bdc4f9905543562"
+        },
+        "log": {
+          "path": "output/2026-11-12-cycle6/backend/opencode/fork-final-r3.log",
+          "sha256": "7575a787741b1d8f08af38224ca7ed5cc65842d3aee913a943cc13e76a7d6328"
+        }
+      },
+      {
+        "passed": 1,
+        "receipt": {
+          "path": "output/2026-11-12-cycle6/backend/opencode/preview-final-r3.json",
+          "sha256": "3c234792e5f8dea851e7fb4403fbc98b1b299e6f5bc86df4510dbffc72535186"
+        },
+        "log": {
+          "path": "output/2026-11-12-cycle6/backend/opencode/preview-final-r3.log",
+          "sha256": "063a01cc1da487523027b44c6ef0ba1acece7baa9d0cb3e6a8f9a2fe74a82dfb"
+        }
+      }
+    ],
+    "targetedReuseBoundary": "Capability and spawn tests ran before the subsequent session LaunchIdentity/test-only diagnostic changes; their owning files stayed unchanged. Route/fork/preview were rerun on the final production candidate.",
+    "engineering": {
+      "allSevenPassed": true,
+      "fullRustPassed": 2671,
+      "fullRustIgnored": 9,
+      "fullRustFailed": 0,
+      "frontendInputsUnchanged": 1623,
+      "frontendFourChecksReused": ["format", "typecheck", "test", "build"],
+      "rustChecksRerun": ["cargo-fmt", "clippy", "cargo-test"],
+      "testParallelism": 4,
+      "productInputsUnchanged": true,
+      "receipt": {
+        "path": "output/2026-11-12-cycle6/engineering-opencode/result.json",
+        "sha256": "5e96810877cb45626cd27de7ea800c41ef303facf5cb5161957d1c773020abe0"
+      }
+    },
+    "independentReview": {
+      "path": "output/2026-11-12-cycle6/review/opencode-independent.json",
+      "sha256": "69c86a8ebd1713cfd1db94fd259c3d498493ba65fbc47c71ff0aaae63d69f8f0"
+    },
+    "rootIntegration": {
+      "path": "output/2026-11-12-cycle6/review/opencode-integration.json",
+      "sha256": "7e2d8827aa849fe888a4bbe94f25d224abdcfd76d4910b1a5b76f2b0d4410d4a"
+    },
+    "priorFailures": "Expected admission/entrypoint-drift red cases and intermediate compile errors remain in author summary. An older abandoned-open 10-second wait and a full-suite default-concurrency 5-second fixture wait remain recorded; latest related group/full suite passed. No timeout/assertion weakening or proven resource-starvation diagnosis is claimed."
+  },
+  "officialProbe": {
+    "scope": "Exact registered OpenCode command/acp; real HOME and original environment/config; fixed fake marker in an owned empty-tool stdio helper. No Farfold browser helper, page request, model request, tools/call or setter.",
+    "first": {
+      "receipt": {
+        "path": "output/2026-11-12-cycle6/opencode-stdio/receipt.json",
+        "sha256": "ed6136dbb73b82e7a840bea0593212d5b656dd43fe49f7c08532d57cc10a0214"
+      },
+      "passed": false,
+      "observed": "initialize + one session/new and actual helper initialize/tools/list succeeded. Raw requested /var path did not equal stored /private/var spelling; harness stopped before close/load. EOF exited 0 and helper ended; original failure remains."
+    },
+    "pathDiagnosis": {
+      "receipt": {
+        "path": "output/2026-11-12-cycle6/opencode-stdio/attempt-2-load/path-diagnosis.json",
+        "sha256": "79ca3559004019f79d015cb19762ca6298c8f5b61ec0edd33ebfb4f487098011"
+      },
+      "observed": "Stable disposable query-only copy, exact owned SID only: both paths resolve identically and have the same directory device/inode. Production source bytes unchanged; no official lifecycle conclusion inferred from this correction."
+    },
+    "continuation": {
+      "receipt": {
+        "path": "output/2026-11-12-cycle6/opencode-stdio/attempt-2-load/receipt.json",
+        "sha256": "b3a9809b82b3160bb685fbeb4be4262a81afcca345f040a14ff01970a228b07e"
+      },
+      "passed": true,
+      "newSessions": 0,
+      "observed": "Same existing owned SID loaded with helper; real initialize/tools/list observed. session/close ACK arrived but exact helper remained alive during the observed second. stdin EOF then ended Agent/helper normally. A new process cold-loaded the same SID with empty mcpServers and did not restart the helper."
+    },
+    "totalOfficialProcessStarts": 3,
+    "totalNewNativeSessions": 1,
+    "modelRequests": 0,
+    "toolCalls": 0,
+    "setters": 0,
+    "allProcessesExitZero": true,
+    "signalsSent": 0,
+    "remainingOwnedProcesses": 0,
+    "preservation": "Original table rows unchanged except permitted existing global project time_updated. The owned session remained empty and its model digest unchanged. Protected global configuration/auth and Farfold data matched. Fixed fake marker absent from own native metadata and observed new official log/stderr bytes; new log bytes in continuation: 3628.",
+    "limits": [
+      "Close ACK is not helper removal. The one-second observation is bounded, not a claim about indefinite lifetime.",
+      "Fake-marker absence applies only to observed diagnostic configuration; static diagnostic gates are separately required.",
+      "No claim of model adoption, image understanding, real page access, saved Farfold history restoration or full Agent acceptance."
+    ]
+  },
+  "existingFiveRemaining": [
+    {
+      "agent": "pi-acp",
+      "category": "official bridge absent",
+      "remaining": "Reviewed selected adapter stores ACP mcpServers but does not connect them to Pi. Do not patch upstream or write private Agent config; actual web use remains unverified."
+    },
+    {
+      "agent": "codex-acp",
+      "category": "specific authorization restriction plus actual selection unknown",
+      "remaining": "Existing browser implementation/controlled evidence remain; NEW-24 affected new sends stay paused. Do not infer current account/model from historical success."
+    },
+    {
+      "agent": "fast-agent",
+      "category": "product integration blocked by reviewed official logging/topology behavior",
+      "remaining": "Ordinary stdio env can enter debug file/HTTP config logging; existing capability name is not redacted, and renaming alone is bypassed by LOG_SECRETS/partial display. Default warning suppresses this known event, but no current leak is claimed. Multiple MCP-capable cards can create multiple helpers; safe diagnostic delivery and precise lifecycle/controller integration remain development work, separate from unknown current model/account."
+    },
+    {
+      "agent": "mistral-vibe",
+      "category": "product integration blocked by reviewed legacy persistence and reconnect behavior",
+      "remaining": "With legacy backend and normal saved interaction logging, inline env is serialized into session metadata. Discovery closes its helper, then actual call creates another helper, incompatible with the current once-authenticated channel. Current effective backend was not proven; do not silently select unified or bypass HTTP=false. Existing selected service/mistral-medium-3.5/high remains; prior one-request authorization is used."
+    },
+    {
+      "agent": "opencode",
+      "category": "new implementation checked; formal no-model entry and model/page behavior distinct",
+      "remaining": "Current provider/model selection is not established. No actual model-driven page read/screenshot/cancel was attempted for OpenCode. Formal normal-entry helper readiness, no automatic page grant, exit and permission recovery still need the separate installed-app observation."
+    }
+  ],
+  "cycleBoundary": {
+    "originalCycle6": "Verify web authorization, revocation, tab switching and same-request screenshot return; include the existing five for additional evidence.",
+    "commonEvidence": "Formal Goose same-request page PNG and request cancellation/revocation are separately documented in the prior cycle6 formal evidence; Goose is not a replacement member of the five.",
+    "conditionalExitAssessment": "Formal no-model entry and preservation now observed; cycle6 executable scope may close with the original five outcomes and remaining integration gaps explicitly retained.",
+    "stillRequiredBeforeThatAssessment": "Completed formal entry and separate native/metadata protection; no broader acceptance inferred.",
+    "remainingDevelopmentNotExternalAccountBlocks": "Fast-agent and Mistral safe delivery/lifecycle work remains a product integration gap, not an account problem or a passed unsupported row. Revisit when a safe official route or transport design is established; do not repeat unchanged probes or silently weaken secret/page/controller boundaries.",
+    "unchangedAcceptance": "All 151 original conditions and 29 Agents x 8 final criteria remain. Full P23/P25/P27/P28/P30/H07, complete five-Agent acceptance and stage2 acceptance are not claimed; final all-list acceptance stays at cycles10-12."
+  },
+  "evidence": [
+    {
+      "path": "output/2026-11-12-cycle6/backend/opencode/source-freeze.json",
+      "sha256": "5b7f88c841ca3608c00c4acddf061f4beb59c3d27fd501e778053a67ee01a041"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/backend/opencode/summary.json",
+      "sha256": "2a6e1ead4be5e742ad1fd95ee0d6ee6aee14c5c9ac8b24f2d89a2174468831b3"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/opencode-independent.json",
+      "sha256": "69c86a8ebd1713cfd1db94fd259c3d498493ba65fbc47c71ff0aaae63d69f8f0"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/opencode-integration.json",
+      "sha256": "7e2d8827aa849fe888a4bbe94f25d224abdcfd76d4910b1a5b76f2b0d4410d4a"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-opencode/result.json",
+      "sha256": "5e96810877cb45626cd27de7ea800c41ef303facf5cb5161957d1c773020abe0"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-opencode/reused-frontend.json",
+      "sha256": "5fd388cd3f3c2779b44b16e3f8dd01b391583818590a97630d9a4510e75da273"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-opencode/inputs-before.json",
+      "sha256": "f7b3448253f63d139c26e62ae20957550dd64d534035821118de37ddb61dae3a"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-opencode/inputs-after.json",
+      "sha256": "f7b3448253f63d139c26e62ae20957550dd64d534035821118de37ddb61dae3a"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-opencode/cargo-fmt.json",
+      "sha256": "8cfd84841c93dbff443bfb37f8b2eb4bf9f1bac4398c02bccae55b5aa1a1b7cf"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-opencode/clippy.json",
+      "sha256": "0049abf9949faadca94f556a7f8b664c9afc58d78ad4413553203c15192daeda"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-opencode/cargo-test.json",
+      "sha256": "a52d67d7394b8f4658a9447f63b49705453d83bf2ef8be36d8bf58b73f147bed"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-opencode/cargo-test.log",
+      "sha256": "304e391fba4613d8a7c8833b23c5916b76ccb2a257821d4f335245f96db8aa2f"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/receipt.json",
+      "sha256": "ed6136dbb73b82e7a840bea0593212d5b656dd43fe49f7c08532d57cc10a0214"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/probe.py",
+      "sha256": "3456d2a6904ab199cc071e4d46f6877421059ace558edbfa538991b4b7f20717"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/review.json",
+      "sha256": "451667d5e9bccabcdb7faef54dd24c7f032f2979d386d599682fa3272565069a"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/after-new.json",
+      "sha256": "28cefe2ea9b2373f33ecde5a185c6db1b25852a3538ffed3a09dd91d95a3cf64"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/final-store.json",
+      "sha256": "1e4e9f1c2ad49db841128f4a0204a27c49141640f2c2fb715221d1957ebd903b"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/helper-events.jsonl",
+      "sha256": "8f04f2308313b22b2ec3a562c77571163fd0eff0bfe303946d35aab5c802a50a"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/logging-review.json",
+      "sha256": "e8efe581aeef9b8e220143a58d4919d2ee3040a19d3e559b72892f8e77fe9bd7"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/attempt-2-load/path-diagnosis.json",
+      "sha256": "79ca3559004019f79d015cb19762ca6298c8f5b61ec0edd33ebfb4f487098011"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/attempt-2-load/probe.py",
+      "sha256": "2fe7be0b26180c04b2118899f8c9962ff6951428d6591034235dae77e5d70c2b"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/attempt-2-load/scope.json",
+      "sha256": "85037bdf3f90fab5b209c0128fb99aa0e425a839a7e4226f3c2e8734dba709d0"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/attempt-2-load/review.json",
+      "sha256": "bc7c9f3dbfc09a6391a734c4af33df40d541e2071af481af630e779dccb97195"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/attempt-2-load/receipt.json",
+      "sha256": "b3a9809b82b3160bb685fbeb4be4262a81afcca345f040a14ff01970a228b07e"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/attempt-2-load/after-load-with-helper.json",
+      "sha256": "bf5e656bf010afd764ed0abb1ab6e6c4147f6b80ce3e5d5b71faf82f34e7e4e9"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/attempt-2-load/after-first-close.json",
+      "sha256": "0cec2f0053d78cdbe83add68f6db70cb09ddca1e6aa6c06e554c9d9dbe729b80"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/attempt-2-load/final-store.json",
+      "sha256": "2007d573fd1afa2ad402a10be373a0ec3428fa0a5e879c785a8c17bf0c4bb84e"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/attempt-2-load/helper-events.jsonl",
+      "sha256": "e64fbffd10a9cffb7d83823340aa3dabcbb796a07fae83f53153e9e3c8340229"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/agent-wave/review.json",
+      "sha256": "6e312ef1254bf003b52a7261e7e0166d41b8aa077979b70cf0f47d415ae3d63f"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/agent-wave/fast-agent-browser-review.json",
+      "sha256": "2312bb2b7c98055d6dda914ae2ed95fbf8af4c0604bd5ab9fa420a531c76b155"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/fast-agent-token-rename-review.json",
+      "sha256": "ca35d0fa44f11c08db7fccaf68389b079f4180a9930e3d8604378e00b6766dca"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/agent-wave/mistral-browser-review.json",
+      "sha256": "bf1e6b55883eaa31fecb3b4527671b87c96216db4e728be142d1b248bab69112"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/mistral-browser-independent.json",
+      "sha256": "8827248b4dea6e29ba2b8e700244de1dfdc1858444446dfd8bb8f7990d093105"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/agent-wave/opencode-browser-review.json",
+      "sha256": "dd39aa81081c18f8ae001d0e88f99cb88aa9425ee55e9e9ba6c472ac12737b08"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/cycle-exit.json",
+      "sha256": "2e16382c75a4de56f84ad2842673dc19567d7960abd69be687bfebf7b9bcd2fa"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal/native-result.json",
+      "sha256": "dc6f9fd0f2a5e18342f15f33d5b1ed7472b402a6e085d02b5ea1dcddafd7acaf"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/formal-entry-recommendation.json",
+      "sha256": "d1aa8636509dd3039893fb49e28a6e6d0a559f91e580c67109d78d240ff43bfe"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/backend/opencode/capability-green-r2.json",
+      "sha256": "28672789f00ef1b7581fde5ca9b4a5807c5fb5665f9a522c15732844418b6991"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/backend/opencode/capability-green-r2.log",
+      "sha256": "1c62c84d339640a1cdb47a3e79b1b62f4563aef9c556d42bbe40d52296a416d5"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/backend/opencode/spawn-green-r2.json",
+      "sha256": "f3857181011f09b20c368eabb3b15a87f1ee3d5fd7e72e2d071d515979050026"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/backend/opencode/spawn-green-r2.log",
+      "sha256": "fe95974405b8280ac1158566ad3c51c87ce9eb0e3b9c5a576209157f12e8b6b8"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/backend/opencode/route-diagnosed.json",
+      "sha256": "f8133b0f2df89adbd745d619b8bc5b81e3ff85088ce339fb9d92f92e1554a8dc"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/backend/opencode/route-diagnosed.log",
+      "sha256": "fe54b241773096d93cb4de926a9be00f4dcca7cb6f2f6584eb1f575be295bba2"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/backend/opencode/fork-final-r3.json",
+      "sha256": "bd2a40622ea82bcb4ed008c3e73b85fdbe9949bf155ff31b9bdc4f9905543562"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/backend/opencode/fork-final-r3.log",
+      "sha256": "7575a787741b1d8f08af38224ca7ed5cc65842d3aee913a943cc13e76a7d6328"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/backend/opencode/preview-final-r3.json",
+      "sha256": "3c234792e5f8dea851e7fb4403fbc98b1b299e6f5bc86df4510dbffc72535186"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/backend/opencode/preview-final-r3.log",
+      "sha256": "063a01cc1da487523027b44c6ef0ba1acece7baa9d0cb3e6a8f9a2fe74a82dfb"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-uds/format.json",
+      "sha256": "d89ac85d93c81ae75470733cf79838ee4c809851e56a1aab02607ae313b19d36"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-uds/typecheck.json",
+      "sha256": "397324ee2912de24b4e92a8c08afc3d2b786a9fd78d7b7d319487886ebc3bf6b"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-uds/test.json",
+      "sha256": "bff26a56cc9d6056d2fb3f58acda27109c80ef00f2a1068e00fb6ae008c4ee8f"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-uds/build.json",
+      "sha256": "0161a56537e8b135208887c3ecb902d7f2c608566daae0c7d90c4734965f66dc"
+    }
+  ],
+  "summaryProduction": {
+    "onlyThisPublicSummaryWritten": true,
+    "noNewTestsOrOfficialRunsBySummaryAuthor": true,
+    "formalInstallResultIncluded": true,
+    "cycleMarkedComplete": true,
+    "rootAddedFormalEvidenceAtUtc": "2026-11-12T17:14:37.505021+00:00",
+    "completionBoundary": "Executable cycle6 only; full original conditions and named development gaps remain."
+  },
+  "formal": {
+    "sourceCommit": "a5a5f0e93a2203d8caed8fec9eb93490c80f9070",
+    "identity": {
+      "bundleId": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "arm64": true,
+      "signature": "adhoc",
+      "cdhash": "3532e55086b132239e1e2401c9cb30f5f82c8ebe"
+    },
+    "installDataEntriesPreserved": 206420,
+    "modelPrompts": 0,
+    "pageToolCalls": 0,
+    "explicitModelServiceModeSetters": 0,
+    "nativeHistory": "Two empty native records retained; all original native rows except approved global project time_updated unchanged, no new message/part rows.",
+    "ui": "Normal selector created empty OpenCode conversation in existing owned cycle5 cwd; W3C public page initially ungranted, manual grant changed state, normal quit and cold explicit new draft did not inherit old page/permission.",
+    "scopeAdjustment": "Actual cwd remained previous own test folder because Agent selection starts immediately. No file/model action; not the planned probe cwd.",
+    "coldStartLimit": "No new Farfold saved native index; new-draft cold observation is not same-native history restoration. Exact-SID official load is separately proved.",
+    "metadataProtection": "Original9sessions/config,379dismissed rows,2composers,15file opinions,queues/activity unchanged. Only OpenCode updated_at and draft Agent choice changed; choice config exactly uses preexisting saved OpenCode agentSetup, service/cwd unchanged.",
+    "artifacts": [
+      {
+        "path": "output/2026-11-12-cycle6/formal-opencode/install.json",
+        "sha256": "cb611fa95093e976c30ac52bbb03df0bf19cf8a90d5edaa2f2554e9e5f68a34f"
+      },
+      {
+        "path": "output/2026-11-12-cycle6/formal-opencode/duplicate-cleanup.json",
+        "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+      },
+      {
+        "path": "output/2026-11-12-cycle6/formal-opencode/source-freeze.json",
+        "sha256": "276cd9499bdd3f25470860adc7d75e6150a2c28534449d4709e54041dc4c4c17"
+      },
+      {
+        "path": "output/2026-11-12-cycle6/formal-opencode/verification-scope.json",
+        "sha256": "1274034b4dd03eb4f4e0cbe810ff7a25e3539710224bb830b72a6f9adc7518bc"
+      },
+      {
+        "path": "output/2026-11-12-cycle6/formal-opencode/ui-observations.json",
+        "sha256": "b5a721bf961a9c05fc25b3a2a85264fcce99eb51ea946b05d970635d66d40282"
+      },
+      {
+        "path": "output/2026-11-12-cycle6/formal-opencode/native-protection.json",
+        "sha256": "afcded1a54f4d59abef82e9464fb0531f8fc6a6a0d54cdd018fdb2968fa83bef"
+      },
+      {
+        "path": "output/2026-11-12-cycle6/formal-opencode/meta-protection.json",
+        "sha256": "6af7ad225075c138e8843db3877d49439dac55d85237a3c60e58763177cca7b7"
+      },
+      {
+        "path": "output/2026-11-12-cycle6/formal-opencode/inspect-after.py",
+        "sha256": "dda8f60af321dc992bcaf3dba024ac93fcd77f62f94550312c86881ef39233d8"
+      }
+    ]
+  }
+}

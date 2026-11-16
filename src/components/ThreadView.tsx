@@ -1,7 +1,9 @@
 import { DecisionLine } from "./PermissionDecisionLine";
+import { permissionDecision } from "../runtime/permission_options";
 import { audioCapability } from "../runtime/audio_input";
 import { SearchDisclosure, TranscriptSearchContext } from "./transcript-search";
 import { ConfigurationChangeReview } from "./ConfigurationChangeReview";
+import { SessionToolRecovery } from "./SessionToolRecovery";
 import { AsyncTasks } from "./AsyncTasks";
 import { showToolLocation } from "./showToolLocation";
 import { ASYNC_TASKS } from "../runtime/async_task_strings";
@@ -29,7 +31,6 @@ import {
   useState,
   type ReactNode,
   type RefObject,
-  type MouseEventHandler,
 } from "react";
 import {
   ArrowDownIcon,
@@ -52,15 +53,23 @@ import {
   type PermissionOption,
   type ThreadItem,
   type ThreadState,
+  type ToolCallView,
 } from "../runtime/sessions";
-import { configCheckMessage } from "../runtime/config_check";
+import { unfinishedStoppedToolCallIds } from "../runtime/stopped_tool_results";
+import {
+  configCheckMessage,
+  configurationConfirmationBusy,
+  confirmingMissingModel,
+} from "../runtime/config_check";
 import { streamTailItem } from "../runtime/session_streams";
 import { ReportedDetails } from "./ReportedDetails";
 import { CompressionDescription } from "./CompressionDescription";
 import { ConfigCheckReview } from "./ConfigCheckReview";
+import { useOriginalSessionConfigRecovery } from "./OriginalSessionConfigRecovery";
 import { configRecheckBusy } from "../runtime/session_config_recheck";
 import { canExplainFailedToolQueue } from "../runtime/queue";
 import { FailedToolQueueHint } from "./FailedToolQueueHint";
+import { StoppedWorkClose } from "./StoppedWorkClose";
 import { composerDrafts, useComposerDraft } from "../runtime/drafts";
 import { userMessageDraftAttachments } from "../runtime/message_actions";
 import { UserMessageActions } from "./UserMessageActions";
@@ -69,8 +78,9 @@ import {
   reportedArtifactCounts,
 } from "../runtime/reported_artifacts";
 import { useContentOwner } from "./useContentOwner";
-import { settledRoundResults, type RoundResult } from "../runtime/round_result";
-import { maintenanceLabel } from "../runtime/compaction_strings";
+import { settledRoundResults } from "../runtime/round_result";
+import { SettledLine } from "./SettledLine";
+import { historyForkableItems } from "../runtime/history_fork_point";
 import { COMPACTION } from "../runtime/compaction_strings";
 import {
   hasActiveCompaction,
@@ -95,10 +105,7 @@ import { WorkspacePopover } from "./WorkspacePopover";
 import { ModelPicker } from "./ModelPicker";
 import { SessionOptionsList } from "./SessionOptionsMenu";
 import { ReasoningControl } from "./ReasoningControl";
-import {
-  configChangeBusy,
-  configOptionChangeBlocked,
-} from "../runtime/protected_config";
+import { configOptionChangeBlocked } from "../runtime/protected_config";
 import { useAuthenticationActivity } from "../runtime/authentication";
 import { PermissionControl } from "./PermissionControl";
 import { listCredentials } from "../runtime/credentials";
@@ -130,88 +137,6 @@ function itemBlocks(items: ThreadItem[]): ThreadItem[][] {
   return out;
 }
 
-function SettledLine({
-  item,
-  artifactCount,
-  result,
-  onOpenArtifacts,
-}: {
-  item: Extract<ThreadItem, { kind: "settled" }>;
-  artifactCount: number;
-  result?: RoundResult;
-  onOpenArtifacts: MouseEventHandler<HTMLButtonElement>;
-}) {
-  const maintenance = maintenanceLabel(result);
-  const label =
-    item.status === "done"
-      ? (maintenance ??
-        (result === "none"
-          ? STRINGS.thread.noResult
-          : result === "pending"
-            ? STRINGS.thread.resultPending
-            : result === "tool"
-              ? STRINGS.thread.ended
-              : STRINGS.thread.done))
-      : item.status === "stopped"
-        ? STRINGS.thread.stopped
-        : item.status === "unknown"
-          ? STRINGS.thread.unknown
-          : STRINGS.thread.failed;
-  const cls =
-    item.status === "done"
-      ? result === "none"
-        ? "warn"
-        : result === "tool" || result === "pending" || maintenance
-          ? undefined
-          : "ok"
-      : item.status === "unknown"
-        ? "warn"
-        : "no";
-  const reasonLabel =
-    item.stopReason && item.stopReason !== "end_turn"
-      ? STRINGS.thread.stopReasonLabel(item.stopReason)
-      : null;
-  return (
-    <>
-      <div className="settled">
-        <span className={cls}>
-          {item.status === "done"
-            ? result === "none"
-              ? "! "
-              : result === "pending"
-                ? "… "
-                : result === "tool" || maintenance
-                  ? "· "
-                  : "✓ "
-            : item.status === "stopped"
-              ? "■ "
-              : "✗ "}
-          {label}
-        </span>
-        {reasonLabel && reasonLabel !== label && (
-          <span className="tick">{reasonLabel}</span>
-        )}
-        {item.error && <span className="no">{item.error}</span>}
-        <span>{timeLabel(item.time)}</span>
-      </div>
-      {item.status === "done" && result === "none" && (
-        <p className="completion-note" role="status">
-          {STRINGS.thread.noResultNote}
-        </p>
-      )}
-      {artifactCount > 0 && (
-        <button
-          type="button"
-          className="round-sum round-artifacts"
-          onClick={onOpenArtifacts}
-        >
-          {STRINGS.thread.roundArtifacts(artifactCount)}
-        </button>
-      )}
-    </>
-  );
-}
-
 /* ── 主组件 ── */
 
 export function ThreadView({
@@ -223,6 +148,7 @@ export function ThreadView({
   onRecover,
   onNew,
   onNewFromMessage,
+  onForkFromMessage,
   header,
   artifactReturnFocusRef,
   contentMode,
@@ -254,6 +180,7 @@ export function ThreadView({
   onOpened: (key: string) => void;
   onRecover?: (key: string) => Promise<void>;
   onNew?: () => void;
+  onForkFromMessage?: (item: ThreadItem) => void;
   /** W3-6：从一条用户消息开新对话（宿主负责同上下文预填与草稿冲突）。 */
   onNewFromMessage?: (item: {
     text: string;
@@ -315,6 +242,10 @@ export function ThreadView({
   const artifactReturnFocus =
     artifactReturnFocusRef ?? localArtifactReturnFocus;
   const ownsContent = useContentOwner(thread, active);
+  const originalSettings = useOriginalSessionConfigRecovery(
+    thread,
+    active && !readRequired,
+  );
   const feedbackDestination = useFileFeedbackDestination(
     thread,
     active,
@@ -545,19 +476,14 @@ export function ThreadView({
     option: PermissionOption,
   ) => {
     if (!activeRef.current || thread.stopping || thread.stopUnconfirmed) return;
-    const label =
-      option.kind === "allow_once"
-        ? STRINGS.thread.approved(option.name)
-        : option.kind === "allow_always"
-          ? STRINGS.thread.approvedRemember(option.name)
-          : STRINGS.thread.rejected;
+    const decision = permissionDecision(option);
     threads.decidePermission(
       thread.key,
       requestId,
       option.optionId,
-      label,
-      option.kind.startsWith("allow"),
-      option.kind === "allow_always",
+      decision.label,
+      decision.allow,
+      decision.undoable,
     );
   };
 
@@ -604,6 +530,10 @@ export function ThreadView({
 
   const permissions = thread.pendingPermissions;
   const blocks = itemBlocks(thread.items);
+  const forkableItems = onForkFromMessage && historyForkableItems(thread);
+  const stoppedToolCalls = unfinishedStoppedToolCallIds(thread);
+  const stepActivity = (call: ToolCallView) =>
+    toolActivityState(thread, call, stoppedToolCalls);
   const artifactCounts = reportedArtifactCounts(thread);
   const empty =
     thread.items.length === 0 &&
@@ -629,9 +559,28 @@ export function ThreadView({
     (thread.configCheck
       ? thread.configCheck.status !== "ready"
       : !draftChoices);
+  const serviceModel = thread.service?.model;
+  const serviceModelValue = thread.serviceModelValue;
+  // The service's display name belongs to this exact wire choice. Keep the
+  // original configuration and all values used for selection and saving.
+  const displayedModelOption = useMemo(() => {
+    if (!modelOption || !serviceModel || !serviceModelValue) return modelOption;
+    return {
+      ...modelOption,
+      options: modelOption.options.map((choice) =>
+        choice.value === serviceModelValue
+          ? { ...choice, name: serviceModel }
+          : choice,
+      ),
+    };
+  }, [modelOption, serviceModel, serviceModelValue]);
   const modelLabel =
     modelOption && !(choicesUnchecked && modelOption.currentValue == null)
-      ? configValueLabel(modelOption)
+      ? serviceModel &&
+        serviceModelValue &&
+        modelOption.currentValue === serviceModelValue
+        ? serviceModel
+        : configValueLabel(modelOption)
       : choicesUnchecked
         ? STRINGS.repair.unknownModel
         : STRINGS.switcher.defaultModel;
@@ -658,6 +607,12 @@ export function ThreadView({
         {header}
         <div className="transcript" ref={scrollRef} onScroll={onScroll}>
           <div className="col">
+            {thread.sessionToolRecoveryRequired && (
+              <SessionToolRecovery thread={thread} active={active} />
+            )}
+            {active && (
+              <StoppedWorkClose thread={thread} ownsView={ownsContent} failed />
+            )}
             {thread.historicalOutcomeUnknown && (
               <div className="banner" role="status">
                 <span>{STRINGS.thread.historicalOutcomeUnknown}</span>
@@ -731,20 +686,23 @@ export function ThreadView({
                     options={thread.configOptions}
                   />
                 )}
+                {originalSettings.action}
                 {thread.modelDrift &&
                   (thread.configCheck?.status === "confirmation_required" ||
                     thread.configCheck?.status === "record_failed") && (
                     <button
                       type="button"
                       className="btn btn-ghost"
-                      disabled={configChangeBusy(thread)}
+                      disabled={configurationConfirmationBusy(thread)}
                       onClick={() => void threads.confirmConfig(thread.key)}
                     >
                       {thread.configuring
                         ? STRINGS.repair.confirmingConfig
                         : thread.configCheck.status === "record_failed"
                           ? STRINGS.repair.retryConfigRecord
-                          : STRINGS.repair.confirmConfig}
+                          : confirmingMissingModel(thread.configCheck)
+                            ? STRINGS.repair.confirmCurrentModel
+                            : STRINGS.repair.confirmConfig}
                     </button>
                   )}
                 {(thread.modelDrift || thread.configError) &&
@@ -817,6 +775,7 @@ export function ThreadView({
                 )}
               </div>
             )}
+            {originalSettings.dialog}
             {!thread.running && hasActiveCompaction(thread) && (
               <div className="banner" role="status">
                 {compactionUncertain(thread)
@@ -829,6 +788,9 @@ export function ThreadView({
                 {lastCompletion?.status === "stopped"
                   ? STRINGS.thread.toolsAfterStop
                   : STRINGS.thread.toolsAfterReply}
+                {active && lastCompletion?.status === "stopped" && (
+                  <StoppedWorkClose thread={thread} ownsView={ownsContent} />
+                )}
                 {active &&
                   lastCompletion?.status === "failed" &&
                   !draftReadRequired &&
@@ -862,7 +824,7 @@ export function ThreadView({
                       {block.some(
                         (item) =>
                           item.kind === "tool" &&
-                          toolActivityState(thread, item.call) === "active" &&
+                          stepActivity(item.call) === "active" &&
                           item.call.status === "in_progress",
                       ) && (
                         <span className="workspace-step-running">
@@ -872,7 +834,7 @@ export function ThreadView({
                       {block.some(
                         (item) =>
                           item.kind === "tool" &&
-                          toolActivityState(thread, item.call) === "active" &&
+                          stepActivity(item.call) === "active" &&
                           item.call.status === "pending",
                       ) && (
                         <span className="workspace-step-running">
@@ -882,11 +844,13 @@ export function ThreadView({
                       {block.some(
                         (item) =>
                           item.kind === "tool" &&
-                          toolActivityState(thread, item.call) === "unknown",
+                          stepActivity(item.call) === "unknown",
                       ) && <span>{STRINGS.thread.toolResultUnknown}</span>}
                       {block.some(
                         (item) =>
-                          item.kind === "tool" && item.call.status === "failed",
+                          item.kind === "tool" &&
+                          stepActivity(item.call) === "finished" &&
+                          item.call.status === "failed",
                       ) && (
                         <span className="workspace-step-failed">
                           {W.stepsFailed}
@@ -907,7 +871,7 @@ export function ThreadView({
                               call={item.call}
                               transcriptItemId={item.id}
                               onOpenFile={openFile}
-                              activity={toolActivityState(thread, item.call)}
+                              activity={stepActivity(item.call)}
                               onOpenArtifacts={
                                 canInspectToolContent(
                                   item.call,
@@ -942,6 +906,11 @@ export function ThreadView({
                         {(first.text || first.attachments.length > 0) && (
                           <UserMessageActions
                             text={first.text}
+                            onForkFromMessage={
+                              onForkFromMessage && forkableItems?.has(first)
+                                ? () => onForkFromMessage(first)
+                                : undefined
+                            }
                             disabled={!active}
                             onEditResend={() => prepareResend(first)}
                             onSendAgain={() => prepareResend(first)}
@@ -977,17 +946,25 @@ export function ThreadView({
                         {agent?.name ?? thread.agentId} ·{" "}
                         {timeLabel(first.time)}
                         {first.text && <MessageCopyButton text={first.text} />}
-                        {onNewFromMessage &&
+                        {(onNewFromMessage || onForkFromMessage) &&
                           (first.text ||
                             (first.attachments?.length ?? 0) > 0) && (
                             <UserMessageActions
                               text={first.text}
+                              onForkFromMessage={
+                                onForkFromMessage && forkableItems?.has(first)
+                                  ? () => onForkFromMessage(first)
+                                  : undefined
+                              }
                               disabled={!active}
-                              onNewFromMessage={() =>
-                                newFromMessage({
-                                  text: first.text,
-                                  attachments: first.attachments ?? [],
-                                })
+                              onNewFromMessage={
+                                onNewFromMessage
+                                  ? () =>
+                                      newFromMessage({
+                                        text: first.text,
+                                        attachments: first.attachments ?? [],
+                                      })
+                                  : undefined
                               }
                             />
                           )}
@@ -1112,7 +1089,11 @@ export function ThreadView({
                   {permission.decision ? (
                     <DecisionLine
                       decision={permission.decision}
-                      submitting={permission.status === "submitting"}
+                      submitting={
+                        permission.status === "submitting" ||
+                        (permission.status === "pending" &&
+                          !permission.decision.undoable)
+                      }
                       onUndo={() =>
                         threads.undoPermissionDecision(
                           thread.key,
@@ -1134,6 +1115,7 @@ export function ThreadView({
                       kind={permission.kind}
                       locations={permission.locations}
                       rawInput={permission.toolCallSnapshot?.rawInput}
+                      terminalCommand={permission.terminalCommand}
                       options={
                         permission.status === "pending"
                           ? permission.options
@@ -1295,14 +1277,22 @@ export function ThreadView({
               prepareAction={draftReadRequired ? onGoSettings : undefined}
               onSend={
                 thread.identity === "draft"
-                  ? async (blocks) => {
+                  ? async (blocks, submitted) => {
                       // Composer calls after attachments and draft persistence settle.
+                      if (
+                        thread.connectionLost ||
+                        threads.thread(thread.key) !== thread
+                      )
+                        return false;
                       if (
                         thread.identity === "draft" &&
                         pendingPreparationRead(thread)
                       )
                         throw new Error(C.readRequired);
-                      await threads.send(thread.key, blocks);
+                      await threads.send(thread.key, blocks, {
+                        key: `session:${thread.key}`,
+                        value: submitted,
+                      });
                     }
                   : undefined
               }
@@ -1348,10 +1338,10 @@ export function ThreadView({
                         option={
                           selectedModel
                             ? {
-                                ...modelOption,
+                                ...(displayedModelOption ?? modelOption),
                                 currentValue: selectedModel.value,
                               }
-                            : modelOption
+                            : displayedModelOption
                         }
                         disabled={configOptionChangeBlocked(
                           thread,
@@ -1383,7 +1373,7 @@ export function ThreadView({
                       selectedModel && (
                         <ConfigurationChangeReview
                           thread={thread}
-                          option={modelOption}
+                          option={displayedModelOption ?? modelOption}
                           value={selectedModel.value}
                           onCancel={() => setModelSelection(null)}
                           onSaved={() => setModelSelection(null)}

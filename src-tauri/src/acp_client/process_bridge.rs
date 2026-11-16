@@ -1,7 +1,7 @@
 //! Only transports original official frames; SDK owns JSON-RPC interpretation.
 use super::{
     ingress_permit::{ConsumerProbe, Forwarded, Gate, PermittedRead, QueueSnapshot},
-    process::ProcessControl,
+    process::{ProcessControl, PromptEscrow},
     startup_diagnostics::Diagnostics,
 };
 use agent_client_protocol::{
@@ -12,13 +12,25 @@ use futures_lite::{
     StreamExt,
     io::{AsyncRead, AsyncWrite},
 };
-use std::sync::Arc;
-fn inspect(frame: &TransportFrame, diagnostics: &Diagnostics, outgoing: bool) {
+use std::sync::{
+    Arc,
+    atomic::{AtomicU64, Ordering},
+};
+fn inspect(
+    frame: &TransportFrame,
+    diagnostics: &Diagnostics,
+    prompts: &PromptEscrow,
+    outgoing: bool,
+    wire_sequence: &AtomicU64,
+) {
     let inspect_one = |message: &RawJsonRpcMessage| {
         diagnostics.inspect(message, outgoing);
+        prompts.inspect(message, outgoing);
         if let Ok(line) = serde_json::to_string(message) {
             let mut record =
                 super::tap::diagnostic_record(&line, if outgoing { "out" } else { "in" });
+            // Count before the bounded diagnostic queue so gaps remain visible.
+            record["wireSequence"] = (wire_sequence.fetch_add(1, Ordering::Relaxed) + 1).into();
             if outgoing {
                 diagnostics.annotate_outgoing_error(message, &mut record);
             } else {
@@ -73,9 +85,19 @@ pub(super) async fn run(
         tx: source,
     } = wire;
     let outgoing_diagnostics = diagnostics.clone();
+    let prompts = process.prompt_escrow();
+    let outgoing_prompts = prompts.clone();
+    let wire_sequence = AtomicU64::new(0);
+    let outgoing_wire_sequence = &wire_sequence;
     let outgoing = async move {
         while let Some(frame) = outgoing.next().await {
-            inspect(&frame, &outgoing_diagnostics, true);
+            inspect(
+                &frame,
+                &outgoing_diagnostics,
+                &outgoing_prompts,
+                true,
+                outgoing_wire_sequence,
+            );
             source
                 .unbounded_send(frame)
                 .map_err(agent_client_protocol::Error::into_internal_error)?;
@@ -85,7 +107,7 @@ pub(super) async fn run(
     };
     let incoming = async {
         while let Some(frame) = incoming.next().await {
-            inspect(&frame, &diagnostics, false);
+            inspect(&frame, &diagnostics, &prompts, false, &wire_sequence);
             match gate.forward(frame, |frame| {
                 destination
                     .unbounded_send(frame)

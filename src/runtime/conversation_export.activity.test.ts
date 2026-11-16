@@ -1,13 +1,16 @@
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 import {
   applyConnectionLost,
   applyUpdate,
   freshThreadState,
 } from "./session_projection";
 import { captureConversationExport } from "./conversation_archive_snapshot";
+import { artifactPaneCards } from "./artifact_view";
 import { transcriptMarkdown } from "./conversation_export";
 import { EXPORT_STRINGS as E } from "./export_strings";
 import { applySessionEvent } from "./session_event_projection";
+import { paneCards } from "./artifacts";
+import { toolActivityState, type ThreadState } from "./session_types";
 
 function subject() {
   const s = freshThreadState("export-activity", "fixture", "/work", "native");
@@ -134,4 +137,167 @@ it("shares the declared file-operation label without exporting raw or proposed i
   expect(snapshot.detailedMarkdown).toContain("- 修改（失败）");
   expect(snapshot.detailedMarkdown).not.toContain("PRIVATE_PROPOSED");
   expect(snapshot.detailedMarkdown).toContain("工具输入与拟写入内容");
+});
+
+function beginTool(
+  s: ThreadState,
+  toolCallId: string,
+  status: "pending" | "in_progress" = "in_progress",
+) {
+  s.running = true;
+  s.roundItemBase = s.items.length;
+  applySessionEvent(
+    s,
+    {
+      update: {
+        sessionUpdate: "tool_call",
+        toolCallId,
+        title: toolCallId,
+        kind: "execute",
+        status,
+      },
+    },
+    true,
+  );
+  applySessionEvent(
+    s,
+    { kind: "toolActivity", toolCallIds: [...s.activeToolCallIds, toolCallId] },
+    true,
+  );
+}
+
+function renderToolStates(s: ThreadState) {
+  return s.items.flatMap((item) =>
+    item.kind === "tool" ? [toolActivityState(s, item.call)] : [],
+  );
+}
+
+function finishTool(
+  s: ThreadState,
+  toolCallId: string,
+  status: "completed" | "failed",
+) {
+  applySessionEvent(
+    s,
+    { update: { sessionUpdate: "tool_call_update", toolCallId, status } },
+    true,
+  );
+  applySessionEvent(
+    s,
+    {
+      kind: "toolActivity",
+      toolCallIds: s.activeToolCallIds.filter((id) => id !== toolCallId),
+    },
+    true,
+  );
+}
+
+it.each([
+  ["pending", "completed"],
+  ["in_progress", "failed"],
+] as const)(
+  "shows a cancelled round's %s tool as unknown across exports and cards until its own %s receipt",
+  (status, terminal) => {
+    const s = freshThreadState("stopped-export", "fixture", "/work", "native");
+    s.connectionId = "current";
+    beginTool(s, "stopped-tool", status);
+    expect(renderToolStates(s)).toEqual(["active"]);
+    expect(paneCards(s).map((card) => card.status)).toEqual([status]);
+    expect(transcriptMarkdown(s, "Own", "Fixture")).toContain(
+      `（${E.status[status]}）`,
+    );
+
+    applySessionEvent(s, { kind: "turnEnd", stopReason: "cancelled" }, true);
+    expect(s.items.at(-1)).toMatchObject({
+      kind: "settled",
+      status: "stopped",
+      stopReason: "cancelled",
+    });
+    expect(s.items.find((item) => item.kind === "tool")?.call.status).toBe(
+      status,
+    );
+    const rawBeforeRead = structuredClone(s.items);
+    const stepId = s.items.find((item) => item.kind === "tool")!.id;
+    const stoppedRoundId = s.items.at(-1)!.id;
+    const snapshot = captureConversationExport(s, "Own", "Fixture");
+    expect.soft(renderToolStates(s)).toEqual(["unknown"]);
+    expect.soft(paneCards(s).map((card) => card.status)).toEqual(["unknown"]);
+    for (const target of [stepId, stoppedRoundId])
+      expect
+        .soft(artifactPaneCards(s, target)?.map((card) => card.status))
+        .toEqual(["unknown"]);
+    for (const text of [
+      snapshot.markdown,
+      snapshot.archiveMarkdown,
+      snapshot.detailedMarkdown,
+      snapshot.detailedArchiveMarkdown,
+    ]) {
+      expect.soft(text).toContain(`（${E.unknown}）`);
+      expect.soft(text).not.toContain(`（${E.status[status]}）`);
+    }
+    expect(s.items).toEqual(rawBeforeRead);
+    expect(s.activeToolCallIds).toEqual(["stopped-tool"]);
+
+    finishTool(s, "stopped-tool", terminal);
+    expect(renderToolStates(s)).toEqual(["finished"]);
+    expect(paneCards(s).map((card) => card.status)).toEqual([terminal]);
+    for (const target of [stepId, stoppedRoundId])
+      expect(artifactPaneCards(s, target)?.map((card) => card.status)).toEqual([
+        terminal,
+      ]);
+    expect(transcriptMarkdown(s, "Own", "Fixture")).toContain(
+      `（${E.status[terminal]}）`,
+    );
+    expect(s.items.find((item) => item.kind === "tool")?.call.status).toBe(
+      terminal,
+    );
+    expect(s.items.filter((item) => item.kind === "settled")).toMatchObject([
+      { status: "stopped", stopReason: "cancelled" },
+    ]);
+  },
+);
+
+it("keeps the cancelled tool unknown during other rounds and isolates a sibling reusing its tool ID", ({
+  onTestFinished,
+}) => {
+  const clock = vi.spyOn(Date, "now").mockReturnValue(100);
+  onTestFinished(() => {
+    clock.mockRestore();
+  });
+  const a = freshThreadState("owner-a", "fixture", "/work", "a");
+  a.connectionId = "connection-a";
+  beginTool(a, "background");
+  applySessionEvent(a, { kind: "turnEnd", stopReason: "end_turn" }, true);
+  clock.mockReturnValue(200);
+  beginTool(a, "shared-id", "pending");
+  applySessionEvent(a, { kind: "turnEnd", stopReason: "cancelled" }, true);
+  clock.mockReturnValue(300);
+  beginTool(a, "new-round");
+
+  const b = freshThreadState("owner-b", "fixture", "/work", "b");
+  b.connectionId = "connection-b";
+  beginTool(b, "shared-id", "pending");
+  expect(renderToolStates(b)).toEqual(["active"]);
+  expect(paneCards(b).map((card) => card.status)).toEqual(["pending"]);
+  expect(transcriptMarkdown(b, "Own B", "Fixture")).toContain(
+    `（${E.status.pending}）`,
+  );
+
+  clock.mockReturnValue(400);
+  finishTool(a, "background", "completed");
+  finishTool(b, "shared-id", "completed");
+  expect.soft(renderToolStates(a)).toEqual(["finished", "unknown", "active"]);
+  // The drawer uses the completion time when a tool finishes.
+  expect.soft(paneCards(a)).toMatchObject([
+    { kind: "command", title: "shared-id", status: "unknown", time: 200 },
+    { kind: "command", title: "new-round", status: "in_progress", time: 300 },
+    { kind: "command", title: "background", status: "completed", time: 400 },
+  ]);
+  const markdown = transcriptMarkdown(a, "Own A", "Fixture");
+  expect.soft(markdown).toContain(`（${E.unknown}）`);
+  expect.soft(markdown).not.toContain(`（${E.status.pending}）`);
+  expect(markdown).toContain(`（${E.status.in_progress}）`);
+  expect(markdown).toContain(`（${E.status.completed}）`);
+  expect(renderToolStates(b)).toEqual(["finished"]);
+  expect(a.activeToolCallIds).toEqual(["shared-id", "new-round"]);
 });

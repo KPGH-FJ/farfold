@@ -1,0 +1,71 @@
+{
+  "kind": "InstalledConfigurationConfirmationDeliveryRecheck",
+  "sourceCodeCommit": "091fac1c7dc0ec2ff67747317aa7ff7a25d05b7d",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "b31a860eb8a1ed0b1275ebfa181b8fb29bead46d"
+  },
+  "closedDataEntriesUnchanged": 206275,
+  "dataRootsUnchanged": true,
+  "soleApplication": "/Applications/Farfold.app",
+  "duplicateCandidateRemoved": true,
+  "actualUiUrl": "tauri://localhost",
+  "freshManualChoice": {
+    "atUtc": "2026-11-07T08:52:04.165Z",
+    "before": "nvidia/nemotron-3.5-super-vl:free",
+    "after": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "confirmedWithoutFailure": true,
+    "newNativeSession": "20261107_13",
+    "firstSendAcceptedAtUtc": "2026-11-07T08:56:34.863Z",
+    "bodyRequests": 1,
+    "pendingApprovalObserved": true,
+    "cancelConfirmed": true
+  },
+  "existingHistoryModelChoice": {
+    "nativeSession": "20261107_11",
+    "confirmedAtUtc": "2026-11-07T08:59:49.015Z",
+    "historyMessagesBefore": 11,
+    "sameExistingNativeSession": true,
+    "actualNextRequestModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "actualToolAndExactReplyCompleted": true,
+    "historyMessagesAfter": 16,
+    "firstElevenUnchanged": true,
+    "coldUiModel": "Nemotron 3 Ultra (free)",
+    "coldUiThought": "off"
+  },
+  "coldRecovery": {
+    "normalExitObserved": true,
+    "oldProcessGroupsAndPipesGone": true,
+    "AOriginalDraftUtf8Bytes": 70,
+    "AOriginalDraftAndUnknownPreserved": true,
+    "BAll16MessagesUnchanged": true,
+    "newColdLoads": 2,
+    "coldNewPrompts": 0,
+    "coldCancels": 0,
+    "coldSetters": 0
+  },
+  "originals": {
+    "install": "output/2026-11-07-stage1-formal-acceptance/confirmation-delivery/install.json",
+    "sourceReview": "output/2026-11-07-stage1-formal-acceptance/confirmation-delivery/source-independent-review.json",
+    "normalQuit": {
+      "path": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/resource-final-normal-exit.json",
+      "sha256": "280e386015e81abbddabdba11f86dbc451a04544f222363a5efdcb85c9ee8a0a"
+    },
+    "cold": {
+      "path": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/final-close-cold-recovery-readonly.json",
+      "sha256": "29ff7adfbfb126fc6b16eb1d86f017b79f6ab5d8a426bae1194a4cf50ea42fda"
+    },
+    "actualModel": {
+      "path": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/final-close-event3-b-result-readonly.json",
+      "sha256": "177b8f28157ab933f0e6d1ac884563f240df69975723ce9af6d7e5e50517e727"
+    }
+  },
+  "limits": [
+    "Two actual manual-choice paths succeeded in this installed source; this is not all timing combinations or all Agents.",
+    "The exact historical failure event ordering was not captured. The deterministic regression establishes a reachable race, not every old long wait.",
+    "Session-close resource scope and idle-cache limits are recorded separately in goose-close-installed.json."
+  ]
+}

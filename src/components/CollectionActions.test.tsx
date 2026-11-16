@@ -436,7 +436,7 @@ it("disables archive before invocation while the conversation still has an activ
   );
 });
 
-it("keeps the header running after a stopped reply until the official tool tail ends", () => {
+it("describes an unfinished step after stop without calling newer work unknown", () => {
   const state = threads.markOpenFailed(
     "a:/p:header-tail",
     "a",
@@ -490,8 +490,31 @@ it("keeps the header running after a stopped reply until the official tool tail 
         (element) => element.props.className === "thread-title",
       )?.props.children as ReactNode,
     );
-  expect(headerText()).toContain(LIBRARY.running);
+  expect(headerText()).toContain(STRINGS.thread.unknown);
   expect(headerText()).not.toContain(LIBRARY.notRunning);
+  state.running = true;
+  expect(headerText()).toContain(LIBRARY.running);
+  state.running = false;
+  state.asyncTasks = {
+    connectionId: state.connectionId ?? "current-connection",
+    sessionId: state.nativeSessionId ?? "header-tail",
+    supported: true,
+    overflow: false,
+    tasks: [
+      {
+        asyncTaskId: "independent-new-task",
+        name: "New background task",
+        taskType: "fixture",
+        toolCallId: null,
+        canStop: true,
+        state: "running",
+        stopRequest: "idle",
+      },
+    ],
+  };
+  expect(headerText()).toContain(LIBRARY.running);
+  state.asyncTasks = undefined;
+  expect(headerText()).toContain(STRINGS.thread.unknown);
   state.connectionOutcomeUnknown = true;
   expect(headerText()).toContain(LIBRARY.attention);
   state.connectionOutcomeUnknown = false;

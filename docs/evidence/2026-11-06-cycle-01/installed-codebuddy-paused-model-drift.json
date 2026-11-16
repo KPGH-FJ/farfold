@@ -1,0 +1,24 @@
+{
+  "kind": "InstalledCodeBuddyPausedQueueReopen",
+  "date": "2026-11-07",
+  "platform": "macOS arm64",
+  "installedSource": "6ce829c5",
+  "scope": "One exact owned historical test conversation, reopened via the installed app search.",
+  "observed": {
+    "historyWasDisplayed": true,
+    "pausedQueueItemCount": 1,
+    "originalQueueUtf8Bytes": 200,
+    "originalQueueTextSha256": "35c636a10b697870beca645cab4d8bda1870a5742ea6e673cf57c44b941c79bf",
+    "sameQueueAfterReopen": true,
+    "historicalToolOutcomeStillUnknown": true,
+    "modelDrift": { "saved": "hy4-preview-f", "observed": "hy4-preview" },
+    "reasoningDrift": { "saved": "high", "observed": "enabled" },
+    "continueWasDisabled": true,
+    "editingWasNotAttempted": true,
+    "originalDraftAndOtherSessionRowsPreserved": true,
+    "retainedDraftCount": 1,
+    "otherOpenProtocolTapsUnchanged": 6,
+    "targetOutboundEvents": ["initialize", "other", "session/load"]
+  },
+  "boundary": "Warm reopen with the model guard active. The unclassified startup frame is recorded as observed. No prompt, cancel, config setter, or approval traffic was recorded in this tap."
+}

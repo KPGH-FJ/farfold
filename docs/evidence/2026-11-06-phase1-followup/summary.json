@@ -1,0 +1,310 @@
+{
+  "kind": "Phase1DesktopAttributionAndCopilotAccountVerification",
+  "formalSource": "dbe23bb6ea3eaa714205b4290f32cafffe1218f9",
+  "installedMainSha256": "b8f3b2cf7c10fa08c23a64f25ba2fc73048bacbf6ea340f54ab80cc6f2a7bfe3",
+  "privateEvidenceRoot": "output/2026-11-06-phase1-followup/",
+  "scope": "正式应用既有安装。原记录、测试记录、只读账户资料、受控回归分别计证。没有产品源码修改或安装。",
+  "kiloOriginal": {
+    "originalDesktopLookupComplete": false,
+    "formalResponsibilityVerified": true,
+    "matchedDesktopRequestGroups": 1,
+    "promptingEventVerified": true,
+    "decisionObserved": false,
+    "settingsDesktopToggleOn": true,
+    "actualSyscallPathAndResultKnown": false,
+    "refs": [
+      {
+        "path": "kilo-original-before-search.ax.txt",
+        "sha256": "15d13ff26b04b11b09a1f25af457195d0af8b9778dac65b3b6b4bf2bfc773d5b",
+        "bytes": 307
+      },
+      {
+        "path": "kilo-original-search-running.ax.txt",
+        "sha256": "f1b585374904519cea6b4f5fd90d99007e0c2c94f70590f5feb1836feec527d9",
+        "bytes": 336
+      },
+      {
+        "path": "kilo-original-search-error-expanded.ax.txt",
+        "sha256": "2a32473d336e931936ebe3bd892ba0fbdb58c623d83a69b952a3127bfdfb6b88",
+        "bytes": 294
+      },
+      {
+        "path": "system-farfold-desktop-readback.ax.txt",
+        "sha256": "25fe9bbd937c6f0b671a9af3a61f9afbfedc6e8ef42fb56000ed8f1d9ec0fefe",
+        "bytes": 173
+      },
+      {
+        "path": "desktop-trace-agent/live-tcc-receipt.json",
+        "sha256": "d8eb14b0298600c57f7b856f9d44922beb3d97448c30f027738ec855acbac320",
+        "bytes": 9605
+      },
+      {
+        "path": "desktop-trace-agent/live-tcc-terminal-crosscheck.json",
+        "sha256": "7e71d37fe9e08a406621babd2cb62bef4370953c6ed509d9d8326cc2877b2774",
+        "bytes": 3470
+      },
+      {
+        "path": "desktop-trace-agent/live-kilo-tcc-late-crosscheck.json",
+        "sha256": "34e9fbd3123e878e33e38988960d7a1d3ec81efc9712a8e7ab5f8c27d1640884",
+        "bytes": 369
+      }
+    ]
+  },
+  "gooseOriginal": {
+    "formalBodyReadBack": true,
+    "loadUpdates": 35,
+    "identifiedDesktopRequestGroupsDuringRead": 0,
+    "priorDirectoryStallReproduced": false,
+    "actualContinuationRequests": 1,
+    "explicitStopsSent": 1,
+    "continuationFinalReplyObserved": false,
+    "stopOutcome": "unknown",
+    "sendPaused": true,
+    "refs": [
+      {
+        "path": "goose-original-before-open.ax.txt",
+        "sha256": "3835a534b391aa615d17a015fdbbc41b205fabba1b746eca657c7bb13f27461c",
+        "bytes": 489
+      },
+      {
+        "path": "goose-original-open-result.ax.txt",
+        "sha256": "e670b4255845a2483156876818b5384ac8b468e88c7f0bcc4f34fcddc2aa4790",
+        "bytes": 738
+      },
+      {
+        "path": "goose-original-choice.ax.txt",
+        "sha256": "11b17497a2e16d5eb879791b5af0a5eb98ee0cc4f1b03efe3ef7d816dc31a8a7",
+        "bytes": 269
+      },
+      {
+        "path": "goose-provider-confirmed.json",
+        "sha256": "a57ccc5fdc24b08a36c7b10cc470eb5f77e56eca42a92926ae37b0724b89469a",
+        "bytes": 134
+      },
+      {
+        "path": "goose-original-recall-before.ax.txt",
+        "sha256": "fba9c7d7feb43636c0910b7b4dd59fbede1cfda3bd2ee8cc64137b7017e359ef",
+        "bytes": 223
+      },
+      {
+        "path": "goose-original-recall-start.ax.txt",
+        "sha256": "3717bd51893cd953bd08d084a0160c1166b0028e8aee7bbda8b16c419b01205f",
+        "bytes": 235
+      },
+      {
+        "path": "goose-original-late-check.json",
+        "sha256": "e3fb4f7249837952d4cce37c87bb710cc260ba3e227ad904f4044c9167852ad7",
+        "bytes": 264
+      },
+      {
+        "path": "desktop-trace-agent/live-goose-tcc-receipt.json",
+        "sha256": "e35486913030b0f4c8ab4d3a30d1296fda8f64579014d42bde90b156b9cbf777",
+        "bytes": 1458
+      },
+      {
+        "path": "desktop-trace-agent/goose-current-sample-receipt.json",
+        "sha256": "7b922108649cdd67ad15beb18091d1c1d4ebe7cd8eb84b46ac27e1639d0489b8",
+        "bytes": 753
+      },
+      {
+        "path": "desktop-trace-agent/goose-original-continuation-tcc.json",
+        "sha256": "2faaddb193dad77064d548954f449bfd16f38c6cbb1ab0410d2101c8698f2f0c",
+        "bytes": 4568
+      },
+      {
+        "path": "desktop-trace-agent/goose-continuation-sample-receipt.json",
+        "sha256": "b07a56088370c4bfcb5436d8d1720e85da6fc72762d821042219404a071d5e78",
+        "bytes": 892
+      }
+    ]
+  },
+  "copilot": {
+    "registrationVersion": "1.0.89",
+    "runtimeReportedVersion": "1.0.106",
+    "sdkAndWebIdentityMatch": true,
+    "plan": "Copilot Free",
+    "includedCreditsUsedPercentAtCheck": 0,
+    "absoluteIncludedAiCreditCountObserved": false,
+    "cliEnabled": true,
+    "sdkExhaustedQuotaUsageAllowed": false,
+    "sdkExhaustedQuotaOverageAllowed": false,
+    "accountSettingsModified": false,
+    "formalOriginalBodyReadBack": true,
+    "formalOriginalLoadUpdates": 49,
+    "originalSavedModelChoiceCount": 0,
+    "originalSendPaused": true,
+    "originalPrompts": 0,
+    "actualNeutralAutoExactReply": true,
+    "actualNeutralExplicitStop": true,
+    "underlyingAutoModelVerified": false,
+    "refs": [
+      {
+        "path": "copilot-acp-version.json",
+        "sha256": "f0560a0282e2c4f23d486a75b4ee433e2e3edad8b2dcbc9ee5635cf326ee87b8",
+        "bytes": 320
+      },
+      {
+        "path": "copilot-read-only-result.json",
+        "sha256": "4a04d0e7937e8890c74d1f57587bcd47afd285e32a967eef131b017be2daf365",
+        "bytes": 998
+      },
+      {
+        "path": "copilot-read-only-current-result.json",
+        "sha256": "e66cca02c32f7a7be05d9e0eb5c501e83308f0717d5d4243690601d43b4f15f4",
+        "bytes": 2395
+      },
+      {
+        "path": "copilot-personal-usage-endpoint.json",
+        "sha256": "533debf1c447552b67ca73080ff4384b3e1c3dc582b37793a7178c1dfd56f99b",
+        "bytes": 201
+      },
+      {
+        "path": "copilot-browser-billing-readback.json",
+        "sha256": "fcfe4bd1fc3930f580de1414211361297dc68b49b84967f6901bb96a230632d7",
+        "bytes": 2495
+      },
+      {
+        "path": "copilot-browser-matching-plan.json",
+        "sha256": "c084cd4e3fb98b58d3e0a83a066c727abece849504fc4609332bb9238fc892fb",
+        "bytes": 2140
+      },
+      {
+        "path": "copilot-browser-usage-controls.json",
+        "sha256": "ae922a9b593fa6d3113308824f0043050816ea1403fcf945d01a67f3bab103e9",
+        "bytes": 9569
+      },
+      {
+        "path": "copilot-original-before-open.ax.txt",
+        "sha256": "898d6e7fc919cfd8119ea9a1f32450a222dcb952f76112d8555b390b1ce36b9f",
+        "bytes": 533
+      },
+      {
+        "path": "copilot-original-open-result.ax.txt",
+        "sha256": "c59fbb818496bb3563260e18203bee9f1f5e54477a156a69c25b28ed572179df",
+        "bytes": 3213
+      },
+      {
+        "path": "copilot-original-model-paused.ax.txt",
+        "sha256": "3466cdb79798c09a82dddafb4c99a98eeba28af613b3e669e6d8018b896dc564",
+        "bytes": 767
+      },
+      {
+        "path": "copilot-original-config-shape.json",
+        "sha256": "c0d9545a4577a66654f0ac8e0bf21160d3e403d3780d7ba66acf13a1295c8e6f",
+        "bytes": 264
+      },
+      {
+        "path": "copilot-formal-neutral-process.json",
+        "sha256": "db8d1c8f1cde69086582ea8287ffc031cc0b35dc0b2a51251c376f067ff7104b",
+        "bytes": 399
+      },
+      {
+        "path": "copilot-neutral-before.ax.txt",
+        "sha256": "b76859cc71c0ef6a36c5a6b996c8259bb8accdf6a78d636fabdf5ff77f5dbb38",
+        "bytes": 470
+      },
+      {
+        "path": "copilot-neutral-passed.ax.txt",
+        "sha256": "26ee3f1b6ee93b8e7452d394bd80711e54a0cb716a811cd0ce680e12fe2302ec",
+        "bytes": 392
+      },
+      {
+        "path": "copilot-neutral-conversation.ax.txt",
+        "sha256": "6f934b5922fe827f5b5c5698c150e8ded2b1aade091c2714146686a87047716d",
+        "bytes": 495
+      },
+      {
+        "path": "copilot-neutral-choice-after-success.ax.txt",
+        "sha256": "60fc8bb65083224ac36d00e34f19b90653e9533670e5a02cb1bcef310e3a4013",
+        "bytes": 239
+      },
+      {
+        "path": "copilot-neutral-stop-inflight.ax.txt",
+        "sha256": "7ec7e3ecaa128c0370c5ee2f61827d58ab3bfd154d72dc4e6ef9ae75fa16278c",
+        "bytes": 493
+      },
+      {
+        "path": "copilot-neutral-stop-action.ax.txt",
+        "sha256": "a072dbc515e5dd9f5c1205e759938a99254dcf566a894cb17363603411ab83bc",
+        "bytes": 261
+      },
+      {
+        "path": "copilot-neutral-stop-result.ax.txt",
+        "sha256": "73a2f5559167fc85e5d415549b0ea6ddd663a56a8a4e76f6097febc3e543fd3e",
+        "bytes": 470
+      },
+      {
+        "path": "copilot-formal-content-free-wire.json",
+        "sha256": "bb307170e3db1bffafa78e8b0dc03e58d41504d8fa9f4220aa3d12920bde885e",
+        "bytes": 755
+      }
+    ]
+  },
+  "isolation": {
+    "formalCrossAgentOverlapCases": 1,
+    "gooseCancelCount": 1,
+    "kiloCancelCount": 0,
+    "gooseStopOutcome": "unknown",
+    "kiloOwnedRequestCompleted": true,
+    "controlledSameAgentApprovalCasesPassed": 1,
+    "realApprovalTested": false,
+    "refs": [
+      {
+        "path": "isolation-both-active.ax.txt",
+        "sha256": "7dc85602b9d6a23dd052f3735b3be6b34a747e165324ff4dac52b94dc42a1606",
+        "bytes": 535
+      },
+      {
+        "path": "isolation-goose-before-stop.ax.txt",
+        "sha256": "aa4e9264a5c60aba3a8241bd9ddae7ebe3824bd5117bbb4bfaf1aed36a15e335",
+        "bytes": 980
+      },
+      {
+        "path": "isolation-goose-stop-action.ax.txt",
+        "sha256": "7d1ef1ce2a6f2aab6e1a133e62debf559b0e9961dc2c5a24b56596c0c9858630",
+        "bytes": 431
+      },
+      {
+        "path": "isolation-goose-post-stop-details.ax.txt",
+        "sha256": "6a06a20c70d487621a76c8cddeaf35979034fd7369d4bce4727b24fbbe7d867f",
+        "bytes": 1359
+      },
+      {
+        "path": "isolation-kilo-completion.ax.txt",
+        "sha256": "618f7b889fa35747cd306b94bdb0244997eca6f2685db50d8d425329319199c7",
+        "bytes": 824
+      },
+      {
+        "path": "formal-goose-load-and-real-isolation-wire.json",
+        "sha256": "4b7fa85b7912de5d61129e0ec5c7fa4d55186d01cdb42b13e6e8ff6049e6f80f",
+        "bytes": 1872
+      },
+      {
+        "path": "independent-agent/summary.json",
+        "sha256": "b43fcc16f87ee73d8ec3f184cefe0dc371bc348d557b6abe57c8437a663796a4",
+        "bytes": 3299
+      }
+    ]
+  },
+  "preservation": {
+    "originalDraftAndFolderVerified": true,
+    "preservedDraftCount": 1,
+    "oldPromptsReplayed": 0,
+    "osPrivacySettingsChanged": false,
+    "originalDraftEvidence": {
+      "path": "final-original-draft-readback.ax.txt",
+      "sha256": "8723ac526dbbfe76bbc10f170dfa34d111bc3a7a52bc02a5e38fff08f8cf47c6",
+      "bytes": 325
+    }
+  },
+  "firstWave": {
+    "complete": 0,
+    "total": 3,
+    "open": [
+      "Kilo同桌面权限请求终态、系统调用实际路径与返回、原历史读回",
+      "Goose原会话续接最终回复和停止终态",
+      "Copilot原模型基线和旧工具未知状态",
+      "真实审批、安装版存储故障、Windows安装 runner"
+    ]
+  }
+}

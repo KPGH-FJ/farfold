@@ -31,7 +31,7 @@ vi.mock("./file_copy_jobs", () => ({
           : [],
   },
 }));
-import { exitNeedsReview } from "./exit_impact";
+import { exitReviewReason } from "./exit_impact";
 
 beforeEach(() => {
   h.threads.clear();
@@ -42,15 +42,15 @@ beforeEach(() => {
 });
 it("reviews file saves even after the file view is gone", () => {
   h.copying = true;
-  expect(exitNeedsReview()).toBe(true);
+  expect(exitReviewReason()).not.toBeNull();
 });
 it("reviews an ended save with an unknown result before exiting", () => {
   h.unknownCopy = true;
-  expect(exitNeedsReview()).toBe(true);
+  expect(exitReviewReason()).not.toBeNull();
 });
 it("does not silently dismiss a missing operation as a successful copy", () => {
   h.absentCopy = true;
-  expect(exitNeedsReview()).toBe(true);
+  expect(exitReviewReason()).not.toBeNull();
 });
 it.each([
   { running: true },
@@ -67,18 +67,18 @@ it.each([
       patch,
     );
     h.threads.set(thread.key, thread);
-    expect(exitNeedsReview()).toBe(true);
+    expect(exitReviewReason()).not.toBeNull();
   },
 );
 it("includes account work after its settings view has closed", () => {
   h.account = true;
-  expect(exitNeedsReview()).toBe(true);
+  expect(exitReviewReason()).not.toBeNull();
 });
 it("does not treat preserved paused drafts as active Agent work", () => {
   const thread = freshThreadState("a", "fixture", "/p", "a");
   thread.queued = [[{ type: "text", text: "keep without sending" }]];
   thread.queuePaused = "stopped";
   h.threads.set(thread.key, thread);
-  expect(exitNeedsReview()).toBe(false);
+  expect(exitReviewReason()).toBeNull();
   expect(thread.queued).toHaveLength(1);
 });

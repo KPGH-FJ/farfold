@@ -40,13 +40,18 @@ vi.mock("react", async (original) => ({
     h.slots[index] = { deps, cleanup: slot?.cleanup };
   },
 }));
-import { VisualFilePreview } from "./VisualFilePreview";
+import {
+  VisualFilePreview,
+  type DrawnPdfPreview,
+  type PdfPreviewCandidate,
+} from "./VisualFilePreview";
 import { renderPdfPage } from "../runtime/pdf_preview";
 import {
   MAX_VISUAL_BYTES,
   VISUAL_PREVIEW_STRINGS as S,
 } from "../runtime/visual_preview";
 import type { VisualPreview } from "../runtime/file_delivery";
+import type { PreviewReadingPositionRef } from "../runtime/preview_reading_position";
 const bytes = new Uint8Array(
   readFileSync(
     new URL(
@@ -111,11 +116,18 @@ function nodes(tree: ReactNode): E[] {
   });
   return all;
 }
-function commit() {
+function commit(
+  options: Partial<Parameters<typeof VisualFilePreview>[0]> = {},
+  candidateTarget?: HTMLCanvasElement,
+) {
   h.cursor = 0;
-  const all = nodes(VisualFilePreview({ preview, active: true }));
-  const element = all.find((n) => n.type === "canvas");
-  if (element) (element.props.ref as { current: unknown }).current = target;
+  const all = nodes(VisualFilePreview({ preview, active: true, ...options }));
+  for (const element of all.filter((n) => n.type === "canvas")) {
+    const ref = element.props.ref as { current: HTMLCanvasElement | null };
+    if (ref === options.pdfCandidate?.surface.canvas)
+      ref.current = candidateTarget ?? null;
+    else if (ref !== options.drawnPdf?.surface.canvas) ref.current = target;
+  }
   for (const effect of h.effects.splice(0)) effect();
   return all;
 }
@@ -248,4 +260,221 @@ it("idle actual component expands once, transfers the original file bytes and cl
   expect(view.find((n) => n.type === "canvas")?.props.hidden).toBe(false);
   expect(bitmap.close).toHaveBeenCalledOnce();
   expect(worker.terminate).toHaveBeenCalledOnce();
+});
+
+function newPdf(name: string): VisualPreview {
+  const captured = readFileSync(
+    new URL(`../runtime/fixtures/pdf-preview/${name}`, import.meta.url),
+  );
+  return {
+    ...original,
+    file: {
+      ...file,
+      version: "owned-v2",
+      sha256: "replacement",
+      size: captured.length,
+    },
+    data: captured.toString("base64"),
+  };
+}
+
+async function readySecondPage() {
+  const readingPosition: PreviewReadingPositionRef = {
+    current: {
+      kind: "pdf",
+      page: 2,
+      root: file.root,
+      resolvedPath: file.resolvedPath,
+    },
+  };
+  const options = { readingPosition, onReadiness: vi.fn() };
+  commit(options);
+  const worker = OwnedWorker.instances[0];
+  expect(worker.postMessage.mock.calls[0][0]).toMatchObject({
+    pageNumber: 2,
+    restorePage: true,
+  });
+  worker.receive({
+    kind: "ready",
+    pages: 2,
+    pageNumber: 2,
+    bitmap: new Bitmap(64, 48),
+  });
+  await tick();
+  expect(text(commit(options))).toContain(S.page(2, 2));
+  return options;
+}
+
+function candidateFor(next: VisualPreview): PdfPreviewCandidate {
+  return {
+    preview: next,
+    page: 2,
+    surface: { slot: 1, canvas: { current: null } },
+    controller: new AbortController(),
+    current: () => true,
+    settle: vi.fn(),
+  };
+}
+
+it.each(["password", "draw error"])(
+  "keeps only the old PDF surface visible after the staged %s outcome",
+  async (outcome) => {
+    const options = await readySecondPage();
+    const candidate = candidateFor(
+      newPdf(outcome === "password" ? "password.pdf" : "embedded-chinese.pdf"),
+    );
+    const staged = canvas();
+    const pending = commit(
+      { ...options, interactionBlocked: true, pdfCandidate: candidate },
+      staged,
+    );
+    expect(
+      pending.filter((n) => n.type === "canvas").map((n) => n.props.hidden),
+    ).toEqual([false, true]);
+    const worker = OwnedWorker.instances[1];
+    expect(worker.postMessage.mock.calls[0][0]).toMatchObject({
+      pageNumber: 2,
+      restorePage: true,
+    });
+    const bitmap = new Bitmap();
+    if (outcome === "password")
+      worker.receive({ kind: "error", code: "password" });
+    else {
+      vi.mocked(staged.getContext).mockImplementationOnce(() => {
+        throw new Error("Controlled draw failure");
+      });
+      worker.receive({ kind: "ready", pages: 1, pageNumber: 1, bitmap });
+    }
+    await tick();
+    expect(candidate.settle).toHaveBeenCalledExactlyOnceWith(
+      new Error(outcome === "password" ? S.password : S.failed),
+    );
+    if (outcome !== "password") expect(bitmap.close).toHaveBeenCalledOnce();
+    const finished = commit(options);
+    expect(text(finished)).toContain(S.page(2, 2));
+    expect(
+      finished.filter((n) => n.type === "canvas").map((n) => n.props.hidden),
+    ).toEqual([false]);
+    expect(target).toMatchObject({ width: 64, height: 48 });
+    expect(staged).toMatchObject({ width: 0, height: 0 });
+    expect(options.onReadiness).toHaveBeenLastCalledWith({
+      source: original,
+      location: { kind: "pdf", page: 2, pageCount: 2 },
+    });
+    expect(OwnedWorker.instances).toHaveLength(2);
+    expect(worker.terminate).toHaveBeenCalledOnce();
+  },
+);
+
+it("promotes the already-drawn clamped PDF surface and disposes only the old canvas", async () => {
+  const options = await readySecondPage();
+  const next = newPdf("embedded-chinese.pdf");
+  const candidate = candidateFor(next);
+  const staged = canvas();
+  const pending = commit(
+    { ...options, interactionBlocked: true, pdfCandidate: candidate },
+    staged,
+  );
+  const stagedNode = pending.find((n) => n.type === "canvas" && n.props.hidden);
+  const worker = OwnedWorker.instances[1];
+  const bitmap = new Bitmap(40, 30);
+  worker.receive({ kind: "ready", pages: 1, pageNumber: 1, bitmap });
+  await tick();
+  const page = vi.mocked(candidate.settle).mock.calls[0][0];
+  expect(page).toEqual({
+    element: staged,
+    page: 1,
+    pageCount: 1,
+  });
+  if (page instanceof Error) throw page;
+  const drawn: DrawnPdfPreview = {
+    ...page,
+    preview: next,
+    surface: candidate.surface,
+  };
+  expect(target).toMatchObject({ width: 64, height: 48 });
+  const replacement = { ...options, preview: next, drawnPdf: drawn };
+  commit(replacement);
+  await tick();
+  const shown = commit(replacement);
+  expect(text(shown)).toContain(S.page(1, 1));
+  expect(shown.filter((n) => n.type === "canvas")).toHaveLength(1);
+  const displayed = shown.find((n) => n.type === "canvas");
+  expect(displayed?.props.hidden).toBe(false);
+  expect(displayed?.key).toBe(stagedNode?.key);
+  expect(displayed?.props.ref).toBe(stagedNode?.props.ref);
+  expect(target).toMatchObject({ width: 0, height: 0 });
+  expect(staged).toMatchObject({ width: 40, height: 30 });
+  expect(options.onReadiness).toHaveBeenLastCalledWith({
+    source: next,
+    location: { kind: "pdf", page: 1, pageCount: 1 },
+  });
+  expect(OwnedWorker.instances).toHaveLength(2);
+  expect(staged.getContext).toHaveBeenCalledOnce();
+  expect(bitmap.close).toHaveBeenCalledOnce();
+  // A remounted DOM node cannot inherit the first node's draw receipt.
+  cleanup();
+  const remounted = canvas();
+  drawn.surface.canvas.current = remounted;
+  commit(replacement);
+  expect(OwnedWorker.instances).toHaveLength(3);
+  expect(remounted).toMatchObject({ width: 0, height: 0 });
+});
+
+it("ends the staged PDF draw when hidden and closes a late bitmap", async () => {
+  const options = await readySecondPage();
+  const candidate = candidateFor(newPdf("embedded-chinese.pdf"));
+  const staged = canvas();
+  commit({ ...options, pdfCandidate: candidate }, staged);
+  const worker = OwnedWorker.instances[1];
+  commit({ ...options, active: false });
+  await tick();
+  const bitmap = new Bitmap();
+  worker.receive({ kind: "ready", pages: 1, pageNumber: 1, bitmap });
+  expect(candidate.settle).toHaveBeenCalledExactlyOnceWith(
+    new Error(S.cancelled),
+  );
+  expect(bitmap.close).toHaveBeenCalledOnce();
+  expect(worker.terminate).toHaveBeenCalledOnce();
+  expect(staged).toMatchObject({ width: 0, height: 0 });
+  expect(options.onReadiness).toHaveBeenLastCalledWith({
+    source: original,
+    location: null,
+  });
+});
+
+it("releases the drawn PDF surface when its promotion and hide share a commit", async () => {
+  const options = await readySecondPage();
+  const next = newPdf("embedded-chinese.pdf");
+  const candidate = candidateFor(next);
+  const staged = canvas();
+  commit({ ...options, pdfCandidate: candidate }, staged);
+  const bitmap = new Bitmap(40, 30);
+  OwnedWorker.instances[1].receive({
+    kind: "ready",
+    pages: 1,
+    pageNumber: 1,
+    bitmap,
+  });
+  await tick();
+  const page = vi.mocked(candidate.settle).mock.calls[0][0];
+  if (page instanceof Error) throw page;
+  expect(staged).toMatchObject({ width: 40, height: 30 });
+  const drawnPdf: DrawnPdfPreview = {
+    ...page,
+    preview: next,
+    surface: candidate.surface,
+  };
+
+  commit({ ...options, preview: next, drawnPdf, active: false });
+  expect(staged).toMatchObject({ width: 0, height: 0 });
+  expect(target).toMatchObject({ width: 0, height: 0 });
+  expect(options.onReadiness).toHaveBeenLastCalledWith({
+    source: next,
+    location: null,
+  });
+  expect(OwnedWorker.instances).toHaveLength(2);
+  expect(bitmap.close).toHaveBeenCalledOnce();
+  commit({ ...options, preview: next, drawnPdf, active: true });
+  expect(OwnedWorker.instances).toHaveLength(3);
 });

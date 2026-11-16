@@ -1,0 +1,33 @@
+{
+  "kind": "InstalledKiloModelSwitchAndRestore",
+  "date": "2026-11-07",
+  "timezone": "Asia/Shanghai",
+  "platform": "macOS arm64",
+  "application": "/Applications/Farfold.app",
+  "installedSource": "6ce829c5",
+  "scope": "A single archived, owned synthetic conversation, already loaded and idle in the installed app.",
+  "service": "existing",
+  "modelSequence": [
+    "kilo/nvidia/nemotron-3-ultra-550b-a55b:free",
+    "kilo/dots-studio/dots-3-note-preview:free",
+    "kilo/nvidia/nemotron-3-ultra-550b-a55b:free"
+  ],
+  "observed": {
+    "previewDidNotChangeSavedModelOrSendSetter": true,
+    "twoExplicitSaveActions": true,
+    "settingRequests": 2,
+    "successfulProtocolResponses": 2,
+    "installedUiAndSavedRowMatchedAfterEachSave": true,
+    "sameApplicationAndKiloProcess": true,
+    "sameArchivedConversationAndExistingService": true,
+    "originalConfigurationRestored": true,
+    "otherSessionRowsUnchanged": true,
+    "originalDraftAndOtherSavedWorkUnchanged": true,
+    "retainedDraftsBeforeAndAfter": [1, 1],
+    "otherOpenProtocolTapsUnchanged": 5,
+    "protectedOldTapsUnchanged": 3,
+    "newPromptCancelOrOpenRequests": 0,
+    "originalDraftViewRestored": true
+  },
+  "boundary": "Warm settings receipt and rollback. Formal cold restore, actual inference using the changed model, account login and billing require separate evidence."
+}

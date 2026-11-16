@@ -61,6 +61,7 @@ vi.mock("../runtime/work_policy", () => ({
   }),
 }));
 import { AgentPreparationActions } from "./AgentPreparationActions";
+import { authConnectionOptions } from "./agent_auth_options";
 import { PREPARATION_ACTION_STRINGS as S } from "../runtime/preparation_action_strings";
 import type { AgentAccessPrimary } from "../runtime/access_primary";
 import type { PreparationAction } from "../runtime/preparation";
@@ -140,6 +141,53 @@ it("requires a separate command review and an explicit run without deriving anyt
   (button(nodes, S.run).props.onClick as () => void)();
   expect(h.run).toHaveBeenCalledExactlyOnceWith(action, "/original");
   expect(button(render(), S.run)).toBeUndefined();
+});
+
+it("keeps the official account login separate from the declared key setup and reviews the exact command", async () => {
+  const login: PreparationAction = {
+    ...action,
+    id: "login-amp-account",
+    purpose: "account_login",
+    command: "/managed/amp",
+    args: ["login"],
+  };
+  const choices = authConnectionOptions({
+    existingAccount: null,
+    methods: [
+      {
+        id: "setup",
+        name: "Amp API Key Setup",
+        kind: "terminal",
+        description: null,
+        terminalCommand: null,
+        envName: null,
+      },
+    ],
+    actions: [login],
+    apiState: "unsupported",
+  });
+  expect(choices.map((choice) => choice.title)).toEqual([
+    "Amp API Key Setup",
+    S.accountLogin.title,
+  ]);
+  props.data = { actions: [login], error: null, onRetry: vi.fn() };
+  let nodes = await settle();
+  expect(button(nodes, S.accountLogin.run)).toBeUndefined();
+  (button(nodes, S.review).props.onClick as () => void)();
+  nodes = render();
+  expect(h.run).not.toHaveBeenCalled();
+  expect(
+    nodes.some((node) => node.props.children === S.accountLogin.effects),
+  ).toBe(true);
+  expect(
+    nodes.some(
+      (node) =>
+        node.type === "pre" &&
+        node.props.children === JSON.stringify([login.command, "login"]),
+    ),
+  ).toBe(true);
+  (button(nodes, S.accountLogin.run).props.onClick as () => void)();
+  expect(h.run).toHaveBeenCalledExactlyOnceWith(login, "/original");
 });
 it("waits for the real location and reviews and runs the canonical directory from an independent account entry", async () => {
   props.cwd = "/tmp/alias";

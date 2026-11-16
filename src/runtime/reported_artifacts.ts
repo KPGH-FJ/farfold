@@ -1,6 +1,7 @@
 import { paneCards } from "./artifacts";
 import { reportedFileSources, type ReportedFile } from "./file_delivery";
 import type { ThreadItem, ThreadState, ToolCallView } from "./session_types";
+import { NO_STOPPED_TOOL_CALLS } from "./stopped_tool_results";
 
 export type ArtifactToolItem = Extract<ThreadItem, { kind: "tool" }>;
 export type ReportedArtifactOrigin = Readonly<{
@@ -172,7 +173,11 @@ function toolStats(thread: ThreadState, item: ArtifactToolItem): ToolStats {
   );
   let outputs = 0;
   // This clipped view is only a count input, never used for entry authority.
-  for (const card of paneCards({ ...thread, items: [item] })) {
+  for (const card of paneCards(
+    { ...thread, items: [item] },
+    0,
+    NO_STOPPED_TOOL_CALLS,
+  )) {
     if (card.kind === "diff") paths.add(card.path);
     else if (card.output.length > 0) outputs++;
   }

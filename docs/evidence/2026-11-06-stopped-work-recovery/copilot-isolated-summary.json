@@ -1,0 +1,38 @@
+{
+  "testedFarfoldSource": "fc7eb6a68",
+  "officialCopilotHandshakeVersion": "1.0.106",
+  "selectedRuns": 1,
+  "selectedTestSeconds": 18.43,
+  "isolatedFarfoldStore": true,
+  "installedApplicationOperatedByThisProbe": false,
+  "sameAccountWithIncludedUseAndNoOverageBeforeEitherPrompt": true,
+  "sameOwnerAutoAgentAllowAllOffBeforeEitherPrompt": true,
+  "sameOriginalTransportDistinctNewSessions": true,
+  "operatorApprovalGrants": 0,
+  "a": {
+    "promptInvocations": 1,
+    "stopInvocations": 1,
+    "matchedPromptStopReason": "cancelled",
+    "firstExactApprovalNeverGranted": true,
+    "closeInvocations": 1,
+    "exactScopedManagerCloseReceipt": true,
+    "nativeUserAbortCount": 1,
+    "nativeRoutineShutdownAfterAbort": true,
+    "matchingNativeToolTerminals": 0
+  },
+  "b": {
+    "promptInvocations": 1,
+    "sameOriginalTransportAndManagerRoute": true,
+    "exactTextMarkerAndSuccessfulTurnEndAfterAClose": true,
+    "toolEventsObserved": 0
+  },
+  "resources": {
+    "sameOfficialProcessBeforeAndAfterClose": true,
+    "activeWorkBeforeClose": 2,
+    "activeWorkAfterClose": 1,
+    "exactOwnedHistoryHandlesABBefore": [1, 1],
+    "exactOwnedHistoryHandlesABAfter": [0, 1]
+  },
+  "temporaryHarnessRemoved": true,
+  "outcome": "passed"
+}

@@ -3,11 +3,19 @@ import { boolean, attr, child } from "./xlsx_xml";
 import {
   XlsxError,
   type WorkbookPreview,
+  type WorkbookDirectory,
   type XlsxWorkerInput,
 } from "./xlsx_types";
 import { workbookContext } from "./xlsx_workbook_context";
+import {
+  checkedWorkbookSheetRestore,
+  selectedWorkbookSheetId,
+} from "./xlsx_directory";
 
-export function parseWorkbook(input: XlsxWorkerInput): WorkbookPreview {
+export function parseWorkbook(
+  input: XlsxWorkerInput,
+  onDirectory?: (directory: WorkbookDirectory) => void,
+): WorkbookPreview {
   const {
     entries,
     relations,
@@ -21,12 +29,20 @@ export function parseWorkbook(input: XlsxWorkerInput): WorkbookPreview {
     themes,
     read,
   } = workbookContext(input);
-  const selected =
-    input.sheetId ??
-    sheets.find((s) => s.state === "visible")?.id ??
-    sheets[0].id;
+  const selected = selectedWorkbookSheetId(
+    sheets,
+    input.sheetId,
+    checkedWorkbookSheetRestore(input.restoreSheet),
+  );
+  if (!selected) throw new XlsxError("invalid");
   const sheetPart = sheetParts.get(selected);
   if (!sheetPart) throw new XlsxError("invalid");
+  // Global package, directory and shared metadata have passed. A bad sheet
+  // may still fail below; these choices never declare its content ready.
+  onDirectory?.({
+    sheets: sheets.map((sheet) => ({ ...sheet })),
+    selectedId: selected,
+  });
   // Relationships are checked even though no links or embedded assets are opened.
   relations(sheetPart);
   const sheet = parseSheet(

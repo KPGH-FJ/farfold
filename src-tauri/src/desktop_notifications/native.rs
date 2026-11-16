@@ -33,6 +33,7 @@ unsafe extern "C" {
         target: *const c_char,
         body: *const c_char,
         sound: bool,
+        explicit_test: bool,
         context: *mut c_void,
         reply: SubmitReply,
     ) -> bool;
@@ -223,12 +224,11 @@ pub(super) async fn submit(
             let _ = reply.send(Ok(false));
             return;
         }
-        if super::resolve_target(
+        if !super::target_current(
             owned.state::<crate::meta_store::MetaStore>().inner(),
             &target,
-        )
-        .is_none()
-        {
+            kind,
+        ) {
             super::diagnostic_stop(
                 &owned,
                 &queued_attempt,
@@ -272,6 +272,7 @@ pub(super) async fn submit(
                 target.as_ptr(),
                 body.as_ptr(),
                 sound,
+                kind == NoticeKind::Test,
                 pointer.cast(),
                 submit_reply,
             )

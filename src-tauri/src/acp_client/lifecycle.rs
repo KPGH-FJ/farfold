@@ -198,9 +198,13 @@ struct Activity {
     closing_history: Vec<super::history_admission::Permit>,
     detached_work: u64,
 }
+#[cfg(all(test, windows))]
+pub(super) type RetirementObserver = Arc<dyn Fn(serde_json::Value) + Send + Sync>;
+
 pub(crate) struct ConnectionLife {
     pub(super) routes: Arc<super::session_routes::Routes>,
     pub(super) ingress: super::ingress_permit::ConsumerProbe,
+    pub(super) tool_terminals: super::pump::tool_terminal::Connection,
     pub state: Arc<AtomicU8>,
     pub work: Arc<AtomicU64>,
     activity: Mutex<Activity>,
@@ -209,8 +213,7 @@ pub(crate) struct ConnectionLife {
     // Installed by one owned test before prompting. This carries values only;
     // it retains no Child, Job, handle, or production completion authority.
     #[cfg(all(test, windows))]
-    pub(super) retirement_observer:
-        Arc<std::sync::OnceLock<Arc<dyn Fn(serde_json::Value) + Send + Sync>>>,
+    pub(super) retirement_observer: Arc<std::sync::OnceLock<RetirementObserver>>,
 }
 impl ConnectionLife {
     pub fn retain_opening(&self, opening: OpenReservation) {
@@ -262,6 +265,7 @@ impl ConnectionLife {
             state: Arc::new(AtomicU8::new(CONNECTING)),
             routes: Arc::new(super::session_routes::Routes::default()),
             ingress: super::ingress_permit::ConsumerProbe::default(),
+            tool_terminals: Default::default(),
             work: Arc::new(AtomicU64::new(0)),
             activity: Mutex::new(Activity {
                 last: Instant::now(),
@@ -413,6 +417,34 @@ impl ConnectionLife {
             admission: Some(admission),
             history,
         })
+    }
+    fn failed_work_is_only_activity(&self, activity: &Activity) -> bool {
+        self.state.load(Ordering::SeqCst) == READY
+            && self.work.load(Ordering::SeqCst) == 1
+            && activity.sessions == 1
+            && activity.detached_work == 0
+            && activity.operations.is_empty()
+            && activity.closing_opens.is_empty()
+            && activity.closing_admissions.is_empty()
+            && activity.closing_history.is_empty()
+            && !self.routes.has_unclaimed()
+    }
+    pub(super) fn can_close_failed_work(&self) -> bool {
+        self.activity
+            .lock()
+            .is_ok_and(|activity| self.failed_work_is_only_activity(&activity))
+    }
+    /// The owning pump has matched a prior explicit error to its retained
+    /// prompt. Fence other work and opens before asking the process owner to exit.
+    pub(super) fn close_failed_work(&self) -> Result<(), String> {
+        let mut activity = self.activity.lock().map_err(|_| "无法读取连接状态")?;
+        if !self.failed_work_is_only_activity(&activity) {
+            return Err("现在无法关闭这条连接，请检查待处理事项".into());
+        }
+        activity.close_reason = Some(CloseReason::User);
+        self.state.store(CLOSING, Ordering::SeqCst);
+        self.stop.send_replace(true);
+        Ok(())
     }
     /// Check and mark under the same lock used by admission; never remove a stale key.
     pub fn close(&self, force: bool, idle: Option<Duration>) -> Result<bool, String> {

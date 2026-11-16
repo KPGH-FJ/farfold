@@ -1,0 +1,131 @@
+{
+  "kind": "DerivedDraftConfigManagementStageFormalSummary",
+  "sourceCommit": "13422001561df7ccf0328d73e4fb49df19168464",
+  "recordedAtUtc": "2026-11-06T02:55:15.013314+00:00",
+  "formerFunctionalSource": "f54a9513d5f3cac188a82ea107374722fd4bafc9",
+  "status": "delivered_with_explicit_unverified_scope",
+  "engineering": {
+    "freshNaturalZeroCommands": 7,
+    "inputs": 2404,
+    "productionInputs": 2400,
+    "freshFixtures": 11,
+    "frontendFiles": 720,
+    "frontendPassed": 9621,
+    "rustPassed": 2401,
+    "rustFailed": 0,
+    "rustIgnored": 7,
+    "oldRustReuse": false
+  },
+  "formal": {
+    "appPath": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "mainSha256": "ac2853dcb1ba6357497abb57af9f40f97b131d70123028cb1c69dfa4907ad81e",
+    "candidateBuildCount": 1,
+    "candidateChecks": 9,
+    "installedChecks": 6,
+    "atomicNewInodeFiles": 5,
+    "normalSavedExit": true,
+    "forcedQuit": false,
+    "closedStateManifests": {
+      "entriesEach": 206275,
+      "sha256": "8b2c9a3ecbe34eea4fa40d7bc03ea55f6f21def8f8f3121aff7a6c63564fb776",
+      "equal": true,
+      "scope": "Closed-state interval only."
+    },
+    "backupIntegrity": "ok on the independently copied database",
+    "generatedDuplicateAppRemoved": true,
+    "candidateZipRetainedSha256": "f02ea4319333f6419a3be7e3cfe79e3ca75c7ddc2b40417142e42126a951940d"
+  },
+  "rootNativeColdUi": {
+    "originalP02RetainedDraftAndWorkingFolderPreserved": true,
+    "retainedDrafts": 1,
+    "agentUnselected": true,
+    "source": {
+      "path": "output/2026-11-06-draft-config-stage/formal-preparation/formal/ui/root-selected-installed-observation.json",
+      "sha256": "7f16dc28029a884acdbc3abe0bd1425bbc992bb19254703b27ef2ee89cae9aa4"
+    },
+    "scope": "Single CUA witness; source rawAX remains private. No second UI witness or complete post-start user data equality."
+  },
+  "earlierF54OwnedCopy": {
+    "sourceCommit": "f54a9513d5f3cac188a82ea107374722fd4bafc9",
+    "normalNativeSave": true,
+    "selectedSourceAndDestinationEqual": true,
+    "bytes": 70,
+    "fixtureSha256": "dd856b46bce6e2de79c5ca096e331d8586da255e45f1f9b063b2dd1eb2073386",
+    "saveClicks": 1,
+    "visibleCompletedBytes": "70 / 70",
+    "historyOpenSucceeded": false,
+    "reason": "Selected old self-owned test work folder unavailable; not retried. Local explicit file route remained available.",
+    "originalP02Preserved": true,
+    "receipt": {
+      "path": "output/2026-11-06-draft-config-stage/native-file/observation.json",
+      "sha256": "ccbd870caf7316741e25173e3fe6fbebedfae32ca82e450bea211fb7ee9dde46"
+    },
+    "scope": "Positive copy on installed f54 only; no changed-file fault, cancellation, text export, old historical bytes, performance or Agent file access."
+  },
+  "independentReaders": {
+    "draft": {
+      "path": "output/2026-11-06-draft-config-stage/p01-independent-review/reader.json",
+      "sha256": "859fe4d30f39aa91771114c3e907e9eed17cb98c902a084f5a27bbc3cf4b49da"
+    },
+    "config": {
+      "path": "output/2026-11-06-draft-config-stage/config-independent-review/reader.json",
+      "sha256": "c7aafb247daec2bb5050122ddd977231027d79b86c0536d077e13c45c5e22af6"
+    },
+    "management": {
+      "path": "output/2026-11-06-draft-config-stage/management-independent-review/reader.json",
+      "sha256": "64c4ae04abb38700275476b8aa757b465f4afc36011aba205ca104a9774f4a0d"
+    },
+    "engineering": {
+      "path": "output/2026-11-06-draft-config-stage/engineering-independent-review/reader.json",
+      "sha256": "67e38382f7fd5a968cc43feb75c9e8c739b6ed03628fb7ecd4f24f40d89d79a9"
+    },
+    "textCapsule": {
+      "path": "output/2026-11-06-draft-config-stage/capsule-independent-review/reader.json",
+      "sha256": "08e640c2fa6baf31516674035e3659c11514cad4e923e15ccecd434bb74e77b7"
+    },
+    "delivery": {
+      "path": "output/2026-11-06-draft-config-stage/formal-delivery-independent-review/reader.json",
+      "sha256": "b52baa89427c0dbc6919f6cb438d0004a3ae78e19ec80eb7ffee4acf84b8e709"
+    }
+  },
+  "privateReceiptReferences": {
+    "exit": {
+      "path": "output/2026-11-06-draft-config-stage/formal-preparation/formal/root-normal-exit-current-draft-ui.json",
+      "sha256": "6a7a5443db38172ebc3021e0e95a30ecf9ede4044a276f2b5c666dd407804541"
+    },
+    "delivery": {
+      "path": "output/2026-11-06-draft-config-stage/formal-preparation/formal/root-delivery-completion.json",
+      "sha256": "90359382f1750b56d05e066db3c08f0428a8956060f76640e81c53eba7cd7e25"
+    },
+    "install": {
+      "path": "output/2026-11-06-draft-config-stage/formal-preparation/formal/install/install-result.json",
+      "sha256": "5538f7845635a9942f6d53efc77c8d65a5d2e95b7d8111c6671220b3b5445613"
+    },
+    "closedData": {
+      "path": "output/2026-11-06-draft-config-stage/formal-preparation/formal/install/installed-independent-review-private.json",
+      "sha256": "7dac1458828957f02618e17a6a0337efce7f5b4b6ec2725c6adb1c8949401c9a"
+    },
+    "cleanup": {
+      "path": "output/2026-11-06-draft-config-stage/formal-preparation/formal/install/candidate-cleanup.json",
+      "sha256": "3ccb08a6da768af2f2e5659fd1b7dfd81834d709b94918f781bd06b0cc5bf4af"
+    }
+  },
+  "zeroNewModelSends": true,
+  "zeroOldRequestResends": true,
+  "remaining": [
+    "Actual installed delayed preserved-draft restore, conflicting config notification/ACK, and official skill/MCP retained-scope write flows were not fault-injected or executed. Controlled checks remain distinct from installed cold recovery.",
+    "Original Dirac self-test history failed this one read with unavailable work folder. Re-evaluate when original folder is available with ownership confirmed; no substitute empty folder and no retry. Native f54 copy is an independent local file normal path only.",
+    "Official skill/MCP adoption, connection and calls; actual Agent compaction/settings interactions; installed storage faults; B3/Q causes, P18/N/O attribution and NEW24 affected new sends remain open/paused as before.",
+    "Windows run41984263036 still lacks a runner under payment/spending conditions. No repeated dispatch or billing changes, no new Windows acceptance."
+  ],
+  "scopeUnchanged": {
+    "originalRequirements": 151,
+    "agents": 29,
+    "standardsEach": 8,
+    "wholeItemOrAgentAcceptanceClaimed": false
+  },
+  "publicationBoundary": "Derived observations and receipt references only; no private AX, user draft body, database, backup, complete data manifest or executable copied. The four earlier controlled capsule files remain byte exact."
+}

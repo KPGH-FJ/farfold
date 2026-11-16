@@ -1,0 +1,198 @@
+{
+  "kind": "InstalledFarfoldKiloDots3ExistingConversationModelReplyWitness",
+  "recordedUtc": "2026-11-07T05:55:18.877160+00:00",
+  "installed": {
+    "sourceCodeCommit": "d3529ff52",
+    "identity": {
+      "bundleId": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "arm64": true,
+      "signature": "adhoc",
+      "cdhash": "525e91665479f41cd8b051d0c2008a92587ad971"
+    }
+  },
+  "agent": "Kilo",
+  "officialProgramVersion": "7.8.1",
+  "requestMarker": "FARFOLD_STAGE1_KILO_DOTS3_1107",
+  "exactReply": "FARFOLD_KILO_DOTS3_OK_1107",
+  "exactReplyMatched": true,
+  "sameExistingNativeSession": true,
+  "nativeSessionFingerprint": "5e878cebc5b24efe1911fd01ff87d5fc8b838913bbee5019d21f643c302265e3",
+  "workingDirectoryFingerprint": "f60f4acc680c6fefd1c4759c045f06f51289b6c9e0074ee74828cc39883dae95",
+  "nativeWorkingDirectoryMatchesSelectedExistingDirectory": true,
+  "service": {
+    "savedKind": "existing",
+    "actualProviderID": "kilo"
+  },
+  "model": {
+    "beforeSavedChoices": {
+      "effort": "none",
+      "model": "kilo/nvidia/nemotron-3-ultra-550b-a55b:free"
+    },
+    "confirmedSavedChoices": {
+      "effort": "instant",
+      "model": "kilo/dots-studio/dots-3-note-preview:free"
+    },
+    "nativeSessionModel": {
+      "id": "dots-studio/dots-3-note-preview:free",
+      "providerID": "kilo",
+      "variant": "instant"
+    },
+    "userRequestModel": {
+      "providerID": "kilo",
+      "modelID": "dots-studio/dots-3-note-preview:free",
+      "variant": "instant"
+    },
+    "assistantProviderID": "kilo",
+    "assistantModelID": "dots-studio/dots-3-note-preview:free",
+    "assistantVariant": "instant",
+    "rawThoughtValuePreserved": false,
+    "previousAssistantVariant": "none",
+    "scope": "The observed raw effort changed from none to instant. This is not a reasoning-value preservation result."
+  },
+  "completedReply": {
+    "finish": "stop",
+    "createdMs": 1794030593945,
+    "completedMs": 1794030596143,
+    "replyTextLength": 26,
+    "replyTextSha256": "80709cb141ff3305c5fe08de8aa300f571c67ad598e0e7bead471de324df73b1",
+    "userMarkerOccurrencesInThisSession": 1,
+    "linkedAssistantMessages": 1,
+    "userPartTypes": ["text"],
+    "assistantPartTypes": ["step-start", "text", "step-finish"],
+    "toolPartsInThisReply": 0
+  },
+  "nativeReportedCost": {
+    "messageCost": 0,
+    "messageTokens": {
+      "total": 13913,
+      "input": 11848,
+      "output": 17,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 2048
+      }
+    },
+    "cumulativeSessionCost": 0.0,
+    "scope": "Native message and cumulative session fields only. No account balance, invoice or provider charge was queried."
+  },
+  "sameAgentConversationA": {
+    "appMetadataAllColumnsExactlyMatchBeforeInstall": true,
+    "nativeSessionFingerprint": "80124c00a5558b1d8088b53760abf41a24566465428069f499e0c6d10e2c6656",
+    "appSavedChoices": {
+      "effort": "none",
+      "model": "kilo/nvidia/nemotron-3-ultra-550b-a55b:free"
+    },
+    "currentNativeSessionModel": {
+      "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "providerID": "kilo",
+      "variant": "none"
+    },
+    "appUpdatedAtUnchanged": true,
+    "nativeTimeUpdated": 1793955726297
+  },
+  "tap": {
+    "sha256": "e5213e02cc08df319ff10ceb85b30ca694f6d076d81267c214225583f8eee746",
+    "bytes": 4743,
+    "eventCounts": {
+      "-:startup": 5,
+      "out:initialize": 1,
+      "in:response": 4,
+      "out:session/load": 1,
+      "in:session/update": 19,
+      "out:session/set_config_option": 1,
+      "out:session/prompt": 1
+    },
+    "promptMs": 1794030593891,
+    "finalResponseMs": 1794030596845,
+    "followingUpdates": 7,
+    "finalResponseError": "none",
+    "scope": "Metadata tap. Model values and response text are independently read from the official native database."
+  },
+  "readerActions": {
+    "queryOnly": true,
+    "newAgentLaunches": 0,
+    "newProtocolCalls": 0,
+    "newModelRequests": 0,
+    "productionDataOrSettingsWrites": 0
+  },
+  "remaining": [
+    "No new generation was sent after restoring Ultra/none; native stored B model remains last Dots3/Instant field, not used as live setting proof."
+  ],
+  "originals": {
+    "appScopedReadSha256": "25c0b7cd763dd90e461a73ad08d85c2c1172d53b4b16df3cb1f9d9f044c5d5c2",
+    "nativeScopedReadSha256": "002552d1c37365ada8ab8b5bd373068d5f6bd68a91ce1d4f525000e9f41d7e2b",
+    "readerSourceSha256": "23ef9d34e48ac9f39a87add513ce030f7a78adcc7b68e7bd1c7238e08317d02d"
+  },
+  "coldAndOriginalBaselineRestore": {
+    "atUtc": "2026-11-07T06:26:32.743545+00:00",
+    "installedSource": "2ce9c57e4",
+    "coldRestore": {
+      "atUtc": "2026-11-07T06:20:45.941890+00:00",
+      "installedSource": "2ce9c57e4",
+      "normalExitAndColdReopen": true,
+      "uiCurrentModel": "Kilo Gateway/Dots Studio: Dots3-Note Preview (free)",
+      "uiThought": "Instant",
+      "appChoices": {
+        "ses_e5037ca4dffeKQtOx0LuACJJ0z": {
+          "effort": "none",
+          "model": "kilo/nvidia/nemotron-3-ultra-550b-a55b:free"
+        },
+        "ses_e4fea0403fferFU5sExI9TZvk7": {
+          "effort": "instant",
+          "model": "kilo/dots-studio/dots-3-note-preview:free"
+        }
+      },
+      "nativeCurrentModels": {
+        "ses_e5037ca4dffeKQtOx0LuACJJ0z": {
+          "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+          "providerID": "kilo",
+          "variant": "none"
+        },
+        "ses_e4fea0403fferFU5sExI9TZvk7": {
+          "id": "dots-studio/dots-3-note-preview:free",
+          "providerID": "kilo",
+          "variant": "instant"
+        }
+      },
+      "latestAssistantFingerprint": "cef25a2260b0e469d7153390f42a4241cfba185cba8f2458701808ba262dfaef",
+      "latestAssistantStillOriginalDots3Reply": true,
+      "operatorSendClicksAfterCold": 0,
+      "scope": "actual installed UI and read-only local state after cold load; no independent generation-network trace"
+    },
+    "explicitUiRestore": {
+      "searchedExactOriginalModelId": true,
+      "confirmedOriginalFreeModel": true,
+      "uiModelAfterSuccessfulReturn": "Kilo Gateway/NVIDIA: Nemotron 3 Ultra (free)",
+      "uiThoughtAfterSuccessfulReturn": "None",
+      "appChoices": {
+        "ses_e5037ca4dffeKQtOx0LuACJJ0z": {
+          "effort": "none",
+          "model": "kilo/nvidia/nemotron-3-ultra-550b-a55b:free"
+        },
+        "ses_e4fea0403fferFU5sExI9TZvk7": {
+          "effort": "none",
+          "model": "kilo/nvidia/nemotron-3-ultra-550b-a55b:free"
+        }
+      },
+      "nativeStoredSessionModels": {
+        "ses_e5037ca4dffeKQtOx0LuACJJ0z": {
+          "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+          "providerID": "kilo",
+          "variant": "none"
+        },
+        "ses_e4fea0403fferFU5sExI9TZvk7": {
+          "id": "dots-studio/dots-3-note-preview:free",
+          "providerID": "kilo",
+          "variant": "instant"
+        }
+      },
+      "nativeBStoredModelStillDots3": true,
+      "nativeStoredModelNotClaimedToBeLiveConfiguration": true,
+      "latestAssistantIdentityUnchanged": true,
+      "newSendClicks": 0
+    },
+    "scope": "Normal cold reopen read UI Dots3/Instant. Then an explicit zero-message UI change read back Ultra/free + None and saved those exact original choices. Native stored B model remains Dots3/Instant; it is not claimed to have been rewritten or to be a live configuration query. No restored-Ultra generation was run."
+  }
+}

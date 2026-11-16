@@ -1,0 +1,91 @@
+{
+  "kind": "InstalledOwnedSkillFailureCancellationRecovery",
+  "requirements": ["P39", "P40"],
+  "sourceCommit": "c68acf7b0d6af085cddb5f9433616d4a3301beca",
+  "agent": "Codex",
+  "adapterReportedVersion": "1.13.1",
+  "scope": "One newly created project-scope synthetic skill copied byte-for-byte from retained evidence. No model prompts or adoption claim. Existing service and model choices retained.",
+  "checks": {
+    "officialProjectSkillListedEnabled": true,
+    "reviewNamesExactSkillAndUserConfigScope": true,
+    "ownedSkillTemporarilyRenamedAfterReview": true,
+    "oneExplicitConfirmationRejectedBeforeConfigurationWrite": true,
+    "visibleOutcome": "本次没有发出配置修改请求。技能位置或报告已变化，请重新查询并审阅。",
+    "configurationExactBytesUnchanged": true,
+    "ownedSkillRestoredSameBytes": true,
+    "freshOfficialQueryListsRestoredSkillEnabled": true,
+    "freshReviewClosedWithoutConfirmation": true,
+    "postCancellationQueryStillEnabled": true,
+    "allOriginalGooseNativeRowsUnchanged": true,
+    "newGooseNativeIds": 0,
+    "finalMcpPendingCount": 0,
+    "normalSaveAndQuitObserved": true
+  },
+  "modelPrompts": 0,
+  "protocolScope": {
+    "ACPInitialize": 2,
+    "ACPPreparationSessionNew": 1,
+    "ACPModelPrompts": 0,
+    "boundary": "One ordinary preparation session was created while reading saved model choices; no model request. Separate skill-management official requests are not counted by the ACP log."
+  },
+  "remaining": [
+    "Actual skill adoption/call under current model restrictions",
+    "Official installation/full source management and other Agents",
+    "Long-wait or in-flight cancellation; queries returned immediately, not artificially labelled cancelled",
+    "Full P39/P40 and whole-Agent acceptance remain open"
+  ],
+  "evidence": [
+    {
+      "path": "output/2026-11-12-cycle4/skill-recovery/launch.json",
+      "sha256": "4a4a0539c1cac9934dda05552cf3e1c3221cba8c049786884e788ff22ffbc58a"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/skill-recovery/before-confirm.json",
+      "sha256": "059267c958851d5c404ef693eab67485454d811d93b57a94a9296f794ca069ac"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/skill-recovery/after-rejection.json",
+      "sha256": "8fe02030835ff0a7e66263ab7bd6138d3685eafb2bf3188794e88acadd090a18"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/skill-recovery/configuration-after.json",
+      "sha256": "c9c4f025764c4a3e127ad97643318be85cfe9649f981fdec4d0a5ec60a097d5d"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/skill-recovery/protocol-summary.json",
+      "sha256": "3288884c9b93539b94c1904fc017670ef3ff07982bf10b2baff5fe60e5361adc"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/skill-recovery/stores-before.json",
+      "sha256": "60137bb4329ab3b9e131b11b28ef74932a952eb3ea60d2c0b802d3c9c639bf29"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/skill-recovery/stores-after.json",
+      "sha256": "621fc57f997090c11797f47be5df3f06dd798b27240a974ed14b56dbaa76a93d"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/skill-recovery/01-inventory.txt",
+      "sha256": "6fd3e262bd5a28ec0312ba3021be2931178e49e284978bd227f0f06a9e91f6f4"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/skill-recovery/02-review.txt",
+      "sha256": "e90bd03eea509c85f001615b72c643b79e2add0d30bb6b23e3e4001fc6992986"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/skill-recovery/03-target-missing.txt",
+      "sha256": "b24e4ece5457b79ac7e0f691b94bfccd943574ddc017a35b747cc8001afa1d62"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/skill-recovery/04-restored-query.txt",
+      "sha256": "86f2f2285a04557a2bc9b40f2bbf03d673050a0c678507b626eb50903442857b"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/skill-recovery/05-restored-review.txt",
+      "sha256": "ac597fd8824c947d20ea95b374196868653e9e02a4a9608bd0904f578033ecf6"
+    },
+    {
+      "path": "output/2026-11-12-cycle4/skill-recovery/06-cancelled-recheck.txt",
+      "sha256": "6cd68519a27af247cfc71d90a6a711f0036b7026f4e3b50eddef6675ac8ca2c2"
+    }
+  ]
+}

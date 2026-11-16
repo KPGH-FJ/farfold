@@ -84,6 +84,8 @@ export const USAGE_STRINGS = {
   contextCapacity: "上下文容量",
   cost: "累计费用",
   total: "累计用量",
+  accumulatedInput: "累计输入",
+  accumulatedOutput: "累计输出",
   input: "输入",
   output: "输出",
   thought: "思考",

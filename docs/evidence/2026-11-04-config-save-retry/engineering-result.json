@@ -1,0 +1,160 @@
+{
+  "recordedAt": "2026-11-04T14:57:58.744801+00:00",
+  "sourceInputs": 2369,
+  "frontendFiles": 707,
+  "frontendPassed": 9509,
+  "rustPassed": 2339,
+  "rustIgnored": 7,
+  "sevenCommands": [
+    {
+      "argv": ["corepack", "pnpm", "format:check"],
+      "naturalExitCode": 0,
+      "log": "format-final.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "receipt": {
+        "path": "output/2026-11-04-config-save-retry/engineering/checks/format-final.json",
+        "sha256": "f2cfe2ce3a9a7e99a632cea887865be53c14dd42a94c569377074b4308e97f6e"
+      },
+      "durationSeconds": 34.095
+    },
+    {
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "naturalExitCode": 0,
+      "log": "typecheck-final.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "receipt": {
+        "path": "output/2026-11-04-config-save-retry/engineering/checks/typecheck-final.json",
+        "sha256": "79aab2c61df1b3da34456844e10bc2e5dec0734e82aae913832b863e5b7c3f59"
+      },
+      "durationSeconds": 8.353
+    },
+    {
+      "argv": ["corepack", "pnpm", "test"],
+      "naturalExitCode": 0,
+      "log": "frontend-final.log",
+      "sha256": "ce422998e23b5f8814c32988e2f65aa39244dc7998e399060730296d26f69a58",
+      "receipt": {
+        "path": "output/2026-11-04-config-save-retry/engineering/checks/frontend-final.json",
+        "sha256": "a262494c351e2583a70273474cadbcd61a901453517296c05bb0320595eb0d87"
+      },
+      "durationSeconds": 41.064
+    },
+    {
+      "argv": ["corepack", "pnpm", "build"],
+      "naturalExitCode": 0,
+      "log": "build-final.log",
+      "sha256": "7828f401b8a9602bb0a8859341d78905c619960c4871fc201e506adf29431d10",
+      "receipt": {
+        "path": "output/2026-11-04-config-save-retry/engineering/checks/build-final.json",
+        "sha256": "ba10b31de3a7899d5a335da124b4eb6fb8b27da5543e11ec30b7778b576c03ad"
+      },
+      "durationSeconds": 8.705
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "naturalExitCode": 0,
+      "log": "cargo-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt": {
+        "path": "output/2026-11-04-config-save-retry/engineering/checks/cargo-fmt.json",
+        "sha256": "eb4b641a34f8b284289d48ea2dcdf9126520582b860ee03db29f657c7c532c2e"
+      },
+      "durationSeconds": 1.309
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "naturalExitCode": 0,
+      "log": "clippy.log",
+      "sha256": "dd621e9ff7c9eac161c730aa8a79332dd68698435a7a84d044d9ad39dfa1f5d2",
+      "receipt": {
+        "path": "output/2026-11-04-config-save-retry/engineering/checks/clippy.json",
+        "sha256": "f3ad78b81ae025642853ec3de8d6c1468e1d088fe2c6d5423bf97ca402bcf82d"
+      },
+      "durationSeconds": 0.471
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "naturalExitCode": 0,
+      "log": "rust-full.log",
+      "sha256": "02da64f33d4db1782ec05880844d8125fa51eeb7219afb4592f25b180f552171",
+      "receipt": {
+        "path": "output/2026-11-04-config-save-retry/engineering/checks/rust-full.json",
+        "sha256": "b13c9c58152814c15ebe90c731de0336496dcf8b7fa9817cf97b0169dc0e89dc"
+      },
+      "durationSeconds": 132.704
+    }
+  ],
+  "logProvenance": {
+    "format-final.log": {
+      "source": "output/2026-11-04-config-save-retry/engineering/checks/format-final.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    "typecheck-final.log": {
+      "source": "output/2026-11-04-config-save-retry/engineering/checks/typecheck-final.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    "frontend-final.log": {
+      "source": "output/2026-11-04-config-save-retry/engineering/checks/frontend-final.log",
+      "sha256": "ce422998e23b5f8814c32988e2f65aa39244dc7998e399060730296d26f69a58"
+    },
+    "build-final.log": {
+      "source": "output/2026-11-04-config-save-retry/engineering/checks/build-final.log",
+      "sha256": "7828f401b8a9602bb0a8859341d78905c619960c4871fc201e506adf29431d10"
+    },
+    "cargo-fmt.log": {
+      "source": "output/2026-11-04-config-save-retry/engineering/checks/cargo-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "clippy.log": {
+      "source": "output/2026-11-04-config-save-retry/engineering/checks/clippy.log",
+      "sha256": "dd621e9ff7c9eac161c730aa8a79332dd68698435a7a84d044d9ad39dfa1f5d2"
+    },
+    "rust-full.log": {
+      "source": "output/2026-11-04-config-save-retry/engineering/checks/rust-full.log",
+      "sha256": "02da64f33d4db1782ec05880844d8125fa51eeb7219afb4592f25b180f552171"
+    }
+  },
+  "finalInputs": {
+    "before": {
+      "path": "output/2026-11-04-config-save-retry/engineering/source-before.json",
+      "sha256": "5e8ca9618627e49b7f558471c54a3dabd6b3b46e952e04bb1d06441850c2a305"
+    },
+    "after": {
+      "path": "output/2026-11-04-config-save-retry/engineering/source-after.json",
+      "sha256": "5e8ca9618627e49b7f558471c54a3dabd6b3b46e952e04bb1d06441850c2a305"
+    },
+    "allEqual": true
+  },
+  "allSevenRerunOnFinalDeclaredInputs": true,
+  "dependencyReuseUsed": false,
+  "sourceBoundary": "Declared2369source/authority/check-configuration inputs matched before and after all seven genuine commands. No continuous mutation lock or complete transitive environment freeze is claimed. Pure evidence/status documents generated later have separate format/docs checks.",
+  "originals": {
+    "path": "docs/evidence/2026-11-04-config-save-retry/engineering-originals.zip",
+    "sha256": "69dc42cbf0761a13aa30a38534acf35807577a638b7efdb3692d8686e3a3c26b",
+    "entries": 20,
+    "bytes": 289343,
+    "byteExact": true
+  },
+  "scope": "macOS arm64 engineering only. Not the new source installed-app UI, actual provider/model changes or complete Windows execution. Seven ignored tests remain explicitly ignored; existing owned storage bridge was separately executed earlier."
+}

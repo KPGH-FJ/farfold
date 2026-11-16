@@ -334,7 +334,17 @@ it.each([false, true])(
         h.channels
           .get(old.nativeSessionId)
           .onmessage({ kind: "configCheck", check });
-        return check;
+        return {
+          ...check,
+          configuration: {
+            configOptions: [option],
+            configOptionsModern: true,
+            configCheck: check,
+            service: null,
+            permissionConfigId: null,
+            permissionState: old.permissionState,
+          },
+        };
       }
       return command === "settings_get" ? null : [];
     });
@@ -613,3 +623,172 @@ it("keeps bound live unknown data and connection loss after opening staging sett
   expect(state.connectionLost).toBe(true);
   expect(state.connectionCloseReason).toBe("unexpected");
 });
+
+it("explicitly retries after an identical known check arrives while detaching", async () => {
+  const old = await seed("recheck-same-check-during-detach");
+  const channel = h.channels.get(old.nativeSessionId);
+  channel.onmessage({
+    kind: "configCheck",
+    check: {
+      ...ready(),
+      status: "blocked",
+      issues: [
+        {
+          id: "model",
+          category: "model",
+          reason: "changed",
+          expected: "confirmed",
+          current: "different",
+        },
+      ],
+      current: {
+        choices: [
+          {
+            id: "model",
+            category: "model",
+            type: "select",
+            value: "different",
+          },
+        ],
+      },
+    },
+  });
+  const initialCheck = old.configCheck;
+  const draftKey = `session:${old.key}`;
+  composerDrafts.update(draftKey, (draft) => ({
+    ...draft,
+    text: "Keep the explicit user's draft",
+  }));
+  const draft = composerDrafts.read(draftKey);
+  const history = old.items;
+  let releaseDetach!: () => void;
+  const detaching = new Promise<void>((resolve) => {
+    releaseDetach = resolve;
+  });
+  let detaches = 0;
+  let opens = 0;
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command === "session_detach_for_config_check") {
+      if (++detaches === 1) await detaching;
+    }
+    if (command === "session_open") {
+      if (++opens === 1) throw new Error("Controlled failed reload");
+      return opened(args);
+    }
+    return command === "settings_get" ? null : [];
+  });
+  const first = threads.recheckConfig(old.key);
+  expect(detaches).toBe(1);
+  channel.onmessage({
+    kind: "configCheck",
+    check: structuredClone(initialCheck),
+  });
+  expect(old.configCheck).not.toBe(initialCheck);
+  expect(old.configCheck).toEqual(initialCheck);
+  releaseDetach();
+  await expect(first).rejects.toBeTruthy();
+  expect(opens).toBe(1);
+  expect(threads.thread(old.key)).toBe(old);
+  expect(old.connectionLost).toBe(true);
+  expect(old.items).toBe(history);
+  expect(composerDrafts.read(draftKey)).toBe(draft);
+  const recovered = await threads.reconnect(old.key);
+  expect({ detaches, opens }).toEqual({ detaches: 2, opens: 2 });
+  expect(recovered?.configCheck?.status).toBe("ready");
+  expect(composerDrafts.read(draftKey)).toBe(draft);
+  const detachCalls = h.invoke.mock.calls.filter(
+    ([command]) => command === "session_detach_for_config_check",
+  );
+  expect(detachCalls[1][1].allowAlreadyDetached).toBe(true);
+  expect(
+    h.invoke.mock.calls.some(([command]) =>
+      ["session_prompt", "session_close", "session_set_config"].includes(
+        command,
+      ),
+    ),
+  ).toBe(false);
+});
+
+it.each(["known-different", "unknown", "record_failed"] as const)(
+  "does not authorize a detached retry after a new %s check",
+  async (kind) => {
+    const old = await seed(`recheck-new-guard-during-detach-${kind}`);
+    const channel = h.channels.get(old.nativeSessionId);
+    const initial = {
+      ...ready(),
+      status: kind === "record_failed" ? "record_failed" : "blocked",
+      issues: [
+        {
+          id: "model",
+          category: "model",
+          reason: kind === "unknown" ? "unknown" : "changed",
+          expected: "confirmed",
+          current: "different",
+        },
+      ],
+      current: {
+        choices: [
+          {
+            id: "model",
+            category: "model",
+            type: "select",
+            value: "different",
+          },
+        ],
+      },
+    };
+    channel.onmessage({ kind: "configCheck", check: initial });
+    const initialCheck = old.configCheck;
+    let releaseDetach!: () => void;
+    const detaching = new Promise<void>((resolve) => {
+      releaseDetach = resolve;
+    });
+    let detached = false;
+    let opens = 0;
+    h.invoke.mockImplementation(async (command, args) => {
+      if (command === "session_detach_for_config_check") {
+        if (detached) {
+          if (!args.allowAlreadyDetached)
+            throw new Error("Detached route requires its original retry owner");
+        } else {
+          await detaching;
+          detached = true;
+        }
+      }
+      if (command === "session_open") {
+        if (++opens === 1 && kind === "known-different")
+          throw new Error("Controlled failed reload");
+        return opened(args);
+      }
+      return command === "settings_get" ? null : [];
+    });
+    const first = threads.recheckConfig(old.key);
+    const latest = structuredClone(initial);
+    if (kind === "known-different") {
+      latest.issues[0].current = "third";
+      latest.current.choices[0].value = "third";
+    }
+    channel.onmessage({ kind: "configCheck", check: latest });
+    expect(old.configCheck).not.toBe(initialCheck);
+    expect(old.configCheck).toEqual(latest);
+    releaseDetach();
+    await expect(first).rejects.toBeTruthy();
+    expect(await threads.reconnect(old.key)).toBeUndefined();
+    expect(opens).toBe(kind === "known-different" ? 1 : 0);
+    expect(old.configCheck).toEqual(latest);
+    expect(old.modelDrift).toBe(true);
+    expect(old.queuePaused).toBe("unavailable");
+    expect(
+      h.invoke.mock.calls
+        .filter(([command]) => command === "session_detach_for_config_check")
+        .every(([, args]) => args.allowAlreadyDetached !== true),
+    ).toBe(true);
+    expect(
+      h.invoke.mock.calls.some(([command]) =>
+        ["session_prompt", "session_close", "session_set_config"].includes(
+          command,
+        ),
+      ),
+    ).toBe(false);
+  },
+);

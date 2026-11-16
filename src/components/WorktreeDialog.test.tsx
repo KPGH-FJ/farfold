@@ -325,6 +325,7 @@ it("shows unknown operation recovery and keeps the ordinary-folder fallback", ()
   const html = renderToStaticMarkup(render());
   expect(html).toContain(S.unknownId);
   expect(html).toContain(S.unknown);
+  expect(html).toContain("同一文件夹里的对话共享文件");
   expect(button(S.ordinary).props.disabled).toBe(false);
   expect(button(S.inspect).props.disabled).toBe(true);
   expect(button(S.check).props.disabled).toBe(false);

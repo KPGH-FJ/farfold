@@ -89,6 +89,60 @@ fn exit_seal_is_independent_of_other_activity_and_blocks_new_reservations() {
 }
 
 #[test]
+fn busy_start_settles_only_the_unstarted_copy() {
+    let (directory, file, first_destination) = fixture();
+    let jobs = FileCopyJobs::default();
+    let first = jobs.prepare(file.clone(), first_destination).unwrap();
+    let first_worker = {
+        let mut registry = jobs.jobs.lock().unwrap();
+        let worker = registry.entries[&first.operation_id].as_copy().unwrap();
+        worker.status.lock().unwrap().state = CopyState::Copying;
+        registry.active = Some(first.operation_id.clone());
+        worker
+    };
+    let second_destination = directory.path().join("second.txt");
+    let second = jobs
+        .prepare(file.clone(), second_destination.to_str().unwrap().into())
+        .unwrap();
+    let rejected = jobs.start(&second.operation_id).unwrap().unwrap();
+    let reply = serde_json::to_value(&rejected).unwrap();
+    assert_eq!(reply["operationId"], second.operation_id);
+    assert_eq!(reply["file"], serde_json::to_value(&file).unwrap());
+    assert_eq!(reply["destination"], second.destination);
+    assert_eq!(reply["state"], "failed");
+    assert_eq!(reply["code"], "busy");
+    assert_eq!(reply["settled"], true);
+    assert_eq!(reply["bytesCopied"], 0);
+    assert!(reply.get("receipt").is_none());
+    assert_eq!(first_worker.snapshot().state, CopyState::Copying);
+    assert_eq!(
+        jobs.jobs.lock().unwrap().active.as_deref(),
+        Some(first.operation_id.as_str())
+    );
+    assert_eq!(jobs.seal_exit().unwrap_err(), EXIT_BLOCKED);
+
+    first_worker.finish(CopyOutcome::Cancelled);
+    jobs.jobs.lock().unwrap().active = None;
+    assert!(
+        jobs.seal_exit().is_ok(),
+        "refused copy still owns admission"
+    );
+    for observed in [
+        jobs.status(&second.operation_id).unwrap().unwrap(),
+        jobs.start(&second.operation_id).unwrap().unwrap(),
+    ] {
+        assert_eq!(serde_json::to_value(observed).unwrap(), reply);
+    }
+    assert!(jobs.release(&second.operation_id).unwrap());
+    assert!(!second_destination.exists());
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
+    assert_eq!(
+        std::fs::read(&file.resolved_path).unwrap(),
+        b"exact bytes\r\n"
+    );
+}
+
+#[test]
 fn capacity_is_bounded_and_release_removes_only_in_memory_reservation() {
     let (_directory, file, destination) = fixture();
     let jobs = FileCopyJobs::default();

@@ -1,0 +1,44 @@
+{
+  "scope": "New cohort in existing Windows launch-prerequisites workflow; ordinary defaults and old cohorts retained. Local checks are not native Windows execution.",
+  "functionalSource": "aeb0dc491dbea76003aad988d86b675034b837ad",
+  "nativeSelection": {
+    "groups": 5,
+    "expectedExactTests": 18,
+    "WindowsExecuted": false
+  },
+  "frontendSelection": {
+    "typecheckPlanned": true,
+    "exactFiles": [
+      "src/runtime/ui_error.test.ts",
+      "src/components/ThreadView.history-recovery.test.tsx"
+    ],
+    "expectedTests": 51,
+    "localActualVitestJsonPassed": 51,
+    "localJSONSchemaValidated": true,
+    "localWindowsProofClaimed": false
+  },
+  "sourceBinding": "New cohort expands tracked source inputs to frontend source/lock/configuration; both phases match same built binary/source map. Windows CRLF hash is distinct from the functional LF commit blob.",
+  "localPowerShell": "pwsh unavailable; no local parse/execution claim. Existing selected-build performs native ParseFile before compilation.",
+  "originals": {
+    "path": "docs/evidence/2026-11-04-open-failure-diagnostics/windows-ci-local-originals.zip",
+    "sha256": "1472e087dfdd521e6566bbeaa71cb46b3c4cb02fb5d679644ebbd7ff85d694dd",
+    "entries": 8,
+    "byteExact": true
+  },
+  "changedFiles": [
+    ".github/workflows/windows-launch-prerequisites.yml",
+    ".github/scripts/windows-launch-prerequisites.ps1",
+    ".github/scripts/windows-selected-build.ps1"
+  ],
+  "noNewWorkflowOrProductionEnvSwitch": true,
+  "dispatchPending": false,
+  "dispatched": {
+    "runId": 41841306844,
+    "sourceHead": "96c0f902becb84718e38fc61280b0c92e3dee043",
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41841306844",
+    "status": "completed",
+    "nativeResultPending": false,
+    "actualSelectedResult": "passed18native/51frontend/typecheck/PSparse4",
+    "actualSummary": "windows-open-failure-41841306844.json"
+  }
+}

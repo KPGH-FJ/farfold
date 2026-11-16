@@ -1,0 +1,22 @@
+{
+  "started_ns": 1794396394960809000,
+  "finished_ns": 1794396421655766000,
+  "expected_files": 619,
+  "verified_files": 619,
+  "failures": 0,
+  "converted_files": 607,
+  "no_benefit_files": 12,
+  "original_allocated_bytes": 36610584576,
+  "current_allocated_bytes": 8912580608,
+  "allocated_reduction_bytes": 27698003968,
+  "logical_bytes_unchanged": 36608910905,
+  "frozen_hashes": {
+    "compress_manifests.py": "ab9af903e3767eb78cb5dd1cf1b206f45f44fd213e5e1865645e82c5b7e57e90",
+    "manifest.json": "1c8116372b6a039ee8842465d90e3b665ace39710b4d2361ffb7e7dc62f3ae4d"
+  },
+  "candidate_directories_remaining": [],
+  "df_k_after": "Filesystem   1024-blocks      Used Available Capacity iused     ifree %iused  Mounted on\n/dev/disk3s5   239311296 129170156  63334068    68% 1297778 633340680    0%   /System/Volumes/Data\n",
+  "df_caveat": "Other development is concurrent; net df change is not attributable solely to compression.",
+  "all_source_bytes_match_frozen_manifest": true,
+  "inode_ctime_blocks_flags_changed_with_receipts": true
+}

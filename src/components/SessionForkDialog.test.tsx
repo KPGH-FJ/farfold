@@ -93,6 +93,25 @@ it("requires explicit confirmation of complete current context and shared files"
   expect(control.start).not.toHaveBeenCalled();
 });
 
+it("reviews an inclusive historical point and current shared files before one dispatch", () => {
+  control = {
+    ...control,
+    historyPoint: { messageId: "official", preview: "Earlier selected answer" },
+  };
+  const tree = render();
+  expect(text(tree)).toContain(S.pointScope);
+  expect(text(tree)).toContain(S.pointFiles);
+  expect(text(tree)).toContain("Earlier selected answer");
+  expect(text(tree)).not.toContain(S.scope);
+  expect(
+    nodes(tree).find((node) => node.type === WorkspaceDialog)!.props.title,
+  ).toBe(S.pointTitle);
+  expect(control.start).not.toHaveBeenCalled();
+  click(S.pointConfirm, nodes(tree));
+  click(S.pointConfirm, nodes(tree));
+  expect(control.start).toHaveBeenCalledOnce();
+});
+
 it("synchronously admits one confirmation and never infers success from dispatch", () => {
   const tree = nodes();
   click(S.confirm, tree);

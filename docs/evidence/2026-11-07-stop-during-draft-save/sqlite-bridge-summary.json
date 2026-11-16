@@ -1,0 +1,147 @@
+{
+  "kind": "controlled-Composer-stop-during-SQLite-save-reply",
+  "startedAtUtc": "2026-11-06T16:59:42.234Z",
+  "endedAtUtc": "2026-11-06T16:59:43.731Z",
+  "sourceHead": "d750c2bf13e70c5cedc5313b94969cb0013e76cd",
+  "relevantSourceEndpointsMatch": true,
+  "driver": {
+    "bindingSource": "output/2026-11-06-wave-01/open-error-boundary/green-binary.json",
+    "sha256": "e97f8f87d912e30df78176e61a1b2c00b06975b4c24a02fedd94e20605ffcabf",
+    "shortSha256": "e97f8f87d912",
+    "newCargoBuilds": 0,
+    "defaultIgnoredAndOneExplicitListingVerified": true
+  },
+  "testsPassed": 2,
+  "sqliteWrites": 15,
+  "sqliteReads": 8,
+  "retained": {
+    "originalSeparateDraft": true,
+    "unchangedPriorQueue": true,
+    "finalSendPendingFalse": true,
+    "extraPromptCountAcrossBothCases": 0,
+    "freshConnectionFinalReadBothCases": true,
+    "testDraftTextAndEmptyAttachmentList": true,
+    "testDraftText": true
+  },
+  "cases": [
+    {
+      "variant": "waiting",
+      "startedAtUtc": "2026-11-06T16:59:42.234Z",
+      "endedAtUtc": "2026-11-06T16:59:42.970Z",
+      "passed": true,
+      "binarySource": "output/2026-11-06-wave-01/open-error-boundary/green-binary.json",
+      "driverSha256": "e97f8f87d912e30df78176e61a1b2c00b06975b4c24a02fedd94e20605ffcabf",
+      "sqliteWrites": 8,
+      "sqliteReads": 4,
+      "heldWriteExchange": 8,
+      "events": [
+        {
+          "event": "prompt_dispatched",
+          "atUtc": "2026-11-06T16:59:42.409Z"
+        },
+        {
+          "event": "second_sqlite_write_succeeded_before_frontend_reply",
+          "atUtc": "2026-11-06T16:59:42.692Z",
+          "exchange": 8
+        },
+        {
+          "event": "fresh_sqlite_connection_reads_pending_write_before_stop",
+          "atUtc": "2026-11-06T16:59:42.747Z",
+          "exchange": 9
+        },
+        {
+          "event": "matched_original_stop_dispatched",
+          "atUtc": "2026-11-06T16:59:42.751Z"
+        },
+        {
+          "event": "second_success_reply_delivered",
+          "atUtc": "2026-11-06T16:59:42.802Z",
+          "exchange": 8
+        },
+        {
+          "event": "matched_original_stop_confirmed",
+          "atUtc": "2026-11-06T16:59:42.853Z"
+        },
+        {
+          "event": "fresh_sqlite_connection_reads_final_snapshot",
+          "atUtc": "2026-11-06T16:59:42.969Z",
+          "exchange": 12
+        }
+      ],
+      "promptCount": 1,
+      "stopCount": 1,
+      "priorQueueCount": 1,
+      "finalReadBackConfirmed": true,
+      "scope": "Current Composer and conversation store, actual MetaStore and SQLite in a private temporary database, controlled IPC promise delivery and Agent replies. No native WebView, installed app, actual Agent, real writer contention or production data."
+    },
+    {
+      "variant": "confirmed",
+      "startedAtUtc": "2026-11-06T16:59:43.056Z",
+      "endedAtUtc": "2026-11-06T16:59:43.731Z",
+      "passed": true,
+      "binarySource": "output/2026-11-06-wave-01/open-error-boundary/green-binary.json",
+      "driverSha256": "e97f8f87d912e30df78176e61a1b2c00b06975b4c24a02fedd94e20605ffcabf",
+      "sqliteWrites": 7,
+      "sqliteReads": 4,
+      "heldWriteExchange": 7,
+      "events": [
+        {
+          "event": "prompt_dispatched",
+          "atUtc": "2026-11-06T16:59:43.224Z"
+        },
+        {
+          "event": "second_sqlite_write_succeeded_before_frontend_reply",
+          "atUtc": "2026-11-06T16:59:43.451Z",
+          "exchange": 7
+        },
+        {
+          "event": "fresh_sqlite_connection_reads_pending_write_before_stop",
+          "atUtc": "2026-11-06T16:59:43.506Z",
+          "exchange": 8
+        },
+        {
+          "event": "matched_original_stop_dispatched",
+          "atUtc": "2026-11-06T16:59:43.509Z"
+        },
+        {
+          "event": "matched_original_stop_confirmed",
+          "atUtc": "2026-11-06T16:59:43.561Z"
+        },
+        {
+          "event": "second_success_reply_delivered",
+          "atUtc": "2026-11-06T16:59:43.561Z",
+          "exchange": 7
+        },
+        {
+          "event": "fresh_sqlite_connection_reads_final_snapshot",
+          "atUtc": "2026-11-06T16:59:43.731Z",
+          "exchange": 11
+        }
+      ],
+      "promptCount": 1,
+      "stopCount": 1,
+      "priorQueueCount": 0,
+      "finalReadBackConfirmed": true,
+      "scope": "Current Composer and conversation store, actual MetaStore and SQLite in a private temporary database, controlled IPC promise delivery and Agent replies. No native WebView, installed app, actual Agent, real writer contention or production data."
+    }
+  ],
+  "earlierHarnessFailures": [
+    {
+      "log": "first-run.log",
+      "cause": "mock startup invocation lacked the resolved promise shape; no target test case reached"
+    },
+    {
+      "log": "second-run.log",
+      "cause": "harness incorrectly expected the explicit cleared sendPending:false field to be omitted; both exchanges retained in the corresponding second-* summaries"
+    }
+  ],
+  "scope": "Current Composer and conversation store, actual MetaStore and SQLite in a private temporary database, controlled IPC promise delivery and Agent replies. No native WebView, installed app, actual Agent, real writer contention or production data.",
+  "testDraftAttachmentCount": 0,
+  "localFixtureDirectory": "output/2026-11-07-stop-sqlite-bridge",
+  "fixtureSha256": {
+    "stop-sqlite.test.tsx": "1473751ab7e3f8d1705a9d667a0c82fe75aafeeb7b445d36ffa1d6fc8aa21a76",
+    "vitest.config.mts": "20e3c3558b79e0c404d5321289799f3911facd24acb04ccfcc230a89daf562ff",
+    "final-run.log": "5992d8fc92b259bacc52057a7b8b03a609cd5412d4c7ca2a22e0df87d028cdfc",
+    "final-source-before.sha256": "4268a5ad613c63ef3733d7abd95c24d9ed35418ec51e65a8a9e978b43c4835d1"
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "kind": "FirstWaveInstalledTransportDiagnosticsAndStorageIpcCheckpoint",
+  "firstPhaseComplete": false,
+  "firstWaveFullyAccepted": 0,
+  "installedFunctionalSource": "68aefdb496c284252a38e86049d269baf0432439",
+  "installedMainSha256": "ad8b6ed5613404ed6e65a1686bba9882d2eedcd55732b1c67eb842149d667c5c",
+  "engineeringCommit": "8f487c843a00573511d1165660b0a6ef1a0ac155",
+  "platform": "macOS arm64 27.0 (26A425)",
+  "installedAttempts": {
+    "CopilotOriginal": {
+      "initializeResult": "not_observed",
+      "startupOutcome": "timeout",
+      "loadDispatched": false,
+      "historyUpdates": 0,
+      "additionalInboundResponsesAfterLoadByRowOrder": null,
+      "parentStdinBytes": 486,
+      "parentStdoutBytes": 0,
+      "parentStderrBytes": 0,
+      "ownedCleanupObserved": true,
+      "safeTapSha256": "bebd8b6bee8cdf8ecb709fcd384838bd160a7e7f39b4836a90f1db70c1206e13"
+    },
+    "KiloOriginal": {
+      "initializeResult": "not_observed",
+      "startupOutcome": "timeout",
+      "loadDispatched": false,
+      "historyUpdates": 0,
+      "additionalInboundResponsesAfterLoadByRowOrder": null,
+      "parentStdinBytes": 486,
+      "parentStdoutBytes": 0,
+      "parentStderrBytes": 0,
+      "ownedCleanupObserved": true,
+      "safeTapSha256": "9a3cfe627ee46f490edfb5a0119058ce363b37a6f930fc295a0ea20799c60fa7"
+    },
+    "GooseOriginal": {
+      "initializeResult": "matched_result",
+      "startupOutcome": "success",
+      "loadDispatched": true,
+      "historyUpdates": 3,
+      "additionalInboundResponsesAfterLoadByRowOrder": 0,
+      "parentStdinBytes": 793,
+      "parentStdoutBytes": 2296,
+      "parentStderrBytes": 0,
+      "ownedCleanupObserved": true,
+      "safeTapSha256": "8dbbd7e6bcf078a5d7f243605e2bfda5b0359f367f7f74463029c61da43b5c18"
+    },
+    "KiloOriginalWithPipeSampling": {
+      "initializeResult": "not_observed",
+      "startupOutcome": "timeout",
+      "loadDispatched": false,
+      "historyUpdates": 0,
+      "additionalInboundResponsesAfterLoadByRowOrder": null,
+      "parentStdinBytes": 486,
+      "parentStdoutBytes": 0,
+      "parentStderrBytes": 0,
+      "ownedCleanupObserved": true,
+      "safeTapSha256": "c76af66f9ce2a61835b27056305d9b530c90bcd0b50abb881e7c2af3f2e65f6d"
+    },
+    "GooseOriginalWithPipeSampling": {
+      "initializeResult": "matched_result",
+      "startupOutcome": "success",
+      "loadDispatched": true,
+      "historyUpdates": 12,
+      "additionalInboundResponsesAfterLoadByRowOrder": 0,
+      "parentStdinBytes": 793,
+      "parentStdoutBytes": 8639,
+      "parentStderrBytes": 0,
+      "ownedCleanupObserved": true,
+      "safeTapSha256": "dc05a961f814a119f72481df3b12b64fad39d4fde0a4b4cfc791827f1f698ff3"
+    },
+    "KiloProgramCheck": {
+      "initializeResult": "not_observed",
+      "startupOutcome": "timeout",
+      "loadDispatched": false,
+      "historyUpdates": 0,
+      "additionalInboundResponsesAfterLoadByRowOrder": null,
+      "parentStdinBytes": 486,
+      "parentStdoutBytes": 0,
+      "parentStderrBytes": 0,
+      "ownedCleanupObserved": true,
+      "safeTapSha256": "ce6ef8e0f4d1f8a4d4a6d864991f7dd6eb69ff1c2dd4bfe3fe76293f15fc7c4e"
+    }
+  },
+  "directAndIsolatedInitialize": {
+    "github-copilot-cli": {
+      "registeredVersion": "1.0.89",
+      "sdkWireDirectSeconds": 0.539,
+      "productionTransportInheritedSeconds": 0.55,
+      "productionTransportResolvedSeconds": 0.242,
+      "isolatedManagerReadySeconds": 0.805
+    },
+    "kilo": {
+      "registeredVersion": "7.8.1",
+      "sdkWireDirectSeconds": 1.033,
+      "productionTransportInheritedSeconds": 1.076,
+      "productionTransportResolvedSeconds": 0.877,
+      "isolatedManagerReadySeconds": 1.355
+    }
+  },
+  "gooseDirectAndIsolated": {
+    "registeredVersion": "1.52.0",
+    "sameOwnedOriginal": true,
+    "directMatchedLoadSeconds": 0.084,
+    "directUpdatesForOriginal": 33,
+    "isolatedManagerMatchedOriginalSeconds": 0.435,
+    "isolatedManagerSavedOptionsReapplied": false
+  },
+  "pipeAndProcessSampling": {
+    "positiveControlInputAndOutput": {
+      "knownInputQueue": 7,
+      "knownOutputQueue": 13,
+      "knownStderrQueue": 0,
+      "exitCode": 0,
+      "reported": "7,13,0"
+    },
+    "KiloOriginal": {
+      "samples": 34,
+      "seconds": 22.51,
+      "stdinPending": 486,
+      "stdoutPending": 0,
+      "stderrPending": 0
+    },
+    "GooseOriginal": {
+      "samples": 18,
+      "seconds": 11.593,
+      "stdinPending": 0,
+      "stdoutPending": 0,
+      "stderrPending": 0
+    },
+    "GooseOriginalSampleCountAtCwdOpen": 48,
+    "KiloProgramCheckSampleCountAtCwdOpen": 48,
+    "KiloProgramCheckSingleSampleStdinPendingBytes": 486,
+    "KiloProgramCheckDefaultCwdVerified": false,
+    "attributableDesktopPermissionDecisionObserved": false,
+    "underlyingCauseConfirmed": false
+  },
+  "storageIpc": {
+    "mockRuntimeIpcInvocations": 9,
+    "selectedRustCasesPassed": 19,
+    "existingDraftAfterSqliteBusy": true,
+    "explicitRetryAndNewConnectionReadback": true,
+    "realNativeExitExercised": false,
+    "newFormalInstallation": false
+  },
+  "engineering": {
+    "declaredInputsBeforeAfterEqual": 2405,
+    "commandsPassed": 7,
+    "frontendFiles": 721,
+    "frontendPassed": 9642,
+    "rustPassed": 2405,
+    "rustIgnored": 7,
+    "initialRustTestBinaryRetainedOneExtraTemporaryIgnoredProbe": true,
+    "restoredSourceRetestedWithFreshRustCompilation": true
+  },
+  "preservation": {
+    "originalUnsentDraftVisible": true,
+    "retainedDraftCount": 1,
+    "newPrompts": 0,
+    "oldResends": 0,
+    "permissionResponses": 0,
+    "actualAgentStops": 0
+  },
+  "evidenceDigests": {
+    "realTransportIndependent": "361ffdd5cfc33f91510521366b7fd256a8cc2df2a33a186812df93379e40dadc",
+    "pipeIndependent": "482261caf6efb14c3155865d5a5622c25db10de891f08513132e338bf84c1d84",
+    "storageIndependent": "56292d8188a34d54c977d4b87191151b83e8d485db32e9373f6575ed576659b6",
+    "kiloProgramProcess": "19d54fb82bcee6c5fad424cca1c74a1287d3eb2bede18cf64713d547d6fa8977",
+    "storageEvidence": "0c1d2002286ea43856e9cd5d5e4e88864c9c4228366d8d1bcf59df0c7a9c69b7"
+  }
+}

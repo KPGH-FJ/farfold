@@ -44,6 +44,10 @@ vi.mock("react", async (original) => ({
   },
 }));
 import { VisualFilePreview } from "./VisualFilePreview";
+import type {
+  ImagePreviewCandidate,
+  LoadedImagePreview,
+} from "./visual_file_replacement";
 import * as draft from "../runtime/draft_images";
 import * as raster from "../runtime/image_bytes";
 import {
@@ -74,11 +78,19 @@ function nodes(tree: ReactNode): E[] {
   });
   return all;
 }
-function commit() {
+function commit(
+  options: Partial<Parameters<typeof VisualFilePreview>[0]> = {},
+  candidateElement?: HTMLImageElement,
+) {
   h.cursor = 0;
-  const tree = VisualFilePreview({ preview, active: true });
+  const all = nodes(VisualFilePreview({ preview, active: true, ...options }));
+  for (const node of all.filter((n) => n.type === "img")) {
+    const ref = node.props.ref as { current: HTMLImageElement | null };
+    if (ref === options.imageCandidate?.surface.image)
+      ref.current = candidateElement ?? null;
+  }
   for (const fn of h.effects.splice(0)) fn();
-  return nodes(tree);
+  return all;
 }
 function text(elements: E[]): string {
   return elements
@@ -97,14 +109,76 @@ function cleanup() {
 }
 function pending() {
   let resolve!: () => void;
-  const promise = new Promise<void>((yes) => {
+  let reject!: (error: Error) => void;
+  const promise = new Promise<void>((yes, no) => {
     resolve = yes;
+    reject = no;
   });
-  return { promise, resolve };
+  return { promise, resolve, reject };
 }
 const tick = async () => {
-  for (let i = 0; i < 8; i++) await Promise.resolve();
+  for (let i = 0; i < 14; i++) await Promise.resolve();
 };
+
+class MountedImage extends EventTarget {
+  private source: string | null = null;
+  writes = vi.fn();
+  complete = false;
+  naturalWidth = 0;
+  naturalHeight = 0;
+  request = pending();
+  decode = vi.fn(() => this.request.promise);
+  set src(url: string) {
+    this.source = url;
+    this.writes(url);
+  }
+  getAttribute() {
+    return this.source;
+  }
+  removeAttribute() {
+    this.source = null;
+  }
+  load() {
+    this.complete = true;
+    this.naturalWidth = 2;
+    this.naturalHeight = 1;
+    this.dispatchEvent(new Event("load"));
+  }
+}
+
+async function oldImage() {
+  const onReadiness = vi.fn();
+  commit({ onReadiness });
+  await tick();
+  const displayed = commit({ onReadiness }).find(
+    (node) => node.type === "img",
+  )!;
+  (displayed.props.onLoad as () => void)();
+  expect(onReadiness).toHaveBeenLastCalledWith({
+    source: original,
+    location: { kind: "image" },
+  });
+  return onReadiness;
+}
+
+function replacement(data = original.data): ImagePreviewCandidate {
+  return {
+    preview: {
+      ...original,
+      data,
+      file: {
+        ...file,
+        size: Buffer.from(data, "base64").length,
+        version: "image-v2",
+        sha256: "image-v2-sha",
+      },
+    },
+    surface: { slot: 1, image: { current: null } },
+    controller: new AbortController(),
+    current: () => true,
+    settle: vi.fn(),
+  };
+}
 
 let queue: Promise<void>[] = [],
   created = 0,
@@ -277,3 +351,147 @@ it("late successful image decode cannot publish after this actual preview become
     await tick();
   }
 });
+
+it("waits for the mounted candidate load after decode and promotes that node without a second source or decode", async () => {
+  const onReadiness = await oldImage();
+  const candidate = replacement();
+  const mounted = new MountedImage();
+  const target = mounted as unknown as HTMLImageElement;
+  const options = {
+    imageCandidate: candidate,
+    interactionBlocked: true,
+    onReadiness,
+  };
+  const staged = commit(options, target).filter((n) => n.type === "img");
+  expect(staged.map((n) => n.props.hidden)).toEqual([false, true]);
+  expect(staged[0].props.src).toBe(`data:image/png;base64,${data}`);
+  expect(staged[1].props.src).toBeUndefined();
+  await tick();
+  expect(mounted.decode).toHaveBeenCalledOnce();
+  mounted.request.resolve();
+  await tick();
+  expect(candidate.settle).not.toHaveBeenCalled();
+  expect(
+    commit(options, target)
+      .filter((n) => n.type === "img")
+      .map((n) => n.props.hidden),
+  ).toEqual([false, true]);
+  mounted.load();
+  await tick();
+  const result = vi.mocked(candidate.settle).mock.calls[0][0];
+  expect(result).toEqual({
+    element: target,
+    url: `data:image/png;base64,${data}`,
+  });
+  if (result instanceof Error) throw result;
+  const loadedImage: LoadedImagePreview = {
+    ...result,
+    preview: candidate.preview,
+    surface: candidate.surface,
+  };
+  const next = { preview: candidate.preview, loadedImage, onReadiness };
+  commit(next);
+  await tick();
+  const shown = commit(next).filter((n) => n.type === "img");
+  expect(shown).toHaveLength(1);
+  expect(shown[0].key).toBe(staged[1].key);
+  expect(shown[0].props.ref).toBe(staged[1].props.ref);
+  expect(shown[0].props.hidden).toBe(false);
+  expect(shown[0].props.src).toBeUndefined();
+  expect(mounted.getAttribute()).toBe(result.url);
+  expect(mounted.writes).toHaveBeenCalledExactlyOnceWith(result.url);
+  expect(mounted.decode).toHaveBeenCalledOnce();
+  expect(created).toBe(1); // The first ordinary preview's preflight only.
+  expect(onReadiness).toHaveBeenLastCalledWith({
+    source: candidate.preview,
+    location: { kind: "image" },
+  });
+});
+
+it.each(["decode", "mounted load"])(
+  "retains the old visible PNG if the candidate %s fails",
+  async (failure) => {
+    const onReadiness = await oldImage();
+    // A valid first block and chunk CRC still allow a later zlib checksum error.
+    const invalid =
+      "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAD0lEQVR4nGP4z8DA0PAfAAgAAn7rQnDYAAAAAElFTkSuQmCC";
+    expect(
+      raster.inspectImageBytes(Buffer.from(invalid, "base64")),
+    ).toMatchObject({ mimeType: "image/png", width: 2, height: 1 });
+    const candidate = replacement(failure === "decode" ? invalid : data);
+    const mounted = new MountedImage();
+    commit(
+      { imageCandidate: candidate, interactionBlocked: true, onReadiness },
+      mounted as unknown as HTMLImageElement,
+    );
+    await tick();
+    expect(mounted.decode).toHaveBeenCalledOnce();
+    if (failure === "decode")
+      mounted.request.reject(new Error("Invalid deflate"));
+    else {
+      mounted.request.resolve();
+      mounted.dispatchEvent(new Event("error"));
+    }
+    await tick();
+    expect(candidate.settle).toHaveBeenCalledExactlyOnceWith(
+      new Error(S.failed),
+    );
+    expect(mounted.getAttribute()).toBeNull();
+    const shown = commit({ onReadiness }).filter((n) => n.type === "img");
+    expect(shown).toHaveLength(1);
+    expect(shown[0].props.src).toBe(`data:image/png;base64,${data}`);
+    expect(shown[0].props.hidden).toBe(false);
+    mounted.load();
+    await tick();
+    expect(candidate.settle).toHaveBeenCalledOnce();
+    expect(onReadiness).toHaveBeenLastCalledWith({
+      source: original,
+      location: { kind: "image" },
+    });
+  },
+);
+
+it.each([false, true])(
+  "cleans the candidate source when hidden %s with completed load",
+  async (loaded) => {
+    const onReadiness = await oldImage();
+    const candidate = replacement();
+    const mounted = new MountedImage();
+    commit(
+      { imageCandidate: candidate, onReadiness },
+      mounted as unknown as HTMLImageElement,
+    );
+    await tick();
+    if (loaded) {
+      mounted.request.resolve();
+      mounted.load();
+      await tick();
+      const result = vi.mocked(candidate.settle).mock.calls[0][0];
+      if (result instanceof Error) throw result;
+      commit({
+        preview: candidate.preview,
+        loadedImage: {
+          ...result,
+          preview: candidate.preview,
+          surface: candidate.surface,
+        },
+        active: false,
+        onReadiness,
+      });
+    } else {
+      commit({ active: false, onReadiness });
+      mounted.request.resolve();
+      mounted.load();
+    }
+    await tick();
+    expect(candidate.controller.signal.aborted).toBe(true);
+    expect(mounted.getAttribute()).toBeNull();
+    expect(
+      onReadiness.mock.calls.filter(
+        ([ready]) => ready.source === candidate.preview && ready.location,
+      ),
+    ).toHaveLength(0);
+    expect(mounted.decode).toHaveBeenCalledOnce();
+    expect(created).toBe(1);
+  },
+);

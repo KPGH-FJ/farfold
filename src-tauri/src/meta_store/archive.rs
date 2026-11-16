@@ -1,6 +1,6 @@
 //! Archive metadata and saved unsent input share the existing SQLite transaction.
 use super::{MetaStore, SessionRow, now_millis, row_to_session};
-use rusqlite::{OptionalExtension, TransactionBehavior, params};
+use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
 use serde_json::Value;
 
 impl MetaStore {
@@ -82,37 +82,20 @@ impl MetaStore {
                 return Err(directory_error.into());
             }
         }
-        if archived {
-            let raw: Option<String> = tx
-                .query_row(
-                    "SELECT value FROM settings WHERE key = 'unsentWork.v1'",
-                    [],
-                    |r| r.get(0),
-                )
-                .optional()
-                .map_err(|_| "未能读取未发送内容，请重试")?;
-            if let Some(raw) = raw {
-                let value = serde_json::from_str(&raw)
-                    .map_err(|_| "未能读取未发送内容，请先恢复后再归档")?;
-                if has_unsent_work(&value, &row)? {
-                    return Err("此对话还有未发送内容或发送结果待确认，请处理后再归档".into());
-                }
-                if let Some((_, canonical_cwd)) = verified
-                    && canonical_cwd != row.cwd
-                {
-                    let mut canonical = row.clone();
-                    canonical.cwd = canonical_cwd.into();
-                    if let Some(native) = &row.native_session_id {
-                        canonical.id = crate::acp_client::session_index::session_row_id(
-                            &row.agent_id,
-                            canonical_cwd,
-                            native,
-                        );
-                    }
-                    if has_unsent_work(&value, &canonical)? {
-                        return Err("此对话还有未发送内容或发送结果待确认，请处理后再归档".into());
-                    }
-                }
+        if archived && let Some(value) = read_saved_work(&tx)? {
+            let blocked = "此对话还有未发送内容或发送结果待确认，请处理后再归档";
+            if has_unsent_work(&value, &row.id)? {
+                return Err(blocked.into());
+            }
+            if let Some((_, canonical_cwd)) = verified
+                && canonical_cwd != row.cwd
+                && let Some(native) = &row.native_session_id
+                && has_unsent_work(
+                    &value,
+                    &MetaStore::dismissed_id(&row.agent_id, canonical_cwd, native),
+                )?
+            {
+                return Err(blocked.into());
             }
         }
         let updated = tx
@@ -129,8 +112,23 @@ impl MetaStore {
     }
 }
 
-pub(super) fn has_unsent_work(saved: &Value, row: &SessionRow) -> Result<bool, String> {
-    let unreadable = "未能读取未发送内容，请先恢复后再归档";
+const UNREADABLE: &str = "未能读取未发送内容，请先恢复后再继续";
+
+pub(super) fn read_saved_work(connection: &Connection) -> Result<Option<Value>, String> {
+    let raw: Option<String> = connection
+        .query_row(
+            "SELECT value FROM settings WHERE key = 'unsentWork.v1'",
+            [],
+            |row| row.get(0),
+        )
+        .optional()
+        .map_err(|_| UNREADABLE)?;
+    raw.map(|value| serde_json::from_str(&value).map_err(|_| UNREADABLE.into()))
+        .transpose()
+}
+
+pub(super) fn has_unsent_work(saved: &Value, id: &str) -> Result<bool, String> {
+    let unreadable = UNREADABLE;
     if saved["version"] != 1 {
         return Err(unreadable.into());
     }
@@ -138,7 +136,7 @@ pub(super) fn has_unsent_work(saved: &Value, row: &SessionRow) -> Result<bool, S
     let feedback = saved["feedback"].as_object().ok_or(unreadable)?;
     let queues = saved["queues"].as_object().ok_or(unreadable)?;
     for prefix in ["session:", "queue-edit:", "resend:"] {
-        if let Some(draft) = composers.get(&format!("{prefix}{}", row.id)) {
+        if let Some(draft) = composers.get(&format!("{prefix}{id}")) {
             let draft = draft.as_object().ok_or(unreadable)?;
             let text = draft
                 .get("text")
@@ -159,17 +157,22 @@ pub(super) fn has_unsent_work(saved: &Value, row: &SessionRow) -> Result<bool, S
     }
     // A first send may have no ordinary conversation draft yet. Its saved
     // pointer protects exactly the real target, including after a crash.
-    if row.native_session_id.as_ref().is_some_and(|native| {
-        composers.values().any(|draft| {
-            let target = &draft["pendingConversation"];
-            target["agentId"] == row.agent_id
-                && target["cwd"] == row.cwd
-                && target["nativeSessionId"] == *native
-        })
+    if composers.values().any(|draft| {
+        let target = &draft["pendingConversation"];
+        match (
+            target["agentId"].as_str(),
+            target["cwd"].as_str(),
+            target["nativeSessionId"].as_str(),
+        ) {
+            (Some(agent), Some(cwd), Some(native)) => {
+                MetaStore::dismissed_id(agent, cwd, native) == id
+            }
+            _ => false,
+        }
     }) {
         return Ok(true);
     }
-    if let Some(files) = feedback.get(&row.id) {
+    if let Some(files) = feedback.get(id) {
         for draft in files.as_object().ok_or(unreadable)?.values() {
             let text = draft["text"].as_str().ok_or(unreadable)?;
             if !text.trim().is_empty() {
@@ -177,11 +180,17 @@ pub(super) fn has_unsent_work(saved: &Value, row: &SessionRow) -> Result<bool, S
             }
         }
     }
-    if let Some(queue) = queues.get(&row.id)
-        && (!queue["blocks"].as_array().ok_or(unreadable)?.is_empty()
-            || queue.get("uncertainIndex").is_some_and(|v| !v.is_null()))
-    {
-        return Ok(true);
+    if let Some(queue) = queues.get(id) {
+        let unknown = match queue.get("outcomeUnknown") {
+            Some(value) => value.as_bool().ok_or(unreadable)?,
+            None => false,
+        };
+        if unknown
+            || !queue["blocks"].as_array().ok_or(unreadable)?.is_empty()
+            || queue.get("uncertainIndex").is_some_and(|v| !v.is_null())
+        {
+            return Ok(true);
+        }
     }
     Ok(false)
 }
@@ -224,12 +233,15 @@ mod tests {
             json!({"version":1,"composers":{},"feedback":{key:{"/file":{"text":"review this"}}},"queues":{}}),
             json!({"version":1,"composers":{},"feedback":{},"queues":{key:{"blocks":[[{"type":"text","text":"next"}]],"uncertainIndex":null}}}),
             json!({"version":1,"composers":{},"feedback":{},"queues":{key:{"blocks":[],"uncertainIndex":0}}}),
+            json!({"version":1,"composers":{},"feedback":{},"queues":{key:{"blocks":[],"uncertainIndex":null,"outcomeUnknown":true}}}),
             json!({"version":1,"composers":{"new":{"text":"", "attachments":[],"pendingConversation":{"agentId":"fixture","cwd":"/fixture","nativeSessionId":"native"}}},"feedback":{},"queues":{}}),
         ]);
         for saved in examples {
             store.set_setting("unsentWork.v1", &saved).unwrap();
             assert!(store.archive_session_row(key, true).is_err(), "{saved}");
             assert!(!store.get_session(key).unwrap().unwrap().archived);
+            assert!(store.remove_and_dismiss_session(key).is_err(), "{saved}");
+            assert!(store.list_dismissed().unwrap().is_empty());
             assert!(store.archive_session_row(&other.id, true).unwrap().archived);
             assert!(
                 !store

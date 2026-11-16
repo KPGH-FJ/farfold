@@ -1,7 +1,14 @@
 import { conversationArchiveJobs } from "./conversation_archive_jobs";
 import { invoke } from "@tauri-apps/api/core";
 import { useSyncExternalStore } from "react";
-import type { VerifiedFile } from "./file_delivery";
+import { fileDelivery, type VerifiedFile } from "./file_delivery";
+import {
+  savedCopyTarget,
+  savedCopyFailure,
+  type SavedCopyAction,
+  type SavedCopyIntent,
+} from "./file_copy_actions";
+import { checkedCopyDestination } from "./file_copy_types";
 import { samePreviewFile } from "./preview_capture";
 import {
   copyFailureCode,
@@ -22,6 +29,8 @@ export interface FileCopyJob {
   closeFailed?: boolean;
   /** Exact-ID absence is a current no-IO proof, not a historical result. */
   absence?: true;
+  /** Explicit destination action; does not rewrite the completed copy result. */
+  savedAction?: SavedCopyAction;
 }
 interface CopyApi {
   prepare(file: VerifiedFile, destination: string): Promise<unknown>;
@@ -49,10 +58,15 @@ export class FileCopyJobs {
   private cancelRequested = new Set<number>();
   private epochs = new Map<number, number>();
   private started = new Set<number>();
+  private savedActions = new Map<number, object>();
   constructor(
     private port: CopyApi = api,
     private pollMs = 800,
     private waitMs = 10_000,
+    private files: Pick<
+      typeof fileDelivery,
+      "inspectSelected" | "open" | "reveal"
+    > = fileDelivery,
   ) {}
   getSnapshot = () => this.items;
   subscribe = (listener: () => void) => {
@@ -257,15 +271,18 @@ export class FileCopyJobs {
     }
   }
   async begin(file: VerifiedFile, destination: string): Promise<void> {
-    if (
-      this.items.some(
-        (j) =>
-          j.destination === destination &&
-          j.phase !== "notStarted" &&
-          (j.phase !== "known" || !j.status || !copyTerminal(j.status.state)),
-      )
-    )
+    const existing = this.items.find(
+      (job) =>
+        job.destination === destination &&
+        job.phase !== "notStarted" &&
+        (job.phase !== "known" ||
+          !job.status ||
+          !copyTerminal(job.status.state)),
+    );
+    if (existing) {
+      if (!samePreviewFile(existing.file, file)) throw { code: "busy" };
       return;
+    }
     if (this.items.length >= 64) throw { code: "busy" };
     const job: FileCopyJob = {
       id: ++this.next,
@@ -421,6 +438,70 @@ export class FileCopyJobs {
   }
   forFile(file: VerifiedFile) {
     return this.items.filter((j) => samePreviewFile(j.file, file));
+  }
+  async actOnSavedCopy(
+    id: number,
+    kind: SavedCopyIntent,
+    interested: () => boolean,
+  ): Promise<void> {
+    const job = this.find(id),
+      target = job && savedCopyTarget(job);
+    if (
+      !job ||
+      !target ||
+      job.checking ||
+      this.savedActions.has(id) ||
+      !interested()
+    )
+      return;
+    const token = {};
+    this.savedActions.set(id, token);
+    this.change({ ...job, savedAction: { kind, pending: true } });
+    const owns = () => {
+      const current = this.find(id);
+      return (
+        this.savedActions.get(id) === token &&
+        interested() &&
+        !!current &&
+        !current.checking &&
+        savedCopyTarget(current)?.stamp === target.stamp
+      );
+    };
+    let result: SavedCopyAction | undefined;
+    try {
+      if (!owns()) return;
+      const raw = await this.files.inspectSelected(target.file.path);
+      if (!owns()) return;
+      let actual: VerifiedFile;
+      try {
+        actual = checkedCopyDestination(raw);
+      } catch {
+        result = { kind, pending: false, code: "changed" };
+        return;
+      }
+      if (!samePreviewFile(actual, target.file)) {
+        result = { kind, pending: false, code: "changed" };
+        return;
+      }
+      if (!owns()) return;
+      // The native action independently revalidates these same fields again.
+      await this.files[kind](actual);
+      if (owns()) result = { kind, pending: false, completed: true };
+    } catch (error) {
+      if (owns())
+        result = { kind, pending: false, code: savedCopyFailure(error) };
+    } finally {
+      if (this.savedActions.get(id) === token) {
+        const publish = owns();
+        this.savedActions.delete(id);
+        const current = this.find(id);
+        if (current)
+          this.change({
+            ...current,
+            savedAction: publish ? result : undefined,
+          });
+      }
+    }
   }
 }
 export const fileCopyJobs = new FileCopyJobs();

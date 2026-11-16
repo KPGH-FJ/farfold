@@ -1,0 +1,162 @@
+{
+  "additionalKernelPolicy": {
+    "globalGooseConfigReadPolicyDenied": true,
+    "outsideExactProfileAndTmpWriteDenied": true,
+    "ownedTmpWriteAllowed": true,
+    "realHomeGooseProfileReadPolicyDenied": true,
+    "realKeychainMachServicesDenied": true
+  },
+  "bothExactExecutableSignaturesStrictVerified": true,
+  "endedUtc": "2026-11-07T00:47:21.623246+00:00",
+  "exactOwnedGooseProcessCountAfterTest": 0,
+  "exactScratchCliVersion1_52_0": true,
+  "exactTestRan": true,
+  "executedScratchManagerTestBinarySha256": "0c6229b35cb74c6ed2d4b9ade9b1434851d7aafa91c215312333feccdf47c7ce",
+  "externalInferenceRequests": 0,
+  "kernelPolicy": {
+    "differentListeningPortDenied": true,
+    "exactLoopbackAllowed": true,
+    "ordinaryHomeReadDenied": true,
+    "realHomeWritesDeniedBySamePolicy": true
+  },
+  "kind": "OfficialGooseCurrentFarfoldColdReconciliationLocalCatalogueOnly",
+  "localHttpRouteCounts": {
+    "localCatalogue": 1
+  },
+  "manager": {
+    "actualCurrentFarfoldNativeManager": true,
+    "authRequests": 0,
+    "bothExactNativeIdsAndFarfoldSavedRowsPreserved": true,
+    "cold": {
+      "confirmedGroupsGone": 2,
+      "killEscalations": 0,
+      "outboundCounts": {
+        "initialize": 2,
+        "session/load": 2,
+        "session/set_config_option": 1
+      }
+    },
+    "coldOutboundBeforeOpeningB": {
+      "initialize": 1,
+      "session/load": 1,
+      "session/set_config_option": 1
+    },
+    "effectiveColdAAlternateAndBBaseline": true,
+    "exactOwnedCatalogueCommittedBeforeSecondOpen": true,
+    "existingSignedAccountUsed": false,
+    "gate": {
+      "coldA": {
+        "alternateOfferCount": 1,
+        "baselineOfferCount": 1,
+        "exactModel": true,
+        "exactProvider": true,
+        "issues": [],
+        "modernOptions": true,
+        "optionsArray": true,
+        "readiness": "ready"
+      },
+      "coldB": {
+        "alternateOfferCount": 1,
+        "baselineOfferCount": 1,
+        "exactModel": true,
+        "exactProvider": true,
+        "issues": [],
+        "modernOptions": true,
+        "optionsArray": true,
+        "readiness": "ready"
+      },
+      "seedAInitial": {
+        "alternateOfferCount": 0,
+        "baselineOfferCount": 1,
+        "exactModel": true,
+        "exactProvider": true,
+        "issues": [],
+        "modernOptions": true,
+        "optionsArray": true,
+        "readiness": "ready"
+      },
+      "seedBPostRefresh": {
+        "alternateOfferCount": 1,
+        "baselineOfferCount": 1,
+        "exactModel": true,
+        "exactProvider": true,
+        "issues": [],
+        "modernOptions": true,
+        "optionsArray": true,
+        "readiness": "ready"
+      },
+      "warmA": {
+        "alternateOfferCount": 1,
+        "baselineOfferCount": 1,
+        "exactModel": true,
+        "exactProvider": true,
+        "issues": [],
+        "modernOptions": true,
+        "optionsArray": true,
+        "readiness": "ready"
+      },
+      "warmB": {
+        "alternateOfferCount": 1,
+        "baselineOfferCount": 1,
+        "exactModel": true,
+        "exactProvider": true,
+        "issues": [],
+        "modernOptions": true,
+        "optionsArray": true,
+        "readiness": "ready"
+      }
+    },
+    "modelPrompts": 0,
+    "nativeDriftVerifiedBeforeCold": true,
+    "nativeMessages": 0,
+    "normalManagerSetAOnly": true,
+    "officialGooseVersion": "1.52.0",
+    "outcome": "passed",
+    "productionDataUsed": false,
+    "rawOfficialDrift": {
+      "exactProcessImageOwnerAndHandshake": true,
+      "naturalExitCode": 0,
+      "officialRawAcpMethods": [
+        "initialize",
+        "session/load",
+        "session/load",
+        "session/set_config_option"
+      ],
+      "onlyNativeADriftedFromAlternateToBaseline": true,
+      "ownedGroupGone": true,
+      "passed": true
+    },
+    "seed": {
+      "confirmedGroupsGone": 2,
+      "killEscalations": 0,
+      "outboundCounts": {
+        "initialize": 2,
+        "session/new": 2
+      }
+    },
+    "warm": {
+      "confirmedGroupsGone": 2,
+      "killEscalations": 0,
+      "outboundCounts": {
+        "initialize": 2,
+        "session/load": 2,
+        "session/set_config_option": 1
+      }
+    }
+  },
+  "modelPrompts": 0,
+  "noIsolatedCredentialFileCreated": true,
+  "ordinaryHomePreservedWithControlledShell": true,
+  "outcome": "official-goose-current-farfold-restores-exact-a-only-after-native-drift",
+  "ownedTemporaryProfilesRemoved": true,
+  "productionMetadataOrSessionsRead": false,
+  "publicArtifactBytesOnlyCopiedFromRegisteredPath": true,
+  "rawWireOrSessionIdsRetainedInReceipt": false,
+  "realCredentialsOrAccountUsed": false,
+  "registeredExecutableAndScratchBytesMatch": true,
+  "startedUtc": "2026-11-07T00:47:17.738915+00:00",
+  "testExit": 0,
+  "versionPreflightExit": 0,
+  "versionStderrClassesOnly": [],
+  "versionStdoutFormatClass": "pinned-empty-display-name"
+}

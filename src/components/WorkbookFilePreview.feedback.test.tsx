@@ -8,7 +8,15 @@ import {
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, expect, it, vi, type Mock } from "vitest";
 import type { VerifiedFile } from "../runtime/file_delivery";
-import type { WorkbookCapture, WorkbookPreview } from "../runtime/xlsx_types";
+import { parseWorkbook } from "../runtime/xlsx_parse";
+import { firstSheetFailureFixture } from "../runtime/xlsx_directory.test-support";
+import {
+  XlsxError,
+  type WorkbookCapture,
+  type WorkbookPreview,
+  type WorkbookDirectory,
+  type WorkbookSheetRestore,
+} from "../runtime/xlsx_types";
 import type {
   OfficeTargetAvailability,
   OfficeTargetConfirmation,
@@ -386,6 +394,122 @@ it("an explicitly chosen hidden worksheet keeps its own r:id and name", async ()
   );
 });
 
+it.each(["fails", "is cancelled"] as const)(
+  "another sheet remains selectable when a sheet read %s",
+  async (outcome) => {
+    await ready();
+    const oldFeedback = button(select("A1"), confirmLabel);
+    let resolve!: (value: WorkbookPreview) => void;
+    let reject!: (error: Error) => void;
+    const pending = new Promise<WorkbookPreview>((done, fail) => {
+      resolve = done;
+      reject = fail;
+    });
+    h.parse.mockReturnValueOnce(pending);
+    const sheetControl = (shown: ReturnType<typeof view>) =>
+      shown.all.find((n) => n.type === "select")!;
+    const changeSheet = (shown: ReturnType<typeof view>, value: string) => {
+      const control = sheetControl(shown);
+      expect(control.props.disabled).toBe(false);
+      (control.props.onChange as (event: unknown) => void)({
+        target: { value },
+      });
+    };
+    changeSheet(view(), "rel_17");
+    view();
+    await drain();
+    const loading = view();
+    expect(sheetControl(loading).props.disabled).toBe(true);
+    expect(h.parse.mock.lastCall?.[1]).toBe("rel_17");
+    const signal = h.parse.mock.lastCall?.[2] as AbortSignal;
+    if (outcome === "fails") reject(new XlsxError("invalid"));
+    else {
+      click(button(loading, S.cancel));
+      expect(signal.aborted).toBe(true);
+    }
+    await drain();
+    const interrupted = view();
+    expect(interrupted.html).toContain(
+      outcome === "fails" ? S.failed : S.cancelled,
+    );
+    expect(interrupted.html).not.toContain('data-cell="A1"');
+    changeSheet(interrupted, "sheet-main");
+    await ready();
+    expect(h.parse.mock.calls.map((call) => call[1])).toEqual([
+      undefined,
+      "rel_17",
+      "sheet-main",
+    ]);
+    expect(h.capture).toHaveBeenCalledOnce();
+    expect(h.parse.mock.calls.every(([value]) => value === capture)).toBe(true);
+    if (outcome === "is cancelled") {
+      resolve(book("rel_17"));
+      await drain();
+    }
+    const recovered = view();
+    expect(recovered.html).toContain(S.snapshot);
+    expect(sheetControl(recovered).props.value).toBe("sheet-main");
+    click(oldFeedback);
+    expect(props.onOfficeTargetConfirm).not.toHaveBeenCalled();
+    click(button(select("A1"), confirmLabel));
+    expect(props.onOfficeTargetConfirm).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({
+        anchor: expect.objectContaining({ sheetId: "sheet-main" }),
+      }),
+    );
+  },
+);
+
+it("cold reading resolves the retained sheet before parsing an unrelated bad default, while explicit choices still win", async () => {
+  const input = firstSheetFailureFixture();
+  const saved = { id: "sheet2", name: "Good second sheet" };
+  props = {
+    ...props,
+    readingPosition: {
+      current: {
+        root: file.root,
+        resolvedPath: file.resolvedPath,
+        kind: "workbook",
+        sheet: saved,
+        row: 1,
+        column: 1,
+        showHidden: false,
+      },
+    },
+  };
+  h.parse.mockImplementation(
+    async (
+      _value: WorkbookCapture,
+      sheetId: string | undefined,
+      _signal: AbortSignal,
+      onDirectory?: (directory: WorkbookDirectory) => void,
+      restoreSheet?: WorkbookSheetRestore,
+    ) => parseWorkbook({ ...input, sheetId, restoreSheet }, onDirectory),
+  );
+  await ready();
+  const first = select("A1");
+  const oldConfirm = button(first, confirmLabel);
+  expect(first.html).toContain('data-cell="A1"');
+  expect(h.parse).toHaveBeenCalledOnce();
+  expect(h.parse.mock.calls[0][1]).toBeUndefined();
+  expect(h.parse.mock.calls[0][4]).toEqual(saved);
+  expect(h.parse.mock.calls[0][4]).not.toBe(saved);
+  const control = first.all.find((node) => node.type === "select")!;
+  expect(control.props.value).toBe("sheet2");
+  (control.props.onChange as (event: unknown) => void)({
+    target: { value: "sheet1" },
+  });
+  await ready();
+  expect(view().html).toContain(S.failed);
+  expect(h.parse.mock.calls.map((call) => call[1])).toEqual([
+    undefined,
+    "sheet1",
+  ]);
+  expect(h.capture).toHaveBeenCalledOnce();
+  click(oldConfirm);
+  expect(props.onOfficeTargetConfirm).not.toHaveBeenCalled();
+});
+
 it("a replayed grid registration creates a new source instead of reusing its retired source", async () => {
   await ready();
   const old = button(select("A1"), confirmLabel);
@@ -590,14 +714,145 @@ it("blocking an in-progress parse does not pause or restart it", async () => {
   await drain();
   view();
   const blocked = view();
-  expect(onStatus.mock.calls.map(([value]) => value.state)).toEqual([
-    "loading",
-    "ready",
+  expect(
+    onStatus.mock.calls.map(([value]) => [value.state, value.readInFlight]),
+  ).toEqual([
+    ["loading", false],
+    ["loading", true],
+    ["loading", false],
+    ["ready", false],
   ]);
   expect(h.capture).toHaveBeenCalledOnce();
   expect(h.parse).toHaveBeenCalledOnce();
   expect(blocked.html).toContain('data-cell="A1"');
   expect(blocked.all.find((n) => n.type === "section")!.props.inert).toBe(true);
+});
+
+it("keeps the native read receipt after preview cancel until the original capture settles", async () => {
+  let resolve!: (value: WorkbookCapture) => void;
+  h.capture.mockImplementationOnce(
+    () => new Promise((done) => (resolve = done)),
+  );
+  const onStatus = vi.fn();
+  props = { ...props, onStatus };
+  view();
+  await drain();
+  expect(onStatus).toHaveBeenLastCalledWith({
+    file,
+    state: "loading",
+    readInFlight: true,
+  });
+  click(button(view(), S.cancel));
+  expect(onStatus).toHaveBeenLastCalledWith({
+    file,
+    state: "paused",
+    readInFlight: true,
+  });
+  resolve(capture);
+  await drain();
+  expect(onStatus).toHaveBeenLastCalledWith({
+    file,
+    state: "paused",
+    readInFlight: false,
+  });
+  expect(h.parse).not.toHaveBeenCalled();
+  click(button(view(), S.retry));
+  await ready();
+  expect(h.capture).toHaveBeenCalledOnce();
+  expect(h.parse).toHaveBeenCalledOnce();
+});
+
+it("shows an explicitly chosen hidden replacement sheet instead of restoring the previous sheet", async () => {
+  const readingPosition: NonNullable<typeof props.readingPosition> = {
+    current: {
+      root: file.root,
+      resolvedPath: file.resolvedPath,
+      kind: "workbook",
+      sheet: { id: "sheet-main", name: "数据一" },
+      row: 1,
+      column: 1,
+      showHidden: false,
+    },
+  };
+  props = {
+    ...props,
+    readingPosition,
+    prepared: {
+      kind: "workbook",
+      file,
+      capture,
+      value: book("hidden.note"),
+      selectedSheetId: "hidden.note",
+    },
+  };
+  const shown = await ready();
+  expect(shown.all.find((node) => node.type === "select")?.props.value).toBe(
+    "hidden.note",
+  );
+  expect(readingPosition.current).toMatchObject({
+    sheet: { id: "hidden.note", hiddenSelected: true },
+  });
+  expect(h.parse).not.toHaveBeenCalled();
+});
+
+it("labels the previous grid and routes the replacement sheet control to its owner", async () => {
+  await ready();
+  const onSelect = vi.fn();
+  props = {
+    ...props,
+    replacement: {
+      directory: {
+        selectedId: "broken",
+        sheets: [
+          { id: "broken", name: "Broken", state: "visible" },
+          { id: "replacement", name: "Replacement", state: "visible" },
+        ],
+      },
+      onSelect,
+    },
+  };
+  const shown = view();
+  expect(shown.html).toContain(S.replacementSnapshot);
+  expect(shown.html).toContain('data-cell="A1"');
+  const control = shown.all.find((node) => node.type === "select")!;
+  expect(control.props["aria-label"]).toBe(S.replacementSheet);
+  (control.props.onChange as (event: unknown) => void)({
+    target: { value: "replacement" },
+  });
+  expect(onSelect).toHaveBeenCalledExactlyOnceWith("replacement");
+  expect(h.parse).toHaveBeenCalledOnce();
+});
+
+it("closes only the unsaved range editor when an explicit reread retains the grid", async () => {
+  const previous = await ready();
+  click(button(previous, S.feedbackRangeOpen));
+  const rangeInput = () =>
+    view().all.find(
+      (node) =>
+        node.props["aria-label"] === S.feedbackRangeInput &&
+        node.type === "input",
+    );
+  const originalInput = rangeInput()!;
+  (originalInput.props.onChange as (event: unknown) => void)({
+    target: { value: "A1:" },
+  });
+  const retiredInput = rangeInput()!;
+  expect(retiredInput.props.value).toBe("A1:");
+
+  props = { ...props, interactionBlocked: true, rangeRevision: 1 };
+  expect(rangeInput()).toBeUndefined();
+  expect(view().html).toContain('data-cell="A1"');
+
+  props = { ...props, interactionBlocked: false };
+  click(button(view(), S.feedbackRangeOpen));
+  expect(rangeInput()?.props.value).toBe("");
+  (retiredInput.props.onChange as (event: unknown) => void)({
+    target: { value: "A2" },
+  });
+  expect(rangeInput()?.props.value).toBe("");
+  expect(h.capture).toHaveBeenCalledOnce();
+  expect(h.parse).toHaveBeenCalledOnce();
+  expect(props.onOfficeTargetConfirm).not.toHaveBeenCalled();
 });
 
 it("a queued retry remains inert until an explicit unblocked action", async () => {
@@ -615,3 +870,86 @@ it("a queued retry remains inert until an explicit unblocked action", async () =
   expect(h.capture).toHaveBeenCalledTimes(2);
   expect(view().html).toContain('data-cell="A1"');
 });
+
+it.each(["fails", "is cancelled"] as const)(
+  "the first worksheet read %s after its directory and another sheet can recover without an earlier preview",
+  async (outcome) => {
+    const directory = { sheets: book().sheets, selectedId: "sheet-main" };
+    let rejectFirst!: (error: Error) => void;
+    const first = new Promise<WorkbookPreview>((_resolve, reject) => {
+      rejectFirst = reject;
+    });
+    const second = book("rel_17");
+    second.sheet!.cells[0] = {
+      ...second.sheet!.cells[0],
+      type: "text",
+      raw: "FIRST_FAILURE_SECOND_READY",
+      value: "FIRST_FAILURE_SECOND_READY",
+      display: "FIRST_FAILURE_SECOND_READY",
+    };
+    h.parse.mockImplementation(
+      async (
+        value: WorkbookCapture,
+        id: string | undefined,
+        _signal: AbortSignal,
+        onDirectory?: (value: typeof directory) => void,
+      ) => {
+        expect(value).toBe(capture);
+        onDirectory?.({ ...directory, selectedId: id ?? "sheet-main" });
+        if (id === "rel_17") return second;
+        if (outcome === "fails") throw new XlsxError("invalid");
+        return first;
+      },
+    );
+
+    await ready();
+    const initialSignal = h.parse.mock.calls[0][2] as AbortSignal;
+    if (outcome === "is cancelled") {
+      click(button(view(), S.cancel));
+      expect(initialSignal.aborted).toBe(true);
+    }
+    await drain();
+    const interrupted = view();
+    expect(interrupted.html).toContain(
+      outcome === "fails" ? S.failed : S.cancelled,
+    );
+    expect(interrupted.html).not.toContain('data-cell="A1"');
+    expect(props.onOfficeTargetConfirm).not.toHaveBeenCalled();
+    const control = interrupted.all.find((n) => n.type === "select");
+    expect(
+      control,
+      "directory must remain usable before any sheet succeeds",
+    ).toBeDefined();
+    expect(control!.props.disabled).toBe(false);
+    expect(control!.props.value).toBe("sheet-main");
+    (control!.props.onChange as (event: unknown) => void)({
+      target: { value: "rel_17" },
+    });
+    await ready();
+    if (outcome === "is cancelled") {
+      rejectFirst(new XlsxError("invalid"));
+      await drain();
+    }
+    const recovered = view();
+    expect(recovered.html).toContain("FIRST_FAILURE_SECOND_READY");
+    expect(recovered.html).toContain(S.snapshot);
+    expect(recovered.html).not.toContain(S.failed);
+    expect(h.capture).toHaveBeenCalledOnce();
+    expect(h.parse.mock.calls.map((call) => call[1])).toEqual([
+      undefined,
+      "rel_17",
+    ]);
+    expect(h.parse.mock.calls.every(([value]) => value === capture)).toBe(true);
+    expect(h.parse.mock.calls[0][3]).toEqual(expect.any(Function));
+    expect(props.onOfficeTargetConfirm).not.toHaveBeenCalled();
+    click(button(select("A1"), confirmLabel));
+    expect(props.onOfficeTargetConfirm).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({
+        anchor: expect.objectContaining({
+          sheetId: "rel_17",
+          sheetName: "同文副本",
+        }),
+      }),
+    );
+  },
+);

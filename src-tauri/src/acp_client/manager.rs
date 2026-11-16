@@ -119,10 +119,18 @@ pub enum ManagerCommand {
         all_pages: bool,
         result: oneshot::Sender<Result<serde_json::Value, String>>,
     },
+    McpRecoveryRead {
+        session_id: String,
+        availability: Arc<super::session_tools::Availability>,
+        result: oneshot::Sender<Result<super::session_tool_changes::inventory::Inventory, String>>,
+    },
     /// `session/delete` for sessions without an open pump (agent-side rows).
     DeleteSession {
         session_id: String,
-        result: oneshot::Sender<Result<(), String>>,
+        row_id: String,
+        store: crate::meta_store::MetaStore,
+        /// False proves the local readiness check prevented dispatch.
+        result: oneshot::Sender<Result<bool, String>>,
     },
 }
 
@@ -133,6 +141,7 @@ impl std::fmt::Debug for ManagerCommand {
             Self::Logout { .. } => "Logout",
             Self::OpenSession { .. } => "OpenSession",
             Self::ListSessions { .. } => "ListSessions",
+            Self::McpRecoveryRead { .. } => "McpRecoveryRead",
             Self::AccountStatus { .. } => "AccountStatus",
             Self::DeleteSession { .. } => "DeleteSession",
         })
@@ -187,7 +196,10 @@ pub struct AcpManager {
     pub(crate) pending_permissions: PendingPermissions,
     /// requestId → responder for pending `elicitation/create` calls.
     pub(crate) pending_elicitations: PendingElicitations,
+    pub(crate) tool_recovery: Arc<super::session_tool_recovery::Reviews>,
     status_sink: Option<Arc<dyn Fn(AgentConnectionStatus) + Send + Sync>>,
+    #[cfg(test)]
+    pub(super) test_tool_terminal: bool,
 }
 
 /// Dropping a connect future must not leave its transport or reservation behind.
@@ -218,7 +230,10 @@ impl AcpManager {
             data_dir,
             pending_permissions: PendingPermissions::default(),
             pending_elicitations: PendingElicitations::default(),
+            tool_recovery: Arc::new(super::session_tool_recovery::Reviews::default()),
             status_sink: None,
+            #[cfg(test)]
+            test_tool_terminal: false,
         };
         manager.spawn_idle_reaper();
         manager
@@ -507,7 +522,10 @@ impl AcpManager {
             }
         };
         for (name, value) in dependency_environment {
-            environment.entry(name).or_insert(value);
+            let names = crate::shell_env::EnvNames::current();
+            if !names.contains(&environment, &name) {
+                names.insert(&mut environment, name, value);
+            }
         }
         // This is deliberately last: prepared service and explicit row values
         // must not overwrite the selected program's process-local delivery.
@@ -520,16 +538,26 @@ impl AcpManager {
             mpsc::unbounded_channel::<super::operations::QueuedCommand>();
         let (init_tx, init_rx) = oneshot::channel::<Result<Handshake, InitializeFailure>>();
         let life = ConnectionLife::new();
+        let selected_fast_agent = agent.source == "registry"
+            && agent.id == "registry:fast-agent"
+            && Path::new(&agent.command)
+                .file_name()
+                .is_some_and(|name| name == "fast-agent-acp")
+            && agent.args.iter().any(|argument| argument == "-x")
+            && key.conversation_id.is_some();
+        #[cfg(test)]
+        let selected_fast_agent = selected_fast_agent || self.test_tool_terminal;
+        if cfg!(target_os = "macos") && !candidate && selected_fast_agent {
+            life.tool_terminals.enable(self.data_dir.clone());
+        }
+        let tool_terminal = life.tool_terminals.enabled.load(Ordering::SeqCst);
         life.retain_startup(admission)?;
         life.retain_history_startup(history)?;
         let state = life.state.clone();
         let browser_launch = super::browser_capability::reviewed_launch(agent);
         let process = ProcessControl::new(diagnostics.clone())
             .with_prompt_admission(self.prompt_admission.clone())
-            .review_mcp_launch(matches!(
-                browser_launch,
-                Some(super::browser_capability::LaunchKind::Node)
-            ));
+            .review_mcp_launch(browser_launch);
         let sessions: SessionMap = SessionMap::default();
         let sessions_for_task = sessions.clone();
         let sessions_for_cleanup = sessions.clone();
@@ -542,11 +570,36 @@ impl AcpManager {
             connection_id.clone(),
         );
         let account_query = super::account_launch::reviewed(agent);
+        let managed_vibe = if agent.id == "registry:mistral-vibe" {
+            let verified = if account_query == Some(super::account_query::AccountQuery::Vibe) {
+                let row = agent.clone();
+                let data = self.data_dir.clone();
+                store
+                    .run(move |store| {
+                        super::preparation_actions::has_registry_installation(store, &row, &data)
+                    })
+                    .await
+                    .unwrap_or(false)
+            } else {
+                false
+            };
+            Some(verified)
+        } else {
+            None
+        };
         let workspace_access = super::workspace_access::Availability::new(account_query);
         let identity_read = super::identity_read::Availability::new(account_query);
+        let session_tools = super::session_tools::Availability::new(agent);
+        let live_status_enabled = super::recipes::goose_acp(agent);
+        let receive_session_tools = session_tools.clone();
         let receive_workspace_access = workspace_access.clone();
         let receive_identity_read = identity_read.clone();
         let ops = SessionOps {
+            session_tools: session_tools.clone(),
+            configuration_dialect: Default::default(),
+            live_status_enabled,
+            tool_media_enabled: super::tool_media::enabled(agent),
+            history_supplement_source: super::history_supplement::Source::capture(agent),
             workspace_access: workspace_access.clone(),
             async_tasks_supported: Arc::new(AtomicBool::new(false)),
             opening: None,
@@ -582,11 +635,13 @@ impl AcpManager {
                     account_query,
                     workspace_access,
                     identity_read,
+                    session_tools,
                     command_tx: command_tx.clone(),
                     state: state.clone(),
                     handshake: handshake.clone(),
                     sessions: sessions.clone(),
                     child_pid: child_pid.clone(),
+                    process_identity: process.identity.clone(),
                     browser_launch,
                     mcp_spawn_facts: process.mcp_spawn_facts.clone(),
                     life: life.clone(),
@@ -636,6 +691,7 @@ impl AcpManager {
                     async move |dispatch: Dispatch<UntypedMessage, UntypedMessage>, _cx| {
                         receive_workspace_access.observe_decision(&dispatch);
                         receive_identity_read.observe(&dispatch);
+                        receive_session_tools.observe(&dispatch);
                         if receive_observer.observe(&dispatch) {
                             return Ok(Handled::Yes);
                         }
@@ -652,6 +708,7 @@ impl AcpManager {
                         .client_info(Implementation::new("farfold", env!("CARGO_PKG_VERSION")))
                         .client_capabilities(
                             ClientCapabilities::new()
+                                .terminal(tool_terminal)
                                 .session(
                                     ClientSessionCapabilities::new().compaction(CompactionCapabilities::new()).config_options(
                                         SessionConfigOptionsCapabilities::new()
@@ -676,6 +733,7 @@ impl AcpManager {
                                             "air": super::failures::capability()
                                         }),
                                     );
+                                    super::live_status::initialize_meta(&mut meta, live_status_enabled);
                                     meta
                                 }),
                         );
@@ -692,6 +750,8 @@ impl AcpManager {
                             return Err(error);
                         }
                     };
+                    let mut ops = ops;
+                    ops.configuration_dialect = super::session_config::Dialect::for_connection(managed_vibe, &init_response);
                     ops.async_tasks_supported.store(super::async_tasks::supported(&init_response.public_json()), Ordering::SeqCst);
                     // A configured service owns this fresh process. Do not
                     // publish ready or admit session work until the official
@@ -740,12 +800,28 @@ impl AcpManager {
             let _ = life_for_task.close_for(true, None, fallback_reason);
             let reason = life_for_task.close_reason().unwrap_or(CloseReason::Unexpected);
             process.stop();
-            let process_result = process.closed().await;
+            let (process_result, terminal_result, transport_reported) = if life_for_task.tool_terminals.enabled.load(Ordering::SeqCst) {
+                pump::clear_connection_interactions(&pending_for_cleanup, &forms_for_cleanup, &life_for_task);
+                let ((agent, terminal), transport_reported) = pump::wait_for_connection_end(&sessions_for_cleanup, reason, async {
+                    tokio::join!(process.closed(), life_for_task.tool_terminals.close())
+                }).await;
+                (agent, terminal, transport_reported)
+            } else {
+                let process_result = process.closed().await;
+                pump::clear_connection_interactions(&pending_for_cleanup, &forms_for_cleanup, &life_for_task);
+                (process_result, Ok(()), false)
+            };
+            pump::notify_connection_end(&sessions_for_cleanup, reason, terminal_result.is_ok(), transport_reported);
+            if terminal_result.is_err() {
+                // The original owner can no longer observe terminal exit. Keep
+                // the closing entry so replacement and account cleanup cannot
+                // treat lost OS evidence as successful reap.
+                logging::warn("acp_client", "delegated terminal termination not confirmed; closing owner retained");
+                return result;
+            }
             let outcome = process_result.and_then(|_| if requested { Ok(()) } else {
                 result.as_ref().map(|_| ()).map_err(|_| "Agent 连接已结束".to_string())
             });
-            pump::clear_connection_interactions(&pending_for_cleanup, &forms_for_cleanup, &life_for_task);
-            pump::notify_connection_lost(&sessions_for_cleanup, reason);
             // Completion includes removing this exact instance. A waiter must
             // not return from disconnect while status still exposes the owner.
             let outcome = match connections_for_cleanup.lock() {

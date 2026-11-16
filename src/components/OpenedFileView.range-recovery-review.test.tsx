@@ -201,6 +201,7 @@ it("actual invalid range form defers automatic replacement without a live target
 });
 it("external action blocking keeps invalid input and its editing hold after it completes", async () => {
   await invalidRange();
+  const rangeRevision = child().rangeRevision;
   let finish!: () => void;
   h.open.mockImplementationOnce(
     () =>
@@ -211,6 +212,7 @@ it("external action blocking keeps invalid input and its editing hold after it c
   click(S.open);
   leaf();
   expect(child().interactionBlocked).toBe(true);
+  expect(child().rangeRevision).toBe(rangeRevision);
   finish();
   await drain();
   const tree = leaf();
@@ -221,8 +223,9 @@ it("external action blocking keeps invalid input and its editing hold after it c
   );
   expect(h.prepare).not.toHaveBeenCalled();
 });
-it("Office explicit reread unmounts the editing form rather than preserving an unprotected invalid input", async () => {
+it("Office explicit reread retires invalid editing while keeping the verified workbook", async () => {
   await invalidRange();
+  const rangeRevision = child().rangeRevision ?? 0;
   let finish!: (value: typeof file) => void;
   h.inspect.mockImplementationOnce(
     () =>
@@ -230,14 +233,25 @@ it("Office explicit reread unmounts the editing form rather than preserving an u
         finish = resolve;
       }),
   );
+  h.prepare.mockResolvedValueOnce({
+    kind: "workbook",
+    file,
+    capture,
+    value: preview,
+  });
   click(S.refresh);
-  expect(parent().some((n) => n.type === WorkbookFilePreview)).toBe(false);
-  // Reflect the real parent's conditional removal, rather than force-retaining a leaf.
+  expect(child()).toMatchObject({
+    file,
+    interactionBlocked: true,
+    rangeRevision: rangeRevision + 1,
+  });
+  // Mirror WorkbookGrid's editor unmount for a changed revision.
   for (const slot of h.slots.get("range") ?? []) slot.cleanup?.();
   h.slots.delete("range");
   finish(file);
   await drain();
   const p = child();
+  expect(p.rangeRevision).toBe(rangeRevision + 1);
   p.onStatus?.({ file: p.file, state: "ready" });
   parent();
   h.prepare.mockResolvedValue({
@@ -249,5 +263,5 @@ it("Office explicit reread unmounts the editing form rather than preserving an u
   expect(await monitor().apply({ ...file, version: "v2" }, () => true)).toBe(
     "applied",
   );
-  expect(h.prepare).toHaveBeenCalledOnce();
+  expect(h.prepare).toHaveBeenCalledTimes(2);
 });

@@ -1,0 +1,22 @@
+{
+  "authorization": "User explicitly confirmed clearing Farfold conversations, drafts, attachment references and queued content; preserve Agent programs, credentials, services, source and evidence. Current Mac account may be used for fault tests.",
+  "executedAt": "2026-11-07",
+  "closedApplicationTransaction": true,
+  "sessionsBefore": 168,
+  "sessionsAfter": 0,
+  "agentRowsPreserved": 40,
+  "otherSettingsPreserved": 50,
+  "groupDefinitionsPreserved": 3,
+  "nativeAgentOperations": 0,
+  "filesystemNamespacesDeleted": 0,
+  "oldNativeHistoryNotDeleted": true,
+  "tombstonesAdded": 168,
+  "formalColdUi": {
+    "allConversations": 0,
+    "retainedDraftsAbsent": true,
+    "inputEmpty": true,
+    "agentCatalogStill29": true
+  },
+  "developmentEvidenceAndPrivateRollbackReferenceRetained": true,
+  "boundary": "Explicit history picker can still list Agent-owned histories and reimport them on user action. No claim of resetting Agent-side accounts/history."
+}

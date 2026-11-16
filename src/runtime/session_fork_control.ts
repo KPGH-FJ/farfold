@@ -16,6 +16,7 @@ export interface SessionForkControl {
     title?: string;
   };
   message?: string;
+  historyPoint?: { messageId: string; preview?: string };
   isCurrent: () => boolean;
   start: () => void;
   continue?: () => void;

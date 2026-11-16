@@ -164,6 +164,89 @@ it("does not borrow an earlier request's input when a new approval for the same 
   expect(s.pendingPermissions[0].options).toEqual(options);
 });
 
+it("shows an owned command's exact program, argv boundaries, and directory before its one-time choices", () => {
+  const s = state("terminal-approval");
+  const command = {
+    program: "/tmp/test tools/print",
+    args: ["<review tag>", "", " leading", "first\nsecond", "a\u202eb"],
+    cwd: "/tmp/test workspace",
+  };
+  channel.applyChannelEvent(s.key, {
+    kind: "permissionRequest",
+    requestId: "terminal",
+    terminalCommand: command,
+    options,
+  });
+  command.args[0] = "later edit";
+  const html = render(s);
+  const card = approval(html);
+  expect(card).toContain("程序");
+  expect(card).toContain("&quot;/tmp/test tools/print&quot;");
+  expect(card).toContain("参数");
+  expect(card).toContain("<code>&quot;&lt;review tag&gt;&quot;\n</code>");
+  expect(card).toContain("<code>&quot;&quot;\n</code>");
+  expect(card).toContain("<code>&quot; leading&quot;\n</code>");
+  expect(card).toContain("<code>&quot;first\\nsecond&quot;\n</code>");
+  expect(card).toContain("<code>&quot;a\\u{202e}b&quot;</code>");
+  expect(card).toContain("执行目录");
+  expect(card).toContain("&quot;/tmp/test workspace&quot;");
+  expect(card).not.toMatch(/later edit|<review tag>|\u202e|Agent 未提供/);
+  expect(html).toContain("批准一次");
+  expect(html).toContain("拒绝");
+  expect(h.invoke).not.toHaveBeenCalled();
+});
+
+it("distinguishes zero arguments from one empty argument", () => {
+  const s = state("terminal-no-arguments");
+  channel.applyChannelEvent(s.key, {
+    kind: "permissionRequest",
+    requestId: "terminal",
+    terminalCommand: { program: "/usr/bin/true", args: [], cwd: "/tmp" },
+    options,
+  });
+  expect(approval(render(s))).toContain("无参数");
+});
+
+it.each([null, { program: "/usr/bin/true", args: [null], cwd: "/tmp" }])(
+  "does not use Agent input to fill incomplete owned command details",
+  (terminalCommand) => {
+    const s = state(
+      terminalCommand ? "terminal-invalid-args" : "terminal-null",
+    );
+    channel.applyChannelEvent(s.key, {
+      kind: "permissionRequest",
+      requestId: "terminal",
+      terminalCommand,
+      toolCall: {
+        toolCallId: "wrong-source",
+        rawInput: { command: "unrelated-command" },
+      },
+      options,
+    });
+    const html = render(s);
+    expect(approval(html)).toContain("无法核对这次命令的完整信息");
+    expect(approval(html)).not.toContain("unrelated-command");
+    expect(html).not.toContain("批准一次");
+    expect(
+      s.pendingPermissions[0].options.map((option) => option.kind),
+    ).toEqual(["reject_once"]);
+    expect(h.invoke).not.toHaveBeenCalled();
+  },
+);
+
+it("does not offer allow when an owned command advertises a persistent choice sharing an ID", () => {
+  const s = state("terminal-ambiguous-options");
+  channel.applyChannelEvent(s.key, {
+    kind: "permissionRequest",
+    requestId: "terminal",
+    terminalCommand: { program: "/usr/bin/true", args: [], cwd: "/tmp" },
+    options: [...options, { ...options[1], kind: "allow_always" }],
+  });
+  expect(s.pendingPermissions[0].options).toEqual([]);
+  expect(render(s)).not.toContain("批准一次");
+  expect(h.invoke).not.toHaveBeenCalled();
+});
+
 it("keeps unknown input fully inspectable as escaped JSON without inventing command or directory fields", () => {
   const s = state("approval-unknown-input");
   channel.applyChannelEvent(s.key, {

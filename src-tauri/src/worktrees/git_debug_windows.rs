@@ -82,29 +82,39 @@ impl DebugProcesses {
             _launch_thread: PhantomData,
         })
     }
+    /// True means this bounded pass continued at least one debug event.
     pub(super) fn drain(
         &mut self,
         group: &crate::process_platform::OwnedGroup,
         child: &Child,
-    ) -> io::Result<()> {
+    ) -> io::Result<bool> {
         // Bound each pass so the original cancellation, output caps and clock
         // remain checked even while a command generates many debug events.
+        let mut progressed = false;
         for _ in 0..32 {
             if self.confirmed(group, child).unwrap_or(false) {
-                return Ok(());
+                return Ok(progressed);
             }
             if self.pending.is_none() {
                 let mut raw = DEBUG_EVENT::default();
                 // Let the continued process hand off its next loader event
                 // before returning to the caller's regular polling interval.
+                #[cfg(test)]
+                let wait_started = std::time::Instant::now();
                 if unsafe { WaitForDebugEvent(&mut raw, 1) } == 0 {
                     let error = io::Error::last_os_error();
+                    #[cfg(test)]
+                    self.event_observation.native_wait(
+                        wait_started.elapsed(),
+                        error.raw_os_error() == Some(ERROR_SEM_TIMEOUT as i32),
+                        progressed,
+                    );
                     if error.raw_os_error() == Some(ERROR_SEM_TIMEOUT as i32) {
                         #[cfg(test)]
                         {
                             self.event_observation.empty_wait();
                         }
-                        return Ok(());
+                        return Ok(progressed);
                     }
                     // A drained debugger can report no attached process. That
                     // result is never an exit witness: accept it only after
@@ -117,7 +127,7 @@ impl DebugProcesses {
                         )
                     {
                         return if self.confirmed(group, child).unwrap_or(false) {
-                            Ok(())
+                            Ok(progressed)
                         } else {
                             Err(error)
                         };
@@ -127,6 +137,8 @@ impl DebugProcesses {
                 }
                 #[cfg(test)]
                 {
+                    self.event_observation
+                        .native_wait(wait_started.elapsed(), false, progressed);
                     self.event_observation.event_received();
                 }
                 self.pending = Some(Event::new(raw));
@@ -156,6 +168,11 @@ impl DebugProcesses {
                 return Err(error);
             }
             let event = self.pending.take().unwrap();
+            #[cfg(test)]
+            if !progressed {
+                self.event_observation.productive_pass();
+            }
+            progressed = true;
             if let Some(index) = event.exit_member {
                 self.members[index].exit_continued = true;
             }
@@ -164,7 +181,7 @@ impl DebugProcesses {
             }
             handled?;
         }
-        Ok(())
+        Ok(progressed)
     }
     fn handle(members: &mut Vec<Member>, event: &mut Event) -> io::Result<()> {
         let raw = &event.raw;
@@ -233,7 +250,7 @@ impl DebugProcesses {
     }
     #[cfg(test)]
     pub(super) fn observation(&self) -> serde_json::Value {
-        let (events, empty_waits) = self.event_observation.counts();
+        let (events, empty_waits, productive_passes) = self.event_observation.counts();
         serde_json::json!({
             "capturedMemberCount": self.members.len(),
             "capturedMemberPids": self.members.iter().map(|member| member.pid).collect::<Vec<_>>(),
@@ -241,7 +258,14 @@ impl DebugProcesses {
             "unresolvedDebugError": self.uncertain,
             "debugEventCount": events,
             "debugEmptyWaitCount": empty_waits,
+            "debugProductivePassCount": productive_passes,
+            "debugNativeWait": self.event_observation.wait_observation(),
+            "debugCallerPollSleep": self.event_observation.poll_sleep_observation(),
         })
+    }
+    #[cfg(test)]
+    pub(super) fn observe_poll_sleep(&mut self, elapsed: std::time::Duration) {
+        self.event_observation.caller_poll_sleep(elapsed);
     }
     pub(super) fn confirmed(
         &self,

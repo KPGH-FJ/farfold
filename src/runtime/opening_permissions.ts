@@ -1,7 +1,12 @@
 import { invoke } from "@tauri-apps/api/core";
+import { draftPersistence } from "./draft_storage";
 import type { PendingPermission, ThreadState } from "./session_types";
 import { STRINGS } from "./strings";
 import { uiError } from "./ui_error";
+import {
+  permissionDecision,
+  selectablePermissionOption,
+} from "./permission_options";
 
 export interface OpeningPermission extends PendingPermission {
   owner: Record<string, unknown>;
@@ -148,19 +153,17 @@ export class OpeningPermissions {
     if (!entry) return;
     const p = entry.request,
       option = p.options.find((o) => o.optionId === optionId);
+    const interrupted = draftPersistence.captureInteractionInterruption();
     if (
       !option ||
+      !selectablePermissionOption(p.options, option) ||
+      interrupted() ||
       !entry.ports.canSubmit() ||
       p.status !== "pending" ||
       p.decision
     )
       return;
-    const decision = {
-      optionId,
-      label: option.name,
-      allow: option.kind.startsWith("allow"),
-      undoable: option.kind === "allow_always",
-    };
+    const decision = { ...permissionDecision(option), label: option.name };
     p.decision = decision;
     const revision = this.revision();
     p.error = null;
@@ -174,7 +177,11 @@ export class OpeningPermissions {
           p.status !== "pending"
         )
           return;
-        if (!entry.ports.canSubmit() || revision !== this.revision()) {
+        if (
+          interrupted() ||
+          !entry.ports.canSubmit() ||
+          revision !== this.revision()
+        ) {
           p.decision = null;
           entry.ports.changed();
           return;

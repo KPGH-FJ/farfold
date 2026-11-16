@@ -10,6 +10,7 @@ use tauri::{AppHandle, Emitter, Manager};
 pub struct DraftExit {
     ready: AtomicBool,
     clearing: AtomicBool,
+    preparing: AtomicBool,
     serial: AtomicU64,
     pending: Mutex<Option<(u64, i32, bool)>>,
     exit_admission: Mutex<Option<crate::managed_update::UpdatePermit>>,
@@ -17,12 +18,38 @@ pub struct DraftExit {
     worktree_exit_admission: Mutex<Option<crate::managed_update::UpdatePermit>>,
 }
 pub(crate) struct ClearExitGuard<'a>(&'a DraftExit);
+struct ExitPreparation<'a>(&'a AtomicBool);
+impl Drop for ExitPreparation<'_> {
+    fn drop(&mut self) {
+        self.0.store(false, Ordering::SeqCst);
+    }
+}
 impl Drop for ClearExitGuard<'_> {
     fn drop(&mut self) {
         self.0.clearing.store(false, Ordering::SeqCst);
     }
 }
 impl DraftExit {
+    fn begin_preparation(
+        &self,
+        token: u64,
+        installing: bool,
+    ) -> Result<ExitPreparation<'_>, String> {
+        let pending = self.pending.lock().map_err(|_| "暂时无法关闭，请重试")?;
+        if !matches!(*pending, Some((current, _, false)) if current == token) {
+            return Err("关闭请求已失效".into());
+        }
+        if self.clearing.load(Ordering::SeqCst) {
+            return Err("正在清除数据，请等待完成后重新打开应用".into());
+        }
+        if installing {
+            return Err("更新正在安装，请稍后再试".into());
+        }
+        self.preparing
+            .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
+            .map_err(|_| "正在准备退出，请稍后重试")?;
+        Ok(ExitPreparation(&self.preparing))
+    }
     pub(crate) fn begin_data_clear(&self) -> ClearExitGuard<'_> {
         self.clearing.store(true, Ordering::SeqCst);
         ClearExitGuard(self)
@@ -171,12 +198,22 @@ pub fn handle(app: &AppHandle, event: &tauri::RunEvent) {
                 copies.take();
                 worktrees.take();
                 let store = app.try_state::<crate::meta_store::MetaStore>();
-                match admit_file_exit(
-                    &app.state::<crate::file_copy_jobs::FileCopyJobs>(),
-                    &app.state::<crate::worktrees::Worktrees>(),
-                    store.as_deref(),
-                    false,
-                ) {
+                let admit = || {
+                    admit_file_exit(
+                        &app.state::<crate::file_copy_jobs::FileCopyJobs>(),
+                        &app.state::<crate::worktrees::Worktrees>(),
+                        store.as_deref(),
+                        false,
+                    )
+                };
+                // Storage can be open while the renderer is still in recovery.
+                let admission = if store.is_some() {
+                    app.state::<crate::storage_recovery::StorageRecoveryState>()
+                        .admit_startup_exit(admit)
+                } else {
+                    admit()
+                };
+                match admission {
                     Ok((copy, worktree)) => {
                         *copies = Some(copy);
                         *worktrees = Some(worktree);
@@ -184,6 +221,15 @@ pub fn handle(app: &AppHandle, event: &tauri::RunEvent) {
                     Err(_) => api.prevent_exit(),
                 }
             }
+        } else if let tauri::RunEvent::WindowEvent {
+            event: tauri::WindowEvent::CloseRequested { api, .. },
+            ..
+        } = event
+            && app.try_state::<crate::meta_store::MetaStore>().is_some()
+        {
+            // Keep the recovery window available if the exit is blocked.
+            api.prevent_close();
+            app.exit(0);
         }
         return;
     }
@@ -268,11 +314,17 @@ pub fn app_drafts_ready(app: AppHandle) -> Result<(), String> {
     Ok(())
 }
 #[tauri::command]
-pub fn app_exit_after_save(
+pub async fn app_exit_after_save(
     app: AppHandle,
     token: u64,
     confirm_activity: Option<bool>,
 ) -> Result<(), String> {
+    let state = app.state::<DraftExit>();
+    let _preparation = state.begin_preparation(
+        token,
+        app.state::<crate::managed_update::ManagedUpdateAuthority>()
+            .is_installing(),
+    )?;
     // Separate from confirm_activity: confirmed Agent interruption never
     // cancels a filesystem write, nor permits a late copy after this point.
     let store = app.try_state::<crate::meta_store::MetaStore>();
@@ -282,6 +334,18 @@ pub fn app_exit_after_save(
         store.as_deref(),
         confirm_activity == Some(true),
     )?;
+    // Remove only tools owned by this live connection before taking the quiet
+    // exit permit. An explicit existing interruption decision still permits
+    // exit if native cleanup is unknown; local permissions are revoked either way.
+    if crate::browser_sharing::prepare_shutdown(&app)
+        .await
+        .is_err()
+        && confirm_activity != Some(true)
+    {
+        // This is an unresolved tool removal, not a draft save failure. The
+        // existing confirmation flow lets the user stay or explicitly exit.
+        return Err("BROWSER_TOOL_EXIT_REVIEW_REQUIRED".into());
+    }
     let installing = app
         .state::<crate::managed_update::ManagedUpdateAuthority>()
         .is_installing();
@@ -320,8 +384,22 @@ fn admit_file_exit(
     ),
     String,
 > {
-    let copy = copies.seal_exit_with_confirmation(confirm)?;
-    let worktree = worktrees.seal_exit(store, confirm)?;
+    let copy = copies
+        .seal_exit_with_confirmation(confirm)
+        .map_err(|error| {
+            if error == "EXIT_CONFIRMATION_REQUIRED" {
+                "FILE_COPY_EXIT_REVIEW_REQUIRED".into()
+            } else {
+                error
+            }
+        })?;
+    let worktree = worktrees.seal_exit(store, confirm).map_err(|error| {
+        if error == "EXIT_CONFIRMATION_REQUIRED" {
+            "WORKTREE_EXIT_REVIEW_REQUIRED".into()
+        } else {
+            error
+        }
+    })?;
     Ok((copy, worktree))
 }
 
@@ -336,6 +414,30 @@ pub fn app_exit_cancel(app: AppHandle, token: u64) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn asynchronous_exit_cleanup_keeps_one_current_owner_and_releases_on_failure() {
+        let state = DraftExit::default();
+        let owner = state.request(0).unwrap();
+        assert!(state.begin_preparation(owner + 1, false).is_err());
+        assert!(state.begin_preparation(owner, true).is_err());
+        let preparation = state.begin_preparation(owner, false).unwrap();
+        assert!(state.begin_preparation(owner, false).is_err());
+        // Cancellation while cleanup is in flight must invalidate the final exit.
+        state.cancel(owner).unwrap();
+        assert!(
+            state
+                .complete(owner, false, || panic!("stale cleanup must not admit exit"))
+                .is_err()
+        );
+        let next = state.request(0).unwrap();
+        assert!(state.begin_preparation(next, false).is_err());
+        drop(preparation);
+        let retry = state.begin_preparation(next, false).unwrap();
+        drop(retry);
+        assert_eq!(state.complete(next, false, || Ok(None)).unwrap(), 0);
+        assert!(state.begin_preparation(next, false).is_err());
+    }
+
     #[test]
     fn unacknowledged_restart_can_stay_in_app_without_allowing_exit() {
         let state = DraftExit::default();

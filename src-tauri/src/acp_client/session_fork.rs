@@ -21,12 +21,15 @@ use tauri::{AppHandle, Manager, Webview, ipc::Channel};
 use tokio::sync::{oneshot, watch};
 
 mod coordinator;
+pub(crate) mod point;
 pub(crate) use coordinator::{preflight, start};
+pub use point::HistoryPoint;
 
 #[derive(Debug, Clone, Default, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SessionOperations {
     pub fork_current_context: bool,
+    pub fork_historical_point: bool,
 }
 
 pub(crate) fn capabilities(connection: &ManagedConnection, session_id: &str) -> SessionOperations {
@@ -35,14 +38,23 @@ pub(crate) fn capabilities(connection: &ManagedConnection, session_id: &str) -> 
             .get(session_id)
             .is_some_and(|entry| entry.workspace.as_ref().is_some_and(Vec::is_empty))
     });
+    let base = workspace_known
+        && connection.handshake.get().is_some_and(|h| {
+            let caps = &h.typed.agent_capabilities;
+            caps.load_session && caps.session_capabilities.close.is_some()
+        });
     SessionOperations {
-        fork_current_context: workspace_known
+        fork_current_context: base
             && connection.handshake.get().is_some_and(|h| {
-                let caps = &h.typed.agent_capabilities;
-                caps.load_session
-                    && caps.session_capabilities.fork.is_some()
-                    && caps.session_capabilities.close.is_some()
+                h.typed
+                    .agent_capabilities
+                    .session_capabilities
+                    .fork
+                    .is_some()
             }),
+        // This official supplement is verified by complete pre/post exports;
+        // its running endpoint need not advertise the optional standard fork.
+        fork_historical_point: base && connection.session_tools.historical_fork_supported(),
     }
 }
 
@@ -59,6 +71,8 @@ pub struct ForkResult {
     pub source_released: bool,
     pub session: Option<SessionOpenResult>,
     pub reason: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub history_point: Option<HistoryPoint>,
 }
 
 impl ForkResult {
@@ -68,6 +82,7 @@ impl ForkResult {
         parent: &str,
         cwd: &Path,
         failure: AdmissionFailure,
+        history_point: Option<HistoryPoint>,
     ) -> Self {
         Self {
             status: if failure.uncertain {
@@ -84,6 +99,7 @@ impl ForkResult {
             source_released: !failure.uncertain,
             session: None,
             reason: Some(failure.reason),
+            history_point,
         }
     }
 }
@@ -130,6 +146,7 @@ pub(crate) struct ForkRequest {
     pub delivery_failed: Arc<AtomicBool>,
     pub parent_opening: super::lifecycle::OpenReservation,
     pub(super) history: Option<super::history_admission::Permit>,
+    pub history_point: Option<HistoryPoint>,
 }
 
 fn opened_result(
@@ -140,9 +157,12 @@ fn opened_result(
     let session_operations = capabilities(&connection, &opened.session_id);
     let workspace_access = super::workspace_access::capability(&connection);
     let identity_read = super::identity_read::capability(&connection);
+    let session_tool_inventory = super::session_tools::capability(&connection);
     let source = connection.service;
     SessionOpenResult {
+        history_empty_confirmed: opened.history_empty_confirmed,
         identity_read,
+        session_tool_inventory,
         workspace_access,
         session_operations,
         connection_id: opened.connection_id,
@@ -162,6 +182,7 @@ fn opened_result(
         resumed: true,
         warnings: opened.warnings,
         service: source.as_ref().map(|s| s.identity.clone()),
+        service_model_value: None,
         service_context: source.map(|s| s.revision),
     }
 }
@@ -175,6 +196,7 @@ struct Holds {
 
 /// One transient operation owned by its parent pump, including failed delivery.
 pub(crate) struct SourceFork {
+    open_token: String,
     pub busy: AtomicBool,
     result: Mutex<ForkResult>,
     updated: watch::Sender<ForkResult>,
@@ -185,6 +207,19 @@ pub(crate) struct SourceFork {
 }
 
 impl SourceFork {
+    pub(crate) fn operation_matches(&self, id: &str) -> bool {
+        self.result.lock().is_ok_and(|r| r.operation_id == id)
+    }
+    pub(crate) fn request_matches(&self, request: &ForkRequest) -> bool {
+        self.result.lock().is_ok_and(|r| {
+            r.history_point == request.history_point
+                && self.open_token == request.open_token
+                && r.parent_session_id == request.parent
+                && r.parent_connection_id == request.connection.connection_id
+                && Path::new(&r.cwd) == request.cwd
+        })
+    }
+
     fn observe_parent(
         self: &Arc<Self>,
         life: Arc<super::lifecycle::ConnectionLife>,
@@ -316,6 +351,7 @@ mod owner_tests;
 
 impl AcpManager {
     #[allow(clippy::too_many_arguments)]
+    #[cfg(test)]
     pub(super) async fn fork_current(
         &self,
         row: AgentRow,
@@ -329,8 +365,38 @@ impl AcpManager {
         store: &MetaStore,
         history: Option<super::history_admission::Permit>,
     ) -> Result<ForkResult, String> {
+        self.fork_selected(
+            row,
+            cwd,
+            parent,
+            connection_id,
+            operation_id,
+            open_token,
+            events,
+            delivery_failed,
+            store,
+            history,
+            None,
+        )
+        .await
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(super) async fn fork_selected(
+        &self,
+        row: AgentRow,
+        cwd: &Path,
+        parent: &str,
+        connection_id: &str,
+        operation_id: String,
+        open_token: String,
+        events: SessionSink,
+        delivery_failed: Arc<AtomicBool>,
+        store: &MetaStore,
+        history: Option<super::history_admission::Permit>,
+        history_point: Option<HistoryPoint>,
+    ) -> Result<ForkResult, String> {
         let result = self
-            .begin_fork(
+            .begin_fork_selected(
                 row,
                 cwd,
                 parent,
@@ -341,16 +407,27 @@ impl AcpManager {
                 delivery_failed,
                 store,
                 history,
+                history_point.clone(),
             )
             .await;
         Ok(match result {
             Ok(source) => source.wait(Duration::from_secs(120)).await,
             Err(failure) => {
-                ForkResult::before_dispatch(operation_id, connection_id, parent, cwd, failure)
+                let mut result = ForkResult::before_dispatch(
+                    operation_id,
+                    connection_id,
+                    parent,
+                    cwd,
+                    failure,
+                    history_point.clone(),
+                );
+                result.history_point = history_point;
+                result
             }
         })
     }
     #[allow(clippy::too_many_arguments)]
+    #[cfg(test)]
     pub(super) async fn begin_fork(
         &self,
         row: AgentRow,
@@ -364,12 +441,48 @@ impl AcpManager {
         store: &MetaStore,
         history: Option<super::history_admission::Permit>,
     ) -> Result<Arc<SourceFork>, AdmissionFailure> {
+        self.begin_fork_selected(
+            row,
+            cwd,
+            parent,
+            connection_id,
+            operation_id,
+            open_token,
+            events,
+            delivery_failed,
+            store,
+            history,
+            None,
+        )
+        .await
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(super) async fn begin_fork_selected(
+        &self,
+        row: AgentRow,
+        cwd: &Path,
+        parent: &str,
+        connection_id: &str,
+        operation_id: String,
+        open_token: String,
+        events: SessionSink,
+        delivery_failed: Arc<AtomicBool>,
+        store: &MetaStore,
+        history: Option<super::history_admission::Permit>,
+        history_point: Option<HistoryPoint>,
+    ) -> Result<Arc<SourceFork>, AdmissionFailure> {
         let connection = self.session_connection(&row.id, cwd, parent)?;
         if connection.connection_id != connection_id {
             return Err(AdmissionFailure::rejected("unavailable"));
         }
-        if !capabilities(&connection, parent).fork_current_context {
+        if history_point.is_none() && !capabilities(&connection, parent).fork_current_context {
             return Err(AdmissionFailure::rejected("unsupported"));
+        }
+        if history_point.as_ref().is_some_and(|point| !point.valid()) {
+            return Err(AdmissionFailure::rejected("point_unavailable"));
+        }
+        if history_point.is_some() && !capabilities(&connection, parent).fork_historical_point {
+            return Err(AdmissionFailure::rejected("point_unavailable"));
         }
         let parent_opening = self.opening_sessions.reserve(&row.id, cwd, parent)?;
         let control = {
@@ -392,6 +505,7 @@ impl AcpManager {
             delivery_failed,
             parent_opening,
             history,
+            history_point,
         };
         crate::work_policy::admit(store, &request.row.id.clone(), cwd, || async {
             let (reply, receive) = oneshot::channel();
@@ -436,6 +550,7 @@ pub async fn session_fork_current(
     connection_id: String,
     operation_id: String,
     open_token: String,
+    history_point: Option<HistoryPoint>,
     admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
     channel: Channel<Wake>,
 ) -> Result<ForkResult, String> {
@@ -457,6 +572,7 @@ pub async fn session_fork_current(
             &parent_session_id,
             Path::new(&cwd),
             AdmissionFailure::rejected("unavailable"),
+            history_point.clone(),
         ));
     }
     let manager = app.state::<AcpManager>();
@@ -479,6 +595,7 @@ pub async fn session_fork_current(
                 &parent_session_id,
                 Path::new(&cwd),
                 AdmissionFailure::rejected("unavailable"),
+                history_point.clone(),
             ));
         }
     };
@@ -491,6 +608,7 @@ pub async fn session_fork_current(
                 &parent_session_id,
                 Path::new(&cwd),
                 AdmissionFailure::rejected("unavailable"),
+                history_point.clone(),
             ));
         }
     };
@@ -499,6 +617,13 @@ pub async fn session_fork_current(
     request.preparation_bytes = std::mem::size_of::<ForkRequest>()
         .checked_add(connection_id.len())
         .and_then(|v| v.checked_add(operation_id.len()))
+        .and_then(|v| {
+            v.checked_add(
+                history_point
+                    .as_ref()
+                    .map_or(0, |point| point.message_id.len()),
+            )
+        })
         .ok_or("读取所需设置较大，暂时无法开始；原记录与设置已保留。")?;
     let history = match manager
         .admit_cold_history(&row, &cwd, &parent_session_id, &[], &store, None, request)
@@ -512,6 +637,7 @@ pub async fn session_fork_current(
                 &parent_session_id,
                 &cwd,
                 AdmissionFailure::rejected("unavailable"),
+                history_point.clone(),
             ));
         }
     };
@@ -525,7 +651,7 @@ pub async fn session_fork_current(
         }
     });
     app.state::<AcpManager>()
-        .fork_current(
+        .fork_selected(
             row,
             &cwd,
             &parent_session_id,
@@ -536,6 +662,7 @@ pub async fn session_fork_current(
             delivery_failed,
             &app.state::<MetaStore>(),
             Some(history),
+            history_point,
         )
         .await
 }

@@ -1,0 +1,11 @@
+{
+  "recordedAt": "2026-11-04T09:53:57.013163+00:00",
+  "sourceAndLockFilesChecked": 2260,
+  "sourceAndLockChanges": [],
+  "originalCleanupReceiptsChecked": 6,
+  "originalCleanupReceiptChanges": [],
+  "formalBinarySha256": "e3eccba47c505ba0118b5de3679872810eca5d26775b1ae228ca7e11c918f2da",
+  "formalBinaryMatchesBefore": true,
+  "originalCandidateAndNewWindowsTestUnchanged": true,
+  "scope": "Listed source and lock files, six exact raw cleanup receipts, and installed main program bytes; no claim of atomic observation or live application-data byte identity."
+}

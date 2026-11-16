@@ -1,0 +1,204 @@
+{
+  "kind": "ReliabilityStageTextEvidenceCapsule",
+  "state": "PREPARED_FOR_ROOT_REVIEW_NOT_COMMITTED_BY_PRODUCER",
+  "preparedAtUtc": "2026-11-05T09:38:57.315100+00:00",
+  "sourceCommit": "38e53a304b10d15c5eb10fecb6b55d922a100357",
+  "parent": "6a0fc311ecd70e790730402761a0582b9f555f7b",
+  "ownedSourceFiles": [
+    "src-tauri/src/acp_client/skill_management/mod.rs",
+    "src-tauri/src/acp_client/skill_management/prewrite_owner_tests.rs",
+    "src-tauri/src/acp_client/skill_management/rpc.rs",
+    "src/components/AgentHub.continuity.test.tsx",
+    "src/components/AgentHub.install-progress.test.tsx",
+    "src/components/AgentHub.repair.test.tsx",
+    "src/components/AgentHub.tsx",
+    "src/components/AgentSetup.tsx",
+    "src/components/Composer.attachments.test.tsx",
+    "src/components/Composer.tsx",
+    "src/runtime/queue_edit.import-ownership.test.ts",
+    "src/runtime/queue_edit.ts",
+    "src/runtime/session_config_recheck.ts",
+    "src/runtime/sessions.config-recheck.test.ts"
+  ],
+  "implemented": [
+    {
+      "area": "Agent管理准备页的焦点返回",
+      "change": "复用共用弹窗的明确入口引用，收起后回到原入口；不改Agent连接、认证或配置。",
+      "baseline": "Root实际旧755界面两种收起方式均返回错误键盘位置；原AX/截图未保存。这是Root观察层，不存在本批受控RED原件。",
+      "controlledRed": null,
+      "controlledGreen": {
+        "files": 13,
+        "passed": 200,
+        "failed": 0,
+        "skipped": 0
+      },
+      "greenNaturalExitCode": 0,
+      "fixedInstalledUiIncluded": false,
+      "independentReview": {
+        "path": "output/2026-11-05-next-reliability-stage/focus-investigation/independent-review.json",
+        "sha256": "c2415e0da453a18c272a0e770deb06ebf89dd6262fdd7cce537c48e750604699"
+      }
+    },
+    {
+      "area": "队列编辑中的附件读取归属",
+      "change": "附件读取未结束时拒绝把编辑内容转到主输入，保留原编辑者；读取完成后仍须用户明确转入。",
+      "controlledRed": {
+        "files": 2,
+        "passed": 4,
+        "failed": 2,
+        "skipped": 0
+      },
+      "redNaturalExitCode": 1,
+      "sameTestBytesGreen": {
+        "files": 2,
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0
+      },
+      "greenNaturalExitCode": 0,
+      "associated": {
+        "files": 7,
+        "passed": 41,
+        "failed": 0,
+        "skipped": 0
+      },
+      "coverage": "真实Node File字节、实际草稿/persistence helper与受控settings存储及Composer SSR回调；不称浏览器DOM、SQLite或完整IPC。",
+      "independentReview": {
+        "path": "output/2026-11-05-next-reliability-stage/input-investigation/queue-transfer-ownership/independent-review.json",
+        "sha256": "4042c0804174d83bad338f1dfdc9122949576e21c5e9e4196dbbfe7b6a704e15"
+      }
+    },
+    {
+      "area": "技能/MCP启停写入前的原项目归属",
+      "change": "SetEnabled在实际写帧前复核原来源仍当前；保持已经获准的确认不因只读清单撤回而失效。",
+      "controlledRed": {
+        "tests": 5,
+        "passed": 3,
+        "failed": 2,
+        "ignored": 0,
+        "naturalExitCode": 101
+      },
+      "sameTestBytesGreen": {
+        "tests": 5,
+        "passed": 5,
+        "failed": 0,
+        "ignored": 0,
+        "naturalExitCode": 0
+      },
+      "associatedExactFqns": 22,
+      "coverage": "生产Exchange/Requests、真实自有Python peer与临时项目；两项cwd替换负控仅Unix注册，不是Windows证据或官方程序采用。",
+      "independentReview": {
+        "path": "output/2026-11-05-next-reliability-stage/management-investigation/independent-review.json",
+        "sha256": "e185230829ca4898dfa4734adfb4a7fbb312e1daa7f45519b5eb6d22b67b8016"
+      }
+    },
+    {
+      "area": "失败配置重核的显式重试",
+      "change": "失败标记接纳完整相同且已知的新检查对象；不同/未知/保存失败不取得旧分离操作的重试权限。",
+      "initialFilteredRed": {
+        "files": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 30
+      },
+      "initialFilteredRedNaturalExitCode": 1,
+      "controlledSealedRed": {
+        "files": 1,
+        "passed": 33,
+        "failed": 1,
+        "skipped": 0
+      },
+      "redNaturalExitCode": 1,
+      "sameTestBytesGreen": {
+        "files": 1,
+        "passed": 34,
+        "failed": 0,
+        "skipped": 0
+      },
+      "greenNaturalExitCode": 0,
+      "associated": {
+        "files": 7,
+        "passed": 121,
+        "failed": 0,
+        "skipped": 0
+      },
+      "coverage": "真实ThreadsStore配合受控invoke/Channel；不改权限、归属、修订、保存基线或队列，不自动发送。",
+      "independentReview": {
+        "path": "output/2026-11-05-next-reliability-stage/recovery-investigation/independent-review.json",
+        "sha256": "ecdf8d8df5f5165c988e2f0b32584f602fb020f14936f611caa1a87fe0cffe55"
+      }
+    }
+  ],
+  "freshMacEngineering": {
+    "canonical": {
+      "path": "output/2026-11-05-next-reliability-stage/engineering-result.json",
+      "sha256": "2181b5da2370966021317fddb10821ec1c62177beb7f1bf0862ec3c932b20192",
+      "bytes": 5651
+    },
+    "freshCommands": 7,
+    "allNaturalExitCodes": 0,
+    "frontend": {
+      "files": 716,
+      "passed": 9584,
+      "failed": 0
+    },
+    "rust": {
+      "passed": 2369,
+      "failed": 0,
+      "ignored": 7,
+      "binaryTests": 0,
+      "docTests": 0
+    },
+    "declaredInputs": {
+      "count": 2398,
+      "includesFreshFixtureInputs": 11,
+      "productionAndToolScopeFiles": 2394,
+      "additionalAuthorityAndConfigFiles": 4,
+      "beforeAfterDiskFixedCommitBlobShaEqual": true,
+      "currentDiskAndGitExecutableModesEqual": true,
+      "modeBoundary": "原before/after清单只记录SHA；当前0644/Git executable模式独立核过，不补造历史mode端点。",
+      "notClaimed": "不称所有编译器/工具链/环境或用户数据的传递输入。"
+    },
+    "independentEngineeringReview": {
+      "path": "output/2026-11-05-next-reliability-stage/engineering-independent-review/independent-review.json",
+      "sha256": "dd7ede332827b1fa7402bf0350250f6a339328080492d1272512817131718bef",
+      "bytes": 20692
+    },
+    "originalFmtFailure": {
+      "naturalExitCode": 1,
+      "otherSixCommandsNotRun": true,
+      "minimumCorrection": "仅cfg(test)模块字母排序。",
+      "allSevenFreshlyRerunAfterCorrection": true,
+      "receipt": "originals/engineering/checks/cargo-fmt.json",
+      "log": "originals/engineering/checks/cargo-fmt.log",
+      "correction": "originals/engineering/format-correction.json"
+    },
+    "canonicalLogsAndMaps": "副本与最终原件逐字节同，非又一次执行。",
+    "buildWarning": "Vite大包体积警告保留，build自然0，不称无警告。"
+  },
+  "publicationBoundary": {
+    "originalSourceTextFiles": 137,
+    "originalSourceTextBytes": 2797576,
+    "exactOriginalBytesPreserved": true,
+    "derivedWrappers": [
+      "README.md",
+      "summary.json",
+      "text-allowlist.json",
+      "safety-check.json"
+    ],
+    "formalResultsIncluded": false,
+    "formalAndUi": "本胶囊不含本批正式安装或修后安装版UI结果。后续由Root按实际回执另附派生摘要，不能从工程通过推定。",
+    "windows": "未新增本源码的Windows执行或安装结论；旧付款/额度阻塞不在本包改写成运行成功。",
+    "noNewAcceptanceClaim": "29家八项、151原条件和NEW-24等既有边界不变；不形成任何一家完整八项验收结论。",
+    "exclusions": [
+      "用户数据库或metadata备份",
+      "完整用户数据清单",
+      "用户草稿正文",
+      "原始AX/截图/真实UI内容",
+      "App/Agent/测试binary字节",
+      "原二进制CI压缩包",
+      "真实凭据/账号/环境文件"
+    ]
+  },
+  "packagingRole": "本胶囊的作者封装及自动检查，不是自我独立安全复核；四代码读者和工程读者只按其实际范围引用。"
+}

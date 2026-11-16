@@ -9,6 +9,11 @@ import { Channel, invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AgentExtensionOwners } from "./agent_extension_owner";
+import {
+  beginProgramAuthenticationChange,
+  hasPendingProgramAuthenticationChange,
+  programAuthenticationChanged,
+} from "./authentication";
 import { uiError } from "./ui_error";
 import { threads } from "./sessions";
 import { hasActiveWork, hasPendingRequests } from "./session_types";
@@ -156,6 +161,7 @@ export function agentAddCustom(input: {
   command: string;
   args: string[];
   env: Record<string, string>;
+  secretEnv?: Record<string, string>;
 }): Promise<AgentRow> {
   return invoke("agent_add_custom", input);
 }
@@ -696,11 +702,33 @@ export interface AgentsState {
     command: string;
     args: string[];
     env?: Record<string, string>;
+    secretEnv?: Record<string, string>;
   }) => Promise<string | null>;
+}
+
+type ProgramSelection = readonly [
+  string,
+  string[],
+  string | null,
+  string | null,
+];
+function selectedProgram(
+  row: AgentRow,
+  programEnv?: string | null,
+): ProgramSelection {
+  const program = programEnv
+    ? row.env.find(([key]) => key === programEnv)?.[1]
+    : null;
+  return [row.command, row.args, row.version, program ?? null];
 }
 
 export function useAgents(): AgentsState {
   const statusRevisions = useRef(new Map<string, number>());
+  const programRead = useRef({
+    started: 0,
+    applied: 0,
+    selections: new Map<string, ProgramSelection>(),
+  });
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [entries, setEntries] = useState<CatalogEntry[]>([]);
@@ -715,11 +743,42 @@ export function useAgents(): AgentsState {
   >({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
 
+  const acceptProgram = useCallback((agent: string) => {
+    const programs = programRead.current;
+    // Native selection completed. Any older snapshot can still describe the former program.
+    programs.applied = ++programs.started;
+    programs.selections.delete(agent);
+    programAuthenticationChanged(agent);
+  }, []);
+
   const refresh = useCallback(async () => {
+    const version = ++programRead.current.started;
     const [snapshot, catalog] = await Promise.all([
       appInitialSnapshot(),
       catalogList(),
     ]);
+    const programs = programRead.current;
+    if (version < programs.applied) return;
+    programs.applied = version;
+    const previous = programs.selections;
+    const companionKeys = new Map(
+      catalog.map((entry) => [entry.agentId, entry.programEnv]),
+    );
+    programs.selections = new Map(
+      snapshot.agents.map((row) => [
+        row.id,
+        selectedProgram(row, companionKeys.get(row.id)),
+      ]),
+    );
+    for (const [agent, before] of previous) {
+      if (hasPendingProgramAuthenticationChange(agent)) {
+        programs.selections.set(agent, before);
+        continue;
+      }
+      const after = programs.selections.get(agent);
+      if (!after || JSON.stringify(before) !== JSON.stringify(after))
+        programAuthenticationChanged(agent);
+    }
     setRows(snapshot.agents);
     setEntries(catalog);
     const catalogIds = new Set(catalog.map((entry) => entry.agentId));
@@ -840,11 +899,17 @@ export function useAgents(): AgentsState {
           await agentRegister(card.id, card.discoveredPath);
         } else {
           setBusyFor(card.id, "install");
-          await agentInstall(
-            card.id,
-            (p) => setInstallProgress((prev) => ({ ...prev, [card.id]: p })),
-            input,
-          );
+          const finish = beginProgramAuthenticationChange(card.id);
+          try {
+            await agentInstall(
+              card.id,
+              (p) => setInstallProgress((prev) => ({ ...prev, [card.id]: p })),
+              input,
+            );
+            acceptProgram(card.id);
+          } finally {
+            finish();
+          }
           setBusyFor(card.id, "connect");
         }
         await agentConnect(card.id, target);
@@ -861,7 +926,7 @@ export function useAgents(): AgentsState {
         setBusyFor(card.id, null);
       }
     },
-    [connectCwd, refresh, setBusyFor, setErrorFor],
+    [acceptProgram, connectCwd, refresh, setBusyFor, setErrorFor],
   );
 
   /** Drop the live connection and connect again (picks up env/auth changes). */
@@ -957,6 +1022,7 @@ export function useAgents(): AgentsState {
       command: string;
       args: string[];
       env?: Record<string, string>;
+      secretEnv?: Record<string, string>;
     }) => {
       setErrors((prev) => ({ ...prev, __custom: null }));
       try {
@@ -979,12 +1045,14 @@ export function useAgents(): AgentsState {
   const install = async (card: AgentCardModel, input?: InstallationInput) => {
     setBusyFor(card.id, "install");
     setErrorFor(card.id, null);
+    const finish = beginProgramAuthenticationChange(card.id);
     try {
       await agentInstall(
         card.id,
         (p) => setInstallProgress((prev) => ({ ...prev, [card.id]: p })),
         input,
       );
+      acceptProgram(card.id);
       return true;
     } catch (reason) {
       setErrorFor(card.id, uiError(reason, STRINGS.install.failed));
@@ -994,8 +1062,11 @@ export function useAgents(): AgentsState {
       }));
       return false;
     } finally {
+      finish();
+      await refresh().catch((reason) => {
+        setLoadError(uiError(reason, STRINGS.repair.requestFailed));
+      });
       setBusyFor(card.id, null);
-      await refresh().catch(() => undefined);
     }
   };
   const changeProgram = async (
@@ -1009,20 +1080,25 @@ export function useAgents(): AgentsState {
       ...prev,
       [id]: { stage: "check", bytes: null, total: null },
     }));
+    const finish = beginProgramAuthenticationChange(id);
     try {
       await invoke(command, { agentId: id, ...args });
+      acceptProgram(id);
       return true;
     } catch (reason) {
       setErrorFor(id, uiError(reason, STRINGS.install.changeFailed));
       return false;
     } finally {
+      finish();
+      await refresh().catch((reason) => {
+        setLoadError(uiError(reason, STRINGS.repair.requestFailed));
+      });
       setBusyFor(id, null);
       setInstallProgress((prev) => {
         const next = { ...prev };
         delete next[id];
         return next;
       });
-      await refresh().catch(() => undefined);
     }
   };
   const cancelInstall = async (id: string) => {

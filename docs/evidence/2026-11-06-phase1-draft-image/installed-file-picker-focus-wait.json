@@ -1,0 +1,79 @@
+{
+  "kind": "InstalledMacOSFileChooserRemoteFocusWaitObservation",
+  "installedSource": "6ce829c538da454414bd1158ef0c8bbb521b2a20",
+  "installedBinarySha256": "40758ffc653c3de0e7554730bbbc604590267bc4fd95b988edaaab0014f2da73",
+  "scope": "Read-only process diagnostics during two actual file chooser imports of synthetic PNG bytes from owned anonymous loopback volumes, in the same completed owned conversation.",
+  "idleControl": {
+    "rawSampleSha256": "bc75c832356abcb3096e0b7843b60d807f725acc73fbbd06d4e844422f680370",
+    "mainThreadIdleAppKitEventWait": true,
+    "remoteAccessibilityFocusWaitObserved": false
+  },
+  "preOpenCalibration": {
+    "rawServerEventsSha256": "bfd10bf2be92302afee42c31ae56cc71f936e51791da165b9f1979c16298181f",
+    "samplesAllCompletedBeforeOpen": true,
+    "rawSampleSha256": [
+      "7b0140ba34b75f20e4d472f1ea2006e4d3fe3078be38e88ad85c807a2916e6dc",
+      "8f894020b67c4c419ada12cb1b802eed98d554ccda99e98b07c63e71db52d6d5",
+      "9eaa1a8d14103cad25ae5fabd7d739b47ffc7bde2ffd15f8257d20a3181e4946"
+    ],
+    "openReturnBeforeBodyCompletionMs": 6625.671,
+    "firstScreenshotReturnedAfterBodyCompletionMs": 1038.329,
+    "firstScreenshotShowedFixtureThumbnail": true,
+    "savedBytesMatched": true
+  },
+  "postOpenProbe": {
+    "rawServerEventsSha256": "f073a4700cb8dbaec6a36e1fa21c7625ab37f8f0317a2c325063ab7411334df6",
+    "serverGetBeforeOpenMs": 1289.745,
+    "openReturnBeforeBodyCompletionMs": 45207.692,
+    "bodyHoldDurationMs": 48007.78,
+    "screenshotToolTimedOutWhileBodyHeld": true,
+    "independentReadWhileHeldHadNoFixtureAttachment": true,
+    "samples": [
+      {
+        "startMsAfterOpenReturn": 8068.936,
+        "endMsAfterOpenReturn": 9390.83,
+        "rawSampleSha256": "ac00b340ec0fa8675a72eed3c93bda9838572bf6e63912a1148d3c6b263030a3",
+        "mainThreadRemoteAccessibilityFocusWait": true,
+        "namedFixtureFdReportedByEitherCheck": false,
+        "attachmentReadSymbolObserved": false
+      },
+      {
+        "startMsAfterOpenReturn": 9391.193,
+        "endMsAfterOpenReturn": 10653.66,
+        "rawSampleSha256": "3519c7bf4c1acf8801294acc81cc88d010eddbdb282417dca3c06ba81968123d",
+        "mainThreadRemoteAccessibilityFocusWait": true,
+        "namedFixtureFdReportedByEitherCheck": false,
+        "attachmentReadSymbolObserved": false
+      },
+      {
+        "startMsAfterOpenReturn": 10653.99,
+        "endMsAfterOpenReturn": 11938.51,
+        "rawSampleSha256": "6bd3e579dd0d7c753e39ba01fd01e3488041258488955b786ce86622034d746e",
+        "mainThreadRemoteAccessibilityFocusWait": true,
+        "namedFixtureFdReportedByEitherCheck": false,
+        "attachmentReadSymbolObserved": false
+      },
+      {
+        "startMsAfterOpenReturn": 13005.413,
+        "endMsAfterOpenReturn": 14351.305,
+        "rawSampleSha256": "d55d076b9222c38aa09d8794f866f3315d98116364b33f5379974ce3f6101da6",
+        "mainThreadRemoteAccessibilityFocusWait": true,
+        "namedFixtureFdReportedByEitherCheck": false,
+        "attachmentReadSymbolObserved": false
+      }
+    ],
+    "attachmentVisibleAfterBodyCompletion": true,
+    "savedBytesIndependentlyReadThisRun": false
+  },
+  "actualPendingSwitchObserved": false,
+  "productFileReadInitiationEstablished": false,
+  "originalAndRetainedDraftsQueuesAndFourTapsPreserved": true,
+  "bothFixturesRemovedAndVolumesUnmounted": true,
+  "ownedServerExitCodes": [0, 0],
+  "agentRequests": 0,
+  "limits": [
+    "The post-open process samples support an accessibility remote-view wait in the observed windows. They do not identify the remote service, the GET initiator, or the origin of the AX query.",
+    "Successful file-descriptor observations omitted the exact path; this does not establish that the process never opened it.",
+    "No observation of completed view switching during a confirmed product read."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "recordedAt": "2026-11-04T12:00:18.846012+00:00",
+  "file": "output/2026-11-04-p01-storage-bridge/build-driver.py",
+  "beforeSha256": "25530f9b6f7eb271b8eb2fcd68521d3b14e702640be51c492da50350f979e28b",
+  "afterSha256": "7610c11d07d1530b9f6b3e9935f8c70d8e6f9b6ddc685c08c4ad98c9c3878598",
+  "diff": {
+    "originalPath": "output/2026-11-04-p01-storage-bridge/builder-reproducibility.patch",
+    "path": "docs/evidence/2026-11-04-p01-storage-bridge/builder-reproducibility-original.zip",
+    "zipEntry": "builder-reproducibility.patch",
+    "sha256": "74ce6f78fe60c2e3ad7a5530074e672187dd583d0343e6db84418fe9a36ce08b",
+    "archiveSha256": "73218cae3631b5699fae12033557f1bfe0a084525eafc058bdbda1da095ba724",
+    "reason": "Byte-exact raw diff contains required context-line spaces; ZIP preserves original bytes without treating patch contents as source whitespace."
+  },
+  "staticChecks": {
+    "pythonAstParses": true,
+    "explicitBuildUsesExclusiveRunDirectory": true,
+    "bindingFilenameMatchesCurrentFrontendFixture": true,
+    "oldBindingPreservedBeforeAtomicPointerReplacement": true
+  },
+  "executionPerformed": false,
+  "newCargoInvocations": 0,
+  "testsRerun": false,
+  "currentBindingWasNotModified": {
+    "path": "output/2026-11-04-p01-storage-bridge/driver-binding-exit.json",
+    "sha256": "6db3ae98fb386c9e056fa2a7808c78004e4ecad5cabc3c8b0ec99725b765aa39"
+  },
+  "scope": "The builder reproducibility change is statically checked only. The two successful experiments retain their own actual builder source and raw receipts inside the immutable ZIPs."
+}

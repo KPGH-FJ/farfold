@@ -1,0 +1,152 @@
+{
+  "phase": "cycle6 executable scope complete; original five outcomes retained; full151 and29x8 remain open",
+  "completedCommit": "a5a5f0e93a2203d8caed8fec9eb93490c80f9070",
+  "formalInstalledSource": "a5a5f0e93a2203d8caed8fec9eb93490c80f9070",
+  "modelRequests": 3,
+  "evidence": [
+    {
+      "path": "output/2026-11-12-cycle6/frontend/summary.json",
+      "sha256": "3267060651940d8b1ff1992723cf58192d86c6a91cb50155a71960a4b9a18202"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/frontend/source-freeze.json",
+      "sha256": "776b92a90649b7b5c6a719f07e6b2b5381cf1a568196609b0abf0de89bca4f30"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/frontend.json",
+      "sha256": "948ca582a168dad1c0a82ba2ab1bb092964a99fce4ab76835c06c4438f60be11"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering/result.json",
+      "sha256": "2f7b9c5ddb93b2dbe0c7d45ad287a6dca52437bf5a933cc3c67967761995c55a"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/agent-wave/review.json",
+      "sha256": "6e312ef1254bf003b52a7261e7e0166d41b8aa077979b70cf0f47d415ae3d63f"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/goose-uds-http/receipt.json",
+      "sha256": "6c6323ea8415e3b3ec8342d256428055ce4ffcc5d0a78044adaeb1f4b6a7d37f"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/goose-uds-http/attempt-2/receipt.json",
+      "sha256": "e01e181f14f2d69cc71bee0c038e11b71bddafd305dd540fb48c3a090831aaf4"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/goose-uds-http/attempt-3/receipt.json",
+      "sha256": "6032e42b1537bba653ff210e55d163d7004ba69bd5837ec789d84f825d4cd7d9"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/frontend/connect-render/result.json",
+      "sha256": "a45901a1ce4f672a65a32089b6a91aac4f653e54569581a7bdfae4294d568c39"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-uds/result.json",
+      "sha256": "1216dae8cdd53e5e74ee9002ac21962481fc66d41803299b06f3459933128361"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-uds/inputs-after.json",
+      "sha256": "d61ce1b1d9bcd5a13cb50693b836c9aed4743bcb496195968c5ba3faef996f15"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/integration.json",
+      "sha256": "61317d50f60c96aed6404f48a79b3c2ab234c0a22b271247781b0db4143ed357"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal/install.json",
+      "sha256": "3563cf259984c73fe0c73f3e92e56c89ef89a3aa567981a973e99174d418cd9b"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal/duplicate-cleanup.json",
+      "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal/ui-observations.json",
+      "sha256": "aba7b28ce3c67e7eab8a255859c2c89bae9f96e66f7aa27c70a15114d8de849c"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal/native-result.json",
+      "sha256": "dc6f9fd0f2a5e18342f15f33d5b1ed7472b402a6e085d02b5ea1dcddafd7acaf"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal/protection-result.json",
+      "sha256": "e38e1694692370229d8c563b64998559c38bfbdff82995ec3d91e2317af28d6a"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal/screenshot-attempt-1.json",
+      "sha256": "1c75f84175105a6ebd8e22f5202fd4a94a07257f87c7ed6d3b90eef28a835115"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal/screenshot-300-0.png",
+      "sha256": "8d21be7cf8550a9b422c5e613c38dcd98f0fe85fb951a17e4505d6f641d41d79"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/engineering-opencode/result.json",
+      "sha256": "5e96810877cb45626cd27de7ea800c41ef303facf5cb5161957d1c773020abe0"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/opencode-integration.json",
+      "sha256": "7e2d8827aa849fe888a4bbe94f25d224abdcfd76d4910b1a5b76f2b0d4410d4a"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/receipt.json",
+      "sha256": "ed6136dbb73b82e7a840bea0593212d5b656dd43fe49f7c08532d57cc10a0214"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/opencode-stdio/attempt-2-load/receipt.json",
+      "sha256": "b3a9809b82b3160bb685fbeb4be4262a81afcca345f040a14ff01970a228b07e"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal-opencode/install.json",
+      "sha256": "cb611fa95093e976c30ac52bbb03df0bf19cf8a90d5edaa2f2554e9e5f68a34f"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal-opencode/ui-observations.json",
+      "sha256": "b5a721bf961a9c05fc25b3a2a85264fcce99eb51ea946b05d970635d66d40282"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal-opencode/native-protection.json",
+      "sha256": "afcded1a54f4d59abef82e9464fb0531f8fc6a6a0d54cdd018fdb2968fa83bef"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/formal-opencode/meta-protection.json",
+      "sha256": "6af7ad225075c138e8843db3877d49439dac55d85237a3c60e58763177cca7b7"
+    },
+    {
+      "path": "output/2026-11-12-cycle6/review/cycle-exit-final.json",
+      "sha256": "e6c9c1ebc382628dc55f89da40f4e3de7b3986db6bf04ba14508db642aca297d"
+    }
+  ],
+  "limits": [
+    "Original983b engineering covers HTML fix; current engineering-uds covers combined ab540 source",
+    "No-model official probe evidence remains distinct from later three formal UI prompts",
+    "Missing-socket observation was normal close, not crash",
+    "Goose native PNG receipt proves same-request delivery, not model image comprehension",
+    "Original five unchanged; their source admission, selected-model and authorization gaps are not full-Agent acceptance",
+    "OpenCode formal result is zero-model new draft/connection/permission only, not same-native saved history, real page tool output or model comprehension. Fast-agent/Mistral safety/lifecycle integration remains product development, not an account-only dependency."
+  ],
+  "opencodeAdditionalModelRequests": 0,
+  "closure": {
+    "atUtc": "2026-11-12T17:16:07.622746+00:00",
+    "currentCycleExecutableScopeComplete": true,
+    "nextCycle": 7,
+    "fullProductAcceptance": false,
+    "taskEntryCheck": {
+      "path": "output/2026-11-12-cycle6/task-entry-closure.txt",
+      "sha256": "af994868e8743021f4a737c5580d256dc3a91d541f8990c469974928e930c3b7",
+      "ids": ["P23", "P25", "P27", "P28", "P30", "H07"],
+      "actualOutputCheckedAgainstStatus": true
+    },
+    "docsCheck": {
+      "path": "output/2026-11-12-cycle6/docs-check-closure-final-r2.txt",
+      "sha256": "c0bce3977c905f163bb080992d764b49b13070eebabd03b1435e080610c2be5f",
+      "originalConditions": 151,
+      "activePlans": 1
+    },
+    "retainedDocumentCheckFailures": [
+      "docs-check-closure.txt",
+      "docs-check-closure-final.txt"
+    ],
+    "postReviewDocsOnly": "Plan shortened to5KiB by removing duplicate text; original cycle outline/requirements unchanged. Closure references added after independent review."
+  }
+}

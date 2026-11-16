@@ -1,5 +1,6 @@
 import type { LocalAudio } from "./audio_input";
 import { hasActiveFork } from "./session_fork_activity";
+import { unfinishedStoppedToolCallIds } from "./stopped_tool_results";
 /**
  * Normalized thread view-model types (extracted from `sessions.ts` to keep
  * it under the file-size cap; `sessions.ts` re-exports this module).
@@ -101,6 +102,7 @@ export type ThreadItem = (
       id: string;
       /** Official message identity, kept only in the current view. */
       messageId?: string;
+      historyForkPoint?: import("./history_fork_point").OwnedHistoryForkPoint;
       text: string;
       attachments: Attachment[];
       streaming: boolean;
@@ -110,6 +112,7 @@ export type ThreadItem = (
       kind: "agent";
       id: string;
       messageId?: string;
+      historyForkPoint?: import("./history_fork_point").OwnedHistoryForkPoint;
       text: string;
       attachments?: Attachment[];
       /** In-memory order observed while projecting this Agent message. */
@@ -143,7 +146,7 @@ export type ThreadItem = (
       kind: "decision";
       id: string;
       label: string;
-      allow: boolean;
+      allow: boolean | null;
       time: number;
     }
   | {
@@ -152,6 +155,8 @@ export type ThreadItem = (
       status: "done" | "stopped" | "failed" | "unknown";
       stopReason?: string;
       error?: string;
+      /** Recoverable only on the exact live connection that received the error. */
+      failedWorkCloseAvailable?: true;
       /** Count of file diffs seen in this round's tool calls. */
       diffCount: number;
       /** diff + command cards produced during this round. */
@@ -187,6 +192,8 @@ export interface ConfigOptionView {
 
 export interface PermissionOption {
   optionId: string;
+  /** Malformed wire IDs remain visible but cannot become a different choice. */
+  invalidId?: boolean;
   name: string;
   /** `allow_once` | `allow_always` | `reject_once` | `reject_always`. */
   kind: string;
@@ -211,8 +218,16 @@ export interface PendingElicitation extends PendingRequest {
   values: Record<string, unknown>;
 }
 
+export interface TerminalCommandPermission {
+  program: string;
+  args: string[];
+  cwd: string;
+}
+
 export interface PendingPermission extends PendingRequest {
   toolCallId: string | null;
+  /** Absent for Agent tool approvals; null when command details are invalid. */
+  terminalCommand?: TerminalCommandPermission | null;
   /** Exact data for this request, never borrowed from a mutable live tool. */
   toolCallSnapshot?: Record<string, unknown> | null;
   /** Original request params, including opaque extensions; memory only. */
@@ -225,7 +240,7 @@ export interface PendingPermission extends PendingRequest {
   decision: {
     optionId: string;
     label: string;
-    allow: boolean;
+    allow: boolean | null;
     /** `allow_always` only — undo reverts the "remember" before it lands. */
     undoable: boolean;
   } | null;
@@ -241,6 +256,8 @@ export interface ThreadState extends ReportedDetailsOwner {
   nativeSessionId: string;
   service?: import("./credentials").ServiceIdentity;
   serviceContext?: string;
+  /** Exact wire model option for the connection's selected service. */
+  serviceModelValue?: string;
   /** Live process only, not saved in the conversation index. */
   connectionId?: string;
   /** Separate local process-end channel only; never copied to a new route. */
@@ -249,6 +266,8 @@ export interface ThreadState extends ReportedDetailsOwner {
   workspaceAccess?:
     import("./workspace_access_types").WorkspaceAccessCapability | null;
   identityRead?: import("./session_identity_types").IdentityReadSupport | null;
+  sessionToolInventory?:
+    import("./session_tools_types").SessionToolInventoryCapability | null;
   /** Only the latest explicit read, never saved with history or account settings. */
   sessionIdentityRead?: import("./session_identity_types").SessionIdentityRead;
   forkOperation?: import("./session_fork_types").ForkOperation;
@@ -266,8 +285,17 @@ export interface ThreadState extends ReportedDetailsOwner {
   identity: "draft" | "established";
   reconnecting: boolean;
   submitting: boolean;
+  /** Exact local queue entry until the send invocation settles. */
+  promptSubmission?: {
+    blocks: PromptBlock[];
+    connectionId?: string;
+    dispatched: boolean;
+    deliveryConfirmed: boolean;
+  };
   promptAdmission?: import("./prompt_admission").PromptAdmissionView | null;
   configuring: boolean;
+  /** Only this conversation has a tool change awaiting official recheck. */
+  sessionToolRecoveryRequired?: boolean;
   configError: string | null;
   workEnabled: boolean;
   queuePaused: import("./queue").QueuePause;
@@ -402,9 +430,11 @@ export function hasActiveWork(state: ThreadState): boolean {
 
 /** Rendering only: never rewrite the Agent's reported tool status. */
 export function toolActivityState(
-  state: ToolActivityEvidence,
+  state: ToolActivityEvidence & Partial<Pick<ThreadState, "items">>,
   call: ToolCallView,
+  stoppedToolCalls = unfinishedStoppedToolCallIds(state),
 ): "active" | "finished" | "unknown" {
+  if (stoppedToolCalls.has(call.toolCallId)) return "unknown";
   if (call.status === "completed" || call.status === "failed")
     return "finished";
   return !state.connectionLost &&

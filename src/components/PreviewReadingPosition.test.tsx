@@ -9,7 +9,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import type { VerifiedFile } from "../runtime/file_delivery";
 import type { DocxPreview } from "../runtime/docx_types";
-import type { WorkbookPreview } from "../runtime/xlsx_types";
+import type {
+  WorkbookDirectory,
+  WorkbookPreview,
+  WorkbookSheetRestore,
+} from "../runtime/xlsx_types";
+import { selectedWorkbookSheetId } from "../runtime/xlsx_directory";
 import type { PreviewReadingPositionRef } from "../runtime/preview_reading_position";
 const h = vi.hoisted(() => ({
   owner: "",
@@ -172,6 +177,23 @@ function book(
     },
   };
 }
+// Match the current preview port: resolve a saved location against this new
+// directory before returning one completed sheet, with the same dimensions.
+function workbookReader(row = 220, column = 30) {
+  return async (
+    capture: { file: VerifiedFile },
+    id: string | undefined,
+    _signal: AbortSignal,
+    onDirectory?: (directory: WorkbookDirectory) => void,
+    restoreSheet?: WorkbookSheetRestore,
+  ) => {
+    const sheets = book(capture.file).sheets;
+    const selected = selectedWorkbookSheetId(sheets, id, restoreSheet);
+    const value = book(capture.file, selected, row, column);
+    onDirectory?.({ sheets: value.sheets, selectedId: value.sheet!.id });
+    return value;
+  };
+}
 function document(file: VerifiedFile, count = 45): DocxPreview {
   const blocks = Array.from({ length: count }, (_, i) => ({
     kind: "paragraph" as const,
@@ -211,9 +233,7 @@ beforeEach(() => {
   h.effects = [];
   vi.clearAllMocks();
   h.captureWorkbook.mockImplementation(async (file) => ({ file }));
-  h.readWorkbook.mockImplementation(async (capture, id) =>
-    book(capture.file, id),
-  );
+  h.readWorkbook.mockImplementation(workbookReader());
   h.captureDocument.mockImplementation(async (file) => ({ file }));
   h.readDocument.mockImplementation(async (capture) => document(capture.file));
 });
@@ -245,9 +265,12 @@ it("restores the matching sheet/window on a new revision and clamps to real shru
   expect(view.html).toContain('value="second" selected');
   expect(view.html).toContain("Y201");
   expect(view.html).toContain("v2-second");
-  h.readWorkbook.mockImplementation(async (capture, id) =>
-    book(capture.file, id, 8, 4),
-  );
+  expect(h.readWorkbook).toHaveBeenCalledOnce();
+  expect(h.readWorkbook.mock.calls[0][4]).toEqual({
+    id: "second",
+    name: "Second",
+  });
+  h.readWorkbook.mockImplementation(workbookReader(8, 4));
   render(null);
   const small = (
     <WorkbookFilePreview
@@ -498,7 +521,11 @@ it("uses a prepared matching document without a new capture, and reports owned r
   render(node);
   expect(h.captureDocument).not.toHaveBeenCalled();
   expect(h.readDocument).not.toHaveBeenCalled();
-  expect(status).toHaveBeenLastCalledWith({ file: source, state: "ready" });
+  expect(status).toHaveBeenLastCalledWith({
+    file: source,
+    state: "ready",
+    readInFlight: false,
+  });
 });
 it("adopts a prepared workbook but reselects the latest position from its same capture", async () => {
   const position: PreviewReadingPositionRef = {
@@ -566,8 +593,18 @@ it.each(["docx", "workbook"] as const)(
       );
     render(element(true));
     await drain();
+    expect(status).toHaveBeenLastCalledWith({
+      file: source,
+      state: "loading",
+      readInFlight: true,
+    });
     const signal = capture.mock.calls[0][1] as AbortSignal;
     render(element(false));
+    expect(status).toHaveBeenLastCalledWith({
+      file: source,
+      state: "paused",
+      readInFlight: true,
+    });
     render(element(true));
     await drain();
     expect(capture).toHaveBeenCalledOnce();
@@ -583,6 +620,7 @@ it.each(["docx", "workbook"] as const)(
       file: source,
       state: "failed",
       code: "readPending",
+      readInFlight: false,
     });
     render(element(false));
     render(element(true));
@@ -594,7 +632,11 @@ it.each(["docx", "workbook"] as const)(
     await drain();
     render(element(true));
     expect(capture).toHaveBeenCalledTimes(2);
-    expect(status).toHaveBeenLastCalledWith({ file: source, state: "ready" });
+    expect(status).toHaveBeenLastCalledWith({
+      file: source,
+      state: "ready",
+      readInFlight: false,
+    });
   },
 );
 
@@ -637,14 +679,19 @@ it.each(["docx", "workbook"] as const)(
     render(prepared);
     await drain();
     render(prepared);
-    expect(status).toHaveBeenLastCalledWith({ file: source, state: "ready" });
+    const ready = {
+      file: source,
+      state: "ready",
+      readInFlight: false,
+    };
+    expect(status).toHaveBeenLastCalledWith(ready);
     const ErrorClass =
       kind === "docx"
         ? (await import("../runtime/docx_types")).DocxError
         : (await import("../runtime/xlsx_types")).XlsxError;
     reject(new ErrorClass("readPending"));
     await drain();
-    expect(status).toHaveBeenLastCalledWith({ file: source, state: "ready" });
+    expect(status).toHaveBeenLastCalledWith(ready);
   },
 );
 
@@ -664,6 +711,11 @@ it.each(["docx", "workbook"] as const)(
     render(node);
     await drain();
     action(render(node), "取消预览");
+    expect(status).toHaveBeenLastCalledWith({
+      file: source,
+      state: "paused",
+      readInFlight: true,
+    });
     action(render(node), "重新预览");
     render(node);
     await drain();
@@ -676,7 +728,14 @@ it.each(["docx", "workbook"] as const)(
     await drain();
     render(node);
     expect(status.mock.calls.filter(([s]) => s.state === "failed")).toEqual([
-      [{ file: source, state: "failed", code: "readPending" }],
+      [
+        {
+          file: source,
+          state: "failed",
+          code: "readPending",
+          readInFlight: false,
+        },
+      ],
     ]);
   },
 );

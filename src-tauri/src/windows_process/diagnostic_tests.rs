@@ -51,6 +51,7 @@ impl OwnedGroup {
             "accountingQueryReturn": query.ok,
             "accountingError": query.native_error,
             "accountingActiveProcesses": (query.ok != 0).then_some(query.info.ActiveProcesses),
+            "accountingTotalProcesses": (query.ok != 0).then_some(query.info.TotalProcesses),
             "currentMembers": current,
             "scope": "selected test callback inside original ACP Child owner; borrowed original Job and leader handles; extra native reads do not alter completion; no PID reopen, new handle, Job lifetime extension, or complete historical membership claim",
         })

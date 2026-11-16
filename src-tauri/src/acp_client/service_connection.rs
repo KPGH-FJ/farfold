@@ -135,9 +135,13 @@ impl AcpManager {
                         // Explicit service selection does not inherit the legacy global
                         // grants. User-configured Agent environment remains intact.
                         let mut environment = crate::shell_env::command_env();
-                        environment.extend(crate::auth::resolve_agent_env(&row.id, &row.env));
+                        crate::shell_env::EnvNames::current().extend(
+                            &mut environment,
+                            crate::auth::resolve_agent_env(&row.id, &row.env)?,
+                        );
                         let config = super::service_config::compile(&row, &snapshot, &environment)?;
-                        environment.extend(config.env_overrides);
+                        crate::shell_env::EnvNames::current()
+                            .extend(&mut environment, config.env_overrides);
                         let key = serde_json::to_vec(&(
                             &snapshot.identity,
                             &snapshot.connection_revision,

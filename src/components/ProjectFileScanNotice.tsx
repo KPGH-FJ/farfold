@@ -23,6 +23,7 @@ export function ProjectFileScanNotice({
   onChoose: () => void;
 }) {
   const r = state?.result;
+  const skippedNonlocal = r?.counts.skippedNonlocalDirectories ?? 0;
   const pending = state?.phase === "pending";
   const loading =
     !!cwd &&
@@ -48,6 +49,7 @@ export function ProjectFileScanNotice({
                         : `已扫描 ${r?.files.length ?? 0} 个文件`))}
       </p>
       {r?.truncated && r.partial && <p>{F.truncated}</p>}
+      {skippedNonlocal > 0 && <p>{F.skippedNonlocal(skippedNonlocal)}</p>}
       {matchesLimited && <p>{F.matchesLimited}</p>}
       {r && (
         <details>

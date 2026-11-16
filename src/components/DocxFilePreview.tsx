@@ -47,6 +47,10 @@ export function DocxFilePreview({
   status.current = onStatus;
   const current = useRef<AbortController | null>(null);
   const captureReader = useRef(new PreviewCapture<DocxCapture>());
+  // Presentation can stop before this bounded file read returns.
+  const flight = useRef<{ file: VerifiedFile } | null>(null);
+  const reading = () =>
+    Boolean(flight.current && samePreviewFile(flight.current.file, file));
   const capture = useRef<{ file: VerifiedFile; value: DocxCapture } | null>(
     null,
   );
@@ -71,13 +75,17 @@ export function DocxFilePreview({
   useLayoutEffect(() => {
     const operation = new AbortController();
     current.current = operation;
+    const sameAttempt = () =>
+      props.current.file === file &&
+      attempt.current.retry === retry &&
+      attempt.current.prepared === prepared;
     const owns = () =>
       current.current === operation &&
       !operation.signal.aborted &&
-      props.current.file === file &&
+      sameAttempt() &&
       props.current.active;
     if (!active) {
-      status.current?.({ file, state: "paused" });
+      status.current?.({ file, state: "paused", readInFlight: reading() });
       capture.current = null;
       setState("paused");
       setMessage(S.paused);
@@ -88,7 +96,7 @@ export function DocxFilePreview({
     }
     setState("loading");
     setMessage(S.loading);
-    status.current?.({ file, state: "loading" });
+    status.current?.({ file, state: "loading", readInFlight: reading() });
     void (async () => {
       // StrictMode's discarded effect cannot start a second OS read.
       await Promise.resolve();
@@ -102,22 +110,39 @@ export function DocxFilePreview({
         cached.current = result;
         setLoaded({ ...result, retry, prepared });
         setState("ready");
-        status.current?.({ file, state: "ready" });
+        status.current?.({ file, state: "ready", readInFlight: false });
         return;
       }
       if (cached.current?.file === file) {
         setLoaded({ ...cached.current, retry, prepared });
         setState("ready");
-        status.current?.({ file, state: "ready" });
+        status.current?.({ file, state: "ready", readInFlight: false });
         return;
       }
       cached.current = null;
       setLoaded(null);
-      const snapshot =
-        capture.current?.file === file
-          ? capture.current.value
-          : await captureReader.current.read(file, retry, readDocxCapture);
+      let snapshot =
+        capture.current?.file === file ? capture.current.value : null;
+      if (!snapshot) {
+        const receipt = { file };
+        flight.current = receipt;
+        status.current?.({ file, state: "loading", readInFlight: true });
+        try {
+          snapshot = await captureReader.current.read(
+            file,
+            retry,
+            readDocxCapture,
+          );
+        } finally {
+          if (flight.current === receipt) {
+            flight.current = null;
+            if (sameAttempt() && !owns())
+              status.current?.({ file, state: "paused", readInFlight: false });
+          }
+        }
+      }
       if (!owns()) return;
+      status.current?.({ file, state: "loading", readInFlight: false });
       capture.current = { file, value: snapshot };
       const value = await readDocxPreview(snapshot, operation.signal);
       if (!owns()) return;
@@ -127,16 +152,19 @@ export function DocxFilePreview({
       cached.current = result;
       setLoaded({ ...result, retry, prepared });
       setState("ready");
-      status.current?.({ file, state: "ready" });
+      status.current?.({ file, state: "ready", readInFlight: false });
     })().catch((error) => {
       const code = error instanceof DocxError ? error.code : undefined;
       if (
-        props.current.file === file &&
-        attempt.current.retry === retry &&
-        attempt.current.prepared === prepared &&
+        sameAttempt() &&
         (owns() || code === "readPending" || code === "readBusy")
       )
-        status.current?.({ file, state: "failed", ...(code ? { code } : {}) });
+        status.current?.({
+          file,
+          state: "failed",
+          readInFlight: reading(),
+          ...(code ? { code } : {}),
+        });
       if (!owns()) return;
       setState("failed");
       setMessage(documentFailure(error));
@@ -178,7 +206,11 @@ export function DocxFilePreview({
             capture.current = null;
             setState("paused");
             setMessage(S.cancelled);
-            status.current?.({ file, state: "paused" });
+            status.current?.({
+              file,
+              state: "paused",
+              readInFlight: reading(),
+            });
           }}
         >
           {S.cancel}

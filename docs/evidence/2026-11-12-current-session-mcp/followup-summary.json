@@ -1,0 +1,120 @@
+{
+  "scope": "Followup repair after first formal pass",
+  "implementationBaseCommit": "f44c42248b441516272713d98cd5047110c12f36",
+  "formalAtThisRecord": "728d4ba00155eb052d4ca6cdc075aed7d8379805",
+  "followupInstalled": true,
+  "actualModelRequests": 0,
+  "actualToolCalls": 0,
+  "sourceSha256": {
+    "src-tauri/src/acp_client/model_guard.rs": "da5e99cf4445ff11c64eeb13844d6756a92fd90b85882ab8dd39d768b278cf01",
+    "src-tauri/src/acp_client/pump.rs": "f77be2db0ca3b4771d0006a26d1bb8224baea437e909466f2e92abae16802b54",
+    "src-tauri/src/acp_client/session_tool_changes.rs": "7d3baf37cda7a31985a818d04d218f60cf0cbfd66305f1a10ab9342b985f3156",
+    "src-tauri/src/acp_client/session_tool_changes/actor.rs": "5216d9e09aa5f3fd2277a327937cfec69e60313e27a27d1f183992e4f0dc0114",
+    "src-tauri/src/acp_client/session_tool_changes/inventory.rs": "c84b91a1058124454e43f6cd1e558c901fded50be5a95fe2c9bd92bc20786cac",
+    "src-tauri/src/acp_client/session_tool_changes/peer.py": "746f39d696cdc35bb2fac365b2ccd2f163cc638e6f841fc687e2a77d2212cabc",
+    "src-tauri/src/acp_client/session_tool_changes/tests.rs": "85a03ffb5b119154cfade455ea171a24844e715d9cf25b7d6198ff4e3b5f9f53",
+    "src-tauri/src/acp_client/session_tool_changes/types.rs": "3513b581cdded2848e8305c59ee0ce8f2d5599b1b535565dbecd09ea8b2d90e5",
+    "src-tauri/src/acp_client/session_tool_changes/wire_tests.rs": "051de6116a2c07978aed19cb5466bb263959a7948a1783e2c3cec9ccf00e0290",
+    "src-tauri/src/acp_client/session_tools/dispatch.rs": "467ec773019f901fb468e074389a0062fe6a86e29dc2ebc42c5485524294631e",
+    "src-tauri/src/acp_client/skill_management/mcp_add_peer.py": "df7ead5d2a684efb87bb6bf235ae94adab1109ce73d082513c8ad74d665515ee",
+    "src-tauri/src/acp_client/skill_management/mcp_add_tests.rs": "8bdc7f2c35e95baca6f257b0001ba0db397fdae9b2cbda2ee1355915efa8aa32",
+    "src-tauri/src/acp_client/skill_management/mcp_peer.py": "87fde77b99fa6864405916d9f4b61b80c76998f7e8df48628e572605e976e565",
+    "src-tauri/src/acp_client/skill_management/mcp_peer_publication_tests.rs": "4397fe86af5a948ec3bf8e3c77b90194a3b71632bdce64be8bf46404233feedc",
+    "src-tauri/src/acp_client/skill_management/mcp_remove_peer.py": "ab4495ae15296defe8762c77e1aa58ea6a8912b1b2d293ea980fc2f274a14899",
+    "src-tauri/src/file_copy_jobs.rs": "3d93507e12b61fd82fea992cfe12506a0ebda5ee055b6af6e3eca9570f267065",
+    "src-tauri/src/file_copy_jobs_independent_tests.rs": "41c59596b04e903ad4b083c0ddf3c3cccb5e1cb14891a33a28b977ca092c50ab",
+    "src-tauri/src/file_delivery.rs": "009808897c556a0ae188628496c4caf5d725381a583e64227530f6fa32c09904",
+    "src-tauri/src/file_delivery/copy_stream.rs": "0860a237d1082fb307e8b71d89202982466a6192d3b1c87b57cff8f60d35c365",
+    "src-tauri/src/file_delivery/metadata_version_tests.rs": "119ca20326233fd279cc8bfe7c1c350afa7a8e8fc69c22beece91032a879e88d",
+    "src-tauri/src/file_delivery/published_receipt_tests.rs": "615a4fc65736ad6d181be8be63a91564c5a64f83447d4b98b2c04a357f644fe4",
+    "src-tauri/src/file_delivery/revision_tests.rs": "f947454265f3c0094da96f2bd6d266c98d92a430a690921e6e85f860741d0601",
+    "src-tauri/src/meta_store.rs": "20ad0fd16ef78e95e3cb06cd07881eb86e385345dd49ea062c0ccc7527f512fa",
+    "src-tauri/src/meta_store/initial_config.rs": "0310b29c81628fe8d45e32575383e24427fc4241796f34aea43c2bc54bf4428f",
+    "src-tauri/src/meta_store/initial_config_tests.rs": "58d9bdda989937c82f464b905cee22f0c86be12ab59954d8318d9e3dfed5a84a",
+    "src/components/FileCopyJobsStatus.test.tsx": "825aadf9f12304dd6ea13f83d712bc64d758041a2dcb012823002ebb4a3abd19",
+    "src/components/FileCopyJobsStatus.tsx": "c5ae1582913368323431d9787866ca27226ce97e5864db9aca42e4f8d93cd326",
+    "src/components/FileDeliveryActions.tsx": "700f0c0f406775356af47749c9a7e4baa1000f508ef26b4bbe0b3ebcb2c9f22c",
+    "src/components/OpenedFileView.tsx": "4f78e74934b23351883b17c2f6bb557a60c08e4d1d3342ba269f1537173ca7f2",
+    "src/components/SavedCopyActions.tsx": "1203fcbf9528fe1ab3bcd4c1d3de71e3d25816e9ebdca7ce80618e52c8390b9d",
+    "src/components/SessionToolManagement.test.tsx": "f22923556dcd5d1f87dd8676897836385469896d50181f587672f96296a4242d",
+    "src/components/SessionToolManagement.tsx": "8bbdbb4294a3b54d98042824e330cf0583e9e2f7e2799828ca55ddc23e9ed91d",
+    "src/runtime/file_copy_actions.test.ts": "e491baa6152d89e676dce49055f91a6bc073e2b95487ac63404be7b927cde236",
+    "src/runtime/file_copy_actions.ts": "331249343a32883a018966891e2080000028d0738b7f24634a9913eed2a8dcd7",
+    "src/runtime/file_copy_jobs.ts": "17547ad8f72d520bd86d7b543a2ae3c701869c4deb40891dc239b9033181dc7d",
+    "src/runtime/file_copy_strings.ts": "e5946a2cb83f91875cf6b6504abcf809cfbdb3cbc05b409a456e0096acb271da",
+    "src/runtime/file_copy_types.ts": "93c642376fb6f23d3bee39d7bc5a85e2f69211a400ec791ec59cca3acc9b34d7",
+    "src/runtime/file_delivery.ts": "c6f43a01056de08975884e875a9618f816ed82189b415d2cfc5268966a3a13cf",
+    "src/runtime/session_draft_cleanup.ts": "08742bdadb20d02b94678d0e8f19fd078eebd9c7bd4ff2bdcce39d9041a9b49a",
+    "src/runtime/session_tool_change.test-support.ts": "abebda1b9c035f2f663b634e493d8af7d09730e6d7fcf059c955cd3f3745c381",
+    "src/runtime/session_tool_change_controller.test.ts": "f458a051d3353f421820759cdd8b263716f102e97fe1d2ef83b228e6b6177701",
+    "src/runtime/session_tool_change_controller.ts": "6efa39e52a84478e02f391e73a668f9385dffe0a220a284f736c016634a6c3cc",
+    "src/runtime/session_tool_change_guard.ts": "f80e7713e18c5db7fdce628b727e1b73c6ade1723e207fec5aac25c440f37ddd",
+    "src/runtime/session_tool_change_guards.ts": "a0f9f57a00c856c8aba513edc57909bf52e71e1ba7fa98ba0ea7ee8a769f4c74",
+    "src/runtime/session_tool_change_strings.ts": "6a7e79b5e96c6317658ee4bbade1c110804ab16d6765d93d30ddbdbb91758099",
+    "src/runtime/session_tool_change_types.test.ts": "4045e1e16e846ddcefdc81a384d770093fffe9b8fac40b5cb3e4788434c390c9",
+    "src/runtime/session_tool_change_types.ts": "62e615511503f76078eb57694d626a4d4351979e6e9d3f36c6bd460d29e58456",
+    "src/runtime/session_tool_saved_conversation.test.ts": "66258a08e9a5283da21b7644605db75f0c9096575e3ff18336c7af512056a15c",
+    "src/runtime/sessions.tool-saved.test.ts": "d2e46e55edae74d12fb0a039b2b7b7eb6f4a6ae3ad3ad36ca91f433ad7e7d58b",
+    "src/runtime/sessions.ts": "3f6c8de87fb45d1ebcc1da70dd97e3ec7ac78e002cedaa5335fd50fdda212b53"
+  },
+  "engineering": {
+    "path": "output/2026-11-12-four-hour-mcp/engineering-followup-final/result.json",
+    "sha256": "667aa2ff1f9f234c444a6d712514703df26d5ca7d29c09fdf9f0033a5c420881"
+  },
+  "allSevenPassed": true,
+  "frontend": {
+    "files": 757,
+    "passed": 10485
+  },
+  "rust": {
+    "passed": 2594,
+    "failed": 0,
+    "ignored": 8
+  },
+  "integrationReview": {
+    "path": "output/2026-11-12-four-hour-mcp/review/followup-integration.json",
+    "sha256": "e7d64e2b2f80297b0a2dd47860f919abf73400ce87a7a6b0c5176eb06303f887"
+  },
+  "controlledBrowser": [
+    {
+      "path": "output/2026-11-12-four-hour-mcp/render/webkit-run6-result.json",
+      "sha256": "f8a2f3e1f9db01ca4ecdc825fb08512a1e2d482aed3bfc60cb9425372636e9a5"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/render/chromium-run6-result.json",
+      "sha256": "574ee7679ba94c50f22b92c43586fc7fafac4df65d43f8d4bdf5082184a11075"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/file-copy-render/webkit-run2-result.json",
+      "sha256": "3eab17f14e69f22fdfb7cd5bf872ce482da3f9bb0520753003ce15ffb4cfdd3f"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/file-copy-render/chromium-run2-result.json",
+      "sha256": "7c59e4914f0735e63e8c22ce9632fcc6b3f5851155c8fa077f4b2353866c92bf"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/file-copy-render/webkit-commit2-result.json",
+      "sha256": "c8b51d724f73117b33db1d783afdf19fadb9d94e2113147d19a030958b8b7df6"
+    }
+  ],
+  "closedFindings": [
+    "Empty conversation inspect required an index; mutation now safely persists initial confirmed baseline.",
+    "Initial configuration blind upsert could overwrite another baseline; transaction comparison prevents it.",
+    "Saved-conversation proof could erase a replacement draft; exact owner checks preserve it.",
+    "Contradictory ready result cannot promote saved identity.",
+    "Metadata-only ctime changes no longer change content version; within-read full stamp checks remain.",
+    "Published copy has verified destination and guarded open/reveal actions.",
+    "Unmount commit retires interested view synchronously before late inspection can dispatch.",
+    "Three test-only PID producers publish atomically; deterministic original 3 failures become 4 passes including control."
+  ],
+  "limitations": [
+    "Installed728d4: empty inspect/add/save/list and saved-copy open/reveal observed; prepared editor remains disabled after first save.",
+    "Seven-file editor handoff repair is uncommitted/uninstalled; real selected-model call, withdrawal and cold reopen remain unverified.",
+    "Full P21/P22/P41, other Agents/platforms and29x8 remain open."
+  ],
+  "implementationCommit": "728d4ba00155eb052d4ca6cdc075aed7d8379805",
+  "formalFollowup": {
+    "path": "docs/evidence/2026-11-12-current-session-mcp/formal-followup-summary.json",
+    "sha256": "13cf8bd5f55cbb371501ac668590a4421ae4f4940ceb54aacdda71ac6e91600e"
+  }
+}

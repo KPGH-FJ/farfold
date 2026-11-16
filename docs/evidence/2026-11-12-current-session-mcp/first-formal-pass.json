@@ -1,0 +1,84 @@
+{
+  "observedAtUtc": "2026-11-11T18:55:04.682946+00:00",
+  "installedCommit": "f44c42248b441516272713d98cd5047110c12f36",
+  "mcp": {
+    "inspect": "failed before official list; exact owned cwd has zero active Farfold index rows",
+    "modelRequests": 0,
+    "mcpAdded": false,
+    "toolsCalled": false,
+    "sourceChoice": "existing Goose/OpenRouter/Nemotron3Ultra free/off; no prompt with briefly shown default3.5"
+  },
+  "fileCopy": {
+    "sameName": "copy failed, source+existingtargetSHA preserved, opinion retained; sourcechanged message, exact originalctime cause unknown",
+    "newTarget": "saved59B exact sourceSHA; UI lacks direct savedcopy actions",
+    "opinion": "explicit unsent synthetic note retained under prior fileversion after reread; no send"
+  },
+  "history": {
+    "originalSessions": 55,
+    "originalMessages": 234,
+    "originalRowsPreserved": true,
+    "newEmptyIds": ["20261111_5", "20261111_6"],
+    "selectedUnchanged": true,
+    "configurationUnchanged": true,
+    "pendingMarkerCount": 0
+  },
+  "close": "Normal save-and-exit. CUA AX observation subsequently launched new empty process47320; normalclosed again. ps confirms no formalapp/Goose left. No forced termination. Existing worktree unknown retained, not declared resolved.",
+  "evidence": [
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal/ui/01-prepared.ax.txt",
+      "sha256": "c0fb6ad813a4805750000411162ba21361129dfe082a3235a637c477ee221287"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal/ui/02-tools-initial.ax.txt",
+      "sha256": "f0041d48d06bf019d391c7f68817ce0eccbd073b71e734761fb8f1052cdb13c6"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal/ui/03-inspect-empty-failed.ax.txt",
+      "sha256": "8a6c860436fbc53cb2de9fc709ac139aff78b4cf78bbde391909e7f92ca8d8d3"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal/ui/04-owned-collision-prompt.ax.txt",
+      "sha256": "e120cd37261dccc0ef075ae5fb253bb6a57ed65e3b838e6d08297025b3cf8758"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal/ui/05-owned-copy-collision-result.ax.txt",
+      "sha256": "da0ac830162e3efa30b89c166b2387dbcc70f08e289478f68c4938149045000e"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal/ui/06-new-copy-result.ax.txt",
+      "sha256": "b24f398c80bb9f9750f132c664812c42d851698c154a73c5f210a613ee2cfe3d"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal/ui/07-saved-opinion-retained.ax.txt",
+      "sha256": "d85e7a6b28f90dad42961d15b91cafc0c58989d88f965fb57056d65c033b980a"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal/ui/08-exit-state.ax.txt",
+      "sha256": "e0a21c88396bbd9eaab668e072b5de932f927799e7a4680f0a29b5f40e6b7659"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal/install.json",
+      "sha256": "1e4ea5e3c8300879596a062c069c96cac0e715634f31e4922f396e07f58cbe5e"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal/inspect-empty-index.json",
+      "sha256": "fe513457f5717a21cee06cf590e608ad622392c4c8261a76fb7e768c720673e8"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal/stores-after-first-formal.json",
+      "sha256": "371be66614439382c28a1066000a813b7643e2af2d59aa7607e6fd59e81cf089"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/formal/mcp-server-40494dc4f509378f.json",
+      "sha256": "1cce6c50fcad7014d0a7abf34765a6d0ddb35cb626939ef374fa9a89ed09914d"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/file-delivery-slice/after-collision.json",
+      "sha256": "df7815762850a9322a73aada36ab56c98b920a777fb4cbec172833d6b7812b65"
+    },
+    {
+      "path": "output/2026-11-12-four-hour-mcp/file-delivery-slice/successful-copy.json",
+      "sha256": "457705b8b61d2ad6bd23dd9e40ef33fe0767b6c0de896718d8ce1cffd30b5c81"
+    }
+  ]
+}

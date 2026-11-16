@@ -54,6 +54,31 @@ function failure(action: () => void): unknown {
   throw new Error("expected local history failure");
 }
 
+it.each(["missing boundary", "lost connection", "conversion failure"])(
+  "keeps %s protection when an official empty fact is present",
+  (condition) => {
+    const history = new HistoryReplayProjection(fresh(), "owner", () => {
+      if (condition === "conversion failure") throw new TypeError("bad replay");
+    });
+    history.push({});
+    if (condition !== "missing boundary") history.mark("owner");
+    const error = failure(() =>
+      history.requireReadable(
+        "agent",
+        { ...result, historyEmptyConfirmed: true },
+        condition === "lost connection",
+        true,
+      ),
+    );
+    if (condition === "lost connection")
+      expect(error).toMatchObject({ message: STRINGS.thread.connectionLost });
+    else
+      expect(error).toMatchObject({
+        reason: condition === "missing boundary" ? "incomplete" : "unreadable",
+      });
+  },
+);
+
 it("projects each delivered event once and transfers that same full private view", () => {
   const state = fresh();
   const items = state.items;
@@ -174,7 +199,8 @@ it("keeps the first actual JSON conversion failure private and typed without rep
     history.push({
       update: {
         sessionUpdate: "tool_call",
-        toolCallId: JSON.parse('{"toString":null,"valueOf":null}'),
+        toolCallId: "malformed-tool-title",
+        title: JSON.parse('{"toString":null,"valueOf":null}'),
       },
     }),
   ).toBe("consumed");
@@ -265,7 +291,8 @@ it("keeps the real delivery flow draining through a failed projection to its mar
   const malformed = {
     update: {
       sessionUpdate: "tool_call",
-      toolCallId: JSON.parse('{"toString":null,"valueOf":null}'),
+      toolCallId: "malformed-tool-title",
+      title: JSON.parse('{"toString":null,"valueOf":null}'),
     },
   };
   const events = [

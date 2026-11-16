@@ -55,7 +55,11 @@ impl Requests {
         entries.retain(|_, e| e.running || e.touched.elapsed() < RETENTION);
         Ok(entries)
     }
-    pub fn begin(self: &Arc<Self>, id: &str) -> Result<Lease, Failure> {
+    pub(super) fn begin_with<T>(
+        self: &Arc<Self>,
+        id: &str,
+        admit: impl FnOnce() -> Result<T, Failure>,
+    ) -> Result<(Lease, T), Failure> {
         if !valid_id(id) {
             return Err(Failure::new("invalidRequest"));
         }
@@ -70,6 +74,8 @@ impl Requests {
         if entries.len() >= CAPACITY {
             return Err(Failure::new("readBusy"));
         }
+        // Refusing a fresh scan must not fill the request table with retries.
+        let permit = admit()?;
         let flag = Arc::new(AtomicBool::new(false));
         entries.insert(
             id.into(),
@@ -79,11 +85,14 @@ impl Requests {
                 touched: Instant::now(),
             },
         );
-        Ok(Lease {
-            owner: self.clone(),
-            id: id.into(),
-            flag,
-        })
+        Ok((
+            Lease {
+                owner: self.clone(),
+                id: id.into(),
+                flag,
+            },
+            permit,
+        ))
     }
     pub fn cancel(&self, id: &str) -> Result<(), Failure> {
         if !valid_id(id) {
@@ -113,8 +122,19 @@ impl Requests {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::{
+        file_read_check::tests::PRODUCTION_CHECKS,
+        project_index::{observe, observe_scan, read},
+    };
+    use std::path::Path;
     const A: &str = "00000000-0000-4000-8000-000000000001";
     const B: &str = "00000000-0000-4000-8000-000000000002";
+    const C: &str = "00000000-0000-4000-8000-000000000003";
+    impl Requests {
+        fn begin(self: &Arc<Self>, id: &str) -> Result<Lease, Failure> {
+            self.begin_with(id, || Ok(())).map(|(lease, ())| lease)
+        }
+    }
     #[test]
     fn early_cancel_prevents_late_start_and_only_matches_exact_id() {
         let r = Arc::new(Requests::default());
@@ -174,6 +194,7 @@ mod tests {
 
     #[tokio::test]
     async fn dropped_observer_keeps_real_worker_identity_and_cancellation_flag() {
+        let _checks = PRODUCTION_CHECKS.lock().await;
         let r = Arc::new(Requests::default());
         let lease = r.begin(A).unwrap();
         let (started, started_rx) = tokio::sync::oneshot::channel();
@@ -209,6 +230,7 @@ mod tests {
 
     #[tokio::test]
     async fn real_read_pending_keeps_the_worker_live_until_it_returns() {
+        let _checks = PRODUCTION_CHECKS.lock().await;
         let r = Arc::new(Requests::default());
         let lease = r.begin(A).unwrap();
         let (started, started_rx) = tokio::sync::oneshot::channel();
@@ -250,5 +272,63 @@ mod tests {
                 .unwrap()
         );
         assert!(!r.0.lock().unwrap()[A].running);
+    }
+
+    #[tokio::test]
+    async fn cancelled_scan_and_rescan_leave_a_slot_for_the_explicit_file_read() {
+        let _checks = PRODUCTION_CHECKS.lock().await;
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        std::fs::write(root.join("text"), "explicit read").unwrap();
+        let requests = Arc::new(Requests::default());
+        let (started_a, ready_a) = tokio::sync::oneshot::channel();
+        let (release_a, blocked_a) = std::sync::mpsc::channel();
+        let owner_a = requests.clone();
+        let scan_a = tokio::spawn(async move {
+            observe_scan(&owner_a, A.into(), move |_, cancelled| {
+                started_a.send(()).unwrap();
+                blocked_a.recv_timeout(Duration::from_secs(6)).unwrap();
+                Ok(cancelled.load(Ordering::Acquire))
+            })
+            .await
+        });
+        tokio::time::timeout(Duration::from_secs(2), ready_a)
+            .await
+            .unwrap()
+            .unwrap();
+        requests.cancel(A).unwrap();
+        assert!(requests.0.lock().unwrap()[A].running);
+
+        let (started_b, ready_b) = tokio::sync::oneshot::channel();
+        let (release_b, blocked_b) = std::sync::mpsc::channel();
+        let owner_b = requests.clone();
+        let scan_b = tokio::spawn(async move {
+            observe_scan(&owner_b, B.into(), move |_, _| {
+                started_b.send(()).unwrap();
+                blocked_b.recv_timeout(Duration::from_secs(6)).unwrap();
+                Ok(())
+            })
+            .await
+        });
+        // The admission refusal drops the closure and closes its start signal.
+        // On old code that signal proves the second worker still holds a slot.
+        let second_worker_started = tokio::time::timeout(Duration::from_secs(2), ready_b)
+            .await
+            .unwrap()
+            .is_ok();
+        let second_request_registered = requests.0.lock().unwrap().contains_key(B);
+        let explicit = observe(move || read::read(&root, Path::new("text"))).await;
+        let _ = release_b.send(());
+        release_a.send(()).unwrap();
+        let second = scan_b.await.unwrap();
+        assert_eq!(scan_a.await.unwrap(), Ok(true));
+        assert_eq!(explicit, Ok("explicit read".to_owned()));
+        assert!(!second_worker_started);
+        assert!(!second_request_registered);
+        assert_eq!(second, Err(Failure::new("readBusy")));
+        assert_eq!(
+            observe_scan(&requests, C.into(), |_, _| Ok(())).await,
+            Ok(())
+        );
     }
 }

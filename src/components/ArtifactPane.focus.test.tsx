@@ -13,7 +13,15 @@ const hooks = vi.hoisted(() => ({
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
-  useState: (value: unknown) => [value, vi.fn()],
+  useState: (value: unknown) => {
+    const slot = (hooks.slots[hooks.cursor++] ??= { value });
+    return [
+      slot.value,
+      (next: unknown) => {
+        slot.value = next;
+      },
+    ];
+  },
   useRef: (value: unknown) =>
     (hooks.slots[hooks.cursor++] ??= { value: { current: value } }).value,
   useEffect: (effect: () => void | (() => void), deps: unknown[]) => {
@@ -36,6 +44,7 @@ vi.mock("../runtime/sessions", () => ({
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn(), Channel: class {} }));
 
 import { ArtifactPane } from "./ArtifactPane";
+import { invoke } from "@tauri-apps/api/core";
 import { threads } from "../runtime/sessions";
 import { freshThreadState } from "../runtime/session_projection";
 
@@ -100,6 +109,7 @@ function render(
     if (ref && node.props.className === "a-close") ref.current = close;
   }
   for (const effect of hooks.effects.splice(0)) effect();
+  return tree;
 }
 function unmount() {
   for (const slot of hooks.slots) slot.cleanup?.();
@@ -114,6 +124,9 @@ beforeEach(() => {
   pane = new Host();
   opener = new Host();
   close = new Host();
+  vi.mocked(invoke).mockImplementation(async (command) =>
+    command === "settings_get" ? 560 : undefined,
+  );
   main.parent = pane.parent = layout;
   opener.parent = main;
   close.parent = pane;
@@ -241,6 +254,57 @@ it("tracks width changes while open without leaving a wide conversation inert", 
   narrow = false;
   mediaChange?.();
   expect(main.inert).toBe(false);
+});
+
+it("restores the saved width and persists keyboard or completed pointer resizing", async () => {
+  narrow = false;
+  const separator = () =>
+    render().find((node) => node.props.role === "separator")!;
+  await vi.waitFor(() => expect(separator().props["aria-valuenow"]).toBe(560));
+  (separator().props.onKeyDown as (event: unknown) => void)({
+    key: "ArrowLeft",
+    preventDefault: vi.fn(),
+  });
+  const writes = () =>
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([command]) => command === "settings_set");
+  await vi.waitFor(() =>
+    expect(writes().at(-1)).toEqual([
+      "settings_set",
+      { key: "artifactPaneWidth", value: 584 },
+    ]),
+  );
+
+  const pointer = (name: string, clientX: number) =>
+    (separator().props[name] as (event: unknown) => void)({
+      button: 0,
+      pointerId: 1,
+      clientX,
+      preventDefault: vi.fn(),
+      currentTarget: { setPointerCapture: vi.fn() },
+    });
+  const previousWrites = writes().length;
+  pointer("onPointerDown", 250);
+  pointer("onPointerMove", 220);
+  expect(separator().props["aria-valuenow"]).toBe(614);
+  expect(writes()).toHaveLength(previousWrites);
+  pointer("onPointerCancel", 220);
+  expect(separator().props["aria-valuenow"]).toBe(584);
+  expect(writes()).toHaveLength(previousWrites);
+  pointer("onPointerDown", 250);
+  pointer("onPointerMove", 200);
+  pointer("onPointerUp", 200);
+  await vi.waitFor(() =>
+    expect(writes().at(-1)).toEqual([
+      "settings_set",
+      { key: "artifactPaneWidth", value: 634 },
+    ]),
+  );
+
+  unmount();
+  hooks.slots = [];
+  expect(separator().props["aria-valuenow"]).toBe(634);
 });
 
 it("releases the covered conversation without restoring focus into a hidden route", () => {

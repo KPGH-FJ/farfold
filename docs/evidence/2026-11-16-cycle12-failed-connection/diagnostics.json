@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-16",
+  "timeZone": "Asia/Shanghai",
+  "cline": {
+    "scope": "Independent official CLI stdio ACP diagnosis; no Farfold process in the request path",
+    "registeredVersion": "3.0.74",
+    "provider": "cline",
+    "modelShown": "Claude Sonnet 5.5",
+    "autoApproval": false,
+    "syntheticModelRequests": 1,
+    "responseMatchedPromptId": true,
+    "responseClass": "internal_error",
+    "responseAfterPromptMs": 10312,
+    "assistantUpdates": 0,
+    "toolUpdates": 0,
+    "stderrBytes": 333,
+    "explicitHttpStatusObserved": null,
+    "officialErrorTemplateMatched": false,
+    "cause": "unknown",
+    "ownProcessGroupExited": true,
+    "existingClineSettingsFileMetadataUnchanged": true
+  },
+  "minimaxCode": {
+    "scope": "Read-only native session metadata; no model requests and no settings changes",
+    "registeredVersion": "0.2.7",
+    "officialCapabilities": ["session/list", "session/load"],
+    "originalNativeRecordDigest": "1811783c263622e8",
+    "priorFarfoldPreviewCorrelation": "Only native record with both an existing original directory and a saved user message; the earlier sanitized preview omitted the session ID",
+    "originalEffectiveModel": "minimax/MiniMax-M2.7",
+    "originalReasoningRecorded": false,
+    "originalAccountOrBillingSourceRecorded": false,
+    "originalNativeStatus": "error",
+    "savedUserRows": 1,
+    "savedAssistantRows": 0,
+    "currentDefaultModel": "minimax/MiniMax-M3",
+    "currentProviderSource": "managed-login"
+  }
+}

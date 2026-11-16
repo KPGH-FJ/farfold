@@ -13,6 +13,7 @@ import {
   MCP_ADD_STRINGS as S,
   MCP_HTTP_ADD_STRINGS as H,
 } from "../runtime/mcp_add_strings";
+import { McpHttpFields } from "./McpHttpFields";
 import "./McpAddForm.css";
 type Draft = {
   owner: InventoryOwner;
@@ -272,32 +273,24 @@ export function McpAddForm({
                 </select>
               </label>
             )}
-            <label>
-              {S.name}
-              <input
-                aria-label={S.name}
-                value={draft.input.name}
-                disabled={!enabled}
-                autoComplete="off"
-                spellCheck={false}
-                onChange={(event) =>
-                  edit({ ...draft.input, name: event.currentTarget.value })
-                }
-              />
-            </label>
             {httpInput && (
+              <McpHttpFields
+                input={httpInput}
+                disabled={!enabled}
+                onChange={edit}
+              />
+            )}
+            {localInput && (
               <label>
-                {H.address}
+                {S.name}
                 <input
-                  aria-label={H.address}
-                  type="text"
-                  value={httpInput.url}
+                  aria-label={S.name}
+                  value={draft.input.name}
                   disabled={!enabled}
                   autoComplete="off"
-                  autoCapitalize="none"
                   spellCheck={false}
                   onChange={(event) =>
-                    edit({ ...httpInput, url: event.currentTarget.value })
+                    edit({ ...draft.input, name: event.currentTarget.value })
                   }
                 />
               </label>

@@ -3,6 +3,12 @@
  * 新增文案一律加进本文件；禁用词由 strings.test.ts 保证。
  */
 export const STRINGS = {
+  historySupplement: {
+    tool: "历史工具结果",
+    partial: "部分工具记录未能补齐，已保留可读取的对话内容。",
+    snapshot:
+      "工具记录来自这段历史的单独读取；如果同时在其他窗口修改，内容可能不同步。",
+  },
   storageRecovery: {
     title: "本机资料暂时无法使用",
     loading: "正在检查本机资料…",
@@ -276,9 +282,94 @@ export const STRINGS = {
     configBlocked: "已暂停发送，请重新检查。原内容和待发消息已保留。",
     configRecordFailed: "未能保存会话设置，已暂停发送。请重试保存。",
     confirmConfig: "确认当前选项",
+    confirmCurrentModel: "确认并保存当前模型",
     retryConfigRecord: "重试保存",
     confirmingConfig: "正在确认…",
     confirmConfigFailed: "确认失败，请核对当前设置后重试",
+    originalConversation: {
+      title: "恢复原对话设置",
+      introduction: "核对这段对话原来的账号、服务和选项，再恢复发送。",
+      readCurrent: "查看当前选项",
+      readBackup: "从备份读取",
+      chooseBackup: "选择 Farfold 数据备份",
+      backupType: "Farfold 数据备份",
+      reading: "正在读取…",
+      source: "服务来源",
+      existing: "沿用 Agent 已有设置",
+      currentNote: "以下选项由 Agent 当前报告。请核对是否与原对话一致。",
+      backupNote: "这段对话在备份中的选项与当前报告一致。",
+      attestation: "当前账号、服务和所列选项都与原对话一致",
+      cancel: "取消",
+      apply: "保存原设置",
+      saving: "正在保存…",
+      readFailed: "无法核对当前选项。你也可以从原对话的备份读取。",
+      backupFailed: "无法从此备份核对原设置，请检查所选备份。",
+      saveFailed: "未能确认保存，请重新检查这段对话的设置。",
+      sendNote: "保存后，由你决定何时发送消息。",
+    },
+    confirmConfigReasons: {
+      "missing-check": "尚无可确认的设置信息。",
+      "prepare-failed": "确认所需的信息未能准备完成。",
+      "busy-before": "确认前仍有未结束的事项",
+      "invoke-rejected": "确认请求未成功完成。",
+      "owner-changed": "确认时，对话或连接已发生变化。",
+      "busy-after": "确认后仍有未结束的事项",
+      "reply-not-ready": "确认结果尚未就绪。",
+      "state-not-ready": "当前设置仍未就绪。",
+      "delivery-incomplete": "当前设置的接收尚未确认，请重试。",
+      "snapshot-changed": "确认结果与当前设置不一致。",
+      "values-changed": "当前选项与准备确认的选择不一致。",
+    },
+    confirmConfigNativeReasons: {
+      FARFOLD_RESTORE_CONFIRM_CWD_INVALID: "工作文件夹当前不可用。",
+      FARFOLD_RESTORE_CONFIRM_ROUTE_UNAVAILABLE: "未找到唯一可用的对话连接。",
+      FARFOLD_RESTORE_CONFIRM_CONTROL_SEND: "确认请求未能送达。",
+      FARFOLD_RESTORE_CONFIRM_WAIT_TIMEOUT: "等待确认结果超时。",
+      FARFOLD_RESTORE_CONFIRM_WAIT_CLOSED: "确认结果未能返回。",
+      FARFOLD_RESTORE_CONFIRM_READ_ONLY: "当前对话仅供查看。",
+      FARFOLD_RESTORE_CONFIRM_OPENING: "对话仍在打开。",
+      FARFOLD_RESTORE_CONFIRM_FORK_PENDING: "仍有未结束的对话操作。",
+      FARFOLD_RESTORE_CONFIRM_IDENTITY_READ: "账号信息仍在核对。",
+      FARFOLD_RESTORE_CONFIRM_BUSY_BEFORE: "确认前的状态或等待条件尚未满足。",
+      FARFOLD_RESTORE_CONFIRM_SERVICE: "服务设置暂时无法核对。",
+      FARFOLD_RESTORE_CONFIRM_BUSY_AFTER: "确认后的状态或等待条件尚未满足。",
+      FARFOLD_RESTORE_CONFIRM_MODEL: "模型设置暂时无法核对。",
+      FARFOLD_RESTORE_CONFIRM_DELIVERY: "确认结果返回前已失效。",
+      FARFOLD_RESTORE_CONFIRM_SELECTION_INVALID: "准备确认的选择不完整。",
+      FARFOLD_RESTORE_CONFIRM_GUARD_NOT_READY: "当前模型和思考设置尚未确认。",
+      FARFOLD_RESTORE_CONFIRM_DISPLAYED_CHANGED:
+        "确认时，显示的设置已发生变化。",
+      FARFOLD_RESTORE_CONFIRM_OPTIONS_INVALID: "当前选项信息不完整。",
+      FARFOLD_RESTORE_CONFIRM_DECLARATION_MISSING: "缺少需要确认的选项。",
+      FARFOLD_RESTORE_CONFIRM_DECLARATION_DUPLICATE: "需要确认的选项存在重复。",
+      FARFOLD_RESTORE_CONFIRM_DECLARATION_TYPE:
+        "需要确认的选项类型不符合要求。",
+      FARFOLD_RESTORE_CONFIRM_DECLARATION_VALUE: "需要确认的选项值不一致。",
+      FARFOLD_RESTORE_CONFIRM_DECLARATION_OPTIONS:
+        "需要确认的可选值信息不完整。",
+      FARFOLD_RESTORE_CONFIRM_SELECTED_MISSING: "准备确认的选项已不存在。",
+      FARFOLD_RESTORE_CONFIRM_SELECTED_MISMATCH: "准备确认的选择与当前值不同。",
+      FARFOLD_RESTORE_CONFIRM_NO_PROTECTED_SELECTION:
+        "尚未选择需要确认的模型或思考选项。",
+    },
+    confirmConfigBusyReasons: {
+      running: "任务正在运行",
+      submitting: "消息正在发送",
+      configuring: "设置正在修改",
+      reconnecting: "连接正在恢复",
+      stopping: "正在停止",
+      stopUnconfirmed: "停止尚未确认",
+      connectionLost: "连接已断开",
+      connectionOutcomeUnknown: "连接结果未知",
+      uncertainPrompt: "请求结果未知",
+      openError: "对话打开失败",
+      sourceError: "来源不可用",
+      unrecoverable: "对话无法恢复",
+      historyUnavailable: "历史不可读取",
+      authentication: "登录或准备操作未结束",
+      activeWork: "工具或其他工作未结束",
+      pendingRequests: "仍有待审批或待回答事项",
+    },
     recheckConfig: "重新检查",
     recheckingConfig: "正在检查…",
     recheckConfigFailed: "无法确认已保存选择，请重新检查",
@@ -397,13 +488,15 @@ export const STRINGS = {
     approved: (title: string) => `已批准 · ${title}`,
     approvedRemember: (title: string) => `已批准 · ${title}`,
     rejected: "已拒绝 · 已告知 Agent",
+    permissionChoiceSubmitted: (name: string) =>
+      name ? `已回复 · ${name}` : "已回复",
     done: "已完成",
     ended: "已结束",
     noResult: "已结束，但未收到可展示结果",
     resultPending: "回复已结束，步骤仍在进行",
     noResultNote:
       "没有收到可展示的回答或工具结果。不会自动重试；你可以检查对话后再决定下一步。",
-    stopped: "已停止",
+    stopped: "回复已停止",
     failed: "出错了",
     unknown: "结果未知",
     historicalOutcomeUnknown: "此前请求结果未确认，未自动重发",
@@ -438,7 +531,7 @@ export const STRINGS = {
         case "end_turn":
           return "已完成";
         case "cancelled":
-          return "已停止";
+          return "回复已停止";
         case "refusal":
           return "已拒绝";
         case "error":
@@ -451,12 +544,19 @@ export const STRINGS = {
     unrecoverableHint: "你可以新开对话，原对话记录不会删除。",
     queuedDropped: (n: number) => `${n} 条排队消息未发出`,
     permissionCommand: "运行命令",
+    permissionApproveCommandOnce: "批准一次",
+    permissionCommandDetailsUnavailable: "无法核对这次命令的完整信息。",
+    inputProgram: "程序",
+    inputArguments: "参数",
+    inputNoArguments: "无参数",
     inputCommand: "命令",
     inputCwd: "执行目录",
     fullInput: "完整输入",
     permissionInputMissing: "Agent 未提供本次操作的输入详情",
     permissionEdit: "写入文件",
     permissionOther: "操作请求",
+    permissionOptionsUnavailable:
+      "审批选项的标识重复或无效，相关选项暂不可用。",
     secondsLeft: (n: number) => `${n}s`,
   },
   artifacts: {

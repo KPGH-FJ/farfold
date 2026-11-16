@@ -290,3 +290,192 @@ it("keeps controls locked while unsent work is still loading", () => {
   click(S.new);
   expect(h.edit).toBeNull();
 });
+
+const attach = (node: Node, element: unknown) =>
+  (node.props.ref as ((element: unknown) => void) | undefined)?.(element);
+const focusable = (disabled = false) => ({ disabled, focus: vi.fn() });
+
+it("hands an explicit new edit to its name once without stealing focus on later renders", () => {
+  const name = focusable();
+  click(S.new);
+  attach(
+    render().find((n) => n.type === "input")!,
+    name,
+  );
+  expect(name.focus).toHaveBeenCalledOnce();
+  attach(
+    render().find((n) => n.type === "input")!,
+    name,
+  );
+  expect(name.focus).toHaveBeenCalledOnce();
+  click(S.discard);
+  const entry = focusable();
+  attach(button(S.new), entry);
+  expect(entry.focus).toHaveBeenCalledOnce();
+});
+
+it("returns a discarded existing edit to that exact row, not the first template", () => {
+  const a = { id: "a", label: "A", text: "A" };
+  const b = { id: "b", label: "B", text: "B" };
+  h.state.items = [a, b];
+  const edits = render().filter(
+    (n) =>
+      n.type === "button" && text(n.props.children as ReactNode) === S.edit,
+  );
+  (edits[1].props.onClick as () => void)();
+  const name = focusable();
+  attach(
+    render().find((n) => n.type === "input")!,
+    name,
+  );
+  expect(name.focus).toHaveBeenCalledOnce();
+  click(S.discard);
+  const entries = render().filter(
+    (n) =>
+      n.type === "button" && text(n.props.children as ReactNode) === S.edit,
+  );
+  const first = focusable(),
+    exact = focusable();
+  attach(entries[0], first);
+  attach(entries[1], exact);
+  expect(first.focus).not.toHaveBeenCalled();
+  expect(exact.focus).toHaveBeenCalledOnce();
+});
+
+it("defaults deletion review to Cancel and returns to its entry without deleting", () => {
+  h.state.items = [{ id: "a", label: "A", text: "A" }];
+  click(S.delete);
+  const confirm = focusable(),
+    cancel = focusable();
+  attach(button(S.confirmDelete), confirm);
+  attach(button(S.cancel), cancel);
+  expect(confirm.focus).not.toHaveBeenCalled();
+  expect(cancel.focus).toHaveBeenCalledOnce();
+  click(S.cancel);
+  const entry = focusable();
+  attach(button(S.delete), entry);
+  expect(entry.focus).toHaveBeenCalledOnce();
+  expect(h.remove).not.toHaveBeenCalled();
+});
+
+it("returns a successful save only after its exact edit is cleared and controls unlock", async () => {
+  h.edit = { id: "a", label: "A", text: "A" };
+  let finish!: () => void;
+  h.flush.mockResolvedValueOnce(undefined).mockImplementationOnce(
+    () =>
+      new Promise<void>((resolve) => {
+        finish = resolve;
+      }),
+  );
+  h.save.mockImplementation(async () => {
+    h.state.items = [{ id: "a", label: "A", text: "A" }];
+  });
+  submit();
+  await settle();
+  expect(h.edit).toBeNull();
+  const entry = focusable(true);
+  attach(button(S.edit), entry);
+  expect(entry.focus).not.toHaveBeenCalled();
+  finish();
+  await settle();
+  entry.disabled = false;
+  attach(button(S.edit), entry);
+  expect(entry.focus).toHaveBeenCalledOnce();
+  attach(button(S.edit), entry);
+  expect(entry.focus).toHaveBeenCalledOnce();
+});
+
+it("does not focus a newer edit after an older save settles", async () => {
+  let finish!: () => void;
+  h.save.mockImplementation(
+    () =>
+      new Promise<void>((resolve) => {
+        finish = resolve;
+      }),
+  );
+  h.edit = { id: "a", label: "A", text: "A" };
+  submit();
+  await settle();
+  h.edit = { id: "b", label: "B", text: "Keep" };
+  finish();
+  await settle();
+  const name = focusable();
+  attach(
+    render().find((n) => n.type === "input")!,
+    name,
+  );
+  expect(name.focus).not.toHaveBeenCalled();
+  expect(h.edit?.id).toBe("b");
+});
+
+it("does not hand an entry action to a different edit that replaces it before attachment", () => {
+  click(S.new);
+  h.edit = { id: "replacement", label: "Newer", text: "Keep" };
+  const name = focusable();
+  attach(
+    render().find((n) => n.type === "input")!,
+    name,
+  );
+  expect(name.focus).not.toHaveBeenCalled();
+});
+
+it("falls back to the dialog close control when the returned row becomes read-only", () => {
+  const item = { id: "a", label: "A", text: "A" };
+  h.state.items = [item];
+  h.edit = { ...item };
+  h.state.uncertain = true;
+  click(S.discard);
+  const close = focusable();
+  const entry = {
+    ...focusable(true),
+    closest: () => ({ querySelector: () => close }),
+  };
+  attach(button(S.edit), entry);
+  expect(entry.focus).not.toHaveBeenCalled();
+  expect(close.focus).toHaveBeenCalledOnce();
+  entry.disabled = false;
+  attach(button(S.edit), entry);
+  expect(entry.focus).not.toHaveBeenCalled();
+});
+
+it("returns a rejected save to its retained edit after unlocking", async () => {
+  h.edit = { id: "a", label: "A", text: "Keep" };
+  h.save.mockRejectedValue(new Error("rejected"));
+  submit();
+  await settle();
+  const name = focusable();
+  attach(
+    render().find((n) => n.type === "input")!,
+    name,
+  );
+  expect(name.focus).toHaveBeenCalledOnce();
+  expect(h.edit?.text).toBe("Keep");
+  attach(
+    render().find((n) => n.type === "input")!,
+    name,
+  );
+  expect(name.focus).toHaveBeenCalledOnce();
+});
+
+it("does not focus a newer edit when an older save rejects", async () => {
+  let reject!: () => void;
+  h.save.mockImplementation(
+    () =>
+      new Promise<void>((_, fail) => {
+        reject = () => fail(new Error("rejected"));
+      }),
+  );
+  h.edit = { id: "a", label: "A", text: "A" };
+  submit();
+  await settle();
+  h.edit = { id: "a", label: "Newer same ID", text: "Keep" };
+  reject();
+  await settle();
+  const name = focusable();
+  attach(
+    render().find((n) => n.type === "input")!,
+    name,
+  );
+  expect(name.focus).not.toHaveBeenCalled();
+  expect(h.edit?.text).toBe("Keep");
+});

@@ -7,13 +7,13 @@ import {
   WarningCircleIcon,
 } from "@phosphor-icons/react";
 import type { AgentCardModel } from "../runtime/agents";
+import { isAgentPresentable } from "../runtime/agent_directory";
 import { threads, type IndexRow } from "../runtime/sessions";
 import {
   closeHistoryPreview,
   commitHistoryPreview,
   discoverHistory,
   hasPreviewContent,
-  historyContinuation,
   previewHistory,
   readHistoryPreview,
   type DiscoveredConversation,
@@ -23,13 +23,14 @@ import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
 import "../settings-library-redesign.css";
 import { IMPORT_STRINGS as S } from "../runtime/import_strings";
 import { LIBRARY } from "../runtime/library_strings";
-import { MessageContent } from "./MessageContent";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { HistoryReadStatus } from "./HistoryReadStatus";
 import { AgentLogo } from "./AgentLogo";
 import { chooseDirectory } from "../runtime/dialogs";
 import {
-  observeAuthentication,
+  captureProgramAuthentication,
+  hasPendingProgramAuthenticationChange,
+  pendingProgramAuthenticationChange,
   subscribeAuthenticationChanges,
 } from "../runtime/authentication";
 import { subscribeCredentialChanges } from "../runtime/credentials";
@@ -38,10 +39,10 @@ import {
   historyPreviewAssociationKey,
   historyPreviewRowKey,
 } from "../runtime/history_preview_scope";
-import {
-  configValueLabel,
-  modelConfigOption,
-} from "../runtime/session_projection";
+import { renderHistoryPreviewBody } from "./HistoryPreviewBody";
+import { KnownHistoryImport } from "./KnownHistoryImport";
+import { KnownHistoryReader } from "../runtime/known_history_import";
+import { agentOpenError } from "../runtime/ui_error";
 
 interface AddedConversation {
   saved: IndexRow;
@@ -153,18 +154,25 @@ export function ImportConversations({
   onNew?: (agentId: string) => void;
   returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
+  const historyAgents = new Set(index.map((row) => row.agentId));
   const available = agents.filter(
-    (a) => a.status === "installed" || a.status === "connected",
+    (card) =>
+      (card.status === "installed" || card.status === "connected") &&
+      (isAgentPresentable(card) || historyAgents.has(card.id)),
   );
+  const firstAvailableId = available[0]?.id ?? "";
+  const requestedAgentId = available.find(
+    (card) => card.id === initialAgentId,
+  )?.id;
   const [agentQuery, setAgentQuery] = useState("");
   const visibleAgents = available.filter((card) =>
     card.name
       .toLocaleLowerCase()
       .includes(agentQuery.trim().toLocaleLowerCase()),
   );
-  const [agentId, setAgentId] = useState(
-    initialAgentId ?? available[0]?.id ?? "",
-  );
+  const [agentId, setAgentId] = useState(requestedAgentId ?? firstAvailableId);
+  const agentIdRef = useRef(agentId);
+  agentIdRef.current = agentId;
   const [lookupCwd, setLookupCwd] = useState<string | null>(null);
   const lookupRevision = useRef(0);
   const requestedContext = `${requestRevision}\0${initialAgentId ?? ""}`;
@@ -175,6 +183,7 @@ export function ImportConversations({
   const [searched, setSearched] = useState(false);
   const [choosing, setChoosing] = useState(true);
   const [unsupported, setUnsupported] = useState(false);
+  const [manualLoadSupport, setManualLoadSupport] = useState(false);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [receivedPreview, setPreview] = useState<HistoryPreview | null>(null);
@@ -186,6 +195,13 @@ export function ImportConversations({
   const [listing, setListing] = useState(false);
   const inFlight = useRef(false);
   const mounted = useRef(true);
+  const [, refreshKnown] = useState(0);
+  const knownReader = useRef<KnownHistoryReader | null>(null);
+  if (!knownReader.current)
+    knownReader.current = new KnownHistoryReader(() => {
+      if (mounted.current) refreshKnown((value) => value + 1);
+    });
+  const known = knownReader.current;
   const openRef = useRef(open);
   openRef.current = open;
   const [error, setError] = useState<string | null>(null);
@@ -227,6 +243,7 @@ export function ImportConversations({
   ]);
   const restoreDiscovery = (nextAgent: string, nextCwd: string | null) => {
     lookupRevision.current++;
+    known.reset();
     const saved = lookupDrafts.current.get(
       JSON.stringify([nextAgent, nextCwd]),
     );
@@ -236,6 +253,7 @@ export function ImportConversations({
     setSearched(saved?.searched ?? false);
     setChoosing(!saved?.searched);
     setUnsupported(saved?.unsupported ?? false);
+    setManualLoadSupport(false);
     setQuery(saved?.query ?? "");
     setCursor(saved?.cursor ?? null);
     setPreviewId(saved?.previewId ?? null);
@@ -250,7 +268,12 @@ export function ImportConversations({
     mounted.current &&
     lookupRevision.current === revision &&
     requestedContextRef.current === context;
-  const selectedAgent = agents.find((card) => card.id === agentId);
+  const selectedAgent = available.find((card) => card.id === agentId);
+  const selectedAgentId = selectedAgent?.id;
+  const newConversationAgentId =
+    selectedAgent && isAgentPresentable(selectedAgent)
+      ? selectedAgent.id
+      : null;
   const viewKey = JSON.stringify([
     requestedContext,
     open,
@@ -258,6 +281,7 @@ export function ImportConversations({
     lookupCwd,
     query,
     historyPreviewAgentKey(selectedAgent),
+    newConversationAgentId,
   ]);
   const viewScope = useRef({ key: viewKey });
   if (viewScope.current.key !== viewKey) viewScope.current = { key: viewKey };
@@ -321,6 +345,7 @@ export function ImportConversations({
   }, [viewKey, rows, index]);
   useEffect(() => {
     const retire = (agent?: string) => {
+      if (!agent || agent === agentIdRef.current) known.retire();
       const owner = previewInterest.current;
       if (owner && (!agent || owner.agentId === agent)) {
         owner.retire();
@@ -350,12 +375,10 @@ export function ImportConversations({
     };
   }, []);
   useEffect(() => {
-    if (!agentId && available.length) setAgentId(available[0].id);
-  }, [agentId, available]);
-  useEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
+      void known.release().catch(() => undefined);
       const p = previewRef.current;
       if (p) void closeHistoryPreview(p).catch(() => undefined);
     };
@@ -386,6 +409,7 @@ export function ImportConversations({
     (row) => !visible.includes(row),
   ).length;
   const release = async () => {
+    await known.release();
     const owner = previewInterest.current;
     owner?.retire();
     const p = previewRef.current;
@@ -431,17 +455,27 @@ export function ImportConversations({
     if (!open) void work(release);
   }, [open]);
   const handledRequest = useRef(-1);
+  const attemptedFallback = useRef<string | null>(null);
   useEffect(() => {
-    if (
-      !open ||
-      busy ||
-      handledRequest.current === requestRevision ||
-      !initialAgentId
-    )
-      return;
-    if (!available.some((card) => card.id === initialAgentId)) return;
-    handledRequest.current = requestRevision;
-    if (agentId === initialAgentId) return;
+    if (!open || selectedAgentId) attemptedFallback.current = null;
+    if (!open || busy || inFlight.current) return;
+    const target =
+      handledRequest.current !== requestRevision ? requestedAgentId : undefined;
+    if (target) handledRequest.current = requestRevision;
+    const nextAgent = target ?? selectedAgentId ?? firstAvailableId;
+    if (agentId === nextAgent) return;
+    if (!selectedAgentId) {
+      const fallback = JSON.stringify([
+        requestRevision,
+        requestedAgentId,
+        agentId,
+        firstAvailableId,
+      ]);
+      // Leave a failed preview release visible until eligibility changes or
+      // the user explicitly retries by changing Agent or closing the dialog.
+      if (attemptedFallback.current === fallback) return;
+      attemptedFallback.current = fallback;
+    }
     void work(async () => {
       const context = requestedContextRef.current;
       const revision = lookupRevision.current;
@@ -454,20 +488,35 @@ export function ImportConversations({
       )
         return;
       restoreDiscovery(
-        initialAgentId,
-        agentLocations.current.get(initialAgentId) ?? null,
+        nextAgent,
+        agentLocations.current.get(nextAgent) ?? null,
       );
     });
-  }, [open, busy, initialAgentId, requestRevision]);
+  }, [
+    open,
+    busy,
+    requestRevision,
+    requestedAgentId,
+    selectedAgentId,
+    firstAvailableId,
+    agentId,
+  ]);
   const close = () => {
     openRef.current = false;
     onClose();
   };
-  const preparationFailure = (reason: unknown, cwd: string | null) => {
-    if (String(reason).replace(/^Error:\s*/, "") !== "AUTH_REQUIRED")
+  const preparationFailure = (
+    reason: unknown,
+    cwd: string | null,
+    authentication: ReturnType<typeof captureProgramAuthentication>,
+  ) => {
+    if (
+      !authentication.current() ||
+      String(reason).replace(/^Error:\s*/, "") !== "AUTH_REQUIRED"
+    )
       return false;
     const effectiveCwd = cwd ?? defaultCwd;
-    if (effectiveCwd) observeAuthentication(agentId, effectiveCwd, reason);
+    if (effectiveCwd) authentication.observe(effectiveCwd, reason);
     setPreparationCwd({ cwd });
     return true;
   };
@@ -496,10 +545,13 @@ export function ImportConversations({
   };
   const discover = (more = false) =>
     work(async () => {
+      if (!selectedAgent) return;
       const revision = lookupRevision.current;
       const context = requestedContextRef.current;
       const scope = viewScope.current;
       await release();
+      const replacing = pendingProgramAuthenticationChange(agentId);
+      if (replacing) await replacing;
       if (
         !openRef.current ||
         !currentLookup(revision, context) ||
@@ -507,24 +559,31 @@ export function ImportConversations({
       )
         return;
       setPreviewId(null);
+      setManualLoadSupport(false);
       setListing(true);
+      const authentication = captureProgramAuthentication(agentId);
       const page = await discoverHistory(
         agentId,
         more ? (cursor ?? undefined) : undefined,
         lookupCwd,
       )
         .catch((reason) => {
-          if (!currentLookup(revision, context) || viewScope.current !== scope)
+          if (
+            !authentication.current() ||
+            !currentLookup(revision, context) ||
+            viewScope.current !== scope
+          )
             return null;
           throw new Error(
-            preparationFailure(reason, lookupCwd)
+            preparationFailure(reason, lookupCwd, authentication)
               ? S.authRequired
-              : S.listFailed,
+              : (agentOpenError(reason) ?? S.listFailed),
           );
         })
         .finally(() => setListing(false));
       if (
         !page ||
+        !authentication.current() ||
         !openRef.current ||
         !currentLookup(revision, context) ||
         viewScope.current !== scope
@@ -551,13 +610,17 @@ export function ImportConversations({
       setSearched(true);
       setChoosing(false);
       setUnsupported(page.status === "unsupported");
+      setManualLoadSupport(page.canLoad === true);
     });
   const view = (row: DiscoveredConversation) =>
     work(async () => {
+      if (!selectedAgent) return;
       const revision = lookupRevision.current;
       const context = requestedContextRef.current;
       const scope = viewScope.current;
       await release();
+      const replacing = pendingProgramAuthenticationChange(agentId);
+      if (replacing) await replacing;
       if (
         !openRef.current ||
         !currentLookup(revision, context) ||
@@ -572,11 +635,12 @@ export function ImportConversations({
       const owner = createPreviewInterest(row);
       if (!owner.inquiryCurrent()) return;
       previewInterest.current = owner;
+      const authentication = captureProgramAuthentication(agentId);
       const loaded = await readHistoryPreview(agentId, row, owner).catch(
         (reason) => {
           if (!owner.inquiryCurrent()) return null;
           throw new Error(
-            preparationFailure(reason, row.cwd)
+            preparationFailure(reason, row.cwd, authentication)
               ? S.authRequired
               : reason instanceof Error && reason.message === S.noContent
                 ? S.noContent
@@ -596,6 +660,7 @@ export function ImportConversations({
     });
   const add = (targets = selectedRows) =>
     work(async () => {
+      if (!selectedAgent) return;
       const revision = lookupRevision.current;
       const context = requestedContextRef.current;
       const scope = viewScope.current;
@@ -731,6 +796,57 @@ export function ImportConversations({
       close();
       onOpen(found);
     });
+  const knownScope = viewScope.current;
+  const knownContext = requestedContextRef.current;
+  const knownRevision = lookupRevision.current;
+  const knownCurrent = () =>
+    openRef.current &&
+    currentLookup(knownRevision, knownContext) &&
+    viewScope.current === knownScope;
+  const readKnown = async (
+    id: string,
+    cwd: string,
+    interested: () => boolean,
+  ) => {
+    const replacing = pendingProgramAuthenticationChange(agentId);
+    if (replacing) await replacing;
+    if (
+      !selectedAgent ||
+      !manualLoadSupport ||
+      !knownCurrent() ||
+      !interested()
+    )
+      return;
+    const association = historyPreviewAssociationKey(
+      threads.getSnapshot().index,
+      agentId,
+      id,
+    );
+    if (
+      threads
+        .getSnapshot()
+        .index.some(
+          (row) => row.agentId === agentId && row.nativeSessionId === id,
+        )
+    )
+      throw new Error(S.knownAlreadyAdded);
+    const authentication = captureProgramAuthentication(agentId);
+    await known.read(
+      agentId,
+      { nativeSessionId: id, cwd },
+      () =>
+        interested() &&
+        authentication.current() &&
+        !hasPendingProgramAuthenticationChange(agentId) &&
+        knownCurrent() &&
+        historyPreviewAssociationKey(
+          threads.getSnapshot().index,
+          agentId,
+          id,
+        ) === association,
+      () => preparationFailure("AUTH_REQUIRED", cwd, authentication),
+    );
+  };
   const previewRow = visible.find((r) => r.nativeSessionId === previewId);
   // Exactly three user-visible results: joined, nothing to join, or an
   // incomplete/uncertain outcome whose technical detail stays collapsed.
@@ -791,7 +907,7 @@ export function ImportConversations({
       restoreDiscovery(agentId, next);
     });
   const startNew = () => {
-    if (!onNew || !agentId) return;
+    if (!onNew || !newConversationAgentId) return;
     const revision = lookupRevision.current;
     const context = requestedContextRef.current;
     const scope = viewScope.current;
@@ -804,7 +920,7 @@ export function ImportConversations({
       )
         return;
       close();
-      onNew(agentId);
+      onNew(newConversationAgentId);
     });
   };
   const step = listing ? 1 : choosing ? 0 : 2;
@@ -954,6 +1070,22 @@ export function ImportConversations({
             )}
           </div>
         )}
+        {!choosing && !listing && manualLoadSupport && (
+          <details className="history-location history-hint">
+            <summary>{S.knownTitle}</summary>
+            <KnownHistoryImport
+              key={JSON.stringify([agentId, lookupCwd, requestRevision])}
+              reader={known}
+              busy={busy}
+              initialCwd={lookupCwd}
+              current={knownCurrent}
+              run={work}
+              release={release}
+              read={readKnown}
+              add={() => known.add(() => threads.refreshIndex())}
+            />
+          </details>
+        )}
         {outcome === "incomplete" && (
           <div className="history-outcome partial" role="alert">
             <WarningCircleIcon size={20} />
@@ -1040,11 +1172,11 @@ export function ImportConversations({
                     ? S.queryHint
                     : S.emptyHint}
               </p>
-              {unsupported && onNew && (
+              {unsupported && onNew && newConversationAgentId && (
                 <button
                   type="button"
                   className="btn btn-ghost"
-                  disabled={busy || !agentId}
+                  disabled={busy}
                   onClick={startNew}
                 >
                   {S.newChat}
@@ -1215,59 +1347,7 @@ export function ImportConversations({
                     ) : preview &&
                       preview.nativeSessionId === previewRow.nativeSessionId ? (
                       preview.replayComplete ? (
-                        <>
-                          <div className="history-continuation" role="note">
-                            <strong>
-                              {historyContinuation(preview).title}
-                            </strong>
-                            <p>{historyContinuation(preview).detail}</p>
-                            <dl>
-                              <dt>{S.currentModel}</dt>
-                              <dd>
-                                {configValueLabel(
-                                  modelConfigOption(
-                                    preview.state.configOptions,
-                                  ),
-                                ) || S.notProvided}
-                              </dd>
-                              <dt>{S.source}</dt>
-                              <dd>
-                                {preview.state.service
-                                  ? S.savedService
-                                  : S.agentSettings}
-                              </dd>
-                              <dt>{S.conversationLocation}</dt>
-                              <dd>
-                                {preview.cwd === defaultCwd
-                                  ? LIBRARY.ordinary
-                                  : preview.cwd}
-                              </dd>
-                            </dl>
-                          </div>
-                          {!hasPreviewContent(preview) && <p>{S.noContent}</p>}
-                          {preview.state.items.map((item) =>
-                            item.kind === "user" || item.kind === "agent" ? (
-                              <div
-                                className={`history-message ${item.kind}`}
-                                key={item.id}
-                              >
-                                <small>
-                                  {item.kind === "user" ? S.you : S.agentRole}
-                                </small>
-                                <MessageContent
-                                  source={item}
-                                  text={item.text}
-                                  attachments={item.attachments}
-                                  contentOrder={
-                                    item.kind === "agent"
-                                      ? item.contentOrder
-                                      : undefined
-                                  }
-                                />
-                              </div>
-                            ) : null,
-                          )}
-                        </>
+                        <>{renderHistoryPreviewBody(preview, defaultCwd)}</>
                       ) : (
                         <p>{S.loadFailed}</p>
                       )
@@ -1317,8 +1397,7 @@ export function ImportConversations({
           type="button"
           className="btn btn-primary"
           disabled={
-            busy ||
-            (choosing ? !agentId || !available.length : !selectedRows.length)
+            busy || !selectedAgent || (!choosing && !selectedRows.length)
           }
           onClick={() => void (choosing ? discover() : add())}
         >

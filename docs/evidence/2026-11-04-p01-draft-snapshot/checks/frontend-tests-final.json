@@ -1,0 +1,10 @@
+{
+  "label": "frontend-tests-final",
+  "command": ["corepack", "pnpm", "test"],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-11-04T11:09:47.797225+00:00",
+  "finishedAt": "2026-11-04T11:10:29.705012+00:00",
+  "durationSeconds": 41.907,
+  "exitCode": 0,
+  "log": "docs/evidence/2026-11-04-p01-draft-snapshot/checks/frontend-tests-final.log"
+}

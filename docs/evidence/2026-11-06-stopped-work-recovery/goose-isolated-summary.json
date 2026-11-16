@@ -1,0 +1,38 @@
+{
+  "testedFarfoldSource": "fc7eb6a68",
+  "officialGooseHandshakeVersion": "1.52.0",
+  "selectedRuns": 1,
+  "selectedTestSeconds": 6.09,
+  "isolatedFarfoldStore": true,
+  "installedApplicationOperatedByThisProbe": false,
+  "onlyNewOwnedOfficialHistoryAllowed": true,
+  "sameOriginalTransportDistinctNewSessions": true,
+  "sameOwnerFreeModelAndAskBeforeConfirmedBeforeEitherPrompt": true,
+  "operatorApprovalGrants": 0,
+  "activeWork": {
+    "beforeCloseLowerBound": 2,
+    "afterCloseStrictlyLower": true,
+    "exactCountsCaptured": false
+  },
+  "a": {
+    "promptInvocations": 1,
+    "stopInvocations": 1,
+    "matchedPromptStopReason": "cancelled",
+    "firstExactApprovalNeverGranted": true,
+    "matchingToolTerminalBeforeCloseCommit": false,
+    "closeInvocations": 1,
+    "exactScopedManagerCloseReceipt": true,
+    "localRouteRemoved": true,
+    "officialReadOnOriginalTransportReturnedExactSessionNotFound": true
+  },
+  "b": {
+    "promptInvocations": 1,
+    "sameOriginalTransportAndManagerRoute": true,
+    "officialReadOnOriginalTransportStillReturnedTools": true,
+    "exactTextMarkerAndSuccessfulTurnEndAfterAClose": true,
+    "toolEventsObserved": 0
+  },
+  "independentOperatingSystemChildOrHandleReleaseProven": false,
+  "temporaryHarnessRemoved": true,
+  "outcome": "passed"
+}

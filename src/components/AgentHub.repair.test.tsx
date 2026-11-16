@@ -280,7 +280,13 @@ it.each(["A", "B"])(
         node.type === "button" &&
         String(node.props.className).includes("agent-hub-start"),
     )!;
-    (start.props.onClick as () => void)();
+    (
+      start.props.onClick as (event: {
+        currentTarget: HTMLButtonElement;
+      }) => void
+    )({
+      currentTarget: { focus: vi.fn() } as unknown as HTMLButtonElement,
+    });
     expect(props.onStart).toHaveBeenCalledWith(
       agentId,
       pending.selection,

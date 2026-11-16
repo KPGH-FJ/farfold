@@ -10,9 +10,42 @@ import {
   written,
   snapshot,
   id,
+  setup,
+  reviewed,
 } from "../runtime/mcp_management.test-support";
+import { MCP_MANAGEMENT_STRINGS as S } from "../runtime/mcp_management_strings";
 import { flush } from "../runtime/extension_inventory.test-support";
 afterEach(() => vi.restoreAllMocks());
+
+it.each(["expired", "retired"] as const)(
+  "keeps the invalidation explanation for a previously ready %s review",
+  async (reason) => {
+    const h = await setup(),
+      review = await reviewed(h);
+    vi.spyOn(skillManagement, "get").mockImplementation(h.controller.get);
+    vi.spyOn(skillManagement, "canConfirm").mockImplementation((owner, value) =>
+      h.controller.canConfirm(owner, value),
+    );
+    vi.spyOn(h.port, "cancel").mockResolvedValue(null);
+    if (reason === "retired") h.controller.retire(h.owner);
+    else
+      vi.spyOn(Date, "now").mockReturnValue(
+        review.observedAtMs + review.validForMs + 1,
+      );
+    expect(h.controller.get(h.owner.agentId).operation?.review).toEqual(review);
+    expect(h.controller.canConfirm(h.owner, review)).toBe(false);
+    const html = renderToStaticMarkup(
+      <SkillChangeReview agentId={h.owner.agentId} owner={h.owner} active />,
+    );
+    expect(html).toContain(S.retired);
+    if (reason === "retired") expect(html).not.toContain(S.disable);
+    else
+      expect(html).toMatch(
+        /<button[^>]*disabled=""[^>]*>确认停用偏好<\/button>/,
+      );
+    expect(h.port.confirm).not.toHaveBeenCalled();
+  },
+);
 
 it("renders the actual shared review with separate saved and reported values and scope consequences", async () => {
   const owner = {

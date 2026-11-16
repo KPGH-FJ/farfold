@@ -1,0 +1,323 @@
+{
+  "kind": "InputLifecycleStageTextEvidenceCapsule",
+  "state": "FROZEN_FOR_ROOT_REVIEW_NOT_COMMITTED_BY_PACKAGER",
+  "preparedAtUtc": "2026-11-05T10:57:39.378917+00:00",
+  "sourceCommit": "844f0697c83c1e60208b142d4c30e0a5f855910d",
+  "parent": "698fe5a9f67fa4cdec2c65b1918af3aeee115944",
+  "ownedSourceFiles": {
+    "src/runtime/session_index_refresh.ts": "e714da1747355c3c5e112fa0b7046de361d3c14fc0c93c0e72e94949e00c921f",
+    "src/runtime/sessions.ts": "b5823005b94bce5ca7bed3831f9d31ade7eb1c8f192f07d79302ad98d359b222",
+    "src/runtime/sessions.index-refresh.test.ts": "f507d6e8ea7c968ffb41e9d44e3e804f9cd08c97d76826228f87938a17749284",
+    "src/runtime/sessions.index-ordering.test.ts": "479c8bb0fc88cfa9396117fb1237481cb05a832bf29bbbb9fc01940f30fbe1ab",
+    "src-tauri/src/acp_client/pump.rs": "ebfe936ad69ea27ae8db43f7ad8305d0c96be7707f5fec8504bbe81fc6e53b5a",
+    "src-tauri/src/acp_client/pump/restore_config.rs": "ffed35ce8799493d69391b03fe0fe998be74e8177edad29ec255db1db7e26e34",
+    "src-tauri/src/acp_client/pump/config_activity_pending_tests.rs": "00b08592d0009f5ff1abf5de0f38fbc0a947f982432f9f2e0417ca4f661d6bdd"
+  },
+  "indexPublicationFix": {
+    "change": "只在本次等待期间当前索引数组仍为原对象时发布本地读取结果；若确有改变，最多额外读取一次本地索引，第二次仍冲突则保留现有索引。等值结果保持原外层数组及条目身份；成员增加后移除的ABA不复活旧项。",
+    "localReadBoundary": "额外读取是已有本地session_index_list，不是Agent请求重发、计时循环、持久账本或新增调度队列。",
+    "earlierProgression": {
+      "initialFiveRed": {
+        "files": 1,
+        "passed": 1,
+        "failed": 4,
+        "skipped": 0
+      },
+      "sealedSixRed": {
+        "files": 1,
+        "passed": 1,
+        "failed": 5,
+        "skipped": 0
+      },
+      "sameTestBytesSixGreen": {
+        "files": 1,
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0
+      },
+      "v1IndependentVerdict": "CHANGES_REQUESTED_STATIC_COUNTEREXAMPLE",
+      "v1FinalAcceptance": false
+    },
+    "finalMembershipAba": {
+      "sealedRed": {
+        "files": 1,
+        "passed": 8,
+        "failed": 2,
+        "skipped": 0
+      },
+      "sameFullTestBytesGreen": {
+        "files": 1,
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0
+      },
+      "fixtureSha256": "479c8bb0fc88cfa9396117fb1237481cb05a832bf29bbbb9fc01940f30fbe1ab",
+      "redNaturalExitCode": 1,
+      "greenNaturalExitCode": 0,
+      "affectedFinal": {
+        "files": 14,
+        "passed": 301,
+        "failed": 0,
+        "skipped": 0
+      },
+      "oldCountsNotAdded": "最终14文件301项包括既有用例；早期214/85/25或10项不另累加。"
+    },
+    "independentReview": {
+      "path": "output/2026-11-05-input-lifecycle-stage/archive-independent-review/reader-v2.json",
+      "sha256": "3dea33a0c80a98beca46b1edfdc089653b3dce937406e87b96a4fbd237bc71e8"
+    },
+    "scope": "真实ThreadsStore/helper与受控Tauri返回；未读取真实用户DB，不称安装版或完整IPC。旧Root96→94计数变化的原因未唯一归属，不能据此声称已修实际计数变化或数据丢失。"
+  },
+  "receivedActivityFirstPollFix": {
+    "change": "未started的配置、模式、关闭、删除请求首次poll前重新检查已收到的工作。Config保留原等待项条件；其余只重复原tools/tasks/compaction工作条件，不给普通close新加待审批限制。Restore、已started、原期限及ForkClose实际回执所有权不变；Cancel/StopTask分支不改。",
+    "finalSealed": {
+      "red": {
+        "receipt": {
+          "path": "output/2026-11-05-input-lifecycle-stage/recovery/red-sealed.json",
+          "sha256": "a71c5a0c0248eaf8873078fc72b23d75e1fe02206bc591c84b9f328327998f18",
+          "bytes": 3483
+        },
+        "cargoNaturalExitCode": 101,
+        "passed": 13,
+        "failed": 9,
+        "ignored": 0,
+        "compilerWarnings": 0,
+        "originalProductionHelperExactBytes": true
+      },
+      "green": {
+        "receipt": {
+          "path": "output/2026-11-05-input-lifecycle-stage/recovery/green-sealed.json",
+          "sha256": "b89325e463db152e56499aec99667522a5bf53ce6876a64b15c7cdd5ad279de0",
+          "bytes": 3488
+        },
+        "cargoNaturalExitCode": 0,
+        "passed": 22,
+        "failed": 0,
+        "ignored": 0,
+        "compilerWarnings": 0
+      },
+      "fixture": {
+        "path": "output/2026-11-05-input-lifecycle-stage/recovery/config_activity_pending_tests.final-sealed.rs",
+        "sha256": "00b08592d0009f5ff1abf5de0f38fbc0a947f982432f9f2e0417ca4f661d6bdd",
+        "bytes": 18106
+      },
+      "sameBytes": true,
+      "actualDifferences": 9
+    },
+    "actualEarlierIterations": [
+      {
+        "phase": "red-initial",
+        "receipt": {
+          "path": "output/2026-11-05-input-lifecycle-stage/recovery/red-initial.json",
+          "sha256": "4945b25a157fa0b73113820bcdeface6f7f2f2546dbf9bba6d169f36cad76b71",
+          "bytes": 3437
+        },
+        "cargoNaturalExitCode": 101,
+        "outerWrapperBoundary": "Initial two ad-hoc Python wrappers returned0 after recording Cargo return code; later owned wrapper propagates Cargo exit code.",
+        "passed": 5,
+        "failed": 2,
+        "ignored": 0,
+        "compilerWarnings": ["variable does not need to be mutable"],
+        "fixtureSha256": "8aa50c8d68e1ebef524a3ddd1e3ffa4cf35f1a9233f7c08649c2501362ceb6ab",
+        "traceRows": 7
+      },
+      {
+        "phase": "green-config",
+        "receipt": {
+          "path": "output/2026-11-05-input-lifecycle-stage/recovery/green-config.json",
+          "sha256": "a5f13c09595081f1935ef21be2fa1dc166687ffe0811232b688bb8abff11d8a9",
+          "bytes": 3506
+        },
+        "cargoNaturalExitCode": 0,
+        "outerWrapperBoundary": "Initial two ad-hoc Python wrappers returned0 after recording Cargo return code; later owned wrapper propagates Cargo exit code.",
+        "passed": 7,
+        "failed": 0,
+        "ignored": 0,
+        "compilerWarnings": ["variable does not need to be mutable"],
+        "fixtureSha256": "8aa50c8d68e1ebef524a3ddd1e3ffa4cf35f1a9233f7c08649c2501362ceb6ab",
+        "traceRows": 7
+      },
+      {
+        "phase": "red-family",
+        "receipt": {
+          "path": "output/2026-11-05-input-lifecycle-stage/recovery/red-family.json",
+          "sha256": "41c1d830cb9fb2c102b805cce32b33d66d8ba740d4497ac72b8f42ad455e680d",
+          "bytes": 3484
+        },
+        "cargoNaturalExitCode": 101,
+        "outerWrapperBoundary": "Initial two ad-hoc Python wrappers returned0 after recording Cargo return code; later owned wrapper propagates Cargo exit code.",
+        "passed": 15,
+        "failed": 7,
+        "ignored": 0,
+        "compilerWarnings": ["variable does not need to be mutable"],
+        "fixtureSha256": "326737838ed8ec72325687223a3968361ffe190f2d68ed399d343a547a301e8d",
+        "traceRows": 22
+      },
+      {
+        "phase": "red-final",
+        "receipt": {
+          "path": "output/2026-11-05-input-lifecycle-stage/recovery/red-final.json",
+          "sha256": "7b11fe31e7bf842f2bab1efa5fe1d8c3e5b713ad044c9f6c077db722f0948e68",
+          "bytes": 3481
+        },
+        "cargoNaturalExitCode": 101,
+        "outerWrapperBoundary": "Initial two ad-hoc Python wrappers returned0 after recording Cargo return code; later owned wrapper propagates Cargo exit code.",
+        "passed": 13,
+        "failed": 9,
+        "ignored": 0,
+        "compilerWarnings": ["unused import: `model_guard::ModelGuard`"],
+        "fixtureSha256": "29fdf32eddda278a98081c79edf38e64e22d0c0a82d84572654e87590e939d7a",
+        "traceRows": 22
+      },
+      {
+        "phase": "red-sealed",
+        "receipt": {
+          "path": "output/2026-11-05-input-lifecycle-stage/recovery/red-sealed.json",
+          "sha256": "a71c5a0c0248eaf8873078fc72b23d75e1fe02206bc591c84b9f328327998f18",
+          "bytes": 3483
+        },
+        "cargoNaturalExitCode": 101,
+        "outerWrapperBoundary": "Initial two ad-hoc Python wrappers returned0 after recording Cargo return code; later owned wrapper propagates Cargo exit code.",
+        "passed": 13,
+        "failed": 9,
+        "ignored": 0,
+        "compilerWarnings": [],
+        "fixtureSha256": "00b08592d0009f5ff1abf5de0f38fbc0a947f982432f9f2e0417ca4f661d6bdd",
+        "traceRows": 22
+      },
+      {
+        "phase": "green-sealed",
+        "receipt": {
+          "path": "output/2026-11-05-input-lifecycle-stage/recovery/green-sealed.json",
+          "sha256": "b89325e463db152e56499aec99667522a5bf53ce6876a64b15c7cdd5ad279de0",
+          "bytes": 3488
+        },
+        "cargoNaturalExitCode": 0,
+        "outerWrapperBoundary": "Initial two ad-hoc Python wrappers returned0 after recording Cargo return code; later owned wrapper propagates Cargo exit code.",
+        "passed": 22,
+        "failed": 0,
+        "ignored": 0,
+        "compilerWarnings": [],
+        "fixtureSha256": "00b08592d0009f5ff1abf5de0f38fbc0a947f982432f9f2e0417ca4f661d6bdd",
+        "traceRows": 22
+      }
+    ],
+    "associated": {
+      "groups": 9,
+      "actualPassed": 66,
+      "ignored": 0,
+      "allNaturalExitCodes": 0,
+      "summary": {
+        "path": "output/2026-11-05-input-lifecycle-stage/recovery/associated-summary.json",
+        "sha256": "3e2c48227fb2e53fcc439f18ea79f53cf7ac7d97296342735b9932c93eed1b3f",
+        "bytes": 14292
+      }
+    },
+    "independentReview": {
+      "path": "output/2026-11-05-input-lifecycle-stage/recovery-independent-review/reader.json",
+      "sha256": "413dcead378e53052d57b1070d3bf98388fe391b6d358f83fe4a1ebb27323a77"
+    },
+    "importantLimits": [
+      "生产next_mutation＋官方SDK内存通道/Routes/Inbox及自有peer实际帧；测试直接按control字段创建Mutation，没有实走SessionControl创建入口或整个pump。",
+      "新Config用例是普通format选项；已保存模型/permission_value收尾依据原消费代码和既有关联，不称新的一次完整存储或官方权限验证。",
+      "caller/deadline新case同时有busy活动，只称组合0写；ForkClose使用past deadline及丢caller/started对照，不能把past字面改说duration0。",
+      "最初unused_mut及后续unused-import编译警告随旧原件保留；最终sealed22 RED/GREEN编译警告为0。初两Python包装器本身退出0但准确记录Cargo101/0，后续包装器传递Cargo退出，不混淆层级。"
+    ]
+  },
+  "freshMacEngineering": {
+    "report": {
+      "path": "output/2026-11-05-input-lifecycle-stage/formal-preparation/engineering-result.json",
+      "sha256": "666a4789533409451fcef2c73f4f812dd8b2f7d7d9ebb8ddcc3b8ef8d9973c54",
+      "bytes": 5539
+    },
+    "actualFreshCommands": 7,
+    "allNaturalExitCodes": 0,
+    "frontend": {
+      "files": 717,
+      "passed": 9594,
+      "failed": 0
+    },
+    "rust": {
+      "passed": 2391,
+      "failed": 0,
+      "ignored": 7,
+      "binaryTests": 0,
+      "docTests": 0
+    },
+    "declaredInputs": {
+      "count": 2400,
+      "productionAndTools": 2396,
+      "explicitAuthorityConfig": 4,
+      "freshFixturesIncluded": 11,
+      "beforeAfterBytesEqual": true,
+      "currentDiskAndFixedCommitBlobsEqual": true,
+      "currentModesMatchGit": true,
+      "modeBoundary": "before/after清单记录SHA；当前0644/Git模式由读者核合，不补造历史mode端点。",
+      "notAllTransitiveEnvironmentDependencies": true
+    },
+    "independentReview": {
+      "path": "output/2026-11-05-input-lifecycle-stage/engineering-independent-review/independent-review.json",
+      "sha256": "23f86c3165b3295f1056d47998fb62e8382d9c9a75462de543007865168a84d0",
+      "bytes": 22956
+    },
+    "gitBinding": {
+      "path": "output/2026-11-05-input-lifecycle-stage/engineering-independent-review/input-git-binding.json",
+      "sha256": "f82fde5fd98276b45ce7fb802289bd21390ec585534902590a35699b9f230b8e",
+      "bytes": 784892
+    },
+    "rawCanonicalBoundary": "原始logs/receipts与规范副本字节一致，副本不是新执行；完整七项是本批fresh，不复用旧Rust。Vite体积warning仍保留。"
+  },
+  "rootNativePositionAttachmentObservation": {
+    "receipt": {
+      "path": "output/2026-11-05-input-lifecycle-stage/native/observation.json",
+      "sha256": "23cbe60ad00037654a2da0b8940a58a45afb7e5839295daab296bd81901b199a",
+      "bytes": 2238
+    },
+    "observer": "Root actual Cua; not a second independent UI witness",
+    "functionalSource": "38e53a304b10d15c5eb10fecb6b55d922a100357",
+    "new844FixesVerifiedByThisUi": false,
+    "ownedPngMetadata": {
+      "path": "output/2026-11-05-input-lifecycle-stage/native/input-image.png",
+      "sha256": "b96ad102de3894bc3a9e3724728df3d76d6f5cbc4cb5c1ad8bae34fbccef192d",
+      "bytes": 1086,
+      "origin": "Exact unchanged project32x32 icon copy"
+    },
+    "pngBytesArchived": false,
+    "actualResults": "1086B自有PNG经native picker作为位置附件加入；正常退出/冷启保留并要求核对，明确保留后显示已核；移除自有引用后第二次正常退出/冷启无该附件。原稿、retained1及原工作位置可见。",
+    "normalSaveExitCount": 2,
+    "realModelPrompts": 0,
+    "oldRequestsResent": 0,
+    "scopeBoundary": "PNG chosen by native file picker is a location attachment. This does not prove inline-image byte snapshot, clipboard import, pending-image queue transfer, Agent image reading, save failure/capacity fault or fullP01. No original user database SQL connection, no Agent connection/check, no original unknown request opened or resent.",
+    "rawAxOrScreenshotPersisted": false,
+    "noPostlaunchWholeDatabaseEqualityClaim": true
+  },
+  "publicationBoundary": {
+    "originalTextFiles": 161,
+    "originalTextBytes": 5567274,
+    "derivedTextMembers": [
+      "README.md",
+      "summary.json",
+      "text-allowlist.json",
+      "safety-check.json"
+    ],
+    "formal844ResultsIncluded": false,
+    "formalFollowup": "本包不包含844正式更新/修后UI；Root后续按实际回执另附派生结果。38e的位置附件观察不能移作844索引/首poll修复安装验收。",
+    "actualInputInvestigationNewBugClaimed": false,
+    "notCompleted": [
+      "完整P01及队列/inline图片/Agent读取",
+      "B3/Q历史恢复根因与完整冷恢复",
+      "官方NEW-24及完整NEW-29",
+      "Windows本批原生验证或安装",
+      "任何一家完整八项或29家验收"
+    ],
+    "excluded": [
+      "原用户DB/metadata备份",
+      "完整用户数据清单及草稿正文",
+      "原始AX/截图/真实UI内容",
+      "PNG及App/Agent/测试程序二进制",
+      "原二进制CI包",
+      "凭据/账号/环境文件"
+    ]
+  },
+  "preservationAndRole": "所有原private文件保留原字节；旧producer summary的review pending状态不改写，由真实final读者另说明。封装作者也是recovery作者，本包自动检查不是自我独立安全审查；两代码读者和工程读者仅按真实范围引用。151原条件、29×8及服务/模型/推理边界保持。"
+}

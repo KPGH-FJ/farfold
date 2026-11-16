@@ -2,6 +2,7 @@ import { open as chooseFile } from "@tauri-apps/plugin-dialog";
 import { fileDelivery, type VerifiedFile } from "../runtime/file_delivery";
 import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
 import { browserSurfaceGuard } from "../runtime/browser_surface";
+import { getAppliedInterfaceScale } from "../runtime/interface_scale_geometry";
 import type {
   BrowserSurfaceGuard,
   BrowserSurfaceRegistration,
@@ -106,6 +107,21 @@ function htmlFailure(error: unknown): string {
   return error === D.checkWaitExpired || error === D.checkBusy
     ? error
     : S.htmlFailed;
+}
+
+function snapshotFailure(error: unknown): string {
+  if (error instanceof BrowserWorkspaceRetiredError) return S.readChanged;
+  // Only this fixed app-authored refusal is safe to explain. Never expose
+  // arbitrary page text, native diagnostics, or an object's string conversion.
+  const message =
+    typeof error === "string"
+      ? error
+      : error instanceof Error && error.name === "Error"
+        ? error.message
+        : undefined;
+  return message === "页面含登录输入，已停止读取；请关闭并改用公开网页"
+    ? S.readProtected
+    : S.readFailed;
 }
 
 function sameBounds(a: BrowserWorkspaceBounds, b: BrowserWorkspaceBounds) {
@@ -561,7 +577,8 @@ export function BrowserWorkspacePage({
 
   // A native picker is not permission to finish opening after a hide or task switch.
   useLayoutEffect(() => {
-    if (!visible && busy.current === "choose") ++sequence.current;
+    // Tab switches retain the page with visible=true and only deactivate it.
+    if ((!active || !visible) && busy.current === "choose") ++sequence.current;
     if (!active || !visible) setClearPrompt(null);
   }, [active, visible]);
 
@@ -791,11 +808,7 @@ export function BrowserWorkspacePage({
       }
     } catch (failure) {
       if (request === sequence.current) {
-        setError(
-          failure instanceof BrowserWorkspaceRetiredError
-            ? S.readChanged
-            : S.readFailed,
-        );
+        setError(snapshotFailure(failure));
       }
     } finally {
       if (request === sequence.current) {
@@ -913,6 +926,7 @@ export function BrowserWorkspacePage({
     let cancelled = false;
     let frame = 0;
     let last: BrowserWorkspaceBounds | null = null;
+    let lastScale: number | null = null;
     let resizing = false;
     // A commit can hide/remove the surface before this passive effect cleans
     // up. Neither its old frame nor an old resize rejection owns that new
@@ -950,13 +964,18 @@ export function BrowserWorkspacePage({
         );
         return;
       }
-      if (!resizing && (!last || !sameBounds(last, bounds))) {
+      const scale = getAppliedInterfaceScale();
+      if (
+        !resizing &&
+        (!last || !sameBounds(last, bounds) || lastScale !== scale)
+      ) {
         resizing = true;
         void owner
           .resize(bounds)
           .then(
             () => {
               last = bounds;
+              lastScale = scale;
             },
             () => {
               if (!isCurrentPresentation()) return;

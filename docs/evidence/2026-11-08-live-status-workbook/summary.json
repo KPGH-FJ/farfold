@@ -1,0 +1,177 @@
+{
+  "kind": "InstalledLiveStatusAndFirstWorksheetRecoveryEvidence",
+  "date": "2026-11-08",
+  "sourceCodeCommit": "880b4d08c1d1c39d78ce0f2cbf8162312c7bd7af",
+  "featureCommits": {
+    "liveProgramStatus": "bb098cd8c27d632323d55d6130095ec14fbd5555",
+    "firstWorksheetRecovery": "880b4d08c1d1c39d78ce0f2cbf8162312c7bd7af"
+  },
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "8483fc5ad0f865243baa2e97ff04c9e7510b96cd"
+  },
+  "scope": "Stage2 Cycle4 common live presentation plus independent Cycle5/P16 first-sheet recovery. Full original requirements remain open.",
+  "implemented": {
+    "liveStatus": [
+      "Only the reviewed official Goose launch opts in to custom notifications. A recognized status_message keeps original method/params and gains common live-only presentation.",
+      "Opening/replay/preview/retired actor receives a null display hint; only the still-published exact owner may display its latest status. Standard raw envelopes cannot impersonate the local wrapper.",
+      "Latest plaintext and local receipt time only: no transcript, metadata persistence, queue/permission/work/compaction change or inferred completion."
+    ],
+    "workbook": [
+      "A validated same-capture sheet directory can arrive before the selected sheet completes or fails. It is not an empty successful preview.",
+      "One preview-only intermediate packet does not complete the read, extend its deadline or release its shared slot. Whole-file/global metadata limits and selected-sheet parsing remain.",
+      "First sheet failure or cancellation keeps alternate choices; loaded grid and version-bound feedback still require an actual successful selected sheet. Refresh replacement rules were not changed."
+    ]
+  },
+  "engineering": {
+    "liveStatusFullSeven": {
+      "path": "output/2026-11-08-program-status/checks/engineering-results.json",
+      "sha256": "ed06ca6a8badc225f2e60a87954eb235164522889757e98adb66e9a214129f5b"
+    },
+    "liveStatusFrozenInputs": {
+      "path": "output/2026-11-08-program-status/checks/engineering-inputs.json",
+      "sha256": "eb01d04944d0852798cf83a30b74357c511515e98c4d0c8c9eb19e65c4171d04"
+    },
+    "liveStatusFrontendFilesPassed": 736,
+    "liveStatusFrontendTestsPassed": 9975,
+    "rustTestsPassed": 2467,
+    "rustExistingIgnored": 7,
+    "liveStatusNativeFocusedPassed": 11,
+    "affectedToolReportNativePassed": 14,
+    "newWorkbookFourPlusNativeReuse": {
+      "path": "output/2026-11-08-workbook-first-failure/checks/engineering-results.json",
+      "sha256": "23acecb3a535b710a14f08e3135b1ad26a5a4f9d45ec49d08e6ef093761cc4b0"
+    },
+    "combinedFrozenInputs": {
+      "path": "output/2026-11-08-workbook-first-failure/checks/engineering-inputs.json",
+      "sha256": "48d9a5f5b837ada6a04d9e07db23e144ff3f0d74450ed1664d9f2984f8f034e6"
+    },
+    "combinedFrontendFilesPassed": 739,
+    "combinedFrontendTestsPassed": 10007,
+    "nativeUnchangedInputCountReused": 844,
+    "nativeChecksRerunForWorksheetOnlyChange": false,
+    "runtimeAndWorkerTargeted": {
+      "path": "output/2026-11-08-workbook-first-failure/runtime-engineering.json",
+      "sha256": "d7698c33902b89d0312dea847ae0cc52034db8ee719b1b4afb584537f61f0e04"
+    },
+    "uiTargeted": {
+      "path": "output/2026-11-08-workbook-first-failure/ui-first-sheet-green.json",
+      "sha256": "d4f4a276b6899610efaecfcd88f4fdc26c8479a37739111f7df348679f9935ef"
+    },
+    "uiTargetedFiles": 3,
+    "uiTargetedTestsPassed": 82,
+    "oldUiRedCasesFailed": 2,
+    "oldParserRedCasesFailed": 1,
+    "parserOtherSheetAlreadyPassedBeforeFix": true,
+    "oldUiFailure": {
+      "path": "output/2026-11-08-workbook-first-failure/ui-first-sheet-red.json",
+      "sha256": "6004cd371e4af3e12faa5f8074a5a456cffae542bb96242872fc7a447ff4eae5"
+    },
+    "oldParserFailureLog": {
+      "path": "output/2026-11-08-workbook-first-failure/runtime-parser-before.log",
+      "sha256": "61df18f2d9b6c81679655da690ce11bbf3aa377fd1a149d4e09b18228805cdf4"
+    },
+    "initialStatusCompileFailure": {
+      "path": "output/2026-11-08-program-status/native-live-status.json",
+      "sha256": "2c20772491a9db40db401365a6e642193722c7b8d746191e177e36f5f71cb386"
+    },
+    "statusNativeAfterImportCorrection": {
+      "path": "output/2026-11-08-program-status/native-live-status-final.json",
+      "sha256": "6592b7b3f6f7f390fd40dc00b52e70442d511b8ef984b31ed0a5b7b496a7096d"
+    },
+    "initialUiAssertionCorrection": {
+      "path": "output/2026-11-08-program-status/ui-focused.json",
+      "sha256": "93d7ffc1bb3d754165bb13d5dd054b94201e3a76653efd45183f78c8060de766"
+    }
+  },
+  "independentReviews": [
+    {
+      "path": "output/2026-11-08-program-status/independent-review.json",
+      "sha256": "c58e257fe3a8c2d0ac39575190a111fd4cf8bfee3e1f013c848e7f5a28af2c79"
+    },
+    {
+      "path": "output/2026-11-08-workbook-first-failure/independent-review.json",
+      "sha256": "b1c3c0854535027d0c3bf21fbe24ad6ee9698f9a83a4bbc7cc7fe706115d5ee4"
+    },
+    {
+      "path": "output/2026-11-08-program-status/formal/candidate-review.json",
+      "sha256": "fd07e629254444244ef2d46bef8ef2831861fb4a238fecc1c7b2660baa1d4f7b"
+    }
+  ],
+  "formalUpdate": {
+    "normalExit": {
+      "path": "output/2026-11-08-program-status/formal/normal-exit.json",
+      "sha256": "9bb46db622a1fb78c74ac332e541699dd7669be0df20a2567077654cba04e177"
+    },
+    "install": {
+      "path": "output/2026-11-08-program-status/formal/install.json",
+      "sha256": "a969eb19aaa2a8c41048c806c51e4da9aa17d48496692b87c8c4e4ce51e523c4"
+    },
+    "dataEntries": 206275,
+    "dataRootsUnchanged": true,
+    "exactDuplicateCleanup": {
+      "path": "output/2026-11-08-program-status/formal/duplicate-cleanup.json",
+      "sha256": "5e90f57eff55c269b0dda0fb9e618aeb361b06e7004d8827bcbc899f929dab6d"
+    },
+    "singleFormalApp": "/Applications/Farfold.app"
+  },
+  "installedWorkbookSample": {
+    "ui": {
+      "path": "output/2026-11-08-workbook-first-failure/installed-ui.json",
+      "sha256": "b3f31d2c4a1e2d6f99eefd997171ad55c4be2620cf0021f0790a43076bee46f3"
+    },
+    "protocolMetadata": {
+      "path": "output/2026-11-08-workbook-first-failure/installed-readonly-protocol.json",
+      "sha256": "39ae1a59900f8c2a7fcd21dbf9185c0802078e1b71151c72ab27459d183d4db1"
+    },
+    "fixture": {
+      "path": "output/2026-11-08-workbook-first-failure/fixtures/first-sheet-recovery-fixture.json",
+      "sha256": "de1e66688206a94bcb3bcf1649ad489d6a43ad1cde01dcd3e7da74d51d1e80b1"
+    },
+    "fixtureCopy": {
+      "path": "output/2026-11-08-workbook-first-failure/fixtures/farfold-owned-first-sheet-recovery.xlsx",
+      "sha256": "9f5f6fbe428123c058ca6642dc598355387206c47df7bb46ef3a17f157af53e7"
+    },
+    "fixtureBytes": 3851,
+    "fixtureUnchangedAfterPreview": true,
+    "firstSheet": "样本",
+    "firstSheetXmlIntentionallyMalformed": true,
+    "firstFailureAndEnabledSelectorObserved": true,
+    "firstFailureFeedbackDisabledObserved": true,
+    "secondSheet": "Good second sheet",
+    "secondSheetA1": "42",
+    "secondSheetB1": "WORKBOOK_SECOND_OK_20261108",
+    "secondSheetRenderedThroughNativeCaptureAndPackagedWorker": true,
+    "protocolOutbound": {
+      "initialize": 1,
+      "session/load": 1,
+      "session/prompt": 0,
+      "session/cancel": 0,
+      "session/set_config_option": 0,
+      "session/new": 0
+    },
+    "protocolErrors": 0
+  },
+  "installedStatusBoundary": {
+    "originalGooseSyntheticTextsModelFreeOffVisible": true,
+    "actualStatusMessageUiSampleObtained": false,
+    "customMessageUsageObservedInUi": true,
+    "messageUsageCurrentlyRetainedAsUnknown": true,
+    "messageUsageDedicatedPresentationComplete": false
+  },
+  "limits": [
+    "Installed XLSX sample covers one malformed selected-sheet XML and explicit alternate-sheet recovery; installed cancellation, timeout, global ZIP failures, all formats and full P16 are not newly accepted.",
+    "Directory global metadata comes from the verified captured package. It does not establish successful sheet content, file refresh success or new version/opinion acceptance.",
+    "Program status is implemented and controlled-test validated; the installed app loaded the original Goose conversation, but no actual status_message display sample was obtained.",
+    "The new official message_usage was observed as an unknown notification. Its dedicated presentation and complete usage/compaction lifecycle remain unfinished.",
+    "Protocol evidence is sanitized frame metadata during this read-only launch; it does not decode every RPC ID or prove provider-internal behavior, all transports or global resource release.",
+    "Original synthetic text and model/off are root GUI observations, not a fresh complete native-history byte comparison.",
+    "No complete P39/P40/P41, ARCH-36/NEW-29, P11, Cycle4/5, Stage2 or 29-Agent acceptance is claimed."
+  ],
+  "p16Complete": false,
+  "stage2Complete": false,
+  "allAgentsAccepted": false
+}

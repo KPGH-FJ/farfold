@@ -9,7 +9,8 @@
   height: auto;
   margin: 0 auto;
 }
-.visual-file-preview canvas[hidden] {
+.visual-file-preview canvas[hidden],
+.visual-file-preview img[hidden] {
   display: none;
 }
 .visual-file-preview p {

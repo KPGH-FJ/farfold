@@ -1,12 +1,18 @@
 import { invoke } from "@tauri-apps/api/core";
-import { sameConfigurationSnapshot, type ConfigCheck } from "./config_check";
-import { configChangeBusy, protectedConfigIds } from "./protected_config";
+import {
+  releaseConfigurationPause,
+  sameConfigurationSnapshot,
+  type ConfigCheck,
+} from "./config_check";
+import { configChangeBusyReason, protectedConfigIds } from "./protected_config";
 import { modelConfigOption } from "./session_projection";
 import type { ThreadState } from "./session_types";
 import { STRINGS } from "./strings";
 import {
   requireSavedConfigurationOption,
   requireRestoredConfigurationValues,
+  ConfigurationConfirmationError,
+  configurationConfirmationRejection,
 } from "./configuration_restore_feedback";
 
 interface RestoreHooks {
@@ -46,12 +52,15 @@ export function configurationRestoreIntent(
     model &&
     protectedConfigIds(state.configOptions).has(model.id)
   ) {
+    const expectedModelValue = state.serviceModelValue;
     if (
-      model.currentValue !== serviceModel ||
-      (Object.hasOwn(saved, model.id) && saved[model.id] !== serviceModel)
+      state.service?.model !== serviceModel ||
+      !expectedModelValue ||
+      model.currentValue !== expectedModelValue ||
+      (Object.hasOwn(saved, model.id) && saved[model.id] !== expectedModelValue)
     )
       throw new Error(STRINGS.repair.configFailed);
-    saved[model.id] = serviceModel;
+    saved[model.id] = expectedModelValue;
   }
   return saved;
 }
@@ -113,49 +122,111 @@ export function captureConfigurationOwner(state: ThreadState) {
     ]) && sameConfigurationSnapshot(service, state.service ?? null);
 }
 
+function cloneConfirmationValue<T>(value: T): T {
+  try {
+    return structuredClone(value);
+  } catch {
+    throw new ConfigurationConfirmationError("prepare-failed");
+  }
+}
+
 /** Strict restore/explicit-choice path. Manual confirmation retains its own semantics. */
 export async function confirmSavedConfiguration(
   state: ThreadState | undefined,
   selection: Record<string, unknown>,
-  hooks: { current(): ThreadState | undefined; emit(): void },
+  hooks: {
+    current(): ThreadState | undefined;
+    emit(): void;
+    settleDelivery(deadline: number): Promise<void>;
+  },
 ): Promise<void> {
-  const failure = () => new Error(STRINGS.repair.confirmConfigFailed);
-  if (!state?.configCheck || configChangeBusy(state)) throw failure();
-  const saved = structuredClone(selection);
+  if (!state?.configCheck)
+    throw new ConfigurationConfirmationError("missing-check");
+  const busyBefore = configChangeBusyReason(state);
+  if (busyBefore)
+    throw new ConfigurationConfirmationError("busy-before", busyBefore);
+  const saved = cloneConfirmationValue(selection);
   const choices = Object.entries(saved);
   const protectedIds = protectedConfigIds(state.configOptions);
-  if (!choices.some(([id]) => protectedIds.has(id))) throw failure();
+  if (!choices.some(([id]) => protectedIds.has(id)))
+    throw new ConfigurationConfirmationError("missing-check");
   requireRestoredConfigurationValues(state.configOptions, choices);
   const initialCheck = state.configCheck;
-  const sameOwner = captureConfigurationOwner(state);
+  let sameOwner: () => boolean;
+  try {
+    sameOwner = captureConfigurationOwner(state);
+  } catch {
+    throw new ConfigurationConfirmationError("prepare-failed");
+  }
   const current = () => hooks.current() === state && sameOwner();
   state.configuring = true;
   state.configError = null;
   hooks.emit();
+  let confirmed = false;
   try {
-    const reply = await invoke<ConfigCheck>("session_confirm_config", {
-      agentId: state.agentId,
-      cwd: state.cwd,
-      sessionId: state.nativeSessionId,
-      displayed: structuredClone(initialCheck.current),
-      restoreSelection: saved,
+    const displayed = cloneConfirmationValue(initialCheck.current);
+    // Match the existing native confirmation operation's 30-second limit;
+    // delivery uses only what remains, rather than starting a second deadline.
+    const deadline = performance.now() + 30_000;
+    let reply: ConfigCheck;
+    try {
+      reply = await invoke<ConfigCheck>("session_confirm_config", {
+        agentId: state.agentId,
+        cwd: state.cwd,
+        sessionId: state.nativeSessionId,
+        displayed,
+        restoreSelection: saved,
+      });
+    } catch (error) {
+      throw configurationConfirmationRejection(error);
+    }
+    if (!current()) throw new ConfigurationConfirmationError("owner-changed");
+    const busyAfter = configChangeBusyReason({ ...state, configuring: false });
+    if (busyAfter)
+      throw new ConfigurationConfirmationError("busy-after", busyAfter);
+    if (reply?.status !== "ready")
+      throw new ConfigurationConfirmationError("reply-not-ready");
+    try {
+      await hooks.settleDelivery(deadline);
+    } catch {
+      throw new ConfigurationConfirmationError("delivery-incomplete");
+    }
+    if (!current()) throw new ConfigurationConfirmationError("owner-changed");
+    const busyDelivered = configChangeBusyReason({
+      ...state,
+      configuring: false,
     });
-    if (
-      !current() ||
-      configChangeBusy({ ...state, configuring: false }) ||
-      reply?.status !== "ready" ||
-      state.configCheck?.status !== "ready" ||
-      !sameConfigurationSnapshot(state.configCheck.current, reply.current)
-    )
-      throw failure();
-    requireRestoredConfigurationValues(state.configOptions, choices);
+    if (busyDelivered)
+      throw new ConfigurationConfirmationError("busy-after", busyDelivered);
+    if (state.configCheck?.status !== "ready")
+      throw new ConfigurationConfirmationError("state-not-ready");
+    if (!sameConfigurationSnapshot(state.configCheck.current, reply.current))
+      throw new ConfigurationConfirmationError("snapshot-changed");
+    try {
+      requireRestoredConfigurationValues(state.configOptions, choices);
+    } catch {
+      throw new ConfigurationConfirmationError("values-changed");
+    }
     // Channel order owns the guard. Never apply a possibly stale ready reply.
-  } catch {
+    confirmed = true;
+  } catch (error) {
     if (current()) state.configError = STRINGS.repair.confirmConfigFailed;
-    throw failure();
+    throw error instanceof ConfigurationConfirmationError
+      ? error
+      : new ConfigurationConfirmationError("invoke-rejected");
   } finally {
     if (current()) {
       state.configuring = false;
+      // A fresh first-message editor has no history or existing work to resume.
+      // Only the completed strict confirmation may release its own empty pause.
+      if (
+        confirmed &&
+        state.identity === "draft" &&
+        !state.resumed &&
+        state.roundItemBase === 0 &&
+        state.items.length === 0
+      )
+        releaseConfigurationPause(state);
       hooks.emit();
     }
   }

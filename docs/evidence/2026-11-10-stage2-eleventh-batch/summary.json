@@ -1,0 +1,74 @@
+{
+  "sourceCodeCommit": "90f15029427054a03378948c707bc233bd40e6a8",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "97986171ae95c384b8a61c577e29ef3867116c6e",
+    "executableSha256": "67752e3eb8ff7b6dec266fa50d1d8d119a1ce01b898c9d50cc68e495c8ab48c6"
+  },
+  "engineering": {
+    "frozenInputs": 2476,
+    "sevenExitCodes": {
+      "format": 0,
+      "typecheck": 0,
+      "frontend": 0,
+      "build": 0,
+      "rust-fmt": 0,
+      "clippy": 0,
+      "rust-test": 0
+    },
+    "frontendFiles": 744,
+    "frontendPassed": 10204,
+    "rustPassed": 2496,
+    "rustExistingIgnored": 7,
+    "initialClippyFailureFixedInFinalCommit": true
+  },
+  "installed": {
+    "onlyFormalApp": true,
+    "independentCandidateExitAndInstalledReview": true,
+    "normallyExitedOwnedChildren": 7,
+    "closedDataEntriesIdentical": 206346,
+    "candidateRemoved": true
+  },
+  "formalObservations": {
+    "gooseReportEntries": 7,
+    "settingsOriginAndConnectionUnknown": true,
+    "readAfterReturnLostFocus": true,
+    "noNewPromptForReport": true,
+    "publicW3cNativeCaptureWidth": 600,
+    "publicW3cNativeCaptureHeight": 420,
+    "publicAndLocalTabIsolation": true,
+    "publicTextReadManually": true,
+    "noScreenshotDeliveryToAgent": true,
+    "crossConversationMatches": 15,
+    "crossConversationExactJumps": 2,
+    "archiveAndRestoreRetainedUnread": true,
+    "notificationColdClickExactConversation": true,
+    "coldNotificationHadSoundButMacOsMutedThisRequest": true,
+    "positiveAudibleSoundPending": true,
+    "cycle7CurrentFormalPositiveReadbacks": 0
+  },
+  "storage": {
+    "removedRebuildableFiles": 487,
+    "availableIncreaseBytes": 2169352192,
+    "preservationIndependentReview": true
+  },
+  "evidenceFiles": {
+    "output/2026-11-09-six-hour-stage2/eleventh-scope-engineering/result.json": "e4e30f45efc62fe2e5fe5564677aa5f9961e2cd192a46fb68267aca2f1f76662",
+    "output/2026-11-09-six-hour-stage2/eleventh-scope-engineering/inputs-after.json": "74fb9d0f3475d020962db7679fb689ac23c1fe226a7591fd63c0d5eeb34669a9",
+    "output/2026-11-09-six-hour-stage2/formal-eleventh/candidate-review.json": "9495bcc86dbf2b13129d7d6284a065d216cb536213d92211a6e3137156c61bdb",
+    "output/2026-11-09-six-hour-stage2/formal-eleventh/install.json": "e09a0ccb727fd56696aa09522e75d3f003fdd950ddb4e68687b192e0bef0f72c",
+    "output/2026-11-09-six-hour-stage2/formal-eleventh/duplicate-cleanup.json": "88a1db576ecb74b227ab943f20b27fdd740bb675b3c98685d3a4d9086044c6cf",
+    "output/2026-11-10-stage2-closeout/p41-installed-configuration-report.json": "4f76a2c85afebb601eb39b745be3fd6541bd414524e6653c95a72d054d669f70",
+    "output/2026-11-10-stage2-closeout/p30-formal-public-tabs.json": "4e7c953ba9837aa659cea74fecf278a632f92f2b05c6f9155a5a3de99a5d696d",
+    "output/2026-11-10-stage2-closeout/p27-w3c-native-pixels/execution.json": "5298be8925b6e22872c01319d613635635523a9915014c10609076860179309f",
+    "output/2026-11-10-stage2-closeout/p32-cross-conversation-observation.json": "5fdc037743d935c0ce9d263872d6f5455f0c9fe50703ba9d1f2695f11e634ad0",
+    "output/2026-11-10-stage2-closeout/p31-archive-restore-observation.json": "f10468425f97d9038a3c37420d33c15b6edad56aa4731bf7dd70620b4612cdbb",
+    "output/2026-11-10-stage2-closeout/p48-cold-click-observation.json": "979f7f8029cc2ba8e245c6e816a6a8c951402a3988acf9bf6b71d4453afa9069",
+    "output/2026-11-10-stage2-closeout/p48-system-sound-observation.json": "881bec534241a01d62ea0edfeeb7f64a7bdd8a68b514203f9981074d7ef18760",
+    "output/2026-11-10-stage2-closeout/wave7-observation.json": "3cc81741f63f9a018e2216cfb6f79b5a432ee3d54b73275e1c726d187268ce4c",
+    "output/2026-11-10-stage2-closeout/cache-recovery/expanded/result.json": "f8654fda5dd99c7d72f905a0f96c3a80a7dcbe3037eeefe14eb0fb67af22e679"
+  }
+}

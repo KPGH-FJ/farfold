@@ -1,0 +1,106 @@
+{
+  "canary": {
+    "devNullOpenReadWrite": {
+      "errno": 0,
+      "ok": true
+    },
+    "devTtyOpenReadOnly": {
+      "errno": 0,
+      "ok": true
+    },
+    "devTtyOpenReadWrite": {
+      "errno": 1,
+      "ok": false
+    },
+    "fd": {
+      "0": {
+        "isatty": true,
+        "tcgetattr": {
+          "errno": 0,
+          "ok": true
+        },
+        "ttyname": {
+          "errno": 0,
+          "ok": true
+        }
+      },
+      "1": {
+        "isatty": true,
+        "tcgetattr": {
+          "errno": 0,
+          "ok": true
+        },
+        "ttyname": {
+          "errno": 0,
+          "ok": true
+        }
+      },
+      "2": {
+        "isatty": true,
+        "tcgetattr": {
+          "errno": 0,
+          "ok": true
+        },
+        "ttyname": {
+          "errno": 0,
+          "ok": true
+        }
+      }
+    },
+    "foregroundGroupIsOwn": true,
+    "foregroundGroupMatches": {
+      "errno": 0,
+      "ok": true
+    },
+    "kernel": {
+      "knownKeychainLookupDenied": true,
+      "networkInboundDeniedWithoutSocket": true,
+      "networkOutboundDeniedWithoutSocket": true,
+      "ordinaryHomeOpenWithoutRead": {
+        "errno": 1,
+        "ok": false
+      },
+      "outsideFixtureOpenWithoutWrite": {
+        "errno": 1,
+        "ok": false
+      },
+      "unlistedInertExec": {
+        "errno": 1,
+        "ok": false
+      }
+    },
+    "ownGroup": true,
+    "ownSession": true,
+    "ownedSlaveOpenReadOnly": {
+      "errno": 0,
+      "ok": true
+    },
+    "ownedSlaveOpenReadWrite": {
+      "errno": 1,
+      "ok": false
+    },
+    "stdoutInheritedWrite": {
+      "errno": 0,
+      "ok": true
+    },
+    "termiosSetSameAttributes": {
+      "errno": 0,
+      "ok": true
+    },
+    "ttynameIsOwnedSlaveFamily": true
+  },
+  "checkedUtc": "2026-11-07T03:31:49.826705+00:00",
+  "controlCharactersSent": 0,
+  "copilotLaunches": 0,
+  "exitCode": 0,
+  "groupGone": true,
+  "kind": "same-policy-controlling-pty-canary",
+  "networkRequests": 0,
+  "originalPolicySourceSha256": "2433899a6f557b4b0ca2d14ead1279302ec90adc83f5fa40a938b497dc34caf5",
+  "policyDelta": "owned scratch path and exact Python-only executable allowlist",
+  "policySha256": "cca523a9ca917bcdb28b6eb5ae2738a4568d78544dc17b481ea44f914a95a75c",
+  "ptyEof": true,
+  "rawPtyOutputPersisted": false,
+  "sourceSha256": "71e69e20c0b6881a8b8915f5d3c7cf7cbb4d2316122f4e098d16709fbc2d4b01",
+  "stdoutMarkerObserved": true
+}

@@ -1,0 +1,101 @@
+{
+  "sourceCodeCommit": "248de08624b93fd02d47d672442afdc973f5e1ad",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "9968dd8c88f4c86b6996f7aa17d81951d6335122",
+    "executableSha256": "4fe6a67b4bb625fe7c5f722b10ea9316fa333b94efb8254efa99f57a3f76e03c"
+  },
+  "engineering": {
+    "inputs": 2475,
+    "checksPassed": 7,
+    "frontendFiles": 744,
+    "frontendPassed": 10193,
+    "rustPassed": 2491,
+    "rustIgnored": 7
+  },
+  "install": {
+    "closedRecordsUnchanged": 206346,
+    "normalQuit": true,
+    "independentReview": true,
+    "mainAndWalUnchangedDuringMetadataRefresh": true
+  },
+  "formalObservations": {
+    "p16-pptx-observation": {
+      "sourceCodeCommit": "39fcd882a4127f52999d25492899e53b79212e07",
+      "firstVersionShown": true,
+      "samePathMalformedRejected": true,
+      "failureUiSaysUnsupportedPresentation": true,
+      "oldTitleAndOpinionPreserved": true,
+      "goodSecondTitleOnlyAdoptedAfterExplicitReread": true,
+      "originalOpinionDigestMatchesFirstVersionInUiAndDb": true,
+      "noNewModelRequests": true,
+      "fixture": {
+        "path": "/private/tmp/farfold-owned-p38.eEpDKuZS/pptx-same-path-recovery-stage2-20261110.pptx",
+        "originalSha256": "7746ae1aceb54fd7ffb08a9599931e96cbf307cfc9bf9d9c99f02489b2216d90",
+        "malformedSha256": "13c520eb46810953f47a8e184a5ad9d5420f1cad79ad34a6f7281d7c5b42728c",
+        "secondSha256": "d2b6500c4ca6de20aa2a8c059ec68e52659a4b1a68ebb61006d90d3389408177"
+      },
+      "supportedPreviewIsPartial": true
+    },
+    "p31-organization-observation": {
+      "sourceCodeCommit": "39fcd882a4127f52999d25492899e53b79212e07",
+      "syntheticGooseSession": "20261107_14",
+      "keyboardRenameCommitted": true,
+      "titleMetadataSearchAndClear": true,
+      "pinAndUnpin": true,
+      "moveToTestGroupAndUndo": true,
+      "archivingBlockedByUnsentContent": true,
+      "archiveOrDeleteExecuted": false,
+      "originalTitleAndFlagsAndMembershipRestoredInDb": true,
+      "unsentOpinionsAndWorktreeUnknownPreserved": true,
+      "modelRequests": 0
+    },
+    "p35-archive-observation": {
+      "sourceCodeCommit": "39fcd882a4127f52999d25492899e53b79212e07",
+      "archiveBytes": 5162,
+      "sha256": "948ba8592e3ab79e39d2fc6dfaa7fc6557e00319e4f8eaceeafc41c7f1b11770",
+      "members": ["conversation.md", "attachments/0001.txt", "manifest.json"],
+      "included": 1,
+      "omitted": 1,
+      "selectedCurrentFileBytes": 156,
+      "currentFileSha256": "908cc386ccdc3819a46584fcbfb1df0945471a91a9f1d5e037614f89570969fc",
+      "matchesCurrentSource": true,
+      "sourceHistoryBytesClaimed": false,
+      "privatePathsExcludedFromManifest": true,
+      "explicitOriginalMessageTextCanContainPath": true,
+      "resumableAgentSession": false,
+      "keyboardFromSelectionToSavePicker": true,
+      "independentReadback": true,
+      "newModelRequests": 0
+    },
+    "cold-report-observation": {
+      "sourceCodeCommit": "248de08624b93fd02d47d672442afdc973f5e1ad",
+      "ownedGooseConversation": "20261109_3",
+      "coldAttachmentRenderedAsText": true,
+      "noStructuredAttachmentCandidatesInCurrentScope": true,
+      "loadedBodySearchMatchedFlattenedText": 1,
+      "extensionLoadReportSucceeded": 7,
+      "currentConversationToolReportCount": 17,
+      "permissionAndCompletenessUnconfirmed": true,
+      "priorUnsentOpinionsRetained": true,
+      "protocolLabels": ["initialize", "session/load", "other"],
+      "protocolLogSha256": "5c6e9a6e096fd6e93c1474f99c5e328604a481c1b342316adf0e499d71cd6fa9",
+      "modelRequests": 0
+    }
+  },
+  "localReceiptSha256": {
+    "output/2026-11-10-stage2-closeout/p16-pptx-observation.json": "c2f9a67947d5a0753cf26e18fffdef0883d639668f3ef03acce15dcbccc9f37c",
+    "output/2026-11-10-stage2-closeout/p31-organization-observation.json": "be1270c784f598d4bb0588d885f8c0fda1af6cb613382475ac47f04a4097aef8",
+    "output/2026-11-10-stage2-closeout/p35-archive-observation.json": "98719d91e65ae242b72a1059efc0aebf626ca34ae09c221c9eba61244e9e78b4",
+    "output/2026-11-10-stage2-closeout/cold-report-observation.json": "66dca87afd52888907c40e142fc920726cd8f08f82575b1eb42a76de3c140aff",
+    "output/2026-11-09-six-hour-stage2/ninth-engineering/result.json": "abfb608f131f1f4b2cbfc06ac18a84e149cd63808e9d96e928a3d33e2057c3c3",
+    "output/2026-11-09-six-hour-stage2/formal-ninth/candidate-review.json": "005670ece7fb79cdf399d41695d46c4702745054b50760868c137358aa909762",
+    "output/2026-11-09-six-hour-stage2/formal-ninth/normal-exit.json": "f57f53acd976ed4bd4db58d8e99b204929b35d11b21598e8028e9788f84b087d",
+    "output/2026-11-09-six-hour-stage2/formal-ninth/closed-metadata-refresh.json": "a6c7000c95043c36fa8606459d99a591c151ac4d25aaface2cd531afbfe929cb",
+    "output/2026-11-09-six-hour-stage2/formal-ninth/install.json": "c9d7d580d218482c451c9ba97c568c6ecbdc3c0d6abbd9775b1a750554cc09b4",
+    "output/2026-11-09-six-hour-stage2/formal-ninth/duplicate-cleanup.json": "88a1db576ecb74b227ab943f20b27fdd740bb675b3c98685d3a4d9086044c6cf"
+  }
+}

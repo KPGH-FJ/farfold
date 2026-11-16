@@ -9,6 +9,9 @@ vi.mock("../runtime/browser_surface", async (original) => ({
   useBrowserSurfaceBarrier: (requested: boolean) => requested,
 }));
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { crc32 } from "node:zlib";
 import {
   Children,
@@ -23,8 +26,19 @@ const hooks = vi.hoisted(() => ({
   slots: [] as { value?: unknown; deps?: unknown[]; cleanup?: () => void }[],
   effects: [] as (() => void)[],
   openDialog: vi.fn(),
+  exitListeners: new Map<string, (event: { payload: number }) => void>(),
 }));
 vi.mock("@tauri-apps/plugin-dialog", () => ({ open: hooks.openDialog }));
+vi.mock("@tauri-apps/api/event", async (original) => ({
+  ...(await original<typeof import("@tauri-apps/api/event")>()),
+  listen: async (
+    name: string,
+    callback: (event: { payload: number }) => void,
+  ) => {
+    hooks.exitListeners.set(name, callback);
+    return () => hooks.exitListeners.delete(name);
+  },
+}));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
   useState: (initial: unknown) => {
@@ -84,7 +98,9 @@ import { projectFilesFixture } from "../runtime/project_files.test-support";
 import { PROJECT_FILES } from "../runtime/project_files";
 import { DocumentComposerAttachments } from "./DocumentComposerAttachments";
 import { draftImagePreview } from "../runtime/draft_images";
+import { IMAGE_BYTES_STRINGS } from "../runtime/image_bytes";
 import { composerDrafts } from "../runtime/drafts";
+import { filePathUri } from "../runtime/file_paths";
 import { threads } from "../runtime/sessions";
 import { freshThreadState } from "../runtime/session_projection";
 import { STRINGS } from "../runtime/strings";
@@ -102,10 +118,10 @@ function nodes(tree: ReactNode): Element[] {
       : [],
   );
 }
-function render() {
+function render(component = Composer) {
   for (let pass = 0; pass < 8; pass++) {
     hooks.cursor = 0;
-    const tree = nodes(Composer(props));
+    const tree = nodes(component(props));
     for (const node of tree) {
       const ref = node.props.ref as { current: unknown } | undefined;
       if (ref) ref.current = { focus: vi.fn(), style: {}, scrollHeight: 48 };
@@ -149,12 +165,12 @@ function deferred<T>() {
   });
   return { promise, resolve };
 }
-function openFilePicker() {
-  const plus = render().find(
+function openFilePicker(component = Composer) {
+  const plus = render(component).find(
     (node) => node.props["aria-label"] === STRINGS.composer.addTitle,
   )!;
   (plus.props.onClick as () => void)();
-  const choose = render().find(
+  const choose = render(component).find(
     (node) =>
       node.type === "button" &&
       nodes(node.props.children as ReactNode).some(
@@ -186,6 +202,7 @@ beforeEach(() => {
   hooks.cursor = 0;
   hooks.slots = [];
   hooks.effects = [];
+  hooks.exitListeners.clear();
   hooks.openDialog.mockReset().mockResolvedValue(null);
   vi.mocked(invoke)
     .mockReset()
@@ -258,6 +275,63 @@ it("uses the existing add-file menu to import an image without changing text or 
   ).toContain(`data:image/png;base64,${PNG_IMAGE_TEST_DATA}`);
 });
 
+it("delivers a pending native image read only to its original draft after switching drafts", async () => {
+  const imageRead = deferred<{ mimeType: string; data: string }>();
+  const original = composerDrafts.read("project-new-a");
+  const other = composerDrafts.read("project-new-b");
+  const uri = "file:///chosen/pending.png";
+  props.imageEnabled = true;
+  vi.stubGlobal("Image", TestImageDecoder);
+  hooks.openDialog.mockResolvedValue(["/chosen/pending.png"]);
+  vi.mocked(invoke).mockImplementation((command) =>
+    command === "draft_attachment_image"
+      ? imageRead.promise
+      : Promise.resolve(null),
+  );
+
+  openFilePicker();
+  try {
+    await vi.waitFor(() =>
+      expect(invoke).toHaveBeenCalledExactlyOnceWith("draft_attachment_image", {
+        uri,
+        read: true,
+      }),
+    );
+    const pending = composerDrafts.read("project-new-a").attachments.at(-1);
+    expect(pending).toMatchObject({ uri, loading: true });
+    expect(pending?.data).toBeUndefined();
+
+    props.draftKey = "project-new-b";
+    props.workContext = { agentId: "other", cwd: "/other" };
+    const area = render().find((node) => node.type === "textarea")!;
+    expect(area.props.value).toBe(other.text);
+    expect(composerDrafts.read("project-new-b")).toBe(other);
+  } finally {
+    imageRead.resolve({ mimeType: "image/png", data: PNG_IMAGE_TEST_DATA });
+  }
+
+  await vi.waitFor(() =>
+    expect(composerDrafts.read("project-new-a").attachments).toEqual([
+      ...original.attachments,
+      expect.objectContaining({
+        kind: "image",
+        uri,
+        data: PNG_IMAGE_TEST_DATA,
+        loading: false,
+      }),
+    ]),
+  );
+  expect(composerDrafts.read("project-new-a").text).toBe(original.text);
+  expect(composerDrafts.read("project-new-b")).toBe(other);
+  expect(invoke).toHaveBeenCalledExactlyOnceWith("draft_attachment_image", {
+    uri,
+    read: true,
+  });
+  expect(threads.open).not.toHaveBeenCalled();
+  expect(threads.send).not.toHaveBeenCalled();
+  expect(props.onSend).not.toHaveBeenCalled();
+});
+
 function tooWidePng() {
   const bytes = Uint8Array.from(atob(PNG_IMAGE_TEST_DATA), (char) =>
     char.charCodeAt(0),
@@ -294,6 +368,57 @@ it.each([
     expect(props.onSend).not.toHaveBeenCalled();
   },
 );
+
+it("clears only the removed image's warning and keeps a valid replacement", async () => {
+  props.imageEnabled = true;
+  const originalText = composerDrafts.read("project-new-a").text;
+  vi.stubGlobal("Image", TestImageDecoder);
+  hooks.openDialog.mockResolvedValue(["/chosen.png", "/too-wide.png"]);
+  let replacement = false;
+  vi.mocked(invoke).mockImplementation(async (command, args) => {
+    expect(command).toBe("draft_attachment_image");
+    return {
+      mimeType: "image/png",
+      data: (args as { uri: string }).uri.endsWith("/too-wide.png")
+        ? tooWidePng()
+        : replacement
+          ? PNG_IMAGE_TEST_DATA
+          : "AAAA",
+    };
+  });
+  const attachments = () => composerDrafts.read("project-new-a").attachments;
+  const notes = () => render().map((node) => node.props.message);
+  const remove = (name: string) => {
+    const item = attachments().find((attachment) => attachment.name === name)!;
+    const component = render().find(
+      (node) => node.type === DocumentComposerAttachments,
+    )!;
+    (component.props.onRemove as (id: string) => void)(item.id);
+  };
+
+  openFilePicker();
+  await vi.waitFor(() =>
+    expect(notes()).toContain(IMAGE_BYTES_STRINGS.tooManyPixels),
+  );
+  remove("too-wide.png");
+  expect(notes()).toContain(IMAGE_BYTES_STRINGS.invalid);
+  expect(notes()).not.toContain(IMAGE_BYTES_STRINGS.tooManyPixels);
+  remove("chosen.png");
+  expect(notes()).not.toContain(IMAGE_BYTES_STRINGS.invalid);
+
+  replacement = true;
+  hooks.openDialog.mockResolvedValue(["/chosen.png"]);
+  openFilePicker();
+  await vi.waitFor(() =>
+    expect(draftImagePreview(attachments().at(-1)!)).toBe(
+      `data:image/png;base64,${PNG_IMAGE_TEST_DATA}`,
+    ),
+  );
+  expect(notes()).not.toContain(IMAGE_BYTES_STRINGS.invalid);
+  expect(composerDrafts.read("project-new-a").text).toBe(originalText);
+  expect(threads.send).not.toHaveBeenCalled();
+  expect(props.onSend).not.toHaveBeenCalled();
+});
 
 it("keeps cancellation and a late chooser response from replacing later draft input", async () => {
   const original = composerDrafts.read("project-new-a");
@@ -731,6 +856,7 @@ it("shows bounded partial results and lets the user refine a display-limited mat
             unreadableDirectories: 1,
             unreadableEntries: 3,
             unsupportedNames: 0,
+            skippedNonlocalDirectories: 1,
           },
         },
       ),
@@ -742,6 +868,7 @@ it("shows bounded partial results and lets the user refine a display-limited mat
   expect(scanText()).toContain(PROJECT_FILES.partial);
   expect(scanText()).toContain(PROJECT_FILES.truncated);
   expect(scanText()).toContain(PROJECT_FILES.matchesLimited);
+  expect(scanText()).toContain("已跳过 1 个非本地挂载目录");
   expect(scanText()).toContain("node_modules");
   typeMention("Keep @file-69");
   expect(options()).toHaveLength(1);
@@ -932,3 +1059,249 @@ it("resets keyboard selection when a rescan returns fewer files", async () => {
   );
   noAgentRequests();
 });
+
+const sqlite = process.getBuiltinModule("node:sqlite") as
+  typeof import("node:sqlite") | undefined;
+
+it.skipIf(!sqlite)(
+  "waits for the original native image and both drafts before exit and restores their ownership",
+  async () => {
+    const { DatabaseSync } = sqlite!;
+    vi.resetModules();
+    vi.mocked(invoke).mockResolvedValue(null);
+    const { Composer: OwnedComposer } = await import("./Composer");
+    const { DraftStartup } = await import("./DraftStartup");
+    const { composerDrafts: ownedDrafts, draftPersistence } =
+      await import("../runtime/drafts");
+    const directory = await mkdtemp(join(tmpdir(), "farfold-p01-native-"));
+    const database = join(directory, "drafts.sqlite3");
+    const imageFile = join(directory, "owned pending.png");
+    const uri = filePathUri(imageFile);
+    const aKey = "session:owned-image-a";
+    const bKey = "session:owned-image-b";
+    const originalA = {
+      text: "A's original draft",
+      attachments: [{ id: "a", kind: "file" as const, name: "a.txt" }],
+    };
+    const originalB = {
+      text: "B's distinct draft",
+      attachments: [{ id: "b", kind: "file" as const, name: "b.txt" }],
+    };
+    const readImage = deferred<void>();
+    const commitDraft = deferred<void>();
+    const imageReadFinished = deferred<void>();
+    const draftWriteFinished = deferred<void>();
+    const expectedA = {
+      ...originalA,
+      attachments: [
+        ...originalA.attachments,
+        {
+          kind: "image",
+          uri,
+          mimeType: "image/png",
+          data: PNG_IMAGE_TEST_DATA,
+        },
+      ],
+    };
+    let deferWrite = false;
+    let imageReadStarted = false;
+    let waitingDraft: unknown;
+    let acknowledged: unknown;
+    let cleanup: (() => void) | undefined;
+    const readSetting = (key: string): unknown => {
+      const reader = new DatabaseSync(database, { readOnly: true });
+      try {
+        const row = reader
+          .prepare("SELECT value FROM settings WHERE key = ?")
+          .get(key);
+        return row ? JSON.parse(row.value as string) : null;
+      } finally {
+        reader.close();
+      }
+    };
+    function mountStartup(component: typeof DraftStartup) {
+      const composerSlots = hooks.slots;
+      hooks.slots = [];
+      hooks.cursor = 0;
+      component({ children: null });
+      for (const effect of hooks.effects.splice(0)) effect();
+      const startupSlots = hooks.slots;
+      hooks.slots = composerSlots;
+      return () => startupSlots.forEach((slot) => slot.cleanup?.());
+    }
+
+    const exits = () =>
+      vi
+        .mocked(invoke)
+        .mock.calls.filter(([name]) => name === "app_exit_after_save");
+    try {
+      await writeFile(imageFile, Buffer.from(PNG_IMAGE_TEST_DATA, "base64"));
+      const writer = new DatabaseSync(database);
+      try {
+        writer.exec(
+          "CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)",
+        );
+      } finally {
+        writer.close();
+      }
+      vi.mocked(invoke).mockImplementation(async (command, payload) => {
+        if (
+          command === "app_drafts_ready" ||
+          command === "host_performance_origin"
+        )
+          return null;
+        if (command === "app_exit_after_save") {
+          acknowledged = readSetting("unsentWork.v1");
+          return null;
+        }
+        if (command === "draft_attachment_image") {
+          expect(payload).toEqual({ uri, read: true });
+          imageReadStarted = true;
+          try {
+            await readImage.promise;
+            return {
+              mimeType: "image/png",
+              data: (await readFile(imageFile)).toString("base64"),
+            };
+          } finally {
+            imageReadFinished.resolve();
+          }
+        }
+        const { key, value } = (payload ?? {}) as {
+          key?: string;
+          value?: unknown;
+        };
+        if (
+          command === "settings_get" &&
+          (key === "unsentWork.v1" || key === "agentSetup.v1")
+        )
+          return readSetting(key);
+        if (command !== "settings_set" || key !== "unsentWork.v1")
+          throw new Error(`Unexpected command: ${command}`);
+        const waits = deferWrite;
+        try {
+          if (waits) {
+            waitingDraft = value;
+            await commitDraft.promise;
+          }
+          const writer = new DatabaseSync(database);
+          try {
+            writer
+              .prepare(
+                "INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)",
+              )
+              .run(key, JSON.stringify(value));
+          } finally {
+            writer.close();
+          }
+        } finally {
+          if (waits) draftWriteFinished.resolve();
+        }
+        return null;
+      });
+      cleanup = mountStartup(DraftStartup);
+      await vi.waitFor(() =>
+        expect(invoke).toHaveBeenCalledWith("app_drafts_ready"),
+      );
+      ownedDrafts.update(aKey, () => originalA);
+      ownedDrafts.update(bKey, () => originalB);
+      await draftPersistence.flush();
+      const beforeImage = readSetting("unsentWork.v1");
+      expect(beforeImage).toMatchObject({
+        composers: { [aKey]: originalA, [bKey]: originalB },
+      });
+
+      props.imageEnabled = true;
+      props.draftKey = aKey;
+      vi.stubGlobal("Image", TestImageDecoder);
+      hooks.openDialog.mockResolvedValue([imageFile]);
+      deferWrite = true;
+      openFilePicker(OwnedComposer);
+      await vi.waitFor(() =>
+        expect(invoke).toHaveBeenCalledWith("draft_attachment_image", {
+          uri,
+          read: true,
+        }),
+      );
+      const pending = ownedDrafts.read(aKey).attachments.at(-1);
+      expect(pending).toMatchObject({ uri, loading: true });
+      expect(pending?.data).toBeUndefined();
+      props.draftKey = bKey;
+      const area = render(OwnedComposer).find(
+        (element) => element.type === "textarea",
+      );
+      expect(area?.props.value).toBe(originalB.text);
+
+      hooks.exitListeners.get("app:save-before-exit")!({ payload: 42 });
+      expect(draftPersistence.snapshot().interactionLocked).toBe(true);
+      await new Promise<void>((resolve) => setImmediate(resolve));
+      expect(exits()).toHaveLength(0);
+      expect(waitingDraft).toBeUndefined();
+      expect(readSetting("unsentWork.v1")).toEqual(beforeImage);
+      readImage.resolve();
+      await vi.waitFor(() =>
+        expect(waitingDraft).toMatchObject({
+          composers: { [aKey]: expectedA, [bKey]: originalB },
+        }),
+      );
+      expect(exits()).toHaveLength(0);
+      expect(readSetting("unsentWork.v1")).toEqual(beforeImage);
+      commitDraft.resolve();
+      await vi.waitFor(() =>
+        expect(exits()).toEqual([["app_exit_after_save", { token: 42 }]]),
+      );
+      expect(acknowledged).toMatchObject({
+        composers: { [aKey]: expectedA, [bKey]: originalB },
+      });
+
+      cleanup();
+      cleanup = undefined;
+      vi.resetModules();
+      const cold = await import("../runtime/drafts");
+      const { DraftStartup: ColdStartup } = await import("./DraftStartup");
+      cleanup = mountStartup(ColdStartup);
+      await vi.waitFor(() =>
+        expect(
+          vi
+            .mocked(invoke)
+            .mock.calls.filter(([name]) => name === "app_drafts_ready"),
+        ).toHaveLength(2),
+      );
+      expect(cold.composerDrafts.read(aKey)).toMatchObject({
+        text: originalA.text,
+        attachments: [
+          ...originalA.attachments,
+          {
+            kind: "image",
+            uri,
+            mimeType: "image/png",
+            data: PNG_IMAGE_TEST_DATA,
+            recovered: true,
+          },
+        ],
+      });
+      expect(cold.composerDrafts.read(bKey)).toMatchObject(originalB);
+      expect(props.onSend).not.toHaveBeenCalled();
+      expect(
+        new Set(vi.mocked(invoke).mock.calls.map(([name]) => name)),
+      ).toEqual(
+        new Set([
+          "host_performance_origin",
+          "settings_get",
+          "settings_set",
+          "draft_attachment_image",
+          "app_drafts_ready",
+          "app_exit_after_save",
+        ]),
+      );
+    } finally {
+      readImage.resolve();
+      commitDraft.resolve();
+      if (imageReadStarted) await imageReadFinished.promise;
+      if (waitingDraft !== undefined) await draftWriteFinished.promise;
+      await draftPersistence.flush().catch(() => undefined);
+      cleanup?.();
+      await rm(directory, { recursive: true });
+    }
+  },
+);

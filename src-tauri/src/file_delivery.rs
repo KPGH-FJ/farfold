@@ -46,6 +46,12 @@ pub(crate) use copy_stream::{CopyOutcome, stream_copy};
 mod selected_location;
 pub(crate) use selected_location::{document_extension, selected_location};
 
+#[cfg(all(test, target_os = "macos"))]
+#[path = "file_delivery/metadata_version_tests.rs"]
+mod metadata_version_tests;
+#[cfg(test)]
+#[path = "file_delivery/published_receipt_tests.rs"]
+mod published_receipt_tests;
 #[cfg(test)]
 #[path = "file_delivery/stream_tests.rs"]
 mod stream_tests;
@@ -135,6 +141,10 @@ pub struct DeliveryReceipt {
     pub sha256: String,
     /// Present only for a byte-for-byte copy of a verified disk file.
     pub source_version: Option<String>,
+    /// The exact published copy, observed before returning success. Never the source.
+    /// Older receipts and text snapshots do not grant saved-copy actions.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub destination_file: Option<VerifiedFile>,
 }
 
 fn absolute(path: &Path) -> Result<(), DeliveryError> {
@@ -281,21 +291,30 @@ fn content_hash(bytes: &[u8]) -> String {
 
 fn version(opened: &OpenedFile, sha256: &str) -> Result<String, DeliveryError> {
     let root = file_access::stamp(&opened.root_handle).map_err(|_| DeliveryError::Unreadable)?;
-    let stamp = &opened.before;
+    Ok(version_from_stamp(&root.identity, &opened.before, sha256))
+}
+
+fn version_from_stamp(
+    root: &file_access::Identity,
+    stamp: &file_access::Stamp,
+    sha256: &str,
+) -> String {
+    // Desktop metadata (for example a picker updating an extended attribute)
+    // changes ctime without revising the file contents. Keep it in per-read
+    // Stamp checks, but not in the durable content version. v1 receipts require
+    // an explicit fresh read; old opinions are retained under their old version.
     let identity = format!(
-        "v1:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}",
-        root.identity.device,
-        root.identity.inode,
+        "v2:{}:{}:{}:{}:{}:{}:{}:{}",
+        root.device,
+        root.inode,
         stamp.identity.device,
         stamp.identity.inode,
         stamp.size,
         stamp.modified.0,
         stamp.modified.1,
-        stamp.changed.0,
-        stamp.changed.1,
         sha256,
     );
-    Ok(content_hash(identity.as_bytes()))
+    content_hash(identity.as_bytes())
 }
 
 fn capture(root: &Path, path: &Path, max: u64) -> Result<(VerifiedFile, Vec<u8>), DeliveryError> {
@@ -471,27 +490,116 @@ fn write_new(
     // A rename/replaced parent racing publication must not yield a receipt
     // claiming the old location. Publication may have happened: report that
     // distinction explicitly and leave the source and completed copy intact.
-    check_destination_parent(requested_parent, &parent, &temporary.directory, true)?;
-    let published_file = file_access::open_relative(&temporary.directory, Path::new(name))
+    published_receipt(
+        &temporary,
+        destination,
+        &parent,
+        DeliveryReceipt {
+            kind,
+            destination: destination_text,
+            size: bytes.len() as u64,
+            sha256: content_hash(bytes),
+            source_version,
+            destination_file: None,
+        },
+    )
+}
+
+/// Turn one exclusively published, owned object into its delivery receipt.
+/// A failed observation leaves the published object intact for inspection.
+fn published_receipt(
+    temporary: &TemporaryExport,
+    destination: &Path,
+    parent: &Path,
+    mut receipt: DeliveryReceipt,
+) -> Result<DeliveryReceipt, DeliveryError> {
+    check_destination_parent(
+        destination
+            .parent()
+            .ok_or(DeliveryError::InvalidDestination)?,
+        parent,
+        &temporary.directory,
+        true,
+    )?;
+    let name = destination
+        .file_name()
+        .ok_or(DeliveryError::InvalidDestination)?;
+    let mut published_file = file_access::open_relative(&temporary.directory, Path::new(name))
         .map_err(|_| DeliveryError::DestinationChanged)?;
     if !file_access::same_object(&temporary.file, &published_file)
         .map_err(|_| DeliveryError::DestinationChanged)?
     {
         return Err(DeliveryError::DestinationChanged);
     }
-    Ok(DeliveryReceipt {
-        kind,
-        destination: destination_text,
-        size: bytes.len() as u64,
-        sha256: content_hash(bytes),
-        source_version,
-    })
+    let before =
+        file_access::stamp(&published_file).map_err(|_| DeliveryError::DestinationChanged)?;
+    if !before.regular || before.size != receipt.size {
+        return Err(DeliveryError::DestinationChanged);
+    }
+    // The owned object can still have been edited in place. Read bounded chunks
+    // from its published name before claiming that the expected bytes arrived.
+    let mut hash = Sha256::new();
+    let mut total = 0u64;
+    let mut buffer = [0u8; stream::BUFFER_BYTES];
+    loop {
+        let length = published_file
+            .read(&mut buffer)
+            .map_err(|_| DeliveryError::DestinationChanged)?;
+        if length == 0 {
+            break;
+        }
+        total += length as u64;
+        if total > receipt.size {
+            return Err(DeliveryError::DestinationChanged);
+        }
+        hash.update(&buffer[..length]);
+    }
+    let sha256: String = hash
+        .finalize()
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect();
+    let reopened = file_access::open_relative(&temporary.directory, Path::new(name))
+        .map_err(|_| DeliveryError::DestinationChanged)?;
+    if total != receipt.size
+        || sha256 != receipt.sha256
+        || file_access::stamp(&published_file).map_err(|_| DeliveryError::DestinationChanged)?
+            != before
+        || file_access::stamp(&reopened).map_err(|_| DeliveryError::DestinationChanged)? != before
+    {
+        return Err(DeliveryError::DestinationChanged);
+    }
+    check_destination_parent(
+        destination
+            .parent()
+            .ok_or(DeliveryError::InvalidDestination)?,
+        parent,
+        &temporary.directory,
+        true,
+    )?;
+    if receipt.kind == DeliveryKind::FileCopy {
+        let root = file_access::stamp(&temporary.directory)
+            .map_err(|_| DeliveryError::DestinationChanged)?;
+        receipt.destination_file = Some(VerifiedFile {
+            root: path_text(parent)?,
+            path: path_text(destination)?,
+            resolved_path: path_text(&parent.join(name))?,
+            name: name
+                .to_str()
+                .ok_or(DeliveryError::InvalidDestination)?
+                .to_owned(),
+            size: total,
+            version: version_from_stamp(&root.identity, &before, &sha256),
+            sha256,
+        });
+    }
+    Ok(receipt)
 }
 
 #[cfg(test)]
 pub fn copy(file: &VerifiedFile, destination: &Path) -> Result<DeliveryReceipt, DeliveryError> {
     match stream_copy(file, destination, || false, || true, |_| {}) {
-        CopyOutcome::Completed(receipt) => Ok(receipt),
+        CopyOutcome::Completed(receipt) => Ok(*receipt),
         CopyOutcome::Failed(error) | CopyOutcome::Unknown(error) => Err(error),
         CopyOutcome::Cancelled => Err(DeliveryError::Unavailable),
         CopyOutcome::CleanupUnknown => Err(DeliveryError::DestinationChanged),

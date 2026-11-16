@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-11-04T17:00:59.625425+00:00",
+  "scope": "Final Mac engineering interval after the Windows-only fixture wait change and P11 factual progress update. No new app build/install or Windows full-success claim.",
+  "source": {
+    "baseGitHeadAtStart": "ba010e452d72aa54c9449050413753eba175e9aa",
+    "alreadyCommittedTestAndCiCandidate": "fc1c297a1e191fa58b3b563874cf7bd8e6d446ba",
+    "workingAuthorityChange": "docs/agent-access-requirements.md P11 progress only; original conditions unchanged",
+    "declaredInputs": 2369,
+    "productionInputs": 2365,
+    "sourceEndpointsEqual": true,
+    "inputMapSha256": "213a378f3bd243b369ad5e6bd5831f8c62d2cb0f7f7f5a18f23467c690fa701a",
+    "changesFromEarlier69SevenInputMap": [
+      ".github/scripts/windows-launch-prerequisites.ps1",
+      ".github/workflows/windows-launch-prerequisites.yml",
+      "docs/agent-access-requirements.md",
+      "src-tauri/src/worktrees/remove_boundary_tests.rs"
+    ],
+    "limits": "Equal endpoints of declared input files, not a continuous filesystem lock or complete transitive environment freeze; source/docs generated outside this set checked separately."
+  },
+  "finalSeven": [
+    {
+      "label": "format-final-retry",
+      "command": ["corepack", "pnpm", "format:check"],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T16:58:57.043482+00:00",
+      "finishedAt": "2026-11-04T16:59:25.022033+00:00",
+      "durationSeconds": 27.98,
+      "exitCode": 0,
+      "log": "checks/format-final-retry.log"
+    },
+    {
+      "label": "typecheck-final",
+      "command": ["corepack", "pnpm", "typecheck"],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T16:55:38.220384+00:00",
+      "finishedAt": "2026-11-04T16:55:47.271045+00:00",
+      "durationSeconds": 9.051,
+      "exitCode": 0,
+      "log": "checks/typecheck-final.log"
+    },
+    {
+      "label": "frontend-final",
+      "command": ["corepack", "pnpm", "test"],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T16:55:47.290862+00:00",
+      "finishedAt": "2026-11-04T16:56:28.728342+00:00",
+      "durationSeconds": 41.437,
+      "exitCode": 0,
+      "log": "checks/frontend-final.log"
+    },
+    {
+      "label": "build-final",
+      "command": ["corepack", "pnpm", "build"],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T16:56:28.747978+00:00",
+      "finishedAt": "2026-11-04T16:56:37.586501+00:00",
+      "durationSeconds": 8.838,
+      "exitCode": 0,
+      "log": "checks/build-final.log"
+    },
+    {
+      "label": "cargo-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T16:55:39.385324+00:00",
+      "finishedAt": "2026-11-04T16:55:40.634328+00:00",
+      "durationSeconds": 1.249,
+      "exitCode": 0,
+      "log": "checks/cargo-fmt.log"
+    },
+    {
+      "label": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T16:55:40.655711+00:00",
+      "finishedAt": "2026-11-04T16:55:40.885541+00:00",
+      "durationSeconds": 0.23,
+      "exitCode": 0,
+      "log": "checks/clippy.log"
+    },
+    {
+      "label": "rust-full",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-11-04T16:55:40.906252+00:00",
+      "finishedAt": "2026-11-04T16:57:40.322269+00:00",
+      "durationSeconds": 119.415,
+      "exitCode": 0,
+      "log": "checks/rust-full.log"
+    }
+  ],
+  "observed": {
+    "frontendFiles": 707,
+    "frontendTestsPassed": 9509,
+    "rustLibraryPassed": 2339,
+    "rustLibraryFailed": 0,
+    "rustLibraryIgnored": 7,
+    "otherRustSummaries": ["bin 0/0/0", "doc 0/0/0"]
+  },
+  "formatFirstFailure": {
+    "label": "format-final",
+    "command": ["corepack", "pnpm", "format:check"],
+    "cwd": "/Users/tw/Desktop/farfold",
+    "startedAt": "2026-11-04T16:58:02.862979+00:00",
+    "finishedAt": "2026-11-04T16:58:32.772722+00:00",
+    "durationSeconds": 29.909,
+    "exitCode": 1,
+    "log": "output/2026-11-04-config-save-retry/engineering-final-boundary/checks/format-final.log",
+    "reason": "Only docs/status.md table spacing after factual update; Prettier fixed that evidence document, then the exact full format command naturally passed. The other six checks were not rerun or borrowed from the earlier69 interval."
+  },
+  "noEarlierCheckResultsReused": true,
+  "archive": {
+    "path": "engineering-final-boundary-originals.zip",
+    "bytes": 294930,
+    "sha256": "139f9747b6aec8f6216f46c3cdba8c66709df97c47113e8f6eb30998410e267c",
+    "entries": 23,
+    "manifest": "archive-manifest.json"
+  },
+  "formalUi": "Fresh CUA phase preflight still reported locked. No normal exit, final parameter binding, candidate build, replacement or installed retry-failure UI verification."
+}

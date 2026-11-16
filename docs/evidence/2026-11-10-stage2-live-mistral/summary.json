@@ -1,0 +1,38 @@
+{
+  "sourceCodeCommit": "97479b1850d931c1eea1135750d61189e12a12a3",
+  "formal": {
+    "model": "mistral-medium-3.5",
+    "reasoning": "high",
+    "usesExistingService": true,
+    "promptCount": 1,
+    "tool": "file_system.search_replace",
+    "readCalls": 1,
+    "editCalls": 1,
+    "nestedReplaceAllTrue": true,
+    "reportedDiffLineNumbersOneBased": [3, 18],
+    "bothDisplayedUnderSameToolRecord": true,
+    "finalFile": {
+      "directoryEntryCount": 1,
+      "beforeBytes": 496,
+      "beforeSha256": "5e36fae4994da0f3fd44f5bd4c3125fa804dd6fe3ff35db7d2822920b655aee1",
+      "afterBytes": 494,
+      "afterSha256": "9a1ed5c619fd673f3f54b68fbaacc5772959fa02e022822c47a2ebbd73884a6d",
+      "changedLinesOneBased": [3, 18],
+      "everyOtherByteMatches": true
+    },
+    "nativeProviderOperationCount": 3,
+    "providerBillingInferred": false
+  },
+  "storage": {
+    "removedBuildObjects": 2287,
+    "verifiedAvailableBytes": 6098817024,
+    "netIncreaseBytes": 5379129344,
+    "protectedPreserved": true,
+    "independentReview": true
+  },
+  "evidenceFiles": {
+    "output/2026-11-10-stage2-closeout/p18-mistral-multi-fragment/formal-one-shot-result.json": "234484b128b2454c297dace61d0d6cfbea579705f9c1a9a458e6351d43da5a37",
+    "output/2026-11-10-stage2-closeout/cache-recovery/third-exact/result.json": "467145e3911ebb966053b85184ac44ee34720e8f157ed873634cfbbd9edb5092",
+    "output/2026-11-10-stage2-closeout/cache-recovery/third-exact/deletion-journal.jsonl": "c3aecff6d83faccfda433e78ad447594cb18c221ecdd6e7a654a0fd2c2416175"
+  }
+}

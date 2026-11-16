@@ -1,0 +1,151 @@
+{
+  "kind": "InstalledMessageUsageAndRetainedWorksheetRefreshEvidence",
+  "date": "2026-11-09",
+  "sourceCodeCommit": "5785c5c2d751b85fa157a886a3f0bf11e0890d60",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "3a63b663550dfba5122ab5184235364c3593c430"
+  },
+  "engineering": {
+    "completeSeven": {
+      "path": "output/2026-11-09-message-usage/engineering-results.json",
+      "sha256": "7141d77b620d3a6d5d32ac4a64adac0127d402f6301cf306156e56c4b2e30a0e"
+    },
+    "finalFrozenInputs": {
+      "path": "output/2026-11-09-message-usage/checks-final/engineering-inputs.json",
+      "sha256": "9b5e0758d2c26a1f0eb3515077a61fa4084ea21602c1d1e3688d7d117ffd7ee0"
+    },
+    "finalInputCount": 2412,
+    "frontendFilesPassed": 742,
+    "frontendTestsPassed": 10066,
+    "rustTestsPassed": 2475,
+    "rustExistingIgnored": 7,
+    "nativeFocusedPassed": 19,
+    "initialFrontendMockFailure": {
+      "path": "output/2026-11-09-message-usage/checks/frontend.log",
+      "sha256": "fdc71dc8e1494b38cd85aab091a5a8d5aa334ac9b3372ada317853f3d3a57baf"
+    },
+    "formatAndTypeScopeReuse": {
+      "path": "output/2026-11-09-message-usage/checks-final/reuse.json",
+      "sha256": "0ad31b52bf885012a626e2e17863d22a74faa2140462deca879309eb522dedd3"
+    },
+    "usageOriginalRed": {
+      "path": "output/2026-11-09-message-usage/runtime-before.log",
+      "sha256": "3f6822602716ff97c86d5d7d3c06b0a23d61d667cf24a1b1d79ca7c637601bdc"
+    },
+    "workbookOriginalRed": {
+      "path": "output/2026-11-08-workbook-refresh/runtime-refresh-before.log",
+      "sha256": "6ca43dddde2eff5c639d3af406b43c0e66e36d13eb1df570db6c7ccf55916ff5"
+    }
+  },
+  "independentReview": {
+    "path": "output/2026-11-09-message-usage/independent-review.json",
+    "sha256": "5c81466880cff8bb02f31a9f0346e39dd3437cab2017397accc632adca6a5d74"
+  },
+  "formal": {
+    "candidateReview": {
+      "path": "output/2026-11-09-message-usage/formal/candidate-review.json",
+      "sha256": "80a70b300136fff0ff00e8a99a30d5eca9a110beba3350abbef93a52bad8a7b7"
+    },
+    "normalExit": {
+      "path": "output/2026-11-09-message-usage/formal/normal-exit.json",
+      "sha256": "d216b5fa68554545171dc5b46c239b7ef17c98fa6d11d288a0edd34aa86a25e6"
+    },
+    "install": {
+      "path": "output/2026-11-09-message-usage/formal/install.json",
+      "sha256": "053ccb0124de56cdc18b16e6327e8640ced45e458c0e03e1be408ae78e347ab8"
+    },
+    "duplicateCleanup": {
+      "path": "output/2026-11-09-message-usage/formal/duplicate-cleanup.json",
+      "sha256": "2dc105bed12599f1fae495ecc134677a595136fd9ffbd1ad7ab46b5d3bcb69c3"
+    },
+    "dataEntries": 206275,
+    "dataRootsUnchanged": true,
+    "singleFormalApp": "/Applications/Farfold.app"
+  },
+  "actualUi": {
+    "path": "output/2026-11-09-message-usage/installed-ui.json",
+    "sha256": "458f81f3e5279625613cba1d9d4696e2209ef769e73f9d953b9b32d57cb5d3e0"
+  },
+  "actualProtocolMetadata": {
+    "path": "output/2026-11-09-message-usage/formal/installed-readonly-protocol.json",
+    "sha256": "ad1a47d0b3b9ed39c1b23e9dcf9434ff33885fc175ae06ba11092d62796c09a6"
+  },
+  "fixture": {
+    "originalA": {
+      "path": "docs/evidence/2026-11-09-usage-workbook-refresh/workbook-A.xlsx",
+      "sha256": "9f5f6fbe428123c058ca6642dc598355387206c47df7bb46ef3a17f157af53e7"
+    },
+    "changedB": {
+      "path": "docs/evidence/2026-11-09-usage-workbook-refresh/workbook-B.xlsx",
+      "sha256": "49b17321804881ea7dc083e23c2ab5a943b5b82dd624a349e05c38d287a8ed95"
+    },
+    "samePathUpdate": {
+      "path": "output/2026-11-09-message-usage/fixtures/same-path-update.json",
+      "sha256": "a021f0f36bda7780156491c6815908010ae149f576354bfc9fa468bccede94cb"
+    },
+    "bytesEach": 3851
+  },
+  "actualFacts": {
+    "messageReport": {
+      "actualReceivedMessageReportVisible": true,
+      "receivedAtLocal": "00:35:52",
+      "inputTokens": 5501,
+      "outputTokens": 71,
+      "totalTokens": 5572,
+      "cacheReadTokens": 4384,
+      "cacheWriteTokens": 0,
+      "cost": 0,
+      "currency": "not_provided",
+      "costSource": "provider_reported",
+      "elapsedMs": 3263,
+      "timeToFirstTokenMs": 2562,
+      "isCompaction": false,
+      "contextReportedSeparately": 5572,
+      "contextCapacityReportedSeparately": 1000000,
+      "cumulativeCostReportedSeparately": "0 USD",
+      "cumulativeTokens": "not_provided",
+      "perMessageNotAddedToCumulative": true,
+      "noMessageAssociationClaim": true,
+      "popoverTopAndScrolledBottomVisuallyInspected": true
+    },
+    "workbook": {
+      "ownedPath": "/private/tmp/farfold-phase1-neutral.tGZU83dX/farfold-owned-first-sheet-recovery.xlsx",
+      "beforeSha256": "9f5f6fbe428123c058ca6642dc598355387206c47df7bb46ef3a17f157af53e7",
+      "afterSha256": "49b17321804881ea7dc083e23c2ab5a943b5b82dd624a349e05c38d287a8ed95",
+      "firstSheetStillMalformed": true,
+      "sheet": "Good second sheet",
+      "beforeA1": "42",
+      "afterA1": "43",
+      "B1": "WORKBOOK_SECOND_OK_20261108",
+      "oldVersionWholeFileOpinion": "测试意见：保留原版本 A1=42（FF_WORKBOOK_A42_20261109）。",
+      "unsentOpinionCreatedInUi": true,
+      "automaticChangedNoticeBeforeRefresh": "文件已变化。当前内容和意见保持不变，重新读取可查看新内容。",
+      "old42VisibleWithChangedNotice": true,
+      "explicitRereadKeptSelectedGoodSheetAndReached43": true,
+      "oldOpinionSeparatedUnder": "其他内容版本的意见",
+      "oldOpinionExactOriginalSha256Visible": true,
+      "noOpinionAddToComposerOrSendClicked": true
+    },
+    "protocolOutbound": {
+      "initialize": 1,
+      "session/load": 1,
+      "session/prompt": 0,
+      "session/cancel": 0,
+      "session/set_config_option": 0,
+      "session/new": 0
+    }
+  },
+  "limits": [
+    "One historical/replayed real message_usage report; no fresh prompt or compaction-terminal test. One unrelated unknown notification remains opaque; no blanket all-notifications-converted claim.",
+    "One own same-path workbook change with malformed first sheet, explicit reread, original good sheet and old whole-file opinion; no native cancellation/timeout/global archive corruption/all Office or full P20/P21 acceptance.",
+    "Model/off are selected UI baseline, not new provider adoption/billing proof; protocol metadata has no fresh model/config calls.",
+    "Cold app opened conversation list and local file was explicitly selected; no automatic panel or file reading-position restoration across app restart claim.",
+    "ARCH-35, P20/P21 whole conditions, ARCH-36/NEW-29, P11, Cycle4/5, Stage2 and29-Agent acceptance remain incomplete."
+  ],
+  "wholeStage2Accepted": false,
+  "whole29AgentsAccepted": false
+}

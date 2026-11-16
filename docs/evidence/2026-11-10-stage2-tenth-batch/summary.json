@@ -1,0 +1,32 @@
+{
+  "sourceCodeCommit": "bedbe6eb1e836b3bbbb8b8a07833a2dd14dedb25",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "aed279a6517bd2a4cd3666e5c1a360622d12c9e8",
+    "executableSha256": "fef8a1173dbbbb67130a3bfdf17736ed5f5d92583705d8fc29b07cddfad326ae"
+  },
+  "engineering": {
+    "frozenInputs": 2475,
+    "checksPassed": 7,
+    "frontendPassed": 10195,
+    "rustPassed": 2493,
+    "rustIgnored": 7
+  },
+  "install": {
+    "recordsUnchanged": 206346,
+    "knownDescendantsNormallyExited": 24,
+    "independentReview": true
+  },
+  "localReceiptSha256": {
+    "output/2026-11-10-stage2-closeout/tenth-ui-observation.json": "fbbddd6d9f87bf2bddc49b75c467f4c2861d947895594ca4c1287f7ec69fa1b9",
+    "output/2026-11-10-stage2-closeout/wave6-observation.json": "ad23581abf3057196c14fd31da122af4ca54a3e0ce26860334e5aa83a68e3072",
+    "output/2026-11-10-stage2-closeout/p45-voiceover-observation.json": "9fdef83cf5db9b9eba5e268564e5b32f283cd3ad8130e45caf77e732d9d94885",
+    "output/2026-11-09-six-hour-stage2/tenth-engineering/result.json": "ece9d01438329d996ac76024f98701918dca32e88a40684cbe5ec96493fcde07",
+    "output/2026-11-09-six-hour-stage2/formal-tenth/install.json": "1693a107ce8a6c2df38f58ec6b4b3abc349393173557c8f5b3f00e8bcd35ca25",
+    "output/2026-11-09-six-hour-stage2/formal-tenth/normal-exit.json": "a15e96b529363ea9069b64d329caa7684452b79cf755e875cdb5bdbf9192bbd8",
+    "output/2026-11-09-six-hour-stage2/formal-tenth/candidate-review.json": "f1cb50116ca508aa3bf7cfbe0d096fb77e6304852cb2bb2985e7d0ac668ab13a"
+  }
+}

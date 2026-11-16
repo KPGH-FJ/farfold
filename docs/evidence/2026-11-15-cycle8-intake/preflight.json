@@ -1,0 +1,298 @@
+{
+  "schemaVersion": 1,
+  "observedAtLocal": "2026-11-15T14:59:51+08:00",
+  "scope": "Cycle 8 five-Agent selection and current read-only preflight; no formal app/Agent launch, model, credential, installation, or history operations.",
+  "previousWaves": {
+    "firstWave": ["goose", "kilo", "github-copilot-cli"],
+    "cycle6": ["pi-acp", "codex-acp", "fast-agent", "mistral-vibe", "opencode"],
+    "cycle7": ["devin", "factory-droid", "codebuddy-code", "dirac", "cline"]
+  },
+  "remainingAfterPreviousWaves": 15,
+  "proposedIntake": ["poolside", "qoder", "qwen-code", "claude-acp", "amp-acp"],
+  "directoryProbeReference": "output/2026-11-15-agent-access-research/official-protocol-latest.json",
+  "directoryProbeRecordedAt": "2026-11-14T12:13:26+00:00",
+  "ampManufacturerCliOnPathOrCheckedCommonPaths": false,
+  "localObservations": [
+    {
+      "catalogId": "amp-acp",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 0,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "0.9.0",
+      "recordedHandshakeAgentInfoVersion": "0.9.0",
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": false,
+        "load": false,
+        "resume": false
+      },
+      "localIndexCount": 0,
+      "datedDirectoryProbe": {
+        "registryVersion": "0.12.0",
+        "initialize": "success",
+        "sessionNew": "success",
+        "list": "success",
+        "loadDeclared": true,
+        "resume": "success"
+      },
+      "historicalOwnedDirectory": {
+        "receipt": "output/2026-10-24-agent-acceptance/amp-owned-ack-formal-c876/preflight.json",
+        "present": false
+      }
+    },
+    {
+      "catalogId": "antigravity-acp",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 0,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "1.2.1",
+      "recordedHandshakeAgentInfoVersion": "1.2.1",
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": true,
+        "load": true,
+        "resume": true
+      },
+      "localIndexCount": 0
+    },
+    {
+      "catalogId": "autohand",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 1,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "0.2.1",
+      "recordedHandshakeAgentInfoVersion": "0.2.1",
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": true,
+        "load": true,
+        "resume": true
+      },
+      "localIndexCount": 0
+    },
+    {
+      "catalogId": "claude-acp",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 1,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "0.81.2",
+      "recordedHandshakeAgentInfoVersion": "0.81.2",
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": true,
+        "load": true,
+        "resume": true
+      },
+      "localIndexCount": 0,
+      "datedDirectoryProbe": {
+        "registryVersion": "0.107.0",
+        "initialize": "success",
+        "sessionNew": "success",
+        "list": "no_response",
+        "loadDeclared": true,
+        "resume": "success"
+      }
+    },
+    {
+      "catalogId": "cursor",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 0,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "2026.09.28",
+      "recordedHandshakeAgentInfoVersion": null,
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": true,
+        "load": true,
+        "resume": false
+      },
+      "localIndexCount": 0
+    },
+    {
+      "catalogId": "dimcode",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 1,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "0.5.16",
+      "recordedHandshakeAgentInfoVersion": "0.5.16",
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": true,
+        "load": true,
+        "resume": true
+      },
+      "localIndexCount": 0
+    },
+    {
+      "catalogId": "gemini",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 1,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "0.62.0",
+      "recordedHandshakeAgentInfoVersion": "0.62.0",
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": false,
+        "load": true,
+        "resume": false
+      },
+      "localIndexCount": 0
+    },
+    {
+      "catalogId": "grok-build",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 0,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "1.0.46",
+      "recordedHandshakeAgentInfoVersion": null,
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": true,
+        "load": true,
+        "resume": true
+      },
+      "localIndexCount": 0
+    },
+    {
+      "catalogId": "kimchi",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 0,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "1.3.0",
+      "recordedHandshakeAgentInfoVersion": "1.3.0",
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": true,
+        "load": true,
+        "resume": false
+      },
+      "localIndexCount": 0
+    },
+    {
+      "catalogId": "minimax-code",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 1,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "0.2.7",
+      "recordedHandshakeAgentInfoVersion": "0.2.7",
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": true,
+        "load": true,
+        "resume": true
+      },
+      "localIndexCount": 0
+    },
+    {
+      "catalogId": "nova",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 1,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "1.1.49",
+      "recordedHandshakeAgentInfoVersion": "1.0.0",
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": true,
+        "load": true,
+        "resume": true
+      },
+      "localIndexCount": 0
+    },
+    {
+      "catalogId": "poolside",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 0,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "1.0.16",
+      "recordedHandshakeAgentInfoVersion": "1.0.16",
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": true,
+        "load": true,
+        "resume": false
+      },
+      "localIndexCount": 0,
+      "datedDirectoryProbe": {
+        "registryVersion": "1.0.16",
+        "initialize": "success",
+        "sessionNew": "auth_required",
+        "list": "success",
+        "loadDeclared": true,
+        "resume": "success"
+      },
+      "historicalOwnedDirectory": {
+        "receipt": "output/2026-10-24-agent-acceptance/poolside-official-history-formal-e954-preparation/case-plan.json",
+        "present": false
+      }
+    },
+    {
+      "catalogId": "qoder",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 1,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "0.2.14",
+      "recordedHandshakeAgentInfoVersion": "0.2.14",
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": true,
+        "load": true,
+        "resume": false
+      },
+      "localIndexCount": 0,
+      "datedDirectoryProbe": {
+        "registryVersion": "1.1.89",
+        "initialize": "success",
+        "sessionNew": "auth_required",
+        "list": "auth_required",
+        "loadDeclared": true,
+        "resume": "auth_required"
+      },
+      "historicalOwnedDirectory": {
+        "receipt": "output/2026-10-24-agent-acceptance/qoder-owned-ack-formal-5b31/preflight.json",
+        "present": false
+      }
+    },
+    {
+      "catalogId": "qwen-code",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 1,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "0.24.7",
+      "recordedHandshakeAgentInfoVersion": "0.25.0",
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": true,
+        "load": true,
+        "resume": true
+      },
+      "localIndexCount": 0,
+      "datedDirectoryProbe": {
+        "registryVersion": "0.27.3",
+        "initialize": "success",
+        "sessionNew": "auth_required",
+        "list": "success",
+        "loadDeclared": true,
+        "resume": "resource_not_found"
+      },
+      "historicalOwnedDirectory": {
+        "receipt": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/case-plan.json",
+        "present": false
+      }
+    },
+    {
+      "catalogId": "sigit",
+      "registeredProgramPresentAndExecutable": true,
+      "absoluteArgumentPathCount": 0,
+      "allAbsoluteArgumentPathsPresent": true,
+      "recordedProgramVersion": "1.5.11",
+      "recordedHandshakeAgentInfoVersion": "1.5.11",
+      "recordedHandshake": true,
+      "recordedSessionCapabilities": {
+        "list": true,
+        "load": true,
+        "resume": false
+      },
+      "localIndexCount": 0
+    }
+  ]
+}

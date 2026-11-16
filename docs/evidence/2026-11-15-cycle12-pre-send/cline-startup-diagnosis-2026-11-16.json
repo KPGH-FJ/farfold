@@ -1,0 +1,120 @@
+{
+  "checkedAt": "2026-11-16T11:16:33+08:00",
+  "registration": "registry:cline",
+  "preUpdate": {
+    "installedCliVersion": "3.0.65",
+    "registeredArgument": "--acp",
+    "registeredNodeVersion": "22.22.3",
+    "registrationEnvironmentOverrides": 0,
+    "platform": "macOS 27.0 (26A425), arm64",
+    "protocol": {
+      "log": "~/Library/Logs/Farfold/protocol-v1-1794732594510-9.jsonl",
+      "sha256": "8d1ef5bcd0a1aed80b7e6325ea19459aab9b5c31da11965b753c885257ae27c1",
+      "bytes": 3196,
+      "initializeSentAt": "2026-11-15T16:49:54.510+08:00",
+      "transportStdinBytes": 486,
+      "transportStdoutBytes": 0,
+      "transportStderrBytes": 0,
+      "startupEndedAfterMilliseconds": 1421,
+      "initializeAccepted": false,
+      "waitExitSignal": 9,
+      "exitedBeforeFarfoldTerminateRequest": true,
+      "farfoldRequestedKill": false,
+      "connectionRemoved": true,
+      "modelPrompts": 0
+    },
+    "operatingSystemReport": {
+      "source": "~/Library/Logs/DiagnosticReports/.cline-2026-11-15-164956.ips",
+      "nativeExecutable": ".cline",
+      "processId": 292,
+      "parentProcessId": 290,
+      "responsibleProcess": "farfold",
+      "reportedExecutablePath": "/Users/USER/Library/Application Support/ai.farfold.desktop/*/.cline",
+      "launchedAt": "2026-11-15T16:49:54.5615+08:00",
+      "reportCaptureAt": "2026-11-15T16:49:55.9918+08:00",
+      "terminationNamespace": "CODESIGNING",
+      "terminationCode": 2,
+      "terminationIndicator": "Invalid Page",
+      "exceptionSignal": "SIGKILL (Code Signature Invalid)"
+    },
+    "packageInspection": {
+      "nodeWrapperPropagatesNativeChildSignal": true,
+      "wrapperSignalPropagationLines": [103, 104, 105],
+      "wrapperCachedNativePathLines": [116, 117, 118, 119],
+      "cachedAndPlatformBinaryShareInode": true,
+      "localReadOnlySignatureVerification": "invalid signature (code or signature have been modified)",
+      "officialProjectMatchingReport": "https://github.com/cline/cline/issues/14590"
+    }
+  },
+  "savedService": {
+    "nativeSettingsSource": "~/.cline/data/settings/providers.json#lastUsedProvider",
+    "nativeProvider": "cline",
+    "farfoldManagedCredentialGrantForRegistration": false,
+    "currentFarfoldSavedSessionsForRegistration": 0,
+    "currentModelAndEffort": "unconfirmed"
+  },
+  "currentlyPublishedRoute": {
+    "cliVersion": "3.0.74",
+    "registryPackage": "cline@3.0.74",
+    "arm64PlatformDependency": "@cline/cli-darwin-arm64@3.0.74",
+    "argument": "--acp",
+    "registryManifest": "https://github.com/agentclientprotocol/registry/blob/main/cline/agent.json",
+    "officialRelease": "https://github.com/cline/cline/releases/tag/cli-v3.0.74",
+    "officialAcpImplementation": "https://github.com/cline/cline/blob/cli-v3.0.74/apps/cli/src/acp/acpAgent.ts#L123-L156",
+    "sessionLoadImplementation": "https://github.com/cline/cline/blob/cli-v3.0.74/apps/cli/src/acp/acpAgent.ts#L235-L306",
+    "sourceDeclaresLoadSession": true,
+    "sourceDeclaresSessionList": false,
+    "coldLoadConfiguration": "resolves current provider and model defaults; original provider and model require separate evidence",
+    "temporaryOfficialArm64Candidate": {
+      "npmMetadata": "https://registry.npmjs.org/@cline%2fcli-darwin-arm64/3.0.74",
+      "npmTarball": "https://registry.npmjs.org/@cline/cli-darwin-arm64/-/cli-darwin-arm64-3.0.74.tgz",
+      "compressedBytes": 38261579,
+      "declaredUnpackedBytes": 119788099,
+      "extractedNativeBinaryBytes": 119787762,
+      "publishedArchiveSha512IntegrityVerified": true,
+      "strictCodeSignatureExitCode": 0,
+      "validOnDisk": true,
+      "satisfiesDesignatedRequirement": true,
+      "versionProbe": {
+        "runs": 1,
+        "arg": "--version",
+        "exitCode": 0,
+        "version": "3.0.74",
+        "stderrBytes": 0
+      },
+      "lifecycleScriptsRun": 0,
+      "modelPrompts": 0,
+      "installedInFarfoldOrGlobally": false,
+      "temporaryDirectoryRemoved": true
+    },
+    "installedFarfoldVerification": "official update, initialize, session/new and model read passed"
+  },
+  "diagnosis": "The official Cline 3.0.65 arm64 executable failed macOS code-signature page validation before initialize returned. The next eligible verification is one normal registry update and Farfold connection check; read known original history only after the new installation accepts initialize.",
+  "formalAfterUpdate": {
+    "installedCliVersion": "3.0.74",
+    "oldInstallationRetained": true,
+    "installedNativeSignatureVerificationExit": 0,
+    "installationCheck": {
+      "trace": "protocol-v1-1794799957254-9.jsonl",
+      "initializeResultAfterMs": 3944
+    },
+    "programCheck": {
+      "trace": "protocol-v1-1794799972629-10.jsonl",
+      "initializeResultAfterMs": 281,
+      "programAvailableInUi": true
+    },
+    "existingSourceAndModelRead": {
+      "trace": "protocol-v1-1794799984233-11.jsonl",
+      "existingSettingsAvailableInUi": true,
+      "modelShown": "Claude Sonnet 5.5",
+      "sessionNewResultAfterMs": 1201,
+      "priorSavedSelectionMismatchShown": true,
+      "newSelectionSaved": false,
+      "modelPrompts": 0
+    },
+    "observedSessionCapabilities": {
+      "loadSession": true,
+      "list": false
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "kind": "KiloDeviceAuthorizationProbeWithNoConfirmedChallenge",
+  "officialVersionSeenInOwnedLog": "7.8.1",
+  "checkedAtUtc": "2026-11-06T22:06:12.915843+00:00",
+  "officialSourceCommit": "4089197545a01bbc9fa8041c1305b3fb0b0f8e66",
+  "ownedCliLoginProcessLaunched": true,
+  "ordinaryHomeAndIsolatedDataRoots": true,
+  "inertPolicyPreflight": {
+    "testedUserPathReadAndWriteDenied": true,
+    "registeredProgramReadable": true,
+    "ownedTempWriteAllowed": true,
+    "realMacOpenerExecDenied": true,
+    "ownArgvDiscardingOpenerAllowed": true
+  },
+  "watchedOwnedLogs": {
+    "bootstrapAndIndexingReportedGitExecutionDenied": true,
+    "deviceEndpointLogged": false,
+    "successLogged": false
+  },
+  "harnessFinalGroupSignalReturnedEperm": true,
+  "laterProcessCheckFoundOnlyTheExistingFormalKilo": true,
+  "isolatedAuthFileAbsent": true,
+  "rawPtyTranscriptRetained": false,
+  "browserActionOrManualApprovalPerformed": false,
+  "verifiedDeviceChallengeOrServerCancellation": false,
+  "inferenceInvokedByHarness": false,
+  "outcome": "device-start-and-cancellation-not-verified",
+  "ownedScratchRemoved": true
+}

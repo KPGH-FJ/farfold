@@ -1,0 +1,134 @@
+{
+  "recordedAt": "2026-11-04T13:55:02.263983+00:00",
+  "installedSource": "aeb0dc491dbea76003aad988d86b675034b837ad",
+  "installedBinarySha256": "ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6",
+  "candidateBuilds": 1,
+  "candidateChecksPassed": 9,
+  "installedChecksPassed": 6,
+  "normalSaveExitObserved": true,
+  "forcedQuit": false,
+  "threeClosedStateManifestsEqual": true,
+  "closedManifest": {
+    "counts": {
+      "appData": {
+        "directory": 19477,
+        "file": 186237,
+        "symlink": 145,
+        "special": 0
+      },
+      "webkit": {
+        "directory": 251,
+        "file": 155,
+        "symlink": 0,
+        "special": 0
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "symlink": 0,
+        "special": 0
+      }
+    },
+    "sha256": "e9280ff99ab22a65a507a633bab233f6b4aacce841aee9f35e09e6014de163ec"
+  },
+  "onlyFormalAppUpdated": true,
+  "appBackupCreated": false,
+  "atomicReplacements": [
+    {
+      "file": "Contents/Info.plist",
+      "oldDevice": 16777234,
+      "oldInode": 1725168,
+      "newDevice": 16777234,
+      "newInode": 1872807
+    },
+    {
+      "file": "Contents/MacOS/farfold",
+      "oldDevice": 16777234,
+      "oldInode": 1725169,
+      "newDevice": 16777234,
+      "newInode": 1872808
+    },
+    {
+      "file": "Contents/Resources/icon.icns",
+      "oldDevice": 16777234,
+      "oldInode": 1725170,
+      "newDevice": 16777234,
+      "newInode": 1872809
+    },
+    {
+      "file": "Contents/Resources/release-manifest.json",
+      "oldDevice": 16777234,
+      "oldInode": 1725171,
+      "newDevice": 16777234,
+      "newInode": 1872810
+    },
+    {
+      "file": "Contents/_CodeSignature/CodeResources",
+      "oldDevice": 16777234,
+      "oldInode": 1725172,
+      "newDevice": 16777234,
+      "newInode": 1872811
+    }
+  ],
+  "installedUi": {
+    "B3SafeInitializeTimeoutDisplayed": true,
+    "B3OriginalFourParagraphsKept": true,
+    "QHistoryRecoveredThisTime": true,
+    "QOriginalDraftAttachmentAnd3FeedbackKept": true,
+    "QVisibleExistingOpenRouterModelAutoOffKept": true,
+    "QAuthIdentityNotVerified": true,
+    "genericOpenTimeoutUiExercised": false,
+    "startupP02AndRetained1Kept": true,
+    "unsentSectionsAfterUiUnchanged": {
+      "composers": 16,
+      "feedback": 11,
+      "queues": 7
+    },
+    "newFarfoldPromptMessages": 0,
+    "oldRequestsResent": 0,
+    "rootCauseFixClaimed": false,
+    "genericOpenClosedUiExercised": false
+  },
+  "privateEvidence": {
+    "install": {
+      "path": "output/2026-11-04-open-failure-formal/formal/install/install-result.json",
+      "sha256": "93e984ad10086abc27bdf834638eecc488e8cf13fc551be04ce53142b3a7bfb1"
+    },
+    "candidate": {
+      "path": "output/2026-11-04-open-failure-formal/formal/independent/review-v2.json",
+      "sha256": "2aea863de9a9b32479ca5d2e469327710f0dfef3c521dc8e5bb5b785562a52c8"
+    },
+    "installedReader": {
+      "path": "output/2026-11-04-open-failure-formal/formal/install/installed-independent-review-private.json",
+      "sha256": "f72c2a661fb6ae4c841c231910ad09393d5dae198125e47100d62be127b3ff9d"
+    },
+    "before": {
+      "path": "output/2026-11-04-open-failure-formal/formal/install/retention-before-receipt.json",
+      "sha256": "111f6ab5c03ec1740407e6121a1c183e6923789691b3582fb6d62b3f64b6eef7"
+    },
+    "preinstall": {
+      "path": "output/2026-11-04-open-failure-formal/formal/install/retention-preinstall-receipt.json",
+      "sha256": "3c8a9f1fddfa01895eeece4e3e41c0f0c7730b44cfb9573f6c3cd161fad65a93"
+    },
+    "after": {
+      "path": "output/2026-11-04-open-failure-formal/formal/install/retention-after-receipt.json",
+      "sha256": "8ab0d462afc7a40838bc66dcd329d88db72cc797798ddbb51d07d7822fe3bff3"
+    },
+    "rootNormalExit": {
+      "path": "output/2026-11-04-open-failure-formal/formal/root-normal-exit-b3-ui.json",
+      "sha256": "1ef3430ba0974effccbf0b3f6990ba9be911d990743e989eed19d520e2c5c46c"
+    },
+    "selectedProductReadback": {
+      "path": "output/2026-11-04-open-failure-formal/formal/ui/selected-product-readback.json",
+      "sha256": "a0f64f87e5b552057a27ef7c05c0cfa0b31dfc61bc10b4b74c949fce84f0cb9d"
+    }
+  },
+  "limits": [
+    "Data equality covers the closed installation interval only, not later startup/UI operations.",
+    "Candidate and installed mechanical readers were run separately by root; they are not an additional independent person or agent review.",
+    "Mechanical candidate/installed readers are separate from actual product UI and official Agent outcomes.",
+    "Internal ad-hoc signing only; no notarization, public distribution or Windows app installation."
+  ],
+  "closedManifestEntries": 206275,
+  "createdAt": "2026-11-04T13:15:24.468974+00:00"
+}

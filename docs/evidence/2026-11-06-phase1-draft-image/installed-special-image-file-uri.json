@@ -1,0 +1,22 @@
+{
+  "installedSource": "6ce829c538da454414bd1158ef0c8bbb521b2a20",
+  "installedBinarySha256": "40758ffc653c3de0e7554730bbbc604590267bc4fd95b988edaaab0014f2da73",
+  "testFileName": "p01%2Fprobe #?+ 中文🙂.png",
+  "selectedPngBytes": 76,
+  "selectedPngSha256": "c4edbe9aa249e69b04eb90bc8d12e63689fda8b200dfcadc61c03217790e4ec7",
+  "differentDecoyPngSha256": "0b7d46713f293806de6712373ec4022e982854588c08f84dc237653c936b7174",
+  "actualMacOSChooserSelectedLiteralName": true,
+  "literalSeparatorTextEncodedAsPercent252F": true,
+  "savedFileUriHasNoAuthorityQueryOrFragment": true,
+  "oneDecodeTargetsExactSelectedFile": true,
+  "twoDecodesWouldTargetDifferentOwnedDecoy": true,
+  "savedPngBytesMatchedSelectedFileAfterSwitch": true,
+  "originalDraftShowedNoFixtureAndOneRetainedDraft": true,
+  "onlyOwnedAttachmentReferenceRemoved": true,
+  "originalAndRetainedDraftsQueuesAndFourTapsPreserved": true,
+  "agentRequests": 0,
+  "limits": [
+    "Warm formal application and actual file chooser only.",
+    "No cold start, database fault, Finder drag, or observed switch while a read is pending."
+  ]
+}

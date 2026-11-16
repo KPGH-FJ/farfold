@@ -4,6 +4,11 @@ const h = vi.hoisted(() => ({
   invoke: vi.fn(),
   finishConfig: null as null | ((value: unknown) => void),
   holdConfig: false,
+  deleteRefusal: null as unknown,
+  finishDelete: null as null | ((receipt: unknown) => void),
+  holdDelete: false,
+  refuseClose: false,
+  closedRoutes: new Set<string>(),
   denied: 0,
 }));
 vi.mock("@tauri-apps/api/core", () => ({
@@ -121,6 +126,11 @@ beforeEach(() => {
   h.holdConfig = false;
   h.finishConfig = null;
   h.denied = 0;
+  h.deleteRefusal = null;
+  h.finishDelete = null;
+  h.holdDelete = false;
+  h.refuseClose = false;
+  h.closedRoutes.clear();
   h.invoke.mockReset().mockImplementation(async (command, args) => {
     if (command === "session_set_config") {
       if (!h.holdConfig) return confirmed();
@@ -130,12 +140,38 @@ beforeEach(() => {
     }
     if (command === "session_open") return replay(args);
     if (command === "agent_work_get") return { cwd: args.cwd };
-    if (command === "settings_get" && args.key === "autoArchiveDays")
+    if (
+      command === "settings_get" &&
+      ["autoArchiveDays", "unsentWork.v1"].includes(args.key)
+    )
       return null;
-    if (command === "session_delete") return "unsupported";
+    if (command === "settings_set" && args.key === "unsentWork.v1") return null;
+    if (command === "session_delete") {
+      if (h.refuseClose) throw { code: "localNotRemoved", agent: null };
+      if (
+        !h.deleteRefusal ||
+        (h.deleteRefusal as { connectionClosed?: boolean }).connectionClosed ===
+          true
+      )
+        h.closedRoutes.add(args.nativeSessionId);
+      if (h.deleteRefusal) throw h.deleteRefusal;
+      if (h.holdDelete)
+        return new Promise((resolve) => {
+          h.finishDelete = resolve;
+        });
+      return "unsupported";
+    }
+    if (command === "session_close") {
+      if (
+        h.refuseClose ||
+        (h.closedRoutes.has(args.sessionId) && !args.allowAlreadyClosed)
+      )
+        throw new Error("raw busy or absent");
+      h.closedRoutes.add(args.sessionId);
+      return null;
+    }
     if (
       [
-        "session_close",
         "session_dismiss",
         "session_index_list",
         "session_touch",
@@ -226,6 +262,104 @@ it("retires an explicitly deleted conversation's permission key", async () => {
   });
   expect(threads.thread(state.key)).toBeUndefined();
   expect(store.permissionRevisions.has(state.key)).toBe(false);
+});
+
+it.each([
+  [
+    { code: "localNotRemoved", agent: "deleted", connectionClosed: true },
+    /未从对话列表移除.*确认已删除/,
+  ],
+  [{ code: "localNotRemoved", agent: null }, /未从对话列表移除.*未向 Agent/],
+  [
+    { code: "localRemovalUnknown", agent: "unconfirmed" },
+    /本机.*尚未确认.*Agent.*尚未确认/,
+  ],
+  [new Error("raw user directory"), /本机.*尚未确认/],
+])(
+  "retains loaded content and exact permission ownership on local deletion refusal %#",
+  async (refusal, message) => {
+    const state = await idleDraft();
+    state.identity = "established";
+    state.connectionLost = false;
+    state.items.push({
+      id: "owned-deletion-fixture",
+      kind: "agent",
+      text: "Retained history",
+      streaming: false,
+      time: 0,
+    });
+    const revision = store.permissionRevisions.get(state.key);
+    h.deleteRefusal = refusal;
+    await expect(
+      threads.delete({
+        id: state.key,
+        agentId: state.agentId,
+        cwd: state.cwd,
+        nativeSessionId: state.nativeSessionId,
+      }),
+    ).rejects.toThrow(message);
+    expect(threads.thread(state.key)).toBe(state);
+    expect(state.items.at(-1)).toMatchObject({ text: "Retained history" });
+    expect(store.permissionRevisions.get(state.key)).toBe(revision);
+    expect(state.connectionLost).toBe(
+      !(
+        refusal &&
+        typeof refusal === "object" &&
+        "agent" in refusal &&
+        refusal.agent === null
+      ),
+    );
+  },
+);
+
+it("retains a deleting owner but fences new sends until the exact local receipt", async () => {
+  const state = await idleDraft();
+  state.identity = "established";
+  h.holdDelete = true;
+  const deleting = threads.delete({ id: state.key, ...state });
+  await vi.waitFor(() => expect(h.finishDelete).toBeTypeOf("function"));
+  try {
+    expect(threads.thread(state.key)).toBe(state);
+    expect(threads.archiveBlockReason(state.key)).toBe("unconfirmed");
+    await expect(
+      threads.send(state.key, [{ type: "text", text: "Must not start" }]),
+    ).resolves.toMatchObject({ status: "rejected" });
+    expect(state.queued).toEqual([]);
+  } finally {
+    h.finishDelete!("unsupported");
+    await deleting;
+  }
+  expect(threads.thread(state.key)).toBeUndefined();
+});
+
+it("retains the loaded view when the combined deletion reports a close refusal", async () => {
+  const state = await idleDraft();
+  state.identity = "established";
+  h.refuseClose = true;
+  await expect(threads.delete({ id: state.key, ...state })).rejects.toThrow(
+    /未从对话列表移除.*未向 Agent/,
+  );
+  expect(
+    h.invoke.mock.calls.some(([command]) => command === "session_delete"),
+  ).toBe(true);
+  expect(threads.thread(state.key)).toBe(state);
+});
+
+it("a second explicit attempt can use exact confirmed absence after a local refusal", async () => {
+  const state = await idleDraft();
+  state.identity = "established";
+  const row = { id: state.key, ...state };
+  h.deleteRefusal = {
+    code: "localNotRemoved",
+    agent: "unsupported",
+    connectionClosed: true,
+  };
+  await expect(threads.delete(row)).rejects.toThrow(/未从对话列表移除/);
+  expect(h.closedRoutes.has(state.nativeSessionId)).toBe(true);
+  expect(threads.thread(state.key)).toBe(state);
+  h.deleteRefusal = null;
+  await expect(threads.delete(row)).resolves.toBe("unsupported");
+  expect(threads.thread(state.key)).toBeUndefined();
 });
 
 it("an active owner's unknown event still invalidates its older setter reply", async () => {

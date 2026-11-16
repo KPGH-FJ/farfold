@@ -60,6 +60,10 @@ function setup() {
   const unlisten = vi.fn();
   const client = {
     status: vi.fn(async () => info()),
+    connect: vi.fn(
+      async (_input: { connectionId: string; operationId: string }) =>
+        info({ revision: 2 }),
+    ),
     allow: vi.fn(async () => info({ phase: "shared", revision: 3 })),
     stop: vi.fn(async () => info({ revision: 4 })),
     respond: vi.fn(async () => info({ phase: "shared", revision: 3 })),
@@ -82,6 +86,136 @@ function setup() {
 }
 
 describe("browser sharing boundary", () => {
+  const connectable = () =>
+    info({
+      phase: "unavailable",
+      connectionAvailable: true,
+      connectionId: "owned-connection",
+    });
+
+  it("connects only on explicit action with the authoritative connection and grants nothing", async () => {
+    const { controller, client } = setup();
+    client.status.mockResolvedValue(connectable());
+    await controller.start();
+    expect(client.connect).not.toHaveBeenCalled();
+    await controller.connect();
+    expect(client.connect).toHaveBeenCalledExactlyOnceWith({
+      ...scope,
+      label: page.label,
+      connectionId: "owned-connection",
+      operationId: expect.stringMatching(/^[0-9a-f-]{36}$/),
+    });
+    expect(controller.getSnapshot()).toMatchObject({
+      info: { phase: "unshared" },
+      pendingRequest: null,
+      notice: "",
+      ready: true,
+    });
+    expect(client.allow).not.toHaveBeenCalled();
+    expect(client.respond).not.toHaveBeenCalled();
+    await controller.connect();
+    expect(client.connect).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
+    { connectionAvailable: false },
+    { connectionId: "" },
+    { phase: "preparing" as const },
+    { phase: "shared" as const },
+    { pendingRequest: pending },
+  ])(
+    "does not connect without the current explicit capability: %o",
+    async (patch) => {
+      const { controller, client } = setup();
+      client.status.mockResolvedValue({ ...connectable(), ...patch });
+      await controller.start();
+      await controller.connect();
+      expect(client.connect).not.toHaveBeenCalled();
+    },
+  );
+
+  it("blocks inactive, missing-page and duplicate in-flight connection attempts", async () => {
+    const { controller, client } = setup();
+    client.status.mockResolvedValue(connectable());
+    await controller.start();
+    controller.setActive(false);
+    await controller.connect();
+    expect(client.connect).not.toHaveBeenCalled();
+    controller.setActive(true);
+    controller.setPage(null);
+    await controller.refresh();
+    await controller.connect();
+    expect(client.connect).not.toHaveBeenCalled();
+    controller.setPage(page);
+    await controller.refresh();
+    const connected = deferred<BrowserShareInfo>();
+    client.connect.mockReturnValueOnce(connected.promise);
+    const first = controller.connect();
+    await controller.connect();
+    expect(client.connect).toHaveBeenCalledTimes(1);
+    connected.resolve(info({ revision: 2 }));
+    await first;
+  });
+
+  it("keeps lost connection responses unknown and only queries on refresh", async () => {
+    const { controller, client } = setup();
+    client.status.mockResolvedValue(connectable());
+    await controller.start();
+    client.connect.mockRejectedValueOnce(new Error("lost response"));
+    await controller.connect();
+    expect(controller.getSnapshot()).toMatchObject({
+      ready: false,
+      queryState: "failed",
+      error: "连接结果尚未确认，请重新检查。",
+    });
+    await controller.connect();
+    client.status.mockResolvedValue(
+      info({ phase: "preparing", connectionAvailable: false }),
+    );
+    await controller.refresh();
+    await controller.connect();
+    expect(client.connect).toHaveBeenCalledTimes(1);
+    expect(client.allow).not.toHaveBeenCalled();
+  });
+
+  it("does not apply the previous page's connection result or grant after switching pages", async () => {
+    const { controller, client } = setup();
+    client.status.mockResolvedValue(connectable());
+    await controller.start();
+    const connected = deferred<BrowserShareInfo>();
+    client.connect.mockReturnValueOnce(connected.promise);
+    const action = controller.connect();
+    const next = { ...page, label: "page-b" };
+    client.status.mockResolvedValue(info({ label: next.label, revision: 4 }));
+    controller.setPage(next);
+    connected.resolve(info({ phase: "shared", revision: 3 }));
+    await action;
+    expect(controller.getSnapshot()).toMatchObject({
+      info: { label: "page-b", phase: "unshared" },
+      notice: "",
+    });
+    expect(client.connect).toHaveBeenCalledTimes(1);
+    expect(client.allow).not.toHaveBeenCalled();
+  });
+
+  it("maps explicit connection to the dedicated native command only", async () => {
+    const invoke = vi.fn(async () => info()) as unknown as Parameters<
+      typeof createBrowserSharingClient
+    >[0];
+    const client = createBrowserSharingClient(invoke, async () => () => {});
+    const input = {
+      ...scope,
+      label: page.label,
+      connectionId: "owned",
+      operationId: "operation",
+    };
+    await client.connect(input);
+    expect(invoke).toHaveBeenCalledExactlyOnceWith(
+      "browser_share_connect",
+      input,
+    );
+  });
+
   it("can stop an approved screenshot without converting it into a page reading grant", async () => {
     const { controller, client } = setup();
     client.status.mockResolvedValue(
@@ -691,6 +825,7 @@ describe("one-time browser control consent", () => {
         sharing: {
           ...controller.getSnapshot(),
           refresh: controller.refresh,
+          connect: controller.connect,
           allow: controller.allow,
           stop: controller.stop,
           respond: controller.respond,

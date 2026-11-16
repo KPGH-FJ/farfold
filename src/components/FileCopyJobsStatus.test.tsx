@@ -120,3 +120,69 @@ it("exact-ID absence remains an explicitly unknown result and has no restart or 
   (button(S.closeUnknown)!.props.onClick as () => void)();
   expect(h.dismiss).toHaveBeenCalledWith(1, true);
 });
+
+it("offers destination actions only for a complete published destination receipt, keeping legacy success visible", () => {
+  const original = { ...file, sha256: "a".repeat(64) };
+  const completed: FileCopyJob = {
+    ...base,
+    file: original,
+    status: {
+      ...base.status!,
+      file: original,
+      state: "completed",
+      settled: true,
+      bytesCopied: 6,
+      receipt: {
+        kind: "fileCopy",
+        destination: base.destination,
+        size: 6,
+        sha256: original.sha256,
+        sourceVersion: original.version,
+        destinationFile: {
+          ...original,
+          root: "/out",
+          path: base.destination,
+          resolvedPath: base.destination,
+          version: "copy-version",
+        },
+      },
+    },
+  };
+  h.jobs = [completed];
+  const html = renderToStaticMarkup(<FileCopyJobsStatus />);
+  expect(html).toContain(S.openCopy);
+  expect(html).toContain(S.revealCopy);
+  expect(html).toContain(S.states.completed);
+  const inactive = renderToStaticMarkup(<FileCopyJobsStatus active={false} />);
+  expect(inactive.match(/<button[^>]*>打开副本<\/button>/)?.[0]).toContain(
+    'disabled=""',
+  );
+  for (const next of [
+    { ...completed, absence: true as const },
+    { ...completed, phase: "uncertain" as const },
+    { ...completed, status: { ...completed.status!, settled: false } },
+    {
+      ...completed,
+      status: {
+        ...completed.status!,
+        state: "failed" as const,
+        receipt: undefined,
+      },
+    },
+    {
+      ...completed,
+      status: {
+        ...completed.status!,
+        receipt: { ...completed.status!.receipt!, destinationFile: undefined },
+      },
+    },
+  ]) {
+    h.jobs = [next];
+    const result = renderToStaticMarkup(<FileCopyJobsStatus />);
+    expect(result).not.toContain(S.openCopy);
+    expect(result).not.toContain(S.revealCopy);
+  }
+  expect(renderToStaticMarkup(<FileCopyJobsStatus />)).toContain(
+    S.states.completed,
+  );
+});

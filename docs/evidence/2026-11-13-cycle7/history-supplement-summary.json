@@ -1,0 +1,140 @@
+{
+  "updatedAtUtc": "2026-11-13T06:58:42.890720+00:00",
+  "state": "installed ee4c05b8b; fast history repair and OpenCode Xiaomi MiMo live screenshot/Farfold restart verified in UI; cycles6/7 remain incomplete",
+  "changes": [
+    "Authorized same-install official fast-agent export supplements original cold-open tools and images before the original history marker. Exact ownership and full visible text anchors, no live effects or persisted transcript.",
+    "Theme save failures retain keyboard focus and Enter retry; theme changes only after saved success."
+  ],
+  "engineering": {
+    "productInputs": 2589,
+    "allSevenPassed": true,
+    "frontendFiles": 774,
+    "frontendPassed": 10770,
+    "rustPassed": 2764,
+    "rustIgnored": 11,
+    "receipt": {
+      "path": "output/2026-11-13-cycle7/engineering-history-supplement/result.json",
+      "sha256": "9651cd576d7b8581eb64248cdfe74c100a0f00f766d2791b9f7173cdc3eaf665"
+    },
+    "independentReview": {
+      "path": "output/2026-11-13-cycle7/engineering-history-supplement/independent-result-review.json",
+      "sha256": "528ddd4dc77e0a4a496b21cd93c096161ebda40436e2cfe1753036ba36a649ec"
+    }
+  },
+  "reviews": [
+    {
+      "path": "output/2026-11-13-cycle7/history-supplement/backend-independent-review.json",
+      "sha256": "a8b81591349ce5498543c94e5d9e6e89d31cf08c2e8e1c1f6a80954914b5f98a"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/history-supplement/frontend-review/independent-review.json",
+      "sha256": "cceae46edb59ea5a7126c025ee5308908ac0137fae76d57d74b378c3a134e213"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/history-supplement/root-final-review.json",
+      "sha256": "62f6575815965a835f814df603082bf39dded44af7deb319090c2959ebbb274e"
+    }
+  ],
+  "controlled": {
+    "historyBrowserChecksPerEngine": 18,
+    "historyBrowser": {
+      "path": "output/2026-11-13-cycle7/history-supplement/frontend-browser/summary.json",
+      "sha256": "260020bd1e8cb5a823cedbd2481d7cec3a0bbde4781b5387e37d16efce7e4ba8"
+    },
+    "themeChecksPerEngine": 15,
+    "theme": {
+      "path": "output/2026-11-13-cycle7/a11y-followup/summary.json",
+      "sha256": "45d2793377b51419ed9f5db5eb83b4a0a2a9c4f1db14c5b68968e6636ef17dbb"
+    }
+  },
+  "formalE32Followup": {
+    "observations": {
+      "path": "output/2026-11-13-cycle7/notification-followup/root-ui-observations.json",
+      "sha256": "492a4d764095ac8961d633f212fb66c92f9bef237fb1f453f110f8e1bd6df849"
+    },
+    "voiceOver": "17 and7 item report UI/focus observed; listener second read reported navigation labels, exact result sentence not confirmed. Original system preferences restored.",
+    "notification": "One original Goose prompt ended with four invalid-name tool errors before webpage dispatch or approval. No retry by Farfold/tester, original3 file opinions retained; notification preferences restored off.",
+    "gooseNative": "Exact current call/error source audit retained under goose-page-followup; not a finding that current webpage tool was unadvertised."
+  },
+  "remaining": [
+    "Original fast bash stop failure",
+    "P47 notification click/sound/deduplication and other required types; one needs-response actual delivery confirmed",
+    "P45 precise result speech and remaining original paths",
+    "Other prior cycle6/7 conditions remain in docs/status.md; no 29x8 scope reduction"
+  ],
+  "limits": [
+    "Official export and ACP have no shared atomic revision",
+    "Any actual ACP tools remain authoritative; ambiguous text segmentation or unsafe/unsupported content keeps readable original body with partial notice",
+    "Private temporary export is cleaned after owned process exit; RLIMIT_FSIZE is file size cap, not process-memory cap"
+  ],
+  "formalFast": {
+    "sourceCommit": "ee4c05b8b533699991b4cd0f302abc80e6e0a981",
+    "install": {
+      "path": "output/2026-11-13-cycle7/formal-fast-supplement/install.json",
+      "sha256": "3da2c20ea723034ed216452a5cf8440b06cf247256165b983a6d1abaff472af0"
+    },
+    "observations": {
+      "path": "output/2026-11-13-cycle7/formal-fast-supplement/root-ui-observations.json",
+      "sha256": "8f06ecef4ed66cf6c66fa7dff1ba0e211996f6ae5e79a9cd989f225709fe492d"
+    },
+    "protectionReview": {
+      "path": "output/2026-11-13-cycle7/formal-fast-supplement/post-install-review.json",
+      "sha256": "89a31ba883821053818ed2e96f4782c027c84d5a186a5d0fcb5e260dca651f2e"
+    },
+    "result": "Original text, one historical tool step, original final answer and explicitly expanded W3C screenshot visible after ordinary cold open; zero new sends.",
+    "protected": "206443 install entries unchanged. Original4 messages,2 previous messages, one tool pair,90330-byte PNG, continuation/configuration,12 session rows,53 settings,380 dismissed rows,drafts,selections retained.",
+    "differences": "Native session last_activity changed only. One Farfold fast-agent row changed; exact columns/cause unavailable because collector removed its derived after copy. No whole-store-unchanged claim.",
+    "limits": "UI image seen; rendered UI bytes not separately exported. Existing alias/config retains selected High provenance; no new explicit wire effort observation. Theme save-failure fix installed but failure reproduction remains controlled-browser evidence."
+  },
+  "formalCurrentNameNotification": {
+    "observations": {
+      "path": "output/2026-11-13-cycle7/notification-followup/current-name-ui.json",
+      "sha256": "cbda07223d18fc702da739c3f1195bb488e0a0e23202631e5fe0c9c67a555e82"
+    },
+    "result": "21 current tools reported with four new page names. One new prompt using exact reported full name reached webpage permission. User confirmed actual needs-response system notification.",
+    "ending": "Exactly one current-name tool call with {}, same-call MCP isError=true and exact timeout text: waiting for page-read confirmation timed out. No cancellation success or page title/URL returned. Original39 message ids, roles and full content hashes preserved.",
+    "limits": "Click, sound, deduplication and other notification types remain unverified. This later report does not recover earlier failure-time tool list.",
+    "native": {
+      "path": "output/2026-11-13-cycle7/goose-page-followup/current-name/summary.json",
+      "sha256": "96a779fce182b095140e11566c8dc5257f582cecd63823020ecf644a493f1ed7"
+    }
+  },
+  "fastStopReadOnlyReview": {
+    "path": "output/2026-11-13-cycle7/fast-stop-review/source-review.json",
+    "sha256": "e7323917bb82fd3b0ed794565f53c22a7b4bf7ce505742bd388cd6f58c88cb88",
+    "result": "Original October6 independent bash failure remains unclosed; not a new webpage failure and no current formal replay. Current official source suggests prompt cancellation does not directly cancel separately managed command task; not proof of current runtime result. No new program/model probe or guessed descendant termination."
+  },
+  "opencodeFailureFollowup": {
+    "path": "output/2026-11-13-cycle7/opencode/diagnostic-followup.json",
+    "sha256": "798f561284680fd4a516d82cf45a85f437b43298c58c9ee169044e604d80c06e",
+    "result": "Same exact-SID unchanged original official log reports AI_APICallError: Free usage limit reached for build at2026-11-12T17:41:38.473Z; title AI_RetryError with3 internal attempts at17:41:44.501Z. Both precede user cancel at17:44:42.755Z. One original user ACP send; no new request.",
+    "evidenceCorrection": "Original diagnostic whitelist regex missed both AI_-prefixed errors. Old artifacts preserved.",
+    "limits": "No HTTP status or reset time; current quota not probed. Original raw ACP error response/update is missing, so no finding that Farfold received and dropped these errors. Original Big Pickle/build selection was retained at that observation, before later user-authorized changes."
+  },
+  "opencodeFreeModelSwitch": {
+    "result": "User authorized another free model. Saved opencode/glm-5.3-flash-free with returned low; one new user send reached the selected official model but also returned Free usage limit reached. Stopped without visible reply/tool and retained that selection at the time.",
+    "evidence": {
+      "path": "output/2026-11-13-cycle7/opencode/free-model-followup/final-summary.json",
+      "sha256": "2f29d575dbb8d5a2cc97e004b176d890b3be8c120d0194970b7cc71018b6c29b"
+    },
+    "limits": "Does not prove all free models unavailable or disclose reset time; subsequently superseded by user-selected Xiaomi MiMo below."
+  },
+  "opencodeMimo": {
+    "userAuthorization": "User manually updated OpenCode and configured Xiaomi API key, then explicitly authorized MiMo v2.6 Flash test.",
+    "selectedModel": "xiaomi/mimo-v2.6-flash",
+    "actualHandshakeVersion": "2.2.7",
+    "registeredVersionField": "1.18.31 remains historical registration metadata",
+    "ui": {
+      "path": "output/2026-11-13-cycle7/opencode/mimo-followup/ui-result.json",
+      "sha256": "5d151e60f92b649234f6d629dc9eaf0ac879977d0d27116e09c4a2e0420e35c3"
+    },
+    "independentMetadataAndEvidence": {
+      "path": "output/2026-11-13-cycle7/opencode/mimo-followup/final-summary.json",
+      "sha256": "4222cd8ba41e3d2c78c594ee8195470db0b959f1f37b0a352eaac3e72fda40bc"
+    },
+    "liveResult": "One user send, one observe_page(screenshot=true) step, exact one-time permission, returned correct W3C title/URL and visible PNG. Page returned to not allowed.",
+    "farfoldRestartResult": "Zero new sends; original prompts, tool step, final answer and explicitly expanded PNG visible after normal Farfold restart. Selected Xiaomi model retained.",
+    "protection": "Saved Xiaomi model, no stale low effort; other11 indexes/original drafts and feedback retained, queues/pending0. Original legacy2 message/1part records unchanged. User Terminal not interrupted.",
+    "limits": "New OpenCode2.2.7 history location not independently identified; known legacy DB stops at two free-model attempts, so it cannot prove or disprove MiMo storage. New native record/PNG byte hashes not verified. UI results do not prove image understanding, all server-process restart or all original cycle6/7 conditions."
+  }
+}

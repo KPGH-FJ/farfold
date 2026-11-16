@@ -35,6 +35,17 @@ vi.mock("react", async (original) => ({
       },
     ];
   },
+  useMemo: (read: () => unknown, deps: unknown[]) => {
+    const slot = (h.slots[h.cursor++] ??= {});
+    if (
+      !slot.deps ||
+      deps.some((value, i) => !Object.is(value, slot.deps?.[i]))
+    ) {
+      slot.value = read();
+      slot.deps = deps;
+    }
+    return slot.value;
+  },
   useRef: (initial: unknown) =>
     (h.slots[h.cursor++] ??= { value: { current: initial } }).value,
   useEffect: (effect: () => void | (() => void), deps: unknown[]) => {
@@ -74,6 +85,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 
 import { WorkspacePopover } from "./WorkspacePopover";
+import { WorkspacePopoverScope } from "./WorkspacePopoverScope";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { PermissionControl } from "./PermissionControl";
 import { freshThreadState } from "../runtime/session_projection";
@@ -370,4 +382,33 @@ it("does not dismiss an in-progress input composition on Escape", () => {
   expect(menu.render().some((node) => node.props.role === "dialog")).toBe(true);
   expect(event.preventDefault).not.toHaveBeenCalled();
   menu.unmount();
+});
+
+it("keeps registered child menu events inside the parent until that child unregisters", () => {
+  const view = popup({ title: "Parent", label: "Open", children: null });
+  const provider = () =>
+    view.render().find((node) => node.type === WorkspacePopoverScope.Provider)!;
+  const scope = provider().props.value as {
+    register: (element: HTMLElement) => () => void;
+  };
+  const child = new Host();
+  const input = new Host();
+  child.child = input;
+  expect(view.panel.contains(input)).toBe(false);
+  const unregister = scope.register(child as unknown as HTMLElement);
+  expect((provider().props.value as typeof scope).register).toBe(
+    scope.register,
+  );
+  for (const kind of ["mousedown", "focusin", "scroll"]) {
+    listeners.get(kind)?.({ target: input });
+    expect(view.render().some((node) => node.props.role === "dialog")).toBe(
+      true,
+    );
+  }
+  unregister();
+  listeners.get("focusin")?.({ target: input });
+  expect(view.render().some((node) => node.props.role === "dialog")).toBe(
+    false,
+  );
+  view.unmount();
 });

@@ -1,0 +1,357 @@
+{
+  "recordedAtUtc": "2026-11-07T05:35:30.742804+00:00",
+  "scope": "Installed macOS Copilot specified stopped-work close: A first permission never approved, A stopped and explicitly closed while B executes one controlled OS command, A draft/unknown retained and B independently finishes.",
+  "formalApplication": {
+    "pid": 93628,
+    "sourceCodeCommit": "d3529ff521532d0de4b437d9350ea1c962ddde66",
+    "version": "0.1.7",
+    "installedBinaryMatchesCandidate": true,
+    "binarySha256": "ac22adcb72549c26153ec1c409e362957179ac411093c941ce577560b32aefc1"
+  },
+  "officialAgent": {
+    "id": "registry:github-copilot-cli",
+    "versionObservedInNewNativeSession": "1.0.107",
+    "savedModelChoice": "auto",
+    "workingDirectory": "/private/tmp/farfold-phase1-neutral.tGZU83dX",
+    "scopeIsThisVersionAndConfigurationOnly": true
+  },
+  "evidenceSnapshots": [
+    {
+      "path": "output/2026-11-07-stage1-formal-acceptance/copilot-close-after-a-stop.json",
+      "observedAtUtc": "2026-11-07T05:32:06.422359+00:00",
+      "sha256": "615d20d67dd2ea9a4a506c6ff9cf806f02b9c24d3f918f4cd17d2276eba25209"
+    },
+    {
+      "path": "output/2026-11-07-stage1-formal-acceptance/copilot-close-b-running-before-a-close.json",
+      "observedAtUtc": "2026-11-07T05:32:11.792944+00:00",
+      "sha256": "5abc9b487ef559d38b2b878b39c2a49436372985efbaba07dea35bb99fde4c39"
+    },
+    {
+      "path": "output/2026-11-07-stage1-formal-acceptance/copilot-close-a-close-requested.json",
+      "observedAtUtc": "2026-11-07T05:32:26.729588+00:00",
+      "sha256": "f30ab3a75bc26c292b347298a4d6ab306ff5f4b255af01b8859358b471d7f04a"
+    },
+    {
+      "path": "output/2026-11-07-stage1-formal-acceptance/copilot-close-after-a-close-b-complete.json",
+      "observedAtUtc": "2026-11-07T05:33:08.040993+00:00",
+      "sha256": "1e4b9b0fa6b8cef20f2efd58d444caa345ce6fbc68abf426af19aef06961720a"
+    }
+  ],
+  "A": {
+    "nativeSessionId": "3f90ddba-7c78-49f4-b2b4-175c5f0d7454",
+    "toolCallId": "call_wrkLU3Re4KJeDpn9QJY2uc92",
+    "promptPrefix": "FARFOLD_STAGE1_CLOSE_CP_A_1107",
+    "exactRequestedCommand": "printf '%s\\n' FARFOLD_CP_CLOSE_A_1107",
+    "managedProcess": {
+      "wrapperPid": 94258,
+      "cliPid": 94259,
+      "processGroupId": 94258,
+      "startedLocal": "2026-11-07T13:29:06+08:00",
+      "standardPipeFormalPeerFds": {
+        "stdin": 45,
+        "stdout": 46,
+        "stderr": 48
+      },
+      "ownershipEvidence": "Independent libproc double-ended standard-pipe handle matching against formal PID93628 in every snapshot."
+    },
+    "protocol": {
+      "path": "/Users/tw/Library/Logs/Farfold/protocol-v1-1794029346759-4.jsonl",
+      "bytesAtLastSnapshot": 4154,
+      "sha256AtLastSnapshot": "f24057723a88a7eca6a5199fe2fad49ff51055287369f78eb99da56f6be612f2",
+      "outPromptCount": 1,
+      "outCancelCount": 1,
+      "closeRequestObserved": {
+        "version": 1,
+        "ts": 1794029529289,
+        "dir": "out",
+        "event": "other",
+        "bytes": 148,
+        "error": "none"
+      },
+      "followingNoErrorResponseObserved": {
+        "version": 1,
+        "ts": 1794029530305,
+        "dir": "in",
+        "event": "response",
+        "bytes": 73,
+        "error": "none"
+      },
+      "rawMethodRequestIdAndResponseBodyPersistedInTap": false,
+      "requestMethodAttribution": "Root explicit close action, exact-session official shutdown, and installed source session/close path correlate the sole subsequent other request. Tap strips raw method outside its classification, IDs and result bodies."
+    },
+    "nativeEvidence": {
+      "path": "/Users/tw/.copilot/session-state/3f90ddba-7c78-49f4-b2b4-175c5f0d7454/events.jsonl",
+      "bytes": 66483,
+      "sha256": "4e76f008a187f65007a647d58a6ff637978986f742beb87012cf5f93915b03e0",
+      "firstPermissionRequest": {
+        "type": "permission.requested",
+        "timestamp": "2026-11-07T05:30:27.673Z",
+        "eventId": "0fa4fdc8-d28f-49ce-922c-1aaeaa40c696",
+        "selectedData": {
+          "requestId": "1212eba5-c601-4765-b508-d052edc11ed7",
+          "ownerSessionId": "3f90ddba-7c78-49f4-b2b4-175c5f0d7454",
+          "permissionMode": "manual",
+          "permissionRequest": {
+            "kind": "shell",
+            "toolCallId": "call_wrkLU3Re4KJeDpn9QJY2uc92",
+            "fullCommandText": "printf '%s\\n' FARFOLD_CP_CLOSE_A_1107",
+            "shellType": "bash"
+          }
+        }
+      },
+      "permissionDecision": {
+        "type": "permission.completed",
+        "timestamp": "2026-11-07T05:31:00.027Z",
+        "eventId": "b6be2af1-4076-4dac-bf06-e4dd27639210",
+        "selectedData": {
+          "toolCallId": "call_wrkLU3Re4KJeDpn9QJY2uc92",
+          "requestId": "1212eba5-c601-4765-b508-d052edc11ed7",
+          "result": {
+            "kind": "denied-interactively-by-user"
+          }
+        }
+      },
+      "cancelConfirmed": {
+        "type": "abort",
+        "timestamp": "2026-11-07T05:31:00.029Z",
+        "eventId": "fea52e4f-2fc2-402f-a19c-4ec5f2674a2b",
+        "selectedData": {
+          "reason": "user_abort"
+        }
+      },
+      "sessionShutdown": {
+        "type": "session.shutdown",
+        "timestamp": "2026-11-07T05:32:09.295Z",
+        "eventId": "c5709737-5c36-4350-9575-844181b036a8",
+        "selectedData": {}
+      },
+      "approvalCount": 0,
+      "matchingToolTerminalCount": 0
+    },
+    "rootObservedUi": [
+      "Original reply stopped, step result unknown; check-close entry appeared.",
+      "Check succeeded, then root explicitly confirmed close for this conversation.",
+      "Close completed: 连接已结束，可以重新连接后继续; old step remained unknown and exact draft remained visible."
+    ],
+    "persistence": {
+      "draftText": "FARFOLD_STAGE1_CP_A_DRAFT_1107🙂 仅保留草稿，不发送",
+      "sameDraftAcrossAllFourSnapshots": true,
+      "queue": {
+        "blocks": [],
+        "uncertainIndex": null,
+        "outcomeUnknown": true
+      },
+      "sameQueueAcrossAllFourSnapshots": true
+    },
+    "resourceScope": {
+      "officialNativeSessionShutdownObserved": true,
+      "officialHistoryFileFdObservedBeforeOrAfter": false,
+      "historyFdOneToZeroClaimed": false,
+      "managedProcessGroupStillPresentInFinalSnapshot": true,
+      "managedProcessGroupExitClaimed": false,
+      "localRouteAndToolLeaseRelease": {
+        "classification": "Source-informed inference from installed successful typed close UI result, not a directly captured in-process counter.",
+        "sourceConditions": "The installed pump accepts only an exact empty-object official result, matching unchanged close proof, waiting caller and exact route. It sends the typed receipt while holding the session lock, removes only A route and releases A stopped-tool work. The command waits to reacquire that lock before returning.",
+        "sources": [
+          {
+            "commit": "d3529ff521532d0de4b437d9350ea1c962ddde66",
+            "path": "src-tauri/src/acp_client/session/stopped_tool_close.rs",
+            "sha256": "0bb456dd9b8d0c5aa674455be875289faa81b2cf8e05dde8d8159646d0eef18e"
+          },
+          {
+            "commit": "d3529ff521532d0de4b437d9350ea1c962ddde66",
+            "path": "src-tauri/src/acp_client/pump/stopped_tool_close.rs",
+            "sha256": "ca869c056beb3ee63306ca28131ee608e066472bac596778fbfad34d34ba371c"
+          }
+        ]
+      },
+      "toolResultRemainsUnknown": true,
+      "noWholeProcessExitRequirementAdded": true
+    }
+  },
+  "B": {
+    "nativeSessionId": "c45add98-1dad-491c-a378-9c0789746eb9",
+    "managedProcess": {
+      "wrapperPid": 94188,
+      "cliPid": 94189,
+      "processGroupId": 94188,
+      "startedLocal": "2026-11-07T13:28:56+08:00",
+      "sameIdentityAcrossAllFourSnapshots": true,
+      "standardPipeFormalPeerFds": {
+        "stdin": 41,
+        "stdout": 42,
+        "stderr": 44
+      }
+    },
+    "commandToolCallId": "call_mgHgdgIUnnUIO5TwGcr0FL5t",
+    "exactRequestedCommand": "/bin/sh -c '/bin/sleep 30; printf \"%s\\n\" FARFOLD_CP_CLOSE_B_DONE_1107'",
+    "realProcessObservation": {
+      "shellPid": 94857,
+      "shellParentCliPid": 94189,
+      "shellGroupId": 94857,
+      "sleepPid": 94858,
+      "sameProcessesObservedBeforeAndAfterACloseRequest": true,
+      "beforeACloseSnapshotUtc": "2026-11-07T05:32:11.792944+00:00",
+      "afterACloseProtocolResponseSnapshotUtc": "2026-11-07T05:32:26.729588+00:00",
+      "shellAndSleepAbsentInFinalSnapshot": true
+    },
+    "nativeEvidence": {
+      "path": "/Users/tw/.copilot/session-state/c45add98-1dad-491c-a378-9c0789746eb9/events.jsonl",
+      "bytes": 187936,
+      "sha256": "bb27f69fd31402162a78ae411fb7674194a913abb0caade2bd09c8c930ed9b11",
+      "testPermissionDecisions": [
+        {
+          "type": "permission.completed",
+          "timestamp": "2026-11-07T05:31:54.538Z",
+          "eventId": "39daad24-32a0-4426-8fa1-353138ec9c55",
+          "selectedData": {
+            "toolCallId": "call_mgHgdgIUnnUIO5TwGcr0FL5t",
+            "requestId": "66549bca-3beb-4b58-9ad0-b93ae5fd5b31",
+            "result": {
+              "kind": "approved"
+            }
+          }
+        },
+        {
+          "type": "permission.completed",
+          "timestamp": "2026-11-07T05:31:57.340Z",
+          "eventId": "9be3c5e8-3411-4710-8e5c-87b8f4c25b7f",
+          "selectedData": {
+            "toolCallId": "call_mgHgdgIUnnUIO5TwGcr0FL5t",
+            "requestId": "772129af-775e-471e-9bd3-da037f226774",
+            "result": {
+              "kind": "approved"
+            }
+          }
+        }
+      ],
+      "testToolEvents": [
+        {
+          "type": "tool.execution_start",
+          "timestamp": "2026-11-07T05:31:29.017Z",
+          "eventId": "c856ee8c-6168-4aca-9327-06a0b8653fed",
+          "selectedData": {
+            "toolCallId": "call_mgHgdgIUnnUIO5TwGcr0FL5t",
+            "toolName": "bash",
+            "arguments": {
+              "command": "/bin/sh -c '/bin/sleep 30; printf \"%s\\n\" FARFOLD_CP_CLOSE_B_DONE_1107'",
+              "description": "Wait 30 seconds and print completion token",
+              "initial_wait": 30,
+              "mode": "sync"
+            },
+            "turnId": "0"
+          }
+        },
+        {
+          "type": "tool.execution_complete",
+          "timestamp": "2026-11-07T05:32:27.363Z",
+          "eventId": "47c8f947-aa71-4ccb-8cfc-9fa1e8aa1b3e",
+          "selectedData": {
+            "toolCallId": "call_mgHgdgIUnnUIO5TwGcr0FL5t",
+            "turnId": "0",
+            "result": {
+              "content": "<command with shellId: 0 is still running after 30 seconds. The command is still running but hasn't produced output yet. You will be automatically notified when it completes; if you need the command to complete end your response with no tool calls to wait for the notification, or use stop_bash to stop it.>",
+              "structuredContent": {
+                "shellId": "0"
+              }
+            },
+            "success": true
+          }
+        },
+        {
+          "type": "tool.execution_start",
+          "timestamp": "2026-11-07T05:32:29.934Z",
+          "eventId": "d8112cbd-d9ce-48bc-adbe-40251a3868e8",
+          "selectedData": {
+            "toolCallId": "bca56c5c-d02a-4429-911e-d173cc2189e8",
+            "toolName": "read_bash",
+            "arguments": {
+              "shellId": "0",
+              "delay": 0
+            }
+          }
+        },
+        {
+          "type": "tool.execution_complete",
+          "timestamp": "2026-11-07T05:32:29.934Z",
+          "eventId": "43ae2661-4da9-4b55-9d58-781a0cc4c374",
+          "selectedData": {
+            "toolCallId": "bca56c5c-d02a-4429-911e-d173cc2189e8",
+            "result": {
+              "content": "FARFOLD_CP_CLOSE_B_DONE_1107\n<shellId: 0 completed with exit code 0>",
+              "structuredContent": {
+                "shellId": "0"
+              }
+            },
+            "success": true
+          }
+        }
+      ],
+      "assistantExactReply": {
+        "type": "assistant.message",
+        "timestamp": "2026-11-07T05:32:29.914Z",
+        "eventId": "9fc9e4a5-91f9-471c-95b4-82a9024801a6",
+        "selectedData": {
+          "turnId": "1",
+          "contentSha256": "9829a28ec81907f274677bf495e331edaeb88f1ac795fd69dfb265fb92462bfb",
+          "contentLength": 28,
+          "content": "FARFOLD_CP_CLOSE_B_DONE_1107"
+        }
+      },
+      "testAbortCount": 0,
+      "testSessionShutdownCount": 0
+    },
+    "protocol": {
+      "path": "/Users/tw/Library/Logs/Farfold/protocol-v1-1794029336907-3.jsonl",
+      "bytesAtLastSnapshot": 14255,
+      "sha256AtLastSnapshot": "0131b61c37927feac86185427dba67130912958d5d84e3b50096576455f2a95e",
+      "testPromptCount": 1,
+      "cancelCount": 0
+    },
+    "agentGeneratedFollowup": "The official Agent added one read_bash(shellId=0,delay=0) after the bash call reported the same shell still running at 30 seconds. That read returned exact output and exit code 0. This is not a second OS command or an operator resend; do not describe the whole request as exactly one Agent tool call.",
+    "completion": {
+      "toolOutputMarker": "FARFOLD_CP_CLOSE_B_DONE_1107",
+      "exitCodeFromReadBashResult": 0,
+      "assistantReplyExactlyMatchesMarker": true,
+      "databaseActivityEnded": true,
+      "rootNeverStoppedB": true,
+      "sameBConnectionPipelinePreserved": true
+    }
+  },
+  "protection": {
+    "allProtectedSnapshotFieldsUnchanged": true,
+    "protectedValues": {
+      "otherComposersSha256": "5ee9a40139aa0dbb59534b1ee6b34bf841586d1ccf4342746271af6700e64af4",
+      "newComposerSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "retainedDraftCount": 2,
+      "choiceSha256": "6ff53a72f650af785d5dea898fdb447c6a748950ed66392eae1567da4f30f67e",
+      "feedbackSha256": "faf229e8a665ea4d84cb1b6bdc133ed05cf75d40282588c7e331014c1c59c5db",
+      "otherQueuesSha256": "7efbb502652add490935a488753d6ce21125721d3a3bbcb3e1124edda132cc3a",
+      "otherActivitySha256": "495e475bc054a7d3e66ef3827472151efac33455954d0253bf82090b01b51009",
+      "otherSessionRowsSha256": "fbfbab0f692231451ae18655456fd1af0d3fbaaf813473a2525242c3148bb648",
+      "otherSettingsSha256": "5e20168c915eec0d3d42c0255176aa0b785d4e9751d7c07c50ba39d484fe36e5"
+    },
+    "originalRetainedDraftPlusOriginalP02RetainedAsSeparateDraft": {
+      "totalObservedRetainedDrafts": 2,
+      "originalRetainedDraftKey": "saved-new:8a3d78c5-4176-4601-9274-a0a63ebb9fe0",
+      "P02PreservedDraftKey": "saved-new:254d4cb5-7cc0-4692-8a9d-b1d1e536068d",
+      "P02TextSha256": "7da38407cacb4e28ffc38f0cc90b9e87f2891ccb0b0d1ebc35e56228b28aad2d",
+      "newComposerAbsentDuringThisTest": true
+    },
+    "originalThreeOldTargetUnknownQueuesAndOtherQueuesUnchanged": true,
+    "noOldPromptResendsObservedInThisTest": true
+  },
+  "readerActions": {
+    "signals": 0,
+    "uiActions": 0,
+    "agentRequests": 0,
+    "productionWrites": 0,
+    "writesLimitedToRequestedEvidencePaths": true
+  },
+  "limitations": [
+    "No raw official close JSON response body, request ID, typed close receipt payload or manager memory counter was directly captured. The no-error transport response, exact official session shutdown, root-observed UI success, and source-informed local release inference are separated.",
+    "No native event-file handle was observable in the lsof snapshots, so this sample does not prove history FD 1→0.",
+    "A backend transport process remains alive; this sample proves specified-session shutdown and preserves the unknown tool outcome, rather than whole process-group termination.",
+    "This receipt covers Copilot1.0.107 on this installed macOS arm64 application. Goose, other Agents, cold recovery, all platforms and complete Stage1 acceptance are not inferred."
+  ]
+}

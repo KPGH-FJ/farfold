@@ -2,8 +2,82 @@ import { invoke } from "@tauri-apps/api/core";
 import type { VerifiedFile } from "./file_delivery";
 import { samePreviewFile } from "./preview_capture";
 
+export const MAX_INLINE_TEXT_BYTES = 1024 * 1024;
 export const TEXT_BLOCK_BYTES = 128 * 1024;
 export const TEXT_BLOCK_LINES = 2000;
+
+const TEXT_EXTENSIONS = new Set([
+  "md",
+  "markdown",
+  "mdx",
+  "txt",
+  "text",
+  "json",
+  "jsonl",
+  "csv",
+  "tsv",
+  "js",
+  "jsx",
+  "mjs",
+  "cjs",
+  "ts",
+  "tsx",
+  "css",
+  "scss",
+  "sass",
+  "less",
+  "xml",
+  "svg",
+  "yaml",
+  "yml",
+  "toml",
+  "ini",
+  "cfg",
+  "conf",
+  "log",
+  "py",
+  "pyi",
+  "rs",
+  "go",
+  "c",
+  "h",
+  "cc",
+  "cpp",
+  "hpp",
+  "java",
+  "kt",
+  "swift",
+  "m",
+  "mm",
+  "rb",
+  "php",
+  "sh",
+  "bash",
+  "zsh",
+  "fish",
+  "sql",
+  "r",
+  "vue",
+  "svelte",
+  "astro",
+  "tex",
+  "rst",
+  "diff",
+  "patch",
+  "env",
+  "gitignore",
+  "gitattributes",
+  "editorconfig",
+]);
+
+/** Filename admission for the passive reader; the protected read checks UTF-8. */
+export function supportsTextFilePreview(name: string): boolean {
+  return (
+    TEXT_EXTENSIONS.has(name.toLowerCase().split(".").pop() ?? "") ||
+    /^(readme|license|licence|copying|notice|makefile|dockerfile)$/i.test(name)
+  );
+}
+
 export interface TextBlockPreview {
   file: VerifiedFile;
   blockIndex: number;

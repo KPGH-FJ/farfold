@@ -42,9 +42,19 @@ export async function drainPrompt(
     return { status: "queued" };
   const blocks = s.queued[0];
   const finishPreparation = hooks.stop.prepare(s);
+  const submission = {
+    blocks,
+    connectionId: s.connectionId,
+    dispatched: false,
+    deliveryConfirmed: false,
+  };
+  s.promptSubmission = submission;
   s.submitting = true;
   s.running = false;
   const firstPrompt = s.identity === "draft";
+  const firstSendInterrupted = firstPrompt
+    ? draftPersistence.captureInteractionInterruption()
+    : undefined;
   sealStreams(s);
   const text = promptText(blocks);
   const item: ThreadItem = {
@@ -59,7 +69,6 @@ export async function drainPrompt(
   s.roundItemBase = s.items.length;
   beginSuccessDesktopNotification(s, () => hooks.thread(key) === s);
   hooks.emit();
-  let dispatched = false;
   const receivedEnding = () =>
     s.items
       .slice(s.roundItemBase)
@@ -67,8 +76,18 @@ export async function drainPrompt(
         (entry) =>
           entry.kind === "settled" && entry.replyReceived !== undefined,
       );
+  const preparationRevoked = () =>
+    !submission.dispatched && s.promptSubmission !== submission;
+  const rejectPreparation = (interrupted?: boolean): SendAdmission => {
+    s.running = false;
+    s.items = s.items.filter((entry) => entry !== item);
+    if (s.uncertainPrompt === blocks) s.uncertainPrompt = null;
+    if (firstPrompt) s.identity = "draft";
+    if (interrupted && !s.queuePaused) pauseQueue(s, "stopped");
+    return { status: "rejected", reason: "unavailable" };
+  };
   const admit = () => {
-    removeQueued(s, blocks);
+    if (s.promptSubmission === submission) removeQueued(s, blocks);
     if (s.uncertainPrompt === blocks) s.uncertainPrompt = null;
     s.identity = "established";
     hooks.retireDraft(s);
@@ -86,25 +105,28 @@ export async function drainPrompt(
     }
   };
   try {
-    await validateQueuedAttachments(blocks);
+    await validateQueuedAttachments(blocks, {
+      canApplyUpdates: () => !preparationRevoked(),
+    });
+    if (preparationRevoked()) return rejectPreparation();
     // Project checked dispatch content, not the earlier queue snapshot.
     item.attachments = localMessageAttachments(blocks);
     // Persist the in-flight input before it can reach an Agent. A crash in
     // this window restores an explicitly quarantined request, never a retry.
     hooks.emit(key);
     await draftPersistence.flush();
+    if (preparationRevoked()) return rejectPreparation();
     await archiveActivity.begin(key);
+    const interrupted = firstSendInterrupted?.();
     if (
       hooks.thread(key) !== s ||
+      preparationRevoked() ||
+      s.connectionId !== submission.connectionId ||
+      interrupted ||
       composerDrafts.read(`queue-edit:${key}`).queueEdit ||
       !canDrain({ ...s, running: false, submitting: false })
-    ) {
-      s.running = false;
-      s.items = s.items.filter((i) => i !== item);
-      if (s.uncertainPrompt === blocks) s.uncertainPrompt = null;
-      if (firstPrompt) s.identity = "draft";
-      return { status: "rejected", reason: "unavailable" };
-    }
+    )
+      return rejectPreparation(interrupted);
     const content = wirePromptBlocks(blocks);
     let owner!: PromptRequestOwner;
     owner = new PromptRequestOwner(
@@ -115,9 +137,24 @@ export async function drainPrompt(
       () => {
         if (hooks.owners.get(s) === owner) hooks.owners.delete(s);
       },
+      () => {
+        // The matched stop receipt can arrive before the offer or admission.
+        // Observe its outcome without sending another stop or accepting input.
+        if (s.stopping) return;
+        s.stopping = true;
+        hooks.stop.start(
+          s,
+          () => hooks.thread(key),
+          () => hooks.emit(),
+          true,
+        );
+      },
+      () => {
+        submission.deliveryConfirmed = true;
+      },
     );
     hooks.owners.set(s, owner);
-    dispatched = true;
+    submission.dispatched = true;
     const result = await invoke<PromptAdmission>("session_prompt", {
       agentId: s.agentId,
       cwd: s.cwd,
@@ -172,11 +209,12 @@ export async function drainPrompt(
     return result;
   } catch (error) {
     if (hooks.thread(key) !== s) return { status: "unknown" };
-    if (dispatched && receivedEnding()) {
+    if (preparationRevoked()) return rejectPreparation();
+    if (submission.dispatched && receivedEnding()) {
       admit();
       return { status: "accepted" };
     }
-    if (!dispatched) {
+    if (!submission.dispatched) {
       s.running = false;
       s.items = s.items.filter((i) => i !== item);
       if (s.uncertainPrompt === blocks) s.uncertainPrompt = null;
@@ -199,13 +237,17 @@ export async function drainPrompt(
     pauseQueue(s, "uncertain");
     return { status: "unknown" };
   } finally {
+    const revoked = preparationRevoked();
     finishPreparation();
+    if (s.promptSubmission === submission) s.promptSubmission = undefined;
     s.submitting = false;
     hooks.emit();
-    hooks.finishArchive(s);
-    // A failed post-admission save must not turn a dispatched message into
-    // "unsent". The global save state retains the error for explicit retry.
-    await draftPersistence.flush().catch(() => undefined);
-    if (canDrain(s)) void hooks.drain(key);
+    if (!revoked) {
+      hooks.finishArchive(s);
+      // A failed post-admission save must not turn a dispatched message into
+      // "unsent". The global save state retains the error for explicit retry.
+      await draftPersistence.flush().catch(() => undefined);
+      if (canDrain(s)) void hooks.drain(key);
+    }
   }
 }

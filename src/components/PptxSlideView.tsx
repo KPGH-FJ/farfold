@@ -28,13 +28,19 @@ function Shape({
   url?: string;
   onError: () => void;
 }) {
-  const { box } = shape;
+  const { box, groupTransform: group } = shape;
   if (!box.width || !box.height) return null;
   const position: CSSProperties = {
-    left: box.x,
-    top: box.y,
+    left: group ? group.x + box.x * group.scaleX : box.x,
+    top: group ? group.y + box.y * group.scaleY : box.y,
     width: box.width,
     height: box.height,
+    ...(group
+      ? {
+          transform: `scale(${group.scaleX}, ${group.scaleY})`,
+          transformOrigin: "top left",
+        }
+      : {}),
   };
   if (shape.kind === "image")
     return url ? (

@@ -63,6 +63,34 @@ pub(super) fn captured(data: &str) -> Option<Value> {
     )
 }
 
+#[cfg(target_os = "macos")]
+pub(super) fn failure_diagnostic(
+    value: &Value,
+) -> Option<crate::logging::BrowserScreenshotFailure> {
+    use crate::logging::BrowserScreenshotFailure;
+
+    if value["status"] != "unavailable" {
+        return None;
+    }
+    let diagnostic = &value["diagnostic"];
+    Some(
+        match (
+            diagnostic["stage"].as_str()?,
+            diagnostic["category"].as_str()?,
+        ) {
+            ("before_capture", "page_structure") => BrowserScreenshotFailure::BeforePageStructure,
+            ("before_capture", "closed_root_inspection_unavailable") => {
+                BrowserScreenshotFailure::ClosedRootInspectionUnavailable
+            }
+            ("capture", "system_capture_failed") => BrowserScreenshotFailure::SystemCaptureFailed,
+            ("capture", "image_limit") => BrowserScreenshotFailure::ImageLimit,
+            ("capture", "encoding_failed") => BrowserScreenshotFailure::EncodingFailed,
+            ("after_capture", "page_structure") => BrowserScreenshotFailure::AfterPageStructure,
+            _ => return None,
+        },
+    )
+}
+
 pub(super) fn checked(value: &Value, requested: bool) -> Value {
     if requested
         && value["status"] == "captured"
@@ -108,6 +136,50 @@ mod tests {
         assert!(checked(&value, false).get("data").is_none());
         value["width"] = json!(3);
         assert!(checked(&value, true).get("data").is_none());
+    }
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn only_known_native_failure_classes_enter_local_diagnostics() {
+        use crate::logging::BrowserScreenshotFailure;
+
+        let mut value = json!({
+            "status":"unavailable",
+            "reason":"P27_SECRET_REASON",
+            "data":"P27_SECRET_PIXELS",
+            "diagnostic":{
+                "stage":"before_capture",
+                "category":"page_structure",
+                "url":"P27_SECRET_URL"
+            }
+        });
+        assert_eq!(
+            failure_diagnostic(&value),
+            Some(BrowserScreenshotFailure::BeforePageStructure)
+        );
+        value["diagnostic"]["stage"] = json!("after_capture");
+        assert_eq!(
+            failure_diagnostic(&value),
+            Some(BrowserScreenshotFailure::AfterPageStructure)
+        );
+        for requested in [true, false] {
+            let result = checked(&value, requested);
+            assert!(result.get("diagnostic").is_none());
+            assert!(!result.to_string().contains("P27_SECRET"));
+        }
+        value["diagnostic"]["category"] = json!("system_capture_failed");
+        assert_eq!(failure_diagnostic(&value), None);
+        value["diagnostic"]["stage"] = json!("capture");
+        assert_eq!(
+            failure_diagnostic(&value),
+            Some(BrowserScreenshotFailure::SystemCaptureFailed)
+        );
+        value["status"] = json!("captured");
+        assert_eq!(failure_diagnostic(&value), None);
+        value["status"] = json!("unavailable");
+        value["diagnostic"]["category"] = json!("P27_SECRET_CATEGORY");
+        assert_eq!(failure_diagnostic(&value), None);
+        value["diagnostic"]["category"] = json!({"category":"system_capture_failed"});
+        assert_eq!(failure_diagnostic(&value), None);
     }
     #[test]
     fn corruption_oversize_unknown_reason_and_trailing_bytes_never_escape() {

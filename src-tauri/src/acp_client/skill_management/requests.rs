@@ -124,7 +124,10 @@ impl Job {
                     State::Failed
                 };
                 if v.action != Action::Inspect
-                    || matches!(self.source.domain(), Domain::McpAdd | Domain::McpRemove)
+                    || matches!(
+                        self.source.domain(),
+                        Domain::McpAdd | Domain::McpRemove | Domain::SkillPreferenceRemoval
+                    )
                 {
                     v.outcome = Some(if v.write_dispatched {
                         Outcome::Unknown
@@ -140,7 +143,10 @@ impl Job {
                 v.code = None;
                 v.outcome = outcome;
                 v.review = review;
-                if self.source.domain() == Domain::McpRemove {
+                if matches!(
+                    self.source.domain(),
+                    Domain::McpRemove | Domain::SkillPreferenceRemoval
+                ) {
                     v.observation = observation;
                 }
             }
@@ -282,7 +288,7 @@ impl RegistryState {
             }
             Input::Confirm { .. } => match source.domain() {
                 Domain::McpAdd => Action::Add,
-                Domain::McpRemove => Action::Remove,
+                Domain::McpRemove | Domain::SkillPreferenceRemoval => Action::Remove,
                 _ => Action::SetEnabled,
             },
             Input::Recheck { .. } => Action::Recheck,
@@ -393,6 +399,40 @@ impl Requests {
         }
         s.insert(id, input, Source::Removal(source), None, None, None)
             .map(|j| (j, true))
+    }
+    pub fn begin_skill_preference_remove_inspect(
+        &self,
+        agent: &str,
+        id: &str,
+        inventory: &str,
+        item: usize,
+    ) -> Result<(Arc<Job>, bool)> {
+        validate(agent, id)?;
+        let input = Input::InspectRemove {
+            inventory: inventory.into(),
+            item,
+        };
+        let mut state = self.0.lock().unwrap_or_else(|p| p.into_inner());
+        state.prune();
+        if let Some(job) = state.existing(agent, id, &input, Domain::SkillPreferenceRemoval)? {
+            return Ok((job, false));
+        }
+        let source = crate::acp_client::extension_inventory::targets::get(agent, inventory, item)?;
+        if !source.request.snapshot().is_some_and(|value| {
+            matches!(value.snapshot, Some(crate::acp_client::extension_inventory::InventorySnapshot::Skills(ref skills)) if skills.complete)
+        }) {
+            return Err(Code::InventoryIncomplete.into());
+        }
+        state
+            .insert(
+                id,
+                input,
+                Source::SkillPreferenceRemoval(source),
+                None,
+                None,
+                None,
+            )
+            .map(|job| (job, true))
     }
     pub fn begin_add_inspect(
         &self,
@@ -516,7 +556,7 @@ impl Requests {
             || op.action
                 != match domain {
                     Domain::McpAdd => Action::Add,
-                    Domain::McpRemove => Action::Remove,
+                    Domain::McpRemove | Domain::SkillPreferenceRemoval => Action::Remove,
                     _ => Action::SetEnabled,
                 }
             || !op.settled

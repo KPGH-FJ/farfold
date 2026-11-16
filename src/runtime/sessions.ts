@@ -7,27 +7,30 @@ import { OwnedSessionChannel, SessionChannels } from "./session_channels";
 import { openDeliveryConsumer } from "./session_open_delivery";
 import { openingInquiries } from "./opening_inquiries";
 import { drainPrompt } from "./session_prompt_dispatch";
-import { PromptRequestOwner } from "./prompt_admission";
+import { pauseQueueForExit, persistedQueue } from "./prompt_admission";
+import {
+  retirePromptSubmission,
+  type PromptRequestOwner,
+} from "./prompt_admission";
 import { ProcessEndedChannel } from "./session_process_ended";
-import { retainIndexRows } from "./session_index_refresh";
+import { createSessionIndexReader } from "./session_index_refresh";
+import { requestSessionDeletion, SessionDeletions } from "./session_deletion";
+import type { SessionDeletionInput } from "./session_deletion";
 import { draftGroup, type OpenInput } from "./session_open_input";
 export type { OpenInput } from "./session_open_input";
-import { observeAuthentication } from "./authentication";
+import * as Auth from "./authentication";
 import {
   discardEmptyDraft,
   retirePreparationRead,
 } from "./session_draft_cleanup";
-import {
-  releaseConfigurationPause,
-  sameConfigurationSnapshot,
-  type ConfigCheck,
-} from "./config_check";
+import type { ConfigCheck } from "./config_check";
 import {
   ConfigurationRecheck,
   recheckConfiguration,
   hasConfigurationRecheckRecovery,
 } from "./session_config_recheck";
 import { SessionConfiguration } from "./session_configuration";
+import { SessionToolChangeGuards } from "./session_tool_change_guards";
 import { readSessionIdentity } from "./session_identity";
 import { forgetSessionIdentity } from "./session_identity_types";
 import type {
@@ -35,36 +38,44 @@ import type {
   WorkspaceAccessScope,
   WorkspaceAccessResult,
 } from "./workspace_access_types";
-import { confirmSavedConfiguration } from "./saved_configuration_restore";
 import { configChangeBusy } from "./protected_config";
 import type { AsyncTask } from "./async_tasks";
 import { stopAsyncTask } from "./async_task_actions";
 import { hasActiveCompaction } from "./compaction_activity";
 import { hasActiveFork } from "./session_fork_activity";
 import { SessionForks } from "./session_fork";
+import type { HistoryForkPoint } from "./history_fork_point";
 import { threadNeedsAttention } from "./thread_attention";
+import { unfinishedStoppedToolCallIds } from "./stopped_tool_results";
+import { WorkConnectionClosures } from "./stopped_work_close";
 /**
  * Session command client and normalized conversation state.
  * Agent updates enter the shared `applyUpdate` projection.
- *
- * Wire shapes mirror `acp_client/session_commands.rs`,
- * `acp_client/pump.rs` and `meta_store.rs` (camelCase). Raw updates arrive
+ * Wire shapes mirror native session commands, pump and meta_store. Updates arrive
  * over a per-conversation `Channel` as `{sessionId, update}` envelopes;
  * side-band events carry `kind`: `permissionRequest` | `elicitation` |
  * `interactionsCancelled` | `turnEnd` | `connectionLost` | `notification`.
  *
- * Naming note: user-facing vocabulary is "会话/thread"; `session*` stays
- * inside this runtime module only (AGENTS.md vocabulary rule).
+ * Internal `session*` identifiers follow AGENTS.md's UI vocabulary boundary.
  */
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { checkDesktopNotifications } from "./desktop_notifications";
 import { paneCards } from "./artifacts";
-import { artifactPaneCards } from "./artifact_view";
+import { canSelectArtifact } from "./artifact_view";
 import type { PaneCard } from "./artifacts";
 import { STRINGS } from "./strings";
 import { InteractionActions } from "./interaction_actions";
-import { StopConfirmation } from "./stop_confirmation";
-import { composerDrafts, draftQueues, draftPersistence } from "./drafts";
+import {
+  captureSubmissionStop,
+  recordStopIntent,
+  StopConfirmation,
+} from "./stop_confirmation";
+import {
+  composerDrafts,
+  draftQueues,
+  draftPersistence,
+  type ComposerDraft,
+} from "./drafts";
 import {
   markRestoredQueueAttachments,
   queuedAttachmentsNeedReview,
@@ -96,7 +107,7 @@ import {
   removeQueued,
   type PromptAdmission,
 } from "./queue";
-
+import { configurationPauseRevision } from "./configuration_pause";
 export type { PaneCard };
 export { paneCards };
 // ---------------------------------------------------------------------------
@@ -165,6 +176,7 @@ export interface ThreadsSnapshot {
   version: number;
   threads: Map<string, ThreadState>;
   index: IndexRow[];
+  indexReady: boolean;
   /** `settings.autoArchiveDays` (0 = off). */
   autoArchiveDays: number;
 }
@@ -183,6 +195,13 @@ class ThreadsStore {
   }
   private threads = new Map<string, ThreadState>();
   private indexRows: IndexRow[] = [];
+  private indexReader = createSessionIndexReader(
+    () => invoke<IndexRow[]>("session_index_list"),
+    () => this.indexRows,
+    (rows) => {
+      this.indexRows = rows;
+    },
+  );
   private autoArchiveDays = 0;
   private archiveRevision = 0;
   private archiveWrite: Promise<void> = Promise.resolve();
@@ -195,6 +214,7 @@ class ThreadsStore {
     version: 0,
     threads: this.threads,
     index: this.indexRows,
+    indexReady: this.indexReader.ready(),
     autoArchiveDays: this.autoArchiveDays,
   };
   /** channel kept alive per thread key. */
@@ -216,16 +236,18 @@ class ThreadsStore {
     emit: (key) => this.emit(key),
     refreshIndex: () => this.refreshIndex(),
   });
-  forkCurrent(key: string): Promise<ThreadState | undefined> {
-    return this.forks.start(key);
+  forkCurrent(key: string, historyPoint?: HistoryForkPoint) {
+    return this.deletions.has(key)
+      ? Promise.resolve(undefined)
+      : this.forks.start(key, historyPoint);
   }
   prepareNewFork(key: string, operationId: string): boolean {
-    return this.forks.prepareNew(key, operationId);
+    return !this.deletions.has(key) && this.forks.prepareNew(key, operationId);
   }
+  private deletions = new SessionDeletions();
   /** dedupe concurrent opens (same agent+cwd+native target). */
   private openings = new Map<string, Promise<ThreadState>>();
-  /** Unprompted ("draft") conversations per agent+cwd — re-picking the
-   *  same pair reuses the draft instead of spawning another session. */
+  /** Reuse unprompted conversations for the same agent and folder. */
   private drafts = new Map<string, string>();
   private interactions = new InteractionActions(
     (key) => this.thread(key),
@@ -237,13 +259,22 @@ class ThreadsStore {
     finish: (thread) => this.finishArchiveActivity(thread),
     permissionRevision: (key) => this.permissionRevisions.get(key) ?? 0,
   });
+  readonly toolChanges = new SessionToolChangeGuards({
+    current: (key) => this.thread(key),
+    emit: (key) => this.emit(key, true),
+    saved: (state) => {
+      if (this.drafts.get(state.draftGroup ?? "") === state.key)
+        this.drafts.delete(state.draftGroup ?? "");
+      void this.refreshIndex(true);
+    },
+  });
   private recordedEndings = new WeakSet<ThreadItem>();
   decidePermission = (
     key: string,
     requestId: string,
     optionId: string,
     label: string,
-    allow: boolean,
+    allow: boolean | null,
     remember = false,
   ): void =>
     this.interactions.decide(key, requestId, optionId, label, allow, remember);
@@ -257,6 +288,24 @@ class ThreadsStore {
 
   getSnapshot = (): ThreadsSnapshot => this.snapshot;
 
+  // The running state stays live. A cold start cannot infer a result for
+  // owned work interrupted before its exact terminal receipt was observed.
+  private hasUnfinishedOwnedWork(state: ThreadState): boolean {
+    if (!state.connectionId || state.connectionLost) return false;
+    if (
+      !state.historyUnavailable &&
+      state.running &&
+      this.promptOwners.get(state)?.isOffered()
+    )
+      return true;
+    return (
+      state.activeToolCallIds.length > 0 &&
+      (!state.historyUnavailable ||
+        state.historyUnavailable.toolActivityConnectionId ===
+          state.connectionId)
+    );
+  }
+
   private emit(key?: string, preserveQueues = false): void {
     checkDesktopNotifications();
     for (const state of preserveQueues
@@ -265,16 +314,17 @@ class ThreadsStore {
         ? [this.thread(key)]
         : this.threads.values()) {
       if (!state) continue;
-      const uncertain =
-        state.uncertainPrompt ?? (state.submitting ? state.queued[0] : null);
+      const { blocks, uncertainIndex } = persistedQueue(state);
       draftQueues.write(
         state.key,
-        state.queued,
-        uncertain ? state.queued.indexOf(uncertain) : null,
+        blocks,
+        uncertainIndex,
         Boolean(
           state.historicalOutcomeUnknown ||
           state.connectionOutcomeUnknown ||
-          state.stopUnconfirmed,
+          state.stopUnconfirmed ||
+          this.hasUnfinishedOwnedWork(state) ||
+          unfinishedStoppedToolCallIds(state).size > 0,
         ),
       );
     }
@@ -283,6 +333,7 @@ class ThreadsStore {
       version: this.snapshot.version + 1,
       threads: this.threads,
       index: this.indexRows,
+      indexReady: this.indexReader.ready(),
       autoArchiveDays: this.autoArchiveDays,
     };
     for (const fn of this.listeners) fn();
@@ -384,11 +435,10 @@ class ThreadsStore {
       : DEFAULT_AUTO_ARCHIVE_DAYS;
   }
 
-  async refreshIndex(): Promise<void> {
+  async refreshIndex(preserveQueues = false): Promise<void> {
     const archiveRevision = this.archiveRevision;
     try {
-      const rows = await invoke<IndexRow[]>("session_index_list");
-      this.indexRows = retainIndexRows(this.indexRows, rows);
+      await this.indexReader.refresh();
     } catch {
       // Keep the last known index; a failed read must not blank the sidebar.
     }
@@ -402,7 +452,7 @@ class ThreadsStore {
     } catch {
       // A failed read cannot replace a confirmed setting with an invented default.
     }
-    this.emit();
+    this.emit(undefined, preserveQueues);
   }
 
   private recordPermissionChanges(key: string, count = 1): void {
@@ -429,6 +479,8 @@ class ThreadsStore {
         owns: () => this.thread(key) === state,
         promptOwner: () => this.promptOwners.get(state),
         configurationChanging: () => this.configurations.changing(state),
+        configurationOptionsReceived: () =>
+          this.configurations.receiveOptions(state),
         receiveConfigCheck: (check) =>
           this.configurations.receiveCheck(state, check),
         finishActivity: () => this.finishArchiveActivity(state),
@@ -448,8 +500,8 @@ class ThreadsStore {
       },
       activityConnectionId,
     );
+    this.configurations.observe(state);
   }
-
   /** Concurrent opens for the same target share one close/load request. */
   open(input: OpenInput): Promise<ThreadState> {
     if (needsCanonicalRecovery(input, this.threads))
@@ -461,7 +513,6 @@ class ThreadsStore {
       );
     return this.openTarget(input);
   }
-
   private openTarget(
     input: OpenInput,
     recheck?: ConfigurationRecheck,
@@ -469,6 +520,8 @@ class ThreadsStore {
     let retryState: ThreadState | undefined;
     if (input.nativeSessionId) {
       const key = `${input.agentId}:${input.cwd}:${input.nativeSessionId}`;
+      if (this.deletions.has(key))
+        return Promise.reject(new Error(LIBRARY.deleteReasons.unconfirmed));
       const existing = this.threads.get(key);
       if (existing && hasActiveFork(existing))
         return Promise.reject(new Error(STRINGS.repair.reconnectFailed));
@@ -509,6 +562,7 @@ class ThreadsStore {
       return pending;
     }
     const inquiry = openingInquiries.begin(openingKey, input);
+    let authentication: ReturnType<typeof Auth.captureProgramAuthentication>;
     const replay = new SessionOpenReplay(
       input,
       (key) => this.threads.get(key),
@@ -521,7 +575,6 @@ class ThreadsStore {
     const channel = new OwnedSessionChannel(delivery);
     let deliveryBound = false;
     const admission = historyReads.begin(openingKey, input, replay.token);
-
     let opened: OpenResult | undefined;
     let routePrepared = false;
     let abandonRecheck: (() => void) | undefined;
@@ -534,7 +587,10 @@ class ThreadsStore {
       if (retryState && this.thread(retryState.key) !== retryState)
         throw new Error(STRINGS.repair.reconnectFailed);
       routePrepared = true;
-      if (retryState) this.channels.delete(retryState.key);
+      if (retryState) {
+        retirePromptSubmission(retryState);
+        this.channels.delete(retryState.key);
+      }
       const openToken = replay.token;
       let boundKey: string | null = null;
       const processEndedChannel = new ProcessEndedChannel(
@@ -584,6 +640,9 @@ class ThreadsStore {
           return replay.push(event);
         },
       });
+      const replacing = Auth.pendingProgramAuthenticationChange(input.agentId);
+      if (replacing) await replacing;
+      authentication = Auth.captureProgramAuthentication(input.agentId);
       admission?.dispatch();
       const result = await invoke<OpenResult>("session_open", {
         processEndedChannel,
@@ -609,10 +668,7 @@ class ThreadsStore {
       // before pull pauses. The command can return without any further body.
       await replay.waitForReady(result.resumed);
       const key = `${input.agentId}:${result.cwd}:${result.nativeSessionId}`;
-      const rows = await invoke<IndexRow[]>("session_index_list").catch(
-        () => null,
-      );
-      if (rows) this.indexRows = retainIndexRows(this.indexRows, rows);
+      await this.indexReader.refresh().catch(() => undefined);
       recheck?.validateResult(result);
       let state: ThreadState;
       try {
@@ -641,17 +697,14 @@ class ThreadsStore {
             if (failedConnectionId) old.connectionId = failedConnectionId;
             this.channels.set(boundKey, channel);
             deliveryBound = true;
+            Auth.bindProgramAuthentication(old, authentication);
             processEndedChannel.bind(old);
           };
         } else channel.dispose();
         throw error;
       }
-      observeAuthentication(
-        input.agentId,
-        input.cwd,
-        undefined,
-        state.serviceContext,
-      );
+      Auth.bindProgramAuthentication(state, authentication);
+      authentication.observe(input.cwd, undefined, state.serviceContext);
       const previous = this.threads.get(key);
       if (previous) this.forks.retire(previous);
       this.stopConfirmation.clear(key);
@@ -698,8 +751,7 @@ class ThreadsStore {
             this.threads.get(target.originalKey))
           : undefined;
         if (!input.nativeSessionId || previous)
-          observeAuthentication(
-            input.agentId,
+          authentication?.observe(
             target.cwd,
             error,
             previous?.serviceContext ??
@@ -748,7 +800,6 @@ class ThreadsStore {
     this.openings.set(openingKey, promise);
     return promise;
   }
-
   /** Explicit recovery exit: a separate empty draft, never a resumed prompt. */
   async newAfterRecoveryFailure(key: string): Promise<ThreadState> {
     const old = this.thread(key);
@@ -764,7 +815,6 @@ class ThreadsStore {
       fresh: true,
     });
   }
-
   /** Preserve failed state; restart-resume failures render as 无法恢复. */
   markOpenFailed(
     key: string,
@@ -787,9 +837,7 @@ class ThreadsStore {
     return state;
   }
 
-  /** Materialize the index row for an agent-side session (rename / pin /
-   *  archive on a `source: "agent"` row) — `session_touch` upserts so the
-   *  meta op that follows has a row to mutate. */
+  /** Materialize an Agent-history row before an index operation. */
   async ensureIndexRow(input: {
     agentId: string;
     cwd: string;
@@ -806,22 +854,98 @@ class ThreadsStore {
     await this.refreshIndex();
   }
 
+  private pendingQueueHandoffs = new WeakSet<PromptBlock[]>();
+
   /** Submission acknowledgement, not optimistic rendering, consumes a queued message. */
-  async send(key: string, blocks: PromptBlock[]): Promise<SendAdmission> {
+  async send(
+    key: string,
+    blocks: PromptBlock[],
+    sourceDraft?: { key: string; value: ComposerDraft },
+  ): Promise<SendAdmission> {
     const s = this.thread(key);
-    if (!s || !blocks.length)
+    if (!s || !blocks.length || this.deletions.has(key)) {
+      if (sourceDraft) throw new Error(STRINGS.repair.sendFailed);
       return { status: "rejected", reason: "unavailable" };
+    }
+    const connectionId = s.connectionId;
+    const stopped = captureSubmissionStop(s);
+    const firstSendInterrupted =
+      s.identity === "draft"
+        ? draftPersistence.captureInteractionInterruption()
+        : undefined;
+    const interrupted = () =>
+      stopped() ||
+      s.connectionLost ||
+      s.reconnecting ||
+      s.connectionId !== connectionId ||
+      this.thread(key) !== s;
     if (s.configuring) await this.configurations.requests.get(key);
+    if (this.deletions.has(key))
+      return { status: "rejected", reason: "unavailable" };
     if (s.configError) throw new Error(STRINGS.repair.configFailed);
+    if (
+      sourceDraft &&
+      (interrupted() ||
+        firstSendInterrupted?.() ||
+        draftPersistence.snapshot().interactionLocked ||
+        (sourceDraft.key !== `session:${key}` &&
+          sourceDraft.key !== `resend:${key}`) ||
+        composerDrafts.read(sourceDraft.key) !== sourceDraft.value)
+    )
+      throw new Error(STRINGS.repair.sendFailed);
+    if (firstSendInterrupted?.())
+      return { status: "rejected", reason: "unavailable" };
     // Explicit new input can start after permission/work is restored for an
     // empty queue. Never resume existing or uncertain queued input.
-    if (canReleaseEmptyQueuePause(s, blocks)) s.queuePaused = null;
+    const pauseRevision = configurationPauseRevision(s);
+    const releasePause = canReleaseEmptyQueuePause(s, blocks);
+    if (sourceDraft) this.pendingQueueHandoffs.add(blocks);
+    else if (releasePause) s.queuePaused = null;
+    const releaseDraft = sourceDraft
+      ? composerDrafts.holdForQueue(sourceDraft.key, sourceDraft.value)
+      : undefined;
     s.queued.push(blocks);
     this.emit();
+    if (releaseDraft) {
+      const revision = draftPersistence.revision();
+      // No request can drain while the queue is taking ownership of this input.
+      try {
+        await draftPersistence.flush().catch((error: unknown) => {
+          if (!draftPersistence.wasSaved(revision)) throw error;
+        });
+        if (interrupted()) throw new Error(STRINGS.repair.sendFailed);
+      } catch (error) {
+        releaseDraft();
+        removeQueued(s, blocks);
+        this.emit(key);
+        if (draftPersistence.wasSaved(revision))
+          await draftPersistence.flush().catch(() => undefined);
+        throw error;
+      } finally {
+        this.pendingQueueHandoffs.delete(blocks);
+      }
+      if (draftPersistence.snapshot().interactionLocked) {
+        if (!s.queuePaused) {
+          pauseQueue(s, "stopped");
+          this.emit(key);
+        }
+        return { status: "queued" };
+      }
+      if (
+        releasePause &&
+        s.queued[0] === blocks &&
+        configurationPauseRevision(s) === pauseRevision &&
+        canReleaseEmptyQueuePause({ ...s, queued: [] }, blocks)
+      )
+        s.queuePaused = null;
+    }
     return this.drainQueue(key);
   }
 
   private drainQueue(key: string): Promise<SendAdmission> {
+    const next = this.thread(key)?.queued[0];
+    if (next && this.pendingQueueHandoffs.has(next))
+      return Promise.resolve({ status: "queued" });
     return drainPrompt(key, {
       thread: (key) => this.thread(key),
       emit: (key) => this.emit(key),
@@ -840,6 +964,7 @@ class ThreadsStore {
     const s = this.thread(key);
     if (
       !s ||
+      this.deletions.has(key) ||
       s.uncertainPrompt ||
       s.connectionOutcomeUnknown ||
       s.queued.some(queuedAttachmentsNeedReview) ||
@@ -874,20 +999,25 @@ class ThreadsStore {
     this.emit();
   }
 
-  pauseQueuesForExit(): void {
-    for (const s of this.threads.values()) {
-      if (s.queued.length)
-        pauseQueue(s, s.uncertainPrompt ? "uncertain" : "stopped");
-    }
+  pauseQueuesForExit(confirmed = false): void {
+    for (const s of this.threads.values()) pauseQueueForExit(s, confirmed);
     this.emit();
   }
 
-  beginQueueEdit(key: string, index: number): PromptBlock[] {
+  beginQueueEdit(
+    key: string,
+    index: number,
+    shown?: PromptBlock[],
+  ): PromptBlock[] {
     const s = this.thread(key);
     const blocks = s?.queued[index];
     if (
       !s ||
       !blocks ||
+      (shown &&
+        (blocks !== shown ||
+          composerDrafts.read(`queue-edit:${key}`).queueEdit)) ||
+      this.pendingQueueHandoffs.has(blocks) ||
       (s.submitting && index === 0) ||
       blocks === s.uncertainPrompt
     )
@@ -908,6 +1038,7 @@ class ThreadsStore {
       !s ||
       index < 0 ||
       !replacement.length ||
+      this.pendingQueueHandoffs.has(original) ||
       (s.submitting && index === 0) ||
       original === s.uncertainPrompt
     )
@@ -917,12 +1048,18 @@ class ThreadsStore {
     this.emit(key);
   }
 
-  dequeue(key: string, index: number): void {
+  dequeue(key: string, index: number, shown?: PromptBlock[]): void {
     const s = this.thread(key);
+    const blocks = s?.queued[index];
     if (
       !s ||
+      !blocks ||
+      (shown &&
+        (blocks !== shown ||
+          composerDrafts.read(`queue-edit:${key}`).queueEdit)) ||
+      this.pendingQueueHandoffs.has(blocks) ||
       (s.submitting && index === 0) ||
-      s.queued[index] === s.uncertainPrompt
+      blocks === s.uncertainPrompt
     )
       return;
     s.queued.splice(index, 1);
@@ -979,6 +1116,7 @@ class ThreadsStore {
 
   async cancel(key: string): Promise<void> {
     const thread = this.thread(key);
+    if (thread) recordStopIntent(thread);
     const owner = thread && this.promptOwners.get(thread);
     if (owner && !owner.isOffered()) {
       await owner.cancel();
@@ -999,10 +1137,14 @@ class ThreadsStore {
 
   /** Round entry points replace their target; the top-level entry keeps its
    * own manual choice. These references last only as long as the projection. */
-  openArtifactPane(key: string, roundId?: string): void {
+  openArtifactPane(
+    key: string,
+    roundId?: string,
+    selected: string | null = null,
+  ): void {
     const s = this.threads.get(key);
     if (!s) return;
-    s.artifactPaneTarget = roundId ? { roundId, selected: null } : null;
+    s.artifactPaneTarget = roundId ? { roundId, selected } : null;
     s.artifactPaneOpen = true;
     this.emit();
   }
@@ -1010,15 +1152,7 @@ class ThreadsStore {
   selectArtifact(key: string, selected: string, roundId: string | null): void {
     const s = this.threads.get(key);
     if (!s || (s.artifactPaneTarget?.roundId ?? null) !== roundId) return;
-    const cards = artifactPaneCards(s, roundId);
-    if (
-      !cards?.some((card) =>
-        card.kind === "diff"
-          ? `file:${card.path}` === selected
-          : selected === "output",
-      )
-    )
-      return;
+    if (!canSelectArtifact(s, roundId, selected)) return;
     if (s.artifactPaneTarget) s.artifactPaneTarget.selected = selected;
     else s.artifactPaneSelection = selected;
     this.emit();
@@ -1061,6 +1195,8 @@ class ThreadsStore {
     configId: string,
     value: unknown,
   ): Promise<void> {
+    if (this.deletions.has(key))
+      throw new Error(LIBRARY.deleteReasons.unconfirmed);
     return this.configurations.set(key, configId, value);
   }
 
@@ -1096,43 +1232,22 @@ class ThreadsStore {
   }
 
   async confirmConfig(key: string): Promise<void> {
-    const s = this.thread(key);
-    if (!s?.configCheck || configChangeBusy(s)) return;
-    s.configuring = true;
-    s.configError = null;
-    const displayed = s.configCheck.current;
-    this.emit(key);
-    try {
-      const check = await invoke<ConfigCheck>("session_confirm_config", {
-        agentId: s.agentId,
-        cwd: s.cwd,
-        sessionId: s.nativeSessionId,
-        displayed,
-      });
-      if (this.thread(key) !== s) return;
-      // Ordered channel events are authoritative; this reply can arrive after
-      // a newer configuration notification and must not overwrite its guard.
-      if (check.status !== "ready")
-        throw new Error(STRINGS.repair.confirmConfigFailed);
-      if (
-        s.configCheck?.status === "ready" &&
-        sameConfigurationSnapshot(s.configCheck.current, check.current)
-      )
-        releaseConfigurationPause(s);
-      await this.refreshIndex();
-    } catch {
-      s.configError = STRINGS.repair.confirmConfigFailed;
-    } finally {
-      s.configuring = false;
-      this.emit(key);
-    }
+    await this.configurations.confirm(key, () => this.refreshIndex());
+  }
+
+  confirmOriginalConfig(key: string, reviewId: string): Promise<boolean> {
+    return this.configurations.confirm(
+      key,
+      () => this.refreshIndex(),
+      reviewId,
+    );
   }
 
   confirmRestoredConfig(
     key: string,
     savedSelection: Record<string, unknown>,
   ): Promise<void> {
-    return confirmSavedConfiguration(this.thread(key), savedSelection, {
+    return this.channels.confirmRestored(key, savedSelection, {
       current: () => this.thread(key),
       emit: () => this.emit(key),
     });
@@ -1181,7 +1296,18 @@ class ThreadsStore {
     return revision;
   }
 
+  readonly workConnectionClose = new WorkConnectionClosures(
+    (thread) => this.thread(thread.key) === thread,
+    (thread) => {
+      this.channels.delete(thread.key);
+      this.stopConfirmation.clear(thread.key);
+      this.emit(thread.key);
+    },
+  );
+
   async close(key: string): Promise<void> {
+    if (this.deletions.has(key))
+      throw new Error(LIBRARY.deleteReasons.unconfirmed);
     const s = this.threads.get(key);
     if (s && hasActiveFork(s)) throw new Error(STRINGS.repair.archiveBusy);
     this.stopConfirmation.clear(key);
@@ -1220,6 +1346,7 @@ class ThreadsStore {
 
   /** The UI and mutation share one guard; this reads existing state only. */
   archiveBlockReason(rowId: string) {
+    if (this.deletions.has(rowId)) return "unconfirmed";
     return archiveBlockReason(rowId, this.thread(rowId), (state) =>
       this.needsAttention(state),
     );
@@ -1268,53 +1395,46 @@ class ThreadsStore {
     });
   }
 
-  /** Delete a session — agent-side `session/delete` when supported, index
-   *  row removal, and a tombstone so it cannot reappear. Works for both
-   *  meta rows (`source:"meta"`) and agent-side rows (`source:"agent"`).
-   *  Reports the agent-side outcome: "deleted" (the agent confirmed),
-   *  "unsupported" (it cannot delete or could not be asked — its record
-   *  stays), "unconfirmed" (the request failed, residue unknown). */
-  async delete(row: {
-    id?: string;
-    key?: string;
-    agentId: string;
-    cwd: string;
-    nativeSessionId: string | null;
-  }): Promise<"deleted" | "unsupported" | "unconfirmed"> {
+  async delete(row: SessionDeletionInput) {
     const native = row.nativeSessionId;
-    if (!native) return "unsupported";
+    if (!native) throw new Error(LIBRARY.deleteLocalNotRemoved);
     const key = row.id ?? row.key ?? `${row.agentId}:${row.cwd}:${native}`;
-    // W3-9：进行中、发送中、停止/结果未确认或还有未发送内容的对话不能
-    // 删除——先完成或清除，避免索引与 Agent 侧活动工作失联。
     const blocked = this.archiveBlockReason(key);
     if (blocked) throw new Error(LIBRARY.deleteReasons[blocked]);
-    const s = this.threads.get(key);
-    this.removeThread(key);
-    if (s) this.drafts.delete(s.draftGroup ?? "");
-    this.channels.delete(key);
-    this.emit();
-    if (s) {
-      await invoke("session_close", {
-        agentId: s.agentId,
-        cwd: s.cwd,
-        sessionId: s.nativeSessionId,
-      }).catch(() => undefined);
-    }
-    const remote = await invoke<"deleted" | "unsupported" | "unconfirmed">(
-      "session_delete",
-      {
-        agentId: row.agentId,
-        cwd: row.cwd,
-        nativeSessionId: native,
+    return this.deletions.run(
+      key,
+      async () => {
+        this.emit(key);
+        await draftPersistence.flush();
+        const s = this.threads.get(key);
+        const blocked = archiveBlockReason(key, s, (state) =>
+          this.needsAttention(state),
+        );
+        if (blocked) throw new Error(LIBRARY.deleteReasons[blocked]);
+        const remote = await requestSessionDeletion(
+          { agentId: row.agentId, cwd: row.cwd, nativeSessionId: native },
+          s,
+          (uncertain) => {
+            if (s && this.threads.get(key) === s) {
+              if (uncertain) s.connectionOutcomeUnknown = true;
+              applyConnectionLost(s);
+            }
+          },
+        );
+        if (this.threads.get(key) === s) {
+          this.removeThread(key);
+          if (s && this.drafts.get(s.draftGroup ?? "") === key)
+            this.drafts.delete(s.draftGroup ?? "");
+          this.channels.delete(key);
+        }
+        await this.refreshIndex();
+        return remote;
       },
-    ).catch((): "unconfirmed" => "unconfirmed");
-    await this.refreshIndex();
-    return remote;
+      () => this.emit(key),
+    );
   }
 }
-
 export const threads = new ThreadsStore();
-
 // React bindings live in `session_hooks.ts`; re-exported for existing
 // `../runtime/sessions` imports.
 export { useThread, useThreadsSnapshot } from "./session_hooks";

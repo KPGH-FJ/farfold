@@ -13,9 +13,21 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   parseTaskReference,
+  resolveTaskProgress,
   selectTaskRequirements,
   taskReferencePath,
+  taskStatusPath,
 } from "./agent-task-reference.mjs";
+import {
+  agentConditionsPath,
+  parseAgentConditions,
+} from "./acceptance-agent-conditions.mjs";
+export { parseAgentConditions } from "./acceptance-agent-conditions.mjs";
+import {
+  parseStage2Evidence,
+  stage2EvidencePath,
+} from "./acceptance-stage2-evidence.mjs";
+export { parseStage2Evidence } from "./acceptance-stage2-evidence.mjs";
 
 // An evidence-side index, not an execution queue or a product event store.
 // Nothing here establishes the truth of an observation or accepts an Agent.
@@ -77,7 +89,7 @@ export function parseAgentIds(text) {
   );
   const ids = [...array.matchAll(/"([^"]+)"/g)].map((item) => item[1]);
   unique(ids, "first-release identity");
-  assert.equal(ids.length, 29, "expected all 29 first-release identities");
+  assert.equal(ids.length, 22, "expected all 22 first-release identities");
   return ids;
 }
 
@@ -101,8 +113,11 @@ export function parseAcceptanceAuthorities({
   productText,
   firstReleaseText,
   requirementsText,
+  statusText,
 }) {
-  const reference = parseTaskReference(requirementsText);
+  const parsed = parseTaskReference(requirementsText);
+  const reference =
+    statusText === undefined ? parsed : resolveTaskProgress(parsed, statusText);
   assert.equal(reference.tasks.size, 151, "expected all 151 requirements");
   const newIds = [...reference.tasks.keys()].filter((id) =>
     id.startsWith("NEW-"),
@@ -154,6 +169,11 @@ export function parseAcceptanceAuthorities({
         path: taskReferencePath,
         sha256: sha256(requirementsText),
       },
+      ...(statusText === undefined
+        ? {}
+        : {
+            status: { path: taskStatusPath, sha256: sha256(statusText) },
+          }),
     },
     agents,
     standards,
@@ -170,7 +190,22 @@ export function loadAcceptanceAuthorities(rootDir = root) {
     productText: readFileSync(resolve(rootDir, "PRODUCT.md"), "utf8"),
     firstReleaseText: readFileSync(resolve(rootDir, directoryPath), "utf8"),
     requirementsText: readFileSync(resolve(rootDir, taskReferencePath), "utf8"),
+    statusText: readFileSync(resolve(rootDir, taskStatusPath), "utf8"),
   });
+}
+
+export function loadAgentConditions(rootDir = root) {
+  return {
+    path: agentConditionsPath,
+    text: readBoundedJson(resolve(rootDir, agentConditionsPath), true),
+  };
+}
+
+export function loadStage2Evidence(rootDir = root) {
+  return {
+    path: stage2EvidencePath,
+    text: readBoundedJson(resolve(rootDir, stage2EvidencePath), true),
+  };
 }
 
 function taskReference(authorities) {
@@ -456,8 +491,28 @@ export function validateCoverage(coverage, authorities, mapping) {
   };
 }
 
-export function buildAcceptanceIndex({ authorities, mapping, coverage = [] }) {
+export function buildAcceptanceIndex({
+  authorities,
+  mapping,
+  coverage = [],
+  conditions,
+  stage2Evidence,
+  rootDir = root,
+}) {
   const normalized = normalizeMapping(mapping, authorities);
+  const agentEvidence =
+    conditions === undefined
+      ? undefined
+      : parseAgentConditions(conditions, authorities, { rootDir });
+  if (stage2Evidence !== undefined) {
+    assert.ok(
+      agentEvidence,
+      "stage-two supplement requires the Agent evidence index",
+    );
+    agentEvidence.supplements = [
+      parseStage2Evidence(stage2Evidence, authorities, { rootDir }),
+    ];
+  }
   assert.ok(
     Array.isArray(coverage),
     "coverage must be an array of validated cases",
@@ -474,11 +529,42 @@ export function buildAcceptanceIndex({ authorities, mapping, coverage = [] }) {
       const requirementIds =
         normalized.links.find((item) => item.standardId === standard.id)
           ?.requirementIds ?? [];
+      const declaredObservations = [
+        ...(agentEvidence?.rows
+          .find((row) => row.agentId === agentId)
+          .observations.filter((item) =>
+            item.standardIds.includes(standard.id),
+          ) ?? []),
+        ...(agentEvidence?.supplements?.flatMap((supplement) =>
+          supplement.observations.filter(
+            (item) =>
+              item.agentId === agentId &&
+              item.standardIds.includes(standard.id),
+          ),
+        ) ?? []),
+      ];
+      const hasCoverage = coverage.some(
+        (item) =>
+          item.agentId === agentId && item.standardIds.includes(standard.id),
+      );
       return {
         agentId,
         standardId: standard.id,
         requirementIds,
         packageIds: neededPackageIds(requirementIds, normalized, authorities),
+        observationStatus:
+          hasCoverage || declaredObservations.length
+            ? "indexed-unreviewed"
+            : "not-indexed",
+        ...(agentEvidence === undefined
+          ? {}
+          : {
+              declaredObservations: declaredObservations.map((item) => ({
+                ...(item.source === undefined ? {} : { source: item.source }),
+                sourcePointer: item.sourcePointer,
+                result: item.result,
+              })),
+            }),
         // Empty means no indexed observations, not failed or never tested.
         observations: Object.fromEntries(
           evidenceLevels.map((level) => [
@@ -521,16 +607,32 @@ export function buildAcceptanceIndex({ authorities, mapping, coverage = [] }) {
       .filter((item) => !mapped.has(item.id))
       .map((item) => item.id),
     coverage: structuredClone(coverage),
+    ...(agentEvidence === undefined ? {} : { agentEvidence }),
     cells,
   };
 }
 
-export function validateAcceptanceIndex(index, authorities) {
+export function validateAcceptanceIndex(
+  index,
+  authorities,
+  { conditions, stage2Evidence, rootDir = root } = {},
+) {
   object(index, "index");
   const rebuilt = buildAcceptanceIndex({
     authorities,
     mapping: index.mapping,
     coverage: index.coverage,
+    ...(index.agentEvidence === undefined
+      ? {}
+      : {
+          conditions: conditions ?? loadAgentConditions(rootDir),
+          ...(index.agentEvidence.supplements === undefined
+            ? {}
+            : {
+                stage2Evidence: stage2Evidence ?? loadStage2Evidence(rootDir),
+              }),
+          rootDir,
+        }),
   });
   assert.deepEqual(
     index,
@@ -551,9 +653,18 @@ export function validateAcceptanceIndex(index, authorities) {
 export function queryAcceptanceIndex(
   index,
   { agentId, standardId, requirementId } = {},
-  { authorities = loadAcceptanceAuthorities() } = {},
+  {
+    authorities = loadAcceptanceAuthorities(),
+    conditions,
+    stage2Evidence,
+    rootDir = root,
+  } = {},
 ) {
-  validateAcceptanceIndex(index, authorities);
+  validateAcceptanceIndex(index, authorities, {
+    conditions,
+    stage2Evidence,
+    rootDir,
+  });
   if (agentId !== undefined)
     assert.ok(
       index.authorities.agents.includes(agentId),
@@ -598,6 +709,45 @@ export function queryAcceptanceIndex(
     common: index.authorities.common,
     scope: index.authorities.scope,
     unmappedRequirementIds: index.unmappedRequirementIds,
+    ...(index.agentEvidence === undefined
+      ? {}
+      : {
+          agentEvidence: {
+            ...index.agentEvidence,
+            ...(index.agentEvidence.supplements === undefined
+              ? {}
+              : {
+                  supplements: index.agentEvidence.supplements.map(
+                    (supplement) => ({
+                      ...supplement,
+                      observations: supplement.observations.filter(
+                        (item) =>
+                          (!agentId || item.agentId === agentId) &&
+                          (!standardId ||
+                            item.standardIds.includes(standardId)) &&
+                          (!requirementId ||
+                            item.requirementIds.includes(requirementId)),
+                      ),
+                    }),
+                  ),
+                }),
+            rows: index.agentEvidence.rows
+              .filter((row) => !agentId || row.agentId === agentId)
+              .map((row) => {
+                // Unassigned evidence stays visible, but never claims the selected standard.
+                const observations = row.observations.filter(
+                  (item) =>
+                    !standardId ||
+                    item.standardIds.length === 0 ||
+                    item.standardIds.includes(standardId),
+                );
+                return {
+                  ...row,
+                  observations,
+                };
+              }),
+          },
+        }),
     cells: index.cells.filter(
       (item) =>
         (!agentId || item.agentId === agentId) &&
@@ -654,34 +804,59 @@ export function runAcceptanceIndex(args, { rootDir = root } = {}) {
       "NEW requirements need explicitly supplied newPackages, never inferred owners.",
       "Coverage FILE is a JSON array of receipt-validator case summaries; exact source conditions and excerpts are checked, raw receipts and effects are not verified here.",
       "Source/fixture checks use shared; claimed layers remain independently reviewable.",
-      "Validation establishes index structure and current source identity, never 29-Agent acceptance.",
+      "Validation establishes index structure and current source identity, never Agent acceptance.",
       "Unmapped requirements remain in the complete 151-item catalog; no pass state is generated.",
+      "Default queries also read the dated stage-one Agent ledger; recorded remaining conditions are not current project status.",
+      "Default queries include scoped stage-two observations with explicit manual links and source digests; these remain unclassified, separate from receipt coverage and current status.",
+      "not-indexed means 未收录, never 未测. Historical ledger observations and remaining-condition prose remain separate from receipt coverage.",
+      "Current task conclusions are read from docs/status.md where migrated; no prose is used to infer standards or passed states.",
     ].join("\n");
   const authorities = loadAcceptanceAuthorities(rootDir);
   const readJson = (file) => readBoundedJson(resolve(rootDir, file));
   if (options.indexFile) {
     const index = readJson(options.indexFile);
-    const validation = validateAcceptanceIndex(index, authorities);
+    const conditions =
+      index.agentEvidence === undefined
+        ? undefined
+        : loadAgentConditions(rootDir);
+    const validation = validateAcceptanceIndex(index, authorities, {
+      conditions,
+      rootDir,
+    });
     if (options.agentId || options.standardId || options.requirementId)
       return {
         validation,
-        query: queryAcceptanceIndex(index, options, { authorities }),
+        query: queryAcceptanceIndex(index, options, {
+          authorities,
+          conditions,
+          rootDir,
+        }),
       };
     return validation;
   }
+  const conditions = loadAgentConditions(rootDir);
+  const stage2Evidence = loadStage2Evidence(rootDir);
   const index = buildAcceptanceIndex({
     authorities,
     mapping: options.mappingFile ? readJson(options.mappingFile) : undefined,
     coverage: options.coverageFile ? readJson(options.coverageFile) : [],
+    conditions,
+    stage2Evidence,
+    rootDir,
   });
   if (options.agentId || options.standardId || options.requirementId)
-    return queryAcceptanceIndex(index, options, { authorities });
+    return queryAcceptanceIndex(index, options, {
+      authorities,
+      conditions,
+      stage2Evidence,
+      rootDir,
+    });
   return index;
 }
 
 // Explicit CLI metadata inputs are bounded ordinary files. This is not an
 // adversarial ancestor-directory sandbox; the caller owns these quiet paths.
-function readBoundedJson(file) {
+function readBoundedJson(file, asText = false) {
   const message = "expected bounded regular JSON input";
   assert.ok(lstatSync(file).isFile(), message);
   let descriptor;
@@ -717,7 +892,8 @@ function readBoundedJson(file) {
         before.dev === current.dev,
       message,
     );
-    return JSON.parse(bytes.toString("utf8"));
+    const text = bytes.toString("utf8");
+    return asText ? text : JSON.parse(text);
   } finally {
     if (descriptor !== undefined) closeSync(descriptor);
   }

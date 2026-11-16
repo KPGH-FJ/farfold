@@ -165,6 +165,75 @@ fn full_fallback_detects_bytes_even_with_an_equivalent_metadata_hint() {
 }
 
 #[test]
+fn restoring_mtime_does_not_hide_changed_bytes_from_copy_or_full_revision() {
+    let (_root, path, file) = fixture();
+    let before = fs::metadata(&path).unwrap().modified().unwrap();
+    fs::write(&path, "version two").unwrap();
+    fs::OpenOptions::new()
+        .write(true)
+        .open(&path)
+        .unwrap()
+        .set_times(fs::FileTimes::new().set_modified(before))
+        .unwrap();
+    assert_eq!(fs::metadata(&path).unwrap().modified().unwrap(), before);
+    let destination = path.with_file_name("must-not-copy.txt");
+    assert!(matches!(
+        super::super::copy(&file, &destination),
+        Err(DeliveryError::Changed)
+    ));
+    assert!(!destination.exists());
+    let RevisionCheck::Verified { file: refreshed } =
+        check_revision(&file, RevisionMode::Content).unwrap()
+    else {
+        panic!("full revision must verify actual bytes");
+    };
+    assert_ne!(refreshed.sha256, file.sha256);
+    assert_ne!(refreshed.version, file.version);
+}
+
+#[test]
+fn old_version_requires_explicit_reread_and_is_not_silently_reassigned() {
+    let (_root, _path, mut file) = fixture();
+    let opened = super::super::open_source(
+        Path::new(&file.root),
+        Path::new(&file.path),
+        super::super::MAX_FILE_BYTES,
+    )
+    .unwrap();
+    let root = crate::file_access::stamp(&opened.root_handle).unwrap();
+    let stamp = opened.before;
+    let legacy = super::super::content_hash(
+        format!(
+            "v1:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}",
+            root.identity.device,
+            root.identity.inode,
+            stamp.identity.device,
+            stamp.identity.inode,
+            stamp.size,
+            stamp.modified.0,
+            stamp.modified.1,
+            stamp.changed.0,
+            stamp.changed.1,
+            file.sha256,
+        )
+        .as_bytes(),
+    );
+    file.version = legacy.clone();
+    assert_eq!(
+        super::super::revalidate_for_open(&file),
+        Err(DeliveryError::Changed)
+    );
+    let RevisionCheck::Verified { file: refreshed } =
+        check_revision(&file, RevisionMode::Hint).unwrap()
+    else {
+        panic!("old receipts need a complete new capture");
+    };
+    assert_eq!(file.version, legacy);
+    assert_eq!(refreshed.sha256, file.sha256);
+    assert_ne!(refreshed.version, file.version);
+}
+
+#[test]
 fn replacement_after_metadata_observation_cannot_return_wrong_bytes() {
     let (_root, path, file) = fixture();
     let result = check_with_capture(&file, RevisionMode::Content, |opened| {

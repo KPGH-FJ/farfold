@@ -199,7 +199,7 @@ export function parseDocxTable(
         else if (width && !["auto", "nil"].includes(attr(width, "type") ?? ""))
           warn("unsupportedFormatting");
         const shading = child(properties, "shd");
-        if (shading) cell.background = styles.color(shading, "fill");
+        if (shading) cell.background = styles.shading(shading);
         const vertical = val(child(properties, "vAlign"));
         if (vertical && ["top", "center", "bottom"].includes(vertical))
           cell.verticalAlign = vertical as DocxCell["verticalAlign"];

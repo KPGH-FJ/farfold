@@ -7,6 +7,8 @@ import {
   parseTaskReference,
   referenceRole,
   taskReferencePath,
+  taskStatusPath,
+  resolveTaskProgress,
 } from "./agent-task-reference.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -160,7 +162,10 @@ export function checkProjectDocs() {
     "reference has no scheduling authority",
   );
   const plan = verifyPlan(referenceText, JSON.parse(raw));
-  const reference = parseTaskReference(referenceText);
+  const reference = resolveTaskProgress(
+    parseTaskReference(referenceText),
+    readFileSync(resolve(root, taskStatusPath), "utf8"),
+  );
   let localLinks = 0;
   let localAnchors = 0;
   for (const file of entrypoints) {

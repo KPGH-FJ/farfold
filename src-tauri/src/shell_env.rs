@@ -1,4 +1,6 @@
 //! Preserve the platform environment; Windows has no Unix login-shell probe.
+mod overrides;
+pub(crate) use overrides::EnvNames;
 #[cfg(unix)]
 mod unix;
 #[cfg(unix)]

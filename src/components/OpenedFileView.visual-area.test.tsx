@@ -81,7 +81,10 @@ vi.mock("react", async (original) => {
 });
 
 import { OpenedFileView, type OpenedFileViewProps } from "./OpenedFileView";
-import { VisualFilePreview } from "./VisualFilePreview";
+import {
+  VisualFilePreview,
+  type PdfPreviewCandidate,
+} from "./VisualFilePreview";
 import type { VerifiedFile, VisualPreview } from "../runtime/file_delivery";
 import type { VisualPreviewReadiness } from "../runtime/visual_feedback";
 import {
@@ -113,6 +116,7 @@ type VisualProps = {
   preview: VisualPreview;
   active: boolean;
   interactionBlocked?: boolean;
+  pdfCandidate?: PdfPreviewCandidate;
   onReadiness: (value: VisualPreviewReadiness) => void;
   onVisualTargetAvailability: (value: VisualTargetAvailability) => void;
   onVisualTargetConfirm: (value: VisualTargetConfirmation) => void;
@@ -157,6 +161,20 @@ function click(label: string) {
 function child() {
   return render().nodes.find((n) => n.type === VisualFilePreview)!
     .props as unknown as VisualProps;
+}
+async function completePdfDraw(previous: VisualPreview) {
+  const candidate = await vi.waitFor(() => {
+    const staged = child();
+    expect(staged.preview).toBe(previous);
+    expect(staged.interactionBlocked).toBe(true);
+    expect(staged.pdfCandidate).toBeDefined();
+    return staged.pdfCandidate!;
+  });
+  candidate.settle({
+    element: { width: 40, height: 30 } as HTMLCanvasElement,
+    page: candidate.page,
+    pageCount: 4,
+  });
 }
 function preview(f = file): VisualPreview {
   return {
@@ -335,7 +353,9 @@ it("wrong-file false and the old editor cannot release the current editor hold",
   p.onTargetEditing({ owner: current, file: next(), editing: false });
   expect(await monitor().apply(next(), () => true)).toBe("deferred");
   p.onTargetEditing({ owner: current, file, editing: false });
-  expect(await monitor().apply(next(), () => true)).toBe("applied");
+  const operation = monitor().apply(next(), () => true);
+  await completePdfDraw(p.preview);
+  expect(await operation).toBe("applied");
 });
 it.each(["hide", "thread", "selection"])(
   "rejects late callbacks after %s",
@@ -363,6 +383,7 @@ it("candidate holds auto refresh, while explicit reread retires old callbacks", 
   click(S.refresh);
   p.onVisualTargetConfirm(a);
   expect(saved().anchor).toBeUndefined();
+  await completePdfDraw(p.preview);
   await vi.waitFor(() => expect(child().preview.file.version).toBe("v2"));
   p.onReadiness(location(p));
   p.onVisualTargetAvailability({ source: a.source, available: true });
@@ -382,6 +403,7 @@ it("staging retains the actual old pixel preview and blocks controls until a new
   p.onVisualTargetConfirm(a);
   expect(saved().anchor).toBeUndefined();
   read.resolve(preview(next()));
+  await completePdfDraw(p.preview);
   expect(await operation).toBe("applied");
   expect(child().preview).not.toBe(p.preview);
   expect(child().interactionBlocked).toBe(false);

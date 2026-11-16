@@ -61,7 +61,11 @@ export function OpeningElicitationList({
             {permission.decision ? (
               <DecisionLine
                 decision={permission.decision}
-                submitting={permission.status === "submitting"}
+                submitting={
+                  permission.status === "submitting" ||
+                  (permission.status === "pending" &&
+                    !permission.decision.undoable)
+                }
                 onUndo={() => owner.undoPermission(permission.requestId)}
               />
             ) : (

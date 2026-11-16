@@ -56,6 +56,8 @@ const render = (thread: ReturnType<typeof state>) =>
 it("distinguishes a stopped reply from still active official steps and clears the note only on terminal activity", () => {
   const thread = state();
   const html = render(thread);
+  expect(html).toContain('class="no">■ 回复已停止</span>');
+  expect(html).not.toContain('class="no">■ 已停止</span>');
   expect(html).toContain("回复已停止，仍有步骤未确认结束");
   expect(html).toContain("正在处理");
   expect(html).toContain('class="g run"');
@@ -66,6 +68,7 @@ it("distinguishes a stopped reply from still active official steps and clears th
   });
   Object.assign(thread, { activeToolCallIds: [] });
   const done = render(thread);
+  expect(done).toContain('class="no">■ 回复已停止</span>');
   expect(done).not.toContain("回复已停止，仍有步骤未确认结束");
   expect(done).toContain('class="g ok"');
 });
@@ -94,6 +97,17 @@ it("describes an officially pending step as waiting without changing its status"
   expect(html).not.toContain("正在处理");
   expect(html).not.toContain('class="g run"');
   expect(html).toContain("回复已停止，仍有步骤未确认结束");
+});
+
+it("offers a check on the stopped live owner without offering an immediate close", () => {
+  const thread = state();
+  thread.connectionId = "owner";
+  thread.identity = "established";
+  const html = render(thread);
+  expect(html).toContain("检查能否关闭此对话的连接");
+  expect(html).not.toContain(">关闭此对话的连接</button>");
+  thread.stopUnconfirmed = true;
+  expect(render(thread)).not.toContain("检查能否关闭此对话的连接");
 });
 
 it("explains the explicit queue path only for a failed reply whose new input can be staged", () => {

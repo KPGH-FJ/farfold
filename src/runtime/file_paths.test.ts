@@ -3,7 +3,10 @@ import {
   fileBasename,
   filePathUri,
   isAbsoluteFilePath,
+  isLocalAbsoluteFilePath,
+  localFileUriPath,
   projectFileUri,
+  relativeVerifiedFilePath,
 } from "./file_paths";
 import {
   fileDelivery,
@@ -12,6 +15,7 @@ import {
 } from "./file_delivery";
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 import { invoke } from "@tauri-apps/api/core";
+import { messageLink } from "./message-link";
 
 it.each([
   "/work/中文 #100%.md",
@@ -73,4 +77,103 @@ it("routes a Windows absolute delivery candidate through explicit file inspectio
   expect(reportedFiles(call)).toEqual([
     { path: "C:\\work\\out.md", toolCallId: "one", source: "location" },
   ]);
+});
+
+it.each([
+  ["file:///C:/Work/report%20one.md", "C:/Work/report one.md"],
+  ["file://localhost/D:/工作/report.md", "D:/工作/report.md"],
+  ["file:///work/a%5Cb.md", "/work/a\\b.md"],
+  ["file:/work/legacy.md", "/work/legacy.md"],
+  ["file://server/share/report.md", null],
+  ["file:////server/share/report.md", null],
+  ["file:///%5Cserver/share/report.md", null],
+  ["file:///C:/work/report.md?query=1", null],
+  ["file:///C:/work/report.md#section", null],
+])("shares the local URI boundary for %s", (uri, path) => {
+  expect(localFileUriPath(uri)).toBe(path);
+  expect(localResourcePath(uri)).toBe(path);
+});
+
+it.each([
+  ["C:\\work\\report.md", true],
+  ["\\\\?\\C:\\work\\report.md", true],
+  ["/work/a\\b.md", true],
+  ["\\\\server\\share\\report.md", false],
+  ["//server/share/report.md", false],
+  ["/\\server/share/report.md", false],
+  ["\\\\?\\UNC\\server\\share\\report.md", false],
+  ["\\\\.\\PhysicalDrive0", false],
+  ["\\work\\report.md", false],
+  ["C:report.md", false],
+] as const)(
+  "distinguishes an explicit local absolute path %s",
+  (path, accepted) => {
+    expect(isLocalAbsoluteFilePath(path)).toBe(accepted);
+  },
+);
+
+it.each([
+  ["C:/work/report.md", "C:/work/report.md", "file_delivery_inspect_selected"],
+  [
+    "file:///C:/work/report.md#L2",
+    "C:/work/report.md",
+    "file_delivery_inspect_selected",
+  ],
+  [".\\report.md", ".\\report.md", "file_delivery_inspect"],
+])(
+  "inspects the actual message destination %s only at the delivery action",
+  async (input, path, command) => {
+    vi.mocked(invoke).mockClear().mockResolvedValue(undefined);
+    const link = messageLink(input);
+    expect(invoke).not.toHaveBeenCalled();
+    expect(link).toEqual({ kind: "file", path });
+    if (link.kind !== "file") throw new Error("expected file candidate");
+    await fileDelivery.inspectLink("C:\\work", link.path);
+    expect(invoke).toHaveBeenCalledExactlyOnceWith(
+      command,
+      command === "file_delivery_inspect"
+        ? { root: "C:\\work", path }
+        : { path },
+    );
+  },
+);
+
+it.each([
+  ["/work", "/work/reports/中文 #%.md", "reports/中文 #%.md"],
+  ["/", "/report.md", "report.md"],
+  [
+    "\\\\?\\C:\\work",
+    "\\\\?\\C:\\work\\reports\\result.md",
+    "reports/result.md",
+  ],
+  ["C:\\work", "C:/work/reports/result.md", "reports/result.md"],
+  [
+    "\\\\?\\UNC\\host\\share",
+    "\\\\?\\UNC\\host\\share\\dir\\result.md",
+    "dir/result.md",
+  ],
+  ["", "/work/result.md", null],
+  ["/work", "/work-other/result.md", null],
+  ["/work", "/work/../result.md", null],
+  ["/work", "/work", null],
+  ["C:\\work", "D:\\work\\result.md", null],
+  ["\\\\host-a\\share", "\\\\host-b\\share\\result.md", null],
+])(
+  "derives a relative locator from exact canonical components (%s, %s)",
+  (root, file, expected) => {
+    expect(relativeVerifiedFilePath(root, file)).toBe(expected);
+  },
+);
+
+it("opens the derived Windows locator within its working directory", async () => {
+  vi.mocked(invoke).mockClear();
+  vi.mocked(invoke).mockResolvedValueOnce(undefined);
+  const root = "C:\\work";
+  const path = relativeVerifiedFilePath(root, "C:\\work\\dir\\result.md");
+  expect(path).toBe("dir/result.md");
+  await fileDelivery.inspectLink(root, path!);
+  expect(invoke).toHaveBeenCalledExactlyOnceWith("file_delivery_inspect", {
+    root,
+    path,
+  });
 });

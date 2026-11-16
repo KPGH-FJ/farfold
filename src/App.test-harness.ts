@@ -6,12 +6,14 @@ import {
   type ReactNode,
 } from "react";
 import type { ServiceIdentity } from "./runtime/credentials";
+import type { threads as productionThreads } from "./runtime/sessions";
 const h = vi.hoisted(() => ({
   cursor: 0,
   slots: [] as unknown[],
   effects: [] as { deps?: unknown[]; cleanup?: () => void }[],
   pending: [] as (() => void)[],
   draft: { text: "OWN-ORIGINAL-DRAFT", attachments: [] as unknown[] },
+  draftGeneration: 0,
   choice: {
     agentId: "A" as string | null,
     cwd: "/draft-A" as string | null,
@@ -44,7 +46,12 @@ const h = vi.hoisted(() => ({
     cwd?: string;
     nativeSessionId?: string | null;
   }[],
+  indexSource: null as Pick<
+    typeof productionThreads,
+    "getSnapshot" | "refreshIndex"
+  > | null,
   notification: null as ((key: string) => void | Promise<void>) | null,
+  notificationSettings: null as (() => void | Promise<void>) | null,
   prepared: new Set(["A", "B"]),
   selections: new Map<
     string,
@@ -121,10 +128,14 @@ vi.mock("./runtime/auto_archive", () => ({ startAutoArchive: () => () => {} }));
 vi.mock("./runtime/notification_navigation", () => ({
   notificationNavigation: async (
     select: (key: string) => void | Promise<void>,
+    _port: unknown,
+    settings?: () => void | Promise<void>,
   ) => {
     h.notification = select;
+    h.notificationSettings = settings ?? null;
     return () => {
       h.notification = null;
+      h.notificationSettings = null;
     };
   },
 }));
@@ -148,6 +159,7 @@ vi.mock("./runtime/performance-trace", () => ({ traceAfterPaint: vi.fn() }));
 vi.mock("./runtime/drafts", () => ({
   composerDrafts: {
     read: () => h.draft,
+    generation: () => h.draftGeneration,
     clear: h.clearDraft,
     preserveNew: h.preserveDraft,
     clearPreservedNew: (ticket: { draft: typeof h.draft }) => {
@@ -162,6 +174,7 @@ vi.mock("./runtime/drafts", () => ({
       h.draft = update(h.draft);
     },
   },
+  draftPersistence: { snapshot: () => ({ interactionLocked: false }) },
   newConversationChoice: h.choice,
 }));
 vi.mock("./runtime/collections", async (original) => ({
@@ -171,9 +184,16 @@ vi.mock("./runtime/collections", async (original) => ({
 vi.mock("./runtime/sessions", () => ({
   threads: {
     subscribe: () => () => {},
-    getSnapshot: () => ({ index: h.index, threads: h.threads }),
+    getSnapshot: () =>
+      h.indexSource?.getSnapshot() ?? {
+        index: h.index,
+        indexReady: true,
+        threads: h.threads,
+      },
     thread: (key: string) => h.threads.get(key),
-    refreshIndex: vi.fn(async () => {}),
+    refreshIndex: vi.fn(async () => {
+      await h.indexSource?.refreshIndex();
+    }),
     open: h.open,
     reconnect: h.reconnect,
     markOpenFailed: vi.fn(),
@@ -279,9 +299,12 @@ export async function resetHarness() {
     .mockImplementation(async () => ({ draft: h.draft }));
   h.reconnect.mockReset();
   h.index = [];
+  h.indexSource = null;
   h.notification = null;
+  h.notificationSettings = null;
   h.threads.clear();
   h.draft = { text: "OWN-ORIGINAL-DRAFT", attachments: [] };
+  h.draftGeneration = 0;
   Object.assign(h.choice, {
     agentId: "A",
     reviewRequired: false,

@@ -7,40 +7,53 @@ import {
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 const h = vi.hoisted(() => ({
   cursor: 0,
-  slots: [] as { value?: unknown; deps?: unknown[]; cleanup?: () => void }[],
+  slots: [] as {
+    value?: unknown;
+    deps?: unknown[];
+    cleanup?: () => void;
+    phase?: "layout" | "passive";
+  }[],
+  layoutEffects: [] as (() => void)[],
   effects: [] as (() => void)[],
   open: vi.fn(),
   inspect: vi.fn(),
 }));
-vi.mock("react", async (original) => ({
-  ...(await original<typeof import("react")>()),
-  useState: (initial: unknown) => {
-    const slot = (h.slots[h.cursor++] ??= {
-      value: typeof initial === "function" ? initial() : initial,
-    });
-    return [
-      slot.value,
-      (value: unknown) => {
-        slot.value = typeof value === "function" ? value(slot.value) : value;
-      },
-    ];
-  },
-  useRef: (initial: unknown) =>
-    (h.slots[h.cursor++] ??= { value: { current: initial } }).value,
-  useEffect: (effect: () => void | (() => void), deps: unknown[]) => {
-    const slot = (h.slots[h.cursor++] ??= {});
-    if (
-      !slot.deps ||
-      deps.some((value, index) => !Object.is(value, slot.deps?.[index]))
-    ) {
-      slot.deps = deps;
-      h.effects.push(() => {
-        slot.cleanup?.();
-        slot.cleanup = effect() || undefined;
+vi.mock("react", async (original) => {
+  const effectFor =
+    (phase: "layout" | "passive") =>
+    (effect: () => void | (() => void), deps: unknown[]) => {
+      const slot = (h.slots[h.cursor++] ??= {});
+      if (
+        !slot.deps ||
+        deps.some((value, index) => !Object.is(value, slot.deps?.[index]))
+      ) {
+        slot.deps = deps;
+        slot.phase = phase;
+        (phase === "layout" ? h.layoutEffects : h.effects).push(() => {
+          slot.cleanup?.();
+          slot.cleanup = effect() || undefined;
+        });
+      }
+    };
+  return {
+    ...(await original<typeof import("react")>()),
+    useState: (initial: unknown) => {
+      const slot = (h.slots[h.cursor++] ??= {
+        value: typeof initial === "function" ? initial() : initial,
       });
-    }
-  },
-}));
+      return [
+        slot.value,
+        (value: unknown) => {
+          slot.value = typeof value === "function" ? value(slot.value) : value;
+        },
+      ];
+    },
+    useRef: (initial: unknown) =>
+      (h.slots[h.cursor++] ??= { value: { current: initial } }).value,
+    useEffect: effectFor("passive"),
+    useLayoutEffect: effectFor("layout"),
+  };
+});
 vi.mock("@tauri-apps/plugin-dialog", () => ({ open: h.open }));
 vi.mock("../runtime/file_delivery", () => ({
   fileDelivery: { inspectSelected: h.inspect },
@@ -98,6 +111,7 @@ function render() {
       onOpenFile: onOpen,
     }),
   );
+  for (const effect of h.layoutEffects.splice(0)) effect();
   for (const effect of h.effects.splice(0)) effect();
   return tree;
 }
@@ -110,11 +124,20 @@ function click(node = button()) {
 function unmount() {
   for (const slot of h.slots) slot.cleanup?.();
   h.slots = [];
+  h.layoutEffects = [];
   h.effects = [];
+}
+function commitUnmount() {
+  for (const slot of h.slots) {
+    if (slot.phase !== "layout") continue;
+    slot.cleanup?.();
+    slot.cleanup = undefined;
+  }
 }
 beforeEach(() => {
   h.cursor = 0;
   h.slots = [];
+  h.layoutEffects = [];
   h.effects = [];
   h.open.mockReset();
   h.inspect.mockReset();
@@ -244,6 +267,31 @@ it("retains the real dialog across unmount/remount and never revives an earlier 
   expect(h.inspect).not.toHaveBeenCalled();
   expect(button().props.disabled).toBe(false);
 });
+it.each(["dialog", "inspection"] as const)(
+  "rejects a %s result after commit unmount but before passive cleanup",
+  async (phase) => {
+    const dialog = deferred<string | null>(),
+      inspection = deferred<VerifiedFile>();
+    h.open.mockReturnValue(dialog.promise);
+    h.inspect.mockReturnValue(inspection.promise);
+    click();
+    if (phase === "inspection") {
+      dialog.resolve(file.path);
+      await drain();
+      expect(h.inspect).toHaveBeenCalledExactlyOnceWith(file.path);
+    }
+
+    // A parent layout effect can settle the original promise before React runs
+    // passive cleanup. The captured content owner still reports current here.
+    commitUnmount();
+    if (phase === "dialog") dialog.resolve(file.path);
+    else inspection.resolve(file);
+    await drain();
+
+    expect(h.inspect).toHaveBeenCalledTimes(phase === "dialog" ? 0 : 1);
+    expect(onOpen).not.toHaveBeenCalled();
+  },
+);
 it.each([
   null,
   { ...file, path: "/outside/another.pptx" },

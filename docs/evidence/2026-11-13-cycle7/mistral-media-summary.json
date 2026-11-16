@@ -1,0 +1,215 @@
+{
+  "sourceCommit": "16ee7466ff7a7c05224797d2f56b946064145815",
+  "installedApp": {
+    "path": "/Applications/Farfold.app",
+    "identity": {
+      "bundleId": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "arm64": true,
+      "signature": "adhoc",
+      "cdhash": "d8ec6d22d795cab62259926c75bcc3dc9f9416d5"
+    },
+    "executableSha256": "1ba6061f643a9d5ac62a394318459852ed565417a8ada619c1248732ac1f267c",
+    "installationEntriesPreserved": 206430,
+    "duplicateCandidateRemoved": true
+  },
+  "change": "Verified typed tool image output is presented through common image preview/export; original result retained. No approval-input guessing or Agent modification.",
+  "engineering": {
+    "allSevenFreshPassed": true,
+    "inputs": 2571,
+    "inputsUnchanged": true,
+    "frontendFiles": 770,
+    "frontendPassed": 10706,
+    "rustPassed": 2726,
+    "rustIgnored": 11,
+    "independentReviewPassed": true
+  },
+  "formal": {
+    "kind": "RootObservedFormalColdMediaCheck",
+    "recordedAtUtc": "2026-11-13T02:58:16.964576+00:00",
+    "sourceCommit": "16ee7466ff7a7c05224797d2f56b946064145815",
+    "nativeSessionId": "d1cabd9a-5fde-e0a8-35d0-608eb87e2f25",
+    "cwd": "/Users/tw/Desktop/farfold/output/2026-11-13-cycle7/formal-mistral-page/owned-work",
+    "newUserRequests": 0,
+    "newModelRequests": 0,
+    "modelUi": "Mistral Medium 3.5",
+    "thinkingUi": "High",
+    "originalMarker": "FF_MISTRAL_WEB_20261113_ONE",
+    "userAndFinalReplyRestored": true,
+    "completedToolSteps": 3,
+    "image": {
+      "route": "Third tool step → technical details → image disclosure",
+      "mimeType": "image/png",
+      "visibleContent": "World Wide Web heading, original public-page paragraphs and hyperlinks",
+      "actuallyDisplayed": true,
+      "automaticallyShownInFilePanel": false
+    },
+    "windowScreenshotDimensions": [1280, 820],
+    "export": {
+      "format": "Markdown and selected attachments ZIP",
+      "selectedImages": 1,
+      "includeToolDetails": false,
+      "saveResult": "已保存本次所选内容。",
+      "imageBytesVerifiedInUi": 103113,
+      "zipBytesReported": 106080,
+      "packed": 1,
+      "omitted": 0,
+      "path": "/Users/tw/Desktop/farfold/output/2026-11-13-cycle7/formal-mistral-media/mistral-cold-media.zip",
+      "selectionNote": "First native menu click did not establish a format change; Return dismissed that dialog with no file. Reopened and Down/Return selected ZIP; one save completed."
+    },
+    "browser": {
+      "samePublicUrlOpened": true,
+      "permission": "尚未允许读取",
+      "permissionControlEnabledAfterLoad": true,
+      "permissionGranted": false,
+      "businessToolCalled": false
+    },
+    "exit": {
+      "method": "Cmd+Q then Save and Quit",
+      "existingUnknownWorkLocationWarningRetained": true,
+      "appIsRunningFalseObservedInAppInventory": true,
+      "postExitAxProcNotFoundObserved": true
+    },
+    "limits": [
+      "Ordinary saved-conversation cold opening only; import/search preview not covered.",
+      "Actual new live reply after repair was not requested; live behavior has controlled regression evidence.",
+      "No complete cycle, Agent or media-format acceptance."
+    ]
+  },
+  "export": {
+    "zipSha256": "544a2ed925852cc4f4ce4d0763b3b2bf650c93b02dd9ee06ff8bbc87341e9d9f",
+    "zipBytes": 106080,
+    "crcVerified": true,
+    "members": [
+      {
+        "name": "conversation.md",
+        "bytes": 1782,
+        "sha256": "aa20ea6164fe256db6b7008fb1500b494db370f3d08d6cab0cdce3a3bb35110a"
+      },
+      {
+        "name": "attachments/0001.bin",
+        "bytes": 103113,
+        "sha256": "6da80ae5128560e1f89836bed1c19aa844054165e3c6d6da48392d65621082c1"
+      },
+      {
+        "name": "manifest.json",
+        "bytes": 791,
+        "sha256": "3f6355b2d49f0b5cc2d297082f2124587b9eb01bc3a3642f8b59c3bb9fe13abe"
+      }
+    ],
+    "imageBytesExactlyEqualOriginalNativePng": true,
+    "imageMember": "attachments/0001.bin",
+    "declaredMimeType": "image/png",
+    "manifestScope": "selectedLoadedSnapshot",
+    "resumableAgentSession": false,
+    "manifestCounts": {
+      "included": 1,
+      "omitted": 0
+    },
+    "boundary": "Received bytes preserved in a generic binary member with declared MIME; archive itself does not certify image codec/format. UI image decoding was separately observed."
+  },
+  "preservation": {
+    "generationBefore": "0000000000000051",
+    "generationAfter": "0000000000000063",
+    "contextMessages": 8,
+    "projectionEntries": 9,
+    "logicalHistoryAndPngUnchanged": true,
+    "metadata": {
+      "tables": {
+        "agents": {
+          "beforeCount": 40,
+          "afterCount": 40,
+          "removedIds": [],
+          "addedIds": [],
+          "changedIds": [
+            "9e5c777bb10a6e387ce5c1cd9b20c3586fceccf2572e493363ce1ebf831a4b13"
+          ]
+        },
+        "sessions": {
+          "beforeCount": 12,
+          "afterCount": 12,
+          "removedIds": [],
+          "addedIds": [],
+          "changedIds": []
+        },
+        "settings": {
+          "beforeCount": 53,
+          "afterCount": 53,
+          "removedIds": [],
+          "addedIds": [],
+          "changedIds": []
+        },
+        "dismissed_sessions": {
+          "beforeCount": 380,
+          "afterCount": 380,
+          "removedIds": [],
+          "addedIds": [],
+          "changedIds": []
+        }
+      },
+      "selectionsUnchanged": true,
+      "draftsUnchanged": true,
+      "selectedSessionRowsUnchanged": true,
+      "pendingMarkerCount": 0
+    },
+    "nativeFileChangeCounts": {
+      "removed": 10,
+      "added": 10,
+      "changed": 3
+    },
+    "boundary": "One Mistral registration row changed; other39 rows exact. Native generation/journal/lease turnover is recorded, while complete logical structures and screenshot stay identical. Unrelated native histories/provider files outside this replay comparison; installation has its own complete data-root check."
+  },
+  "remaining": [
+    "Import/search preview media not wired",
+    "Mistral permission request still has only tool ID; original permission semantics unchanged",
+    "Fast cold replay still lacks tool/media despite retained native bytes",
+    "Other Agent stop/recovery, OpenCode unknown result, actual notifications/VoiceOver and complete cycle6/7 acceptance remain open",
+    "Original and additional one-request Mistral allowances consumed; this repair verification used zero new model requests"
+  ],
+  "records": [
+    {
+      "path": "output/2026-11-13-cycle7/engineering-mistral-media/result.json",
+      "sha256": "fed168415a8cdfb430f1960a5c3dfb5abb351ef3bf30bb355890eaeb8320f722"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/mistral-media/independent-review.json",
+      "sha256": "451aad21eeb92db357234d2896a8460d026c2e27447fcdc3b48ee2cdbc7370bb"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/integration/mistral-media/root-final-review.json",
+      "sha256": "9501d7679c0bd169cb4d56022c030c46b4fa0a5b67a241c6b295a62d2338b44b"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-media/candidate-review.json",
+      "sha256": "32108cc8ee974d82ec38160bd5e9d5684e8b914d7bb026fa67c23e0ffabfdc5d"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-media/install.json",
+      "sha256": "2ff0d0009b3759717fd37145d9b2ee3927533144f0d1bc575597ee5ef9f1b9f9"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-media/duplicate-cleanup.json",
+      "sha256": "026ed3d4370449672601b8149e214405c72581cde87f0fe67fd37f4810d765ca"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-media/collector-independent-review.json",
+      "sha256": "e4b8434e4d038817a9f12fa532af63c00b71d4e52e4391d2f6e5327e0ff19f47"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-media/before.json",
+      "sha256": "ad8aa453255ddb91f611d2d99fd7f769a862f4739ee2d9464ddbb7abf8bb70d8"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-media/after.json",
+      "sha256": "654c80317f29de475065b20491a669527a9eb01978022c8332d2532eb8bc4a4f"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-media/ui-observations.json",
+      "sha256": "5b348110334784ac0ffad5005e2f521e6c6491c766095466cd064e2a139bbd54"
+    },
+    {
+      "path": "output/2026-11-13-cycle7/formal-mistral-media/export-byte-proof.json",
+      "sha256": "08c298e2c7b0e69ee312e1bcfca3b67df3cb012ea62637bbb2f5b8b3175f8ba6"
+    }
+  ]
+}

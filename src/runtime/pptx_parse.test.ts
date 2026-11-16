@@ -527,7 +527,7 @@ describe("PPTX refuses unsupported visible operations and malformed packages", (
       (s: string) => s.replace('anchor="t"/>', 'anchor="t" vert="vert"/>'),
     ],
     [
-      "group",
+      "malformed group without transform",
       SLIDE,
       (s: string) =>
         s.replace(
@@ -568,7 +568,10 @@ describe("PPTX refuses unsupported visible operations and malformed packages", (
   ] as const)("rejects %s", (_name, part, transform) =>
     reject(
       edit(part, transform),
-      _name === "unknown namespace" ? "invalid" : "unsupported",
+      _name === "unknown namespace" ||
+        _name === "malformed group without transform"
+        ? "invalid"
+        : "unsupported",
     ),
   );
   it("rejects external image resources and embedded active content", () => {

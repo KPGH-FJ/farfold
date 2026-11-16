@@ -1,0 +1,34 @@
+{
+  "installedSourceCodeCommit": "d3529ff52",
+  "fixtureSha256": "0a955f74dee4ba300134c4b2853986e144d2796cc6c46953a8d6f45b1045e61b",
+  "fixtureBytes": 9220468,
+  "systemPickerImport": true,
+  "uiWarning": "图片大小超过 8 MiB，请缩小后重新添加。",
+  "storedDraft": {
+    "text": "",
+    "attachments": [
+      {
+        "id": "ef7af7b9-37e5-40ff-9333-2e48edbb0909",
+        "kind": "image",
+        "name": "ff-oversize-png-20261107.txt",
+        "uri": "file:///private/tmp/farfold-installed-oversize-image.yaau0INW/ff-oversize-png-20261107.txt"
+      }
+    ]
+  },
+  "sendButtonClickedOnce": true,
+  "formalProtocolStreamsUnchanged": true,
+  "streamsCompared": 7,
+  "queued": null,
+  "coldRestartTested": true,
+  "scope": "actual installed warm import/rejected send and normal exit/cold restore/failed explicit recheck; exact image attachment unchanged; final removal follows",
+  "completedAtUtc": "2026-11-07T05:38:46.640823+00:00",
+  "normalSaveAndExitDraftQueueChoiceHashesPreserved": true,
+  "coldUiSendDisabledBeforeRecheck": true,
+  "explicitRecheckFailedWithoutChangingOriginalAttachment": true,
+  "coldUiError": "无法读取“ff-oversize-png-20261107.txt”，请取消勾选或重新选择附件。",
+  "coldSavedDraftMatchesWarmExactly": true,
+  "fixtureReusedSameByteHashVerified": true,
+  "coldHistoricalLoadOnly": true,
+  "newPromptSentOnColdRecheck": false,
+  "testAttachmentRemovedAfterValidation": true
+}

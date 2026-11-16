@@ -1,0 +1,64 @@
+import type { SessionToolChangeCode } from "./session_tool_change_types";
+
+export const SESSION_TOOL_CHANGE_STRINGS = {
+  title: "管理当前对话的 HTTP MCP",
+  scope:
+    "先核对当前对话的 HTTP MCP，再选择要撤回的项目。其他扩展仍可从报告查看。",
+  add: "添加 HTTP MCP…",
+  list: "核对可管理项目",
+  listing: "正在核对项目…",
+  empty: "这次核对未提供可管理的 HTTP MCP。这不代表其他扩展已撤回。",
+  initial: "可以添加一个无需凭据的 HTTP MCP，或读取当前对话已有的 HTTP MCP。",
+  inspected: "已核对当前对话的 HTTP MCP。读取清单不代表已连接或已调用工具。",
+  inspectPending: "本次项目核对尚未确认，可以检查读取状态。",
+  checkInspection: "检查项目核对状态",
+  cannotRemove: "这项的名称无法唯一核对，暂不能在此撤回。",
+  invalidName:
+    "名称仅限英文字母、数字、空格、下划线和短横线，至少含一个字母或数字，不含首尾空格，最多128个字符。",
+  withdraw: "撤回",
+  addHeading: "审阅添加到当前对话",
+  removeHeading: "审阅从当前对话撤回",
+  name: "MCP 名称",
+  address: "HTTP 地址",
+  guidance: "填写完整的 HTTP 或 HTTPS 地址，完整地址会原样交给当前对话的程序。",
+  secrets: "仅用于无需凭据的服务。不要在地址中填写密码、访问令牌或其他凭据。",
+  addEffects:
+    "确认后程序会连接此地址，将它保存在当前对话的扩展设置中，并读取工具报告。不发送对话消息，不调用工具。",
+  removeEffects:
+    "确认后只撤回所选项目，并核对当前对话保存的设置与活动工具。其他扩展保持不变。",
+  review: "审阅添加",
+  confirmAdd: "确认添加到当前对话",
+  confirmRemove: "确认撤回所选项目",
+  cancelReview: "返回",
+  closeForm: "收起添加表单",
+  expired: "对话或所选项目已变化，请重新核对后审阅。",
+  pending:
+    "工具变更尚未确认。关闭此面板不会取消操作，确认前暂不能发送消息或再次修改。",
+  checking: "正在核对工具变更…",
+  check: "检查变更状态",
+  added: "已核对保存的设置与工具报告。实际工具调用仍需另行确认。",
+  removed: "已核对：所选项目已从当前对话保存的设置与活动工具中撤回。",
+  removedSavedOnly:
+    "所选项目已从当前对话保存的设置中撤回；活动工具情况仍未确认。",
+  recovered:
+    "核查已确认。请先关闭此面板，在对话中点击“重连”，再核对可管理项目。原消息、草稿和待发内容会保留。",
+  saved: "保存的设置已确认",
+  saveUnknown: "保存结果尚未确认",
+  tools: "已读取活动工具报告",
+  absent: "活动工具已报告不含所选项目",
+  activityUnknown: "活动工具情况尚未确认",
+  currentItems: "当前对话的 HTTP MCP",
+  previousItems: "先前可管理的项目，请重新核对",
+  errors: {
+    unavailable: "当前对话未提供此项管理能力。",
+    changed: "当前对话或工具设置已变化，请重新核对。",
+    busy: "当前对话仍有其他工作或待发送内容，请先完成处理。",
+    timeout: "这次操作尚未返回结果。",
+    invalidInput: "填写内容或所选项目无法使用，请重新核对。",
+    invalidResponse: "返回的信息不完整或无法核实。",
+    queryFailed: "暂时无法读取当前工具情况。",
+    saveFailed: "保存结果未能确认，请核对后再继续。",
+    unknown: "这次操作的结果仍未确认。",
+    limit: "本次连接的操作次数已达上限。",
+  } satisfies Record<SessionToolChangeCode, string>,
+} as const;

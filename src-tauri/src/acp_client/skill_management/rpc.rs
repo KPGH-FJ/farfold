@@ -177,6 +177,13 @@ impl<'a> Exchange<'a> {
                 self.job
                     .source
                     .current(self.store, action == Action::Inspect)?;
+                if self.job.source.domain() == super::domain::Domain::SkillPreferenceRemoval {
+                    self.before_skill_preference_removal(before, target, action)?;
+                    if self.step == Step::Done {
+                        self.job.phase(Phase::Cleaning);
+                    }
+                    return Ok(());
+                }
                 match action {
                     Action::Inspect => {
                         let plan = Arc::new(Plan::new(
@@ -264,7 +271,11 @@ impl<'a> Exchange<'a> {
                         Err(e) => return Err(e),
                     };
                 let after = self.after.take().ok_or(Code::InvalidOutput)?;
-                self.observe(after, target, true)?;
+                if self.job.source.domain() == super::domain::Domain::SkillPreferenceRemoval {
+                    self.observe_skill_preference_removal(&after, target, true)?;
+                } else {
+                    self.observe(after, target, true)?;
+                }
                 self.step = Step::Done;
             }
             Step::Done => return Err(Code::InvalidOutput.into()),
@@ -418,6 +429,74 @@ impl<'a> Exchange<'a> {
         }
         Ok(())
     }
+    fn before_skill_preference_removal(
+        &mut self,
+        before: Config,
+        target: Option<crate::acp_client::extension_inventory::targets::SkillTarget>,
+        action: Action,
+    ) -> Result<()> {
+        match action {
+            Action::Inspect => {
+                let plan = super::skill_preference_remove_plan::Plan::new(
+                    before,
+                    target.ok_or(Code::TargetChanged)?,
+                )?;
+                *self.job.plan.lock().unwrap_or_else(|p| p.into_inner()) =
+                    Some(Arc::new(PreparedPlan::SkillPreferenceRemoval(plan)));
+                self.step = Step::Done;
+            }
+            Action::Remove => {
+                let plan = self.plan()?;
+                if !plan
+                    .skill_preference_removal()?
+                    .unchanged(&before, &target.ok_or(Code::TargetChanged)?)
+                {
+                    return Err(Code::ConfigurationChanged.into());
+                }
+                self.job.update(|value| {
+                    value.write_dispatched = true;
+                    value.write_ack = Ack::Unknown;
+                    value.phase = Phase::Writing;
+                });
+                self.queue(json!({"id":4,"method":"config/value/write","params":plan.params()}))?;
+                self.step = Step::Write;
+            }
+            Action::Recheck => {
+                self.observe_skill_preference_removal(
+                    &before,
+                    target.map(|value| value.enabled),
+                    false,
+                )?;
+                self.step = Step::Done;
+            }
+            _ => return Err(Code::RequestConflict.into()),
+        }
+        Ok(())
+    }
+
+    fn observe_skill_preference_removal(
+        &self,
+        after: &Config,
+        actual_enabled: Option<bool>,
+        acknowledged: bool,
+    ) -> Result<()> {
+        let owned = self.plan()?;
+        let (observation, matching) = owned
+            .skill_preference_removal()?
+            .observation(after, actual_enabled)?;
+        // Publication waits for actual worker cleanup, as for MCP removal.
+        self.job.observed(observation);
+        self.job.observed_outcome(if matching {
+            if acknowledged {
+                Outcome::Verified
+            } else {
+                Outcome::Observed
+            }
+        } else {
+            Outcome::Mismatch
+        });
+        Ok(())
+    }
     fn observe(&self, config: Config, enabled: Option<bool>, acknowledged: bool) -> Result<()> {
         let owned = self.plan()?;
         let plan = owned.skill()?;
@@ -465,14 +544,17 @@ impl<'a> Exchange<'a> {
         if self.sent == self.pending.len() {
             return Ok(());
         }
-        if self.step == Step::Write
-            && matches!(
-                self.job.source.domain(),
-                super::domain::Domain::McpAdd | super::domain::Domain::McpRemove
-            )
-        {
+        if self.step == Step::Write {
             self.job.within()?;
-            self.job.source.current(self.store, true)?;
+            // A queued frame does not keep a replaced cwd/selection current.
+            // An independently admitted enablement still survives inventory revocation.
+            let require_inventory = matches!(
+                self.job.source.domain(),
+                super::domain::Domain::McpAdd
+                    | super::domain::Domain::McpRemove
+                    | super::domain::Domain::SkillPreferenceRemoval
+            );
+            self.job.source.current(self.store, require_inventory)?;
         }
         match writer.write(&self.pending[self.sent..]) {
             Ok(0) => Err(Code::QueryFailed.into()),

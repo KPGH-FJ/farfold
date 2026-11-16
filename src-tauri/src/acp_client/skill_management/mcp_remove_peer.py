@@ -49,7 +49,9 @@ if stage == "list":
         import signal
         import time
         signal.signal(signal.SIGTERM, signal.SIG_IGN)
-        (root / "waiting").write_text(str(os.getpid()))
+        temporary = root / "waiting.tmp"
+        temporary.write_text(str(os.getpid()))
+        temporary.replace(root / "waiting")
         time.sleep(60)
     entry = raw.get("mcp_servers", {}).get(state["name"])
     rows = [report(entry)] if entry else []

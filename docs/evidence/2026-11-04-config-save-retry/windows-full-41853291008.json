@@ -1,0 +1,599 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-11-04T16:39:53.428490+00:00",
+  "scope": "Fixed-source complete Windows workflow attempt and completed Rust library results. Failed attempt; no Windows installer/install acceptance, later candidate coverage, real-Agent or user-data operation is claimed.",
+  "run": {
+    "id": 41853291008,
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41853291008",
+    "workflow": ".github/workflows/windows.yml",
+    "event": "workflow_dispatch",
+    "head": "69e43d16d582841e71eab2a11ebb81ba9678831f",
+    "branch": "codex/2026-11-04-development-resume",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAtUtc": "2026-11-04T15:00:38Z",
+    "lastUpdatedAtUtc": "2026-11-04T16:30:20Z"
+  },
+  "jobResults": [
+    {
+      "id": 126655060654,
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "69e43d16d582841e71eab2a11ebb81ba9678831f",
+      "started_at": "2026-11-04T15:00:42Z",
+      "completed_at": "2026-11-04T15:22:50Z",
+      "elapsedSeconds": 1328.0,
+      "relevantSteps": [
+        {
+          "name": "Check frontend",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-04T15:01:39Z",
+          "completed_at": "2026-11-04T15:22:47Z"
+        }
+      ]
+    },
+    {
+      "id": 126655061314,
+      "name": "rust",
+      "status": "completed",
+      "conclusion": "failure",
+      "head_sha": "69e43d16d582841e71eab2a11ebb81ba9678831f",
+      "started_at": "2026-11-04T15:00:42Z",
+      "completed_at": "2026-11-04T16:21:59Z",
+      "elapsedSeconds": 4877.0,
+      "relevantSteps": [
+        {
+          "name": "Check synthetic protocol fixture interpreter",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-04T15:01:46Z",
+          "completed_at": "2026-11-04T15:01:48Z"
+        },
+        {
+          "name": "Check shared Rust and Windows implementation",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7,
+          "started_at": "2026-11-04T15:01:48Z",
+          "completed_at": "2026-11-04T16:21:53Z"
+        }
+      ]
+    },
+    {
+      "id": 126701888894,
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "failure",
+      "head_sha": "69e43d16d582841e71eab2a11ebb81ba9678831f",
+      "started_at": "2026-11-04T16:22:02Z",
+      "completed_at": "2026-11-04T16:22:08Z",
+      "elapsedSeconds": 6.0,
+      "relevantSteps": [
+        {
+          "name": "Require every Windows verification job to succeed",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 2,
+          "started_at": "2026-11-04T16:22:04Z",
+          "completed_at": "2026-11-04T16:22:05Z"
+        }
+      ]
+    },
+    {
+      "id": 126701892516,
+      "name": "installer",
+      "status": "completed",
+      "conclusion": "skipped",
+      "head_sha": "69e43d16d582841e71eab2a11ebb81ba9678831f",
+      "started_at": "2026-11-04T16:22:00Z",
+      "completed_at": "2026-11-04T16:21:59Z",
+      "elapsedSeconds": null,
+      "timestampCaution": "Provider supplied start16:22:00Z/end16:21:59Z for a skipped job; no execution duration is inferred.",
+      "relevantSteps": []
+    }
+  ],
+  "frontend": {
+    "jobResult": "success",
+    "filesPassed": 707,
+    "testsPassed": 9506,
+    "testsSkipped": 3,
+    "testsTotal": 9509,
+    "summaryReferences": [
+      {
+        "archiveMember": "raw/frontend-job.log",
+        "physicalLfLine": 1213
+      },
+      {
+        "archiveMember": "raw/frontend-job.log",
+        "physicalLfLine": 1214
+      }
+    ],
+    "commands": [
+      "corepack pnpm typecheck",
+      "corepack pnpm test",
+      "corepack pnpm build"
+    ],
+    "buildSuccessReference": {
+      "archiveMember": "raw/frontend-job.log",
+      "physicalLfLine": 1299
+    },
+    "skippedFileObservations": [
+      {
+        "path": "scripts/acceptance-receipts.test.mjs",
+        "skipped": 2,
+        "raw": {
+          "archiveMember": "raw/frontend-job.log",
+          "physicalLfLine": 318
+        }
+      },
+      {
+        "path": "scripts/acceptance-index.test.mjs",
+        "skipped": 1,
+        "raw": {
+          "archiveMember": "raw/frontend-job.log",
+          "physicalLfLine": 330
+        }
+      }
+    ]
+  },
+  "rust": {
+    "jobResult": "failure",
+    "runner": "windows-2022",
+    "jobBudgetMinutes": 90,
+    "jobBudgetIsCapacityOnly": true,
+    "jobElapsedSeconds": 4877,
+    "checkStepElapsedSeconds": 4805,
+    "firstLibraryRunReference": {
+      "archiveMember": "raw/rust-job.log",
+      "physicalLfLine": 1277
+    },
+    "observedPreLibrarySecondsApprox": 1305,
+    "library": {
+      "passed": 2389,
+      "failed": 2,
+      "ignored": 75,
+      "measured": 0,
+      "filteredOut": 0,
+      "total": 2466,
+      "seconds": 3499.97,
+      "completeTopLevelSummary": true,
+      "summaryReference": {
+        "archiveMember": "raw/rust-job.log",
+        "physicalLfLine": 37946
+      },
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked -- --nocapture",
+      "commandReference": {
+        "archiveMember": "raw/rust-job.log",
+        "physicalLfLine": 278
+      }
+    },
+    "earlierCommandsReachedTest": [
+      "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+      "cargo clippy --manifest-path src-tauri/Cargo.toml --locked --all-targets -- -D warnings",
+      "cargo build --manifest-path src-tauri/Cargo.toml --locked --example windows_process_fixture"
+    ],
+    "termination": {
+      "kind": "natural failure before job90minute capacity",
+      "cancelled": false,
+      "stepExitCodeObserved": 1,
+      "stepExitReference": {
+        "archiveMember": "raw/rust-job.log",
+        "physicalLfLine": 37949
+      },
+      "cargoFailureReference": {
+        "archiveMember": "raw/rust-job.log",
+        "physicalLfLine": 37948
+      },
+      "independentCargoExitCode": null,
+      "exitCaution": "Raw GHA step reports exit1. No independent exact Cargo101 is recorded; do not substitute a conventional expected code.",
+      "remainingTargetBoundary": "The library failed. Subsequent test targets/doc tests are not established as completed by this attempt."
+    },
+    "failedFqns": [
+      {
+        "fqn": "worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent",
+        "insideOriginal17": true,
+        "capturedChildTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 30329
+        },
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 31152
+        },
+        "capturedChildSeconds": 154.78,
+        "observedFailure": {
+          "stateLine": {
+            "archiveMember": "raw/rust-job.log",
+            "physicalLfLine": 31149
+          },
+          "state": "recover operation still running, settled=false at helper wait assertion",
+          "parentWrapperPanic": {
+            "archiveMember": "raw/rust-job.log",
+            "physicalLfLine": 30326
+          },
+          "capturedChildPanic": {
+            "archiveMember": "raw/rust-job.log",
+            "physicalLfLine": 31148
+          }
+        },
+        "source69References": [
+          {
+            "path": "src-tauri/src/worktrees/recycle_tests.rs",
+            "line": 31
+          },
+          {
+            "path": "src-tauri/src/worktrees/recycle_tests.rs",
+            "line": 132
+          }
+        ]
+      },
+      {
+        "fqn": "worktrees::remove_boundary_tests::remove_cancelled_retirement_keeps_maintenance_until_worker_returns",
+        "insideOriginal17": false,
+        "capturedChildTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 31504
+        },
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 31896
+        },
+        "capturedChildSeconds": 80.5,
+        "observedFailure": {
+          "messageLine": {
+            "archiveMember": "raw/rust-job.log",
+            "physicalLfLine": 31893
+          },
+          "message": "called Result::unwrap() on an Err value: Timeout",
+          "parentWrapperPanic": {
+            "archiveMember": "raw/rust-job.log",
+            "physicalLfLine": 31501
+          },
+          "capturedChildPanic": {
+            "archiveMember": "raw/rust-job.log",
+            "physicalLfLine": 31892
+          }
+        },
+        "source69References": [
+          {
+            "path": "src-tauri/src/worktrees/recycle_tests.rs",
+            "line": 132
+          },
+          {
+            "path": "src-tauri/src/worktrees/remove_boundary_tests.rs",
+            "line": 219
+          }
+        ]
+      }
+    ]
+  },
+  "original17": {
+    "baselineRunId": 41750118511,
+    "baselineSource": "e02c543578571c9941bbb509bd6d654545a089da",
+    "baselineIndex": "../2026-11-04-windows-ownership/full-after-retirement.json",
+    "baselineIndexSha256": "b60100e63df160ffa279a0feb56dbeed7546cabfb65f091d98e16db89b3a4f90",
+    "nameSetSource": "../2026-11-04-windows-retirement-resume/full-run-wait-fixes-local.json#/baseline17PartialObservations/rows",
+    "nameSetSourceSha256": "cd62c3fedec1cf7e5fa27d60693485c89c01b2b88e421c852adcf3e964ee343b",
+    "finalCounts": {
+      "passed": 16,
+      "failed": 1,
+      "ignored": 0,
+      "unknown": 0
+    },
+    "rows": [
+      {
+        "fqn": "acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 1308
+        },
+        "capturedChildTerminalLines": []
+      },
+      {
+        "fqn": "worktrees::config_compatibility_tests::official_boolean_aliases_preserve_checkout_and_do_not_reject_an_ordinary_repository",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 5789
+        },
+        "capturedChildTerminalLines": []
+      },
+      {
+        "fqn": "worktrees::manager::tests::cold_old_location_and_material_ids_cannot_start_new_filesystem_work",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 15055
+        },
+        "capturedChildTerminalLines": []
+      },
+      {
+        "fqn": "worktrees::manager::tests::real_git_completion_followed_by_storage_failure_keeps_files_and_can_recover_metadata_only",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 15491
+        },
+        "capturedChildTerminalLines": []
+      },
+      {
+        "fqn": "worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 17594
+        },
+        "capturedChildTerminalLines": [16925]
+      },
+      {
+        "fqn": "worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 18264
+        },
+        "capturedChildTerminalLines": [17597]
+      },
+      {
+        "fqn": "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 19186
+        },
+        "capturedChildTerminalLines": [18269]
+      },
+      {
+        "fqn": "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 20059
+        },
+        "capturedChildTerminalLines": [19208]
+      },
+      {
+        "fqn": "worktrees::recovery_tests::recovery_cancel_prepared_keeps_verified_artifact_and_no_delete_authority",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 23401
+        },
+        "capturedChildTerminalLines": [22771]
+      },
+      {
+        "fqn": "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 26814
+        },
+        "capturedChildTerminalLines": []
+      },
+      {
+        "fqn": "worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent",
+        "status": "failed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 31152
+        },
+        "capturedChildTerminalLines": [30329]
+      },
+      {
+        "fqn": "worktrees::remove_boundary_tests::remove_cold_contract_rejects_misaligned_recovery_and_duplicate_ids",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 32536
+        },
+        "capturedChildTerminalLines": [31901]
+      },
+      {
+        "fqn": "worktrees::remove_boundary_tests::remove_cold_dispatched_record_survives_next_intent_and_reconciles_exact_absence",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 33328
+        },
+        "capturedChildTerminalLines": [32539]
+      },
+      {
+        "fqn": "worktrees::remove_boundary_tests::remove_confirmation_rechecks_reflog_evidence_even_same_root_set",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 34039
+        },
+        "capturedChildTerminalLines": [33333]
+      },
+      {
+        "fqn": "worktrees::remove_boundary_tests::remove_confirmation_rejects_corrupt_bundle_and_keeps_source",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 34743
+        },
+        "capturedChildTerminalLines": [34048]
+      },
+      {
+        "fqn": "worktrees::tests::creates_exact_new_branch_preserves_original_index_dirty_ignored_and_disables_hook",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 35069
+        },
+        "capturedChildTerminalLines": []
+      },
+      {
+        "fqn": "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+        "status": "passed",
+        "outerTerminal": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 36018
+        },
+        "capturedChildTerminalLines": []
+      }
+    ],
+    "matrixArchiveMember": "analysis/original17-matrix-lf.json",
+    "matrixSha256": "ae0a15fc195a7d9022ddac7254aac0725eea57d7599bb560095cd559e1258f4e",
+    "deduplication": "Captured child and outer terminals for the same FQN are one top-level case. The additional failure is outside the old17 name set; this does not establish introduction date."
+  },
+  "ignored75": {
+    "topLevelCount": 75,
+    "oldFullRunCount": 72,
+    "existingDeclarationsWithIdenticalAttributesAtBaseline": 72,
+    "newWindowsDiagnosticDeclarations": 3,
+    "newIgnoredNames": [
+      {
+        "fqn": "acp_client::active_prompt_tests::eof_descendant_tests::actual_eof_descendant_exit_edge_child",
+        "reason": "executed only by its bounded owned process wrapper",
+        "raw": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 1293
+        },
+        "source69Path": "src-tauri/src/acp_client/active_prompt_eof_descendant_windows_tests.rs",
+        "functionLine": 41
+      },
+      {
+        "fqn": "acp_client::active_prompt_tests::eof_descendant_tests::actual_eof_descendant_exit_edge_isolated",
+        "reason": "manual bounded native EOF descendant observation",
+        "raw": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 1294
+        },
+        "source69Path": "src-tauri/src/acp_client/active_prompt_eof_descendant_windows_tests.rs",
+        "functionLine": 35
+      },
+      {
+        "fqn": "windows_process::current_members::tests::gap_shadow_tests::native_zero_empty_window_never_precedes_untracked_exact_target_signal",
+        "reason": "manual native challenge of a proposed historical-gap recovery rule",
+        "raw": {
+          "archiveMember": "raw/rust-job.log",
+          "physicalLfLine": 4927
+        },
+        "source69Path": "src-tauri/src/windows_process/current_members_gap_shadow_tests.rs",
+        "functionLine": 11
+      }
+    ],
+    "excludedNewMacOnlyDriver": {
+      "fqn": "meta_store::recovery_tests::explicit_frontend_storage_bridge",
+      "cfg": "target_os = macos",
+      "notInWindows75": true,
+      "doesNotExplainWindowsIncrease": true
+    },
+    "additionalChildObservationsForIgnoredNames": {
+      "differentFqns": 4,
+      "records": {
+        "auth::terminal::tests::cancellation_after_spawn_keeps_the_original_exit_owner": [
+          {
+            "line": 2708,
+            "result": "ok"
+          }
+        ],
+        "auth::tests::login_child_keeps_program_reserved_until_exit": [
+          {
+            "line": 2728,
+            "result": "ok"
+          }
+        ],
+        "platform_tests::windows_conpty::diagnostic_child": [
+          {
+            "line": 4753,
+            "result": "ok"
+          },
+          {
+            "line": 4761,
+            "result": "ok"
+          },
+          {
+            "line": 4768,
+            "result": "ok"
+          },
+          {
+            "line": 4775,
+            "result": "ok"
+          },
+          {
+            "line": 4782,
+            "result": "ok"
+          },
+          {
+            "line": 4790,
+            "result": "ok"
+          }
+        ],
+        "pty::windows_tests::cancelling_a_windows_terminal_confirms_job_end_without_an_agent": [
+          {
+            "line": 4838,
+            "result": "ok"
+          }
+        ]
+      },
+      "boundary": "These are additional terminal-looking libtest records for names whose top-level registration is ignored. Keep them separate from the2389 top-level passes; do not infer absence of all child execution solely from the ignored label."
+    },
+    "provenanceArchiveMember": "analysis/ignored75-provenance-lf.json",
+    "provenanceSha256": "99109e250fa19fae9808082efdfd89d3b062afb7cd929c842433d9128b6e8a0d",
+    "boundary": "Top-level ignored registrations are not passes. Separate child/wrapper terminal records for four names do not reduce the75 or add top-level passes."
+  },
+  "installer": {
+    "jobResult": "skipped",
+    "built": false,
+    "installed": false,
+    "reason": "Source69 installer requires frontend and rust success; rust failed.",
+    "unsignedNsisCommandInSource": "corepack pnpm tauri build --ci --no-sign --target x86_64-pc-windows-msvc --bundles nsis -- --locked",
+    "scope": "No Windows installer artifact or actual installation from this run is established."
+  },
+  "verify": {
+    "jobResult": "failure",
+    "stepExitCodeObserved": 1,
+    "predicateReference": {
+      "archiveMember": "raw/verify-job.log",
+      "physicalLfLine": 31
+    },
+    "exitReference": {
+      "archiveMember": "raw/verify-job.log",
+      "physicalLfLine": 35
+    },
+    "reason": "Aggregate requires frontend, rust and installer success; actual values were success/failure/skipped."
+  },
+  "lineNumberConvention": {
+    "type": "one-based physical LF byte-boundary index",
+    "rustPhysicalLines": 37962,
+    "summaryLine": 37946,
+    "parser": "decode UTF-8 with replacement, split only on U+000A, remove trailing empty item only when terminal LF creates it",
+    "correction": "12 embedded Unicode separator characters were counted by earlier str.splitlines-derived indexes. This publication uses only physical LF indexes; original raw bytes are unchanged."
+  },
+  "separateEvidence": {
+    "macEngineering": "engineering-result.json",
+    "macEngineeringResult": "All seven real commands on2369stable declared inputs:707files9509frontend passes;2339Rust passes7ignored. This is separate from Windows9506passes3skips and the failed Windows library.",
+    "formalInstalledAppSource": "aeb0dc491dbea76003aad988d86b675034b837ad",
+    "formalBoundary": "Mac locked;69 not bound, packaged, installed or UI-validated. No new normal-exit/data-closed proof is inferred.",
+    "subsequentCandidate": "boundary-waits-local.json",
+    "candidateBoundary": "Two test-fixture wait/budget candidates have local Mac-directed evidence only at this record; this run tests unchanged69, and does not verify those candidates on Windows.",
+    "productBoundary": "No29-agent/eight-standard or151-requirement completion, real Agent/model proof, or public distribution acceptance is implied."
+  },
+  "originals": {
+    "path": "windows-full-41853291008-originals.zip",
+    "bytes": 555418,
+    "sha256": "180a01756e7d8241616ef5e6ec64010d4c8be1be24a99c34a5dd27a27a9f7202",
+    "entries": 16,
+    "manifestMember": "manifest.json",
+    "byteExact": true,
+    "selectedOriginalsOnly": true,
+    "providerFullLogsZipSha256": "2e5ea227588e3836e3c5956fbc4db07a12bea5361ab9650bab2bd58b588cc8da",
+    "providerFullLogsZipBytes": 1079771,
+    "providerFullLogsZipRetainedPrivately": true,
+    "rawRustSha256": "f3d155d02afba612f16bd07262f7c38a92d70c8f61180a962f896a0b7acf9e18",
+    "rawFrontendSha256": "5039712c6c5b1c9181bb79082008a20d7e13b1c0e862bf51ab5aaea54ecd865b",
+    "rawVerifySha256": "710cb39afcfa5411cd849955ca4f8d7d938745f05ed6056415c30e7735561a2a",
+    "runMetadataSha256": "86ceda22fb6286d5239e3b060dd38b83b5e9d666e9da66694073b3361e59b2ae",
+    "jobsMetadataSha256": "99a96947a2cfe14fbef44417482a87763afd36f3f9a54bde7fb41adeaf7a7b9b",
+    "sourceWorkflowSha256": "368410b3e3e9a16a9b0332f9ccfbba28dc57598aecb1ded929b26ad5585b9eee"
+  }
+}

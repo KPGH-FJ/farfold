@@ -1,5 +1,11 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import type { ComposerDraft, ConversationChoice } from "./drafts";
+import {
+  createDraftSqliteFixture,
+  draftSqliteAvailable,
+} from "./draft_sqlite.test-support";
+import { PNG_IMAGE_TEST_DATA } from "./image_fixtures.test-support";
+import { MESSAGE_APNG_TEST_DATA } from "./message_apng_fixtures.test-support";
 const mock = vi.hoisted(() => ({ invoke: vi.fn() }));
 vi.mock("@tauri-apps/api/core", () => ({ invoke: mock.invoke }));
 beforeEach(() => {
@@ -111,6 +117,58 @@ it("keeps the active draft and selection when saving the retained copy fails", a
   expect(d.newConversationChoice).toEqual(originalChoice);
   expect(d.composerDrafts.preserved()[0][1].text).toBe(original.text);
   expect(d.draftPersistence.snapshot().error).toBeTruthy();
+});
+it("retries preservation of the same active draft without leaving a second retained copy", async () => {
+  const d = await setup();
+  let disk = lastWritten();
+  let writable = false;
+  mock.invoke.mockImplementation(async (command, args) => {
+    if (command === "settings_get") return structuredClone(disk);
+    if (command !== "settings_set") return;
+    if (!writable) throw new Error("disk full");
+    disk = structuredClone(args.value);
+  });
+  await expect(d.composerDrafts.preserveNew()).rejects.toThrow();
+  const [[retainedKey]] = d.composerDrafts.preserved();
+  expect(disk.composers[retainedKey]).toBeUndefined();
+  expect(d.composerDrafts.read("new").text).toBe(input().text);
+
+  writable = true;
+  const ticket = await d.composerDrafts.preserveNew();
+  d.composerDrafts.clearPreservedNew(ticket);
+  await d.draftPersistence.flush();
+
+  vi.resetModules();
+  const cold = await import("./drafts");
+  await cold.draftPersistence.load();
+  expect(cold.composerDrafts.read("new").text).toBe("");
+  expect(cold.composerDrafts.preserved()).toEqual([
+    [
+      retainedKey,
+      expect.objectContaining({
+        text: input().text,
+        savedChoice: originalChoice,
+        attachments: [expect.objectContaining({ data: "original-image-data" })],
+      }),
+    ],
+  ]);
+});
+it("reuses a retained copy when the same active draft returns to its original selection", async () => {
+  const d = await setup();
+  await d.composerDrafts.preserveNew();
+  const [[firstKey]] = d.composerDrafts.preserved();
+  d.newConversationChoice.agentId = "other-agent";
+  await d.composerDrafts.preserveNew();
+  const [, [otherKey]] = d.composerDrafts.preserved();
+  d.newConversationChoice.agentId = originalChoice.agentId;
+  const ticket = await d.composerDrafts.preserveNew();
+  d.composerDrafts.clearPreservedNew(ticket);
+  await d.draftPersistence.flush();
+  expect(d.composerDrafts.preserved().map(([key]) => key)).toEqual([
+    firstKey,
+    otherKey,
+  ]);
+  expect(Object.keys(lastWritten().composers)).toEqual([firstKey, otherKey]);
 });
 it.each(["editing", "sending", "choice", "clear-generation"])(
   "invalidates the final preservation ticket after %s without clearing the current content",
@@ -326,3 +384,316 @@ it("keeps both retained copies and publishes the matching choice if the final re
   ).toBe(true);
   expect(d.draftPersistence.snapshot().error).toBeTruthy();
 });
+
+it.each([
+  "same input",
+  "later text",
+  "later choice",
+  "same row retry",
+] as const)(
+  "retires only the exact restored source after a delayed write (%s)",
+  async (action) => {
+    const key = "saved-new:restore-retry";
+    const retained = { ...input(), savedChoice: originalChoice };
+    const displaced = { text: "other draft", attachments: [] };
+    const displacedChoice = { ...originalChoice, agentId: "other-agent" };
+    let disk = {
+      version: 1,
+      composers: { new: displaced, [key]: retained } as Record<
+        string,
+        ComposerDraft
+      >,
+      choice: displacedChoice,
+      feedback: {},
+      queues: {},
+    };
+    let markStarted!: () => void;
+    let releaseWrite!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    const write = new Promise<void>((resolve) => {
+      releaseWrite = resolve;
+    });
+    let attempted: typeof disk | undefined;
+    mock.invoke.mockImplementation(async (command, args) => {
+      if (command === "settings_get") return structuredClone(disk);
+      expect(command).toBe("settings_set");
+      if (!attempted && args.value.composers.new?.text === retained.text) {
+        attempted = structuredClone(args.value);
+        markStarted();
+        await write;
+        if (action !== "later choice")
+          throw new Error("promotion write failed");
+      }
+      disk = structuredClone(args.value);
+    });
+    const d = await import("./drafts");
+    await d.draftPersistence.load();
+    expect(await d.composerDrafts.restorePreserved(key)).toBe(true);
+    await started;
+    expect.soft(attempted?.composers).not.toHaveProperty([key]);
+    expect(disk.composers[key]).toMatchObject({ text: retained.text });
+    expect(disk.composers.new.text).toBe(displaced.text);
+    expect(d.composerDrafts.preserved().some(([id]) => id === key)).toBe(true);
+    const promoted = d.composerDrafts.read("new");
+    expect(promoted.text).toBe(retained.text);
+    expect(d.newConversationChoice).toEqual(originalChoice);
+
+    if (action === "later text")
+      d.composerDrafts.update("new", (current) => ({
+        ...current,
+        text: "later input",
+      }));
+    if (action === "later choice")
+      d.newConversationChoice.agentId = "later-agent";
+    const saving = d.draftPersistence.flush();
+    const settled =
+      action === "later choice" ? saving : expect(saving).rejects.toThrow();
+    releaseWrite();
+    await settled;
+    if (action !== "later choice") {
+      expect(disk.composers[key]).toMatchObject({ text: retained.text });
+      expect(disk.composers.new.text).toBe(displaced.text);
+    }
+    if (action === "same row retry")
+      expect(await d.composerDrafts.restorePreserved(key)).toBe(true);
+    await d.draftPersistence.flush();
+    const expectedSource = action === "later text" || action === "later choice";
+    const expectedText =
+      action === "later text" ? "later input" : retained.text;
+    if (!expectedSource)
+      expect.soft(d.composerDrafts.read("new")).toBe(promoted);
+    expect
+      .soft(d.composerDrafts.preserved().some(([id]) => id === key))
+      .toBe(expectedSource);
+    expect
+      .soft(d.composerDrafts.preserved().map(([, draft]) => draft.text))
+      .toEqual(
+        expectedSource ? [retained.text, displaced.text] : [displaced.text],
+      );
+
+    vi.resetModules();
+    const cold = await import("./drafts");
+    await cold.draftPersistence.load();
+    expect(cold.composerDrafts.read("new")).toMatchObject({
+      text: expectedText,
+      attachments: [
+        { id: "picture", data: "original-image-data", recovered: true },
+      ],
+    });
+    expect(cold.newConversationChoice).toEqual({
+      ...originalChoice,
+      agentId:
+        action === "later choice" ? "later-agent" : originalChoice.agentId,
+    });
+    expect
+      .soft(cold.composerDrafts.preserved().some(([id]) => id === key))
+      .toBe(expectedSource);
+    expect(
+      cold.composerDrafts.preserved().map(([, draft]) => draft.text),
+    ).toEqual(
+      expectedSource ? [retained.text, displaced.text] : [displaced.text],
+    );
+  },
+);
+
+it.skipIf(!draftSqliteAvailable)(
+  "atomically restores a retained draft after real SQLite BUSY and cold load",
+  async () => {
+    const sourceKey = "saved-new:sqlite-restore";
+    const image = (id: string, data: string) => ({
+      id,
+      kind: "image" as const,
+      name: `${id}.png`,
+      uri: `file:///fixture/${id}.png`,
+      mimeType: "image/png",
+      data,
+    });
+    const a = {
+      text: "原保留稿\nA",
+      attachments: [image("a", PNG_IMAGE_TEST_DATA)],
+      sendPending: false,
+    };
+    const b = {
+      text: "原编辑稿\nB",
+      attachments: [image("b", MESSAGE_APNG_TEST_DATA)],
+      sendPending: false,
+    };
+    const bChoice: ConversationChoice = {
+      agentId: "other-agent",
+      cwd: "/fixture/other",
+      reviewRequired: false,
+      service: {
+        id: "other-source",
+        model: "other-model",
+        revision: "revision-b",
+      },
+      config: { model: "other-model", budget: 42 },
+    };
+    const retainedA = { ...a, savedChoice: originalChoice };
+    const retainedB = { ...b, savedChoice: bChoice };
+    const db = createDraftSqliteFixture();
+    const writes: string[] = [];
+    let sqliteFailure: unknown;
+    try {
+      db.write({
+        version: 1,
+        composers: { new: b, [sourceKey]: retainedA },
+        choice: bChoice,
+        feedback: {},
+        queues: {},
+      });
+      const before = db.read()!;
+      expect(JSON.parse(before)).toMatchObject({
+        composers: { new: b, [sourceKey]: retainedA },
+        choice: bChoice,
+      });
+      mock.invoke.mockImplementation(async (command, args) => {
+        expect(args.key).toBe(db.key);
+        if (command === "settings_get") return JSON.parse(db.read() ?? "null");
+        expect(command).toBe("settings_set");
+        writes.push(JSON.stringify(args.value));
+        try {
+          db.write(args.value);
+        } catch (error) {
+          sqliteFailure = error;
+          throw error;
+        }
+      });
+      const d = await import("./drafts");
+      await d.draftPersistence.load();
+      const releaseLock = db.holdWriteLock();
+      try {
+        expect(await d.composerDrafts.restorePreserved(sourceKey)).toBe(true);
+        await expect(d.draftPersistence.flush()).rejects.toThrow();
+        expect(sqliteFailure).toMatchObject({ errcode: 5 });
+        expect(writes).toHaveLength(1);
+        expect(db.read()).toBe(before);
+        expect(d.draftPersistence.isSaved(d.draftPersistence.revision())).toBe(
+          false,
+        );
+        expect(d.composerDrafts.read("new")).toMatchObject(a);
+        expect(d.newConversationChoice).toEqual(originalChoice);
+        expect(d.composerDrafts.preserved()).toMatchObject([
+          [sourceKey, retainedA],
+          [expect.stringMatching(/^saved-new:/), retainedB],
+        ]);
+      } finally {
+        releaseLock();
+      }
+
+      expect(db.read()).toBe(before);
+      await d.draftPersistence.flush();
+      expect(d.draftPersistence.isSaved(d.draftPersistence.revision())).toBe(
+        true,
+      );
+      const [[displacedKey]] = d.composerDrafts.preserved();
+      expect(displacedKey).not.toBe(sourceKey);
+      const committed = db.read()!;
+      expect(writes).toEqual([committed, committed]);
+      const after = JSON.parse(committed);
+      expect(after.choice).toEqual(originalChoice);
+      expect(after.composers).toEqual({
+        new: a,
+        [displacedKey]: retainedB,
+      });
+
+      vi.resetModules();
+      const cold = await import("./drafts");
+      await cold.draftPersistence.load();
+      expect(cold.composerDrafts.read("new")).toMatchObject({
+        ...a,
+        attachments: [{ ...a.attachments[0], recovered: true }],
+      });
+      expect(cold.newConversationChoice).toEqual(originalChoice);
+      expect(cold.composerDrafts.preserved()).toMatchObject([
+        [displacedKey, retainedB],
+      ]);
+      expect(mock.invoke.mock.calls.map(([command]) => command)).toEqual([
+        "settings_get",
+        "settings_set",
+        "settings_set",
+        "settings_get",
+      ]);
+    } finally {
+      db.close();
+    }
+  },
+);
+
+it.each([
+  { retainedSizes: [7, 7], displacedSizes: [8], legacyService: false },
+  { retainedSizes: [5, 4], displacedSizes: [8, 7], legacyService: false },
+  { retainedSizes: [7, 7], displacedSizes: [8], legacyService: true },
+])(
+  "restores large drafts without duplicating either input ($retainedSizes/$displacedSizes MiB, legacy=$legacyService)",
+  async ({ retainedSizes, displacedSizes, legacyService }) => {
+    const key = "saved-new:large-restore";
+    const image = (id: string, bytes: number) => ({
+      id,
+      kind: "image" as const,
+      name: `${id}.png`,
+      mimeType: "image/png",
+      data: "A".repeat(bytes * 1024 * 1024),
+    });
+    const retained = {
+      text: "large retained draft",
+      attachments: retainedSizes.map((size, index) =>
+        image(`retained-${index}`, size),
+      ),
+      savedChoice: legacyService
+        ? {
+            ...originalChoice,
+            reviewRequired: false,
+            service: { ...originalChoice.service!, revision: "" },
+          }
+        : originalChoice,
+    };
+    const displaced = {
+      text: "large active draft",
+      attachments: displacedSizes.map((size, index) =>
+        image(`displaced-${index}`, size),
+      ),
+    };
+    let disk = {
+      version: 1,
+      composers: { new: displaced, [key]: retained } as Record<
+        string,
+        ComposerDraft
+      >,
+      choice: originalChoice,
+      feedback: {},
+      queues: {},
+    };
+    const writtenBytes: number[] = [];
+    mock.invoke.mockImplementation(async (command, args) => {
+      if (command === "settings_get") return disk;
+      expect(command).toBe("settings_set");
+      writtenBytes.push(JSON.stringify(args.value).length);
+      disk = args.value;
+    });
+    const d = await import("./drafts");
+    await d.draftPersistence.load();
+    expect(await d.composerDrafts.restorePreserved(key)).toBe(true);
+    const restored = d.newConversationChoice;
+    const review =
+      restored.reviewRequired === true ||
+      Boolean(restored.service && !restored.service.revision);
+    restored.reviewRequired = review;
+    await d.draftPersistence.flush();
+    expect(writtenBytes).toHaveLength(1);
+    expect(writtenBytes[0]).toBeLessThan(25 * 1024 * 1024);
+    expect(disk.choice).toEqual({
+      ...retained.savedChoice,
+      reviewRequired: review,
+    });
+    expect(disk.composers).not.toHaveProperty([key]);
+    expect(
+      disk.composers.new.attachments.map((item) => item.data?.length),
+    ).toEqual(retainedSizes.map((size) => size * 1024 * 1024));
+    expect(d.composerDrafts.preserved().map(([, draft]) => draft.text)).toEqual(
+      [displaced.text],
+    );
+  },
+);

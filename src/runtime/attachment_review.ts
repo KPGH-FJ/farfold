@@ -176,6 +176,38 @@ function assertCurrent(review: AttachmentReview) {
   }
 }
 
+function sameSavedImageBytes(
+  saved: string,
+  checked: string | undefined,
+): boolean {
+  if (saved === checked) return true;
+  // The freshly validated image already bounds both encoded lengths. Allow
+  // legacy Base64 padding bits, with the same input alphabet as image review.
+  if (
+    !checked ||
+    saved.length !== checked.length ||
+    !/^[A-Za-z0-9+/]+={0,2}$/.test(saved)
+  )
+    return false;
+  try {
+    return atob(saved) === atob(checked);
+  } catch {
+    return false;
+  }
+}
+
+function requireSavedImage(
+  original: { uri?: string; data?: string },
+  checked: { data?: string },
+) {
+  if (
+    original.uri &&
+    original.data &&
+    !sameSavedImageBytes(original.data, checked.data)
+  )
+    throw new Error(S.imageChanged);
+}
+
 /** Validate independent copies first. Apply only to the exact still-owned input,
  * synchronously, after every check succeeds; never invoke send/continueQueue. */
 export async function confirmAttachmentReview(
@@ -200,11 +232,11 @@ export async function confirmAttachmentReview(
       continue;
     }
     if (!kept.has(entry.id)) continue;
+    let checked: DraftAttachment;
     try {
-      const [checked] = await prepareDraftAttachments([attachment], embed, {
+      [checked] = await prepareDraftAttachments([attachment], embed, {
         reparseDocuments: true,
       });
-      attachments.push({ ...checked, recovered: false });
     } catch (error) {
       if (!isCurrent()) return false;
       if (
@@ -217,6 +249,8 @@ export async function confirmAttachmentReview(
       throw new Error(S.unreadable(entry.label));
     }
     if (!isCurrent()) return false;
+    if (attachment.kind === "image") requireSavedImage(attachment, checked);
+    attachments.push({ ...checked, recovered: false });
   }
   attachments.reduce(
     (total, item) =>
@@ -257,6 +291,8 @@ export async function confirmAttachmentReview(
         throw new Error(S.unreadable(entry.label));
       }
       if (!isCurrent()) return false;
+      if (block.type === "image" && checked.type === "image")
+        requireSavedImage(block, checked);
       replacement.push(checked);
     }
     replacement.reduce(

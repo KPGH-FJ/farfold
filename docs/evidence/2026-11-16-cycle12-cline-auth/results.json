@@ -1,0 +1,90 @@
+{
+  "date": "2026-11-16",
+  "timeZone": "Asia/Shanghai",
+  "cline": {
+    "version": "3.0.74",
+    "provider": "cline",
+    "model": "anthropic/claude-sonnet-5.5",
+    "previousOfficialAcpRun": {
+      "nativeSessionDigest": "69e42f1010658e6f",
+      "nativeFailureEventAtUnixMs": 1794802862130,
+      "matchedNativeFailure": "requires_reauthentication"
+    },
+    "currentOfficialHeadlessRun": {
+      "nativeSessionDigest": "bde3d07473fab88a",
+      "nativeFailureEventAtUnixMs": 1794804153296,
+      "matchedNativeFailure": "requires_reauthentication",
+      "modelPrompts": 1,
+      "exitCode": 1,
+      "httpStatusObserved": null,
+      "savedSameEffectiveModelExplicitly": true
+    },
+    "installedApp": {
+      "cdhash": "260e7154e771adc070a58ea746c47c5f65721025",
+      "unchangedProductInputs": 2626,
+      "protectedInstallationEntriesMatched": 236586,
+      "programVerifiedThroughNormalUi": true,
+      "officialTerminalActionVisible": true,
+      "formalModelPromptsThisBatch": 1,
+      "sameAccountReloginConfirmedByUser": true,
+      "trace": "protocol-v1-1794805229940-2.jsonl",
+      "nativeSessionDigest": "595530c8dd27e627",
+      "terminalResponseAfterPromptMs": 11398,
+      "exactAssistantMarkerAndCompletedUi": true,
+      "temporaryModelOnly": true,
+      "userNativeNemotronDefaultStillPresent": true
+    }
+  },
+  "minimax": {
+    "installedVersion": "0.2.7",
+    "originalNativeSessionDigest": "1811783c263622e8",
+    "originalModel": "MiniMax-M2.7",
+    "sameModelPresentInCurrentManagedCatalog": true,
+    "currentChinaManagedAccountVerified": true,
+    "originalAccountContinuityConfirmedByUser": true,
+    "readTrace": "protocol-v1-1794805536530-5.jsonl",
+    "normalReopenTrace": "protocol-v1-1794805600437-7.jsonl",
+    "exactNativeRecordReplayedAndImported": true,
+    "reopenedOriginalBodyAndM27ReadBack": true,
+    "liveIndexConfigMissingAndSendBlocked": true,
+    "modelPrompts": 0
+  },
+  "pi": {
+    "originalService": "OpenRouter",
+    "originalModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "originalReasoning": "medium",
+    "oldFarfoldBackupAndNativeRecordAgree": true,
+    "currentCredentialCanReadExactOldGeneration": true,
+    "generationMetadataHttpStatus": 200,
+    "generationIdAndTimeMatched": true,
+    "providerReturnedExactModelStringMatch": false,
+    "normalUiExactOriginalListMatch": true,
+    "normalUiLoadTrace": "protocol-v1-1794804599739-5.jsonl",
+    "loadWaitMs": 120003,
+    "loadCorrespondingResponseSeen": false,
+    "uiOutcome": "正文未能读取，请重试。",
+    "macOsDesktopPromptWithoutDecisionAfterFirstLoad": true,
+    "authorizedFarfoldReplay": {
+      "desktopFolderAccessGrantedByUser": true,
+      "trace": "protocol-v1-1794805643890-9.jsonl",
+      "terminalResponseAfterLoadMs": 112609,
+      "historyUpdates": 39,
+      "assistantTextUpdates": 10,
+      "toolUpdates": 14,
+      "originalMarkerAndSettingsVisible": true,
+      "readOnlyPreview": true,
+      "modelPrompts": 0
+    },
+    "independentNativeCopyReplay": {
+      "sameModelAndReasoning": true,
+      "getStateMs": 171,
+      "messageCount": 41,
+      "originalFilesUnchanged": true,
+      "copyRemoved": true,
+      "modelPrompts": 0
+    },
+    "originalFarfoldMetadataMissingFromLiveIndex": true,
+    "importedOrModifiedOriginal": false,
+    "modelPrompts": 0
+  }
+}

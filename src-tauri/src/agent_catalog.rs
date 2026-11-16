@@ -684,58 +684,73 @@ mod tests {
 
     #[test]
     fn current_directory_filters_entries_without_changing_registered_data() {
-        let registry = ["cline", "fast-agent", "retired-agent", "unreviewed"]
-            .into_iter()
-            .map(|id| RegistryAgent {
-                id: id.into(),
-                name: "Same display name".into(),
-                version: "future-version".into(),
-                distribution: RegistryDistribution {
-                    npx: Some(RegistryNpx {
-                        package: "example-package".into(),
-                        args: vec!["acp".into()],
-                        env: std::collections::BTreeMap::new(),
-                    }),
-                    ..Default::default()
-                },
+        let registry = [
+            "cline",
+            "qoder",
+            "factory-droid",
+            "poolside",
+            "kimchi",
+            "unreviewed",
+        ]
+        .into_iter()
+        .map(|id| RegistryAgent {
+            id: id.into(),
+            name: "Same display name".into(),
+            version: "future-version".into(),
+            distribution: RegistryDistribution {
+                npx: Some(RegistryNpx {
+                    package: "example-package".into(),
+                    args: vec!["acp".into()],
+                    env: std::collections::BTreeMap::new(),
+                }),
                 ..Default::default()
+            },
+            ..Default::default()
+        })
+        .collect::<Vec<_>>();
+        let registered = ["factory-droid", "poolside", "kimchi"]
+            .into_iter()
+            .map(|id| {
+                serde_json::from_value::<AgentRow>(serde_json::json!({
+                    "id":format!("registry:{id}"), "name":"Original", "source":"registry",
+                    "command":"/original/program", "args":["keep"], "env":[["PUBLIC_CONFIG","keep"]],
+                    "version":"old", "handshake":{"authMethods":[]}, "createdAt":1,"updatedAt":2
+                }))
+                .unwrap()
             })
             .collect::<Vec<_>>();
-        let registered: AgentRow = serde_json::from_value(serde_json::json!({
-            "id":"registry:retired-agent", "name":"Original", "source":"registry",
-            "command":"/original/program", "args":["keep"], "env":[["PUBLIC_CONFIG","keep"]],
-            "version":"old", "handshake":{"authMethods":[]}, "createdAt":1,"updatedAt":2
-        }))
-        .unwrap();
         let original = serde_json::to_value(&registered).unwrap();
-        let entries = current_catalog_entries(std::slice::from_ref(&registered), &[], &registry);
+        let entries = current_catalog_entries(&registered, &[], &registry);
         assert_eq!(entries.len(), builtin_defs().len() + 2);
         assert!(entries.iter().all(|entry| entry.first_batch_visible));
-        assert!(
-            entries
-                .iter()
-                .all(|entry| !matches!(entry.registry_id.as_str(), "retired-agent" | "unreviewed"))
-        );
+        assert!(entries.iter().any(|entry| entry.registry_id == "qoder"));
+        assert!(entries.iter().all(|entry| !matches!(
+            entry.registry_id.as_str(),
+            "factory-droid" | "poolside" | "kimchi" | "unreviewed"
+        )));
         assert_eq!(serde_json::to_value(&registered).unwrap(), original);
-        assert_eq!(registry.len(), 4);
+        assert_eq!(registry.len(), 6);
     }
 
     #[test]
     fn out_of_scope_installation_does_not_refresh_or_delete_saved_data() {
         let root = tempfile::tempdir().unwrap();
-        let registry = vec![RegistryAgent {
-            id: "retired-agent".into(),
-            ..Default::default()
-        }];
+        let retired = ["factory-droid", "poolside", "kimchi"];
+        let registry = retired
+            .into_iter()
+            .map(|id| RegistryAgent {
+                id: id.into(),
+                ..Default::default()
+            })
+            .collect::<Vec<_>>();
         write_registry_cache(root.path(), &registry);
         let original = std::fs::read(cache_path(root.path())).unwrap();
         let catalog = AgentCatalog::new(root.path().into());
-        assert!(
-            catalog
-                .installation_entry("registry:retired-agent")
-                .is_err()
-        );
-        assert!(catalog.cached_entry("registry:retired-agent").is_none());
+        for id in retired {
+            let agent_id = format!("registry:{id}");
+            assert!(catalog.installation_entry(&agent_id).is_err());
+            assert!(catalog.cached_entry(&agent_id).is_none());
+        }
         assert_eq!(std::fs::read(cache_path(root.path())).unwrap(), original);
         assert_eq!(catalog.agents_cached(), Some(registry));
     }
@@ -980,14 +995,14 @@ mod tests {
             "windows-x86_64"
         };
         let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([
-            {"id":"poolside","distribution":{"binary":{(foreign_platform):{"archive":"https://example.test/agent.zip","cmd":"agent.exe"}}}},
+            {"id":"qoder","distribution":{"binary":{(foreign_platform):{"archive":"https://example.test/agent.zip","cmd":"agent.exe"}}}},
             {"id":"fast-agent","distribution":{"uvx":{"package":"example @ https://example.test/tool.whl"}}},
             {"id":"unknown","distribution":{}}
         ])).unwrap();
         write_registry_cache(root.path(), &registry);
         let catalog = AgentCatalog::new(root.path().into());
         assert_eq!(
-            catalog.installation_entry("registry:poolside").unwrap_err(),
+            catalog.installation_entry("registry:qoder").unwrap_err(),
             "官方目录未提供适用于此设备的安装方式，请查看官方说明"
         );
         assert_eq!(
@@ -1069,7 +1084,7 @@ mod tests {
         let catalog = AgentCatalog::new(root.path().into());
         let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([
             {"id":"cline","name":"Example","distribution":{"npx":{"package":"example-agent@1.2.3","args":["--agent"]}}},
-            {"id":"nova","distribution":{"npx":{"package":"example@1.0.0","env":{"HOME":"/private"}}}}
+            {"id":"autohand","distribution":{"npx":{"package":"example@1.0.0","env":{"HOME":"/private"}}}}
         ])).unwrap();
         write_registry_cache(root.path(), &registry);
         let (entry, launch) = catalog.installation_entry("registry:cline").unwrap();
@@ -1083,7 +1098,10 @@ mod tests {
         );
         assert!(catalog.installation_entry("cline").is_err());
         assert!(catalog.installation_entry("registry:unknown").is_err());
-        assert!(catalog.installation_entry("registry:nova").is_err());
+        assert_eq!(
+            catalog.installation_entry("registry:autohand").unwrap_err(),
+            "Farfold 当前尚不能安装此条目，请查看官方说明或添加已安装的程序"
+        );
     }
 
     fn fixture_registry(version: &str) -> Vec<RegistryAgent> {

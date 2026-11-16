@@ -98,8 +98,8 @@ function pngCrc(bytes: Uint8Array, start: number, end: number) {
   return (crc ^ 0xffffffff) >>> 0;
 }
 
-// PNG chunks, dimensions and animation declarations follow W3C PNG. CRCs and
-// a zlib header reject broken containers; the browser still decodes image data.
+// PNG chunks, dimensions and animation declarations follow W3C PNG. Check the
+// zlib and first DEFLATE headers before letting the browser decode the data.
 function png(bytes: Uint8Array): Dimensions {
   let size: Dimensions | undefined;
   let at = 8;
@@ -108,7 +108,7 @@ function png(bytes: Uint8Array): Dimensions {
   let imageSeen = false;
   let imageBytes = 0;
   let imageEnded = false;
-  const zlib: number[] = [];
+  const zlibPrefix: number[] = [];
   while (at < bytes.length) {
     range(bytes, at, 12);
     const length = be32(bytes, at);
@@ -154,19 +154,23 @@ function png(bytes: Uint8Array): Dimensions {
     } else if (kind === "IDAT") {
       if (imageEnded || (color === 3 && !palette)) invalid();
       imageSeen = true;
-      for (let i = 0; i < length && zlib.length < 2; i++)
-        zlib.push(bytes[data + i]);
+      for (let i = 0; i < length && zlibPrefix.length < 3; i++)
+        zlibPrefix.push(bytes[data + i]);
       imageBytes += length;
     } else {
       if (imageSeen) imageEnded = true;
       if (kind === "IEND") {
-        if (!size || length || end + 4 !== bytes.length || imageBytes < 6)
+        // Two zlib header bytes, a DEFLATE header byte and four Adler-32 bytes.
+        if (!size || length || end + 4 !== bytes.length || imageBytes < 7)
           invalid();
+        const [cmf, flg, firstBlock] = zlibPrefix;
         if (
-          (zlib[0] & 15) !== 8 ||
-          zlib[0] >>> 4 > 7 ||
-          zlib[1] & 32 ||
-          (zlib[0] * 256 + zlib[1]) % 31
+          (cmf & 15) !== 8 ||
+          cmf >>> 4 > 7 ||
+          flg & 32 ||
+          (cmf * 256 + flg) % 31 ||
+          // RFC 1951 §3.2.3 reserves BTYPE=11 (bits 1 and 2, after BFINAL).
+          (firstBlock & 0b110) === 0b110
         )
           invalid();
         return size;

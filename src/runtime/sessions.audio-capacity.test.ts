@@ -1,6 +1,10 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { createHash } from "node:crypto";
 import { largeAudioCapture } from "./audio_input.test-support";
+import {
+  createDraftSqliteFixture,
+  draftSqliteAvailable,
+} from "./draft_sqlite.test-support";
 // The exact16MiB correctness cases include full validation and persistence.
 // This local runner allowance is not a product interaction/performance target.
 const CAPACITY_TEST_TIMEOUT_MS = 10_000;
@@ -301,5 +305,124 @@ it.each(["cancel", "confirm"])(
     expect(s.queued[0][1].type).toBe("audio");
     expect((s.queued[0][1] as { data: string }).data === data).toBe(true);
     expect(h.prompts).toHaveLength(0);
+  },
+);
+
+it.skipIf(!draftSqliteAvailable)(
+  "retains a paused 16MiB audio queue and its edit across SQLite write refusal and cold recovery",
+  { timeout: CAPACITY_TEST_TIMEOUT_MS },
+  async () => {
+    const { key, read, write, holdWriteLock, close } =
+      createDraftSqliteFixture();
+    const invoke = h.invoke.getMockImplementation()!;
+    let sqliteFailure: unknown;
+    const digest = (value: string | Buffer) =>
+      createHash("sha256").update(value).digest("hex");
+
+    try {
+      h.invoke.mockImplementation(async (command, args) => {
+        if (args?.key !== key) return invoke(command, args);
+        if (command === "settings_get") return JSON.parse(read() ?? "null");
+        if (command !== "settings_set") throw Error("unexpected draft command");
+        try {
+          write(args.value);
+        } catch (error) {
+          sqliteFailure = error;
+          throw error;
+        }
+      });
+      const { attachmentPromptBlocks } = await import("./draft_attachments");
+      const { startQueueEditor } = await import("./queue_edit");
+      const s = state();
+      s.running = true;
+      const blocks = attachmentPromptBlocks(
+        "original queued text",
+        [audio],
+        true,
+      );
+      expect(await threads.send(s.key, blocks)).toEqual({ status: "queued" });
+      s.running = false;
+      const original = threads.beginQueueEdit(s.key, 0);
+      await d.draftPersistence.flush();
+      const previous = digest(read()!);
+      const editKey = `queue-edit:${s.key}`;
+
+      const releaseLock = holdWriteLock();
+      try {
+        startQueueEditor(s.key, 0, original);
+        d.composerDrafts.update(editKey, (draft) => ({
+          ...draft,
+          text: "new edit under write lock",
+        }));
+        await expect(d.draftPersistence.flush()).rejects.toThrow();
+        expect(sqliteFailure).toMatchObject({ errcode: 5 });
+        expect(digest(read()!)).toBe(previous);
+        expect(d.draftPersistence.isSaved(d.draftPersistence.revision())).toBe(
+          false,
+        );
+        expect(d.composerDrafts.read(editKey).text).toBe(
+          "new edit under write lock",
+        );
+        expect(
+          d.composerDrafts.read(editKey).attachments[0]?.data === data,
+        ).toBe(true);
+        expect(s.queued[0]).toBe(original);
+        expect(s.queuePaused).toBe("stopped");
+      } finally {
+        releaseLock();
+      }
+
+      expect(digest(read()!)).toBe(previous);
+      await d.draftPersistence.flush();
+      expect(d.draftPersistence.isSaved(d.draftPersistence.revision())).toBe(
+        true,
+      );
+      const persisted = read()!;
+      expect(digest(persisted)).not.toBe(previous);
+      expect(Buffer.byteLength(persisted)).toBeLessThan(32 * 1024 * 1024);
+      const { values } = JSON.parse(persisted).audioEncoding as {
+        values: string[];
+      };
+      expect(values).toHaveLength(1);
+      expect(values[0] === data).toBe(true);
+
+      vi.resetModules();
+      const cold = await import("./drafts");
+      const { queueEditorTarget } = await import("./queue_edit");
+      const { threads: coldThreads } = await import("./sessions");
+      await cold.draftPersistence.load();
+      const restored = coldThreads.markOpenFailed(
+        s.key,
+        s.agentId,
+        s.cwd,
+        s.nativeSessionId,
+        "fixture",
+      );
+      const editor = cold.composerDrafts.read(editKey);
+      const restoredAudio = restored.queued[0]?.[1];
+      expect(editor.text).toBe("new edit under write lock");
+      expect(editor.attachments[0]?.data === data).toBe(true);
+      expect(editor.queueEdit?.index).toBe(0);
+      const editorOriginal = editor.queueEdit?.original[1];
+      expect(
+        editorOriginal?.type === "audio" && editorOriginal.data === data,
+      ).toBe(true);
+      expect(restored.queued).toHaveLength(1);
+      expect(restored.queuePaused).toBe("stopped");
+      expect(queueEditorTarget(editor, restored.queued)).toBeNull();
+      expect(restored.queued[0]?.[0]).toEqual({
+        type: "text",
+        text: "original queued text",
+      });
+      if (restoredAudio?.type !== "audio")
+        throw Error("queued audio not restored");
+      const bytes = Buffer.from(restoredAudio.data, "base64");
+      expect(bytes.byteLength).toBe(16 * 1024 * 1024);
+      expect(digest(bytes)).toBe(capture.file.sha256);
+      expect(h.prompts).toHaveLength(0);
+    } finally {
+      h.invoke.mockImplementation(invoke);
+      close();
+    }
   },
 );

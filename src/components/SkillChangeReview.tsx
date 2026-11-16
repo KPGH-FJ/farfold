@@ -1,5 +1,6 @@
 import { isHttpInput } from "../runtime/mcp_add_types";
 import { MCP_REMOVE_STRINGS as REMOVE } from "../runtime/mcp_remove_strings";
+import { SKILL_PREFERENCE_REMOVE_STRINGS as SKILL_REMOVE } from "../runtime/skill_preference_remove_strings";
 import {
   MCP_ADD_STRINGS as ADD,
   MCP_HTTP_ADD_STRINGS as HTTP,
@@ -12,6 +13,34 @@ import { SKILL_MANAGEMENT_STRINGS as SKILLS } from "../runtime/skill_management_
 import { EXTENSION_INVENTORY_STRINGS as I } from "../runtime/extension_inventory_strings";
 import { MCP_MANAGEMENT_STRINGS as MCP } from "../runtime/mcp_management_strings";
 import "./SkillChangeReview.css";
+import type { ExtensionChangeRequest } from "../runtime/extension_management_types";
+import type { SkillChangeScope } from "../runtime/skill_management_types";
+
+function stringsForTarget(target: ExtensionChangeRequest["target"]) {
+  return !("kind" in target)
+    ? SKILLS
+    : target.kind === "skillPreferenceRemoval"
+      ? SKILL_REMOVE
+      : target.kind === "mcpRemoval"
+        ? REMOVE
+        : target.kind === "mcpAddition"
+          ? target.transport === "streamableHttp"
+            ? HTTP
+            : ADD
+          : MCP;
+}
+
+function WriteScope({ scope }: { scope: Readonly<SkillChangeScope> }) {
+  return (
+    <>
+      <p>
+        {SKILLS.scope}：
+        {scope.kind === "profile" ? SKILLS.profile : SKILLS.user}
+      </p>
+      <p className="skill-change-path">{scope.configDisplayPath}</p>
+    </>
+  );
+}
 
 export function SkillChangeReview({
   agentId,
@@ -33,11 +62,18 @@ export function SkillChangeReview({
   const heading = useRef<HTMLHeadingElement>(null);
   const reopen = useRef<HTMLButtonElement>(null);
   const priorRequest = useRef(request);
+  const priorClosed = useRef(closed);
   useEffect(() => {
-    if (request !== priorRequest.current && active && owner.current())
+    if (
+      (request !== priorRequest.current ||
+        (priorClosed.current !== null && closed === null)) &&
+      active &&
+      owner.current()
+    )
       heading.current?.focus();
     priorRequest.current = request;
-  }, [request, owner, active]);
+    priorClosed.current = closed;
+  }, [request, closed, owner, active]);
   useEffect(() => {
     if (closed && active && owner.current()) reopen.current?.focus();
   }, [closed, active, owner]);
@@ -52,7 +88,7 @@ export function SkillChangeReview({
     );
     return () => clearTimeout(timer);
   }, [review]);
-  if (!request) return null;
+  if (!request || (view.expiryResolved && !view.originalOperation)) return null;
   const allowed = () =>
     active &&
     owner.current() &&
@@ -68,36 +104,38 @@ export function SkillChangeReview({
         }}
       >
         {
-          ("kind" in request.target
-            ? request.target.kind === "mcpRemoval"
-              ? REMOVE
-              : request.target.kind === "mcpAddition"
-                ? ADD
-                : MCP
-            : SKILLS
+          stringsForTarget(
+            view.expiryResolved && view.originalOperation
+              ? view.originalOperation.target
+              : request.target,
           ).reopen
         }
       </button>
     );
-  const isMcp = "kind" in request.target;
   const isAddition =
     "kind" in request.target && request.target.kind === "mcpAddition";
   const isRemoval =
-    "kind" in request.target && request.target.kind === "mcpRemoval";
-  const isHttp =
-    isAddition &&
-    "transport" in request.target &&
-    request.target.transport === "streamableHttp";
-  const S = isRemoval
-    ? REMOVE
-    : isHttp
-      ? HTTP
-      : isAddition
-        ? ADD
-        : isMcp
-          ? MCP
-          : SKILLS;
+    "kind" in request.target &&
+    ["mcpRemoval", "skillPreferenceRemoval"].includes(request.target.kind);
+  const isSkillRemoval =
+    "kind" in request.target &&
+    request.target.kind === "skillPreferenceRemoval";
+  const R = isSkillRemoval ? SKILL_REMOVE : REMOVE;
+  const S = stringsForTarget(request.target);
+  const prior =
+    view.originalOperation?.requestId !== op?.requestId
+      ? view.originalOperation
+      : null;
   const outcome = op?.outcome;
+  const refusedWithoutReview =
+    request.action === "inspect" &&
+    op?.state === "failed" &&
+    op.settled &&
+    op.review === null &&
+    !op.writeDispatched &&
+    op.writeAck === "none" &&
+    op.code !== null &&
+    view.error === op.code;
   const summary = view.trackingReleased
     ? S.trackingReleased
     : view.admissionRejected ||
@@ -113,37 +151,91 @@ export function SkillChangeReview({
             : request.action === "inspect"
               ? S.inspect
               : isRemoval && request.action === "recheck"
-                ? REMOVE.checkingResult
+                ? R.checkingResult
                 : S.waiting
         : request.action === "inspect"
-          ? review && skillManagement.canConfirm(owner, review)
+          ? refusedWithoutReview ||
+            (review && skillManagement.canConfirm(owner, review))
             ? null
             : S.retired
           : outcome
             ? isRemoval &&
               request.action === "recheck" &&
               ["unknown", "notDispatched"].includes(outcome)
-              ? REMOVE.checkUnknown
+              ? R.checkUnknown
               : S[outcome]
             : S.unknown;
+  const readback =
+    !view.unresolved &&
+    view.originalOperation?.settled &&
+    view.originalOperation.writeDispatched ? (
+      <button
+        type="button"
+        className="btn btn-ghost"
+        disabled={!active}
+        onClick={() => {
+          if (allowed()) skillManagement.recheck(agentId, request.requestId);
+        }}
+      >
+        {S.recheck}
+      </button>
+    ) : null;
+  const priorResult = prior && (
+    <div className="agent-extension-progress">
+      {!view.expiryResolved && (
+        <p>
+          {isRemoval && request.action === "recheck"
+            ? R.original
+            : SKILLS.priorOperation}
+        </p>
+      )}
+      <p>{prior.target.name}</p>
+      <p className="skill-change-path">
+        {SKILLS.priorDirectory}：{prior.cwd}
+      </p>
+      {view.originalWriteScope && (
+        <WriteScope scope={view.originalWriteScope} />
+      )}
+      <p role="status">
+        {!prior.outcome || prior.outcome === "unknown"
+          ? "kind" in prior.target &&
+            ["mcpRemoval", "skillPreferenceRemoval"].includes(prior.target.kind)
+            ? stringsForTarget(prior.target).unknown
+            : SKILLS.priorUnknown
+          : stringsForTarget(prior.target)[prior.outcome]}
+      </p>
+      {readback}
+    </div>
+  );
+  const title = view.expiryResolved ? SKILLS.priorOperation : S.heading;
+  const header = (
+    <div className="skill-change-header">
+      <h5 ref={heading} tabIndex={-1}>
+        {title}
+      </h5>
+      <button
+        type="button"
+        className="btn btn-ghost"
+        onClick={() => {
+          if (!allowed()) return;
+          if (!view.expiryResolved) skillManagement.retire(owner);
+          setClosed(request.requestId);
+        }}
+      >
+        {S.close}
+      </button>
+    </div>
+  );
+  if (view.expiryResolved)
+    return (
+      <section className="skill-change-review" aria-label={title}>
+        {header}
+        {priorResult}
+      </section>
+    );
   return (
-    <section className="skill-change-review" aria-label={S.heading}>
-      <div className="skill-change-header">
-        <h5 ref={heading} tabIndex={-1}>
-          {S.heading}
-        </h5>
-        <button
-          type="button"
-          className="btn btn-ghost"
-          onClick={() => {
-            if (!allowed()) return;
-            skillManagement.retire(owner);
-            setClosed(request.requestId);
-          }}
-        >
-          {S.close}
-        </button>
-      </div>
+    <section className="skill-change-review" aria-label={title}>
+      {header}
       <strong>{request.target.name}</strong>
       {"origin" in request.target && (
         <p>
@@ -159,7 +251,7 @@ export function SkillChangeReview({
       <p>
         {S.requested}：
         {isRemoval
-          ? REMOVE.remove
+          ? R.remove
           : request.requestedEnabled
             ? S.enabled
             : S.disabled}
@@ -167,14 +259,11 @@ export function SkillChangeReview({
       {isRemoval && "transport" in request.target && (
         <p>{I.transport[request.target.transport]}</p>
       )}
-      {isRemoval && view.originalOperation && (
-        <p>
-          {REMOVE.original}：
-          {view.originalOperation.outcome
-            ? REMOVE[view.originalOperation.outcome]
-            : REMOVE.unknown}
-        </p>
-      )}
+      {view.confirmedScope &&
+        (view.unresolved || view.trackingReleased || op?.writeDispatched) && (
+          <WriteScope scope={view.confirmedScope} />
+        )}
+      {priorResult}
       {summary && <p role="status">{summary}</p>}
       {view.error && !view.trackingReleased && (
         <p role="status">
@@ -236,7 +325,7 @@ export function SkillChangeReview({
           )}
           {"configuredEnabled" in review && !isAddition && (
             <p>
-              {MCP.configured}：
+              {isSkillRemoval ? SKILL_REMOVE.configured : MCP.configured}：
               {review.configuredEnabled ? S.enabled : S.disabled}
             </p>
           )}
@@ -245,15 +334,9 @@ export function SkillChangeReview({
               {S.reported}：{review.reportedEnabled ? S.enabled : S.disabled}
             </p>
           )}
-          <p>
-            {S.scope}：
-            {review.writeScope.kind === "profile" ? S.profile : S.user}
-          </p>
-          <p className="skill-change-path">
-            {review.writeScope.configDisplayPath}
-          </p>
+          <WriteScope scope={review.writeScope} />
           {"parentHandling" in review && (
-            <p>{REMOVE.parentHandling[review.parentHandling]}</p>
+            <p>{R.parentHandling[review.parentHandling]}</p>
           )}
           <p>{S.notice}</p>
           <details>
@@ -285,7 +368,7 @@ export function SkillChangeReview({
             }}
           >
             {isRemoval
-              ? REMOVE.confirm
+              ? R.confirm
               : isAddition
                 ? ADD.confirm
                 : review.requestedEnabled
@@ -302,10 +385,10 @@ export function SkillChangeReview({
         <>
           {"configuredEnabled" in op.observation && (
             <p>
-              {MCP.configured}：
+              {isSkillRemoval ? SKILL_REMOVE.configured : MCP.configured}：
               {op.observation.configuredEnabled === null
                 ? isRemoval && op.observation.configuration === "matching"
-                  ? REMOVE.configurationAbsent
+                  ? R.configurationAbsent
                   : S.unverified
                 : op.observation.configuredEnabled
                   ? S.enabled
@@ -338,12 +421,14 @@ export function SkillChangeReview({
           </p>
           {"parentOutcome" in op.observation && (
             <>
-              {op.observation.mcp === "present" && <p>{REMOVE.present}</p>}
+              {"mcp" in op.observation && op.observation.mcp === "present" && (
+                <p>{REMOVE.present}</p>
+              )}
               <p>
-                {REMOVE.parent}：
+                {R.parent}：
                 {op.observation.parentOutcome === null
                   ? S.unverified
-                  : REMOVE.parentOutcomes[op.observation.parentOutcome]}
+                  : R.parentOutcomes[op.observation.parentOutcome]}
               </p>
             </>
           )}
@@ -377,19 +462,7 @@ export function SkillChangeReview({
             </button>
           </>
         )}
-        {!view.unresolved && op?.settled && op.writeDispatched && (
-          <button
-            type="button"
-            className="btn btn-ghost"
-            disabled={!active}
-            onClick={() => {
-              if (allowed())
-                skillManagement.recheck(agentId, request.requestId);
-            }}
-          >
-            {S.recheck}
-          </button>
-        )}
+        {!prior && readback}
       </div>
     </section>
   );

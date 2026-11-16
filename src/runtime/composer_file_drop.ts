@@ -15,7 +15,7 @@ export type FileDropOwner = {
 };
 
 /** A native drag belongs to the input that was active when it entered.
- * Native coordinates remain physical until the DOM hit-test converts them. */
+ * Coordinates keep their platform units until the DOM hit test. */
 export function createFileDropHandler({
   owner,
   accepts,

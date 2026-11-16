@@ -1,0 +1,22 @@
+{
+  "archive": "raw-check-logs.zip",
+  "purpose": "Preserve original stdout bytes including trailing whitespace and blank lines; individual local .log files remain unchanged.",
+  "files": {
+    "checks/cargo-clippy.log": "de1b0332ff7ca4a119c53bfb3ed7dfa67b486b5c0ed8ee92dffa84fce1b497a1",
+    "checks/cargo-fetch.log": "3d7d0f8e003ca2ac816c80c3646dd37494c93206e98144c2c940702c559b900c",
+    "checks/cargo-fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/cargo-tests.log": "327639e85b977923961bbf643c3de797198bb09a1b6fe89ae5696ec40d297f74",
+    "checks/desktop-build.log": "a42dadc9490a342a9f00fb87c3ea59f1627abf61a3d7a90ad1b6f446f48daade",
+    "checks/docs-check-final.log": "f4053f68c51a48892702705e808d86cfaf2d91b0b0891f1ed76b6af718ddf1a9",
+    "checks/docs-check.log": "754635c9babde63b649da6ad863a8c2b503041917fc9731e5e2e77f8253b2ec5",
+    "checks/documentation-format-final.log": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+    "checks/frontend-build.log": "1f712ace7e2ee2d49955ae89b142699a69a801e0bba0d044deef3e7ec90e3e17",
+    "checks/frontend-format-final.log": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "checks/frontend-format.log": "480622d147fbf773e729c501bc7d352ab1eb81fb065c33b5303e171b7c26e58a",
+    "checks/frontend-tests.log": "71fe136774394e0e70b769bc33b094c1f92629df5d4733de69a4072642bf846a",
+    "checks/frontend-typecheck.log": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "checks/pnpm-install.log": "99cb0935716580a189c00218b03d619572838f59e8f2f4390ac7279a495e70a5",
+    "checks/tauri-info.log": "667fbf620af273ba1c23d851161a6298e483d41ef4c22f344acdcab5b64cb4b3",
+    "checks/vite-dev-smoke.log": "e1162240d2a8ba0dc5434df60ba24dd0a30fa14c730e9d427c47a0d53ca45369"
+  }
+}
