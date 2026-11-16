@@ -1,0 +1,45 @@
+{
+  "productSource": "ef5d1a536561f98104a6df53c2da6cd0d605f322",
+  "application": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "b9b7af2eea37ff84d95d0e6f1bc483125100a5c5",
+    "executableSha256": "27a50c49b827470968621b0f97bc176c642e33bd1262bbf2fdb6bf8b6ceca753",
+    "installedAtUtc": "2026-11-16T16:07:30.017253+00:00",
+    "candidateInputsChecked": 2634,
+    "protectedEntriesMatched": 247491,
+    "metadataCopyIntegrity": "ok"
+  },
+  "checks": {
+    "format": "passed",
+    "typecheck": "passed",
+    "frontend": {
+      "files": 786,
+      "passed": 10962
+    },
+    "productionBuild": "passed",
+    "internalMacBundle": "passed",
+    "rustFormat": "passed",
+    "rustClippy": "passed",
+    "rust": {
+      "passed": 2805,
+      "ignored": 11
+    },
+    "originalConditions": 151
+  },
+  "installedDirectory": {
+    "entry": "探索 Agent",
+    "agentCount": 22,
+    "startupFeedback": "官方目录已更新 · 2026年11月17日 00:07",
+    "manualRefresh": {
+      "action": "重新发现",
+      "observedWhileWorking": "正在扫描…",
+      "feedback": "官方目录刷新失败，正在显示上次获取的目录 · 2026年11月17日 00:07",
+      "agentCountAfter": 22
+    },
+    "noCache": "现有 Rust 受控回归与前端渲染回归通过，未在装机数据上清除缓存。",
+    "modelRequests": 0
+  }
+}

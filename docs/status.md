@@ -28,9 +28,9 @@
 
 | 范围           | 当前核对结果                                                                                                                                                                                                                                                                                                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 第 12 周期基线 | 最新应用代码见 `fa9e3ec78`；后续提交补记 Cline、Copilot 等实际验收以及官方依赖。首发范围 22 家，逐家八项验收保持开放。                                                                                                                                                                                                                                                                      |
-| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `7aefe7b0116d761bf7dcfcbed3ab392e0bd4aadd`，可执行文件 SHA-256 `a08923623c0cba509442dc892f5030ae98345a9e5742690abee92db202f1faaa`。UI 目录 22 家。                                                                                                                                                            |
-| Mac 工程与安装 | 当前安装批通过前端生产构建、应用打包、前端 10,959 项及 Rust 2,805 项测试，Rust 另有 11 项既有忽略。正式版完成 Devin 普通新建的设置恢复，后续同版完成 Copilot 原 Auto 续答及 Cline 双前台停止与冷续答。[安装与实测记录](evidence/2026-11-16-cycle12-eight-check/README.md)                                                                                                                   |
+| 第 12 周期基线 | 当前安装代码见 `ef5d1a536`。当前首发名单、逐家台账和执行计划按 22 家八项续验，整家通过仍为 0/22。                                                                                                                                                                                                                                                                                           |
+| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `b9b7af2eea37ff84d95d0e6f1bc483125100a5c5`，可执行文件 SHA-256 `27a50c49b827470968621b0f97bc176c642e33bd1262bbf2fdb6bf8b6ceca753`。界面目录 22 家。                                                                                                                                                           |
+| Mac 工程与安装 | 2026-11-17 安装批完成全量前端 10,962 项、Rust 2,805 项（另有 11 项既有忽略）、其他工程检查及内部打包。保存并正常退出后替换应用，三处数据根的 247,491 项安装前后校验一致。正式版验到联网更新和刷新失败保留目录，零模型请求。[当批摘要](evidence/2026-11-17-baseline-alignment/summary.json) · [前一批 Devin、Copilot 与 Cline 证据](evidence/2026-11-16-cycle12-eight-check/README.md)       |
 | 当前开发环境   | macOS 27.0（26A425），Node 22.22.3、锁定 pnpm 9.15.0、Rust/Cargo 1.96.0、Xcode Command Line Tools 可识别。[环境恢复证据](evidence/2026-11-04-development-environment-restoration/README.md)。                                                                                                                                                                                               |
 | Windows        | 最后完整 CI 成功为固定源码 `2e23056cc` 的 [41931045918](https://github.com/KPGH-FJ/farfold/actions/runs/41931045918)，含未签名 NSIS 构建。后续固定 `5598138f2` 定向原生 30 项、前端 20 项通过。安装修复版 `5b9f1449a` 的 [41984263036](https://github.com/KPGH-FJ/farfold/actions/runs/41984263036) 因付款或支出额度未获运行机器；安装、卸载及桌面流程未执行，当前源码未重跑 Windows 全量。 |
 
@@ -162,7 +162,7 @@
 
 ### ARCH-01
 
-「探索 Agent → 重新发现」已补源码和受控回归，分别回报官方目录已更新、刷新失败时仍显示上次目录、刷新失败且暂无已保存目录。前两种显示对应获取时间，本机发现和已有登记在失败时仍可查看。三种结果待正式应用联网、断网有缓存及断网无缓存复验，完整项保持开放。[目录实现](../src-tauri/src/agent_catalog.rs) · [界面回归](../src/components/AgentHub.test.tsx)
+2026-11-17 正式版在「探索 Agent」显示官方目录已更新及获取时间，手动点「重新发现」后实际出现刷新失败和使用上次目录的提示，22 家仍可见，显示原获取时间。无已保存目录时的提示和本机发现保留已有 Rust 与前端受控回归，未从正式数据清空缓存复验。完整项保持开放。[正式摘要](evidence/2026-11-17-baseline-alignment/summary.json) · [目录实现](../src-tauri/src/agent_catalog.rs) · [界面回归](../src/components/AgentHub.test.tsx)
 
 移出 Kimchi 后，已有正式版探索目录 22 家、新对话搜索 Kimchi 无匹配，原登记与三条对话索引保留。[原正式复验](evidence/2026-11-16-cycle12-retire-kimchi/README.md)
 
