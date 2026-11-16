@@ -12,7 +12,6 @@ const INCLUDED: &[&str] = &[
     "cursor",
     "devin",
     "dirac",
-    "factory-droid",
     "fast-agent",
     "gemini",
     "github-copilot-cli",
@@ -24,7 +23,6 @@ const INCLUDED: &[&str] = &[
     "mistral-vibe",
     "opencode",
     "pi-acp",
-    "poolside",
     "qoder",
     "sigit",
 ];
@@ -42,14 +40,14 @@ mod tests {
     use std::collections::HashSet;
 
     #[test]
-    fn current_directory_has_25_unique_reviewed_identities() {
-        assert_eq!(INCLUDED.len(), 25);
+    fn current_directory_has_23_unique_reviewed_identities() {
+        assert_eq!(INCLUDED.len(), 23);
         let mut reviewed = HashSet::new();
         for id in INCLUDED {
             assert!(reviewed.insert(*id));
             assert!(first_batch_visible(id));
         }
-        assert_eq!(reviewed.len(), 25);
+        assert_eq!(reviewed.len(), 23);
         assert!(!first_batch_visible("future-agent"));
         assert!(!first_batch_visible("Cline"));
         assert!(!first_batch_visible("registry:cline"));
@@ -60,6 +58,9 @@ mod tests {
         assert!(!first_batch_visible("nova"));
         assert!(!first_batch_visible("qwen-code"));
         assert!(!first_batch_visible("dimcode"));
+        assert!(!first_batch_visible("factory-droid"));
+        assert!(!first_batch_visible("poolside"));
+        assert!(first_batch_visible("kimchi"));
         assert!(first_batch_visible("qoder"));
     }
 }

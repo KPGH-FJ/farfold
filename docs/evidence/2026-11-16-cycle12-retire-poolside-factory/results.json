@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-16",
+  "baseline": "fd244d5b882d8b7710e00d0b1a9eba3eb669b0f2",
+  "installed": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "15db1b9fb6b5eca9124492b01a28e22aee191738",
+    "binarySha256": "6d6119ac846b57f6dddcd9d48c01eaff58098c5ced55499aee8e08d75bf155d6"
+  },
+  "sourceVerified": {
+    "inputs": 2633,
+    "postBuildTestOnlyChange": "src-tauri/src/agent_catalog.rs"
+  },
+  "preservation": {
+    "fileEntries": 236586,
+    "beforeAndAfterSha256": "b0f0e363ef02ba282831c32bfe53d61dc9546216659cc01e6c005c498e4498d8",
+    "metadataIntegrity": "ok",
+    "registrationsMatched": 2,
+    "indexedConversationsMatched": 2,
+    "duplicateAppRemoved": true
+  },
+  "acceptance": {
+    "exploreAgentCount": 23,
+    "newChatSearchMatches": {
+      "Poolside": 0,
+      "Factory Droid": 0
+    },
+    "exploreRetained": ["Kimchi", "Qoder CLI"],
+    "currentFirstReleaseCells": 184,
+    "wholeAgentAcceptancePassed": 0,
+    "newModelRequests": 0,
+    "kimchiThirdPartyRequestTested": false
+  },
+  "engineeringChecks": {
+    "productionBuildAndAppBundle": true,
+    "prettierAndRustfmt": true,
+    "typecheck": true,
+    "clippyRelease": true,
+    "docsConditions": 151,
+    "frontendPassed": 10948,
+    "rustReleasePassed": 2800,
+    "rustReleaseIgnored": 11
+  }
+}

@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "agentCount": 25,
-  "cellCount": 200,
+  "agentCount": 23,
+  "cellCount": 184,
   "explicitStatuses": {
-    "准备未齐": 22,
-    "入口有证": 25,
-    "受阻": 11,
+    "准备未齐": 20,
+    "入口有证": 23,
+    "受阻": 9,
     "分项通过": 7,
     "未测": 18,
     "原账号实答": 4,
@@ -21,10 +21,9 @@
     "双前台分项通过": 2,
     "停止及冷续答通过": 1,
     "原正文已读": 2,
-    "实测失败": 4,
+    "实测失败": 2,
     "未确认": 3,
     "已选服务有实答": 1,
-    "结果未知": 1,
     "默认列表为空": 1
   },
   "rows": [
@@ -888,101 +887,6 @@
       "name": "Dirac"
     },
     {
-      "agentId": "factory-droid",
-      "runtime": "登记版本 0.230.0",
-      "liveAction": null,
-      "standards": {
-        "S1": {
-          "observed": "受管程序可执行且旧安装连接通过，旧模型读取出现认证需求。\n本轮实测：目前程序可执行，登记版本 0.230.0。登记所存握手版本 0.230.0。",
-          "remaining": "原账户完整准备及失败回返。",
-          "sources": [
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-06-macos-batch1/README.md",
-            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json",
-            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
-          ],
-          "status": "准备未齐"
-        },
-        "S2": {
-          "observed": "旧 GPT-6 Sol/High 产生401界面及 internal_error。\n2026-11-16 同安装官方 doctor 验证已有登录，后台标题请求和连接器校验明确返回未关联组织。Farfold 和同版官方 CLI 的原模型均收到无正文 401。",
-          "remaining": "核对当前账号可用的 Factory 组织及权限，然后复验原设置。",
-          "sources": [
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-06-macos-batch1/README.md",
-            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json",
-            "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json"
-          ],
-          "status": "受阻"
-        },
-        "S3": {
-          "observed": "当前握手声明 list/load/resume，旧专属未知样本无可靠终态。",
-          "remaining": "只检查独立确权且无旧未知工作的原样本。",
-          "sources": ["docs/evidence/2026-11-13-cycle7/wave7-followup.json"],
-          "status": null
-        },
-        "S4": {
-          "observed": "旧 GPT-6 Sol/High 仅标签与请求路径。",
-          "remaining": "真实已确认配置、模型生效及重启。",
-          "sources": [
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-06-macos-batch1/README.md",
-            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json"
-          ],
-          "status": null
-        },
-        "S5": {
-          "observed": "旧真实请求失败且结果不明。\n2026-11-16 正式版及同版 CLI 分别只发一次 GPT-6 Sol / High，均 401、无模型回复。",
-          "remaining": "在组织权限改变后复验正常模型和工具任务。",
-          "sources": [
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-06-macos-batch1/README.md",
-            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json",
-            "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json"
-          ],
-          "status": "实测失败"
-        },
-        "S6": {
-          "observed": "没有当前独立双任务通过。",
-          "remaining": "实际归属及范围，保护旧未知。",
-          "sources": [
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-06-macos-batch1/README.md",
-            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json"
-          ],
-          "status": null
-        },
-        "S7": {
-          "observed": "旧请求和停止回执都没有确认终态。",
-          "remaining": "不可重发同一旧请求，凭原证补查及另取实际停止样本。",
-          "sources": [
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-06-macos-batch1/README.md",
-            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json"
-          ],
-          "status": null
-        },
-        "S8": {
-          "observed": "旧 unknown 没有作为成功记录，保留原状态。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
-          "remaining": "正式版同类当前可靠提示与可恢复路径。",
-          "sources": [
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-06-macos-batch1/README.md",
-            "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
-          ],
-          "status": "入口有证"
-        }
-      },
-      "name": "Factory Droid"
-    },
-    {
       "agentId": "fast-agent",
       "runtime": "登记及握手 0.10.1。唯一已保存 FF_FAST_WEB_20… 原目录仍在，保存选项模型为空；前次自有回执精确报告 codexplan / codexresponses / gpt-5.6-sol。",
       "liveAction": "先正式冷开同一自有网页测试并展开原 PNG、原正文，零发送。不能用旧 alias 或菜单替代当前明确选择。实际终端停止需先落通用官方委托与原请求权限归属。",
@@ -1510,10 +1414,12 @@
           "status": "受阻"
         },
         "S4": {
-          "observed": "已有原模型显式可选并发出请求，官方返回 internal_error",
-          "remaining": "成功实答、实际模型生效、切换和冷开恢复",
+          "observed": "已有原模型显式可选并发出请求；同版实测确认原托管模型的提供方额度用尽，正式版准确显示",
+          "remaining": "可用服务上的真实回复、实际模型生效、切换和冷开恢复；官方第三方路线有出处，小米直经 Kimchi 配置待实答",
           "sources": [
-            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-16-cycle12-service-diagnosis/README.md",
+            "docs/evidence/2026-11-16-cycle12-retire-poolside-factory/README.md"
           ],
           "status": "分项通过"
         },
@@ -1890,101 +1796,6 @@
         }
       },
       "name": "Pi"
-    },
-    {
-      "agentId": "poolside",
-      "runtime": "登记版本 1.0.16",
-      "liveAction": null,
-      "standards": {
-        "S1": {
-          "observed": "当前登记可执行，旧正式可进入既有设置及真实请求。\n本轮实测：目前程序可执行，登记版本 1.0.16。登记所存握手版本 1.0.16。",
-          "remaining": "正式现有设置可用性与取消返回。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json",
-            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
-          ],
-          "status": "准备未齐"
-        },
-        "S2": {
-          "observed": "旧已有设置原选 Laguna-S-2.1 / Max 实答。\n本轮实测：读取已有设置成功，已选原 Laguna 模型及 Max 可读。\n2026-11-16 正式原设置使用厂商自营推理。原会话日志确认模型版本停用，厂商公告已关闭该托管服务。",
-          "remaining": "确认可用且经用户选择的兼容服务，再核实账号和计费。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json"
-          ],
-          "status": "受阻"
-        },
-        "S3": {
-          "observed": "旧正式找回、正文、同原对象续答均有确切实证；原目录现已不存在。",
-          "remaining": "另一真实同源自有目录及原对象，或准备同源新样本后冷开。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json"
-          ],
-          "status": null
-        },
-        "S4": {
-          "observed": "旧原配置和模型/推理标签恢复观察。",
-          "remaining": "保持原选择，验证实际选择切换、请求作用和冷开。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json"
-          ],
-          "status": null
-        },
-        "S5": {
-          "observed": "旧短答成功；工具审批和实际工作交付仍待。\n本轮实测：原 Laguna／Max 的新短测返回内部错误，无成功回复。\n2026-11-16 同一原请求厂商日志显示版本已停用，HTTP 400，原生轨迹结束且无助手或工具。此次零重发。",
-          "remaining": "官方旧服务已停，待确认可用替代服务。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json"
-          ],
-          "status": "实测失败"
-        },
-        "S6": {
-          "observed": "未见跨任务实际隔离证据。",
-          "remaining": "按实际模型和作用范围验证。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json"
-          ],
-          "status": null
-        },
-        "S7": {
-          "observed": "旧冷回读有效，仅该原对象。\n本轮实测：原新建测试在退出时仍列结果未知，未重发或改为完成。",
-          "remaining": "待该请求可信终态及实际停止测试。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
-          ],
-          "status": "结果未知"
-        },
-        "S8": {
-          "observed": "旧正常入口有回读后继续正例。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
-          "remaining": "当前状态尚未复测，实际失败与返回入口。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
-          ],
-          "status": "入口有证"
-        }
-      },
-      "name": "Poolside"
     },
     {
       "agentId": "qoder",

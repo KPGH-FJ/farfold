@@ -6,7 +6,9 @@
 
 范围决定（2026-11-16）：按用户要求，保留 Qoder CLI（`qoder`），将 Qwen Code（`qwen-code`）移出首发目录、新接入入口与整家验收，剩余 26 项。Qwen Code 已有登记、程序、凭据、配置、原对话和实测证据保留。 [移出前的 27 家验收记录](https://github.com/KPGH-FJ/farfold/blob/9a4ca1a114d51b966b135a0654b800c7fe8da6da/docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)
 
-当前范围决定（2026-11-16）：按用户要求将 DimCode（`dimcode`）移出首发目录、新接入入口和整家验收，剩余 25 项。保留原登记、程序、配置、历史与证据。 [移出前的 26 家验收记录](https://github.com/KPGH-FJ/farfold/blob/002c776ae7b2cc6d25faf93d0347418413bab844/docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)
+范围决定（2026-11-16）：按用户要求将 DimCode（`dimcode`）移出首发目录、新接入入口和整家验收，剩余 25 项。保留原登记、程序、配置、历史与证据。 [移出前的 26 家验收记录](https://github.com/KPGH-FJ/farfold/blob/002c776ae7b2cc6d25faf93d0347418413bab844/docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)
+
+当前范围决定（2026-11-16）：按用户要求移出 Factory Droid（`factory-droid`）与 Poolside（`poolside`）的首发目录、新接入入口和整家验收，剩余 23 项。Factory 原账号未关联可用组织，Poolside 原托管推理已停用。已有登记、程序、配置、凭据、历史与证据保留。 [移出前的 25 家验收记录](https://github.com/KPGH-FJ/farfold/blob/fd244d5b882d8b7710e00d0b1a9eba3eb669b0f2/docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)
 
 历史范围决定（2026-10-07）：用户明确将 Corust Agent（`corust-agent`）、Junie（`junie`）、Stakpak（`stakpak`，用户消息拼作 starpak）和 Auggie CLI（`auggie`）移出首批，并删除相关专属内容。当时范围为 29 项，八项接入标准保持。未来增加须审核，没有自动重新纳入条件。
 
@@ -73,13 +75,13 @@
 
 ## 实现与再审核
 
-集中名单在 [first_release.rs](../src-tauri/src/acp_client/first_release.rs)，保留当前 25 项精确目录 ID。`catalog_list` 只给出当前目录条目，目录安装和准备入口也核对当前范围；完整远端缓存不因范围变化清除。客户端仍用通用卡片处理已有登记；目录外旧登记退出日常列表，历史访问与自定义接入沿共用规则保留，不删除外部程序或用户配置。
+集中名单在 [first_release.rs](../src-tauri/src/acp_client/first_release.rs)，保留当前 23 项精确目录 ID。`catalog_list` 只给出当前目录条目，目录安装和准备入口也核对当前范围；完整远端缓存不因范围变化清除。客户端仍用通用卡片处理已有登记；目录外旧登记退出日常列表，历史访问与自定义接入沿共用规则保留，不删除外部程序或用户配置。
 
-安装版 `b751575` 曾观察到探索 33 项及已有 40 项管理入口，见[原安装记录](evidence/2026-10-02-agent-onboarding-consistency/installed.md)。先前 28 项另有正式验收原件。当前 25 项按本轮正式验收记录跟踪。每家认证与实测状态分别留证。
+安装版 `b751575` 曾观察到探索 33 项及已有 40 项管理入口，见[原安装记录](evidence/2026-10-02-agent-onboarding-consistency/installed.md)。先前 28 项另有正式验收原件。当前 23 项按本轮正式验收记录跟踪。每家认证与实测状态分别留证。
 
-## 当前保留的 25 项
+## 当前保留的 23 项
 
-下表 26 个目录身份与当前[源码允许名单](../src-tauri/src/acp_client/first_release.rs)逐项一致。已有登记、历史分项和整家八项通过分别核对，验收见[当前状态](status.md)及[当前逐家验收记录](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)。
+下表 23 个目录身份与当前[源码允许名单](../src-tauri/src/acp_client/first_release.rs)逐项一致。已有登记、历史分项和整家八项通过分别核对，验收见[当前状态](status.md)及[当前逐家验收记录](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)。
 
 | Agent / 目录 ID                       |
 | ------------------------------------- |
@@ -93,7 +95,6 @@
 | Cursor / `cursor`                     |
 | Devin / `devin`                       |
 | Dirac / `dirac`                       |
-| Factory Droid / `factory-droid`       |
 | fast-agent / `fast-agent`             |
 | Gemini / `gemini`                     |
 | GitHub Copilot / `github-copilot-cli` |
@@ -105,6 +106,5 @@
 | Mistral Vibe / `mistral-vibe`         |
 | OpenCode / `opencode`                 |
 | Pi / `pi-acp`                         |
-| Poolside / `poolside`                 |
 | Qoder / `qoder`                       |
 | siGit / `sigit`                       |

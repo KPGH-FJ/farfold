@@ -20,13 +20,15 @@
 
 2026-11-16 首发范围续调：用户决定将 DimCode 移出首发、新接入和整家验收。正式版目录与新对话选择器已核，现为 25 家，保留已有程序、登记、配置与历史。[范围](agent-first-release.md) · [实装](evidence/2026-11-16-cycle12-service-diagnosis/results.json)
 
+2026-11-16 首发范围续调：按用户决定将 Factory Droid 与 Poolside 移出首发目录、新接入入口和整家验收。正式版探索目录与新对话选择器已复验，现为 23 家。两家的程序、登记、配置、凭据、历史和旧证据保留。[范围](agent-first-release.md) · [当前验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json) · [正式复验](evidence/2026-11-16-cycle12-retire-poolside-factory/README.md)
+
 ## 正式应用与最近功能基线
 
 | 范围           | 当前核对结果                                                                                                                                                                                                                                                                                                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 开发分支       | `codex/2026-11-04-development-resume`。第 12 周期含 fast-agent 隔离和续答、Autohand 程序切换认证、已有 API 模型读回修复和现首发范围。                                                                                                                                                                                                                                                       |
-| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `809f9e60a5b9cbaad929eab0c7328b10ad06ab77`，SHA-256 `c4b9364fa4f2101edfae46a2c7d806a947fac8a02662ed36ea2c474030708b65`。UI 目录 25 家。                                                                                                                                                                       |
-| Mac 工程与安装 | 2,633 个固定输入。前端 10,948 项、Rust 发布版 2,800 项通过，Rust 11 项忽略。格式、类型、严格 Clippy 与生产构建通过。安装前后 236,586 条保护记录摘要一致，元数据副本完整。[当前正式批](evidence/2026-11-16-cycle12-service-diagnosis/README.md)                                                                                                                                              |
+| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `15db1b9fb6b5eca9124492b01a28e22aee191738`，SHA-256 `6d6119ac846b57f6dddcd9d48c01eaff58098c5ced55499aee8e08d75bf155d6`。UI 目录 23 家。                                                                                                                                                                       |
+| Mac 工程与安装 | 正式构建固定 2,633 项产品输入。前端 10,948 项、Rust 发布版 2,800 项通过，Rust 11 项忽略。格式、类型、严格 Clippy 与生产应用打包通过。安装前后 236,586 项保护记录摘要一致。[当前正式批](evidence/2026-11-16-cycle12-retire-poolside-factory/README.md)                                                                                                                                       |
 | 当前开发环境   | macOS 27.0（26A425），Node 22.22.3、锁定 pnpm 9.15.0、Rust/Cargo 1.96.0、Xcode Command Line Tools 可识别。[环境恢复证据](evidence/2026-11-04-development-environment-restoration/README.md)。                                                                                                                                                                                               |
 | Windows        | 最后完整 CI 成功为固定源码 `2e23056cc` 的 [41931045918](https://github.com/KPGH-FJ/farfold/actions/runs/41931045918)，含未签名 NSIS 构建。后续固定 `5598138f2` 定向原生 30 项、前端 20 项通过。安装修复版 `5b9f1449a` 的 [41984263036](https://github.com/KPGH-FJ/farfold/actions/runs/41984263036) 因付款或支出额度未获运行机器；安装、卸载及桌面流程未执行，当前源码未重跑 Windows 全量。 |
 
@@ -52,7 +54,7 @@
 
 **第 11 周期按既定阶段范围收口。** Cursor、Gemini、Grok Build、Kimchi、Nova 均走正式版历史与账号入口，当前 28 家均已纳入分批验收。Cursor 新自测成功，冷开同一原对话读取原正文并准确续答，原标识和配置一致。Gemini、Grok、Nova 需认证，Gemini 当前未提供列表且旧版历史读取有上游修复，Nova 权限待官方兼容。Kimchi 新测试返回内部错误，一次停止未获确认。其原目录连接超时的同动作已在新版复验准确提示，历史文件保持。本批整家八项和真实审批仍未通过。[逐家结果](evidence/2026-11-15-cycle11-macos/README.md)
 
-**macOS 第 12 周期保持开放。** 原 28 家的 224 格已逐家对照并列缺口，当前首发 25 家的 200 格继续，整家 0/25。前序正常入口 28 家逐个点验，12 个无索引退役条目退出选择，Nova、Qwen Code 和 DimCode 后续移出首发，原登记保留。Cursor 文件交付与单次批准有正例。旧 2026.09.28 实测停止失败；升级 2026.11.13 后，已从正常入口停掉前台 Shell 及其子进程，工具终态仍未知。正常退出并冷开同一原对话后，沿用 Auto 明确续答通过，无自动重发。受监视的后台 Shell 仍缺官方精确停止入口。双前台隔离最新复验见下。Copilot 与 Pi 找到并预览原正文，原配置未确认而保留只读。Dirac 冷开同原正文与配置；Qwen Code 移出前的单次无正文后停止已确认，Poolside 新请求内部错误未知，Devin 旧样本曾读取失败，Cline 旧版曾初始化早退。依赖涉及账号、原历史、官方能力与实测负结果。Windows 与公开交付仍按既有顺序。[续验](evidence/2026-11-15-cycle12-followup/README.md) · [本轮细节](evidence/2026-11-15-cycle12-macos/README.md) · [28 家八项](evidence/2026-11-15-cycle12-macos/acceptance-matrix.md)
+**macOS 第 12 周期保持开放。** 原 28 家的 224 格已逐家对照并列缺口，当前首发 23 家的 184 格继续，整家 0/23。前序正常入口 28 家逐个点验，12 个无索引退役条目退出选择，Nova、Qwen Code、DimCode、Factory Droid 和 Poolside 后续移出首发，原登记保留。Cursor 文件交付与单次批准有正例。旧 2026.09.28 实测停止失败；升级 2026.11.13 后，已从正常入口停掉前台 Shell 及其子进程，工具终态仍未知。正常退出并冷开同一原对话后，沿用 Auto 明确续答通过，无自动重发。受监视的后台 Shell 仍缺官方精确停止入口。双前台隔离最新复验见下。Copilot 与 Pi 找到并预览原正文，原配置未确认而保留只读。Dirac 冷开同原正文与配置；Qwen Code 移出前的单次无正文后停止已确认，Poolside 新请求曾报告内部错误，Devin 旧样本曾读取失败，Cline 旧版曾初始化早退。依赖涉及账号、原历史、官方能力与实测负结果。Windows 与公开交付仍按既有顺序。[续验](evidence/2026-11-15-cycle12-followup/README.md) · [本轮细节](evidence/2026-11-15-cycle12-macos/README.md) · [28 家八项](evidence/2026-11-15-cycle12-macos/acceptance-matrix.md)
 
 **接入账号与 API 续查。** OpenCode 选新保存的小米 `Chat Completions` 与 `mimo-v2.6-flash` 实答，并冷开同一原对话读回回复与来源，模型名称显示缺陷已在正式版修正。Autohand 0.9.11 与 Grok Build 1.0.46 分别沿原 `fantail` 与 `grok-4.7 / low` 冷开、读到原正文并准确续答。Claude 使用另存的小米 `Messages` 独立 API 测试成功，普通对话在 0.81.2 无正文，升级 0.107.0 后返回 `auth_required`。两版的合成控制均发现官方适配程序发出占位 Bearer，需确认原生 Claude 的已有设置路径或官方适配程序修复。Gemini CLI 和 Antigravity 按用户要求暂缓。[正式复验与官方限制](evidence/2026-11-15-cycle12-pre-send/README.md)
 
@@ -66,7 +68,7 @@
 
 **移出 DimCode 前的 26 家账号和 API 盘点。** 正式版「探索 Agent」与新对话选择器核对 Qoder 保留、Qwen Code 移出，两家已有登记和对话索引保持。最新 MiniMax 的独立 M2.7 请求也因余额或额度不足终止，需核当前中国区服务。Claude 当前可用官方订阅或 Console 登录入口，托管 API 暂停。Gemini CLI 和 Antigravity 的登录继续暂缓。其余逐家按现有实答、待排障或待官方条件核对。[实装与盘点](evidence/2026-11-16-cycle12-qwen-exit/README.md)
 
-**Factory、Kimchi 与 Poolside 续验。** Factory 现有登录通过官方诊断，后台与连接校验报告当前账号未关联组织，Farfold 和同版 CLI 的 GPT-6 Sol / High 各一次均 401。Kimchi 的原托管模型提供方额度耗尽，正式版现能从设置测试和普通对话显示该具体原因。Poolside 的原托管模型版本停用，厂商已关闭原推理服务，待可验证替代服务。MiniMax 本机 0.2.7 自带第三方提供方入口，Farfold 可沿用，第三方真实发送待验。[第 12 周期实测](evidence/2026-11-16-cycle12-service-diagnosis/README.md)
+**Factory、Kimchi 与 Poolside 续验。** Factory 现有登录通过官方诊断，后台与连接校验报告当前账号未关联组织，Farfold 和同版 CLI 的 GPT-6 Sol / High 各一次均 401。Poolside 的原托管模型版本停用，厂商已关闭原推理服务。两家已按用户决定移出首发。Kimchi 保留，原托管模型提供方额度耗尽，正式版可从设置测试和普通对话显示该具体原因。官方支持第三方 API 和本地模型，当前 Farfold 未向 Kimchi 直配 API，小米经 Kimchi 自定义接入待实答。[官方接法核对](evidence/2026-11-16-cycle12-retire-poolside-factory/README.md#kimchi) MiniMax 本机 0.2.7 自带第三方提供方入口，Farfold 可沿用，第三方真实发送待验。[第 12 周期实测](evidence/2026-11-16-cycle12-service-diagnosis/README.md)
 
 **Autohand 文件交付实测。** 正常新对话沿用 `fantail`，按一次审批整理合成纪要并另存。可从 Farfold 的本轮产物打开新文件，原稿散列一致，负责人和日期保留。[文件交付回执](evidence/2026-11-15-cycle12-continuation/autohand-file-delivery-2026-11-16.json)
 

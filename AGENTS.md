@@ -1,6 +1,8 @@
 # Farfold AI Coding Entrypoint
 
-2026-11-16 用户决定将 DimCode（`dimcode`）移出首发目录、新接入入口与整家验收。保留已有登记、程序、配置、原对话与证据。继续第12周期并行排查 Factory Droid、Kimchi、Poolside，MiniMax 由用户先核额度，Gemini CLI 和 Antigravity 暂缓。当前25家仍各按八项验收。
+2026-11-16 用户决定将 Factory Droid（`factory-droid`）与 Poolside（`poolside`）移出首发目录、新接入入口与整家验收。保留已有登记、程序、配置、凭据、原对话及证据。Kimchi 仍在范围内，继续核实可用免费模型与官方第三方 API 接法。第12周期按当前23家八项续验。
+
+2026-11-16 用户决定将 DimCode（`dimcode`）移出首发目录、新接入入口与整家验收。保留已有登记、程序、配置、原对话与证据。当时剩余25家，第12周期并行排查 Factory Droid、Kimchi、Poolside。MiniMax 由用户先核额度，Gemini CLI 和 Antigravity 暂缓。
 
 2026-11-16 用户决定保留 Qoder CLI，将 Qwen Code（`qwen-code`）移出首发目录、新接入入口与整家验收。保留已有 Qwen Code 登记、程序、配置、凭据、原对话和证据。首发 26 家仍各按八项验收。
 

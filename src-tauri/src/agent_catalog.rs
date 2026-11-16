@@ -684,7 +684,7 @@ mod tests {
 
     #[test]
     fn current_directory_filters_entries_without_changing_registered_data() {
-        let registry = ["cline", "qoder", "qwen-code", "dimcode", "unreviewed"]
+        let registry = ["cline", "qoder", "factory-droid", "poolside", "unreviewed"]
             .into_iter()
             .map(|id| RegistryAgent {
                 id: id.into(),
@@ -702,7 +702,7 @@ mod tests {
             })
             .collect::<Vec<_>>();
         let registered: AgentRow = serde_json::from_value(serde_json::json!({
-            "id":"registry:dimcode", "name":"Original", "source":"registry",
+            "id":"registry:factory-droid", "name":"Original", "source":"registry",
             "command":"/original/program", "args":["keep"], "env":[["PUBLIC_CONFIG","keep"]],
             "version":"old", "handshake":{"authMethods":[]}, "createdAt":1,"updatedAt":2
         }))
@@ -714,7 +714,7 @@ mod tests {
         assert!(entries.iter().any(|entry| entry.registry_id == "qoder"));
         assert!(entries.iter().all(|entry| !matches!(
             entry.registry_id.as_str(),
-            "qwen-code" | "dimcode" | "unreviewed"
+            "factory-droid" | "poolside" | "unreviewed"
         )));
         assert_eq!(serde_json::to_value(&registered).unwrap(), original);
         assert_eq!(registry.len(), 5);
@@ -723,15 +723,22 @@ mod tests {
     #[test]
     fn out_of_scope_installation_does_not_refresh_or_delete_saved_data() {
         let root = tempfile::tempdir().unwrap();
-        let registry = vec![RegistryAgent {
-            id: "dimcode".into(),
-            ..Default::default()
-        }];
+        let retired = ["factory-droid", "poolside"];
+        let registry = retired
+            .into_iter()
+            .map(|id| RegistryAgent {
+                id: id.into(),
+                ..Default::default()
+            })
+            .collect::<Vec<_>>();
         write_registry_cache(root.path(), &registry);
         let original = std::fs::read(cache_path(root.path())).unwrap();
         let catalog = AgentCatalog::new(root.path().into());
-        assert!(catalog.installation_entry("registry:dimcode").is_err());
-        assert!(catalog.cached_entry("registry:dimcode").is_none());
+        for id in retired {
+            let agent_id = format!("registry:{id}");
+            assert!(catalog.installation_entry(&agent_id).is_err());
+            assert!(catalog.cached_entry(&agent_id).is_none());
+        }
         assert_eq!(std::fs::read(cache_path(root.path())).unwrap(), original);
         assert_eq!(catalog.agents_cached(), Some(registry));
     }
@@ -976,14 +983,14 @@ mod tests {
             "windows-x86_64"
         };
         let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([
-            {"id":"poolside","distribution":{"binary":{(foreign_platform):{"archive":"https://example.test/agent.zip","cmd":"agent.exe"}}}},
+            {"id":"qoder","distribution":{"binary":{(foreign_platform):{"archive":"https://example.test/agent.zip","cmd":"agent.exe"}}}},
             {"id":"fast-agent","distribution":{"uvx":{"package":"example @ https://example.test/tool.whl"}}},
             {"id":"unknown","distribution":{}}
         ])).unwrap();
         write_registry_cache(root.path(), &registry);
         let catalog = AgentCatalog::new(root.path().into());
         assert_eq!(
-            catalog.installation_entry("registry:poolside").unwrap_err(),
+            catalog.installation_entry("registry:qoder").unwrap_err(),
             "官方目录未提供适用于此设备的安装方式，请查看官方说明"
         );
         assert_eq!(

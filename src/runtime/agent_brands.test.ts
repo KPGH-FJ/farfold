@@ -13,13 +13,15 @@ const included = readFileSync(
 
 describe("reviewed Agent branding", () => {
   it("covers the current directory and preserves branding for historical conversations", () => {
-    expect(included).toHaveLength(25);
+    expect(included).toHaveLength(23);
     const supportedBrands = [
       ...included,
       "kimi",
       "nova",
       "qwen-code",
       "dimcode",
+      "factory-droid",
+      "poolside",
     ];
     expect(Object.keys(AGENT_BRANDS).sort()).toEqual(supportedBrands.sort());
     for (const id of supportedBrands) {

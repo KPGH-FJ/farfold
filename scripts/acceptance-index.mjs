@@ -89,7 +89,7 @@ export function parseAgentIds(text) {
   );
   const ids = [...array.matchAll(/"([^"]+)"/g)].map((item) => item[1]);
   unique(ids, "first-release identity");
-  assert.equal(ids.length, 25, "expected all 25 first-release identities");
+  assert.equal(ids.length, 23, "expected all 23 first-release identities");
   return ids;
 }
 
