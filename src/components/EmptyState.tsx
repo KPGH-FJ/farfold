@@ -166,7 +166,6 @@ export function EmptyState({
   const [folder, setFolder] = useState<string | null>(
     newConversationChoice.cwd,
   );
-  // New conversations require an explicit folder, separate from global setup.
   const cwd = folder;
   useEffect(() => {
     newConversationChoice.cwd = folder;
@@ -317,7 +316,6 @@ export function EmptyState({
       needsAuthentication,
       sourceContext,
     });
-  // Explicit selection prepares a draft; failed combinations are not retried automatically.
   const failedPairRef = useRef<string | null>(null);
   const pendingInquiryAbort = useRef<AbortController | null>(null);
   useEffect(() => {
@@ -1030,7 +1028,9 @@ export function EmptyState({
     )
       return;
     setChoiceDialog(null);
-    onGoSettings(id);
+    if (choiceDialog === "model" && isConfigurationRestoreNotice(draftError))
+      openRepair();
+    else onGoSettings(id);
   };
   const applyDraftConfig = async (id: string, value: unknown) => {
     const state = draft;

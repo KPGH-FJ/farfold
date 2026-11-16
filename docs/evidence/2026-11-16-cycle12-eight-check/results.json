@@ -1,0 +1,119 @@
+{
+  "date": "2026-11-16",
+  "platform": "macOS arm64",
+  "scope": {
+    "agentCount": 22,
+    "eightStandardCells": 176,
+    "fullAgentPasses": 0,
+    "deferred": ["gemini", "antigravity-acp"]
+  },
+  "autohand": {
+    "baselineFarfoldCdHash": "fe924229dbd869014ab0ede39b8623fd10312faf",
+    "version": "0.9.11",
+    "source": "existing",
+    "model": "fantail",
+    "distinctWorkingFolders": true,
+    "modelPrompts": 2,
+    "singleApprovals": 2,
+    "ownedGroupBeforeStop": {
+      "A": [61098, 61100],
+      "B": [61445, 61447]
+    },
+    "modelReplyStopped": true,
+    "liveToolOutcomeConfirmed": false,
+    "processObservationAfterStop": {
+      "observedAt": "2026-11-16T07:23:29.565508+00:00",
+      "manualStopRequestedAt": "2026-11-16T07:23:20.064Z",
+      "sides": {
+        "A": {
+          "ids": [61098, 61100],
+          "active": [["61100", "1", "60963", "/bin/sleep"]],
+          "done": false
+        },
+        "B": {
+          "ids": [61445, 61447],
+          "active": [
+            ["61445", "61129", "61129", "/bin/sh"],
+            ["61447", "61445", "61129", "/bin/sleep"]
+          ],
+          "done": false
+        }
+      }
+    },
+    "bExpectedMarkerOnDiskAndInReply": true,
+    "aCompletionMarkerAbsent": true,
+    "aRemainingChildExitedNaturally": true
+  },
+  "cline": {
+    "baselineFarfoldCdHash": "fe924229dbd869014ab0ede39b8623fd10312faf",
+    "version": "3.0.74",
+    "source": "existing",
+    "model": "nvidia/nemotron-3.5-super-vl:free",
+    "mode": "act",
+    "modelPrompts": 1,
+    "singleReadApprovals": 1,
+    "singleEditApprovals": 1,
+    "doneInFarfold": true,
+    "openedFromFilePicker": true,
+    "autoDeliveryCardSeen": false,
+    "inputSha256": "e9efa6b780f60234685cd38b97c497fcf8ede5a43f6a841544fbb42daf780393",
+    "inputUnchanged": true,
+    "outputSha256": "d342d278bcd0df8dc4a732c2b2f95ea7a3eb964592dc6c407ec86d46cd929369",
+    "bothSectionsPreserveOwnersAndDates": true
+  },
+  "amp": {
+    "adapterVersion": "0.9.0",
+    "vendorVersion": "0.0.1790740844-g023754",
+    "normalProgramCheckPassed": true,
+    "existingModelOptionsRead": true,
+    "displayedMode": "Medium",
+    "vendorHasSavedAccount": false,
+    "vendorReadOnlyThreadListRequiresAuth": true,
+    "adapterEffectiveIdentityVerified": false,
+    "modelPrompts": 0
+  },
+  "qoder": {
+    "version": "1.1.89",
+    "originalSavedChoice": {
+      "__farfold_legacy_model": "qfmodel",
+      "mode": "default"
+    },
+    "completedInitializeAndSessionNew": true,
+    "newDraftBlockedOnSavedOption": true,
+    "modelPrompts": 0,
+    "repairUiInstalled": true,
+    "installedModelRepairNavigationVerified": true,
+    "ownDraftSurvivedRepair": true,
+    "rereadExistingModel": "mimo-v2.6-flash",
+    "rereadSameWorkMode": "default",
+    "rereadSameExistingService": true,
+    "defaultRefreshedFromVerifiedExistingSelection": true,
+    "postRepairNormalChatPrompts": 1,
+    "singleWriteApproval": true,
+    "turnFinished": true,
+    "openedViaOutputList": true,
+    "inputSha256": "e9efa6b780f60234685cd38b97c497fcf8ede5a43f6a841544fbb42daf780393",
+    "outputSha256": "4c64977fa23d0ab9eba5b09741e420614043d88ea5d193b73c4e8d535b8e8291",
+    "inputUnchanged": true,
+    "twoSectionsPreserveOwnersAndDates": true
+  },
+  "installed": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "463a103256d1d42addd5f74e01b2e772427b40b6",
+    "binarySha256": "007f653ef4846bf3a69239b7e27a189b2528385abf60b478e459e1c1901cb4e5",
+    "productInputCount": 2633,
+    "protectedFileEntries": 236586,
+    "protectedDigestBeforeAndAfter": "00dea8863ed44b5d5fb124e840f0409905c10f30d0c52b9714b758860bff4b26",
+    "metadataIntegrity": "ok",
+    "duplicateRemoved": true
+  },
+  "checks": {
+    "candidateTypecheckAndProductionBuild": true,
+    "frontendTargetedPassed": 122,
+    "allCandidateInputsMatched": true,
+    "docsOriginalConditions": 151
+  }
+}

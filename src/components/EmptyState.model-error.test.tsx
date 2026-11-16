@@ -830,6 +830,36 @@ it("explains a missing saved mode after restoring modern model and thinking with
   ]);
 });
 
+it("opens model settings from a blocked picker without applying an obsolete saved model", async () => {
+  const choice = { __farfold_legacy_model: "qfmodel", mode: "default" };
+  const before = composerDrafts.read("new");
+  startRestore(choice);
+  h.live!.configOptions = [
+    { ...configOption("mode", "default", ["default"]), category: "mode" },
+  ];
+  await vi.advanceTimersByTimeAsync(300);
+  const failed = await settle();
+  expect(failed.dialog!.props.readError).toMatchObject({
+    savedConfigurationRestore: true,
+  });
+  expect(failed.dialog!.props.existingOption).toBeNull();
+  (failed.dialog!.props.onPrepare as () => void)();
+  expect(props.onGoSettings).toHaveBeenCalledExactlyOnceWith("A", {
+    panel: "model",
+    needsAuthentication: false,
+    sourceContext: undefined,
+  });
+  const closed = render();
+  expect(closed.dialog).toBeUndefined();
+  expect(closed.composer.props.disabled).toBe(true);
+  expect(closed.composer.props.sendRequest).toBe(0);
+  expect(h.open).toHaveBeenCalledOnce();
+  expect(h.setConfig).not.toHaveBeenCalled();
+  expect(h.confirmRestored).not.toHaveBeenCalled();
+  expect(newConversationChoice.config).toEqual(choice);
+  expect(composerDrafts.read("new")).toBe(before);
+});
+
 it("explains an unavailable saved select value before calling its setter", async () => {
   const choice = { model: "kept-choice" };
   const before = composerDrafts.read("new");

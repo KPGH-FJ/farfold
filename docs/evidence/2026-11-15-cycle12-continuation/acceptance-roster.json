@@ -5,60 +5,67 @@
   "explicitStatuses": {
     "准备未齐": 19,
     "入口有证": 22,
-    "受阻": 8,
-    "分项通过": 5,
-    "未测": 17,
+    "受阻": 9,
+    "分项通过": 6,
+    "未测": 14,
     "原账号实答": 4,
-    "查找冷开续答通过": 6,
-    "已选模型有实答": 7,
+    "查找冷开续答通过": 7,
+    "已选模型有实答": 8,
     "可建对话": 1,
     "已知标识读取声明": 1,
-    "实测分项通过": 6,
-    "前台停止分项通过": 1,
-    "设置短测通过": 3,
+    "实测分项通过": 11,
+    "前台停止分项通过": 3,
+    "设置短测通过": 1,
     "已有设置实答": 2,
     "本轮短测失败": 1,
-    "双前台分项通过": 2,
+    "双前台分项通过": 3,
     "停止及冷续答通过": 1,
     "原正文已读": 2,
-    "实测失败": 1,
+    "实测失败": 2,
     "未确认": 2,
     "已选服务有实答": 1,
-    "默认列表为空": 1
+    "默认列表为空": 1,
+    "冷开续答分项通过": 1,
+    "跨家分项通过": 2
   },
   "rows": [
     {
       "agentId": "amp-acp",
       "runtime": "登记版本 0.9.0",
-      "liveAction": null,
+      "liveAction": "官方 CLI 需要原账号登录。之后先用同一 CLI 读取已知原 T-ID，再核目录适配器是否可关联、冷开和续答。禁止以适配器的其他账号或新线程代替。",
       "standards": {
         "S1": {
-          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n本轮实测：目前程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。",
-          "remaining": "终端成功退出不等于认证；当前同来源完整准备及回返。",
+          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n本轮实测：目前程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。",
+          "remaining": "恢复正确的厂商 CLI 账号，再验实际服务、首次回复、取消及返回。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json",
-            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "旧真实样本认证要求和结果未知。",
-          "remaining": "官方个人身份、有效服务及费用归属；不重发旧请求。",
+          "observed": "旧真实样本认证要求和结果未知。\n2026-11-16 续查：原厂商程序 account list 无保存账号，一次只读线程查询需要认证。目录适配器的认证来源另核。\n2026-11-16 续查：用户反馈 Farfold 的 Amp API Key Setup 登录失败；该项为适配器独立密钥配置，已告知本机原厂商 CLI 的官方 login 路径。",
+          "remaining": "本人完成厂商 login 后验同账号线程；适配器单独来源须核。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
-            "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json"
+            "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
-          "status": null
+          "status": "受阻"
         },
         "S3": {
-          "observed": "当前所选登记无 list/load/resume。官方制造商 CLI/SDK 有原历史路径，但本机所核常见路径无该独立 CLI。",
-          "remaining": "精确可用厂商程序和获准自有原线程；不能以适配器进程运行判读回。",
-          "sources": ["docs/evidence/2026-11-15-official-alternatives/amp.md"],
+          "observed": "当前所选登记无 list/load/resume。官方制造商 CLI/SDK 有原历史路径，但本机所核常见路径无该独立 CLI。\n2026-11-16 续查：找到并实测原厂商 CLI。目录 0.13.0 的适配器保存新 S-ID 映射，与已有厂商 T-ID 原历史区分。",
+          "remaining": "原账号登录后查询唯一原 T-ID，先读真实正文，再验证正式 Farfold 入口能继续同一个原厂商线程。",
+          "sources": [
+            "docs/evidence/2026-11-15-official-alternatives/amp.md",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+          ],
           "status": null
         },
         "S4": {
@@ -103,7 +110,7 @@
     {
       "agentId": "antigravity-acp",
       "runtime": "登记版本 1.2.1",
-      "liveAction": null,
+      "liveAction": "按用户要求暂缓本家登录、开发与实测。本次零新增启动或请求，原八项及当时证据保留。",
       "standards": {
         "S1": {
           "observed": "已有设置返回认证要求，当前登记披露四类接入方式\n本轮实测：目前程序可执行，登记版本 1.2.1。登记所存握手版本 1.2.1。",
@@ -177,14 +184,15 @@
     {
       "agentId": "autohand",
       "runtime": "当前正式登记 0.9.11",
-      "liveAction": null,
+      "liveAction": "已有设置与 Fantail 可用。正式双前台点停暴露仍运行的子进程；待官方停止覆盖后复验，同次核原对象冷恢复与准确工具状态。",
       "standards": {
         "S1": {
-          "observed": "可打开现行登记的 Autohand 账号入口，已有设置明确要求认证\n本轮实测：目前程序可执行，登记版本 0.2.1。登记所存握手版本 0.2.1。",
-          "remaining": "以用户可用官方账号完成认证并核取消返回",
+          "observed": "可打开现行登记的 Autohand 账号入口，已有设置明确要求认证\n本轮实测：目前程序可执行，登记版本 0.2.1。登记所存握手版本 0.2.1。\n2026-11-16 续查：0.9.11 已从正常新对话准备，沿原服务和 Fantail 成功发送双任务。",
+          "remaining": "进一步核账号准备各种入口及取消返回。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
           "status": "准备未齐"
         },
@@ -225,27 +233,30 @@
           "status": "实测分项通过"
         },
         "S6": {
-          "observed": "未运行双对话变更、审批或停止",
-          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
-          ],
-          "status": "未测"
-        },
-        "S7": {
-          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复",
-          "remaining": "取得独立工作样本并核停止终态、原对象恢复与无重发",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
-          ],
-          "status": "未测"
-        },
-        "S8": {
-          "observed": "显示所选 Agent 的需登录及后续入口\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
-          "remaining": "以当前版本验证授权取消与正向工作链路",
+          "observed": "未运行双对话变更、审批或停止\n2026-11-16 续查：两个独立目录内各只批准一个命令。只停 A，B 原进程继续，产出预期标记并显示完成。",
+          "remaining": "较窄的并行工作已实测；共享范围、多配置与其他审批仍需隔离实测。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+          ],
+          "status": "双前台分项通过"
+        },
+        "S7": {
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n2026-11-16 续查：A 的回复停止且原 Shell 退出；约 9.5 秒后其 sleep 子进程仍活跃。工具结果未知正确保留。B 独立完成。",
+          "remaining": "官方前台停止覆盖实际子进程；之后验原对象冷续答、草稿附件和无重发。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+          ],
+          "status": "实测失败"
+        },
+        "S8": {
+          "observed": "显示所选 Agent 的需登录及后续入口\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续查：原命令审批项与停止后未知步骤说明可见。",
+          "remaining": "核官方终止改动后的工具终态、各种错误及取消反馈。",
+          "sources": [
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
           "status": "入口有证"
         }
@@ -255,27 +266,29 @@
     {
       "agentId": "claude-acp",
       "runtime": "当前正式登记 0.107.0",
-      "liveAction": null,
+      "liveAction": "托管 Messages 保持暂停。用户可单独在 Claude 官方入口选原订阅或 Console 登录，之后沿用同来源准备与短测。",
       "standards": {
         "S1": {
-          "observed": "装机握手成功，旧状态明确提示未登录并呈现订阅与 Console。\n本轮实测：目前程序可执行，登记版本 0.81.2。登记所存握手版本 0.81.2。",
-          "remaining": "当前实际原选择和正常准备/取消。",
+          "observed": "装机握手成功，旧状态明确提示未登录并呈现订阅与 Console。\n本轮实测：目前程序可执行，登记版本 0.81.2。登记所存握手版本 0.81.2。\n2026-11-16 续查：已正式升级至 0.107.0，实发后的 auth_required 有证据。官方订阅及 Console 仍有入口。",
+          "remaining": "官方原订阅或 Console 登录、实答及准备取消返回；新托管来源等待有安全凭据和有效路由回执的官方接口。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
-            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
+            "output/2026-11-15-cycle12-macos/runtime-inventory.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
           "status": "准备未齐"
         },
         "S2": {
           "observed": "未确认可用原账号或所选模型；旧正式设置声明可读但保存选择未确认。\n最新复验：新保存的小米 Messages 设置独立 API 实答；普通对话见相应真实复验及官方适配程序认证头对照。\n2026-11-16 已暂停会将认证头交给进程参数的官方托管路径。正式设置保留原 Messages 服务，Claude 已退出其适用列表。",
-          "remaining": "待官方私密交付或验证已有设置的正常原生路径。",
+          "remaining": "用户完成选定的官方订阅或 Console 登录后验身份和实际服务；托管 Messages 另等官方私密交付且核实际路由。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
             "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
-            "docs/evidence/2026-11-16-cycle12-original-config/results.json"
+            "docs/evidence/2026-11-16-cycle12-original-config/results.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
           "status": "受阻"
         },
@@ -351,17 +364,18 @@
     {
       "agentId": "cline",
       "runtime": "当前正式登记 3.0.74",
-      "liveAction": null,
+      "liveAction": "原账号重登后默认免费 Nemotron 可做普通文件工作。继续核同一原历史和设置恢复，以及工具结果怎样直接成为可开的本轮产物；停止和双任务待验。",
       "standards": {
         "S1": {
-          "observed": "旧程序连接和三类认证方式曾展示；旧同版空白连接有超时。\n本轮实测：目前程序可执行，登记版本 3.0.65。登记所存握手版本 3.0.65。\n2026-11-16 续验：正式从签名无效的旧版更新至厂商 3.0.74，程序检查握手和新建均有回执。\n2026-11-16 正式设置沿已有来源实际收到发送回执，握手和新建通过，试发后回到测试对话可见错误。",
-          "remaining": "日常新建路径能实答，取消返回按原条件。",
+          "observed": "旧程序连接和三类认证方式曾展示；旧同版空白连接有超时。\n本轮实测：目前程序可执行，登记版本 3.0.65。登记所存握手版本 3.0.65。\n2026-11-16 续验：正式从签名无效的旧版更新至厂商 3.0.74，程序检查握手和新建均有回执。\n2026-11-16 正式设置沿已有来源实际收到发送回执，握手和新建通过，试发后回到测试对话可见错误。\n2026-11-16 续查：用户原账号重登已在正式设置短测获正确回复。普通入口沿原默认 Nemotron 完成真实文件工作。",
+          "remaining": "认证取消返回、所有准备方式、当前安装选择与旧错误恢复各依原条件。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "output/2026-11-15-cycle12-macos/runtime-inventory.json",
             "docs/evidence/2026-11-15-cycle12-pre-send/cline-startup-diagnosis-2026-11-16.json",
-            "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json"
+            "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
           "status": "可建对话"
         },
@@ -378,15 +392,16 @@
           "status": "原账号实答"
         },
         "S3": {
-          "observed": "10/06 A 自有失败对话 ID、原目录及原保存消息文件均确认。该版无列表，官方 load 需认证，并在原 ID 启动自己的会话管理器。\n本轮实测：当前正式历史入口连接在检查完成前结束，未向程序发列表或正文。\n2026-11-16 续验：当前正式握手确认仅声明已知标识读取，未提供官方历史列表。",
-          "remaining": "有适用原标识与目录时核对正文、配置和继续，确认发现入口方案。",
+          "observed": "10/06 A 自有失败对话 ID、原目录及原保存消息文件均确认。该版无列表，官方 load 需认证，并在原 ID 启动自己的会话管理器。\n本轮实测：当前正式历史入口连接在检查完成前结束，未向程序发列表或正文。\n2026-11-16 续验：当前正式握手确认仅声明已知标识读取，未提供官方历史列表。\n2026-11-16 续查：同发行 3.0.74 官方源码确认按已知 ID 读取，无官方默认历史列表。",
+          "remaining": "能找到原对话的正式补充入口、同原设置读取及续答仍待。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
             "output/2026-10-09-fourth-install/metadata-before.sqlite3",
             "docs/evidence/2026-10-08-ui-coverage-audit/full-review/screenshots/U001-library-start.ax.txt",
             "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L232-L304",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-15-cycle12-pre-send/cline-startup-diagnosis-2026-11-16.json"
+            "docs/evidence/2026-11-15-cycle12-pre-send/cline-startup-diagnosis-2026-11-16.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
           "status": "已知标识读取声明"
         },
@@ -406,16 +421,17 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧首轮 internal_error；无真实成功短答或完整工具链。\n2026-11-16 正式版新短测仍无正文，未触发工具。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。\n2026-11-16 正式设置收到原服务实际短答，本样本未调用工具。",
-          "remaining": "正式日常工作仍需验证工具、文件、审批及交付。",
+          "observed": "旧首轮 internal_error；无真实成功短答或完整工具链。\n2026-11-16 正式版新短测仍无正文，未触发工具。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。\n2026-11-16 正式设置收到原服务实际短答，本样本未调用工具。\n2026-11-16 续查：原免费 Nemotron 普通对话完成两个一次性权限回执，读取样本并另存 result.md。原稿不变，可从 Farfold 手动打开成品。\n2026-11-16 续查：Cline 3.0.74 的 ACP 更新未给本次编辑提供结构化写入位置或差异，手动打开已验，自动本轮产物仍待官方回执。",
+          "remaining": "本轮产物直达入口、其他工具与技能、拒绝和撤回仍待。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json",
             "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json",
-            "docs/evidence/2026-11-16-cycle12-cline-auth/results.json"
+            "docs/evidence/2026-11-16-cycle12-cline-auth/results.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
-          "status": "设置短测通过"
+          "status": "实测分项通过"
         },
         "S6": {
           "observed": "没有当前双任务实证。",
@@ -451,7 +467,7 @@
     {
       "agentId": "codebuddy-code",
       "runtime": "登记版本 2.160.0",
-      "liveAction": null,
+      "liveAction": "本机现有登记 2.160.0。先核原 Hy4/High 是否仍可选，满足原来源后只用独立合成目录验一个新任务；原 ID 读取超时不因新任务升级。",
       "standards": {
         "S1": {
           "observed": "历史正式启动与设置有观察，当前登记可执行。\n本轮实测：目前程序可执行，登记版本 2.160.0。登记所存握手版本 未报告。",
@@ -614,8 +630,8 @@
     },
     {
       "agentId": "cursor",
-      "runtime": "登记版本 2026.09.28",
-      "liveAction": null,
+      "runtime": "当前正式登记 2026.11.13；原 2026.09.28 的失败与历史证据保留。",
+      "liveAction": "以新版原 Auto 补受监视后台工具的实际停止与官方终态。前台双任务已验，继续查真实授权覆盖及共享范围。",
       "standards": {
         "S1": {
           "observed": "读取已有设置成功，保存的 Auto／Agent 下短请求真实成功\n本轮实测：目前程序可执行，登记版本 2026.09.28。登记所存握手版本 未报告。",
@@ -671,11 +687,12 @@
         },
         "S7": {
           "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n本轮实测：一次取消后 Farfold 显示已停止和步骤已结束，同一 shell 与 sleep 仍继续，约一分钟后自然写下完成标记。\n2026.11.13 Auto 前台复验，正式按钮后 380 毫秒已观察到原 Shell 与 sleep 同时退出，55 秒后没有完成标记。界面步骤结果未知。 正常退出后冷开同一对话，原服务与 Auto 保持，明确短消息正确报回首条独有记号。原请求未自动重发。",
-          "remaining": "后台受监视 Shell 的精确终止、同时在途隔离及工具实时终态仍开放，旧版失败保留。",
+          "remaining": "原前台 Shell/子进程已停止并同原对象续答；持久后台 Shell 的官方精确停止和工具终态未证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-15-cycle12-followup/README.md"
+            "docs/evidence/2026-11-15-cycle12-followup/README.md",
+            "docs/evidence/2026-11-15-cycle12-followup/cursor-foreground-pair-2026-11-16.json"
           ],
           "status": "前台停止分项通过"
         },
@@ -694,7 +711,7 @@
     {
       "agentId": "devin",
       "runtime": "当前正式登记 3000.12.57",
-      "liveAction": null,
+      "liveAction": "已有 SWE-2 Flash Medium 原样本已冷开并续答。正式普通入口核确认采用相同服务及模型，补文件、审批、并行停止；不要复用已知不可用旧对象。",
       "standards": {
         "S1": {
           "observed": "旧安装连接成功，早期短测观察到认证要求。\n本轮实测：目前程序可执行，登记版本 3000.11.3。登记所存握手版本 0.0.0-dev。\n最新复验：固定非桌面目录后，旧版从正式入口在 95 毫秒取得新会话；新版 3000.12.57 经正常更新、检查及已有设置也能创建。\n2026-11-16 设置短测：官方 3000.12.57 在正常设置页以临时选择完成一次短测。",
@@ -793,7 +810,7 @@
     {
       "agentId": "dirac",
       "runtime": "登记版本 0.5.21",
-      "liveAction": null,
+      "liveAction": "沿实际原 Nemotron／Medium 匹配同原标识续答；精确标记旧失败保留，再验文件和审批。",
       "standards": {
         "S1": {
           "observed": "当前登记可执行，旧安装有实际免费模型回复。\n本轮实测：目前程序可执行，登记版本 0.5.21。登记所存握手版本 0.5.21。",
@@ -889,7 +906,7 @@
     {
       "agentId": "fast-agent",
       "runtime": "登记及握手 0.10.1。唯一已保存 FF_FAST_WEB_20… 原目录仍在，保存选项模型为空；前次自有回执精确报告 codexplan / codexresponses / gpt-5.6-sol。",
-      "liveAction": "先正式冷开同一自有网页测试并展开原 PNG、原正文，零发送。不能用旧 alias 或菜单替代当前明确选择。实际终端停止需先落通用官方委托与原请求权限归属。",
+      "liveAction": "从正常入口复用已验证的同一原 ID 冷开、网页与正式单次命令。双任务及冷续答已实证，实时工具终态和各 Agent 自管工具仍须验证。",
       "standards": {
         "S1": {
           "observed": "所选正式程序已有准备、连接和真实窄首发。\n本轮实测：目前程序可执行，登记版本 0.10.1。登记所存握手版本 0.10.1。",
@@ -908,13 +925,14 @@
           "status": null
         },
         "S3": {
-          "observed": "官方批准的同安装只读 export 叠加普通冷开，正式回读原正文、工具、PNG。",
-          "remaining": "官方列表范围、当前同原 ID 实际继续和其他对象仍需分别验证。",
+          "observed": "官方批准的同安装只读 export 叠加普通冷开，正式回读原正文、工具、PNG。\n2026-11-16 续查：两目录实测后正常退出并冷开 A，按原会话 session/load，手动一轮准确续答，无 session/new 或自动重发。",
+          "remaining": "原历史列表与首次带入、其他样本依旧待验。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/history-supplement-summary.json",
-            "docs/evidence/2026-11-13-cycle7/fast-page-summary.json"
+            "docs/evidence/2026-11-13-cycle7/fast-page-summary.json",
+            "docs/evidence/2026-11-15-cycle12-continuation/fast-agent-pair.json"
           ],
-          "status": null
+          "status": "冷开续答分项通过"
         },
         "S4": {
           "observed": "原实际后端明确一次，当前 Farfold 保存选择为空，不伪造可选模型及思考档。",
@@ -926,13 +944,14 @@
           "status": null
         },
         "S5": {
-          "observed": "正式一次公开网页两层许可与同调用 90,330 字节 PNG 交付。",
-          "remaining": "完整原生工具、文件编辑、技能及真实审批能力仍分项验证。",
+          "observed": "正式一次公开网页两层许可与同调用 90,330 字节 PNG 交付。\n2026-11-16 续查：正式从正常入口各单次批准 Agent 权限与明列程序、参数和目录的客户端权限，B 命令完成并返回记号。",
+          "remaining": "其他工具与技能、完整文件交付、拒绝和撤回仍待。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/fast-page-summary.json",
-            "docs/status.md"
+            "docs/status.md",
+            "docs/evidence/2026-11-15-cycle12-fast-approved/live-results.json"
           ],
-          "status": null
+          "status": "实测分项通过"
         },
         "S6": {
           "observed": "官方 0.10.1 委托终端受控双会话，目标结束与另一路保持有证据。\n续验：正式版 0.10.1 两个独立目录同时执行 Shell。A 停止后 B 的原 PID 不变并完成。",
@@ -970,7 +989,7 @@
     {
       "agentId": "gemini",
       "runtime": "登记版本 0.62.0",
-      "liveAction": null,
+      "liveAction": "按用户要求暂缓本家登录、开发与实测。本次零新增启动或请求，原八项及当时证据保留。",
       "standards": {
         "S1": {
           "observed": "已安装，沿已有设置收到认证要求，当前 Gemini API key 不能直接输入\n本轮实测：目前程序可执行，登记版本 0.62.0。登记所存握手版本 0.62.0。",
@@ -1060,7 +1079,7 @@
     {
       "agentId": "github-copilot-cli",
       "runtime": "登记及 npm-loader 包 1.0.89，保存握手 1.0.107。全局保存 Auto / Agent。当前 Farfold 索引为 0。",
-      "liveAction": "正式历史列表指定仍存在的 output/2026-10-06-real-use，按官方原 ID 去认 FARFOLD_COPILOT_A_20261006。当前已有设置及原 Auto 仅在实际核合后做一次自有短测；版本以当次握手判定。",
+      "liveAction": "此前已定位并预览原正文。核对已归属原 ID、目录、身份与保存的 Auto，再补当前正式同原对象续答。登记版本与每次握手分别记录。",
       "standards": {
         "S1": {
           "observed": "旧 1.0.89 真实打开官方登录、暂离和取消；1.0.106 另有实际登录终端和空凭据拒绝受控检查。\n本轮实测：目前程序可执行，登记版本 1.0.89。登记所存握手版本 1.0.107。",
@@ -1184,34 +1203,35 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "正式许可拒绝与批准、公开网页读取/PNG、实际文件返工及另存均有窄样本。C8 共享文件夹读取完成。",
-          "remaining": "当前版本各原工具、文件、提问及技能真实采用仍未齐。",
+          "observed": "正式许可拒绝与批准、公开网页读取/PNG、实际文件返工及另存均有窄样本。C8 共享文件夹读取完成。\n2026-11-16 续查：原版本在正式环境有网页 PNG、文件返工及另存的分项证据。",
+          "remaining": "当前发行的原工具、权限与技能仍须分项验。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-approval/README.md",
             "docs/evidence/2026-11-12-cycle6/README.md",
             "docs/evidence/2026-11-15-cycle8-observation/README.md",
-            "docs/status.md"
+            "docs/status.md",
+            "docs/evidence/2026-11-11-mcp-lifecycle/README.md"
           ],
-          "status": null
+          "status": "实测分项通过"
         },
         "S6": {
-          "observed": "正式跨 Goose/Kilo 审批隔离与 OpenCode 停止时 Goose 持续运行都已有实际分项。",
-          "remaining": "当前所选原对象对并行配置、审批、停止与共享状态的组合仍需逐项限范围。",
+          "observed": "正式跨 Goose/Kilo 审批隔离与 OpenCode 停止时 Goose 持续运行都已有实际分项。\n2026-11-16 续查：OpenCode 与 Goose 分批同时执行；Goose 在一条精确停止复验里继续并实际完成。",
+          "remaining": "同家双任务、模型与权限组合仍需精确实测。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-approval/README.md",
             "docs/evidence/2026-11-15-cycle7-acceptance/README.md",
             "docs/evidence/2026-11-15-cycle8-observation/README.md"
           ],
-          "status": null
+          "status": "跨家分项通过"
         },
         "S7": {
-          "observed": "1.59.1 停止时 shell 和 sleep 都消失，冷开保留未知，零重发。旧 1.52.0 有子进程继续的反例。",
-          "remaining": "没有实时同工具终态，不能把物理结束用于补该 UI 回执或泛化到所有工具。",
+          "observed": "1.59.1 停止时 shell 和 sleep 都消失，冷开保留未知，零重发。旧 1.52.0 有子进程继续的反例。\n2026-11-16 续查：正式 1.59.1 实际前台 Shell 和子进程均退出，Agent 取消后仍无原实时终态。",
+          "remaining": "工具实时退出/完成回执、其他受管工具和同一当前版本恢复保护须依具体样本补验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle7-goose-retest/README.md",
             "docs/evidence/2026-11-15-cycle7-acceptance/README.md"
           ],
-          "status": null
+          "status": "前台停止分项通过"
         },
         "S8": {
           "observed": "正式版明确显示回复已停止而工具待确认、旧模式等原信息保留。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
@@ -1229,7 +1249,7 @@
     {
       "agentId": "grok-build",
       "runtime": "登记版本 1.0.46",
-      "liveAction": null,
+      "liveAction": "现有账号可续用。先沿原 grok-4.7/low 和同一原 ID 复用短答证据，另做有明确权限的自有文件和并行任务。",
       "standards": {
         "S1": {
           "observed": "已安装，沿已有设置进入官方 Grok 登录提示\n本轮实测：目前程序可执行，登记版本 1.0.46。登记所存握手版本 未报告。",
@@ -1259,12 +1279,13 @@
           "status": "查找冷开续答通过"
         },
         "S4": {
-          "observed": "无本项实际验收样本",
-          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
+          "observed": "无本项实际验收样本\n2026-11-16 续查：正式原 grok-4.7/low 同原对象冷开及续答有回执。",
+          "remaining": "同对话更换模型和推理、故障回退及其他允许设置。",
           "sources": [
-            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-15-cycle12-continuation/account-api-results.json"
           ],
-          "status": "未测"
+          "status": "已选模型有实答"
         },
         "S5": {
           "observed": "无本项实际验收样本",
@@ -1386,7 +1407,7 @@
     {
       "agentId": "minimax-code",
       "runtime": "登记版本 0.2.7",
-      "liveAction": null,
+      "liveAction": "用户选择在 MiniMax 官方终端接入小米。配好后独立新对话以明确的小米模型实答；原 M2.7 的账号及续答另验，原选保持。",
       "standards": {
         "S1": {
           "observed": "已安装，沿已有设置到模型页，界面保留原选项且禁用不一致的保存\n本轮实测：目前程序可执行，登记版本 0.2.7。登记所存握手版本 0.2.7。",
@@ -1398,13 +1419,14 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "已有设置成功创建用于准备的空会话\n2026-11-16 当前本机有中国区认证资料，用户表示可能没有登录过。原行无账号和计费凭据，原失败为余额不足。\n2026-11-16 只读盘点另一个最新正式原设置请求。MiniMax-M2.7 实际发送一次，厂商终态 50110 余额或额度不足，零助手回复。\n2026-11-16 本机 0.2.7 的官方选择器具备第三方提供方设置和三种格式，第三方实答未验。",
-          "remaining": "确认现用中国区服务额度或用户选定的外部服务。旧对话另需原账号依据。",
+          "observed": "已有设置成功创建用于准备的空会话\n2026-11-16 当前本机有中国区认证资料，用户表示可能没有登录过。原行无账号和计费凭据，原失败为余额不足。\n2026-11-16 只读盘点另一个最新正式原设置请求。MiniMax-M2.7 实际发送一次，厂商终态 50110 余额或额度不足，零助手回复。\n2026-11-16 本机 0.2.7 的官方选择器具备第三方提供方设置和三种格式，第三方实答未验。\n2026-11-16 续查：用户选择从 MiniMax 官方终端接小米服务，正式新对话实答仍待。",
+          "remaining": "用原生 CLI 中明确确认的小米服务验独立新对话；原 M2.7 的原账号、权益与续答仍沿原条件。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-16-cycle12-original-config/results.json",
             "docs/evidence/2026-11-16-cycle12-qwen-exit/results.json",
-            "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json"
+            "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
           "status": "受阻"
         },
@@ -1421,10 +1443,11 @@
           "status": "原正文已读"
         },
         "S4": {
-          "observed": "当前显示 MiniMax-M3 thinking，保存的模型与该选项不一致，已留原选择",
-          "remaining": "按用户明确选择确认模型，验真实请求、切换和重启恢复",
+          "observed": "当前显示 MiniMax-M3 thinking，保存的模型与该选项不一致，已留原选择\n2026-11-16 续查：当前默认 M3 已与原冷开读出的 M2.7 分开核对；用户未确认原账号，M2.7 未确认、未保存、未发送。独立 M2.7 原服务已报 50110。",
+          "remaining": "原服务恢复后沿已确认的原模型与推理实答，验证当前可用选项及冷开。",
           "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
           "status": "受阻"
         },
@@ -1509,14 +1532,15 @@
           "status": null
         },
         "S5": {
-          "observed": "正式两片段真实编辑、43 字节返工另存、公开页 PNG 同次返回并 ZIP 核对。",
-          "remaining": "技能实际管理入口、完整工具/文件、在途权限和其他失败路径未齐。",
+          "observed": "正式两片段真实编辑、43 字节返工另存、公开页 PNG 同次返回并 ZIP 核对。\n2026-11-16 续查：原选定版本两处文件编辑及保留内容有分项证据。",
+          "remaining": "本轮既有两次模型测试额度用完，现只复用原记录和零发送路径。",
           "sources": [
             "docs/evidence/2026-11-10-stage2-live-mistral/summary.json",
             "docs/evidence/2026-10-24-agent-acceptance/p22-formal-c876-versioned-rework-summary.json",
-            "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json"
+            "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
+            "docs/evidence/2026-11-11-mcp-lifecycle/README.md"
           ],
-          "status": null
+          "status": "实测分项通过"
         },
         "S6": {
           "observed": "未找到当前正式同 Agent 双任务实际归属隔离的完整证据。",
@@ -1578,13 +1602,13 @@
         },
         "S3": {
           "observed": "原对象实际再次找到并用前文续答，另有 1000 条合成官方历史正常发现、带入和搜索。",
-          "remaining": "现有自有活动对象可补冷开；合成无配置长历史不能当可续答。",
+          "remaining": "原 MiMo 对话找回并续答的窄例已通过；合成无配置长历史保留只读，首发其他目录、真实分页和失败组合仍需验证。",
           "sources": [
             "docs/evidence/2026-10-24-agent-acceptance/opencode-formal-e954-history-continuation-summary.json",
             "docs/evidence/2026-11-15-cycle7-acceptance/README.md",
             "docs/evidence/2026-11-15-cycle8-observation/README.md"
           ],
-          "status": null
+          "status": "查找冷开续答通过"
         },
         "S4": {
           "observed": "原 Xiaomi MiMo 已实际回复并始终沿保存模型；旧 Big Pickle 额度失败与新服务分开保留。\n续验：正式新区读取后端确认的完整模型标识，存回所选服务并出站；未收到实际模型回复。\n最新复验：选定 Xiaomi 的 mimo-v2.6-flash 实答，通过原对话冷开正文与来源。 最终正式版复验，同一对话冷开时摘要和模型控件均显示所选模型名，内部前缀不再显示。",
@@ -1609,22 +1633,22 @@
           "status": "实测分项通过"
         },
         "S6": {
-          "observed": "并行两个实际会话共享同一 Git base，独立标记；准确停止 OpenCode 后 Goose 继续。",
-          "remaining": "当前同 Agent 双会话、多配置及独立审批隔离仍需精确样本。",
+          "observed": "并行两个实际会话共享同一 Git base，独立标记；准确停止 OpenCode 后 Goose 继续。\n2026-11-16 续查：正式两家同时执行，点停 OpenCode，Goose 原 Shell 继续并正常完成。",
+          "remaining": "目标与另一条同 Agent 双会话、不同配置与权限仍需隔离验证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle7-acceptance/README.md",
             "docs/evidence/2026-11-15-cycle8-observation/README.md"
           ],
-          "status": null
+          "status": "跨家分项通过"
         },
         "S7": {
-          "observed": "实际目标 shell/sleep 结束同时另一任务继续；另有原生提问跨真实休眠且同轮继续，单次原请求。",
-          "remaining": "其他中断类型、忙态停止恢复及配置漂移不能自动扩大。",
+          "observed": "实际目标 shell/sleep 结束同时另一任务继续；另有原生提问跨真实休眠且同轮继续，单次原请求。\n2026-11-16 续查：从正式按钮停止指定原请求，同期观测两个在途 PID 退场，另一工作继续。另有实际休眠后原颜色卡留存、原轮只提交一次。",
+          "remaining": "停止后同原对象继续、未知状态及草稿和待发联合条件继续分项验证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle7-acceptance/README.md",
             "docs/evidence/2026-11-15-cycle8-observation/README.md"
           ],
-          "status": null
+          "status": "前台停止分项通过"
         },
         "S8": {
           "observed": "真实中断通知送达并原对话定位、未知保护，纯图未读单独实测。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
@@ -1642,7 +1666,7 @@
     },
     {
       "agentId": "pi-acp",
-      "runtime": "当前本机登记 ID pi，为 pi-acp 0.0.34，同安装 Pi 0.87.1，当前无本地索引。",
+      "runtime": "当前官方适配器 0.0.34，同安装 Pi 0.87.1，原桌面会话已正常带入并续答。",
       "liveAction": "原 OpenRouter 对话已从 Farfold 恢复设置、实答及冷开复验。网页任务待官方 SDK 正式接线。",
       "standards": {
         "S1": {
@@ -1687,11 +1711,12 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "当前登记的官方桥未转发 MCP，不能完成网页工具。官方 SDK 已受控验证注册/授权和撤回。",
-          "remaining": "SDK 正式接线、真实工具回执、文件、审批与技能待验。",
+          "observed": "当前登记的官方桥未转发 MCP，不能完成网页工具。官方 SDK 已受控验证注册/授权和撤回。\n2026-11-16 续查：同版适配器接收网页工具配置但未传给 Pi；官方 SDK 1.5.2 受控可会话内注册。",
+          "remaining": "通过官方发版或经验证的显式 SDK 入口实装，证明原会话及权限归属，复验真实工具、文件、审批和技能。",
           "sources": [
             "docs/evidence/2026-11-15-official-alternatives/pi.md",
-            "docs/status.md"
+            "docs/status.md",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
           "status": null
         },
@@ -1723,11 +1748,11 @@
     {
       "agentId": "qoder",
       "runtime": "当前正式登记 1.1.89",
-      "liveAction": null,
+      "liveAction": "普通新对话已沿小米 MiMo / Default 实测文件交付。下一条用合成双任务验精确审批和停止，并保留实际原对象续答证据。",
       "standards": {
         "S1": {
-          "observed": "旧安装和一条正常真实短答，当前可执行。\n本轮实测：目前程序可执行，登记版本 0.2.14。登记所存握手版本 0.2.14。\n最新复验：0.2.14 从正式入口在非桌面目录完成握手及新建，已官方更新到 1.1.89。旧正式超时已发现桌面文件夹授权提示，需按实际目录补验。\n2026-11-16 设置短测：正式设置页按用户批准发送一次，程序在创建对话后接收请求，随后报默认 Auto 不可用。\n2026-11-16 续验：用户从 Qoder Custom 配置小米后，正式设置一次短测通过。",
-          "remaining": "日常新对话默认选用条件、桌面目录访问和取消返回按原条件继续。",
+          "observed": "旧安装和一条正常真实短答，当前可执行。\n本轮实测：目前程序可执行，登记版本 0.2.14。登记所存握手版本 0.2.14。\n最新复验：0.2.14 从正式入口在非桌面目录完成握手及新建，已官方更新到 1.1.89。旧正式超时已发现桌面文件夹授权提示，需按实际目录补验。\n2026-11-16 设置短测：正式设置页按用户批准发送一次，程序在创建对话后接收请求，随后报默认 Auto 不可用。\n2026-11-16 续验：用户从 Qoder Custom 配置小米后，正式设置一次短测通过。\n2026-11-16 续查：普通新对话在非桌面自建目录握手及 session/new 成功。恢复旧 qfmodel 设置卡在缺少一项选择，未发送。\n2026-11-16 续查：新版「检查模型设置」打开同一 Qoder 模型页，读回用户在官方向导配置的 MiMo / Default；更新 Farfold 记住的旧 qfmodel 后保留草稿、从正常入口成功执行。",
+          "remaining": "换号及取消返回仍按原条件验证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
@@ -1735,9 +1760,10 @@
             "output/2026-11-15-cycle12-macos/runtime-inventory.json",
             "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/approved-setup-smokes-2026-11-16.json",
-            "docs/evidence/2026-11-15-cycle12-pre-send/qoder-xiaomi-formal-2026-11-16.json"
+            "docs/evidence/2026-11-15-cycle12-pre-send/qoder-xiaomi-formal-2026-11-16.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
-          "status": "设置短测通过"
+          "status": "分项通过"
         },
         "S2": {
           "observed": "旧短答证明当次来源可工作，保存值不含明确模型。\n2026-11-16 续验：由用户在官方 Qoder 向导配置的小米服务可实答，Farfold 复用已有来源。",
@@ -1766,8 +1792,8 @@
           "status": "查找冷开续答通过"
         },
         "S4": {
-          "observed": "当前仅保存 mode=default。\n最新复验：1.1.89 报默认 auto，原 qfmodel 仍未出现。保存保护拦下发送。\n2026-11-16 设置短测：程序声明 Auto，实际解析时该项被官方程序标为禁用。本次协议没有发送模型设置请求。\n2026-11-16 续验：Qoder 自己的 --list-models 在现有登录下也报无可用模型。正式失败的 Auto 被厂商目录标为禁用。\n2026-11-16 续验：小米 mimo-v2.6-flash 已实答，原对话冷开可核同选项。Auto 旧结果留档。",
-          "remaining": "日常默认使用、切换与服务故障处理依原条件。",
+          "observed": "当前仅保存 mode=default。\n最新复验：1.1.89 报默认 auto，原 qfmodel 仍未出现。保存保护拦下发送。\n2026-11-16 设置短测：程序声明 Auto，实际解析时该项被官方程序标为禁用。本次协议没有发送模型设置请求。\n2026-11-16 续验：Qoder 自己的 --list-models 在现有登录下也报无可用模型。正式失败的 Auto 被厂商目录标为禁用。\n2026-11-16 续验：小米 mimo-v2.6-flash 已实答，原对话冷开可核同选项。Auto 旧结果留档。\n2026-11-16 续查：新版明确核对官方小米模型和 Default，Farfold 的默认选择也从旧 qfmodel 更新为当前已配置模型。该普通对话实答。",
+          "remaining": "已确认选择后实测正常工作与原对象冷开；其他模型切换及配置漂移依原条件。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
@@ -1775,19 +1801,21 @@
             "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/approved-setup-smokes-2026-11-16.json",
             "docs/evidence/2026-11-15-cycle12-pre-send/qoder-model-availability-2026-11-16.json",
-            "docs/evidence/2026-11-15-cycle12-pre-send/qoder-xiaomi-formal-2026-11-16.json"
+            "docs/evidence/2026-11-15-cycle12-pre-send/qoder-xiaomi-formal-2026-11-16.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧成功短答范围窄。",
-          "remaining": "当前工具与文件交付、权限和技能。",
+          "observed": "旧成功短答范围窄。\n2026-11-16 续查：从正常新对话，批准写入 result.md 一次，完成后从本轮产物打开，原稿散列一致，负责人和日期保留。",
+          "remaining": "更多工具、技能、提问、拒绝和撤回按原条件。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json"
+            "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
-          "status": null
+          "status": "实测分项通过"
         },
         "S6": {
           "observed": "未见实际并行完整观察。",
@@ -1810,13 +1838,14 @@
           "status": null
         },
         "S8": {
-          "observed": "旧短答成功和冷开失败分列。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
-          "remaining": "当前失败反馈、正常本地权限和回返。",
+          "observed": "旧短答成功和冷开失败分列。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续查：设置不一致时跳到该 Agent 的模型设置，再返回保留原未发草稿。文件产物可直接打开。",
+          "remaining": "其他准备失败、取消退出和冷恢复反馈仍待抽验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
           "status": "入口有证"
         }
@@ -1826,7 +1855,7 @@
     {
       "agentId": "sigit",
       "runtime": "登记版本 1.5.11",
-      "liveAction": null,
+      "liveAction": "先核已选本地 Onde 的具体来源与缓存、是否有进程级覆盖。只有现选本地或用户明确选定的官方第三方才做新样本；旧请求仍未知。",
       "standards": {
         "S1": {
           "observed": "沿已有设置读取成功并显示该安装的模型选项\n本轮实测：目前程序可执行，登记版本 1.5.11。登记所存握手版本 1.5.11。",
@@ -1855,10 +1884,11 @@
           "status": "默认列表为空"
         },
         "S4": {
-          "observed": "当前选项显示 Onde，旧自测为本地 HuggingFace",
-          "remaining": "确认既有模型与官方读取影响，在同源测试实际请求与恢复",
+          "observed": "当前选项显示 Onde，旧自测为本地 HuggingFace\n2026-11-16 续查：同版官方 ACP 有 OpenAI 兼容环境或官方配置。界面 Ready 可早于本地模型真正加载；字符显示 Onde 也不能排除进程级覆盖。",
+          "remaining": "读回原来源、确认本地模型缓存与实际生成；第三方服务独立于当前原对象。",
           "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
           ],
           "status": "受阻"
         },

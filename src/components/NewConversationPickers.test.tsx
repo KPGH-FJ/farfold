@@ -65,6 +65,7 @@ vi.mock("../runtime/credentials", async (original) => ({
 import {
   NewConversationAgentDialog,
   NewConversationModelDialog,
+  newConversationPreparationError,
 } from "./NewConversationPickers";
 import type { AgentCardModel } from "../runtime/agents";
 type Element = ReactElement<Record<string, unknown>>;
@@ -241,6 +242,20 @@ it("blocks stale existing model choices after a preparation failure but keeps an
     service: { id: "service", revision: "r1", model: "api-two" },
     modelValue: null,
   });
+});
+
+it("offers model settings when preparation cannot read a saved choice", async () => {
+  const restoreNotice = {
+    message: STRINGS.repair.savedConfigMissing,
+    savedConfigurationRestore: true,
+  };
+  props.existingOption = null;
+  props.readError = newConversationPreparationError(restoreNotice);
+  await loaded();
+  expect(button(S.currentModel).props.disabled).toBe(true);
+  click(S.checkModelSettings);
+  expect(props.onPrepare).toHaveBeenCalledOnce();
+  expect(props.onApply).not.toHaveBeenCalled();
 });
 
 it("clearing a preparation error exposes confirmed options without applying or retrying anything until a click", async () => {

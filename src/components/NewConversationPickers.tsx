@@ -17,7 +17,10 @@ import {
   type ServiceCapability,
 } from "../runtime/credentials";
 import type { UiNotice } from "../runtime/ui_error";
-import { configurationApplyNotice } from "../runtime/configuration_restore_feedback";
+import {
+  configurationApplyNotice,
+  isConfigurationRestoreNotice,
+} from "../runtime/configuration_restore_feedback";
 import { NEW_CONVERSATION_PICKER_STRINGS as S } from "../runtime/new_conversation_picker_strings";
 import { STRINGS } from "../runtime/strings";
 import { agentStatus } from "../runtime/agent_status";
@@ -209,8 +212,8 @@ export function newConversationPreparationError(
 ): UiNotice | null {
   return error
     ? {
+        ...error,
         message: `${STRINGS.empty.openFailed}：${error.message}`,
-        detail: error.detail,
       }
     : null;
 }
@@ -464,7 +467,9 @@ export function NewConversationModelDialog({
             disabled={applying}
             onClick={onPrepare}
           >
-            {S.prepare}
+            {isConfigurationRestoreNotice(readError)
+              ? S.checkModelSettings
+              : S.prepare}
           </button>
           {onManageServices && (
             <button

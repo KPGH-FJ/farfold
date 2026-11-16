@@ -29,6 +29,7 @@ export const NEW_CONVERSATION_PICKER_STRINGS = {
   loadFailed: "未能读取服务，请重试。",
   applyFailed: "未能应用这个选择，请检查后重试。",
   prepare: "准备与连接",
+  checkModelSettings: "检查模型设置",
   manageServices: "管理 API 服务",
   retry: "重试",
   close: "关闭",
