@@ -5,7 +5,6 @@ use super::{
 };
 use std::collections::HashMap;
 use std::ffi::{OsStr, OsString};
-use std::path::PathBuf;
 
 pub(super) const AGENT: &str = "registry:amp-acp";
 pub(super) const ACTION: &str = "login-amp-account";
@@ -62,7 +61,7 @@ pub(super) fn action(
                     .is_ok_and(|root| root.join(filename) == program)
         })
         .count();
-    let (config_env, home_env, _) = config_directory_vars(cfg!(windows));
+    let (config_env, home_env) = config_environment_names();
     if adapter_matches != 1
         || companion_matches != 1
         || crate::credentials::has_environment_grant(
@@ -84,22 +83,22 @@ pub(super) fn action(
 }
 
 pub(super) fn check_environment(env: &HashMap<String, String>) -> Result<(), String> {
-    check_environment_with(env, |name| std::env::var_os(name), cfg!(windows))
+    check_environment_with(env, |name| std::env::var_os(name))
 }
 
-fn config_directory_vars(windows: bool) -> (&'static str, &'static str, &'static str) {
-    // Match amp-acp v0.9.0's getConfigDir, including its Windows home fallback.
-    if windows {
-        ("APPDATA", "USERPROFILE", "AppData/Roaming")
+fn config_environment_names() -> (&'static str, &'static str) {
+    // Grants redirecting the adapter's configuration are excluded from this
+    // action because the separately launched CLI receives no Farfold grants.
+    if cfg!(windows) {
+        ("APPDATA", "USERPROFILE")
     } else {
-        ("XDG_CONFIG_HOME", "HOME", ".config")
+        ("XDG_CONFIG_HOME", "HOME")
     }
 }
 
 fn check_environment_with(
     env: &HashMap<String, String>,
     inherited: impl Fn(&str) -> Option<OsString>,
-    windows: bool,
 ) -> Result<(), String> {
     let names = crate::shell_env::EnvNames::current();
     // The PTY inherits process variables in addition to this overlay. Presence
@@ -107,37 +106,16 @@ fn check_environment_with(
     if names.contains(env, KEY) || inherited(KEY).is_some() {
         return Err(CONFLICT.into());
     }
-    let source = |name| -> Result<Option<OsString>, String> {
-        Ok(names
-            .get(env, name)?
-            .map(OsString::from)
-            .or_else(|| inherited(name)))
-    };
-    if source(TRANSPORT)?.is_some_and(|value| value != OsStr::new("cli")) {
+    let transport = names
+        .get(env, TRANSPORT)?
+        .map(OsString::from)
+        .or_else(|| inherited(TRANSPORT));
+    if transport.is_some_and(|value| value != OsStr::new("cli")) {
         return Err(CONFLICT.into());
     }
-    let (config_env, home_env, fallback) = config_directory_vars(windows);
-    let config = match source(config_env)? {
-        Some(path) => PathBuf::from(path),
-        None => source(home_env)?
-            .map(PathBuf::from)
-            .or_else(crate::process_platform::home_dir)
-            .ok_or(CONFLICT)?
-            .join(fallback),
-    };
-    no_stored_key(&config)
-}
-
-fn no_stored_key(config: &Path) -> Result<(), String> {
-    if !config.is_absolute() {
-        return Err(CONFLICT.into());
-    }
-    // The adapter can promote a saved key to AMP_API_KEY before spawning Amp.
-    // Never read that file. Its presence (including a symlink) is ambiguous.
-    match std::fs::symlink_metadata(config.join("amp-acp/credentials.json")) {
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
-        _ => Err(CONFLICT.into()),
-    }
+    // amp-acp v0.9.0 imports its own credentials at adapter startup. This
+    // action directly starts the companion CLI, outside that process.
+    Ok(())
 }
 
 #[cfg(test)]
@@ -147,6 +125,7 @@ mod tests {
     use crate::installations::{ProgramReceipt, record, record_with_program};
     use crate::managed_paths::{Layout, parent};
     use serde_json::json;
+    use std::path::PathBuf;
 
     fn write_program(root: &Path, name: &str) -> PathBuf {
         std::fs::create_dir_all(root).unwrap();
@@ -258,7 +237,7 @@ mod tests {
         row.env.push((KEY.into(), "__keychain__".into()));
         assert!(actions_for(&store, &row, data.path()).unwrap().is_empty());
         row.env.pop();
-        for env_name in [KEY, SERVER, config_directory_vars(cfg!(windows)).0] {
+        for env_name in [KEY, SERVER, config_environment_names().0] {
             store.set_setting("credentials.v1", &json!([{
                 "id":"fixture", "label":"fixture", "provider":"fixture", "endpoint":"fixture",
                 "apiType":"responses", "secretRef":"never-look-up-this-fixture", "retired":[],
@@ -268,66 +247,46 @@ mod tests {
         }
         let shell = HashMap::from([(KEY.into(), String::new())]);
         assert_eq!(
-            check_environment_with(&shell, |_| None, cfg!(windows)),
+            check_environment_with(&shell, |_| None),
             Err(CONFLICT.into())
         );
         assert_eq!(
-            check_environment_with(
-                &HashMap::new(),
-                |name| (name == KEY).then(OsString::new),
-                cfg!(windows),
-            ),
+            check_environment_with(&HashMap::new(), |name| (name == KEY).then(OsString::new)),
             Err(CONFLICT.into())
         );
-
-        let path = data.path().canonicalize().unwrap();
-        assert_eq!(no_stored_key(&path), Ok(()));
-        std::fs::create_dir(path.join("amp-acp")).unwrap();
-        std::fs::write(path.join("amp-acp/credentials.json"), "never read").unwrap();
-        assert_eq!(no_stored_key(&path), Err(CONFLICT.into()));
     }
 
     #[test]
     fn amp_login_transport_must_be_the_literal_cli_value() {
-        let directory = tempfile::tempdir().unwrap();
-        let mut env = HashMap::from([(
-            config_directory_vars(cfg!(windows)).0.into(),
-            directory.path().display().to_string(),
-        )]);
         for value in ["cli/", "sdk", ""] {
-            env.insert(TRANSPORT.into(), value.into());
-            assert_eq!(
-                check_environment_with(&env, |_| None, cfg!(windows)),
-                Err(CONFLICT.into())
-            );
+            let env = HashMap::from([(TRANSPORT.into(), value.into())]);
+            assert_eq!(check_environment_with(&env, |_| None), Err(CONFLICT.into()));
         }
-        env.insert(TRANSPORT.into(), "cli".into());
+        let env = HashMap::from([(TRANSPORT.into(), "cli".into())]);
+        assert_eq!(check_environment_with(&env, |_| None), Ok(()));
         assert_eq!(
-            check_environment_with(&env, |_| None, cfg!(windows)),
-            Ok(())
+            check_environment_with(&HashMap::new(), |name| (name == TRANSPORT)
+                .then(|| "sdk".into())),
+            Err(CONFLICT.into())
         );
     }
 
     #[test]
-    fn amp_login_checks_the_actual_windows_adapter_storage_location() {
+    fn amp_login_allows_the_separately_stored_adapter_credentials() {
         let directory = tempfile::tempdir().unwrap();
         let root = directory.path().canonicalize().unwrap();
-        let roaming = root.join("AppData/Roaming/amp-acp");
-        std::fs::create_dir_all(&roaming).unwrap();
-        std::fs::write(roaming.join("credentials.json"), "never read").unwrap();
-        let mut env = HashMap::from([("USERPROFILE".into(), root.display().to_string())]);
+        let adapter_directory = root.join("amp-acp");
+        let credential_file = adapter_directory.join("credentials.json");
+        std::fs::create_dir(&adapter_directory).unwrap();
+        std::fs::write(&credential_file, "synthetic adapter fixture").unwrap();
+        let env = HashMap::from([(
+            config_environment_names().0.into(),
+            root.display().to_string(),
+        )]);
+        assert_eq!(check_environment_with(&env, |_| None), Ok(()));
         assert_eq!(
-            check_environment_with(&env, |_| None, true),
-            Err(CONFLICT.into())
-        );
-        let appdata = root.join("different-appdata");
-        env.insert("APPDATA".into(), appdata.display().to_string());
-        assert_eq!(check_environment_with(&env, |_| None, true), Ok(()));
-        std::fs::create_dir_all(appdata.join("amp-acp")).unwrap();
-        std::fs::write(appdata.join("amp-acp/credentials.json"), "never read").unwrap();
-        assert_eq!(
-            check_environment_with(&env, |_| None, true),
-            Err(CONFLICT.into())
+            std::fs::read_to_string(credential_file).unwrap(),
+            "synthetic adapter fixture"
         );
     }
 }

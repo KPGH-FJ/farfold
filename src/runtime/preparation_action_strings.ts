@@ -3,7 +3,8 @@ export const PREPARATION_ACTION_STRINGS = {
   accountLogin: {
     title: "使用官方程序登录账号",
     hint: "按所选程序的官方流程登录，使用它保存的账号。",
-    effects: "请按终端提示完成登录。终端退出后还需要检查连接和账号。",
+    effects:
+      "请按终端提示登录。已有 API 密钥可能仍用于对话，登录后请检查对话的账号来源。",
     run: "启动登录终端",
   },
   details: "查看详情",
