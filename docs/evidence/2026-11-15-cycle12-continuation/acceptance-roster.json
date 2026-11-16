@@ -5,14 +5,12 @@
   "explicitStatuses": {
     "准备未齐": 24,
     "入口有证": 27,
-    "受阻": 7,
-    "分项通过": 9,
+    "受阻": 9,
+    "分项通过": 8,
     "未测": 23,
-    "原账号实答": 3,
-    "查找冷开续答通过": 5,
-    "已选模型有实答": 6,
-    "接口独立实测通过": 1,
-    "正式发送认证受阻": 1,
+    "原账号实答": 4,
+    "查找冷开续答通过": 6,
+    "已选模型有实答": 7,
     "可建对话": 1,
     "已知标识读取声明": 1,
     "实测分项通过": 8,
@@ -22,9 +20,9 @@
     "本轮短测失败": 3,
     "双前台分项通过": 2,
     "停止及冷续答通过": 1,
-    "原正文已读": 3,
+    "原正文已读": 2,
     "实测失败": 1,
-    "未确认": 3,
+    "未确认": 4,
     "已选服务有实答": 1,
     "结果未知": 1,
     "默认列表为空": 1
@@ -270,16 +268,17 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "未确认可用原账号或所选模型；旧正式设置声明可读但保存选择未确认。\n最新复验：新保存的小米 Messages 设置独立 API 实答；普通对话见相应真实复验及官方适配程序认证头对照。",
-          "remaining": "确认可验证的原生已有设置或官方适配程序路径，再完成普通对话。",
+          "observed": "未确认可用原账号或所选模型；旧正式设置声明可读但保存选择未确认。\n最新复验：新保存的小米 Messages 设置独立 API 实答；普通对话见相应真实复验及官方适配程序认证头对照。\n2026-11-16 已暂停会将认证头交给进程参数的官方托管路径。正式设置保留原 Messages 服务，Claude 已退出其适用列表。",
+          "remaining": "待官方私密交付或验证已有设置的正常原生路径。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
             "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
-            "docs/evidence/2026-11-15-cycle12-pre-send/README.md"
+            "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
+            "docs/evidence/2026-11-16-cycle12-original-config/results.json"
           ],
-          "status": "接口独立实测通过"
+          "status": "受阻"
         },
         "S3": {
           "observed": "登记声明 list/load/resume，无可安全归属旧样本。",
@@ -293,16 +292,17 @@
           "status": null
         },
         "S4": {
-          "observed": "旧官方模型声明能显示，保存基线不一致。\n最新复验：用户保存 mimo-v2.6-flash，正式 0.81.2 确认该服务和模型并出站，等待后停止，未观察到助手正文。 官方更新至 0.107.0，正向准备和真实出站成功，182.1 秒后收到该请求的 auth_required。",
-          "remaining": "补官方适配程序真实发送、模型实答和冷态恢复。",
+          "observed": "旧官方模型声明能显示，保存基线不一致。\n最新复验：用户保存 mimo-v2.6-flash，正式 0.81.2 确认该服务和模型并出站，等待后停止，未观察到助手正文。 官方更新至 0.107.0，正向准备和真实出站成功，182.1 秒后收到该请求的 auth_required。\n2026-11-16 托管路径因已核的认证交付限制暂停，已保存的服务仍存在。",
+          "remaining": "补安全的官方接法，再验模型实答和冷恢复。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
             "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
-            "docs/evidence/2026-11-15-cycle12-pre-send/README.md"
+            "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
+            "docs/evidence/2026-11-16-cycle12-original-config/results.json"
           ],
-          "status": "正式发送认证受阻"
+          "status": "受阻"
         },
         "S5": {
           "observed": "旧多片段实测未取得，不当做已支持的使用结果。",
@@ -1640,21 +1640,23 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "已有设置成功创建用于准备的空会话",
-          "remaining": "确认真实账号、服务权益及账号切换范围",
+          "observed": "已有设置成功创建用于准备的空会话\n2026-11-16 当前本机有中国区认证资料，用户表示可能没有登录过。原行无账号和计费凭据，原失败为余额不足。",
+          "remaining": "需要能确认的原账号和服务，当前认证资料不证明原账号。",
           "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-16-cycle12-original-config/results.json"
           ],
-          "status": "分项通过"
+          "status": "未确认"
         },
         "S3": {
-          "observed": "默认列表及正式版复查命中可识别的旧测试标题\n本轮实测：用户开放全部原历史后，默认官方列表找到现存原目录的一条原对话并读回正文。旧配置未核，因此只读。\n2026-11-16 原目录与用户消息均存在的唯一官方记录使用 MiniMax-M2.7。当前默认是 MiniMax-M3。前序脱敏预览缺原标识，匹配依据为原目录和非空记录的唯一性。\n2026-11-16 同版官方目录列出原 MiniMax-M2.7，无另选推理档；当前中国区账号已验证，旧对话无原账号记录。\n2026-11-16 用户确认同一中国区账号；正式版按原目录和标识带入、重开，原正文及 MiniMax-M2.7 已读，零发送。",
-          "remaining": "补可核据恢复原配置的入口，再核同一对话实际续答。",
+          "observed": "默认列表及正式版复查命中可识别的旧测试标题\n本轮实测：用户开放全部原历史后，默认官方列表找到现存原目录的一条原对话并读回正文。旧配置未核，因此只读。\n2026-11-16 原目录与用户消息均存在的唯一官方记录使用 MiniMax-M2.7。当前默认是 MiniMax-M3。前序脱敏预览缺原标识，匹配依据为原目录和非空记录的唯一性。\n2026-11-16 同版官方目录列出原 MiniMax-M2.7，无另选推理档；当前中国区账号已验证，旧对话无原账号记录。\n2026-11-16 用户确认同一中国区账号；正式版按原目录和标识带入、重开，原正文及 MiniMax-M2.7 已读，零发送。\n2026-11-16 新版正常冷开已带入原对话，恢复预览显示 M2.7 来自 Agent 当前报告。用户不确定当时是否登录，未确认、未保存，零发送。",
+          "remaining": "确认原账号与服务后，再验同一对话实际续答。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-followup/accounts-and-api.md",
             "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json",
-            "docs/evidence/2026-11-16-cycle12-cline-auth/results.json"
+            "docs/evidence/2026-11-16-cycle12-cline-auth/results.json",
+            "docs/evidence/2026-11-16-cycle12-original-config/results.json"
           ],
           "status": "原正文已读"
         },
@@ -1880,7 +1882,7 @@
     {
       "agentId": "pi-acp",
       "runtime": "当前本机登记 ID pi，为 pi-acp 0.0.34，同安装 Pi 0.87.1，当前无本地索引。",
-      "liveAction": "已从正式入口读回原工作目录的旧自建对话。OpenRouter 原请求的凭据范围已核，续发待支持恢复原配置；网页任务须等官方 SDK 正式接线。",
+      "liveAction": "原 OpenRouter 对话已从 Farfold 恢复设置、实答及冷开复验。网页任务待官方 SDK 正式接线。",
       "standards": {
         "S1": {
           "observed": "旧正式已有设置、官方程序准备与回选窄证；当前登记声明 terminal login。\n本轮实测：目前程序可执行，登记版本 0.0.34。登记所存握手版本 0.0.34。",
@@ -1893,32 +1895,35 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "旧正式请求返回 402 或无助手正文；P32 原正文结果显示来源未确认。",
-          "remaining": "确认实际账户或免登录来源与当前可用服务，不由菜单猜计费或认证。",
+          "observed": "旧正式请求返回 402 或无助手正文；P32 原正文结果显示来源未确认。\n2026-11-16 当前 OpenRouter 凭据可查原生成记录，恢复原设置后使用同来源实答一轮。",
+          "remaining": "其他原账号边界、用户更换凭据和付费范围待验。",
           "sources": [
             "docs/evidence/2026-10-24-agent-acceptance/configuration-preparation-failures-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/p32-pi-formal-e9-selected-user-body-summary.json"
+            "docs/evidence/2026-10-24-agent-acceptance/p32-pi-formal-e9-selected-user-body-summary.json",
+            "docs/evidence/2026-11-16-cycle12-original-config/results.json"
           ],
-          "status": null
+          "status": "原账号实答"
         },
         "S3": {
-          "observed": "一个自有会话曾用正式 P32 读取 23 个可见文本块，10 个命中，用户正文命中。\n本轮实测：正常入口找到并读回自建原正文与原回复。原模型和推理级别无法确认，只读且零发送。\n2026-11-16 原 OpenRouter 请求凭据范围核对通过，原模型和 Medium 有旧备份。正式列表命中同一自建原对话，读取约 120 秒未回，零发送。\n2026-11-16 授予桌面文件夹访问后，正式版同一待定读取返回原正文、OpenRouter 原模型和 Medium，预览仍只读。",
-          "remaining": "补精确原配置恢复入口，从正常入口带入后实际续答。",
+          "observed": "一个自有会话曾用正式 P32 读取 23 个可见文本块，10 个命中，用户正文命中。\n本轮实测：正常入口找到并读回自建原正文与原回复。原模型和推理级别无法确认，只读且零发送。\n2026-11-16 原 OpenRouter 请求凭据范围核对通过，原模型和 Medium 有旧备份。正式列表命中同一自建原对话，读取约 120 秒未回，零发送。\n2026-11-16 授予桌面文件夹访问后，正式版同一待定读取返回原正文、OpenRouter 原模型和 Medium，预览仍只读。\n2026-11-16 正常对话库带入原对话，从旧 Farfold 备份核同原模型和 Medium，单次续答准确，重启后原文和新回复保持，零重发。",
+          "remaining": "本样本通过；其他历史范围、长分页与不完整载入保留原条件。",
           "sources": [
             "docs/evidence/2026-10-24-agent-acceptance/p32-pi-formal-e9-selected-user-body-summary.json",
             "docs/evidence/2026-11-15-cycle12-followup/README.md",
-            "docs/evidence/2026-11-16-cycle12-cline-auth/results.json"
+            "docs/evidence/2026-11-16-cycle12-cline-auth/results.json",
+            "docs/evidence/2026-11-16-cycle12-original-config/results.json"
           ],
-          "status": "原正文已读"
+          "status": "查找冷开续答通过"
         },
         "S4": {
-          "observed": "历史 DeepSeek/off 可读；当前保存 OpenRouter 免费 Ultra，属于另一配置。",
-          "remaining": "新版原选择、实际请求及冷恢复没有因旧记录补通过。",
+          "observed": "历史 DeepSeek/off 可读；当前保存 OpenRouter 免费 Ultra，属于另一配置。\n2026-11-16 同一旧对话以 OpenRouter 的 Nemotron 3 Ultra 免费版和 Medium 实答，重启后的选项保持。",
+          "remaining": "模型切换与其他配置组合待验。",
           "sources": [
             "docs/agent-first-release.md",
-            "docs/evidence/2026-11-15-official-alternatives/pi.md"
+            "docs/evidence/2026-11-15-official-alternatives/pi.md",
+            "docs/evidence/2026-11-16-cycle12-original-config/results.json"
           ],
-          "status": null
+          "status": "已选模型有实答"
         },
         "S5": {
           "observed": "当前登记的官方桥未转发 MCP，不能完成网页工具。官方 SDK 已受控验证注册/授权和撤回。",

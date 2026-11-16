@@ -92,6 +92,12 @@ pub(crate) enum SessionControl {
         deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<Value, String>>,
     },
+    OriginalConfig {
+        connection_id: String,
+        request: super::super::original_config::Request,
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<Result<Value, String>>,
+    },
     /// `session/set_mode` — agents that expose `modes` outside
     /// `configOptions` (the synthetic `mode` option in the UI calls this).
     SetMode {
@@ -180,6 +186,7 @@ impl SessionControl {
             Self::Prompt { .. }
                 | Self::SetConfig { .. }
                 | Self::ConfirmConfig { .. }
+                | Self::OriginalConfig { .. }
                 | Self::SetMode { .. }
                 | Self::Fork { .. }
                 | Self::Delete { .. }
@@ -271,6 +278,7 @@ impl SessionControl {
             }
             Self::StopTask { result, .. }
             | Self::SetConfig { result, .. }
+            | Self::OriginalConfig { result, .. }
             | Self::ConfirmConfig { result, .. } => {
                 let _ = result.send(Err(error));
             }
@@ -338,6 +346,9 @@ impl SessionControl {
                 deadline, result, ..
             }
             | Self::SetConfig {
+                deadline, result, ..
+            }
+            | Self::OriginalConfig {
                 deadline, result, ..
             }
             | Self::ConfirmConfig {

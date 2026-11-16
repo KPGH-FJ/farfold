@@ -34,6 +34,10 @@ import { workspaceAccessCapability } from "./workspace_access_types";
 import { WORKSPACE_ACCESS } from "./workspace_access_strings";
 import { forgetSessionIdentity } from "./session_identity_types";
 import { ConfigurationConfirmation } from "./session_configuration_confirmation";
+import {
+  originalSessionConfigBusy,
+  originalSessionConfigTarget,
+} from "./original_session_config";
 
 interface Change {
   thread: ThreadState;
@@ -138,13 +142,25 @@ export class SessionConfiguration {
       change.interrupted = true;
   }
 
-  async confirm(key: string, refresh: () => Promise<void>): Promise<void> {
+  async confirm(
+    key: string,
+    refresh: () => Promise<void>,
+    originalReviewId?: string,
+  ): Promise<boolean> {
     const s = this.hooks.thread(key);
-    if (!s?.configCheck || configurationConfirmationBusy(s)) return;
+    if (!s?.configCheck) return false;
+    const originalTarget =
+      originalReviewId === undefined ? null : originalSessionConfigTarget(s);
+    if (originalReviewId !== undefined && !originalTarget) return false;
+    const busy = originalTarget
+      ? originalSessionConfigBusy
+      : configurationConfirmationBusy;
+    if (busy(s)) return false;
     const confirmation = new ConfigurationConfirmation(
       s,
       () => this.hooks.thread(key),
       () => this.hooks.permissionRevision(key),
+      busy,
     );
     const change: Change = {
       thread: s,
@@ -161,16 +177,22 @@ export class SessionConfiguration {
     const request = (async () => {
       let published = false;
       try {
-        const result = await invoke<unknown>("session_confirm_config", {
-          agentId: s.agentId,
-          cwd: s.cwd,
-          sessionId: s.nativeSessionId,
-          ...(confirmingMissingModel(s.configCheck)
-            ? { connectionId: s.connectionId }
-            : {}),
-          displayed: structuredClone(confirmation.displayed),
-        });
-        if (this.hooks.thread(key) !== s) return;
+        const result = originalTarget
+          ? await invoke<unknown>("acp_confirm_original_session_config", {
+              ...originalTarget,
+              reviewId: originalReviewId,
+              sameOriginalAccount: true,
+            })
+          : await invoke<unknown>("session_confirm_config", {
+              agentId: s.agentId,
+              cwd: s.cwd,
+              sessionId: s.nativeSessionId,
+              ...(confirmingMissingModel(s.configCheck)
+                ? { connectionId: s.connectionId }
+                : {}),
+              displayed: structuredClone(confirmation.displayed),
+            });
+        if (this.hooks.thread(key) !== s) return false;
         const receipt = confirmation.receipt(result, change.ready);
         if (change.interrupted || !confirmation.owns() || !receipt)
           throw new Error(STRINGS.repair.confirmConfigFailed);
@@ -190,9 +212,11 @@ export class SessionConfiguration {
         s.configuring = false;
         this.hooks.emit();
         await refresh();
+        return true;
       } catch {
         if (!published && confirmation.ownsFeedback())
           s.configError = STRINGS.repair.confirmConfigFailed;
+        return published;
       } finally {
         if (this.changes.get(key) === change) {
           this.changes.delete(key);

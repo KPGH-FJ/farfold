@@ -53,6 +53,8 @@ mod model_guard;
 mod mutation;
 mod open_purpose;
 mod operations;
+pub mod original_config;
+mod original_config_backup;
 mod permission_effect;
 mod permission_guard;
 pub mod plugin_management;

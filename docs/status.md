@@ -21,7 +21,7 @@
 | 范围           | 当前核对结果                                                                                                                                                                                                                                                                                                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 开发分支       | `codex/2026-11-04-development-resume`。第 12 周期含 fast-agent 隔离和续答、Autohand 程序切换认证、已有 API 模型读回修复和现首发范围。                                                                                                                                                                                                                                                       |
-| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `260e7154e771adc070a58ea746c47c5f65721025`，SHA-256 `599d08c80f6dc6449356ae466c076393fc96ce27ce56e347484bc02538c0a9b8`。UI 目录 27 家。                                                                                                                                                                       |
+| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `79fb5b3df120a69b789761b84f90d586597fc007`，SHA-256 `338b743634d604c495499ee4bb4cfd38083033bae38c046ebf1eee3ed1905aa9`。UI 目录 27 家。                                                                                                                                                                       |
 | Mac 工程与安装 | Cline 认证补丁在 2,626 个固定输入下打包。12 项 Rust 定向、严格 Clippy 与前端构建通过。安装前后 236,586 条保护记录摘要一致，元数据副本完整。[当前正式批](evidence/2026-11-16-cycle12-cline-auth/README.md) · [前批全量](evidence/2026-11-16-cycle12-failed-connection/README.md)                                                                                                             |
 | 当前开发环境   | macOS 27.0（26A425），Node 22.22.3、锁定 pnpm 9.15.0、Rust/Cargo 1.96.0、Xcode Command Line Tools 可识别。[环境恢复证据](evidence/2026-11-04-development-environment-restoration/README.md)。                                                                                                                                                                                               |
 | Windows        | 最后完整 CI 成功为固定源码 `2e23056cc` 的 [41931045918](https://github.com/KPGH-FJ/farfold/actions/runs/41931045918)，含未签名 NSIS 构建。后续固定 `5598138f2` 定向原生 30 项、前端 20 项通过。安装修复版 `5b9f1449a` 的 [41984263036](https://github.com/KPGH-FJ/farfold/actions/runs/41984263036) 因付款或支出额度未获运行机器；安装、卸载及桌面流程未执行，当前源码未重跑 Windows 全量。 |
@@ -56,7 +56,9 @@
 
 **出错连接可单独回收。** 当次请求收到匹配的协议错误且连接只有该请求时，用户可检查并确认关闭。正式版用本机夹具实测，A 的进程组退出，B 保持同一进程继续，C 解除排队并完成。A 的原消息和草稿保留，旧请求结果未知、没有重发。[正式回执](evidence/2026-11-16-cycle12-failed-connection/installed-recovery.json)
 
-**Cline 认证根因与旧对话核对。** Cline 3.0.74 的两条官方路径均记录需要重新认证，定位到 OAuth 刷新未取得可用凭据。正式版恢复官方登录入口。用户用原账号重新登录后，正式设置沿 Cline 原服务临时选择 Sonnet 5.5，实测收到预期回复，用户当前默认模型保持。MiniMax 同一中国区账号下原对话已带入并重开，原正文及 M2.7 已读。Pi 当前凭据可读原 OpenRouter 请求记录，获得桌面文件夹授权后，正式预览恢复原正文、Ultra 免费版和 Medium。两家仍缺可信的原配置恢复入口，未续发。[本轮回执](evidence/2026-11-16-cycle12-cline-auth/results.json)
+**Cline 重新认证与旧对话原设置。** Cline 3.0.74 已恢复官方登录入口，用原账号重登后沿原服务临时选 Sonnet 5.5，实际收到预期回复，默认模型保持。[Cline 实测](evidence/2026-11-16-cycle12-cline-auth/results.json) 正式版新增「恢复原对话设置」。Pi 用旧 Farfold 备份核对并保存原 OpenRouter 模型和 Medium，在同一原对话准确续答一轮，重启后原配置和新回复保持。MiniMax 已冷开原文并预览 M2.7，原请求报余额不足，用户无法确认当时是否登录，原账号待核，零保存、零发送。[原设置实测](evidence/2026-11-16-cycle12-original-config/README.md)
+
+**Claude 托管 API 暂停。** 官方适配器 0.107.0 把服务认证头放进 SDK 设置，SDK 0.3.323 将设置带进子进程参数。Farfold 在建立托管连接前拒绝该路径，保存的服务及「沿用已有设置」入口保留。官方私密交付仍待验证。[核对依据](evidence/2026-11-16-cycle12-original-config/README.md#claude-环境核对)
 
 **Autohand 文件交付实测。** 正常新对话沿用 `fantail`，按一次审批整理合成纪要并另存。可从 Farfold 的本轮产物打开新文件，原稿散列一致，负责人和日期保留。[文件交付回执](evidence/2026-11-15-cycle12-continuation/autohand-file-delivery-2026-11-16.json)
 
@@ -172,7 +174,7 @@
 
 ### P33
 
-2026-11-16：MiniMax 用户确认同一中国区账号，正式版按原目录和标识带入并重开，读回原正文及 MiniMax-M2.7。Pi 当前 OpenRouter 凭据可访问原生成元数据，原记录和旧 Farfold 备份核对原模型及 Medium。正式版首次等待桌面授权超时，随后用户授权，同一待定读取返回原正文与选项，停在只读预览。两家目前均缺可信的原配置恢复入口，零续发。[本轮回执](evidence/2026-11-16-cycle12-cline-auth/results.json)
+2026-11-16：Pi 从正常入口带入并重开原对话，当前 OpenRouter 凭据可访问原生成记录。从旧 Farfold 备份恢复 Nemotron 3 Ultra 免费版和 Medium 后，单次续答准确命中原上下文，重启后原设置和新回复保持，冷开零发送。MiniMax 已按原目录和标识带入并重开，读回原文，并预览当前报告的 M2.7。原失败为余额不足，旧记录没有账号或计费来源，用户也不确定曾否登录，原账号待核，零保存、零发送。[本轮正式实测](evidence/2026-11-16-cycle12-original-config/results.json)
 
 2026-11-16：Devin 与 Goose 各一条自建原对话均命中原目录官方列表，正常入口冷开同一原标识，读回原文与所选设置，并准确续答原上下文。未产生重复对话，范围限本次样本，分页与其他历史待验。Qoder 同一小米样本按原测试目录从官方列表查到，打开已有对话并用原上下文准确续答。分页和首次带入其他外部历史待验。[Devin、Goose](evidence/2026-11-15-cycle12-pre-send/history-continuations-2026-11-16.json) · [Qoder](evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json)
 

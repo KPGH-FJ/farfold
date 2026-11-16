@@ -421,6 +421,24 @@ pub(crate) async fn open_session_on_connection(
     }
     let mut deferred_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
     if let Some(received) = received.as_mut() {
+        if purpose == super::super::open_purpose::OpenPurpose::Conversation
+            && recorded_config.is_none()
+        {
+            let presentation = super::super::live_status::Owner::loading(
+                &ops,
+                &session_id,
+                purpose,
+                preview_token.as_deref(),
+                &operation,
+            );
+            received.drain(
+                &session_id,
+                &mut inbox_rx,
+                &events,
+                pending,
+                (&ops, &presentation),
+            );
+        }
         let (models, invalid) = std::mem::take(&mut received.deferred).apply(&mut configuration);
         deferred_models.extend(models);
         config_state = configuration.options();

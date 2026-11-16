@@ -34,6 +34,7 @@ impl Drop for Opening {
 }
 
 pub(super) struct State {
+    pub(super) replayed_message: bool,
     pub(super) permission_ids: Vec<String>,
     pub(super) elicitation_ids: Vec<String>,
     pub(super) tools: super::super::tool_activity::ToolActivity,
@@ -49,6 +50,7 @@ impl State {
     pub(super) fn new(session_id: &str, ops: &SessionOps) -> Self {
         let (expiry_tx, expiry_rx) = mpsc::unbounded_channel();
         Self {
+            replayed_message: false,
             permission_ids: Vec::new(),
             elicitation_ids: Vec::new(),
             tools: super::super::tool_activity::ToolActivity::new(ops.life.clone()),
@@ -125,6 +127,28 @@ impl State {
         pending: &PendingPermissions,
         (ops, presentation): (&SessionOps, &super::super::live_status::Owner),
     ) {
+        if let Dispatch::Notification(message) = &dispatch
+            && message.method() == "session/update"
+            && matches!(
+                message
+                    .params()
+                    .pointer("/update/sessionUpdate")
+                    .and_then(Value::as_str),
+                Some("user_message_chunk" | "agent_message_chunk")
+            )
+            && message
+                .params()
+                .pointer("/update/content/type")
+                .and_then(Value::as_str)
+                == Some("text")
+            && message
+                .params()
+                .pointer("/update/content/text")
+                .and_then(Value::as_str)
+                .is_some_and(|text| !text.trim().is_empty())
+        {
+            self.replayed_message = true;
+        }
         self.deferred.observe(&dispatch, ops.configuration_dialect);
         observe_failure(&dispatch, &mut self.failures, false);
         let mut context = DispatchContext {

@@ -750,6 +750,13 @@ select:focus-visible {
   font-size: 12px;
   color: var(--ink-2);
 }
+.workspace-dialog-body .original-conversation-confirmation {
+  flex-direction: row;
+  align-items: flex-start;
+}
+.original-conversation-confirmation input {
+  margin-top: 0.3em;
+}
 .workspace-dialog input:not([type="checkbox"]) {
   width: 100%;
   color: var(--ink);

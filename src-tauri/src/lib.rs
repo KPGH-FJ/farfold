@@ -282,6 +282,8 @@ pub fn run() {
                 acp_client::workspace_access::decision::session_workspace_access_decide,
                 acp_client::session_commands::session_set_config,
                 acp_client::session_commands::session_confirm_config,
+                acp_client::original_config::acp_review_original_session_config,
+                acp_client::original_config::acp_confirm_original_session_config,
                 acp_client::session_commands::session_set_mode,
                 acp_client::session_commands::session_permission_respond,
                 acp_client::session_commands::session_elicitation_respond,

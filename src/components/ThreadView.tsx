@@ -65,6 +65,7 @@ import { streamTailItem } from "../runtime/session_streams";
 import { ReportedDetails } from "./ReportedDetails";
 import { CompressionDescription } from "./CompressionDescription";
 import { ConfigCheckReview } from "./ConfigCheckReview";
+import { useOriginalSessionConfigRecovery } from "./OriginalSessionConfigRecovery";
 import { configRecheckBusy } from "../runtime/session_config_recheck";
 import { canExplainFailedToolQueue } from "../runtime/queue";
 import { FailedToolQueueHint } from "./FailedToolQueueHint";
@@ -241,6 +242,10 @@ export function ThreadView({
   const artifactReturnFocus =
     artifactReturnFocusRef ?? localArtifactReturnFocus;
   const ownsContent = useContentOwner(thread, active);
+  const originalSettings = useOriginalSessionConfigRecovery(
+    thread,
+    active && !readRequired,
+  );
   const feedbackDestination = useFileFeedbackDestination(
     thread,
     active,
@@ -681,6 +686,7 @@ export function ThreadView({
                     options={thread.configOptions}
                   />
                 )}
+                {originalSettings.action}
                 {thread.modelDrift &&
                   (thread.configCheck?.status === "confirmation_required" ||
                     thread.configCheck?.status === "record_failed") && (
@@ -769,6 +775,7 @@ export function ThreadView({
                 )}
               </div>
             )}
+            {originalSettings.dialog}
             {!thread.running && hasActiveCompaction(thread) && (
               <div className="banner" role="status">
                 {compactionUncertain(thread)

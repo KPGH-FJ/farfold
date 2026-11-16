@@ -331,7 +331,7 @@ impl AcpManager {
         Ok(connection.clone())
     }
 
-    fn session_control_tx(
+    pub(super) fn session_control_tx(
         &self,
         agent_id: &str,
         cwd: &Path,

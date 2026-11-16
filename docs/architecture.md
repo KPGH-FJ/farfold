@@ -65,6 +65,8 @@ Farfold 是独立的多 Agent 桌面产品。React工作台只有一套对话、
 
 恢复标记保存实际已确认的配置和服务身份，不只保存显示文字。服务变化、旧配置缺字段或恢复失败会保留历史、草稿、附件和暂停队列，要求核对；默认配置不冒充原设置。配置与恢复入口见 [session_configuration.ts](../src/runtime/session_configuration.ts)、[session_config_recheck.ts](../src/runtime/session_config_recheck.ts) 与 [model_guard.rs](../src-tauri/src/acp_client/model_guard.rs)。
 
+已读到正文且缺原配置的旧对话可以核对已知原设置。确认仅限同一已打开的对话、同一现用连接及完整读回的模型选项，只补 Farfold 对应的空配置。选定备份时先从私有快照核对 Agent、目录和原对话标识。查看当前报告时，用户核对它与原账号、服务和选项一致后才保存。两种途径均沿用 Agent 的已有服务，保留暂停中的待发内容。[原设置确认](../src-tauri/src/acp_client/original_config.rs)
+
 [delivery_flow.rs](../src-tauri/src/acp_client/delivery_flow.rs)让打开、预览与复制对话的Tauri通道只发送轻通知；界面逐项取出并精确确认原事件，缓冲/异步控制转交与消费分别计数。队列保存原事件及逻辑配额，退役不提前释放在途副本债务，窗口实际销毁才清理未归还的副本。[ingress_permit.rs](../src-tauri/src/acp_client/ingress_permit.rs)在官方SDK前按逻辑积压暂停后续读取，单个已接纳有限帧可越过水位；未知归属前缀超额明确结果未知而保留原工作。现有[delivery_observation.rs](../src-tauri/src/acp_client/delivery_observation.rs)采样另算，不用于筛除原始事件，也不把入缓冲当消费。[session_delivery_observer.ts](../src/runtime/session_delivery_observer.ts)只在外层解析交付封套。当前受控检查不证明React绘制、真实多Agent资源或RSS上限，安装版未验。
 
 最新源码由 [history_admission.rs](../src-tauri/src/acp_client/history_admission.rs) 统一限制已有对话打开/读取的同时开始数、纯等待数和保留请求逻辑字节；[cold_history_open.rs](../src-tauri/src/acp_client/cold_history_open.rs) 在入队前后复核保存来源、模型和目标设置，获准后才准备临时网页工具与连接。许可保持到完整读取标记交付，超时或无人接收时随真实进程归属保留；最后释放不在队列、连接或活动状态锁内唤醒下一项。窗口销毁撤回尚未开始的等待，取消只接受当前窗口与请求令牌；已开始仍按原操作结果判断。前端 [HistoryReadStatus.tsx](../src/components/HistoryReadStatus.tsx) 展示独立读取状态，Agent原始事件不经该状态通道筛除。首发、预览、列表、分支及当前停止/审批不纳入此冷读取队列；这不提供传输背压、渲染消费确认或RSS硬上限。该机制已随3845完成完整工程与安装检查；正式界面一次既有Dirac读取的状态和回复回放已验，真实等待取消、并发突发与长期资源仍未验。a371另将审批登记后的事件发布移到审批表锁外，登记及原始请求保持；该修复已包含在5790安装源码中，不能由此推定全部审批真实路径已验。

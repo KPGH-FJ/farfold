@@ -108,6 +108,7 @@ export class ConfigurationConfirmation {
     private state: ThreadState,
     private current: () => ThreadState | undefined,
     private revision: () => number,
+    private busy = configurationConfirmationBusy,
     private initialRevision = revision(),
   ) {
     this.displayed = structuredClone(state.configCheck!.current);
@@ -130,7 +131,7 @@ export class ConfigurationConfirmation {
         this.initialPermission,
       ) &&
       sameConfigurationSnapshot(this.state.configCheck, this.initialCheck) &&
-      !configurationConfirmationBusy({ ...this.state, configuring: false })
+      !this.busy({ ...this.state, configuring: false })
     );
   }
 

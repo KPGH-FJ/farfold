@@ -68,6 +68,8 @@ mod load_notifications;
 mod open;
 pub(crate) use open::open_session_on_connection;
 mod list;
+#[path = "pump/original_recovery.rs"]
+mod original_recovery;
 #[path = "pump/restore_config.rs"]
 pub(crate) mod restore_config;
 #[path = "pump/tool_terminal/mod.rs"]
@@ -565,6 +567,9 @@ async fn session_pump(
         tokio::task::block_in_place(|| events(event));
     });
     let purpose = opening.purpose;
+    let original_recovery_eligible =
+        opening.restored && opening.recorded.is_none() && received.replayed_message;
+    let mut original_config_review = None;
     let mut opening = Some(opening);
     let live_status = super::live_status::Owner::new(&ops, &session_id, &sessions);
     let mut detached = None;
@@ -580,6 +585,7 @@ async fn session_pump(
         .then(|| tool_terminal::Session::new(&config_store.cwd));
     let mut held_turn = None;
     let load_notifications::State {
+        replayed_message: _,
         mut permission_ids,
         mut elicitation_ids,
         mut tools,
@@ -1309,6 +1315,15 @@ async fn session_pump(
                         MutationKind::Config { request, permission_value: permission.then_some(value), choice, prior_guard, config_store: candidate_store },
                         MutationReply::Config(result), operation, lease, deadline,
                         future));
+                }
+                SessionControl::OriginalConfig { connection_id, request, deadline, result } => {
+                    restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard, &mut permission_guard, &mut opening, &mut mutation);
+                    let busy = !original_recovery_eligible || purpose != super::open_purpose::OpenPurpose::Conversation || connection_id != ops.connection_id || !fork_execution_known
+                        || mutation.is_some() || prompt_in_flight || prompt_cancelling || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved)
+                        || restore_config::busy(&ctx) || !permission_guard.admissible() || identity_read.is_some() || workspace_access_read.is_some();
+                    let response = original_recovery::run(request, &mut original_config_review, &mut config_store, &mut model_guard, configuration.modern_options(), &ctx, busy, deadline, &result).await;
+                    restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard, &mut permission_guard, &mut opening, &mut mutation);
+                    original_recovery::finish(response, result, &mut model_guard, &config_store, &configuration, &permission_guard, &events, deadline, *stopping.borrow() || restore_config::busy(&ctx) || !permission_guard.admissible());
                 }
                 SessionControl::ConfirmConfig { displayed, connection_id, restore_selection, deadline, result } => {
                     if identity_read.is_some() { let _=result.send(Err(RestoreConfirmCode::IdentityRead.for_restore(restore_selection.is_some(), super::identity_read::ReadError::from(super::identity_read::Code::Busy).message.into())));continue; }

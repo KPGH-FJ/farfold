@@ -1232,7 +1232,15 @@ class ThreadsStore {
   }
 
   async confirmConfig(key: string): Promise<void> {
-    return this.configurations.confirm(key, () => this.refreshIndex());
+    await this.configurations.confirm(key, () => this.refreshIndex());
+  }
+
+  confirmOriginalConfig(key: string, reviewId: string): Promise<boolean> {
+    return this.configurations.confirm(
+      key,
+      () => this.refreshIndex(),
+      reviewId,
+    );
   }
 
   confirmRestoredConfig(
