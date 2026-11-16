@@ -12,19 +12,18 @@
     "查找冷开续答通过": 9,
     "已选模型有实答": 11,
     "可建对话": 1,
-    "已知标识读取声明": 1,
     "实测分项通过": 13,
     "前台停止分项通过": 3,
     "已有设置实答": 2,
     "本轮短测失败": 1,
-    "双前台分项通过": 4,
-    "停止及冷续答通过": 2,
+    "双前台分项通过": 5,
+    "停止及冷续答通过": 3,
     "原正文已读": 1,
     "实测失败": 4,
     "未确认": 2,
     "已选服务有实答": 2,
     "默认列表为空": 1,
-    "冷开续答分项通过": 1,
+    "冷开续答分项通过": 2,
     "跨家分项通过": 2
   },
   "rows": [
@@ -64,21 +63,23 @@
         },
         "S3": {
           "observed": "当前所选登记无 list/load/resume。官方制造商 CLI/SDK 有原历史路径，但本机所核常见路径无该独立 CLI。\n2026-11-16 续查：找到并实测原厂商 CLI。目录 0.13.0 的适配器保存新 S-ID 映射，与已有厂商 T-ID 原历史区分。\n2026-11-16 复验：原账号对当前以及含归档的列表真实返回空数组。Farfold 有一条旧适配器本地索引，尚无可对应厂商 T-ID。\n2026-11-16 复验：从正式版搜索冷开同一原测试对话，原正文及 MiMo 恢复。原线程续答遇到官方 CLI 拒绝显式模型参数，用量与正文未新增。\n2026-11-16 复验：临时选 Default，依赖原上下文的一次续问准确完成，官方导出核同一原线程。\n2026-11-16 续验：同一原线程沿用已有 MiMo 的旧正例能追溯。另核官方已发布 SDK 和外部 API，仍未提供显式模型的旧线程续答路径。",
-          "remaining": "显式模型直接续答仍受阻，未建立映射的旧厂商线程带入仍待。",
+          "remaining": "等待 Amp 官方可在原线程保持显式所选模型的续答接口。未建立映射的旧厂商线程带入仍待。",
           "sources": [
             "docs/evidence/2026-11-15-official-alternatives/amp.md",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
             "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#cline-和-amp-的官方备选入口"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#cline-和-amp-的官方备选入口",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件"
           ],
           "status": "查找冷开续答通过"
         },
         "S4": {
           "observed": "历史 Medium 仅档位，不证明具体模型。\n2026-11-16 复验：首条使用 xiaomi/mimo-v2.6-flash，官方用量核到用户的小米连接。冷开恢复原设置，显式续问未到推理。\n2026-11-16 复验：临时沿用原线程模型后，原线程用量新增一次助手推理，经同一小米连接，结束后恢复显式MiMo与Auto。",
-          "remaining": "验证显式模型选项在冷开后直接续答，保留原厂商限制。",
+          "remaining": "等待官方组件按原线程模型续答，或 Amp 支持旧线程模型设置与读回。验显式 MiMo、同原 ID 与同小米用量。",
           "sources": [
             "docs/evidence/2026-11-15-official-alternatives/amp.md",
-            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件"
           ],
           "status": "已选模型有实答"
         },
@@ -378,7 +379,7 @@
     {
       "agentId": "cline",
       "runtime": "当前正式登记 3.0.74",
-      "liveAction": "原账号重登后默认免费 Nemotron 可做普通文件工作。继续核同一原历史和设置恢复，以及工具结果怎样直接成为可开的本轮产物；停止和双任务待验。",
+      "liveAction": "普通前台真实文件任务通过。正式双任务只停止 A，A 的 Shell 和子进程退出，B 自然完成；原 A 冷开同一 ID 并续答。只读历史列表等待官方支持精确原目录与重复冲突。",
       "standards": {
         "S1": {
           "observed": "旧程序连接和三类认证方式曾展示；旧同版空白连接有超时。\n本轮实测：目前程序可执行，登记版本 3.0.65。登记所存握手版本 3.0.65。\n2026-11-16 续验：正式从签名无效的旧版更新至厂商 3.0.74，程序检查握手和新建均有回执。\n2026-11-16 正式设置沿已有来源实际收到发送回执，握手和新建通过，试发后回到测试对话可见错误。\n2026-11-16 续查：用户原账号重登已在正式设置短测获正确回复。普通入口沿原默认 Nemotron 完成真实文件工作。",
@@ -406,8 +407,8 @@
           "status": "原账号实答"
         },
         "S3": {
-          "observed": "10/06 A 自有失败对话 ID、原目录及原保存消息文件均确认。该版无列表，官方 load 需认证，并在原 ID 启动自己的会话管理器。\n本轮实测：当前正式历史入口连接在检查完成前结束，未向程序发列表或正文。\n2026-11-16 续验：当前正式握手确认仅声明已知标识读取，未提供官方历史列表。\n2026-11-16 续查：同发行 3.0.74 官方源码确认按已知 ID 读取，无官方默认历史列表。\n2026-11-16 续验：官方清单脚本限定两份本机真实自有元数据，按原目录查到唯一文件交付样本 ID，7 项原存储证据不变。该路径未接进 Farfold。",
-          "remaining": "官方脚本按目录子串匹配、静默合并重复 ID 且无分页；完整发现仍缺可验证范围的官方只读入口。原设置的读回及续答继续分项验。",
+          "observed": "10/06 A 自有失败对话 ID、原目录及原保存消息文件均确认。该版无列表，官方 load 需认证，并在原 ID 启动自己的会话管理器。\n本轮实测：当前正式历史入口连接在检查完成前结束，未向程序发列表或正文。\n2026-11-16 续验：当前正式握手确认仅声明已知标识读取，未提供官方历史列表。\n2026-11-16 续查：同发行 3.0.74 官方源码确认按已知 ID 读取，无官方默认历史列表。\n2026-11-16 续验：官方清单脚本限定两份本机真实自有元数据，按原目录查到唯一文件交付样本 ID，7 项原存储证据不变。该路径未接进 Farfold。\n2026-11-16 续验：隔离对照复现官方脚本在目录过滤前合并同 ID，不可从输出恢复冲突。已保存索引的 A 正常冷开并沿同一免费模型准确续答。",
+          "remaining": "等待只读列表返回可核原目录和原始冲突，或明确报告冲突。本轮已验从已保存索引按 ID 恢复。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
             "output/2026-10-09-fourth-install/metadata-before.sqlite3",
@@ -416,9 +417,11 @@
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-15-cycle12-pre-send/cline-startup-diagnosis-2026-11-16.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#cline-和-amp-的官方备选入口"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#cline-和-amp-的官方备选入口",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#cline-原目录与重复-id",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#cline-双前台实际停止"
           ],
-          "status": "已知标识读取声明"
+          "status": "冷开续答分项通过"
         },
         "S4": {
           "observed": "6日旧界面确认改免费模型，但当前持久选择显示另一原值。此版 load 用当前 provider 所选而非每会话存档。\n2026-11-16 续验：已有设置读取到 Claude Sonnet 5.5，原保存选择仍提示不一致。\n2026-11-16 临时 Claude Sonnet 5.5 仅发一次，实答未通过，保存选择前后摘要一致。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。\n2026-11-16 正式设置临时选择 Sonnet 5.5 已实答，未保存该临时选择，核对原账号重登后的 Nemotron 默认仍在。",
@@ -449,22 +452,24 @@
           "status": "实测分项通过"
         },
         "S6": {
-          "observed": "没有当前双任务实证。",
-          "remaining": "分开实际权限、模型和停止。",
+          "observed": "没有当前双任务实证。\n2026-11-16 续验：独立目录两条免费 Nemotron 任务各一次审批并同时运行，只停止 A，B 保持 Shell 和子进程并自然完成。",
+          "remaining": "依适用条件核共享目录、不同配置及其他隔离组合。",
           "sources": [
             "docs/agent-first-release.md",
-            "docs/evidence/2026-10-06-macos-batch1/README.md"
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#cline-双前台实际停止"
           ],
-          "status": null
+          "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "旧初始化超时受控回收，原草稿保留；没有真实任务停止正例。",
-          "remaining": "子执行实际结束及原草稿待发恢复。",
+          "observed": "旧初始化超时受控回收，原草稿保留；没有真实任务停止正例。\n2026-11-16 续验：正式停止 A 后 Shell 与 sleep 实际退出。正常退出后冷开同一 A，原目录、账号服务和免费模型保持，准确续答。",
+          "remaining": "实际前台停止和原对话冷续答已验。真实中断及草稿、附件、待发恢复按适用条件继续。",
           "sources": [
             "docs/agent-first-release.md",
-            "docs/evidence/2026-10-06-macos-batch1/README.md"
+            "docs/evidence/2026-10-06-macos-batch1/README.md",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#cline-双前台实际停止"
           ],
-          "status": null
+          "status": "停止及冷续答通过"
         },
         "S8": {
           "observed": "旧失败后空队列恢复入口曾不可达。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
@@ -1171,13 +1176,14 @@
         },
         "S8": {
           "observed": "旧正式显示回复已停和工具待确认；当时实际导出把工具写成等待中。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续验：官方会话记录出现 session.error，ACP 同时刻只显示错误正文，未发协议错误。Farfold 标题下此次显示已完成，实际未获得预期回复。\n2026-11-16 续验：Auto 再次使用时实际实答，第一次失败仍存在错误文字映射，官方 SDK 的整段读取不能确认原失败归属。",
-          "remaining": "核同一请求的官方结构化失败入口，修正实际失败的显示。",
+          "remaining": "等待 Copilot 官方对同一次 ACP 请求报告结构化失败，再核真实失败提示、无完成通知及不重发。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json",
             "docs/evidence/2026-11-06-phase1-copilot-list/README.md",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件"
           ],
           "status": "实测失败"
         }

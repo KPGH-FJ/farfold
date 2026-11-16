@@ -66,7 +66,7 @@
 
 **Amp 小米新对话实测。** 正式 Farfold 选用目录组件 0.13.0 和用户安装的官方 CLI。按用户许可备份旧组件密钥后，已登录 Amp 账号能读取 MiMo。重新确认模型设置后，Farfold 在独立新对话显式选择 `mimo-v2.6-flash`，发送一条并完成。官方同线程用量明细确认 `xiaomi/mimo-v2.6-flash` 的 1 次助手推理和 Amp 自行触发的 2 次标题推理均走用户的小米 Custom URL。覆盖该新对话的模型与实际路由，原线程带入及整家验收依旧待验。[正式实测](evidence/2026-11-16-cycle12-account-retest/README.md#amp-小米单次正式实测)
 
-**Amp 小米原对话冷开并续答通过。** 正式 Farfold 搜索重开同一原线程并恢复正文。按用户许可临时选 `Default`，沿用 Amp 保存在原线程的 MiMo，发送一次依赖上文的续问并准确复述标记。同一原线程官方记录核到新增一次助手推理走原小米连接，之后恢复显式 MiMo 和 `Auto`。显式模型配置下冷开后续答仍会因组件附加的 `--model` 被官方 CLI 拒绝。[正式复验与原失败](evidence/2026-11-16-cycle12-account-retest/README.md#amp-原对话冷开和续答)
+**Amp 小米原对话冷开并续答通过，显式 MiMo 等待官方。** 正式 Farfold 搜索重开同一原线程并恢复正文。按用户许可临时选 `Default`，沿用 Amp 保存在原线程的 MiMo，发送一次依赖上文的续问并准确复述标记。同一原线程官方记录核到新增一次助手推理走原小米连接，之后恢复显式 MiMo 和 `Auto`。显式续答等新版组件正确沿用已核原模型，或等可调用的旧线程模型设置接口。[正式复验与原失败](evidence/2026-11-16-cycle12-account-retest/README.md#amp-原对话冷开和续答) · [等待与复验条件](evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件)
 
 **接入账号与 API 续查。** OpenCode 选新保存的小米 `Chat Completions` 与 `mimo-v2.6-flash` 实答，并冷开同一原对话读回回复与来源，模型名称显示缺陷已在正式版修正。Autohand 0.9.11 与 Grok Build 1.0.46 分别沿原 `fantail` 与 `grok-4.7 / low` 冷开、读到原正文并准确续答。Claude 使用另存的小米 `Messages` 独立 API 测试成功，普通对话在 0.81.2 无正文，升级 0.107.0 后返回 `auth_required`。两版的合成控制均发现官方适配程序发出占位 Bearer，需确认原生 Claude 的已有设置路径或官方适配程序修复。Gemini CLI 和 Antigravity 按用户要求暂缓。[正式复验与官方限制](evidence/2026-11-15-cycle12-pre-send/README.md)
 
@@ -94,13 +94,17 @@
 
 **Qoder 双前台隔离及停止后冷续答通过。** 用户批准后单独关闭占用全局发送名额的 OpenCode 报错连接。正式版中两条 Qoder 1.1.89 对话沿用同一 MiMo，各自在独立目录运行。只点 A 的停止，A 的 Shell 和子进程实际退出，B 的同一进程继续并自然完成。正常保存退出后从侧栏冷开同一 A，只发一条依赖旧上下文的续问，沿用已有小米 MiMo 和 Default 准确回答。原标识保留且唯一，零新建、零自动重发、零工具重跑。A 的已停止工具步骤仍显示结果未知。[隔离实测](evidence/2026-11-16-cycle12-eight-check/README.md#qoder-停止及发送名额) · [续答实测](evidence/2026-11-16-cycle12-eight-check/README.md#qoder-停止后冷开续答)
 
-**Copilot 原 Auto 续答复验通过，旧失败的反馈仍待修。** 用户确认原 GitHub 账号。正式版从原目录找到、读回并加入同一原 ID，恢复已有服务和 Auto。首次续问约 20.7 秒出现官方选模网络错误，错误作为正文返回，协议未将该轮报告为失败，Farfold 显示「已完成」。后续从正常入口在同一原对话只发一次，约 18.1 秒正确回传原标记，原配置与唯一索引保持。首次网络失败的具体地址、状态或底层异常未知。准确反馈待同一请求的官方结构化失败入口。[首次回执](evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由) · [最新复验](evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验)
+**Copilot 原 Auto 续答复验通过，失败反馈等待官方。** 用户确认原 GitHub 账号。正式版从原目录找到、读回并加入同一原 ID，恢复已有服务和 Auto。首次续问约 20.7 秒出现官方选模网络错误，错误作为正文返回，协议未将该轮报告为失败，Farfold 显示「已完成」。后续从正常入口在同一原对话只发一次，约 18.1 秒正确回传原标记，原配置与唯一索引保持。首次网络失败的具体地址、状态或底层异常未知。等待官方回传可对应于同一请求的失败信号。[最新复验](evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验) · [等待与复验条件](evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件)
 
 **Devin 普通新建的旧设置恢复已修并正式实测。** 从新对话「检查模型设置」同时核对原 `swe-2-high`、`high` 与当前 `SWE-2 Flash Medium`、未提供推理选项，明确采用后保留原目录和草稿。使用原已有服务准确实答一次，全局默认设置原样保留。此前沿原测试对话确认的设置完成文件交付，原稿散列不变，成品可从「本轮产物」打开。实际工具审批及其他工作路径继续按原条件核。[正式新建](evidence/2026-11-16-cycle12-eight-check/README.md#devin-普通新建的旧设置恢复) · [正式文件回执](evidence/2026-11-15-cycle12-pre-send/README.md#2026-11-16-devin-文件交付)
 
 **CodeBuddy 2.184.0 原对话预览无正文。** 从正式版选用目录新版，程序检查通过，旧 2.160.0 安装仍在。从正常「带入已有对话」沿用第 7 周期同一原目录及标识，只读一次。协议 `session/load` 在 78.743 秒返回，未见助手正文回放。界面显示「Agent 没有返回可展示的正文，本次未加入」，零模型请求。新版从超时变为收到回包，原正文仍待验证。[第 7 周期原样本](evidence/2026-11-13-cycle67-closure/summary.json)
 
-**Cline、Pi、siGit 的官方路径续查。** Cline 3.0.74 的 CLI 历史列表和同版 SDK 默认可能改写失联状态。Cline 官方历史搜索脚本用两份真实自有清单，按原目录只读找到一条原 ID，原文件及数据库不变。脚本会按目录子串匹配、静默合并重复 ID，且无分页，暂未接成完整列表。已知 ID 继续沿原 ACP 入口读回。Pi 目录最新仍为 `pi-acp 0.0.34`，将网页工具转给 Pi 的实现尚在上游 PR。siGit 当前 1.5.11 裸 stdio 登记无自动加载，原选中的 1.93 GB GGUF 在默认和共享缓存均缺，当前无可确认的已配置兼容服务。[Cline 实测](evidence/2026-11-16-cycle12-eight-check/README.md#cline-和-amp-的官方备选入口) · [Pi 上游 PR](https://github.com/svkozak/pi-acp/pull/164) · [siGit 启动方式](https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L4282-L4298)
+**Cline 只读历史列表等待可准确识别原目录和冲突的官方入口。** 隔离实测确认，官方脚本的模糊目录匹配可以再做精确比较，但同一 ID 的冲突在返回前已被合并。正常 ACP 只声明按已知 ID 加载，CLI/SDK 常规列表可能改写失联状态，完整列表暂不接入。此前用两份真实自有清单的只读正例保留。[目录与冲突复现](evidence/2026-11-16-cycle12-eight-check/README.md#cline-原目录与重复-id)
+
+**Cline 双前台实际停止及原对话冷续答通过。** 正式 Farfold 沿用已保存的免费 Nemotron，两条任务在各自目录同时运行。从 A 按停止，A 的 Shell 和子进程实际退出，B 保持原进程并正常完成。首轮 B 因夹具超过默认 30 秒而超时，用较短夹具复验通过。正常退出后从侧栏重开同一 A，沿原设置一条上下文续问准确回答，零新建和工具重跑。[正式隔离与续答复验](evidence/2026-11-16-cycle12-eight-check/README.md#cline-双前台实际停止)
+
+**Pi 与 siGit 的官方路径续查。** Pi 目录最新仍为 `pi-acp 0.0.34`，将网页工具转给 Pi 的实现尚在上游 PR。siGit 当前 1.5.11 裸 stdio 登记无自动加载，原选中的 1.93 GB GGUF 在默认和共享缓存均缺，当前无可确认的已配置兼容服务。[Pi 上游 PR](https://github.com/svkozak/pi-acp/pull/164) · [siGit 启动方式](https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L4282-L4298)
 
 第 6 周期按原阶段范围收口，网页许可、撤回、标签切换及同请求截图已有正式分项，新增五家逐家记录了接入正例或具体阻碍。第 7 周期已交付搜索、整理、导出、按标识带入及本批发现的焦点与栏宽缺陷修复。真实审批、提问和中断各有单次有声与正确点击证据，纯图片触发未读也有单独正式证据。五家历史样本条件和其他原条目按下表继续保留。
 

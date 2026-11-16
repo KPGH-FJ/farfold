@@ -66,6 +66,25 @@ B 的 `protocol-v1-1794829044139-70.jsonl` 在 19:39:03.976 收到工具更新�
 - Cline 发布的历史搜索脚本有只扫描清单的 `--no-db` 模式。独立样本确认状态和文件不变；本机实测仅将两份已核自有测试元数据链接进临时目录，按文件交付样本的原目录查找，返回唯一原 ID `1794814385032_IEsyY_cli`，与 Farfold 索引和原目录核同。原清单、正文、SQLite 和现有附属文件，共 7 项的摘要、修改时间未变。未读取 transcript、未导出、未发模型。原脚本的目录匹配为子串，重复 ID 先于过滤被合并，输出含完整提示词，接口没有分页；可证明这两个样本内的只读发现，完整 Farfold 列表仍需能确定范围、处理冲突和控制输出的官方方式。只读 SQLite 模式在没有附属文件的 WAL 夹具中也曾把错误变为空列表。[官方脚本](https://github.com/cline/skills/blob/26378461e978f2b4e2e6d67b57121b86b2a79ba5/skills/cline-session-search/scripts/search_sessions.py#L115-L187) · [选项和输出](https://github.com/cline/skills/blob/26378461e978f2b4e2e6d67b57121b86b2a79ba5/skills/cline-session-search/scripts/search_sessions.py#L480-L545)
 - Amp ACP 0.13.0 对旧线程续答仍追加显式 `--model`。已发布的 TypeScript SDK 也将其映射到同一 CLI 参数。官方 CLI 与 SDK 的覆盖选项限新线程，交互界面另有切换模型入口；公开 API 和插件没有可调用的同一旧线程模型设置入口。同一旧线程沿用原 MiMo 的实测正例保留。显式选择后继续仍待官方组件或可验证的同线程接口。[组件](https://github.com/tao12345666333/amp-acp/blob/v0.13.0/src/amp-transport.ts#L205-L243) · [官方模型切换](https://ampcode.com/docs/model-selector#switch-models-in-a-thread) · [API 规范](https://ampcode.com/api/v2/openapi.json)
 
+### Cline 原目录与重复 ID
+
+同版官方脚本的两组隔离对照复现了不同问题。原目录和邻近名称目录各放不同 ID，`--cwd` 给出两条，按能解析的实际目录进行精确比较后只留目标一条。两个不同目录各放同 ID 时，脚本先合并清单再应用目录过滤。其公开输出与仅有幸存记录的对照完全相同，即使加上同一目录条件也无法识别冲突。五份夹具的文件摘要和修改时间未变，未读取实际数据库或正文，未发送请求。
+
+当前发布的 Cline CLI 3.0.74 和 SDK 0.2.0 不提供符合这组要求的另一条只读列表。ACP 只声明按已知 ID 加载，载入流程使用调用方给出的目录，成功回放不能反证它是原目录。通用 Farfold 列表也会在构建页面时按 ID 取首条，未来接入须在该步骤之前验证原始记录。可接入的条件是官方入口只读、能准确说明原目录，并在其过滤或去重前暴露冲突，或返回明确的冲突结果。当前保持已知 ID 的正常入口，范围不明确的完整列表不进入正式版。[脚本分组与过滤](https://github.com/cline/skills/blob/26378461e978f2b4e2e6d67b57121b86b2a79ba5/skills/cline-session-search/scripts/search_sessions.py#L172-L215) · [Cline 已知 ID 读取](https://github.com/cline/cline/blob/cli-v3.0.74/apps/cli/src/acp/acpAgent.ts#L249-L292)
+
+### Cline 双前台实际停止
+
+正式 Farfold 0.1.7，CDHash `7aefe7b0116d761bf7dcfcbed3ab392e0bd4aadd`，正式登记与握手均为 Cline 3.0.74。沿用已有服务及 `nvidia/nemotron-3.5-super-vl:free`，两个自建目录各一条请求和一次批准。首轮 B 的等待夹具超过 Cline 默认 30 秒命令限制而超时，后来提出的额外命令在 Farfold 拒绝。使用 23 秒的 B 夹具重新验证。
+
+复验时本机在 22:01:07.787（UTC+8）同时观察到 A 的 Shell 8126、sleep 8128，B 的 Shell 8150、sleep 8152，各属独立进程组及各自目录。从 Farfold 只按 A 的「停止」，A 协议于 22:01:08.569 发出取消，界面显示回复已停止。22:01:08.656 A 两个进程已退出，B 原两个进程仍在。B 于 22:01:30.784 自然退出，正式界面返回 `FF_C12_CLINE_TIMED_B_NATURAL_END` 并显示完成。协议 `protocol-v1-1794837587893-8.jsonl`、`protocol-v1-1794837610648-10.jsonl` 各只发一次，B 无取消。此证据覆盖两条前台命令实际隔离与停止。
+
+正常保存退出后，从侧栏冷开 A 的原 ID `1794837588192_xoYMw_cli`。在原目录沿用已有服务、相同免费 Nemotron 和 Act，发一条不含原标记的上下文续问。约 5.2 秒准确返回 `FF_C12_CLINE_TIMED_A`。`protocol-v1-1794837874154-0.jsonl` 记录一次 `session/load`、一次手动 `session/prompt`、零新建、零续问工具或审批。原索引唯一，停止命令未重跑。覆盖从已保存索引恢复，未验证 Cline 正式列表发现。
+
+## 等待官方的复验条件
+
+- **Copilot 失败反馈。** 等官方在同一次 ACP 请求返回协议错误，或提供能准确对应这次请求的结构化失败事件。发布后用原 Auto 服务或官方可控夹具，从 Farfold 触发一次失败，核实际请求、失败显示、草稿与待发保护以及无完成通知、无自动重发。原账号及 Auto 正常续答的正例保留。[Copilot 公开问题](https://github.com/github/copilot-cli/issues/5266) · [ACP 错误规范](https://agentclientprotocol.com/protocol/v1/schema#error)
+- **Amp 显式 MiMo 续答。** 等组件新版能核对已有线程的实际模型与显式选项一致并省略仅用于新建的 `--model`，或等 Amp 发布可对既有线程使用且能读回的模型设置接口。恢复后从 Farfold 冷开同一 T-ID，保持显式 MiMo 与原推理设置，发送一次依赖原上下文的短问；官方导出核新问答归原线程，官方用量核一次推理走同一小米连接。已有沿用原 MiMo 续答的正例仍适用。[当前组件发布版](https://github.com/tao12345666333/amp-acp/releases/tag/v0.13.0) · [官方模型说明](https://ampcode.com/docs/model-selector#switch-models-in-a-thread)
+
 ## Devin 普通新建的旧设置恢复
 
 原正式版从「探索 Agent → Devin → 开始新对话」保留测试文字，选择独立空目录。新建使用已保存的 `swe-2-high`、`high` 和 Code，提示「已保存的选择当前不可用」，发送禁用，零模型请求。
