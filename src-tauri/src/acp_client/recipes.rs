@@ -190,6 +190,24 @@ pub(crate) struct TerminalActionDeclaration {
     pub source_url: &'static str,
 }
 
+const CLINE_AUTH_ACTION: TerminalActionDeclaration = TerminalActionDeclaration {
+    id: "configure-model-service",
+    purpose: "service_configuration",
+    agent_id: "registry:cline",
+    version: "3.0.65",
+    launch: TerminalActionLaunch::Npm {
+        package: "cline",
+        bin: "cline",
+        manifest_entry: "./bin/cline",
+        loader: "bin/cline",
+    },
+    launch_args: &["--acp"],
+    action_args: &["auth"],
+    // The 3.0.65 published README documents the interactive setup. The URL
+    // points to that documentation's source directory without widening the match.
+    source_url: "https://github.com/cline/cline/tree/main/apps/cli",
+};
+
 const TERMINAL_ACTIONS: &[TerminalActionDeclaration] = &[
     TerminalActionDeclaration {
         id: "configure-model-service",
@@ -203,24 +221,11 @@ const TERMINAL_ACTIONS: &[TerminalActionDeclaration] = &[
         // only this supplement; it is never a connection or installation gate.
         source_url: "https://github.com/block/goose/blob/v1.52.0/crates/goose-cli/src/commands/configure.rs",
     },
+    CLINE_AUTH_ACTION,
     TerminalActionDeclaration {
-        id: "configure-model-service",
-        purpose: "service_configuration",
-        agent_id: "registry:cline",
-        version: "3.0.65",
-        launch: TerminalActionLaunch::Npm {
-            package: "cline",
-            bin: "cline",
-            manifest_entry: "./bin/cline",
-            loader: "bin/cline",
-        },
-        launch_args: &["--acp"],
-        action_args: &["auth"],
-        // Published cline 3.0.65 README documents this interactive setup; its
-        // CLI and protocol route share ProviderSettingsManager. The repository
-        // URL is a source pointer, not a claim about the current main version or
-        // support for arbitrary providers through the protocol.
-        source_url: "https://github.com/cline/cline/tree/main/apps/cli",
+        version: "3.0.74",
+        source_url: "https://github.com/cline/cline/blob/cli-v3.0.74/docs/cli/cli-reference.mdx",
+        ..CLINE_AUTH_ACTION
     },
 ];
 

@@ -1,7 +1,33 @@
 //! One granted request, using the original pump guards and SDK actor.
 use super::super::active_prompt::{CancelRequest, DispatchResult, Granted, Phase, Progress};
 use super::*;
-use agent_client_protocol::schema::v1::{ContentBlock, PromptRequest};
+use agent_client_protocol::schema::v1::{ContentBlock, ErrorCode, PromptRequest};
+
+fn describe_prompt_error(
+    registered_cline: bool,
+    matched_wire_error: bool,
+    error: agent_client_protocol::Error,
+) -> String {
+    // Cline's runtime throws its fixed OAuth message before the adapter can
+    // emit AuthRequired. The official SDK wraps that exception in details.
+    if registered_cline
+        && matched_wire_error
+        && error.code == ErrorCode::InternalError
+        && error
+            .data
+            .as_ref()
+            .and_then(|data| data.get("details"))
+            .and_then(Value::as_str)
+            .is_some_and(|detail| {
+                detail
+                    .trim()
+                    .eq_ignore_ascii_case("Cline requires re-authentication.")
+            })
+    {
+        return "AUTH_REQUIRED".into();
+    }
+    describe_acp_error(error)
+}
 
 pub(super) struct Outcome {
     pub receipt_id: u64,
@@ -167,6 +193,7 @@ pub(super) async fn send(
         owner: grant.owner,
         observation: observation.clone(),
     };
+    let registered_cline = config_store.agent_id == "registry:cline";
     let sent = cx
         .send_request_to(Agent, PromptRequest::new(ctx.session_id.to_owned(), blocks))
         .on_receiving_result({
@@ -181,7 +208,9 @@ pub(super) async fn send(
                         serde_json::to_value(&response)
                             .map_err(agent_client_protocol::Error::into_internal_error)
                     })
-                    .map_err(describe_acp_error);
+                    .map_err(|error| {
+                        describe_prompt_error(registered_cline, matched_wire_error, error)
+                    });
                 observation.observe(&outcome);
                 let _ = turn.send(Outcome {
                     receipt_id,
@@ -255,5 +284,31 @@ pub(super) fn turn_end_event(outcome: Result<Value, String>) -> Value {
             Value::Object(event)
         }
         Err(error) => serde_json::json!({"kind": "turnEnd", "error": error}),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn registered_cline_maps_only_the_matched_vendor_oauth_error() {
+        let error = agent_client_protocol::Error::internal_error().data(serde_json::json!({
+            "details": "Cline requires re-authentication.",
+            "private": "synthetic diagnostic canary"
+        }));
+        assert_eq!(
+            describe_prompt_error(true, true, error.clone()),
+            "AUTH_REQUIRED"
+        );
+        assert_ne!(
+            describe_prompt_error(false, true, error.clone()),
+            "AUTH_REQUIRED"
+        );
+        assert_ne!(describe_prompt_error(true, false, error), "AUTH_REQUIRED");
+        let generic = agent_client_protocol::Error::internal_error().data(
+            serde_json::json!({"details":"Prompt quoted: Cline requires re-authentication."}),
+        );
+        assert_ne!(describe_prompt_error(true, true, generic), "AUTH_REQUIRED");
     }
 }
