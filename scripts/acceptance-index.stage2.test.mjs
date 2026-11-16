@@ -43,7 +43,7 @@ describe("existing stage-two evidence in the default entry", () => {
     expect(result.agentEvidence.recordedCounts.wholeAgentConfirmed).toBe(0);
     expect(result.agentEvidence.recordedCounts.agents).toBe(29);
     expect(result.coverage).toEqual([]);
-    expect(result.cells).toHaveLength(184);
+    expect(result.cells).toHaveLength(176);
     expect(result.cells.every((cell) => cell.acceptance === "unreviewed")).toBe(
       true,
     );

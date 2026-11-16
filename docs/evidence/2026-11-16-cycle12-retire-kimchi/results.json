@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-16",
+  "baseline": "f2f9b7436e698e38c7325806b713cc7e1164b59c",
+  "installed": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "fe924229dbd869014ab0ede39b8623fd10312faf",
+    "binarySha256": "2ebabc53c3f7f04c65c51bca8fa083a638ff680a37f6ed5f981e4cb9b8b180c4"
+  },
+  "productInputsMatched": 2633,
+  "preservation": {
+    "protectedEntries": 236586,
+    "beforeAndAfterSha256": "7c445c5c78b28e78766d8053b3a48f4153fbfd77d11d01ccd2ca7bb32a61b59f",
+    "metadataIntegrity": "ok",
+    "kimchiRegistrationsMatched": 1,
+    "kimchiConversationIndexesMatched": 3,
+    "kimchiSettingsMatched": 1,
+    "duplicateAppRemoved": true
+  },
+  "observations": {
+    "exploreAgentCount": 22,
+    "kimchiInExplore": false,
+    "kimchiNewChatSearchMatches": 0,
+    "kimchiExistingConversationVisible": true,
+    "qoderInExplore": true,
+    "currentFirstReleaseCells": 176,
+    "wholeAgentAcceptancePassed": 0,
+    "modelRequests": 0
+  },
+  "checks": {
+    "productionBuildAndAppBundle": true,
+    "relatedFrontendPassed": 207,
+    "acceptanceIndexPassed": 66,
+    "rustReleaseTargetedPassed": 22,
+    "docsConditionsPreserved": 151
+  }
+}

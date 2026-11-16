@@ -82,6 +82,7 @@ export function parseAgentConditions(
       "dimcode",
       "factory-droid",
       "poolside",
+      "kimchi",
     ]),
   ];
   const checkedPaths = new Set();

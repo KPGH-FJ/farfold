@@ -684,46 +684,58 @@ mod tests {
 
     #[test]
     fn current_directory_filters_entries_without_changing_registered_data() {
-        let registry = ["cline", "qoder", "factory-droid", "poolside", "unreviewed"]
-            .into_iter()
-            .map(|id| RegistryAgent {
-                id: id.into(),
-                name: "Same display name".into(),
-                version: "future-version".into(),
-                distribution: RegistryDistribution {
-                    npx: Some(RegistryNpx {
-                        package: "example-package".into(),
-                        args: vec!["acp".into()],
-                        env: std::collections::BTreeMap::new(),
-                    }),
-                    ..Default::default()
-                },
+        let registry = [
+            "cline",
+            "qoder",
+            "factory-droid",
+            "poolside",
+            "kimchi",
+            "unreviewed",
+        ]
+        .into_iter()
+        .map(|id| RegistryAgent {
+            id: id.into(),
+            name: "Same display name".into(),
+            version: "future-version".into(),
+            distribution: RegistryDistribution {
+                npx: Some(RegistryNpx {
+                    package: "example-package".into(),
+                    args: vec!["acp".into()],
+                    env: std::collections::BTreeMap::new(),
+                }),
                 ..Default::default()
+            },
+            ..Default::default()
+        })
+        .collect::<Vec<_>>();
+        let registered = ["factory-droid", "poolside", "kimchi"]
+            .into_iter()
+            .map(|id| {
+                serde_json::from_value::<AgentRow>(serde_json::json!({
+                    "id":format!("registry:{id}"), "name":"Original", "source":"registry",
+                    "command":"/original/program", "args":["keep"], "env":[["PUBLIC_CONFIG","keep"]],
+                    "version":"old", "handshake":{"authMethods":[]}, "createdAt":1,"updatedAt":2
+                }))
+                .unwrap()
             })
             .collect::<Vec<_>>();
-        let registered: AgentRow = serde_json::from_value(serde_json::json!({
-            "id":"registry:factory-droid", "name":"Original", "source":"registry",
-            "command":"/original/program", "args":["keep"], "env":[["PUBLIC_CONFIG","keep"]],
-            "version":"old", "handshake":{"authMethods":[]}, "createdAt":1,"updatedAt":2
-        }))
-        .unwrap();
         let original = serde_json::to_value(&registered).unwrap();
-        let entries = current_catalog_entries(std::slice::from_ref(&registered), &[], &registry);
+        let entries = current_catalog_entries(&registered, &[], &registry);
         assert_eq!(entries.len(), builtin_defs().len() + 2);
         assert!(entries.iter().all(|entry| entry.first_batch_visible));
         assert!(entries.iter().any(|entry| entry.registry_id == "qoder"));
         assert!(entries.iter().all(|entry| !matches!(
             entry.registry_id.as_str(),
-            "factory-droid" | "poolside" | "unreviewed"
+            "factory-droid" | "poolside" | "kimchi" | "unreviewed"
         )));
         assert_eq!(serde_json::to_value(&registered).unwrap(), original);
-        assert_eq!(registry.len(), 5);
+        assert_eq!(registry.len(), 6);
     }
 
     #[test]
     fn out_of_scope_installation_does_not_refresh_or_delete_saved_data() {
         let root = tempfile::tempdir().unwrap();
-        let retired = ["factory-droid", "poolside"];
+        let retired = ["factory-droid", "poolside", "kimchi"];
         let registry = retired
             .into_iter()
             .map(|id| RegistryAgent {

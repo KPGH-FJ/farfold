@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "agentCount": 23,
-  "cellCount": 184,
+  "agentCount": 22,
+  "cellCount": 176,
   "explicitStatuses": {
-    "准备未齐": 20,
-    "入口有证": 23,
-    "受阻": 9,
-    "分项通过": 7,
-    "未测": 18,
+    "准备未齐": 19,
+    "入口有证": 22,
+    "受阻": 8,
+    "分项通过": 5,
+    "未测": 17,
     "原账号实答": 4,
     "查找冷开续答通过": 6,
     "已选模型有实答": 7,
@@ -21,8 +21,8 @@
     "双前台分项通过": 2,
     "停止及冷续答通过": 1,
     "原正文已读": 2,
-    "实测失败": 2,
-    "未确认": 3,
+    "实测失败": 1,
+    "未确认": 2,
     "已选服务有实答": 1,
     "默认列表为空": 1
   },
@@ -1382,83 +1382,6 @@
         }
       },
       "name": "Kilo"
-    },
-    {
-      "agentId": "kimchi",
-      "runtime": "登记版本 1.3.0",
-      "liveAction": null,
-      "standards": {
-        "S1": {
-          "observed": "已有设置成功并能按原 Nemotron 3 Ultra FP4 尝试短消息\n本轮实测：目前程序可执行，登记版本 1.3.0。登记所存握手版本 1.3.0。",
-          "remaining": "原短请求 internal_error，仍缺可真实开工种类、取消和返回",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
-            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
-          ],
-          "status": "准备未齐"
-        },
-        "S2": {
-          "observed": "准备空会话成功，帐号权益未由模型结果确认",
-          "remaining": "实际账号身份、权益与换号范围",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
-          ],
-          "status": "分项通过"
-        },
-        "S3": {
-          "observed": "默认列表三条；已归属旧原目录两次仅在 initialize 超时，未发列表",
-          "remaining": "查明连接初始化条件，从原范围核正文与续答，避免重探未变失败",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
-          ],
-          "status": "受阻"
-        },
-        "S4": {
-          "observed": "已有原模型显式可选并发出请求；同版实测确认原托管模型的提供方额度用尽，正式版准确显示",
-          "remaining": "可用服务上的真实回复、实际模型生效、切换和冷开恢复；官方第三方路线有出处，小米直经 Kimchi 配置待实答",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-16-cycle12-service-diagnosis/README.md",
-            "docs/evidence/2026-11-16-cycle12-retire-poolside-factory/README.md"
-          ],
-          "status": "分项通过"
-        },
-        "S5": {
-          "observed": "单次真实短测试收到 internal_error\n2026-11-16 两条同模型原回执均为 HTTP 200 响应流内模型提供方额度耗尽，零助手输出。 安装提示修复后沿同一配置发一次，正式设置与普通对话分别显示额度原因，仍无助手输出。",
-          "remaining": "等原提供方额度恢复或用户确认其他可用模型，再验工作与交付。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json"
-          ],
-          "status": "实测失败"
-        },
-        "S6": {
-          "observed": "未运行双对话变更、审批或停止",
-          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
-          ],
-          "status": "未测"
-        },
-        "S7": {
-          "observed": "正式版单次停止未收到停止确认，保持未知且未自动重发",
-          "remaining": "取得原 task 可信终态并验证停止后原工作恢复",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
-          ],
-          "status": "未确认"
-        },
-        "S8": {
-          "observed": "新版将同一原目录初始化超时准确反馈，未误判为列表成功\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
-          "remaining": "正向工作链路和真实审批需继续验",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
-          ],
-          "status": "入口有证"
-        }
-      },
-      "name": "Kimchi"
     },
     {
       "agentId": "minimax-code",
