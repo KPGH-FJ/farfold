@@ -56,8 +56,10 @@ interface PreviewInterest {
   retire: () => void;
 }
 
+type ListedConversation = DiscoveredConversation & { locationConflict?: true };
+
 interface LookupDraft {
-  rows: DiscoveredConversation[];
+  rows: ListedConversation[];
   cursor: string | null;
   searched: boolean;
   choosing: boolean;
@@ -70,12 +72,13 @@ interface LookupDraft {
 }
 
 function resolveAddedConversation(
-  row: DiscoveredConversation,
+  row: ListedConversation,
   agentId: string,
   index: readonly IndexRow[],
   byId: ReadonlyMap<string, IndexRow>,
   added: Readonly<Record<string, AddedConversation>>,
 ) {
+  if (row.locationConflict) return null;
   const committed = added[row.nativeSessionId];
   const id = row.alreadyAddedId ?? committed?.saved.id;
   if (!id) return null;
@@ -178,7 +181,7 @@ export function ImportConversations({
   const requestedContext = `${requestRevision}\0${initialAgentId ?? ""}`;
   const requestedContextRef = useRef(requestedContext);
   requestedContextRef.current = requestedContext;
-  const [rows, setRows] = useState<DiscoveredConversation[]>([]);
+  const [rows, setRows] = useState<ListedConversation[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
   const [choosing, setChoosing] = useState(true);
@@ -287,6 +290,19 @@ export function ImportConversations({
   if (viewScope.current.key !== viewKey) viewScope.current = { key: viewKey };
   const latestView = useRef({ rows, agentId, lookupCwd });
   latestView.current = { rows, agentId, lookupCwd };
+  const currentListedRow = (
+    row: DiscoveredConversation,
+    rowKey = historyPreviewRowKey(row),
+  ) => {
+    const current = latestView.current.rows.find(
+      (item) => item.nativeSessionId === row.nativeSessionId,
+    );
+    return (
+      !!current &&
+      !current.locationConflict &&
+      historyPreviewRowKey(current) === rowKey
+    );
+  };
   const createPreviewInterest = (
     row: DiscoveredConversation,
   ): PreviewInterest => {
@@ -311,17 +327,13 @@ export function ImportConversations({
       inquiryCurrent: () => {
         if (!active) return false;
         try {
-          const currentRow = latestView.current.rows.find(
-            (item) => item.nativeSessionId === row.nativeSessionId,
-          );
           active =
             !controller.signal.aborted &&
             openRef.current &&
             currentLookup(revision, context) &&
             viewScope.current === scope &&
             latestView.current.agentId === agentId &&
-            !!currentRow &&
-            historyPreviewRowKey(currentRow) === rowKey &&
+            currentListedRow(row, rowKey) &&
             historyPreviewAssociationKey(
               threads.getSnapshot().index,
               agentId,
@@ -384,7 +396,7 @@ export function ImportConversations({
     };
   }, []);
   const savedById = new Map(index.map((row) => [row.id, row]));
-  const joinedRow = (row: DiscoveredConversation) =>
+  const joinedRow = (row: ListedConversation) =>
     resolveAddedConversation(row, agentId, index, savedById, added);
   const visible = rows.filter((row) => {
     const saved = joinedRow(row);
@@ -392,7 +404,8 @@ export function ImportConversations({
       .toLocaleLowerCase()
       .includes(query.trim().toLocaleLowerCase());
   });
-  const canAdd = (r: DiscoveredConversation) =>
+  const canAdd = (r: ListedConversation) =>
+    !r.locationConflict &&
     r.canLoad &&
     r.locationAvailable &&
     !r.alreadyAddedId &&
@@ -589,15 +602,37 @@ export function ImportConversations({
         viewScope.current !== scope
       )
         return;
-      const merged = new Map<string, DiscoveredConversation>();
-      for (const row of [...(more ? rows : []), ...page.sessions])
-        merged.set(row.nativeSessionId, row);
+      const previousRows = new Map(
+        rows.map((row) => [row.nativeSessionId, row]),
+      );
+      const merged = more
+        ? new Map(previousRows)
+        : new Map<string, ListedConversation>();
+      for (const row of page.sessions) {
+        const existing = merged.get(row.nativeSessionId);
+        if (existing?.locationConflict) continue;
+        merged.set(
+          row.nativeSessionId,
+          existing && existing.cwd !== row.cwd
+            ? { ...existing, locationConflict: true }
+            : row,
+        );
+      }
       const nextRows = [...merged.values()];
       setRows(nextRows);
       const retainEligible = (previous: Set<string>) =>
         new Set(
           nextRows
-            .filter((row) => canAdd(row) && previous.has(row.nativeSessionId))
+            .filter((row) => {
+              const original = previousRows.get(row.nativeSessionId);
+              return (
+                canAdd(row) &&
+                previous.has(row.nativeSessionId) &&
+                !!original &&
+                !original.locationConflict &&
+                historyPreviewRowKey(original) === historyPreviewRowKey(row)
+              );
+            })
             .map((row) => row.nativeSessionId),
         );
       setSelected(retainEligible);
@@ -612,9 +647,9 @@ export function ImportConversations({
       setUnsupported(page.status === "unsupported");
       setManualLoadSupport(page.canLoad === true);
     });
-  const view = (row: DiscoveredConversation) =>
+  const view = (row: ListedConversation) =>
     work(async () => {
-      if (!selectedAgent) return;
+      if (!selectedAgent || !currentListedRow(row)) return;
       const revision = lookupRevision.current;
       const context = requestedContextRef.current;
       const scope = viewScope.current;
@@ -624,7 +659,8 @@ export function ImportConversations({
       if (
         !openRef.current ||
         !currentLookup(revision, context) ||
-        viewScope.current !== scope
+        viewScope.current !== scope ||
+        !currentListedRow(row)
       )
         return;
       setPreviewId(row.nativeSessionId);
@@ -690,15 +726,7 @@ export function ImportConversations({
           openRef.current &&
           currentLookup(revision, context) &&
           viewScope.current === scope &&
-          eligible.every((row) => {
-            const current = latestView.current.rows.find(
-              (item) => item.nativeSessionId === row.nativeSessionId,
-            );
-            return (
-              !!current &&
-              historyPreviewRowKey(current) === historyPreviewRowKey(row)
-            );
-          });
+          eligible.every((row) => currentListedRow(row));
         if (!currentAction()) return;
         const completed = new Set<string>();
         const receipts: Record<string, AddedConversation> = {};
@@ -768,8 +796,9 @@ export function ImportConversations({
           pendingImports.current.delete(owner);
       }
     });
-  const openExisting = (row: DiscoveredConversation) =>
+  const openExisting = (row: ListedConversation) =>
     work(async () => {
+      if (!currentListedRow(row)) return;
       const revision = lookupRevision.current;
       const context = requestedContextRef.current;
       const scope = viewScope.current;
@@ -788,7 +817,8 @@ export function ImportConversations({
       if (
         !openRef.current ||
         !currentLookup(revision, context) ||
-        viewScope.current !== scope
+        viewScope.current !== scope ||
+        !currentListedRow(row)
       )
         return;
       const found = current();
@@ -1217,9 +1247,9 @@ export function ImportConversations({
                   </label>
                 )}
                 {visible.map((row) => {
-                  const joined = !!(
-                    row.alreadyAddedId || added[row.nativeSessionId]
-                  );
+                  const joined =
+                    !row.locationConflict &&
+                    !!(row.alreadyAddedId || added[row.nativeSessionId]);
                   const saved = joinedRow(row);
                   return (
                     <div
@@ -1243,22 +1273,24 @@ export function ImportConversations({
                       />
                       <button
                         type="button"
-                        disabled={busy}
+                        disabled={busy || row.locationConflict}
                         onClick={() => void view(row)}
                       >
                         <strong>{row.title ?? S.unknownTitle}</strong>
                         <small>
-                          {joined
-                            ? S.added
-                            : !row.locationAvailable
-                              ? S.locationMissing
-                              : !row.canLoad
-                                ? S.noLoad
-                                : row.isOpen
-                                  ? S.busy
-                                  : row.cwd === defaultCwd
-                                    ? LIBRARY.ordinary
-                                    : row.cwd}
+                          {row.locationConflict
+                            ? S.locationConflict
+                            : joined
+                              ? S.added
+                              : !row.locationAvailable
+                                ? S.locationMissing
+                                : !row.canLoad
+                                  ? S.noLoad
+                                  : row.isOpen
+                                    ? S.busy
+                                    : row.cwd === defaultCwd
+                                      ? LIBRARY.ordinary
+                                      : row.cwd}
                         </small>
                         {joined && (
                           <>

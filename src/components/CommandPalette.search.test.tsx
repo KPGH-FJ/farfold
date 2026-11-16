@@ -8,6 +8,14 @@ import {
 const h = vi.hoisted(() => ({
   cursor: 0,
   slots: [] as unknown[],
+  index: [] as {
+    id: string;
+    title: string;
+    agentId: string;
+    cwd: string;
+    archived: boolean;
+    updatedAt: number;
+  }[],
   groups: [{ id: "group", name: "调研资料" }],
   effects: [] as (() => void | (() => void))[],
 }));
@@ -40,24 +48,7 @@ vi.mock("../runtime/sessions", () => ({
     needsAttention: () => false,
   },
   useThreadsSnapshot: () => ({
-    index: [
-      {
-        id: "new",
-        title: "原型验收 0930 · 最近对话",
-        agentId: "one",
-        cwd: "/active",
-        archived: false,
-        updatedAt: 2,
-      },
-      {
-        id: "old",
-        title: "原型验收 0930 · 旧问题",
-        agentId: "two",
-        cwd: "/archive/notes",
-        archived: true,
-        updatedAt: 1,
-      },
-    ],
+    index: h.index,
     threads: new Map(),
   }),
 }));
@@ -93,6 +84,24 @@ function query(text: string) {
 }
 beforeEach(() => {
   h.slots = [];
+  h.index = [
+    {
+      id: "new",
+      title: "原型验收 0930 · 最近对话",
+      agentId: "one",
+      cwd: "/active",
+      archived: false,
+      updatedAt: 2,
+    },
+    {
+      id: "old",
+      title: "原型验收 0930 · 旧问题",
+      agentId: "two",
+      cwd: "/archive/notes",
+      archived: true,
+      updatedAt: 1,
+    },
+  ];
   h.groups = [{ id: "group", name: "调研资料" }];
   h.effects = [];
   props.returnFocusRef = undefined;
@@ -215,6 +224,57 @@ it("searches across Agents and folders independently of the currently open conve
     }),
   );
 });
+
+it.each(["连接测试 · Dirac", "Dirac"])(
+  "opens the direct match for %s ahead of more recent fuzzy matches",
+  (term) => {
+    const exact = {
+      id: "dirac",
+      title: "连接测试 · Dirac",
+      agentId: "Dirac",
+      cwd: "/owned/original",
+      archived: false,
+      updatedAt: 1,
+    };
+    const olderFuzzy = {
+      ...exact,
+      id: "older-fuzzy",
+      title: "连接测试 · Droid",
+      agentId: "Other",
+      cwd: "/owned/rac",
+      updatedAt: 2,
+    };
+    const newerFuzzy = {
+      ...olderFuzzy,
+      id: "newer-fuzzy",
+      title: "连接测试 · Factory Droid",
+      updatedAt: 3,
+    };
+    const literal = {
+      ...olderFuzzy,
+      id: "literal",
+      title: "备份 连接测试 · Dirac",
+      updatedAt: 4,
+    };
+    h.index = [olderFuzzy, exact, literal, newerFuzzy];
+
+    const tree = query(term);
+    const options = tree.filter((node) => node.props.role === "option");
+    const input = tree.find((node) => node.props.role === "combobox")!;
+    expect
+      .soft(options.map((option) => option.key))
+      .toEqual([exact.id, literal.id, newerFuzzy.id, olderFuzzy.id]);
+    expect(input.props["aria-activedescendant"]).toBe(options[0].props.id);
+    expect(options[0].props["aria-selected"]).toBe(true);
+    (input.props.onKeyDown as (event: unknown) => void)({
+      key: "Enter",
+      nativeEvent: {},
+      preventDefault: vi.fn(),
+    });
+    expect(props.onSelect).toHaveBeenCalledExactlyOnceWith(exact);
+    expect(props.onClose).toHaveBeenCalledOnce();
+  },
+);
 
 it("announces the selected search scope and restores its metadata label when switched back", () => {
   const input = () => render().find((node) => node.props.role === "combobox")!;

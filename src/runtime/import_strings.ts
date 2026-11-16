@@ -64,6 +64,7 @@ export const IMPORT_STRINGS = {
   savedUnavailable: "已有对话信息暂不可用，请返回对话列表查看。",
   open: "打开已有对话",
   locationMissing: "原资料位置不可用",
+  locationConflict: "同一对话返回了不同文件夹，请按原位置重新查找。",
   noLoad: "不支持读取正文",
   locationHint: "原资料位置不可用，无法读取正文；请恢复原位置后重试。",
   previewHint: "选择一段对话查看正文。列表存在不代表能够继续发送。",

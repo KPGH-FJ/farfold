@@ -32,17 +32,25 @@ import {
 } from "../runtime/loaded_search";
 import { LOADED_SEARCH_STRINGS as S } from "../runtime/loaded_search_strings";
 
-function fuzzyMatch(query: string, text: string): boolean {
-  const q = query.trim().toLowerCase();
-  if (!q) return true;
-  const hay = text.toLowerCase();
-  if (hay.includes(q)) return true;
-  let i = 0;
-  for (const ch of hay) {
-    if (ch === q[i]) i += 1;
-    if (i === q.length) return true;
+function metadataMatchRank(
+  query: string,
+  fields: [title: string, ...otherFields: string[]],
+): number | null {
+  if (!query) return 0;
+  const normalized = fields.map((field) => field.toLowerCase());
+  if (normalized[0] === query) return 0;
+  if (normalized.includes(query)) return 1;
+  if (normalized.some((field) => field.includes(query))) return 2;
+
+  // Keep cross-field subsequence matches below direct matches in a field.
+  const combined = normalized.join(" ");
+  if (combined.includes(query)) return 3;
+  let matched = 0;
+  for (const ch of combined) {
+    if (ch === query[matched]) matched += 1;
+    if (matched === query.length) return 3;
   }
-  return false;
+  return null;
 }
 
 export function CommandPalette({
@@ -126,26 +134,25 @@ export function CommandPalette({
     backdropDismiss: true,
   });
 
-  const entries = useMemo(
-    () =>
-      [...snapshot.index]
-        .sort((a, b) => b.updatedAt - a.updatedAt)
-        .map((row) => {
-          const agent = agents.find((card) => card.id === row.agentId);
-          const agentName = agent?.name ?? row.agentId;
-          const group = collections.groups.find(
-            (item) => item.id === collections.assignments[row.id],
-          )?.name;
-          return { row, agent, agentName, group };
-        })
-        .filter(({ row, agentName, group }) =>
-          fuzzyMatch(
-            query,
-            `${row.title ?? ""} ${row.cwd} ${agentName} ${group ?? ""}`,
-          ),
-        ),
-    [snapshot.index, agents, collections, query],
-  );
+  const entries = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    return snapshot.index
+      .flatMap((row) => {
+        const agent = agents.find((card) => card.id === row.agentId);
+        const agentName = agent?.name ?? row.agentId;
+        const group = collections.groups.find(
+          (item) => item.id === collections.assignments[row.id],
+        )?.name;
+        const rank = metadataMatchRank(normalizedQuery, [
+          row.title ?? "",
+          row.cwd,
+          agentName,
+          group ?? "",
+        ]);
+        return rank === null ? [] : [{ row, agent, agentName, group, rank }];
+      })
+      .sort((a, b) => a.rank - b.rank || b.row.updatedAt - a.row.updatedAt);
+  }, [snapshot.index, agents, collections, query]);
 
   const count = scope === "body" ? hits.length : entries.length;
   useEffect(() => {

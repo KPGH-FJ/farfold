@@ -397,7 +397,8 @@ fn decode_page(
             .and_then(Value::as_str)
             .filter(|value| Path::new(value).is_absolute())
             .ok_or("Agent 未提供对话的有效文件位置，请重新查找")?;
-        if !seen.insert(id) {
+        // Preserve conflicting locations so discovery can block ambiguous rows.
+        if !seen.insert((id, cwd)) {
             continue;
         }
         sessions.push(DiscoveredSession {
@@ -570,7 +571,7 @@ mod tests {
     }
 
     #[test]
-    fn discovery_keeps_missing_locations_and_original_identity() {
+    fn discovery_keeps_conflicting_locations_and_deduplicates_exact_repeats() {
         let root = tempfile::tempdir().unwrap();
         let missing = root.path().join("missing-location");
         let another = root.path().join("another-location");
@@ -578,17 +579,22 @@ mod tests {
         let page = decode_page(
             json!({"sessions":[
             {"sessionId":"one","cwd":missing,"title":"Original","updatedAt":"2026-09-24T12:00:00Z"},
-            {"sessionId":"one","cwd":another,"title":"Duplicate"}
+            {"sessionId":"one","cwd":missing,"title":"Repeated row"},
+            {"sessionId":"one","cwd":another,"title":"Conflicting location"}
         ],"nextCursor":"opaque-next"}),
             true,
             None,
         )
         .unwrap();
         assert_eq!(page.status, "supported");
-        assert_eq!(page.sessions.len(), 1);
+        assert_eq!(page.sessions.len(), 2);
+        assert_eq!(page.sessions[0].native_session_id, "one");
         assert_eq!(page.sessions[0].cwd, missing.to_str().unwrap());
         assert_eq!(page.sessions[0].title.as_deref(), Some("Original"));
         assert!(!page.sessions[0].location_available);
+        assert_eq!(page.sessions[1].native_session_id, "one");
+        assert_eq!(page.sessions[1].cwd, another.to_str().unwrap());
+        assert!(!page.sessions[1].location_available);
         assert_eq!(page.next_cursor.as_deref(), Some("opaque-next"));
     }
 

@@ -166,13 +166,13 @@ async function idle() {
     expect(button(S.chooseLocation)?.props.disabled).toBe(false),
   );
 }
-function readKnown(cwd: string) {
+function readKnown(cwd: string, id = "typed-id") {
   const entry = render().find((node) => node.type === KnownHistoryImport);
   expect(entry).toBeDefined();
   const { reader, read, run } = entry!.props as ComponentProps<
     typeof KnownHistoryImport
   >;
-  return { reader, pending: run(() => read("typed-id", cwd, () => true)) };
+  return { reader, pending: run(() => read(id, cwd, () => true)) };
 }
 beforeEach(() => {
   h.slots.length = 0;
@@ -360,6 +360,97 @@ it("leaves the first lookup in the Agent default range and keeps pagination acce
   click(S.more);
   await idle();
   expect(h.discover).toHaveBeenLastCalledWith("a", "old-page-2", null);
+});
+
+it("does not import a different folder through a selected result on a later page", async () => {
+  const unchanged = {
+    ...row,
+    nativeSessionId: "unchanged",
+    title: "Unchanged",
+  };
+  const refreshed = { ...unchanged, title: "Refreshed title" };
+  const conflicting = { ...row, cwd: "/different", title: "Different folder" };
+  h.discover
+    .mockResolvedValueOnce({
+      status: "supported",
+      sessions: [row, unchanged],
+      nextCursor: "page-2",
+    })
+    .mockResolvedValueOnce({
+      status: "supported",
+      sessions: [conflicting, refreshed],
+      nextCursor: "page-3",
+    })
+    .mockResolvedValueOnce({
+      status: "supported",
+      sessions: [row],
+      nextCursor: null,
+    });
+  const checkbox = (title: string | null) =>
+    render().find((node) => node.props["aria-label"] === title)!;
+
+  click(S.search);
+  await idle();
+  (checkbox(row.title).props.onChange as () => void)();
+  (checkbox(unchanged.title).props.onChange as () => void)();
+  click(S.more);
+  await idle();
+  click(S.add);
+  await idle();
+
+  expect(h.preview).toHaveBeenCalledExactlyOnceWith(agent.id, refreshed);
+  expect(h.commit).toHaveBeenCalledOnce();
+  expect(checkbox(row.title).props).toMatchObject({
+    disabled: true,
+    checked: false,
+  });
+  expect(
+    render().some((node) => node.props.children === S.locationConflict),
+  ).toBe(true);
+  click(S.more);
+  await idle();
+  expect(checkbox(row.title).props).toMatchObject({
+    disabled: true,
+    checked: false,
+  });
+  expect(button(S.add)?.props.disabled).toBe(true);
+});
+
+it("blocks same-page folder conflicts and leaves the explicit known-ID read available", async () => {
+  h.discover.mockResolvedValueOnce({
+    status: "supported",
+    sessions: [row, { ...row, cwd: "/different" }],
+    nextCursor: null,
+    canLoad: true,
+  });
+  click(S.search);
+  await idle();
+  const conflict = render().find(
+    (node) =>
+      node.type === "button" &&
+      Children.toArray(node.props.children as ReactNode).some(
+        (child) =>
+          isValidElement<{ children: ReactNode }>(child) &&
+          child.props.children === S.locationConflict,
+      ),
+  );
+  expect(conflict?.props.disabled).toBe(true);
+  expect(button(S.add)?.props.disabled).toBe(true);
+  (conflict!.props.onClick as () => void)();
+  await idle();
+  expect(h.preview).not.toHaveBeenCalled();
+
+  const { reader, pending } = readKnown(row.cwd, row.nativeSessionId);
+  await pending;
+  expect(reader.state.preview).toMatchObject({
+    cwd: row.cwd,
+    nativeSessionId: row.nativeSessionId,
+  });
+  expect(h.preview).toHaveBeenCalledExactlyOnceWith(agent.id, {
+    cwd: row.cwd,
+    nativeSessionId: row.nativeSessionId,
+  });
+  expect(h.commit).not.toHaveBeenCalled();
 });
 
 it("does not claim to query the Agent while the folder chooser is open", async () => {
