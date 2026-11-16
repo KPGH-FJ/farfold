@@ -3,7 +3,6 @@ use super::*;
 use crate::{
     acp_client::{
         manager::AcpManager,
-        service_config,
         service_connection::{PreparedService, ServiceContext},
     },
     credentials::ServiceIdentity,
@@ -138,16 +137,18 @@ impl Fixture {
 
     fn prepared(&self) -> PreparedService {
         let service = selected();
-        let launch = service_config::compile(&self.row, &service, &HashMap::new()).unwrap();
+        // Exercise ACP transport against the synthetic peer. Production
+        // Claude credential admission is covered separately and remains closed.
+        let delivery = ServiceDelivery::anthropic(&service).unwrap();
         let mut environment = crate::shell_env::command_env();
-        environment.extend(launch.env_overrides);
+        environment.insert("ANTHROPIC_MODEL".into(), service.identity.model.clone());
         PreparedService {
             environment,
-            delivery: launch.delivery,
+            delivery: Some(delivery),
             context: ServiceContext {
+                model_id: service.identity.model.clone(),
                 identity: service.identity,
                 revision: service.connection_revision,
-                model_id: launch.model_id,
             },
         }
     }

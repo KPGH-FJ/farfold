@@ -31,15 +31,16 @@ pub(super) fn service() -> ServiceSnapshot {
 }
 
 #[test]
-fn claude_offers_only_the_controlled_service_validated_messages_route() {
+fn claude_does_not_offer_an_unverified_private_delivery_route() {
     let capability = capability(&agent());
-    assert_eq!(capability.api_types, ["messages"]);
-    assert_eq!(capability.validated_api_types, ["messages"]);
+    assert!(capability.api_types.is_empty());
+    assert!(capability.validated_api_types.is_empty());
     assert_eq!(capability.selection_scope, "connection");
+    assert!(capability.unavailable_reason.is_some());
 }
 
 #[test]
-fn claude_selected_secret_and_endpoint_never_enter_launch_environment() {
+fn claude_rejects_saved_messages_before_producing_any_launch_config() {
     let selected = service();
     let inherited = HashMap::from([
         ("ANTHROPIC_BASE_URL".into(), "https://existing.test".into()),
@@ -48,19 +49,14 @@ fn claude_selected_secret_and_endpoint_never_enter_launch_environment() {
         ("HOME".into(), "/unchanged-home".into()),
     ]);
     let before = inherited.clone();
-    let launch = compile(&agent(), &selected, &inherited).unwrap();
-    let environment: HashMap<_, _> = launch.env_overrides.into_iter().collect();
-    assert_eq!(launch.model_id, selected.identity.model);
-    assert_eq!(environment["ANTHROPIC_MODEL"], selected.identity.model);
-    assert_eq!(
-        environment["ANTHROPIC_CUSTOM_MODEL_OPTION"],
-        selected.identity.model
-    );
-    assert_eq!(environment.len(), 2);
-    for value in environment.values() {
-        assert!(!value.contains(&selected.secret));
-        assert!(!value.contains(&selected.endpoint));
-    }
+    let mut row = agent();
+    row.version = Some("0.107.0".into());
+    let Err(error) = compile(&row, &selected, &inherited) else {
+        panic!("a managed credential must not reach this adapter transport");
+    };
+    assert_eq!(Some(error.as_str()), capability(&row).unavailable_reason);
+    assert!(!error.contains(&selected.secret));
+    assert!(!error.contains(&selected.endpoint));
     assert_eq!(inherited, before);
 }
 

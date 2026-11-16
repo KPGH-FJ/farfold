@@ -47,9 +47,14 @@ pub(crate) fn capability(agent: &AgentRow) -> ServiceCapability {
             None,
         ),
         Some("codex") => (vec!["responses"], vec!["responses"], None),
-        // Installed official Agent -> controlled HTTP routing was exercised;
-        // every process still has to declare and confirm the providers API.
-        Some("claude-acp") => (vec!["messages"], vec!["messages"], None),
+        // The adapter puts provider headers in SDK settings, and the SDK
+        // serializes those settings in the Claude process arguments. Keep
+        // configured credentials out until an official private route is verified.
+        Some("claude-acp") => (
+            vec![],
+            vec![],
+            Some("Claude 的 API 配置暂时不可用，所保存的服务仍可在设置中管理"),
+        ),
         Some("pi") => (
             vec![],
             vec![],
@@ -134,6 +139,7 @@ fn compile_with_names(
     }
     if catalog_id(agent) == Some("claude-acp") {
         return Ok(LaunchConfig {
+            // This transport stays disabled by the capability check above.
             // Routing and the key are deliberately absent: Claude settings
             // can overwrite process env. The negotiated provider request
             // below owns the route. A model mismatch still blocks new/load.
