@@ -74,7 +74,7 @@ export function parseAgentConditions(
   text(data.stage1SupplementScope);
   // Keep historical ledger identities that later left the release scope.
   const recordedAgentIds = [
-    ...new Set([...authorities.agents, "kimi", "nova", "qwen-code"]),
+    ...new Set([...authorities.agents, "kimi", "nova", "qwen-code", "dimcode"]),
   ];
   const checkedPaths = new Set();
   const evidencePath = (path) => {

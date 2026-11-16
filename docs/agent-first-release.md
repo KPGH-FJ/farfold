@@ -4,7 +4,9 @@
 
 范围决定（2026-11-15）：用户授权，官方现行版本无法满足接入时将 Nova（`nova`）移出当前首发。Nova 已保存设置并结束官方终端后，Farfold 仍要求登录。官方 1.1.65 对 ACP V1 发送旧权限请求，现有官方入口尚不能完成必需审批。当时剩余 27 家，Nova 既有登记、程序、凭据、配置和历史保留。 [官方版本](https://registry.npmjs.org/@compass-ai%2Fnova/1.1.65) · [ACP V1 权限](https://agentclientprotocol.com/protocol/v1/prompt-turn)
 
-当前范围决定（2026-11-16）：按用户要求，保留 Qoder CLI（`qoder`），将 Qwen Code（`qwen-code`）移出首发目录、新接入入口与整家验收，剩余 26 项。Qwen Code 已有登记、程序、凭据、配置、原对话和实测证据保留。 [移出前的 27 家验收记录](https://github.com/KPGH-FJ/farfold/blob/9a4ca1a114d51b966b135a0654b800c7fe8da6da/docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)
+范围决定（2026-11-16）：按用户要求，保留 Qoder CLI（`qoder`），将 Qwen Code（`qwen-code`）移出首发目录、新接入入口与整家验收，剩余 26 项。Qwen Code 已有登记、程序、凭据、配置、原对话和实测证据保留。 [移出前的 27 家验收记录](https://github.com/KPGH-FJ/farfold/blob/9a4ca1a114d51b966b135a0654b800c7fe8da6da/docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)
+
+当前范围决定（2026-11-16）：按用户要求将 DimCode（`dimcode`）移出首发目录、新接入入口和整家验收，剩余 25 项。保留原登记、程序、配置、历史与证据。 [移出前的 26 家验收记录](https://github.com/KPGH-FJ/farfold/blob/002c776ae7b2cc6d25faf93d0347418413bab844/docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)
 
 历史范围决定（2026-10-07）：用户明确将 Corust Agent（`corust-agent`）、Junie（`junie`）、Stakpak（`stakpak`，用户消息拼作 starpak）和 Auggie CLI（`auggie`）移出首批，并删除相关专属内容。当时范围为 29 项，八项接入标准保持。未来增加须审核，没有自动重新纳入条件。
 
@@ -71,11 +73,11 @@
 
 ## 实现与再审核
 
-集中名单在 [first_release.rs](../src-tauri/src/acp_client/first_release.rs)，保留当前 26 项精确目录 ID。`catalog_list` 只给出当前目录条目，目录安装和准备入口也核对当前范围；完整远端缓存不因范围变化清除。客户端仍用通用卡片处理已有登记；目录外旧登记退出日常列表，历史访问与自定义接入沿共用规则保留，不删除外部程序或用户配置。
+集中名单在 [first_release.rs](../src-tauri/src/acp_client/first_release.rs)，保留当前 25 项精确目录 ID。`catalog_list` 只给出当前目录条目，目录安装和准备入口也核对当前范围；完整远端缓存不因范围变化清除。客户端仍用通用卡片处理已有登记；目录外旧登记退出日常列表，历史访问与自定义接入沿共用规则保留，不删除外部程序或用户配置。
 
-安装版 `b751575` 曾观察到探索 33 项及已有 40 项管理入口，见[原安装记录](evidence/2026-10-02-agent-onboarding-consistency/installed.md)。先前 28 项另有正式验收原件。当前 26 项按本轮正式验收记录跟踪。每家认证与实测状态分别留证。
+安装版 `b751575` 曾观察到探索 33 项及已有 40 项管理入口，见[原安装记录](evidence/2026-10-02-agent-onboarding-consistency/installed.md)。先前 28 项另有正式验收原件。当前 25 项按本轮正式验收记录跟踪。每家认证与实测状态分别留证。
 
-## 当前保留的 26 项
+## 当前保留的 25 项
 
 下表 26 个目录身份与当前[源码允许名单](../src-tauri/src/acp_client/first_release.rs)逐项一致。已有登记、历史分项和整家八项通过分别核对，验收见[当前状态](status.md)及[当前逐家验收记录](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)。
 
@@ -90,7 +92,6 @@
 | Codex / `codex-acp`                   |
 | Cursor / `cursor`                     |
 | Devin / `devin`                       |
-| DimCode / `dimcode`                   |
 | Dirac / `dirac`                       |
 | Factory Droid / `factory-droid`       |
 | fast-agent / `fast-agent`             |

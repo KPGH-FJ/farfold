@@ -1,27 +1,27 @@
 {
   "schemaVersion": 1,
-  "agentCount": 26,
-  "cellCount": 208,
+  "agentCount": 25,
+  "cellCount": 200,
   "explicitStatuses": {
-    "准备未齐": 23,
-    "入口有证": 26,
-    "受阻": 10,
-    "分项通过": 8,
-    "未测": 22,
+    "准备未齐": 22,
+    "入口有证": 25,
+    "受阻": 11,
+    "分项通过": 7,
+    "未测": 18,
     "原账号实答": 4,
     "查找冷开续答通过": 6,
     "已选模型有实答": 7,
     "可建对话": 1,
     "已知标识读取声明": 1,
-    "实测分项通过": 7,
+    "实测分项通过": 6,
     "前台停止分项通过": 1,
     "设置短测通过": 3,
     "已有设置实答": 2,
-    "本轮短测失败": 2,
+    "本轮短测失败": 1,
     "双前台分项通过": 2,
     "停止及冷续答通过": 1,
     "原正文已读": 2,
-    "实测失败": 2,
+    "实测失败": 4,
     "未确认": 3,
     "已选服务有实答": 1,
     "结果未知": 1,
@@ -792,80 +792,6 @@
       "name": "Devin"
     },
     {
-      "agentId": "dimcode",
-      "runtime": "登记版本 0.5.16",
-      "liveAction": null,
-      "standards": {
-        "S1": {
-          "observed": "已安装，空会话返回 internal_error，当前握手没有认证方法\n本轮实测：目前程序可执行，登记版本 0.5.16。登记所存握手版本 0.5.16。",
-          "remaining": "明确该发行的可用配置；厂商新版终端入口属于不同输入",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
-          ],
-          "status": "准备未齐"
-        },
-        "S2": {
-          "observed": "本机已有设置未能打开，具体原因与账号身份未知",
-          "remaining": "取得当前官方认证条件或可读原样本，再用既有选择验证",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
-          ],
-          "status": "受阻"
-        },
-        "S3": {
-          "observed": "默认范围成功返回空列表",
-          "remaining": "有效原工作位置、正文与沿原会话续答",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
-          ],
-          "status": "分项通过"
-        },
-        "S4": {
-          "observed": "无本项实际验收样本",
-          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
-          ],
-          "status": "未测"
-        },
-        "S5": {
-          "observed": "无本项实际验收样本",
-          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
-          ],
-          "status": "未测"
-        },
-        "S6": {
-          "observed": "未运行双对话变更、审批或停止",
-          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
-          ],
-          "status": "未测"
-        },
-        "S7": {
-          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复",
-          "remaining": "取得独立工作样本并核停止终态、原对象恢复与无重发",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
-          ],
-          "status": "未测"
-        },
-        "S8": {
-          "observed": "界面显示会话未能打开，不误报成功\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
-          "remaining": "查明原失败后验证正确准备及其他流程反馈",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
-          ],
-          "status": "入口有证"
-        }
-      },
-      "name": "DimCode"
-    },
-    {
       "agentId": "dirac",
       "runtime": "登记版本 0.5.21",
       "liveAction": null,
@@ -979,15 +905,16 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "旧 GPT-6 Sol/High 产生401界面及 internal_error。",
-          "remaining": "先按当前原配置核实际认证与费用来源，不能由旧 HTTP 字样推全局状态。",
+          "observed": "旧 GPT-6 Sol/High 产生401界面及 internal_error。\n2026-11-16 同安装官方 doctor 验证已有登录，后台标题请求和连接器校验明确返回未关联组织。Farfold 和同版官方 CLI 的原模型均收到无正文 401。",
+          "remaining": "核对当前账号可用的 Factory 组织及权限，然后复验原设置。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json"
+            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json",
+            "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json"
           ],
-          "status": null
+          "status": "受阻"
         },
         "S3": {
           "observed": "当前握手声明 list/load/resume，旧专属未知样本无可靠终态。",
@@ -1007,15 +934,16 @@
           "status": null
         },
         "S5": {
-          "observed": "旧真实请求失败且结果不明。",
-          "remaining": "原来源可用后另取独立安全真实任务及工具审批。",
+          "observed": "旧真实请求失败且结果不明。\n2026-11-16 正式版及同版 CLI 分别只发一次 GPT-6 Sol / High，均 401、无模型回复。",
+          "remaining": "在组织权限改变后复验正常模型和工具任务。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json"
+            "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json",
+            "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json"
           ],
-          "status": null
+          "status": "实测失败"
         },
         "S6": {
           "observed": "没有当前独立双任务通过。",
@@ -1590,10 +1518,11 @@
           "status": "分项通过"
         },
         "S5": {
-          "observed": "单次真实短测试收到 internal_error",
-          "remaining": "可用同服务原设置后的完整工作及实际审批",
+          "observed": "单次真实短测试收到 internal_error\n2026-11-16 两条同模型原回执均为 HTTP 200 响应流内模型提供方额度耗尽，零助手输出。 安装提示修复后沿同一配置发一次，正式设置与普通对话分别显示额度原因，仍无助手输出。",
+          "remaining": "等原提供方额度恢复或用户确认其他可用模型，再验工作与交付。",
           "sources": [
-            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json"
           ],
           "status": "实测失败"
         },
@@ -1640,12 +1569,13 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "已有设置成功创建用于准备的空会话\n2026-11-16 当前本机有中国区认证资料，用户表示可能没有登录过。原行无账号和计费凭据，原失败为余额不足。\n2026-11-16 只读盘点另一个最新正式原设置请求。MiniMax-M2.7 实际发送一次，厂商终态 50110 余额或额度不足，零助手回复。",
-          "remaining": "确认当前中国区服务的可用额度。旧对话另需原账号及来源依据。",
+          "observed": "已有设置成功创建用于准备的空会话\n2026-11-16 当前本机有中国区认证资料，用户表示可能没有登录过。原行无账号和计费凭据，原失败为余额不足。\n2026-11-16 只读盘点另一个最新正式原设置请求。MiniMax-M2.7 实际发送一次，厂商终态 50110 余额或额度不足，零助手回复。\n2026-11-16 本机 0.2.7 的官方选择器具备第三方提供方设置和三种格式，第三方实答未验。",
+          "remaining": "确认现用中国区服务额度或用户选定的外部服务。旧对话另需原账号依据。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-16-cycle12-original-config/results.json",
-            "docs/evidence/2026-11-16-cycle12-qwen-exit/results.json"
+            "docs/evidence/2026-11-16-cycle12-qwen-exit/results.json",
+            "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json"
           ],
           "status": "受阻"
         },
@@ -1978,15 +1908,16 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "旧已有设置原选 Laguna-S-2.1 / Max 实答。\n本轮实测：读取已有设置成功，已选原 Laguna 模型及 Max 可读。",
-          "remaining": "一次模型请求内部错误，尚需可实际回复的原服务及账号身份。",
+          "observed": "旧已有设置原选 Laguna-S-2.1 / Max 实答。\n本轮实测：读取已有设置成功，已选原 Laguna 模型及 Max 可读。\n2026-11-16 正式原设置使用厂商自营推理。原会话日志确认模型版本停用，厂商公告已关闭该托管服务。",
+          "remaining": "确认可用且经用户选择的兼容服务，再核实账号和计费。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json"
           ],
-          "status": "实测分项通过"
+          "status": "受阻"
         },
         "S3": {
           "observed": "旧正式找回、正文、同原对象续答均有确切实证；原目录现已不存在。",
@@ -2009,15 +1940,16 @@
           "status": null
         },
         "S5": {
-          "observed": "旧短答成功；工具审批和实际工作交付仍待。\n本轮实测：原 Laguna／Max 的新短测返回内部错误，无成功回复。",
-          "remaining": "原服务的成功结果、实际权限及工具待验。",
+          "observed": "旧短答成功；工具审批和实际工作交付仍待。\n本轮实测：原 Laguna／Max 的新短测返回内部错误，无成功回复。\n2026-11-16 同一原请求厂商日志显示版本已停用，HTTP 400，原生轨迹结束且无助手或工具。此次零重发。",
+          "remaining": "官方旧服务已停，待确认可用替代服务。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json"
           ],
-          "status": "本轮短测失败"
+          "status": "实测失败"
         },
         "S6": {
           "observed": "未见跨任务实际隔离证据。",

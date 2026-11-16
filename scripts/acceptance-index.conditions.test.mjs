@@ -31,8 +31,8 @@ describe("existing per-Agent evidence in the normal acceptance entry", () => {
     expect(result.agentEvidence.scope).toBe(original.scope);
     expect(result.agentEvidence.basedOnCommit).toBe(original.basedOnCommit);
     expect(result.agentEvidence.currentStatusSource).toBe("docs/status.md");
-    expect(result.cells).toHaveLength(208);
-    for (const id of ["kimi", "nova", "qwen-code"]) {
+    expect(result.cells).toHaveLength(200);
+    for (const id of ["kimi", "nova", "qwen-code", "dimcode"]) {
       expect(result.cells.some((cell) => cell.agentId === id)).toBe(false);
       expect(result.agentEvidence.rows.some((row) => row.agentId === id)).toBe(
         true,

@@ -48,6 +48,12 @@ export function agentOpenError(reason: unknown): string | undefined {
   }
 }
 
+export function confirmedPromptError(code: string): string | undefined {
+  if (code === "AUTH_REQUIRED") return STRINGS.access.authRequired;
+  if (code === "PROMPT_MODEL_PROVIDER_CREDITS_EXHAUSTED")
+    return ERROR_STRINGS.modelProviderCreditsExhausted;
+}
+
 /** Only present short app-authored, user-language errors; never raw transport diagnostics. */
 export function uiError(reason: unknown, fallback: string): string {
   const raw = String(reason);
@@ -61,9 +67,9 @@ export function uiError(reason: unknown, fallback: string): string {
     /AGENT_(?:INITIALIZE_|CONNECTION_|START_|OPEN_|WORK_DIRECTORY_)/i.test(raw)
   )
     return fallback;
-  if (raw.replace(/^Error:\s*/, "") === "AUTH_REQUIRED")
-    return STRINGS.access.authRequired;
   const text = raw.replace(/^Error:\s*/, "");
+  const promptError = confirmedPromptError(text);
+  if (promptError) return promptError;
   return /^[\u3400-\u9fff]/.test(text) &&
     text.length <= 180 &&
     !/[\r\n]|runtime|host|acp|原生|绑定|代次|投影|占用|session|turn|构建|引用|对账|沉降|上游|sidecar|adapter|json|握手|envelope/i.test(

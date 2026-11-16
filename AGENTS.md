@@ -1,5 +1,7 @@
 # Farfold AI Coding Entrypoint
 
+2026-11-16 用户决定将 DimCode（`dimcode`）移出首发目录、新接入入口与整家验收。保留已有登记、程序、配置、原对话与证据。继续第12周期并行排查 Factory Droid、Kimchi、Poolside，MiniMax 由用户先核额度，Gemini CLI 和 Antigravity 暂缓。当前25家仍各按八项验收。
+
 2026-11-16 用户决定保留 Qoder CLI，将 Qwen Code（`qwen-code`）移出首发目录、新接入入口与整家验收。保留已有 Qwen Code 登记、程序、配置、凭据、原对话和证据。首发 26 家仍各按八项验收。
 
 2026-11-15 本批用户暂缓 Gemini CLI 与 Antigravity 登录，继续使用各家保存的设置和 API，对无可复验历史的接入先从正常入口创建自有样本。Nova 原设置终端已由用户保存后退出，现登记仍要求登录，官方最新 V1 审批接口不兼容，依用户授权移出首发。已有登记、程序、配置、凭据和历史保留。

@@ -4,13 +4,13 @@ use super::*;
 use agent_client_protocol::schema::v1::{ContentBlock, ErrorCode, PromptRequest};
 
 fn describe_prompt_error(
-    registered_cline: bool,
+    agent_id: &str,
     matched_wire_error: bool,
     error: agent_client_protocol::Error,
 ) -> String {
     // Cline's runtime throws its fixed OAuth message before the adapter can
     // emit AuthRequired. The official SDK wraps that exception in details.
-    if registered_cline
+    if agent_id == "registry:cline"
         && matched_wire_error
         && error.code == ErrorCode::InternalError
         && error
@@ -25,6 +25,27 @@ fn describe_prompt_error(
             })
     {
         return "AUTH_REQUIRED".into();
+    }
+    // Kimchi 1.3 sends this provider failure as the matched prompt error,
+    // with the SDK prefix and no error data. Never forward the provider text.
+    if agent_id == "registry:kimchi"
+        && matched_wire_error
+        && error.code == ErrorCode::InternalError
+        && error.data.is_none()
+        && error
+            .message
+            .strip_prefix("Internal error: the provider for model ")
+            .and_then(|message| {
+                message.strip_suffix(" has exhausted its credits and cannot process requests")
+            })
+            .is_some_and(|model| {
+                !model.is_empty()
+                    && model
+                        .bytes()
+                        .all(|b| b.is_ascii_alphanumeric() || b"-_.:/".contains(&b))
+            })
+    {
+        return "PROMPT_MODEL_PROVIDER_CREDITS_EXHAUSTED".into();
     }
     describe_acp_error(error)
 }
@@ -193,7 +214,7 @@ pub(super) async fn send(
         owner: grant.owner,
         observation: observation.clone(),
     };
-    let registered_cline = config_store.agent_id == "registry:cline";
+    let agent_id = config_store.agent_id.clone();
     let sent = cx
         .send_request_to(Agent, PromptRequest::new(ctx.session_id.to_owned(), blocks))
         .on_receiving_result({
@@ -208,9 +229,7 @@ pub(super) async fn send(
                         serde_json::to_value(&response)
                             .map_err(agent_client_protocol::Error::into_internal_error)
                     })
-                    .map_err(|error| {
-                        describe_prompt_error(registered_cline, matched_wire_error, error)
-                    });
+                    .map_err(|error| describe_prompt_error(&agent_id, matched_wire_error, error));
                 observation.observe(&outcome);
                 let _ = turn.send(Outcome {
                     receipt_id,
@@ -298,17 +317,54 @@ mod tests {
             "private": "synthetic diagnostic canary"
         }));
         assert_eq!(
-            describe_prompt_error(true, true, error.clone()),
+            describe_prompt_error("registry:cline", true, error.clone()),
             "AUTH_REQUIRED"
         );
         assert_ne!(
-            describe_prompt_error(false, true, error.clone()),
+            describe_prompt_error("custom:cline", true, error.clone()),
             "AUTH_REQUIRED"
         );
-        assert_ne!(describe_prompt_error(true, false, error), "AUTH_REQUIRED");
+        assert_ne!(
+            describe_prompt_error("registry:cline", false, error),
+            "AUTH_REQUIRED"
+        );
         let generic = agent_client_protocol::Error::internal_error().data(
             serde_json::json!({"details":"Prompt quoted: Cline requires re-authentication."}),
         );
-        assert_ne!(describe_prompt_error(true, true, generic), "AUTH_REQUIRED");
+        assert_ne!(
+            describe_prompt_error("registry:cline", true, generic),
+            "AUTH_REQUIRED"
+        );
+    }
+
+    #[test]
+    fn kimchi_normalizes_only_the_matched_provider_credit_error() {
+        const CODE: &str = "PROMPT_MODEL_PROVIDER_CREDITS_EXHAUSTED";
+        let mut error = agent_client_protocol::Error::internal_error();
+        error.message = "Internal error: the provider for model nemotron-3-ultra-fp4 has exhausted its credits and cannot process requests".into();
+        assert_eq!(
+            describe_prompt_error("registry:kimchi", true, error.clone()),
+            CODE
+        );
+        assert_ne!(
+            describe_prompt_error("registry:poolside", true, error.clone()),
+            CODE
+        );
+        assert_ne!(
+            describe_prompt_error("registry:kimchi", false, error.clone()),
+            CODE
+        );
+        assert_ne!(
+            describe_prompt_error(
+                "registry:kimchi",
+                true,
+                error
+                    .clone()
+                    .data(serde_json::json!({"sensitive": "fixture"}))
+            ),
+            CODE
+        );
+        error.message.push_str(". Other diagnostic text.");
+        assert_ne!(describe_prompt_error("registry:kimchi", true, error), CODE);
     }
 }

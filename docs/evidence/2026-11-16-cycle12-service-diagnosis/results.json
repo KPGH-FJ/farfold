@@ -1,0 +1,104 @@
+{
+  "date": "2026-11-16",
+  "timeZone": "Asia/Shanghai",
+  "scope": {
+    "removedRegistryId": "dimcode",
+    "agentCount": 25,
+    "standardCellCount": 200,
+    "installedExplorerCount": 25,
+    "installedExplorerShowsDimCode": false,
+    "installedExplorerShowsQoder": true,
+    "newConversationPickerDimCodeSearchEmpty": true,
+    "preservedDimCodeRegistrationMatch": true
+  },
+  "factory": {
+    "installedVersion": "0.230.0",
+    "source": "existing",
+    "model": "gpt-6-sol",
+    "reasoning": "high",
+    "authDiagnostic": {
+      "checksPassed": 4,
+      "exitCode": 0,
+      "modelPrompts": 0
+    },
+    "farfold": {
+      "nativeSessionDigest": "16aa65b30c6e018c",
+      "trace": "protocol-v1-1794810223468-1.jsonl",
+      "promptCount": 1,
+      "terminalAfterPromptMs": 3643,
+      "status": 401,
+      "mainResponseHasBody": false,
+      "backgroundAndConnectorReportMissingOrganization": true
+    },
+    "officialCli": {
+      "promptCount": 1,
+      "elapsedMs": 13076,
+      "exitCode": 1,
+      "status": 401,
+      "mainResponseHasBody": false,
+      "retried": false,
+      "settingsAndCredentialFileMetadataUnchanged": true
+    }
+  },
+  "kimchi": {
+    "installedVersion": "1.3.0",
+    "model": "kimchi-dev/nemotron-3-ultra-fp4",
+    "nov15AndNov16ExactNativeMatches": 2,
+    "previousHttpStatus": 200,
+    "previousProviderStreamFailure": "model_provider_credits_exhausted",
+    "previousAssistantTokens": 0,
+    "previousLatestTraceSha256": "fd16ff8fa1f3f55c42861ed9f9d17c212930f8f822d3256eb09616953b4375a6",
+    "historicalDesktopAccessPromptsWithoutResponse": 2,
+    "installedReproduction": {
+      "nativeSessionDigest": "084e820b9dbf97de",
+      "trace": "protocol-v1-1794811069568-1.jsonl",
+      "promptCount": 1,
+      "terminalAfterPromptMs": 2284,
+      "assistantTextUpdates": 0,
+      "specificReasonInSettingsAndConversation": true,
+      "savedKimchiAndFactoryChoicesUnchanged": true
+    }
+  },
+  "poolside": {
+    "installedVersion": "1.0.16",
+    "source": "existing",
+    "model": "poolside/laguna-s-2.1",
+    "reasoning": "max",
+    "nativeSessionDigestPrefix": "c53d72ac9437",
+    "previousTrace": "protocol-v1-1794732352086-6.jsonl",
+    "officialSessionLogReadExitCode": 0,
+    "officialSessionLogSha256": "b9e1c511c1206ac04d66c4c67e3d2cd8903133e2b4bcf5fcd8b58ba7c10fa1f8",
+    "nativeTrajectorySha256": "ad2d7d6152ba1a1a54ae301d7837a7661190825b58a66caafd54a9947ad5f9e4",
+    "previousClientPrompts": 1,
+    "previousProviderInternalAttempts": 3,
+    "previousTerminalHttpStatus": 400,
+    "previousModelVersionDeactivated": "qvml0p9",
+    "laterModelPrompts": 0,
+    "openRouterAndVercelPublicCatalogPoolsideMatches": 0
+  },
+  "minimax": {
+    "installedVersion": "0.2.7",
+    "actualPackageChooserSha256": "b45b624c7a4fa3be5d498264b6f5c40a8a2f1f5cfd7e98a3e3ff27e0236acf77",
+    "supportedNativeCustomFormats": [
+      "openai-completions",
+      "openai-responses",
+      "anthropic-messages"
+    ],
+    "farfoldCentralApiSelectionAvailable": false,
+    "configuredOrTestedThirdPartyCredentials": false
+  },
+  "installed": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "cdhash": "809f9e60a5b9cbaad929eab0c7328b10ad06ab77",
+    "binarySha256": "c4b9364fa4f2101edfae46a2c7d806a947fac8a02662ed36ea2c474030708b65",
+    "productInputsUnchanged": 2633,
+    "protectedEntriesMatchingBeforeAndAfter": 236586,
+    "metadataCopyIntegrity": "ok",
+    "duplicateBundleRemoved": true,
+    "frontendTestsPassed": 10948,
+    "rustReleaseTestsPassed": 2800,
+    "rustReleaseTestsIgnored": 11
+  }
+}
