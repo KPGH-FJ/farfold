@@ -1,6 +1,6 @@
 # Farfold 当前工作计划
 
-更新：2026-11-15。五阶段十四周期保持。第1阶段及第4–8周期按各自阶段范围收口。旧 Kimi CLI 和 Nova 移出后首发为27家，各按[产品契约](../PRODUCT.md)八项验收；[要求参考](../docs/agent-access-requirements.md)保留151条原条件，[当前状态](../docs/status.md)记录证据与缺项。
+更新：2026-11-16。五阶段十四周期保持。第1阶段及第4–8周期按各自阶段范围收口。Qwen Code 移出后首发为26家，各按[产品契约](../PRODUCT.md)八项验收；[要求参考](../docs/agent-access-requirements.md)保留151条原条件，[当前状态](../docs/status.md)记录证据与缺项。
 
 ## 五阶段十四周期
 
@@ -39,13 +39,13 @@
 
 [当前状态](../docs/status.md)维护分项证据与外部依赖。第8、10、11周期按阶段范围收口，第9周期 Windows 后置。
 
-1. **先完成 macOS。** 第12周期已对照[原28家八项](../docs/evidence/2026-11-15-cycle12-macos/acceptance-matrix.md)，现按[27家](../docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)继续。Qoder、Devin、Goose 已复验原对话。Cline 重登实答，Pi 原设置及续答通过，MiniMax 原账号待核。[证据](../docs/evidence/2026-11-16-cycle12-original-config/README.md) Claude 待官方私密 API 路径，其余可用 API 与原样本并行。Gemini CLI 与 Antigravity 登录暂缓。Cursor 双前台已验，后台仍待。见[续验](../docs/evidence/2026-11-15-cycle12-followup/README.md)。
+1. **先完成 macOS。** 第12周期已对照[原28家八项](../docs/evidence/2026-11-15-cycle12-macos/acceptance-matrix.md)，现按[26家](../docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)继续。Qoder、Devin、Goose 已复验原对话。Cline 重登实答，Pi 原设置及续答通过，MiniMax 原账号待核。[证据](../docs/evidence/2026-11-16-cycle12-original-config/README.md) Claude 待官方私密 API 路径，其余可用 API 与原样本并行。Gemini CLI 与 Antigravity 登录暂缓。Cursor 双前台已验，后台仍待。见[续验](../docs/evidence/2026-11-15-cycle12-followup/README.md)。
 2. **官方替代。** Goose 1.59.1 实测停掉 shell 及子进程，工具实时终态待证。fast-agent 双任务隔离及停止后冷续答已正式验证，工具终态仍待验。Pi 的 SDK 网页接法待实装；Amp 待厂商程序和原线程。依原首发条件处理范围，保留旧数据和证据。
 3. **再回到 Windows。** macOS 能力验收完成后，续第9周期及受影响的平台回归。第13–14周期仍以用户认可能力为前提。
 
 ## 首发逐家验收
 
-按[实际使用验收](../docs/agent-access-requirements.md#实际使用验收)，27家逐家从正式 Farfold 正常入口验八项。找到旧对话、打开正文、续答分别核。真实工作做到成果交付。点停止后核目标工作实际结束，另一任务继续。冷开核配置和未发材料。
+按[实际使用验收](../docs/agent-access-requirements.md#实际使用验收)，26家逐家从正式 Farfold 正常入口验八项。找到旧对话、打开正文、续答分别核。真实工作做到成果交付。点停止后核目标工作实际结束，另一任务继续。冷开核配置和未发材料。
 
 条件独立时同批并行，逐家留版本、原请求及实际结果。共享条件影响归因时错峰。按已验证的行为复用官方接法。
 

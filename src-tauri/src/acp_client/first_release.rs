@@ -1,4 +1,4 @@
-//! Current product directory scope, last reviewed on 2026-11-15.
+//! Current product directory scope, last reviewed on 2026-11-16.
 //! Compatibility still comes from initialize; existing user data is retained.
 
 const INCLUDED: &[&str] = &[
@@ -27,7 +27,6 @@ const INCLUDED: &[&str] = &[
     "pi-acp",
     "poolside",
     "qoder",
-    "qwen-code",
     "sigit",
 ];
 
@@ -44,14 +43,14 @@ mod tests {
     use std::collections::HashSet;
 
     #[test]
-    fn current_directory_has_27_unique_reviewed_identities() {
-        assert_eq!(INCLUDED.len(), 27);
+    fn current_directory_has_26_unique_reviewed_identities() {
+        assert_eq!(INCLUDED.len(), 26);
         let mut reviewed = HashSet::new();
         for id in INCLUDED {
             assert!(reviewed.insert(*id));
             assert!(first_batch_visible(id));
         }
-        assert_eq!(reviewed.len(), 27);
+        assert_eq!(reviewed.len(), 26);
         assert!(!first_batch_visible("future-agent"));
         assert!(!first_batch_visible("Cline"));
         assert!(!first_batch_visible("registry:cline"));
@@ -60,5 +59,7 @@ mod tests {
         assert!(!first_batch_visible("kimi"));
         assert!(!first_batch_visible("kimi-code"));
         assert!(!first_batch_visible("nova"));
+        assert!(!first_batch_visible("qwen-code"));
+        assert!(first_batch_visible("qoder"));
     }
 }

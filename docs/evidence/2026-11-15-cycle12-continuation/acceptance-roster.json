@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
-  "agentCount": 27,
-  "cellCount": 216,
+  "agentCount": 26,
+  "cellCount": 208,
   "explicitStatuses": {
-    "准备未齐": 24,
-    "入口有证": 27,
-    "受阻": 9,
+    "准备未齐": 23,
+    "入口有证": 26,
+    "受阻": 10,
     "分项通过": 8,
-    "未测": 23,
+    "未测": 22,
     "原账号实答": 4,
     "查找冷开续答通过": 6,
     "已选模型有实答": 7,
     "可建对话": 1,
     "已知标识读取声明": 1,
-    "实测分项通过": 8,
+    "实测分项通过": 7,
     "前台停止分项通过": 1,
     "设置短测通过": 3,
     "已有设置实答": 2,
-    "本轮短测失败": 3,
+    "本轮短测失败": 2,
     "双前台分项通过": 2,
     "停止及冷续答通过": 1,
     "原正文已读": 2,
-    "实测失败": 1,
-    "未确认": 4,
+    "实测失败": 2,
+    "未确认": 3,
     "已选服务有实答": 1,
     "结果未知": 1,
     "默认列表为空": 1
@@ -1640,13 +1640,14 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "已有设置成功创建用于准备的空会话\n2026-11-16 当前本机有中国区认证资料，用户表示可能没有登录过。原行无账号和计费凭据，原失败为余额不足。",
-          "remaining": "需要能确认的原账号和服务，当前认证资料不证明原账号。",
+          "observed": "已有设置成功创建用于准备的空会话\n2026-11-16 当前本机有中国区认证资料，用户表示可能没有登录过。原行无账号和计费凭据，原失败为余额不足。\n2026-11-16 只读盘点另一个最新正式原设置请求。MiniMax-M2.7 实际发送一次，厂商终态 50110 余额或额度不足，零助手回复。",
+          "remaining": "确认当前中国区服务的可用额度。旧对话另需原账号及来源依据。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-16-cycle12-original-config/results.json"
+            "docs/evidence/2026-11-16-cycle12-original-config/results.json",
+            "docs/evidence/2026-11-16-cycle12-qwen-exit/results.json"
           ],
-          "status": "未确认"
+          "status": "受阻"
         },
         "S3": {
           "observed": "默认列表及正式版复查命中可识别的旧测试标题\n本轮实测：用户开放全部原历史后，默认官方列表找到现存原目录的一条原对话并读回正文。旧配置未核，因此只读。\n2026-11-16 原目录与用户消息均存在的唯一官方记录使用 MiniMax-M2.7。当前默认是 MiniMax-M3。前序脱敏预览缺原标识，匹配依据为原目录和非空记录的唯一性。\n2026-11-16 同版官方目录列出原 MiniMax-M2.7，无另选推理档；当前中国区账号已验证，旧对话无原账号记录。\n2026-11-16 用户确认同一中国区账号；正式版按原目录和标识带入、重开，原正文及 MiniMax-M2.7 已读，零发送。\n2026-11-16 新版正常冷开已带入原对话，恢复预览显示 M2.7 来自 Agent 当前报告。用户不确定当时是否登录，未确认、未保存，零发送。",
@@ -1669,12 +1670,13 @@
           "status": "受阻"
         },
         "S5": {
-          "observed": "本轮零模型消息，无当前正例，旧短回复结果未知",
-          "remaining": "先有可信授权和模型，留真实文件、提问与权限证据",
+          "observed": "本轮零模型消息，无当前正例，旧短回复结果未知\n2026-11-16 只读盘点另一个最新正式原设置请求。MiniMax-M2.7 实际发送一次，厂商终态 50110 余额或额度不足，零助手回复。",
+          "remaining": "需要可用服务和本机官方模型实答，再留真实文件、提问和审批证据。",
           "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-16-cycle12-qwen-exit/results.json"
           ],
-          "status": "未测"
+          "status": "实测失败"
         },
         "S6": {
           "observed": "未运行双对话变更、审批或停止",
@@ -2154,103 +2156,6 @@
         }
       },
       "name": "Qoder"
-    },
-    {
-      "agentId": "qwen-code",
-      "runtime": "登记版本 0.24.7",
-      "liveAction": null,
-      "standards": {
-        "S1": {
-          "observed": "登记 0.24.7、握手自报 0.25.0，旧正式设置终端返回可重新连接。\n本轮实测：目前程序可执行，登记版本 0.24.7。登记所存握手版本 0.24.7。",
-          "remaining": "当前已保存设置的实际可用性及取消。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json",
-            "output/2026-11-15-cycle12-macos/runtime-inventory.json"
-          ],
-          "status": "准备未齐"
-        },
-        "S2": {
-          "observed": "旧 10/6 读取模型曾需要认证；已保存 qwen3.6-plus(openai) 与默认，未确认当前身份。",
-          "remaining": "沿原来源核认证与有效请求，不能改服务。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json"
-          ],
-          "status": null
-        },
-        "S3": {
-          "observed": "旧正式查找并回读，草稿42字节及附件名称保持；原目录已不存在。",
-          "remaining": "另取同来源自有样本并建立真实续答，核完整正文。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json"
-          ],
-          "status": null
-        },
-        "S4": {
-          "observed": "旧同设置新空稿和读回标签窄例。",
-          "remaining": "实际同对话请求、显式变更和重启配置。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json"
-          ],
-          "status": null
-        },
-        "S5": {
-          "observed": "旧本地附件审核有限正例，不能当模型真实使用附件。\n本轮实测：当前原模型短请求出站，超过 200 秒无正文。",
-          "remaining": "需能真实完成的模型和工作样本。",
-          "sources": [
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-52aa-local-attachment-review-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
-          ],
-          "status": "本轮短测失败"
-        },
-        "S6": {
-          "observed": "旧同设置新空稿独立保留原稿与附件。",
-          "remaining": "同家真实双任务并行及互不串扰。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json"
-          ],
-          "status": null
-        },
-        "S7": {
-          "observed": "旧重开原草稿与附件名不丢。\n本轮实测：对等待无回复的原测试点击一次停止，原回合随后明确显示已停止。",
-          "remaining": "尚需实际运行工具及另一任务并行证明实际停止。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
-          ],
-          "status": "实测分项通过"
-        },
-        "S8": {
-          "observed": "已有流程及显示回返分项。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
-          "remaining": "当前入口交互、真实错误结果与完整结论。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle8-intake/README.md",
-            "docs/agent-first-release.md",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-5b31-same-settings-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
-          ],
-          "status": "入口有证"
-        }
-      },
-      "name": "Qwen"
     },
     {
       "agentId": "sigit",

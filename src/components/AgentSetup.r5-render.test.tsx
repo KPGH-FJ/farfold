@@ -882,7 +882,7 @@ it("exports real shared components with synthetic state and no external IO", asy
   );
 });
 
-it("compares all 27 static identities with the authoritative plan and shared setup route", () => {
+it("compares all 26 static identities with the authoritative plan and shared setup route", () => {
   const planPath = resolve(ROOT, "../docs/agent-first-release.md");
   const idsPath = resolve(ROOT, "../src-tauri/src/acp_client/first_release.rs");
   const catalogPath = resolve(ROOT, "../src-tauri/src/agent_catalog.rs");
@@ -891,14 +891,14 @@ it("compares all 27 static identities with the authoritative plan and shared set
   const release = readFileSync(idsPath, "utf8");
   const catalog = readFileSync(catalogPath, "utf8");
   const hub = readFileSync(hubPath, "utf8");
-  const matrix = plan.slice(plan.indexOf("## 当前保留的 27 项"));
+  const matrix = plan.slice(plan.indexOf("## 当前保留的 26 项"));
   const declared = [
     ...matrix.matchAll(/^\|\s*([^|/]+?)\s*\/\s*`([a-z0-9-]+)`\s*\|/gm),
   ].map((row) => ({ name: row[1].trim(), registryId: row[2] }));
   const included =
     release.match(/const INCLUDED:[\s\S]*?=\s*&?\[([\s\S]*?)\];/)?.[1] ?? "";
   const ids = [...included.matchAll(/"([a-z0-9-]+)"/g)].map((row) => row[1]);
-  expect(new Set(ids).size).toBe(27);
+  expect(new Set(ids).size).toBe(26);
   expect(declared.map((row) => row.registryId)).toEqual(ids);
   const definitions = catalog.slice(
     catalog.indexOf("pub fn builtin_defs()"),
@@ -928,10 +928,10 @@ it("compares all 27 static identities with the authoritative plan and shared set
   }));
   mkdirSync(OUTPUT, { recursive: true });
   writeFileSync(
-    resolve(OUTPUT, "static-27.json"),
+    resolve(OUTPUT, "static-26.json"),
     JSON.stringify(
       {
-        authority: "docs/agent-first-release.md 当前保留的 27 项",
+        authority: "docs/agent-first-release.md 当前保留的 26 项",
         idsSource: "src-tauri/src/acp_client/first_release.rs INCLUDED",
         count: rows.length,
         missing: [],

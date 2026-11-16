@@ -684,7 +684,7 @@ mod tests {
 
     #[test]
     fn current_directory_filters_entries_without_changing_registered_data() {
-        let registry = ["cline", "fast-agent", "retired-agent", "unreviewed"]
+        let registry = ["cline", "qoder", "qwen-code", "unreviewed"]
             .into_iter()
             .map(|id| RegistryAgent {
                 id: id.into(),
@@ -702,7 +702,7 @@ mod tests {
             })
             .collect::<Vec<_>>();
         let registered: AgentRow = serde_json::from_value(serde_json::json!({
-            "id":"registry:retired-agent", "name":"Original", "source":"registry",
+            "id":"registry:qwen-code", "name":"Original", "source":"registry",
             "command":"/original/program", "args":["keep"], "env":[["PUBLIC_CONFIG","keep"]],
             "version":"old", "handshake":{"authMethods":[]}, "createdAt":1,"updatedAt":2
         }))
@@ -711,10 +711,11 @@ mod tests {
         let entries = current_catalog_entries(std::slice::from_ref(&registered), &[], &registry);
         assert_eq!(entries.len(), builtin_defs().len() + 2);
         assert!(entries.iter().all(|entry| entry.first_batch_visible));
+        assert!(entries.iter().any(|entry| entry.registry_id == "qoder"));
         assert!(
             entries
                 .iter()
-                .all(|entry| !matches!(entry.registry_id.as_str(), "retired-agent" | "unreviewed"))
+                .all(|entry| !matches!(entry.registry_id.as_str(), "qwen-code" | "unreviewed"))
         );
         assert_eq!(serde_json::to_value(&registered).unwrap(), original);
         assert_eq!(registry.len(), 4);
@@ -724,18 +725,14 @@ mod tests {
     fn out_of_scope_installation_does_not_refresh_or_delete_saved_data() {
         let root = tempfile::tempdir().unwrap();
         let registry = vec![RegistryAgent {
-            id: "retired-agent".into(),
+            id: "qwen-code".into(),
             ..Default::default()
         }];
         write_registry_cache(root.path(), &registry);
         let original = std::fs::read(cache_path(root.path())).unwrap();
         let catalog = AgentCatalog::new(root.path().into());
-        assert!(
-            catalog
-                .installation_entry("registry:retired-agent")
-                .is_err()
-        );
-        assert!(catalog.cached_entry("registry:retired-agent").is_none());
+        assert!(catalog.installation_entry("registry:qwen-code").is_err());
+        assert!(catalog.cached_entry("registry:qwen-code").is_none());
         assert_eq!(std::fs::read(cache_path(root.path())).unwrap(), original);
         assert_eq!(catalog.agents_cached(), Some(registry));
     }

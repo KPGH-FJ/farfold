@@ -1,0 +1,49 @@
+{
+  "date": "2026-11-16",
+  "timeZone": "Asia/Shanghai",
+  "scope": {
+    "removedRegistryId": "qwen-code",
+    "retainedRegistryId": "qoder",
+    "agentCount": 26,
+    "standardCellCount": 208,
+    "installedExplorerCount": 26,
+    "installedExplorerShowsQoder": true,
+    "installedExplorerShowsQwen": false,
+    "newConversationPickerShowsQoder": true,
+    "newConversationPickerQwenSearchEmpty": true,
+    "preservedRegistrationsMatch": 2,
+    "preservedConversationIndexesMatch": 3
+  },
+  "installed": {
+    "bundleId": "ai.farfold.desktop",
+    "architecture": "arm64",
+    "version": "0.1.7",
+    "cdhash": "84d87ae2a33972b3e7dc2927b04a2bf57b4fde6a",
+    "binarySha256": "17cc4f104a30448a02213eb7f1ba8f74b1a06ed007c224373b4f04c09c238cd3",
+    "matchingProductInputs": 2633,
+    "protectedEntriesMatchingBeforeAndAfter": 236586,
+    "metadataCopyIntegrity": "ok",
+    "duplicateBundleRemoved": true,
+    "frontendAndAcceptanceTestsPassed": 71,
+    "rustReleaseTestsPassed": 22
+  },
+  "accountAudit": {
+    "registeredExecutablesObserved": 26,
+    "newModelRequests": 0,
+    "savedServiceFormats": ["chat-completions", "messages"],
+    "latestMiniMaxRequest": {
+      "installedVersion": "0.2.7",
+      "nativeSessionDigest": "8fd34c720438b9b8",
+      "source": "existing",
+      "model": "MiniMax-M2.7",
+      "terminalAtLocal": "2026-11-16T13:53:15.033+08:00",
+      "trace": "protocol-v1-1794808385667-3.jsonl",
+      "vendorState": "failed",
+      "vendorErrorCode": 50110,
+      "vendorErrorClass": "insufficient_credits",
+      "outboundModelRequests": 1,
+      "nativeAssistantReplies": 0,
+      "nativeUsageRecords": 0
+    }
+  }
+}

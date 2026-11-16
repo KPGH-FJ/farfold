@@ -72,10 +72,9 @@ export function parseAgentConditions(
   assert.match(data.basedOnCommit, /^[a-f0-9]{40}$/, "invalid recorded commit");
   text(data.scope);
   text(data.stage1SupplementScope);
-  // The November 6 ledger predates the removal of Kimi CLI Legacy and Nova
-  // from the release scope. Both rows stay in the historical projection.
+  // Keep historical ledger identities that later left the release scope.
   const recordedAgentIds = [
-    ...new Set([...authorities.agents, "kimi", "nova"]),
+    ...new Set([...authorities.agents, "kimi", "nova", "qwen-code"]),
   ];
   const checkedPaths = new Set();
   const evidencePath = (path) => {

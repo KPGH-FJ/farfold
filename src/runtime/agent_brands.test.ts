@@ -12,9 +12,9 @@ const included = readFileSync(
   .map((id) => JSON.parse(id) as string);
 
 describe("reviewed Agent branding", () => {
-  it("covers the current directory and preserves branding for historical Kimi and Nova conversations", () => {
-    expect(included).toHaveLength(27);
-    const supportedBrands = [...included, "kimi", "nova"];
+  it("covers the current directory and preserves branding for historical conversations", () => {
+    expect(included).toHaveLength(26);
+    const supportedBrands = [...included, "kimi", "nova", "qwen-code"];
     expect(Object.keys(AGENT_BRANDS).sort()).toEqual(supportedBrands.sort());
     for (const id of supportedBrands) {
       const brand = agentBrand({ id: `registry:${id}` });
