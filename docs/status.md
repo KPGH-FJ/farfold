@@ -64,6 +64,10 @@
 
 **Amp 与 MiniMax 账号复验。** 同登记 Amp 官方 CLI 已登录，普通及含归档旧线程列表为空；既有 Farfold 请求实际返回 `auth_required`，有效账号与原线程关联仍待。MiniMax Code 0.2.7 独立新对话实际采用已配置的小米 MiMo，原回复及来源冷开同一对象保持，零自动重发。原 M2.7 另待确认原服务与额度。首条消息暂不可发送时的误提示已改，定向回归通过。[正式证据](evidence/2026-11-16-cycle12-account-retest/README.md)
 
+**Amp 小米新对话实测。** 正式 Farfold 选用目录组件 0.13.0 和用户安装的官方 CLI。按用户许可备份旧组件密钥后，已登录 Amp 账号能读取 MiMo。重新确认模型设置后，Farfold 在独立新对话显式选择 `mimo-v2.6-flash`，发送一条并完成。官方同线程用量明细确认 `xiaomi/mimo-v2.6-flash` 的 1 次助手推理和 Amp 自行触发的 2 次标题推理均走用户的小米 Custom URL。覆盖该新对话的模型与实际路由，原线程带入及整家验收依旧待验。[正式实测](evidence/2026-11-16-cycle12-account-retest/README.md#amp-小米单次正式实测)
+
+**Amp 小米原对话冷开并续答通过。** 正式 Farfold 搜索重开同一原线程并恢复正文。按用户许可临时选 `Default`，沿用 Amp 保存在原线程的 MiMo，发送一次依赖上文的续问并准确复述标记。同一原线程官方记录核到新增一次助手推理走原小米连接，之后恢复显式 MiMo 和 `Auto`。显式模型配置下冷开后续答仍会因组件附加的 `--model` 被官方 CLI 拒绝。[正式复验与原失败](evidence/2026-11-16-cycle12-account-retest/README.md#amp-原对话冷开和续答)
+
 **接入账号与 API 续查。** OpenCode 选新保存的小米 `Chat Completions` 与 `mimo-v2.6-flash` 实答，并冷开同一原对话读回回复与来源，模型名称显示缺陷已在正式版修正。Autohand 0.9.11 与 Grok Build 1.0.46 分别沿原 `fantail` 与 `grok-4.7 / low` 冷开、读到原正文并准确续答。Claude 使用另存的小米 `Messages` 独立 API 测试成功，普通对话在 0.81.2 无正文，升级 0.107.0 后返回 `auth_required`。两版的合成控制均发现官方适配程序发出占位 Bearer，需确认原生 Claude 的已有设置路径或官方适配程序修复。Gemini CLI 和 Antigravity 按用户要求暂缓。[正式复验与官方限制](evidence/2026-11-15-cycle12-pre-send/README.md)
 
 **Cursor 双前台隔离通过。** 两条 Cursor 2026.11.13 对话沿用 Auto，同时在各自目录执行命令。点停止后 A 的 Shell 和子进程退出，B 继续并正常完成。A 的工具步骤仍显示结果未知，受监视的后台 Shell 仍缺官方精确停止。首次尝试中，Cline 内部错误保留了一个名额，第二条 Cursor 排队超时，未发出且草稿保留。正式退出结束 Cline 的归属进程组后，双前台复测成功。当时需退出整个应用才能回收。[双任务回执](evidence/2026-11-15-cycle12-followup/cursor-foreground-pair-2026-11-16.json)
@@ -87,6 +91,16 @@
 **2026-11-16 原对话与官方模型目录。** Devin 同一测试对话重启后可开，原模型、正文均读回，依赖原上下文的一次续问准确完成，按原目录的官方列表命中该原对象。Goose 的 `FF_C8_B_20261115` 同样完成列表查找、原对话冷开和一次准确续答。Qoder 同一登录的官方 `--list-models` 报无可用模型。厂商返回的模型目录有 16 条，Qoder 按厂商 `enable` 字段判定可用性，失败时 Auto 已被标为禁用。厂商禁用的上游条件仍未知，官方 Custom 路径待用户账号与密钥条件。[原对话](evidence/2026-11-15-cycle12-pre-send/history-continuations-2026-11-16.json) · [Qoder 诊断](evidence/2026-11-15-cycle12-pre-send/qoder-model-availability-2026-11-16.json)
 
 **Qoder 历史和 Cline 短测。** Qoder CLI 1.1.89 沿用官方 Custom 配置的小米 `mimo-v2.6-flash`，按原目录从 Farfold 对话库命中同一原对话，打开原文并准确续答。Auto 旧失败保留。Cline 3.0.74 修复了旧版签名导致的启动失败。此次沿用已有设置，以 `Claude Sonnet 5.5` 只发了一条，程序约 3 秒返回 `internal_error`，没有文本，具体原因待查。Farfold 保存的原选择未变。当前 Cline 声明按已知标识读取，未声明历史列表。[正式复验](evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json) · [Cline 启动证据](evidence/2026-11-15-cycle12-pre-send/cline-startup-diagnosis-2026-11-16.json)
+
+**Qoder 双前台隔离及停止后冷续答通过。** 用户批准后单独关闭占用全局发送名额的 OpenCode 报错连接。正式版中两条 Qoder 1.1.89 对话沿用同一 MiMo，各自在独立目录运行。只点 A 的停止，A 的 Shell 和子进程实际退出，B 的同一进程继续并自然完成。正常保存退出后从侧栏冷开同一 A，只发一条依赖旧上下文的续问，沿用已有小米 MiMo 和 Default 准确回答。原标识保留且唯一，零新建、零自动重发、零工具重跑。A 的已停止工具步骤仍显示结果未知。[隔离实测](evidence/2026-11-16-cycle12-eight-check/README.md#qoder-停止及发送名额) · [续答实测](evidence/2026-11-16-cycle12-eight-check/README.md#qoder-停止后冷开续答)
+
+**Copilot 原对话读回通过，Auto 续答实测失败。** 用户确认原 GitHub 账号。正式版从原目录查到并带入已核对的原 ID，保留一条索引，原正文可读，恢复原已有服务和 Auto。唯一一次续问约 20.7 秒后，Copilot 在助手正文中报告 Auto 路由网络错误，界面显示「已完成」，未正确回答。原选择保留，路由失败原因和准确反馈仍待核。[正式实测](evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由) · [原设置](../output/2026-11-06-phase1-model-repair/original-after-confirm.json)
+
+**Devin 普通新建的旧设置恢复已修并正式实测。** 从新对话「检查模型设置」同时核对原 `swe-2-high`、`high` 与当前 `SWE-2 Flash Medium`、未提供推理选项，明确采用后保留原目录和草稿。使用原已有服务准确实答一次，全局默认设置原样保留。此前沿原测试对话确认的设置完成文件交付，原稿散列不变，成品可从「本轮产物」打开。实际工具审批及其他工作路径继续按原条件核。[正式新建](evidence/2026-11-16-cycle12-eight-check/README.md#devin-普通新建的旧设置恢复) · [正式文件回执](evidence/2026-11-15-cycle12-pre-send/README.md#2026-11-16-devin-文件交付)
+
+**CodeBuddy 2.184.0 原对话预览无正文。** 从正式版选用目录新版，程序检查通过，旧 2.160.0 安装仍在。从正常「带入已有对话」沿用第 7 周期同一原目录及标识，只读一次。协议 `session/load` 在 78.743 秒返回，未见助手正文回放。界面显示「Agent 没有返回可展示的正文，本次未加入」，零模型请求。新版从超时变为收到回包，原正文仍待验证。[第 7 周期原样本](evidence/2026-11-13-cycle67-closure/summary.json)
+
+**Cline、Pi、siGit 的官方路径续查。** Cline 3.0.74 的 CLI 历史列表和同版 SDK 默认会启动写入式恢复，可能将失联对话及子任务标为失败并改写清单。已知 ID 继续沿原 ACP 入口读回，列表需核到同存储的只读入口。Pi 目录最新仍为 `pi-acp 0.0.34`，将网页工具转给 Pi 的实现尚在上游 PR。siGit 当前 1.5.11 裸 stdio 登记无自动加载，原选中的 1.93 GB GGUF 在默认和共享缓存均缺，当前无可确认的已配置兼容服务。[Cline 列表实现](https://github.com/cline/cline/blob/cli-v3.0.74/sdk/packages/core/src/session/services/persistence-service.ts#L445-L525) · [Pi 上游 PR](https://github.com/svkozak/pi-acp/pull/164) · [siGit 启动方式](https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L4282-L4298)
 
 第 6 周期按原阶段范围收口，网页许可、撤回、标签切换及同请求截图已有正式分项，新增五家逐家记录了接入正例或具体阻碍。第 7 周期已交付搜索、整理、导出、按标识带入及本批发现的焦点与栏宽缺陷修复。真实审批、提问和中断各有单次有声与正确点击证据，纯图片触发未读也有单独正式证据。五家历史样本条件和其他原条目按下表继续保留。
 

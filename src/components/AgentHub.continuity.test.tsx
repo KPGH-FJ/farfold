@@ -743,6 +743,44 @@ it("uses the current draft choice before the saved default without altering eith
   expect(storage.scope("A", "another-scope")).toBe("another-scope");
 });
 
+it("returns a reviewed model and thinking profile only to the originating draft", async () => {
+  const old = {
+    service: null,
+    config: { model: "old", thought_level: "high" },
+  };
+  const current = {
+    service: null,
+    config: { model: "new", thought_level: "medium" },
+  };
+  await storage.complete("A", old);
+  const before = structuredClone(storage.snapshot());
+  const applyToDraft = vi.fn(() => true);
+  props = {
+    ...props,
+    initialAgentId: "A",
+    preparationContext: {
+      agentId: "A",
+      cwd: "/current",
+      selection: old,
+      repair: { panel: "model" },
+      applyToDraft,
+    },
+  };
+  expect(setup().props.draftReview).toBe(true);
+  expect(setup().props.progress).toMatchObject({ step: 2, selection: old });
+  setProgress({ step: 2, choice: "existing", selection: current });
+  await (
+    setup().props.onStart as (
+      agentId: string,
+      selection: unknown,
+    ) => Promise<void>
+  )("A", current);
+  expect(applyToDraft).toHaveBeenCalledExactlyOnceWith(current);
+  expect(props.onStart).not.toHaveBeenCalled();
+  await storage.flush();
+  expect(storage.snapshot()).toEqual(before);
+});
+
 it("returns a completed Agent with no trustworthy choice to confirmation instead of starting with defaults", async () => {
   await storage.complete("A");
   clickEntry("A");

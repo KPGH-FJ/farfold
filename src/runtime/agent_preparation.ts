@@ -1,5 +1,5 @@
 import { connectionWorkEnded } from "./session_process_ended";
-import { useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import {
   threads,
   hasPendingRequests,
@@ -702,8 +702,18 @@ export function preparationFor(agentId: string): AgentPreparation {
   }
   return preparation;
 }
-export function usePreparation(agentId: string) {
-  const controller = preparationFor(agentId);
+export function usePreparation(
+  agentId: string,
+  draftReview = false,
+  active = true,
+) {
+  const [draftController] = useState(() =>
+    draftReview ? new AgentPreparation() : null,
+  );
+  const controller = draftController ?? preparationFor(agentId);
+  useEffect(() => {
+    if (draftController && active) return () => draftController.invalidate();
+  }, [draftController, active]);
   return {
     controller,
     state: useSyncExternalStore(

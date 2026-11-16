@@ -33,6 +33,9 @@ import { useProgramInventory } from "./ProgramManager";
 import { agentSetupProgram } from "./AgentSetupProgram";
 import { AgentRemoveDialog } from "./AgentRemoveDialog";
 import {
+  agentSetupModelHeading,
+  agentSetupModelSourceNotice,
+  modelReadStatus,
   agentSetupCurrentSelection,
   agentSetupModelOptions,
   agentSetupModelReview,
@@ -77,6 +80,7 @@ import "../agent-setup-presentation.css";
 import "../agent-redesign.css";
 import { AgentSetupExitReview } from "./AgentSetupExitReview";
 import { AgentSelectionReview } from "./AgentSelectionReview";
+import { sameConfigurationSnapshot } from "../runtime/config_check";
 
 export interface AgentSetupSelection {
   service: ServiceChoice | null;
@@ -129,9 +133,11 @@ export function AgentSetup({
   intent = "use",
   conversation,
   sourceContext,
+  draftReview = false,
 }: {
   conversation?: ConversationRepairContext;
   sourceContext?: string;
+  draftReview?: boolean;
   intent?: "use" | "manage";
   cwd?: string | null;
   returnLabel?: string;
@@ -156,17 +162,23 @@ export function AgentSetup({
   ) => Promise<boolean>;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
-  const { controller, state: test } = usePreparation(card.id);
+  const { controller, state: test } = usePreparation(
+    card.id,
+    draftReview,
+    active,
+  );
   const testThread = useThread(test.threadKey);
   const choice = conversation?.sourceContext ? "api" : setupProgress.choice;
   const connected = card.status === "connected";
-  const setStep = (value: number) =>
-    updateAccess({
-      step: value,
-      ...(value === 1 && step === 0 && !conversation && !authBusy
-        ? { accessStage: "method" as const }
-        : {}),
-    });
+  const setStep = (value: number) => {
+    if (!draftReview)
+      updateAccess({
+        step: value,
+        ...(value === 1 && step === 0 && !conversation && !authBusy
+          ? { accessStage: "method" as const }
+          : {}),
+      });
+  };
   const selection = setupProgress.selection ?? EMPTY_SELECTION;
   const entrySelection = useRef(structuredClone(selection));
   const entryProgress = useRef(structuredClone(setupProgress));
@@ -223,8 +235,11 @@ export function AgentSetup({
     useState<AgentAccessPrimary | null>(null);
   const authJob = useAuthenticationActivity(card.id);
   const authBusy = reportedAuthBusy || authActive(authJob);
-  const step =
-    connected || authJob || authBusy ? Math.min(setupProgress.step, 2) : 0;
+  const step = draftReview
+    ? 2
+    : connected || authJob || authBusy
+      ? Math.min(setupProgress.step, 2)
+      : 0;
   const [loadedCapability, setCapability] = useState<{
     agentId: string;
     value: ServiceCapability;
@@ -340,7 +355,9 @@ export function AgentSetup({
     !test.readError &&
     !modelChanging &&
     !!currentInput &&
-    !preparationMatches(test, currentInput);
+    (draftReview
+      ? !sameConfigurationSnapshot(selection.config, test.config)
+      : !preparationMatches(test, currentInput));
   const explicitReadRequired =
     !!currentInput && preparationNeedsExplicitRead(test, currentInput);
   const modelReadFailed =
@@ -420,6 +437,7 @@ export function AgentSetup({
       !setupProgress.preparationActionId &&
       !needsAuth);
   const returnBlocked =
+    (draftReview && !selection.service && !model) ||
     busy ||
     modelReadFailed ||
     selectionMismatch ||
@@ -486,6 +504,7 @@ export function AgentSetup({
   }, [existingVerifyReady, onProgress]);
   useEffect(() => {
     if (
+      !draftReview &&
       sameSource &&
       !selectionMismatch &&
       !modelReadFailed &&
@@ -559,7 +578,14 @@ export function AgentSetup({
     const changed =
       JSON.stringify(entrySelection.current) !== JSON.stringify(selection) ||
       entryProgress.current.choice !== choice;
-    if (!conversation && changed && !authBusy && !operationPending && !busy)
+    if (
+      !draftReview &&
+      !conversation &&
+      changed &&
+      !authBusy &&
+      !operationPending &&
+      !busy
+    )
       setConfirmExit(true);
     else onClose();
   };
@@ -682,6 +708,7 @@ export function AgentSetup({
   );
   const pickOption = async (optionId: string, value: string) => {
     if (
+      draftReview ||
       conversation ||
       !testThread ||
       modelChanging ||
@@ -734,6 +761,14 @@ export function AgentSetup({
     !!targetCwd &&
     work.enabled(card.id);
   modelReadConfirmation.current = active && step === 2 && canReadModels;
+  const confirmDisplayedRead = () =>
+    modelReadConfirmation.current &&
+    latestProgress.current === setupProgress &&
+    latestEntry.current === entryKey &&
+    (!draftReview || controller.getSnapshot() === test) &&
+    currentInput
+      ? controller.confirmRead(currentInput)
+      : null;
   const testLabel = preparationPhaseLabel(test.phase);
   const importControl = onImport && (
     <button
@@ -785,6 +820,7 @@ export function AgentSetup({
         </span>
       </div>
       <AgentSetupNavigation
+        modelOnly={draftReview}
         step={step}
         connected={connected}
         accountActive={!!authJob || authBusy}
@@ -1082,11 +1118,8 @@ export function AgentSetup({
           })}
         {step === 2 && !conversation && (
           <section className="agent-setup-selection">
-            <h3>{R.chooseModel}</h3>
-            <p className="agent-setup-subtitle">
-              {choice === "api" ? R.serviceModelHint : M.managementHint}
-            </p>
-            {choice === "api" && (
+            {agentSetupModelHeading(draftReview, choice === "api")}
+            {!draftReview && choice === "api" && (
               <ServiceModelPicker
                 value={selection.service}
                 items={services}
@@ -1109,38 +1142,32 @@ export function AgentSetup({
               after={selection}
               services={services}
               options={testThread?.configOptions ?? []}
+              draftOnly={draftReview}
             />
-            {!sourceValid && (
-              <div role="alert" className="agent-setup-notice">
-                <p>{S.chooseCompatibleApi}</p>
-                <button className="btn btn-ghost" onClick={() => setStep(1)}>
-                  {S.changeSource}
-                </button>
-              </div>
-            )}
-            {needsAuth && (choice !== "api" || apiState !== "unsupported") && (
-              <div role="alert" className="agent-setup-notice">
-                <p>
-                  {choice === "api"
-                    ? S.apiAuthRequired
-                    : S.authRequiredName(card.name)}
-                </p>
-                <button
-                  className="btn btn-ghost"
-                  onClick={() => {
-                    if (choice === "api") openApi();
-                    else
-                      onProgress({
-                        ...setupProgress,
-                        step: 1,
-                        choice: "login",
-                      });
-                  }}
-                >
-                  {choice === "api" ? S.openApi : S.login}
-                </button>
-              </div>
-            )}
+            {!sourceValid &&
+              agentSetupModelSourceNotice(
+                S.chooseCompatibleApi,
+                draftReview ? M.draftModelReturn : S.changeSource,
+                draftReview ? onClose : () => setStep(1),
+              )}
+            {needsAuth &&
+              (choice !== "api" || apiState !== "unsupported") &&
+              agentSetupModelSourceNotice(
+                choice === "api"
+                  ? S.apiAuthRequired
+                  : S.authRequiredName(card.name),
+                draftReview
+                  ? M.draftModelReturn
+                  : choice === "api"
+                    ? S.openApi
+                    : S.login,
+                () => {
+                  if (draftReview) onClose();
+                  else if (choice === "api") openApi();
+                  else
+                    onProgress({ ...setupProgress, step: 1, choice: "login" });
+                },
+              )}
             {!prerequisitesReady && (
               <p role="status" className="auth-note">
                 {S.prerequisitesRequired}
@@ -1172,7 +1199,8 @@ export function AgentSetup({
                 </button>
               </div>
             )}
-            {testThread &&
+            {!draftReview &&
+              testThread &&
               sameSource &&
               (choice !== "api" ||
                 testThread.configOptions.some(
@@ -1198,17 +1226,13 @@ export function AgentSetup({
               })}
             <div className="agent-model-reading">
               <p role="status">
-                {!connected
-                  ? M.modelConnect
-                  : readingModels
-                    ? M.modelReading
-                    : modelReadFailed
-                      ? M.modelFailed
-                      : sameSource && testThread
-                        ? model
-                          ? M.modelReady
-                          : M.modelUnprovided
-                        : M.modelPending}
+                {modelReadStatus(
+                  connected,
+                  readingModels,
+                  modelReadFailed,
+                  !!(sameSource && testThread),
+                  !!model,
+                )}
               </p>
               <p className="agent-setup-note">{M.modelReadHint}</p>
               {explicitReadRequired && (
@@ -1218,14 +1242,7 @@ export function AgentSetup({
                 mismatch={selectionMismatch}
                 disabled={!canReadModels}
                 onConfirm={() => {
-                  if (
-                    !modelReadConfirmation.current ||
-                    latestProgress.current !== setupProgress ||
-                    latestEntry.current !== entryKey ||
-                    !currentInput
-                  )
-                    return;
-                  const config = controller.confirmRead(currentInput);
+                  const config = confirmDisplayedRead();
                   if (config)
                     updateAccess({
                       selection: { service: selection.service, config },
@@ -1238,6 +1255,7 @@ export function AgentSetup({
                     after={{ service: selection.service, config: test.config }}
                     services={services}
                     options={testThread.configOptions}
+                    draftOnly={draftReview}
                   />
                 )}
               </AgentModelReadNotice>
@@ -1257,7 +1275,7 @@ export function AgentSetup({
                   ? M.modelRetry
                   : M.modelRead}
               </button>
-              {!connected && (
+              {!draftReview && !connected && (
                 <button className="btn btn-text" onClick={() => setStep(0)}>
                   {M.program}
                 </button>
@@ -1268,71 +1286,72 @@ export function AgentSetup({
                 {testThread.configError}
               </p>
             )}
-            {agentSetupTestNote({
-              open:
-                sameSource &&
-                !readingModels &&
-                !modelReadFailed &&
-                (testing || !!test.error || passed),
-              label:
-                sameSource && !readingModels && !modelReadFailed
-                  ? testLabel
-                  : S.testNotRun,
-              prompt: sameSource ? test.prompt : null,
-              error: sameSource && !modelReadFailed ? test.error : null,
-              reply: sameSource ? test.reply : null,
-              passed,
-              action:
-                sameSource &&
-                testThread?.identity === "draft" &&
-                test.phase === "untested"
-                  ? "start"
-                  : operationPending
-                    ? null
-                    : "reprepare",
-              startDisabled:
-                busy ||
-                selectionMismatch ||
-                modelChanging ||
-                authBusy ||
-                !connected ||
-                !prerequisitesReady ||
-                !modelValid ||
-                !work.enabled(card.id) ||
-                !!testThread?.configuring ||
-                !!testThread?.configError,
-              reprepareDisabled:
-                busy ||
-                authBusy ||
-                !connected ||
-                !prerequisitesReady ||
-                !modelValid ||
-                !work.enabled(card.id) ||
-                !controller.canPrepare(),
-              showStop: sameSource && testing && test.phase !== "stopping",
-              onStartTest: () => void controller.start(),
-              onPrepare: prepareAgain,
-              onStop: controller.stop,
-              onOpenTest:
-                sameSource &&
-                test.threadKey &&
-                onOpenConversation &&
-                testThread?.identity === "established"
-                  ? () => {
-                      dialog.current?.close();
-                      onOpenConversation(test.threadKey!);
-                    }
-                  : undefined,
-              closeHint: sameSource && testing,
-              openingHint: sameSource && test.phase === "opening",
-            })}
-            {importControl}
+            {!draftReview &&
+              agentSetupTestNote({
+                open:
+                  sameSource &&
+                  !readingModels &&
+                  !modelReadFailed &&
+                  (testing || !!test.error || passed),
+                label:
+                  sameSource && !readingModels && !modelReadFailed
+                    ? testLabel
+                    : S.testNotRun,
+                prompt: sameSource ? test.prompt : null,
+                error: sameSource && !modelReadFailed ? test.error : null,
+                reply: sameSource ? test.reply : null,
+                passed,
+                action:
+                  sameSource &&
+                  testThread?.identity === "draft" &&
+                  test.phase === "untested"
+                    ? "start"
+                    : operationPending
+                      ? null
+                      : "reprepare",
+                startDisabled:
+                  busy ||
+                  selectionMismatch ||
+                  modelChanging ||
+                  authBusy ||
+                  !connected ||
+                  !prerequisitesReady ||
+                  !modelValid ||
+                  !work.enabled(card.id) ||
+                  !!testThread?.configuring ||
+                  !!testThread?.configError,
+                reprepareDisabled:
+                  busy ||
+                  authBusy ||
+                  !connected ||
+                  !prerequisitesReady ||
+                  !modelValid ||
+                  !work.enabled(card.id) ||
+                  !controller.canPrepare(),
+                showStop: sameSource && testing && test.phase !== "stopping",
+                onStartTest: () => void controller.start(),
+                onPrepare: prepareAgain,
+                onStop: controller.stop,
+                onOpenTest:
+                  sameSource &&
+                  test.threadKey &&
+                  onOpenConversation &&
+                  testThread?.identity === "established"
+                    ? () => {
+                        dialog.current?.close();
+                        onOpenConversation(test.threadKey!);
+                      }
+                    : undefined,
+                closeHint: sameSource && testing,
+                openingHint: sameSource && test.phase === "opening",
+              })}
+            {!draftReview && importControl}
           </section>
         )}
       </div>
       <footer className="agent-setup-footer">
         <div>
-          {step > 0 && (
+          {!draftReview && step > 0 && (
             <button
               className="btn btn-ghost"
               disabled={busy || authBusy || operationPending}
@@ -1346,7 +1365,11 @@ export function AgentSetup({
         </div>
         <div>
           <button className="btn btn-ghost" onClick={close}>
-            {authBusy || operationPending ? S.leaveAndKeep : S.pauseSetup}
+            {draftReview
+              ? M.draftModelReturn
+              : authBusy || operationPending
+                ? S.leaveAndKeep
+                : S.pauseSetup}
           </button>
           {step === 1 && accountPrimary ? (
             <button
@@ -1368,34 +1391,39 @@ export function AgentSetup({
                       : returnBlocked
                 }
                 onClick={async () => {
+                  if (
+                    draftReview &&
+                    (returnBlocked ||
+                      !sameConfigurationSnapshot(
+                        confirmDisplayedRead(),
+                        selection.config,
+                      ))
+                  ) {
+                    setError(M.draftModelChanged);
+                    return;
+                  }
                   if (nextStep !== null) {
                     if (!nextBlocked) setStep(nextStep);
                     return;
                   }
-                  if (intent === "manage") {
-                    if (conversation || !onConfirmManagement) onClose();
-                    else {
-                      setFinishing(true);
-                      setError(null);
-                      try {
-                        if (await onConfirmManagement(card.id, selection))
-                          onClose();
-                      } catch (reason) {
-                        setError(uiError(reason, S.loadFailed));
-                      } finally {
-                        setFinishing(false);
-                      }
-                    }
-                  } else {
-                    setFinishing(true);
-                    setError(null);
-                    try {
-                      await onStart(card.id, selection);
-                    } catch (reason) {
-                      setError(uiError(reason, S.loadFailed));
-                    } finally {
-                      setFinishing(false);
-                    }
+                  if (
+                    intent === "manage" &&
+                    (conversation || !onConfirmManagement)
+                  ) {
+                    onClose();
+                    return;
+                  }
+                  setFinishing(true);
+                  setError(null);
+                  try {
+                    if (intent === "manage") {
+                      if (await onConfirmManagement?.(card.id, selection))
+                        onClose();
+                    } else await onStart(card.id, selection);
+                  } catch (reason) {
+                    setError(uiError(reason, S.loadFailed));
+                  } finally {
+                    setFinishing(false);
                   }
                 }}
               >
@@ -1407,7 +1435,9 @@ export function AgentSetup({
                     ? conversation
                       ? P.returnConversation
                       : P.save
-                    : returnLabel}
+                    : draftReview
+                      ? M.draftModelUse
+                      : returnLabel}
               </button>
             )
           )}

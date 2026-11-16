@@ -7,12 +7,14 @@ export function AgentSetupNavigation({
   connected,
   accountActive = false,
   modelsAvailable = true,
+  modelOnly = false,
   onStep,
 }: {
   step: number;
   connected: boolean;
   accountActive?: boolean;
   modelsAvailable?: boolean;
+  modelOnly?: boolean;
   onStep: (step: number) => void;
 }) {
   return (
@@ -21,57 +23,61 @@ export function AgentSetupNavigation({
         { step: 0, label: M.program },
         { step: 1, label: M.account },
         { step: 2, label: M.model },
-      ].map((tab) => (
-        <button
-          type="button"
-          role="tab"
-          key={tab.step}
-          id={`agent-setup-tab-${tab.step}`}
-          aria-controls="agent-setup-panel"
-          aria-selected={step === tab.step}
-          tabIndex={step === tab.step ? 0 : -1}
-          disabled={
-            (tab.step !== 0 &&
-              !connected &&
-              !(tab.step === 1 && accountActive)) ||
-            (tab.step === 2 && !modelsAvailable)
-          }
-          title={
-            tab.step === 2 && !modelsAvailable
-              ? R.chooseAccessFirst
-              : tab.step !== 0 &&
-                  !connected &&
-                  !(tab.step === 1 && accountActive)
-                ? M.goProgram
-                : undefined
-          }
-          onClick={() => onStep(tab.step)}
-          onKeyDown={(event) => {
-            if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key))
-              return;
-            event.preventDefault();
-            const available = Array.from(
-              event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>(
-                '[role="tab"]:not(:disabled)',
-              ) ?? [],
-            );
-            const index = available.indexOf(event.currentTarget);
-            const next =
-              event.key === "Home"
-                ? 0
-                : event.key === "End"
-                  ? available.length - 1
-                  : (index +
-                      (event.key === "ArrowRight" ? 1 : -1) +
-                      available.length) %
-                    available.length;
-            available[next]?.focus();
-            available[next]?.click();
-          }}
-        >
-          {tab.label}
-        </button>
-      ))}
+      ]
+        .filter((tab) => !modelOnly || tab.step === 2)
+        .map((tab) => (
+          <button
+            type="button"
+            role="tab"
+            key={tab.step}
+            id={`agent-setup-tab-${tab.step}`}
+            aria-controls="agent-setup-panel"
+            aria-selected={step === tab.step}
+            tabIndex={step === tab.step ? 0 : -1}
+            disabled={
+              (tab.step !== 0 &&
+                !connected &&
+                !(tab.step === 1 && accountActive)) ||
+              (tab.step === 2 && !modelsAvailable)
+            }
+            title={
+              tab.step === 2 && !modelsAvailable
+                ? R.chooseAccessFirst
+                : tab.step !== 0 &&
+                    !connected &&
+                    !(tab.step === 1 && accountActive)
+                  ? M.goProgram
+                  : undefined
+            }
+            onClick={() => onStep(tab.step)}
+            onKeyDown={(event) => {
+              if (
+                !["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)
+              )
+                return;
+              event.preventDefault();
+              const available = Array.from(
+                event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>(
+                  '[role="tab"]:not(:disabled)',
+                ) ?? [],
+              );
+              const index = available.indexOf(event.currentTarget);
+              const next =
+                event.key === "Home"
+                  ? 0
+                  : event.key === "End"
+                    ? available.length - 1
+                    : (index +
+                        (event.key === "ArrowRight" ? 1 : -1) +
+                        available.length) %
+                      available.length;
+              available[next]?.focus();
+              available[next]?.click();
+            }}
+          >
+            {tab.label}
+          </button>
+        ))}
     </div>
   );
 }

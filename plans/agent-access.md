@@ -39,8 +39,8 @@
 
 [当前状态](../docs/status.md)维护分项证据与外部依赖。第8、10、11周期按阶段范围收口，第9周期 Windows 后置。
 
-1. **先完成 macOS。** Kimchi 已移出首发，按[22家](../docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)续验。Qoder、Devin、Goose 已复验原对话。Cline 重登实答，Pi 原设置及续答通过，MiniMax 小米新对话实答，旧 M2.7 待原额度。[证据](../docs/evidence/2026-11-16-cycle12-original-config/README.md) Claude 可走官方登录，托管 API 待官方私密交付。Gemini CLI 与 Antigravity 暂缓。[最新八项续验](../docs/evidence/2026-11-16-cycle12-eight-check/README.md)。
-2. **官方替代。** Goose 1.59.1 实测停掉 shell 及子进程，工具实时终态待证。fast-agent 双任务隔离及停止后冷续答已正式验证，工具终态仍待验。Pi 的 SDK 网页接法待实装；Amp 原生已登录，Farfold 认证及原线程待验。依原首发条件处理范围，保留旧数据和证据。
+1. **先完成 macOS。** 按[22家](../docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)续验。Devin 新建旧设置可恢复，Copilot 原 Auto 路由受阻。MiniMax 旧 M2.7 待原额度，Claude 可走官方登录，托管 API 待官方私密交付。Gemini CLI 与 Antigravity 暂缓。[最新八项续验](../docs/evidence/2026-11-16-cycle12-eight-check/README.md)。
+2. **官方替代与复验。** Qoder 双前台隔离及停止后原对话冷续答通过，工具终态仍待。Goose 1.59.1 实测停掉 shell 及子进程，工具实时终态待证。fast-agent 双任务隔离及停止后冷续答已正式验证，工具终态仍待验。Pi 的 SDK 网页接法待实装。Amp 原对话能沿用保存的小米模型续答，显式配置仍待官方组件修正续接参数。依原首发条件处理范围，保留旧数据和证据。
 3. **再回到 Windows。** macOS 能力验收完成后，续第9周期及受影响的平台回归。第13–14周期仍以用户认可能力为前提。
 
 ## 首发逐家验收

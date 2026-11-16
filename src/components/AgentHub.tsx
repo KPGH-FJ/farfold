@@ -78,6 +78,7 @@ export interface AgentPreparationContext {
   conversation?: ConversationRepairContext;
   /** Prepare a separate draft choice and return to its unchanged origin. */
   preserveOrigin?: boolean;
+  applyToDraft?: (selection: AgentSetupSelection) => boolean;
 }
 export interface AgentHubSurface {
   selected: string | null;
@@ -283,29 +284,45 @@ export function AgentHub({
   const preservesOrigin = (agentId: string) =>
     preparationContext?.agentId === agentId &&
     !!preparationContext.preserveOrigin;
+  const draftReviewFor = (agentId: string) =>
+    preparationContext?.agentId === agentId
+      ? preparationContext.applyToDraft
+      : undefined;
   const localProgress = (agentId: string) =>
-    !!conversationFor(agentId) || preservesOrigin(agentId);
+    !!conversationFor(agentId) ||
+    preservesOrigin(agentId) ||
+    !!draftReviewFor(agentId);
   const progressKey = (agentId: string) =>
-    conversationFor(agentId)
+    draftReviewFor(agentId)
       ? JSON.stringify([
           agentId,
           preparationContext!.cwd,
-          "conversation",
-          conversationFor(agentId)!.key,
+          "draft",
+          requestRevision,
         ])
-      : preservesOrigin(agentId)
-        ? preparationProgressKey(agentId, preparationContext)
-        : setupStorage.scope(
+      : conversationFor(agentId)
+        ? JSON.stringify([
             agentId,
-            preparationProgressKey(agentId, preparationContext),
-          );
+            preparationContext!.cwd,
+            "conversation",
+            conversationFor(agentId)!.key,
+          ])
+        : preservesOrigin(agentId)
+          ? preparationProgressKey(agentId, preparationContext)
+          : setupStorage.scope(
+              agentId,
+              preparationProgressKey(agentId, preparationContext),
+            );
   const setupIntent = (agentId: string) =>
-    conversationFor(agentId) || preservesOrigin(agentId)
-      ? "manage"
-      : setupStorage.completed(agentId) &&
-          (entrySelection(agentId) || setupStorage.confirmedSelection(agentId))
-        ? effectiveIntent
-        : "use";
+    draftReviewFor(agentId)
+      ? "use"
+      : conversationFor(agentId) || preservesOrigin(agentId)
+        ? "manage"
+        : setupStorage.completed(agentId) &&
+            (entrySelection(agentId) ||
+              setupStorage.confirmedSelection(agentId))
+          ? effectiveIntent
+          : "use";
   const entrySelection = (agentId: string) =>
     !preparationContext?.conversation && preparationContext?.agentId === agentId
       ? preparationContext.selection
@@ -395,7 +412,11 @@ export function AgentHub({
   const closePreparation = (agentId: string) => {
     navigationRevision.current++;
     setSelected(null);
-    if (initialAgentId === agentId && initialIntent === "manage") onReturn();
+    if (
+      initialAgentId === agentId &&
+      (initialIntent === "manage" || draftReviewFor(agentId))
+    )
+      onReturn();
   };
   const viewProgress = (
     card: AgentCardModel,
@@ -812,10 +833,12 @@ export function AgentHub({
           returnFocusRef={preparationReturnFocus}
           progress={progressFor(selectedCard)}
           conversation={conversationFor(selectedCard.id)}
+          draftReview={!!draftReviewFor(selectedCard.id)}
           sourceContext={
             conversationFor(selectedCard.id)?.sourceContext ??
-            (progressKey(selectedCard.id) ===
-              preparationProgressKey(selectedCard.id, preparationContext) &&
+            ((draftReviewFor(selectedCard.id) ||
+              progressKey(selectedCard.id) ===
+                preparationProgressKey(selectedCard.id, preparationContext)) &&
             JSON.stringify(
               progressFor(selectedCard).selection?.service ?? null,
             ) ===
@@ -834,6 +857,20 @@ export function AgentHub({
           }}
           onClose={() => closePreparation(selectedCard.id)}
           onStart={async (agentId, selection) => {
+            const applyToDraft = draftReviewFor(agentId);
+            if (applyToDraft) {
+              if (
+                !selection ||
+                !isCurrentCandidate(agentId) ||
+                selectedCard.status !== "connected" ||
+                !liveEntry.current.active ||
+                liveEntry.current.entry !== entryKey
+              )
+                return;
+              if (!applyToDraft(selection)) throw new Error(C.draftChanged);
+              setSelected(null);
+              return;
+            }
             if (conversationFor(agentId) || setupIntent(agentId) === "manage") {
               closePreparation(agentId);
               return;

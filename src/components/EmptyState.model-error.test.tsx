@@ -848,6 +848,7 @@ it("opens model settings from a blocked picker without applying an obsolete save
     panel: "model",
     needsAuthentication: false,
     sourceContext: undefined,
+    draftConfiguration: true,
   });
   const closed = render();
   expect(closed.dialog).toBeUndefined();

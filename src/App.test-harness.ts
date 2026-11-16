@@ -13,6 +13,7 @@ const h = vi.hoisted(() => ({
   effects: [] as { deps?: unknown[]; cleanup?: () => void }[],
   pending: [] as (() => void)[],
   draft: { text: "OWN-ORIGINAL-DRAFT", attachments: [] as unknown[] },
+  draftGeneration: 0,
   choice: {
     agentId: "A" as string | null,
     cwd: "/draft-A" as string | null,
@@ -158,6 +159,7 @@ vi.mock("./runtime/performance-trace", () => ({ traceAfterPaint: vi.fn() }));
 vi.mock("./runtime/drafts", () => ({
   composerDrafts: {
     read: () => h.draft,
+    generation: () => h.draftGeneration,
     clear: h.clearDraft,
     preserveNew: h.preserveDraft,
     clearPreservedNew: (ticket: { draft: typeof h.draft }) => {
@@ -172,6 +174,7 @@ vi.mock("./runtime/drafts", () => ({
       h.draft = update(h.draft);
     },
   },
+  draftPersistence: { snapshot: () => ({ interactionLocked: false }) },
   newConversationChoice: h.choice,
 }));
 vi.mock("./runtime/collections", async (original) => ({
@@ -301,6 +304,7 @@ export async function resetHarness() {
   h.notificationSettings = null;
   h.threads.clear();
   h.draft = { text: "OWN-ORIGINAL-DRAFT", attachments: [] };
+  h.draftGeneration = 0;
   Object.assign(h.choice, {
     agentId: "A",
     reviewRequired: false,

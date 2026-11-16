@@ -17,6 +17,7 @@ const h = vi.hoisted(() => ({
   start: vi.fn(),
   setConfig: vi.fn(),
   confirmRead: vi.fn(),
+  finish: vi.fn(),
   needsAuth: false,
   authJob: null as unknown,
   refresh: vi.fn(async () => {}),
@@ -73,6 +74,7 @@ vi.mock("../runtime/agent_preparation", async (original) => {
     invalidate: vi.fn(),
     prepare: h.prepare,
     confirmRead: h.confirmRead,
+    getSnapshot: () => h.snapshot,
     start: h.start,
   };
   return {
@@ -147,7 +149,7 @@ const changed = vi.fn((next: AgentSetupProgress) => {
   progress = next;
 });
 type Element = ReactElement<Record<string, unknown>>;
-function render(active = true) {
+function render(active = true, draftReview = false) {
   h.cursor = 0;
   const nodes: Element[] = [];
   const visit = (node: ReactNode) =>
@@ -170,10 +172,11 @@ function render(active = true) {
       } as unknown as AgentsState,
       cwd: "/own",
       active,
+      draftReview,
       progress,
       onProgress: changed,
       onClose: h.close,
-      onStart() {},
+      onStart: h.finish,
       onOpenApi() {},
     }),
   );
@@ -208,6 +211,7 @@ beforeEach(() => {
   h.start.mockReset();
   h.setConfig.mockReset();
   h.confirmRead.mockReset();
+  h.finish.mockReset();
   h.needsAuth = false;
   h.authJob = null;
   h.refresh.mockClear();
@@ -362,6 +366,63 @@ it.each(["confirmed", "failed"])(
     );
   },
 );
+
+it("requires explicit review of both unavailable settings before returning to the draft", async () => {
+  const original = { model: "A", thought_level: "high" };
+  const current = { model: "B", thought_level: "medium" };
+  const finishButton = (nodes: Element[]) =>
+    nodes.find(
+      (node) =>
+        node.type === "button" && node.props.children === M.draftModelUse,
+    )!;
+  progress = { ...progress, selection: { service: null, config: original } };
+  returnedModel("B");
+  h.snapshot = {
+    ...(h.snapshot as PreparationSnapshot),
+    input: {
+      ...(h.snapshot as PreparationSnapshot).input!,
+      config: original,
+      readOptionsOnly: true,
+    },
+    config: current,
+  };
+  h.confirmRead.mockReturnValue(current);
+  const nodes = render(true, true);
+  const notice = nodes.find((node) => node.type === AgentModelReadNotice)!;
+  expect(notice.props.mismatch).toBe(true);
+  expect(
+    nodes.find(
+      (node) =>
+        node.type === AgentSelectionReview &&
+        node.props.before === progress.selection,
+    )?.props.after,
+  ).toEqual({ service: null, config: current });
+  expect(finishButton(nodes).props.disabled).toBe(true);
+  expect(nodes.some((node) => node.type === ModelPicker)).toBe(false);
+  expect(h.finish).not.toHaveBeenCalled();
+  expect(progress.selection?.config).toEqual(original);
+
+  const renderSnapshot = h.snapshot;
+  h.snapshot = {
+    ...(h.snapshot as PreparationSnapshot),
+    config: { ...current, thought_level: "low" },
+  };
+  (notice.props.onConfirm as () => void)();
+  expect(h.confirmRead).not.toHaveBeenCalled();
+  h.snapshot = renderSnapshot;
+  (notice.props.onConfirm as () => void)();
+  expect(progress.selection?.config).toEqual(current);
+  expect(h.finish).not.toHaveBeenCalled();
+  const finish = finishButton(render(true, true));
+  expect(finish.props.disabled).toBe(false);
+  await (finish.props.onClick as () => Promise<void>)();
+  expect(h.finish).toHaveBeenCalledExactlyOnceWith(card.id, {
+    service: null,
+    config: current,
+  });
+  expect(h.setConfig).not.toHaveBeenCalled();
+  expect(h.start).not.toHaveBeenCalled();
+});
 
 it.each(["current", "stale", "closed", "step", "method", "blocked"])(
   "only confirms empty returned options for a %s read without applying settings",

@@ -26,6 +26,47 @@
 
 同目录普通新对话重新核对使用小米和 Default，只发一条。批准新副本 `result.md` 的写入一次，界面完成。打开「本轮产物」并选择该文件，核对分类、负责人和日期，原样本字节保持。[正式回执](results.json)
 
+## Qoder 停止及发送名额
+
+11 月 16 日在正式版以 Qoder CLI 1.1.89 的已有设置和已配置的 MiMo 创建两个自建空目录对话。A、B 保存的官方模型值相同。每条仅发送一次，分别单次批准确定的只读等待命令。A 的 `/bin/sleep 120` 子进程 PID 57062 归属 Shell 57059，工作目录匹配 A。此前一轮在发送前超时、零 `session/prompt`，原草稿保留。
+
+A 运行时，B 的界面显示「正在等待发送」，B 连接尚无 `session/prompt`。在 A 按「停止」后，协议 `protocol-v1-1794828307815-63.jsonl` 记录 19:29:46.384（UTC+8）发送 `session/cancel`、19:29:46.391 收到请求响应。独立进程检查确认 A 的 Shell 和子进程均已退出，未等到 120 秒自然结束。界面显示「回复已停止，仍有步骤未确认结束」，该工具实时终态仍未知。
+
+B 的 `protocol-v1-1794828504057-65.jsonl` 在 19:29:46.392 实际发送，单次批准后命令进入独立的 Shell 57284 和子进程 57287，随后返回 `FF_C12_QODER_B_NATURAL_END`，正式界面显示完成。此次覆盖实际停止和排队释放，缺两条实际命令同时运行的隔离证据。
+
+源码的发送名额为全局两个，同一 Agent 可使用两个。正式界面另有一条 OpenCode 协议报错后的对话明确显示「当前连接仍保留一个任务名额」。用户逐条授权后，从正常界面单独关闭该连接。界面确认关闭，原历史与未发送内容按界面范围保留；对应协议记录 `protocol-v1-1794825345946-43.jsonl` 确认归属进程组退出并移除连接。
+
+复验使用新的独立空目录。A 的原标识 `e885dad4-67c9-48e8-ab07-666dd98c2fc3`，B 的原标识 `194aee7f-0fb0-4ad3-83f0-19775fbfe9e0`，两条均沿用已有设置并保存同一 MiMo。各发一条，分别批准一次。停止前从 PID 与工作目录核两条同时运行：A 的 Shell 和 sleep 为 61605、61608，B 为 61610、61613。19:38:07.154 从 A 按「停止」，A 连接的 `protocol-v1-1794829019199-68.jsonl` 记录 `session/cancel`，7 毫秒后收到响应。19:38:19 两个 A PID 都已退出，B 的两个原 PID 仍在执行。界面保留 A 的工具步骤结果未知。
+
+B 的 `protocol-v1-1794829044139-70.jsonl` 在 19:39:03.976 收到工具更新，19:39:09.905 收到终态响应，全程无取消通知。正式界面显示 `FF_C12_QODER_PAIR_B_NATURAL_END` 和「已完成」。A 当时的连接检查仍提示暂时无法安全单独关闭。
+
+### Qoder 停止后冷开续答
+
+在正式版 0.1.7（CDHash `2d46978b6a5c4f3283c817420e242b364de7f2b7`）核两组验收进程均已退出，在退出保护界面保存退出，再打开正式应用。从侧栏打开 A，原消息和「此前请求结果未确认，未自动重发」可见。「模型与来源」显示沿用已有设置、`mimo-v2.6-flash`、Default。首条命令保持停止。打开时只有一次 `session/load`，没有自动发送。
+
+从原输入框发一次不含原标记的上下文追问，要求只回复第一条用户消息开头的验收标记，并明确不执行命令。收到 `FF_C12_QODER_PAIR_A`，正式界面显示「已完成」。`protocol-v1-1794834778265-0.jsonl` 记录 1 次 `session/load`、1 次手动 `session/prompt`、0 次 `session/new`，续问从出站到匹配答复约 1.96 秒，发送后零工具更新和审批。Farfold 索引仅有原标识 `e885dad4-67c9-48e8-ab07-666dd98c2fc3`，目录及官方 Custom 保存的小米 MiMo 保持。A 停止时缺失的原工具终态仍保留为未确认。
+
+## Copilot 原账号、原对话和 Auto 路由
+
+用户确认当前为原 GitHub 账号。正式 Farfold 从「带入已有对话」选择 Copilot 和原工作目录，官方列表找到 `FARFOLD_COPILOT_A_20261006`，预览读回原消息和回复。只加入该条，索引从 0 条到 1 条，原标识 `f42b41e3-2978-4ce8-ac4d-7b92dce52646`，目录保持。预览、加入和打开各阶段没有模型请求。从「恢复原对话设置」核对并保存与旧回执一致的已有服务和 Auto，再打开「模型与来源」核对保存值。
+
+只发一条需要原上下文的短续问，未给出预期标记。`protocol-v1-1794835087081-4.jsonl` 记录一次 `session/load` 和一次手动 `session/prompt`，零 `session/new`，续问无工具和审批。约 20.7 秒后，Copilot 原会话事件记录 `session.error`，`errorType=query`，无状态码，报告 Auto 内部尝试两次后网络错误。同一毫秒的 ACP 更新仅为助手正文，6 毫秒后协议响应无错误码。界面显示「已完成」，实际未返回预期标记。保留原账号、服务和 Auto。本次查询的官方状态页显示 Copilot 与模型提供方运行正常，单次故障原因仍待确认。反馈修复需核同一请求能否从官方接口收到可识别的失败信号。[SDK 失败事件](https://docs.github.com/en/copilot/how-tos/copilot-sdk/features/streaming-events#sessionerror) · [GitHub 状态](https://www.githubstatus.com/)
+
+## Cline 和 Amp 的官方备选入口
+
+- Cline 3.0.74 对应 SDK 0.2.0。公开历史入口即使设 `hydrate:false`，仍调用可能改写失联会话的列表。内部元数据列表跳过该步骤，但公开打开同一存储仍执行初始化和迁移。保留按已知 ID 的 ACP 读取，当前缺可验证的同存储只读发现入口。[公开入口](https://github.com/cline/cline/blob/cli-v3.0.74/sdk/packages/core/src/runtime/host/host.ts#L55-L68) · [列表实现](https://github.com/cline/cline/blob/cli-v3.0.74/sdk/packages/core/src/session/services/persistence-service.ts#L516-L564)
+- Amp ACP 0.13.0 对旧线程续答仍追加显式 `--model`。官方 CLI 与 SDK 的覆盖选项限新线程，交互界面另有切换模型入口。同一旧线程沿用原 MiMo 的实测正例保留。显式选择后继续仍待官方组件或可验证的同线程接口。[组件](https://github.com/tao12345666333/amp-acp/blob/v0.13.0/src/amp-transport.ts#L205-L243) · [官方模型切换](https://ampcode.com/docs/model-selector#switch-models-in-a-thread)
+
+## Devin 普通新建的旧设置恢复
+
+原正式版从「探索 Agent → Devin → 开始新对话」保留测试文字，选择独立空目录。新建使用已保存的 `swe-2-high`、`high` 和 Code，提示「已保存的选择当前不可用」，发送禁用，零模型请求。
+
+通过正常退出安装新的唯一正式应用 0.1.7 arm64，CDHash `7aefe7b0116d761bf7dcfcbed3ab392e0bd4aadd`。原草稿和目录仍在。从相同入口看到相同拦截，点「检查模型设置」。表格同时核对原模型和推理等级：`swe-2-high` 对应当前 `SWE-2 Flash Medium`，旧 `high` 对应「未提供选项」。清楚标明仅用于这份草稿，已有服务和 Code 匹配。明确点「沿用当前设置 → 用这些设置返回草稿」，原文字、目录和新选项读回，确认前零真实请求。
+
+从同一草稿手动发一条短问，约 2.52 秒准确收到 `FF_C12_DEVIN_DRAFT_REPAIR_OK`，无工具和审批。读取用的 `protocol-v1-1794835755582-1.jsonl` 零发送，`protocol-v1-1794835730412-0.jsonl` 恰有一次 `session/prompt`。该目录仅一条本机索引，原标识 `grave-newt`，保存已有服务、`swe-2-flash-medium`，无已确认的推理等级。Agent 全局保存记录 `agentSetup.v1` 变更前后字节摘要相同，Devin 的原默认选择保持，既有历史索引和旧工作位置未确认记录保留。
+
+工程验证含 212 项相关前端测试、786 文件 10,959 项全量前端测试，格式、类型、前端生产构建与正式应用打包通过。Rust 格式、Clippy 与测试通过，共 2,805 项成功、11 项既有忽略。正式实测覆盖原已有服务，托管服务的等效恢复及切换所有者的保护以本轮受控检查为限。
+
 ## 工程与安装
 
 正式版 0.1.7 arm64，CDHash `463a103256d1d42addd5f74e01b2e772427b40b6`。候选固定 2,633 项输入，生产构建与打包通过。四个关联前端测试文件 122 项通过，文档仍保持 151 条原条件。安装比对 236,586 项保护记录摘要一致，元数据副本完整，重复产物已移除。

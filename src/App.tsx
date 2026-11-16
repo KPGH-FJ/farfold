@@ -91,6 +91,7 @@ import {
   draftPreparationRequired,
   draftPreparationSelection,
   conversationRepairContext,
+  captureDraftConfigurationRepair,
   type AgentRepairRequest,
 } from "./runtime/agent_repair";
 
@@ -158,6 +159,7 @@ export default function App() {
       : { kind: "start" },
   );
   const currentView = useRef(view);
+  const draftRepairOwner = useRef<object | null>(null);
   const threadNavigationFocus = useRef<ThreadNavigationFocus | null>(null);
   const [attachmentSearchRequest, setAttachmentSearchRequest] =
     useState<AttachmentSearchRequest | null>(null);
@@ -178,6 +180,7 @@ export default function App() {
     };
   };
   const setView = (next: View, focus: ThreadNavigationFocus | null = null) => {
+    if (next.kind !== "agents") draftRepairOwner.current = null;
     historyReadInterest.current?.abort();
     historyReadInterest.current = null;
     setLoadedSearchRequest(null);
@@ -431,12 +434,47 @@ export default function App() {
       if (reminder) requestGeneralPanel("notifications");
     },
   );
-  const openAgents = afterBrowserClose(
+  const openAgentsAfterClose = afterBrowserClose(
     (
       agentId?: string,
       intent: "use" | "manage" = "use",
       repair?: AgentRepairRequest,
+      ownsSelection?: ReturnType<typeof captureDraftConfigurationRepair>,
     ) => {
+      const draftCwd = newConversationChoice.cwd ?? defaultCwd;
+      let applyToDraft: AgentPreparationContext["applyToDraft"];
+      if (repair?.draftConfiguration) {
+        if (
+          currentView.current.kind !== "start" ||
+          repair.panel !== "model" ||
+          !agentId ||
+          agentId !== newConversationChoice.agentId ||
+          !draftCwd ||
+          !ownsSelection?.({
+            service: newConversationChoice.service,
+            config: newConversationChoice.config,
+          })
+        )
+          return;
+        const owner = {};
+        draftRepairOwner.current = owner;
+        applyToDraft = (selection) => {
+          if (
+            draftRepairOwner.current !== owner ||
+            currentView.current.kind !== "agents" ||
+            !ownsSelection(selection) ||
+            unreadyCandidate(agentId)
+          )
+            return false;
+          allowAutomaticConnection(agentId);
+          setNewAgent(agentId);
+          setPreparedSelection(selection);
+          setAgentRequest((revision) => revision + 1);
+          routeHistory.current = [];
+          setView({ kind: "start" });
+          return true;
+        };
+      } else draftRepairOwner.current = null;
       if (view.kind !== "agents") rememberOrigin();
       setHubTarget(agentId ?? null);
       setHubRestoredState(undefined);
@@ -446,16 +484,17 @@ export default function App() {
       originatingDraft.current =
         view.kind === "start" ? composerDrafts.read("new") : null;
       setHubContext(
-        view.kind === "start" && defaultCwd
+        view.kind === "start" && draftCwd
           ? {
               agentId: newConversationChoice.agentId ?? undefined,
-              cwd: newConversationChoice.cwd ?? defaultCwd,
+              cwd: draftCwd,
               locationLabel: newConversationChoice.cwd ?? LIBRARY.ordinary,
               selection: {
                 service: newConversationChoice.service,
                 config: { ...newConversationChoice.config },
               },
               repair,
+              ...(applyToDraft ? { applyToDraft } : {}),
             }
           : view.kind === "thread" &&
               intent === "manage" &&
@@ -485,6 +524,19 @@ export default function App() {
       setView({ kind: "agents" });
     },
   );
+  const openAgents = (
+    agentId?: string,
+    intent?: "use" | "manage",
+    repair?: AgentRepairRequest,
+  ) =>
+    openAgentsAfterClose(
+      agentId,
+      intent,
+      repair,
+      repair?.draftConfiguration && currentView.current.kind === "start"
+        ? captureDraftConfigurationRepair()
+        : undefined,
+    );
   const prepareHistoryAgent = afterBrowserClose(
     (agentId: string | undefined, cwd: string | null) => {
       rememberOrigin(true);

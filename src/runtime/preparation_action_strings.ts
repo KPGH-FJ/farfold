@@ -1,4 +1,5 @@
 export const PREPARATION_ACTION_STRINGS = {
+  draftChanged: "草稿或原设置已改变，请返回草稿重新检查。",
   title: "设置账号与服务",
   accountLogin: {
     title: "使用官方程序登录账号",

@@ -107,7 +107,7 @@ import {
 } from "../runtime/authentication";
 import { authActive } from "../runtime/auth_activity";
 import {
-  agentRepairPanel,
+  newDraftRepairRequest,
   type AgentRepairRequest,
 } from "../runtime/agent_repair";
 import {
@@ -304,18 +304,16 @@ export function EmptyState({
     !!agentId &&
     authenticationRequired(authentication, agentId, requestCwd, sourceContext);
   const openRepair = () =>
-    onGoSettings(agentId ?? undefined, {
-      panel:
-        explicitReadRequired ||
-        (!needsAuthentication &&
-          (draftError?.message === STRINGS.repair.configFailed ||
-            draftError?.message === STRINGS.repair.confirmConfigFailed ||
-            isConfigurationRestoreNotice(draftError)))
-          ? "model"
-          : agentRepairPanel(draft, needsAuthentication),
-      needsAuthentication,
-      sourceContext,
-    });
+    onGoSettings(
+      agentId ?? undefined,
+      newDraftRepairRequest(
+        draft,
+        needsAuthentication,
+        sourceContext,
+        explicitReadRequired,
+        draftError,
+      ),
+    );
   const failedPairRef = useRef<string | null>(null);
   const pendingInquiryAbort = useRef<AbortController | null>(null);
   useEffect(() => {
