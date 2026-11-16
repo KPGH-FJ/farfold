@@ -1,5 +1,11 @@
 export const PREPARATION_ACTION_STRINGS = {
   title: "设置账号与服务",
+  accountLogin: {
+    title: "使用官方程序登录账号",
+    hint: "按所选程序的官方流程登录，使用它保存的账号。",
+    effects: "请按终端提示完成登录。终端退出后还需要检查连接和账号。",
+    run: "启动登录终端",
+  },
   details: "查看详情",
   inProgress: "配置尚未结束",
   resume: "查看配置进度",

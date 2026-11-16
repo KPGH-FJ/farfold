@@ -700,6 +700,25 @@ pub(crate) fn apply(
     apply_with(store, agent_id, env, &Keychain)
 }
 
+/// Check grant metadata without opening the vault or resolving a credential.
+pub(crate) fn has_environment_grant(
+    store: &MetaStore,
+    agent_id: &str,
+    names: &[&str],
+) -> Result<bool, String> {
+    let platform = crate::shell_env::EnvNames::current();
+    Ok(read(store)?
+        .iter()
+        .filter(|credential| !credential.deleting)
+        .flat_map(|credential| &credential.grants)
+        .any(|grant| {
+            grant.agent_id == agent_id
+                && names
+                    .iter()
+                    .any(|name| platform.matches(&grant.env_name, name))
+        }))
+}
+
 fn remove(store: &MetaStore, vault: &dyn Vault, id: &str) -> Result<(), String> {
     store.require_mcp_service_ready(id)?;
     let mut pool = read(store)?;

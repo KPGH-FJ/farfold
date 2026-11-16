@@ -32,30 +32,32 @@
     {
       "agentId": "amp-acp",
       "runtime": "登记版本 0.9.0",
-      "liveAction": "官方 CLI 需要原账号登录。之后先用同一 CLI 读取已知原 T-ID，再核目录适配器是否可关联、冷开和续答。禁止以适配器的其他账号或新线程代替。",
+      "liveAction": "Farfold 正式版已提供原登录之外独立的「使用官方程序登录账号」，由用户完成原厂商账号。之后核该账号的同一原 T-ID 正文，再看正式恢复、续答及实际停止。",
       "standards": {
         "S1": {
-          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n本轮实测：目前程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。",
-          "remaining": "恢复正确的厂商 CLI 账号，再验实际服务、首次回复、取消及返回。",
+          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n本轮实测：目前程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。\n2026-11-16 续查：新版正式 Amp 账号页显示独立厂商账户登录。查看详情核原已装厂商程序和固定 login，仍需手动启动。",
+          "remaining": "用户完成官方登录后核实际身份、服务、首次回复、取消及返回。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json",
             "output/2026-11-15-cycle12-macos/runtime-inventory.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-16-cycle12-amp-native/README.md"
           ],
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "旧真实样本认证要求和结果未知。\n2026-11-16 续查：原厂商程序 account list 无保存账号，一次只读线程查询需要认证。目录适配器的认证来源另核。\n2026-11-16 续查：用户反馈 Farfold 的 Amp API Key Setup 登录失败；该项为适配器独立密钥配置，已告知本机原厂商 CLI 的官方 login 路径。",
-          "remaining": "本人完成厂商 login 后验同账号线程；适配器单独来源须核。",
+          "observed": "旧真实样本认证要求和结果未知。\n2026-11-16 续查：原厂商程序 account list 无保存账号，一次只读线程查询需要认证。目录适配器的认证来源另核。\n2026-11-16 续查：用户反馈 Farfold 的 Amp API Key Setup 登录失败；该项为适配器独立密钥配置，已告知本机原厂商 CLI 的官方 login 路径。\n2026-11-16 续查：已有独立厂商账号入口，用户尚未回报新入口真实结果。原适配器密钥配置保留。",
+          "remaining": "复核新登录的有效来源与原账号、线程及付费来源，原 API 密钥路径单列。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-16-cycle12-amp-native/README.md"
           ],
           "status": "受阻"
         },
@@ -1884,8 +1886,8 @@
           "status": "默认列表为空"
         },
         "S4": {
-          "observed": "当前选项显示 Onde，旧自测为本地 HuggingFace\n2026-11-16 续查：同版官方 ACP 有 OpenAI 兼容环境或官方配置。界面 Ready 可早于本地模型真正加载；字符显示 Onde 也不能排除进程级覆盖。",
-          "remaining": "读回原来源、确认本地模型缓存与实际生成；第三方服务独立于当前原对象。",
+          "observed": "当前选项显示 Onde，旧自测为本地 HuggingFace\n2026-11-16 续查：同版官方 ACP 有 OpenAI 兼容环境或官方配置。界面 Ready 可早于本地模型真正加载；字符显示 Onde 也不能排除进程级覆盖。\n2026-11-16 续查：登记未设置已知来源覆盖，共用 Onde 模型目录未找到且默认 HuggingFace 缓存无模型库。仅核常见路径，尚无可执行本地模型证据。",
+          "remaining": "确认实际加载的本地模型、确切缓存和体量，或者用户选定官方第三方服务后独立验真实结果。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md"

@@ -4,6 +4,7 @@ import { INQUIRY } from "./elicitation_strings";
 import { BufferedLoginTerminal } from "./login_terminal";
 import { AUTH_ACTIVITY_STRINGS } from "./auth_strings";
 import { PREPARATION_ACTION_STRINGS as P } from "./preparation_action_strings";
+import type { PreparationAction } from "./preparation";
 
 export type AuthOperation =
   | {
@@ -16,7 +17,7 @@ export type AuthOperation =
   | {
       kind: "preparation";
       actionId: string;
-      purpose: "service_configuration";
+      purpose: PreparationAction["purpose"];
       title: string;
       completion: "exit_code";
     };

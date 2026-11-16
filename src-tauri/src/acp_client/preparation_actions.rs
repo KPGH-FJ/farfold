@@ -18,6 +18,8 @@ use crate::{
     pty::{self, PtyManager},
 };
 
+mod amp_login;
+
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct PreparationAction {
@@ -188,6 +190,9 @@ pub(crate) fn actions_for(
     row: &AgentRow,
     data: &Path,
 ) -> Result<Vec<PreparationAction>, String> {
+    if row.id == amp_login::AGENT {
+        return amp_login::action(store, row, data).map(|action| action.into_iter().collect());
+    }
     let Some(declaration) = super::recipes::terminal_action_declaration(row) else {
         return Ok(vec![]);
     };
@@ -272,7 +277,11 @@ fn run_terminal(
     let scope = manager.reserve_preparation_action(row, &action.command, &action.args)?;
     // Only normal shell/process environment. Do not resolve Agent placeholders,
     // call credentials::apply or load the selected service's Farfold Keychain.
-    let env: Vec<_> = crate::shell_env::command_env().into_iter().collect();
+    let env = crate::shell_env::command_env();
+    if action.id == amp_login::ACTION {
+        amp_login::check_environment(&env)?;
+    }
+    let env: Vec<_> = env.into_iter().collect();
     let sink = auth::terminal_output(
         ownership.output,
         ownership.configuration,

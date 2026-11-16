@@ -44,7 +44,7 @@ export interface PreparationInfo {
 
 export interface PreparationAction {
   id: string;
-  purpose: "service_configuration";
+  purpose: "service_configuration" | "account_login";
   transport: "terminal";
   command: string;
   args: string[];

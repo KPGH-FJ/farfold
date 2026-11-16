@@ -176,7 +176,8 @@ export function beginPreparationAction(input: {
       kind: "preparation",
       actionId: action.id,
       purpose: action.purpose,
-      title: P.title,
+      title:
+        action.purpose === "account_login" ? P.accountLogin.title : P.title,
       completion: "exit_code",
     },
     attemptId,
