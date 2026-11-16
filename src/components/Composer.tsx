@@ -92,7 +92,6 @@ import {
   DRAFT_STRINGS,
   useDraftSaveStatus,
 } from "../runtime/draft_storage";
-
 export function Composer({
   thread,
   imageEnabled,
@@ -130,8 +129,7 @@ export function Composer({
   /** `promptCapabilities.embeddedContext` — `@` picks embed file text. */
   embedContext?: boolean;
   onGoSettings: () => void;
-  /** When provided, the composer drives a not-yet-open conversation
-   *  (start page). Otherwise it sends into `thread`. */
+  /** The parent's send action, if it differs from sending into `thread`. */
   onSend?: (
     blocks: PromptBlock[],
     submitted: ComposerDraft,
@@ -197,7 +195,6 @@ export function Composer({
   };
   const [focus, setFocus] = useState(false);
   const [plusOpen, setPlusOpen] = useState(false);
-
   const plusAnchor = useRef<HTMLButtonElement>(null);
   const plusOwner = useRef<string | null>(null);
   plusOwner.current = active && plusOpen ? storageKey : null;
@@ -269,7 +266,6 @@ export function Composer({
       el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
     }
   }, [text, storageKey]);
-
   const workCwd = thread?.cwd ?? workContext?.cwd ?? null;
   const workAgentId = thread?.agentId ?? workContext?.agentId ?? null;
   const work = useWorkPolicy(workCwd);
@@ -286,7 +282,7 @@ export function Composer({
       ? STRINGS.repair.retryStop
       : STRINGS.composer.stopTitle;
   const queued = thread?.queued ?? [];
-  const willQueue =
+  const needsQueue =
     !queueEditing &&
     Boolean(
       running ||
@@ -295,6 +291,13 @@ export function Composer({
       (thread?.queuePaused && !canReleaseEmptyQueuePause(thread)) ||
       queued.length,
     );
+  // The new-conversation editor returns a stalled first message to its draft.
+  const firstSendBlocked =
+    needsQueue &&
+    storageKey === "new" &&
+    !!onSend &&
+    thread?.identity === "draft";
+  const willQueue = needsQueue && !firstSendBlocked;
   const sendLabel = queueEditing
     ? C.saveQueued
     : willQueue
@@ -333,14 +336,12 @@ export function Composer({
       );
     },
   });
-
   const autogrow = () => {
     const el = areaRef.current;
     if (!el) return;
     el.style.height = "auto";
     el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
   };
-
   // Slash popup: whole input is a single `/token` and the agent declared
   // commands. Mention popup: live query after the `@` anchor.
   const commands = thread?.availableCommands ?? [];
@@ -421,7 +422,6 @@ export function Composer({
       filePickerMounted.current = false;
     };
   }, []);
-
   useEffect(() => setPickIndex(0), [slashQ, mentionQ, currentFiles?.requestId]);
 
   // `@` file search asks for a working folder first when none is chosen.
@@ -515,6 +515,7 @@ export function Composer({
     Boolean(text.trim() || chips.length > 0) &&
     active &&
     !disabled &&
+    !firstSendBlocked &&
     !stopPending &&
     !thread?.submitting &&
     !input.sendPending &&
@@ -565,7 +566,6 @@ export function Composer({
     setPlusOpen(false);
     areaRef.current?.focus();
   };
-
   const doSend = async () => {
     if (!canSend || busy.current) return;
     busy.current = true;
@@ -733,7 +733,6 @@ export function Composer({
       prepareAction();
     else void doSend();
   };
-
   const permissionNote =
     thread?.permissionConfigId && thread.permissionState !== "ready"
       ? thread.permissionState === "changing"
@@ -767,6 +766,7 @@ export function Composer({
       false,
     ],
     [noteMessage, noteAction, noteDetail],
+    [firstSendBlocked && !stopPending ? C.stopSendingPaused : null, false],
   ];
   const [openNote, showAction, openNoteDetail] = notes.find(([text]) =>
     Boolean(text),

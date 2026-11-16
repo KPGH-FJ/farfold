@@ -3,14 +3,14 @@
   "agentCount": 22,
   "cellCount": 176,
   "explicitStatuses": {
-    "准备未齐": 19,
+    "准备未齐": 18,
     "入口有证": 22,
-    "受阻": 9,
-    "分项通过": 6,
+    "受阻": 7,
+    "分项通过": 7,
     "未测": 14,
     "原账号实答": 4,
     "查找冷开续答通过": 7,
-    "已选模型有实答": 8,
+    "已选模型有实答": 9,
     "可建对话": 1,
     "已知标识读取声明": 1,
     "实测分项通过": 11,
@@ -23,8 +23,8 @@
     "原正文已读": 2,
     "实测失败": 2,
     "未确认": 2,
-    "已选服务有实答": 1,
-    "默认列表为空": 1,
+    "已选服务有实答": 2,
+    "默认列表为空": 2,
     "冷开续答分项通过": 1,
     "跨家分项通过": 2
   },
@@ -32,11 +32,11 @@
     {
       "agentId": "amp-acp",
       "runtime": "登记版本 0.9.0",
-      "liveAction": "Farfold 正式版已提供原登录之外独立的「使用官方程序登录账号」，由用户完成原厂商账号。之后核该账号的同一原 T-ID 正文，再看正式恢复、续答及实际停止。",
+      "liveAction": "同登记官方 CLI 已确认账号登录，含归档线程为空。Farfold 既有请求返回 auth_required；先确认当前适配器的有效账号或官方密钥来源，有可确定的原线程再关联、读取并续答。",
       "standards": {
         "S1": {
-          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n本轮实测：目前程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。\n2026-11-16 续查：新版正式 Amp 账号页显示独立厂商账户登录。查看详情核原已装厂商程序和固定 login，仍需手动启动。\n2026-11-16 续查：修复前次误拦截并安装；从原入口确实启动官方 CLI 登录终端，原适配器密钥文件保留。",
-          "remaining": "用户完成官方登录后核实际身份、服务、首次回复、取消及返回。",
+          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n本轮实测：目前程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。\n2026-11-16 续查：新版正式 Amp 账号页显示独立厂商账户登录。查看详情核原已装厂商程序和固定 login，仍需手动启动。\n2026-11-16 续查：修复前次误拦截并安装；从原入口确实启动官方 CLI 登录终端，原适配器密钥文件保留。\n2026-11-16 复验：用户完成官方 CLI 登录，厂商程序能列出保存的账号。",
+          "remaining": "核 Farfold 原适配器实际认证、服务和可用模型；原厂商账号配置已证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
@@ -44,31 +44,34 @@
             "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json",
             "output/2026-11-15-cycle12-macos/runtime-inventory.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
-            "docs/evidence/2026-11-16-cycle12-amp-native/README.md"
+            "docs/evidence/2026-11-16-cycle12-amp-native/README.md",
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
           ],
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "旧真实样本认证要求和结果未知。\n2026-11-16 续查：原厂商程序 account list 无保存账号，一次只读线程查询需要认证。目录适配器的认证来源另核。\n2026-11-16 续查：用户反馈 Farfold 的 Amp API Key Setup 登录失败；该项为适配器独立密钥配置，已告知本机原厂商 CLI 的官方 login 路径。\n2026-11-16 续查：已有独立厂商账号入口，用户尚未回报新入口真实结果。原适配器密钥配置保留。",
-          "remaining": "复核新登录的有效来源与原账号、线程及付费来源，原 API 密钥路径单列。",
+          "observed": "旧真实样本认证要求和结果未知。\n2026-11-16 续查：原厂商程序 account list 无保存账号，一次只读线程查询需要认证。目录适配器的认证来源另核。\n2026-11-16 续查：用户反馈 Farfold 的 Amp API Key Setup 登录失败；该项为适配器独立密钥配置，已告知本机原厂商 CLI 的官方 login 路径。\n2026-11-16 续查：已有独立厂商账号入口，用户尚未回报新入口真实结果。原适配器密钥配置保留。\n2026-11-16 复验：厂商 CLI 登录确认，普通 Farfold 既有请求的实际回执为 auth_required。",
+          "remaining": "厂商 CLI 与适配器分别核实际认证和账户；已有设置仍无已证有效身份。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
-            "docs/evidence/2026-11-16-cycle12-amp-native/README.md"
+            "docs/evidence/2026-11-16-cycle12-amp-native/README.md",
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
           ],
           "status": "受阻"
         },
         "S3": {
-          "observed": "当前所选登记无 list/load/resume。官方制造商 CLI/SDK 有原历史路径，但本机所核常见路径无该独立 CLI。\n2026-11-16 续查：找到并实测原厂商 CLI。目录 0.13.0 的适配器保存新 S-ID 映射，与已有厂商 T-ID 原历史区分。",
-          "remaining": "原账号登录后查询唯一原 T-ID，先读真实正文，再验证正式 Farfold 入口能继续同一个原厂商线程。",
+          "observed": "当前所选登记无 list/load/resume。官方制造商 CLI/SDK 有原历史路径，但本机所核常见路径无该独立 CLI。\n2026-11-16 续查：找到并实测原厂商 CLI。目录 0.13.0 的适配器保存新 S-ID 映射，与已有厂商 T-ID 原历史区分。\n2026-11-16 复验：原账号对当前以及含归档的列表真实返回空数组。Farfold 有一条旧适配器本地索引，尚无可对应厂商 T-ID。",
+          "remaining": "有明确原线程后核实际正文和来源；原厂商线程到正式 Farfold 的续答路径仍待。",
           "sources": [
             "docs/evidence/2026-11-15-official-alternatives/amp.md",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
           ],
-          "status": null
+          "status": "默认列表为空"
         },
         "S4": {
           "observed": "历史 Medium 仅档位，不证明具体模型。",
@@ -1409,29 +1412,31 @@
     {
       "agentId": "minimax-code",
       "runtime": "登记版本 0.2.7",
-      "liveAction": "用户选择在 MiniMax 官方终端接入小米。配好后独立新对话以明确的小米模型实答；原 M2.7 的账号及续答另验，原选保持。",
+      "liveAction": "已验独立小米新对话，可沿同一明确来源补工具、交付和隔离；旧 M2.7 仅按原账号、模型和权益确认后续验。",
       "standards": {
         "S1": {
-          "observed": "已安装，沿已有设置到模型页，界面保留原选项且禁用不一致的保存\n本轮实测：目前程序可执行，登记版本 0.2.7。登记所存握手版本 0.2.7。\n2026-11-16 续查：已用登记内同一 Node 与官方 cli.js 核普通 mcode 命令，可用绝对路径自带官方终端入口；用户小米实际配置仍待。",
-          "remaining": "确认可用原模型与实际配置，再验证准备结果与返回",
+          "observed": "已安装，沿已有设置到模型页，界面保留原选项且禁用不一致的保存\n本轮实测：目前程序可执行，登记版本 0.2.7。登记所存握手版本 0.2.7。\n2026-11-16 续查：已用登记内同一 Node 与官方 cli.js 核普通 mcode 命令，可用绝对路径自带官方终端入口；用户小米实际配置仍待。\n2026-11-16 复验：官方选择小米后，普通新对话手动选择同模型，读回并实际回复。",
+          "remaining": "登录与取消返回、原服务及准备其他方式仍按原条件。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "output/2026-11-15-cycle12-macos/runtime-inventory.json",
-            "docs/evidence/2026-11-16-cycle12-amp-native/README.md"
+            "docs/evidence/2026-11-16-cycle12-amp-native/README.md",
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
           ],
-          "status": "准备未齐"
+          "status": "分项通过"
         },
         "S2": {
-          "observed": "已有设置成功创建用于准备的空会话\n2026-11-16 当前本机有中国区认证资料，用户表示可能没有登录过。原行无账号和计费凭据，原失败为余额不足。\n2026-11-16 只读盘点另一个最新正式原设置请求。MiniMax-M2.7 实际发送一次，厂商终态 50110 余额或额度不足，零助手回复。\n2026-11-16 本机 0.2.7 的官方选择器具备第三方提供方设置和三种格式，第三方实答未验。\n2026-11-16 续查：用户选择从 MiniMax 官方终端接小米服务，正式新对话实答仍待。",
-          "remaining": "用原生 CLI 中明确确认的小米服务验独立新对话；原 M2.7 的原账号、权益与续答仍沿原条件。",
+          "observed": "已有设置成功创建用于准备的空会话\n2026-11-16 当前本机有中国区认证资料，用户表示可能没有登录过。原行无账号和计费凭据，原失败为余额不足。\n2026-11-16 只读盘点另一个最新正式原设置请求。MiniMax-M2.7 实际发送一次，厂商终态 50110 余额或额度不足，零助手回复。\n2026-11-16 本机 0.2.7 的官方选择器具备第三方提供方设置和三种格式，第三方实答未验。\n2026-11-16 续查：用户选择从 MiniMax 官方终端接小米服务，正式新对话实答仍待。\n2026-11-16 复验：本次新对话沿已有设置和小米指定服务完成。保存的供应商 ID 与同版官方配置匹配。",
+          "remaining": "原 MiniMax 中国区服务的账号、额度和身份未由新服务确定；同账号退出换号范围仍待验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-16-cycle12-original-config/results.json",
             "docs/evidence/2026-11-16-cycle12-qwen-exit/results.json",
             "docs/evidence/2026-11-16-cycle12-service-diagnosis/results.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
           ],
-          "status": "受阻"
+          "status": "已选服务有实答"
         },
         "S3": {
           "observed": "默认列表及正式版复查命中可识别的旧测试标题\n本轮实测：用户开放全部原历史后，默认官方列表找到现存原目录的一条原对话并读回正文。旧配置未核，因此只读。\n2026-11-16 原目录与用户消息均存在的唯一官方记录使用 MiniMax-M2.7。当前默认是 MiniMax-M3。前序脱敏预览缺原标识，匹配依据为原目录和非空记录的唯一性。\n2026-11-16 同版官方目录列出原 MiniMax-M2.7，无另选推理档；当前中国区账号已验证，旧对话无原账号记录。\n2026-11-16 用户确认同一中国区账号；正式版按原目录和标识带入、重开，原正文及 MiniMax-M2.7 已读，零发送。\n2026-11-16 新版正常冷开已带入原对话，恢复预览显示 M2.7 来自 Agent 当前报告。用户不确定当时是否登录，未确认、未保存，零发送。",
@@ -1446,13 +1451,14 @@
           "status": "原正文已读"
         },
         "S4": {
-          "observed": "当前显示 MiniMax-M3 thinking，保存的模型与该选项不一致，已留原选择\n2026-11-16 续查：当前默认 M3 已与原冷开读出的 M2.7 分开核对；用户未确认原账号，M2.7 未确认、未保存、未发送。独立 M2.7 原服务已报 50110。",
-          "remaining": "原服务恢复后沿已确认的原模型与推理实答，验证当前可用选项及冷开。",
+          "observed": "当前显示 MiniMax-M3 thinking，保存的模型与该选项不一致，已留原选择\n2026-11-16 续查：当前默认 M3 已与原冷开读出的 M2.7 分开核对；用户未确认原账号，M2.7 未确认、未保存、未发送。独立 M2.7 原服务已报 50110。\n2026-11-16 复验：独立新对话从已保存 M2.7 切到官方小米的 MiMo，模型在同一索引中持久化，实际精确回复。\n2026-11-16 冷开新版同一小米测试对话，原回复、模型和已有设置可见，零新建、零重发。",
+          "remaining": "其他模型及换源受影响场景按原条件验证；旧 M2.7 在核对原配置及有额度的原服务后另验证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
           ],
-          "status": "受阻"
+          "status": "已选模型有实答"
         },
         "S5": {
           "observed": "本轮零模型消息，无当前正例，旧短回复结果未知\n2026-11-16 只读盘点另一个最新正式原设置请求。MiniMax-M2.7 实际发送一次，厂商终态 50110 余额或额度不足，零助手回复。",
@@ -1480,11 +1486,12 @@
           "status": "未确认"
         },
         "S8": {
-          "observed": "原选择不一致时提示并阻止保存，列表零导入\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
-          "remaining": "实际模型恢复后复验完整反馈",
+          "observed": "原选择不一致时提示并阻止保存，列表零导入\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 复验：首条消息短暂不可发送时错误显示待发，零出站及草稿保持有证；随后同设置手动已实答。已有定向回归核真实状态提示。",
+          "remaining": "其他恢复、取消、窗口与许可路径按原条件继续。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
           ],
           "status": "入口有证"
         }

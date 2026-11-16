@@ -180,6 +180,38 @@ it.each(["queued", "running", "permission"] as const)(
   },
 );
 
+it("keeps a paused first message in the new composer until it can actually send", async () => {
+  vi.spyOn(draftPersistence, "flush").mockResolvedValue();
+  const thread = freshThreadState("new-paused", "mini", "/fixture", "draft");
+  thread.identity = "draft";
+  thread.queuePaused = "unavailable";
+  const onSend = vi.fn().mockResolvedValue(undefined);
+  const props = { thread, onSend, imageEnabled: false, onGoSettings() {} };
+  const text = "First message after model readback";
+  composerDrafts.update("new", () => ({ text, attachments: [] }));
+  const blocked = renderComposer({ ...props, draftKey: "new" });
+  expect(blocked.button(C.addQueued)).toBeUndefined();
+  expect(blocked.html).toContain(C.stopSendingPaused);
+  const send = blocked.button(STRINGS.composer.sendTitle)!;
+  expect(send.props.disabled).toBe(true);
+  (send.props.onClick as () => void)();
+  expect(onSend).not.toHaveBeenCalled();
+  expect(composerDrafts.read("new").text).toBe(text);
+  expect(thread.queued).toEqual([]);
+
+  // Its conversation-scoped composer can genuinely accept queued input.
+  expect(renderComposer(props).button(C.addQueued)).toBeDefined();
+  thread.queuePaused = null;
+  const ready = renderComposer({ ...props, draftKey: "new" });
+  expect(ready.html).not.toContain(C.stopSendingPaused);
+  expect(onSend).not.toHaveBeenCalled();
+  const readySend = ready.button(STRINGS.composer.sendTitle)!;
+  expect(readySend.props.disabled).toBe(false);
+  (readySend.props.onClick as () => void)();
+  await vi.waitFor(() => expect(onSend).toHaveBeenCalledOnce());
+  composerDrafts.clear("new");
+});
+
 it("offers mouse queue submission alongside stop without starting another request", async () => {
   vi.spyOn(draftPersistence, "flush").mockResolvedValue();
   const thread = threads.markOpenFailed(

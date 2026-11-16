@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-16",
+  "agentScope": {
+    "rosterCount": 22,
+    "acceptanceCells": 176,
+    "cycleComplete": false
+  },
+  "miniMax": {
+    "version": "0.2.7",
+    "nativeSessionDigest": "ea58cf06222eeba9",
+    "knownSource": "existing",
+    "officialCustomProviderIdMatched": true,
+    "providerHostMatchesXiaomi": true,
+    "model": "mimo-v2.6-flash",
+    "protocol": "openai-completions",
+    "plainEndpointLogBoundToSession": false,
+    "preSendFailure": {
+      "wireTrace": "protocol-v1-1794817997488-7.jsonl",
+      "wirePrompts": 0,
+      "draftRetained": true,
+      "exactPauseCauseVerified": false
+    },
+    "formalNewTurn": {
+      "wireTrace": "protocol-v1-1794818175908-8.jsonl",
+      "wirePrompts": 1,
+      "returnCountAfter": 1,
+      "toolUpdates": 0,
+      "exactMarker": true,
+      "visibleCompletion": true
+    },
+    "coldReopen": {
+      "wireTrace": "protocol-v1-1794818799480-0.jsonl",
+      "sameNativeSessionDigest": "ea58cf06222eeba9",
+      "sessionLoads": 1,
+      "sessionNew": 0,
+      "wirePrompts": 0,
+      "sameVisibleModel": true,
+      "sameExistingSource": true,
+      "originalReplyVisible": true
+    },
+    "oldM27PromptsThisTurn": 0
+  },
+  "amp": {
+    "adapter": "0.9.0",
+    "nativeSignedIn": true,
+    "nativeListExit": 0,
+    "includingArchivedRows": 0,
+    "matchedFarfoldExistingAttempt": {
+      "wireTrace": "protocol-v1-1794817721777-5.jsonl",
+      "nativeSessionDigest": "f41b78d4f62d298e",
+      "response": "auth_required"
+    },
+    "actualProfileMatchVerified": false,
+    "newPromptsByAssistant": 0
+  },
+  "installed": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "2d46978b6a5c4f3283c817420e242b364de7f2b7",
+    "binarySha256": "c5f5b095b58e6905d37d23179398aa2ad47d4d63570e5b83211fcd9a8fc868b4",
+    "inputCount": 2634,
+    "protectedEntries": 236586,
+    "protectedDigest": "8349ea548ac5890404fa4415742d9a7dda26cfb5214c9b2230800dc419669b84",
+    "duplicateRemoved": true
+  },
+  "affectedFrontendPassed": 84
+}
