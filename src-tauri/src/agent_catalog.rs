@@ -328,7 +328,7 @@ fn is_fresh(fetched_at: u64) -> bool {
     now_millis().saturating_sub(fetched_at) < REGISTRY_CACHE_TTL.as_millis() as u64
 }
 
-fn write_registry_cache(app_data_dir: &Path, agents: &[RegistryAgent]) {
+fn write_registry_cache(app_data_dir: &Path, agents: &[RegistryAgent]) -> u64 {
     let cache = RegistryCache {
         fetched_at: now_millis(),
         source: REGISTRY_URL.into(),
@@ -337,6 +337,7 @@ fn write_registry_cache(app_data_dir: &Path, agents: &[RegistryAgent]) {
     if let Ok(raw) = serde_json::to_vec(&cache) {
         let _ = std::fs::write(cache_path(app_data_dir), raw);
     }
+    cache.fetched_at
 }
 
 fn fetch_registry(url: &str, timeout: Duration) -> Result<Vec<RegistryAgent>, String> {
@@ -354,6 +355,18 @@ fn fetch_registry(url: &str, timeout: Duration) -> Result<Vec<RegistryAgent>, St
         .and_then(|response| response.json())
         .map_err(|error| format!("registry fetch failed: {error}"))?;
     Ok(document.agents)
+}
+
+#[derive(Debug, PartialEq, Serialize)]
+#[serde(
+    rename_all = "snake_case",
+    rename_all_fields = "camelCase",
+    tag = "status"
+)]
+pub enum DirectoryRefresh {
+    Updated { fetched_at: u64 },
+    Cached { fetched_at: u64 },
+    Unavailable,
 }
 
 /// The agent catalog as managed state: builtin defs plus the registry with
@@ -413,11 +426,18 @@ impl AgentCatalog {
             .find(|entry| registry_agent_id(entry).as_deref() == Some(agent_id))
     }
 
-    /// Blocking refresh: probe binaries and re-pull the registry (scan
-    /// path). Discovery always writes the cache; a failed fetch keeps the
-    /// stale registry cache. Without any registry cache, return the failure;
-    /// discovery stays available through `catalog_list` in either case.
-    pub fn refresh_blocking(&self) -> Result<Vec<DiscoveredBinary>, String> {
+    fn store_registry(&self, agents: Vec<RegistryAgent>) -> u64 {
+        let mut registry = self.registry.lock().ok();
+        let fetched_at = write_registry_cache(&self.app_data_dir, &agents);
+        if let Some(registry) = registry.as_deref_mut() {
+            *registry = Some((fetched_at, agents));
+        }
+        fetched_at
+    }
+
+    /// Probe binaries and refresh the official directory. Local discoveries
+    /// stay available even when the directory could not be fetched.
+    fn refresh_blocking(&self) -> DirectoryRefresh {
         self.refresh_with(crate::agent_discovery::discover(), || {
             fetch_registry(REGISTRY_URL, REGISTRY_REQUEST_TIMEOUT)
         })
@@ -427,24 +447,19 @@ impl AgentCatalog {
         &self,
         found: Vec<DiscoveredBinary>,
         fetch: impl FnOnce() -> Result<Vec<RegistryAgent>, String>,
-    ) -> Result<Vec<DiscoveredBinary>, String> {
+    ) -> DirectoryRefresh {
         if let Ok(mut discovered) = self.discovered.lock() {
-            *discovered = Some(found.clone());
+            *discovered = Some(found);
         }
         match fetch() {
-            Ok(agents) => {
-                write_registry_cache(&self.app_data_dir, &agents);
-                if let Ok(mut registry) = self.registry.lock() {
-                    *registry = Some((now_millis(), agents));
-                }
-            }
-            Err(error) => {
-                if self.retained_registry().is_none() {
-                    return Err(error);
-                }
-            }
+            Ok(agents) => DirectoryRefresh::Updated {
+                fetched_at: self.store_registry(agents),
+            },
+            Err(_) => match self.retained_registry() {
+                Some((fetched_at, _)) => DirectoryRefresh::Cached { fetched_at },
+                None => DirectoryRefresh::Unavailable,
+            },
         }
-        Ok(found)
     }
 
     /// Registry entries. Fresh in-memory or on-disk cache (3h TTL) wins;
@@ -466,10 +481,7 @@ impl AgentCatalog {
         }
         match fetch() {
             Ok(agents) => {
-                write_registry_cache(&self.app_data_dir, &agents);
-                if let Ok(mut registry) = self.registry.lock() {
-                    *registry = Some((now_millis(), agents.clone()));
-                }
+                self.store_registry(agents.clone());
                 Some(agents)
             }
             Err(_) => self.retained_registry().or(stale).map(|(_, agents)| agents),
@@ -640,19 +652,19 @@ fn current_catalog_entries(
 /// tell the UI to re-read `catalog_list`. This is the only path that
 /// touches the filesystem or the network.
 #[tauri::command]
-pub async fn catalog_scan(app: AppHandle) -> Result<Vec<DiscoveredBinary>, String> {
+pub async fn catalog_scan(app: AppHandle) -> Result<DirectoryRefresh, String> {
     tauri::async_runtime::spawn_blocking(move || {
         let catalog = app.state::<AgentCatalog>();
-        let found = catalog.refresh_blocking();
+        let outcome = catalog.refresh_blocking();
         crate::ui_transport::emit_event(
             &app,
             "catalog:updated",
             serde_json::json!({ "found": catalog.discovered_cached().map_or(0, |entries| entries.len()) }),
         );
-        found
+        outcome
     })
     .await
-    .map_err(|error| format!("catalog scan failed: {error}"))?
+    .map_err(|error| format!("catalog scan failed: {error}"))
 }
 
 /// The merged catalog: defs + registered rows + the last scan's discovery
@@ -1155,21 +1167,30 @@ mod tests {
         }];
         let result = catalog.refresh_with(found.clone(), || Err("offline".into()));
         assert_eq!(catalog.discovered_cached(), Some(found));
-        assert_eq!(result, Err("offline".into()));
+        assert_eq!(result, DirectoryRefresh::Unavailable);
     }
 
     #[test]
-    fn registry_retention_scan_accepts_known_cache_when_offline() {
+    fn registry_retention_scan_distinguishes_download_from_cached_fallback() {
         let directory = tempfile::tempdir().unwrap();
         let catalog = AgentCatalog::new(directory.path().to_path_buf());
         let entries = fixture_registry("2.0.0");
-        *catalog.registry.lock().unwrap() = Some((0, entries.clone()));
-        assert!(
-            catalog
-                .refresh_with(vec![], || Err("offline".into()))
-                .is_ok()
+        let updated = catalog.refresh_with(vec![], || Ok(entries.clone()));
+        let (fetched_at, cached) = read_registry_cache(directory.path()).unwrap();
+        assert_eq!(updated, DirectoryRefresh::Updated { fetched_at });
+        assert_eq!(cached, entries);
+        let restarted = AgentCatalog::new(directory.path().to_path_buf());
+        let fallback = restarted.refresh_with(vec![], || Err("offline".into()));
+        assert_eq!(fallback, DirectoryRefresh::Cached { fetched_at });
+        assert_eq!(
+            serde_json::to_value(fallback).unwrap(),
+            serde_json::json!({ "status": "cached", "fetchedAt": fetched_at })
         );
-        assert_eq!(catalog.agents_cached(), Some(entries));
+        assert_eq!(
+            read_registry_cache(directory.path()),
+            Some((fetched_at, entries.clone()))
+        );
+        assert_eq!(restarted.agents_cached(), Some(entries));
     }
 
     #[test]

@@ -146,6 +146,7 @@ beforeEach(async () => {
     loadError: null,
     busy: { [card.id]: "install" },
     scanning: false,
+    directoryRefresh: null,
     installProgress: {
       [card.id]: { stage: "install", bytes: null, total: null },
     },

@@ -25,6 +25,10 @@ export const ACCESS_STRINGS = {
   custom: "自定义",
   customAccess: "自定义接入",
   refresh: "重新发现",
+  directoryUpdated: "官方目录已更新",
+  directoryCached: "官方目录刷新失败，正在显示上次获取的目录",
+  directoryUnavailable:
+    "无法刷新官方目录，暂无已保存的目录。仍可查看本机发现和已接入的 Agent。",
   directoryNote:
     "目录信息来自官方发布。连接成功后，仍需通过实际对话确认模型和工具是否可用。",
   available: (count: number) => `${count} 个 Agent`,

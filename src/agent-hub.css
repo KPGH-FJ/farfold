@@ -172,6 +172,11 @@
   text-align: right;
   white-space: nowrap;
 }
+.agent-hub-directory-refresh {
+  margin: 0 0 12px;
+  color: var(--ink-2);
+  font-size: 12px;
+}
 .agent-hub-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

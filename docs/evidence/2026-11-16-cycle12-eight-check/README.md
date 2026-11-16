@@ -8,7 +8,9 @@
 
 官方适配器收到 ACP 取消后触发原请求的 AbortSignal。同版本前台命令路径未在该调用中单独创建命令进程组，取消只终止直接子进程。已核的稳定发行仍为 0.9.11，正向停止须等官方前台终止覆盖子进程。SDK 的进程树终止只管理由 SDK 自己启动的进程。Farfold 的原请求未知保护保留，未改用自动关闭整条连接。[取消入口](https://github.com/autohandai/code-cli/blob/v0.9.11/src/modes/acp/adapter.ts#L1089-L1099) · [命令停止实现](https://github.com/autohandai/code-cli/blob/v0.9.11/src/actions/command.ts#L320-L345) · [官方 SDK](https://github.com/autohandai/code-agent-sdk-rust/blob/main/docs/API_REFERENCE.md#run)
 
-## 外部条件与不能合并的结果
+## 11 月 16 日初查时的外部条件
+
+下列为初查时的账号、服务和官方能力观测。Amp 和 MiniMax 后续的实测见[账号复验](../2026-11-16-cycle12-account-retest/README.md)，最新缺口见[当前状态](../../status.md)。
 
 - **Amp** 原登记适配器 0.9.0，正式程序检查的 Amp CLI 已就绪，实际同一路径官方程序版本为 0.0.1790740844-g023754。已有设置读到 Medium，零模型请求。厂商 CLI 的 `account list` 返回无保存账号，同一程序一次只读线程列表因需认证退出。目录适配器的旧密钥和厂商 CLI 登录分别管理，使用的身份需分别核。用户需先恢复原厂商账号，之后核原 T-ID 线程。目录可用的 0.13.0 有适配器自己的 S-ID 映射，不能直接代替原厂商线程。云端与工具实际停止仍待确切原请求回执。[官方账号](https://ampcode.com/docs/cli#manage-cli-accounts) · [原线程导出](https://ampcode.com/docs/threads#export-a-thread) · [目录适配器 0.13.0](https://github.com/tao12345666333/amp-acp/releases/tag/v0.13.0)
 - **MiniMax** 原正文和 M2.7 已冷开，当前 M2.7 官方返回 50110 余额或额度不足，原账号未能确认，新服务不能作为原对话续答。需确认中国区原账号与可用额度。已核同版官方第三方入口，可验另一条独立新对话。[原对话](../2026-11-16-cycle12-original-config/README.md) · [额度回执](../2026-11-16-cycle12-qwen-exit/README.md) · [第三方 API](../2026-11-16-cycle12-service-diagnosis/README.md#minimax-外部-api)
@@ -87,16 +89,16 @@ B 的 `protocol-v1-1794829044139-70.jsonl` 在 19:39:03.976 收到工具更新�
 
 ## Devin 普通新建的旧设置恢复
 
-原正式版从「探索 Agent → Devin → 开始新对话」保留测试文字，选择独立空目录。新建使用已保存的 `swe-2-high`、`high` 和 Code，提示「已保存的选择当前不可用」，发送禁用，零模型请求。
+11 月 16 日安装当前批次前，在前一正式版从「探索 Agent → Devin → 开始新对话」保留测试文字，选择独立空目录。新建使用已保存的 `swe-2-high`、`high` 和 Code，提示「已保存的选择当前不可用」，发送禁用，零模型请求。
 
 通过正常退出安装新的唯一正式应用 0.1.7 arm64，CDHash `7aefe7b0116d761bf7dcfcbed3ab392e0bd4aadd`。原草稿和目录仍在。从相同入口看到相同拦截，点「检查模型设置」。表格同时核对原模型和推理等级：`swe-2-high` 对应当前 `SWE-2 Flash Medium`，旧 `high` 对应「未提供选项」。清楚标明仅用于这份草稿，已有服务和 Code 匹配。明确点「沿用当前设置 → 用这些设置返回草稿」，原文字、目录和新选项读回，确认前零真实请求。
 
 从同一草稿手动发一条短问，约 2.52 秒准确收到 `FF_C12_DEVIN_DRAFT_REPAIR_OK`，无工具和审批。读取用的 `protocol-v1-1794835755582-1.jsonl` 零发送，`protocol-v1-1794835730412-0.jsonl` 恰有一次 `session/prompt`。该目录仅一条本机索引，原标识 `grave-newt`，保存已有服务、`swe-2-flash-medium`，无已确认的推理等级。Agent 全局保存记录 `agentSetup.v1` 变更前后字节摘要相同，Devin 的原默认选择保持，既有历史索引和旧工作位置未确认记录保留。
 
-工程验证含 212 项相关前端测试、786 文件 10,959 项全量前端测试，格式、类型、前端生产构建与正式应用打包通过。Rust 格式、Clippy 与测试通过，共 2,805 项成功、11 项既有忽略。正式实测覆盖原已有服务，托管服务的等效恢复及切换所有者的保护以本轮受控检查为限。
+该批应用代码见 `fa9e3ec78`，装机可执行文件 SHA-256 为 `a08923623c0cba509442dc892f5030ae98345a9e5742690abee92db202f1faaa`。工程记录含 212 项相关前端测试、786 文件 10,959 项全量前端测试，格式、类型、前端生产构建与正式应用打包通过。Rust 格式、Clippy 与测试通过，共 2,805 项成功、11 项既有忽略。仓库在本页保留该批工程和安装摘要，未附整套原始日志与固定输入清单。正式实测覆盖原已有服务，托管服务的等效恢复及切换所有者的保护以本轮受控检查为限。
 
-## 工程与安装
+## 11 月 16 日 15:38（UTC+8）较早安装批
 
-正式版 0.1.7 arm64，CDHash `463a103256d1d42addd5f74e01b2e772427b40b6`。候选固定 2,633 项输入，生产构建与打包通过。四个关联前端测试文件 122 项通过，文档仍保持 151 条原条件。安装比对 236,586 项保护记录摘要一致，元数据副本完整，重复产物已移除。
+当时正式版为 0.1.7 arm64，CDHash `463a103256d1d42addd5f74e01b2e772427b40b6`。本机 `output/2026-11-16-cycle12-eight-check/` 的 `candidate.json`、`install.json` 和 `product-inputs.json` 均对应此批，候选基线为 `9881ddaf3`。候选固定 2,633 项输入，生产构建与打包通过。四个关联前端测试文件 122 项通过，文档仍保留 151 条原条件。安装比对 236,586 项保护记录摘要一致，元数据副本完整，重复产物已移除。
 
-用户反馈 Farfold 的 Amp 适配器独立密钥终端登录失败。已区分当前界面的「Amp API Key Setup」与原厂商 CLI 的 `amp login`，已告知该已安装 CLI 的官方登录方式。用户选择在 MiniMax 官方配置添加小米，待有效配置读回后单独验新对话。Gemini CLI 和 Antigravity 保持暂缓。 [本轮验收表](../2026-11-15-cycle12-continuation/acceptance-roster.json)
+当时用户反馈 Farfold 的 Amp 适配器独立密钥终端登录失败，已区分「Amp API Key Setup」与原厂商 CLI 的 `amp login` 并告知官方登录方式。用户选择在 MiniMax 官方配置添加小米，当时尚未读回有效配置。后续情况见[账号复验](../2026-11-16-cycle12-account-retest/README.md)。Gemini CLI 和 Antigravity 保持暂缓。[本轮验收表](../2026-11-15-cycle12-continuation/acceptance-roster.json)

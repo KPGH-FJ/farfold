@@ -43,6 +43,10 @@ export interface DiscoveredBinary {
   version: string | null;
 }
 
+export type DirectoryRefresh =
+  | { status: "updated" | "cached"; fetchedAt: number }
+  | { status: "unavailable" };
+
 export type AgentSource = "discovered" | "registry" | "custom";
 
 export interface AgentRow {
@@ -145,7 +149,7 @@ export function catalogList(): Promise<CatalogEntry[]> {
   return invoke("catalog_list");
 }
 
-export function catalogScan(): Promise<DiscoveredBinary[]> {
+export function catalogScan(): Promise<DirectoryRefresh> {
   return invoke("catalog_scan");
 }
 
@@ -676,6 +680,7 @@ export interface AgentsState {
   statuses?: Record<string, AgentConnectionStatus[]>;
   busy: Record<string, AgentBusy | null>;
   scanning: boolean;
+  directoryRefresh: DirectoryRefresh | null;
   installProgress: Record<string, InstallProgress>;
   install: (
     card: AgentCardModel,
@@ -738,6 +743,9 @@ export function useAgents(): AgentsState {
   >({});
   const [busy, setBusy] = useState<Record<string, AgentBusy | null>>({});
   const [scanning, setScanning] = useState(false);
+  const scanInProgress = useRef(false);
+  const [directoryRefresh, setDirectoryRefresh] =
+    useState<DirectoryRefresh | null>(null);
   const [installProgress, setInstallProgress] = useState<
     Record<string, InstallProgress>
   >({});
@@ -809,6 +817,27 @@ export function useAgents(): AgentsState {
     setLoadError(null);
   }, []);
 
+  const rescan = useCallback(async () => {
+    if (scanInProgress.current) return;
+    scanInProgress.current = true;
+    setScanning(true);
+    setDirectoryRefresh(null);
+    setErrors((prev) => ({ ...prev, __scan: null }));
+    try {
+      const outcome = await catalogScan();
+      await refresh();
+      setDirectoryRefresh(outcome);
+    } catch {
+      setErrors((prev) => ({
+        ...prev,
+        __scan: STRINGS.agents.errors.scanFailed,
+      }));
+    } finally {
+      scanInProgress.current = false;
+      setScanning(false);
+    }
+  }, [refresh]);
+
   useEffect(() => {
     let cancelled = false;
     const unlistenCatalog = listen("catalog:updated", () => {
@@ -852,20 +881,8 @@ export function useAgents(): AgentsState {
   useEffect(() => {
     if (loading || scannedRef.current) return;
     scannedRef.current = true;
-    setScanning(true);
-    void catalogScan()
-      .then(async () => {
-        await refresh();
-        setErrors((prev) => ({ ...prev, __scan: null }));
-      })
-      .catch(() => {
-        setErrors((prev) => ({
-          ...prev,
-          __scan: STRINGS.agents.errors.scanFailed,
-        }));
-      })
-      .finally(() => setScanning(false));
-  }, [loading, refresh]);
+    void rescan();
+  }, [loading, rescan]);
 
   /** Connect target: the project the user picked in settings. No project
    *  → refuse rather than silently spawning an agent in $HOME. */
@@ -1000,22 +1017,6 @@ export function useAgents(): AgentsState {
     [refresh, setBusyFor, setErrorFor],
   );
 
-  const rescan = useCallback(async () => {
-    setScanning(true);
-    setErrors((prev) => ({ ...prev, __scan: null }));
-    try {
-      await catalogScan();
-      await refresh();
-    } catch (reason) {
-      setErrors((prev) => ({
-        ...prev,
-        __scan: STRINGS.agents.errors.scanFailed,
-      }));
-    } finally {
-      setScanning(false);
-    }
-  }, [refresh]);
-
   const addCustom = useCallback(
     async (input: {
       name: string;
@@ -1132,6 +1133,7 @@ export function useAgents(): AgentsState {
     statuses,
     busy,
     scanning,
+    directoryRefresh,
     installProgress,
     install,
     cancelInstall,

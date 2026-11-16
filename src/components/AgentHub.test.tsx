@@ -34,6 +34,7 @@ function state(cards: AgentCardModel[]): AgentsState {
     loadError: null,
     busy: {},
     scanning: false,
+    directoryRefresh: null,
     installProgress: {},
     errors: {},
     install: vi.fn(),
@@ -50,6 +51,36 @@ function state(cards: AgentCardModel[]): AgentsState {
 }
 
 describe("Agent discovery and preparation", () => {
+  it.each([
+    ["updated", "官方目录已更新"],
+    ["cached", "官方目录刷新失败，正在显示上次获取的目录"],
+    ["unavailable", "无法刷新官方目录，暂无已保存的目录"],
+  ] as const)(
+    "shows the %s directory refresh outcome and keeps the cards available",
+    (status, message) => {
+      const agents = state([
+        { ...card, source: "discovered", status: "installed" },
+      ]);
+      agents.directoryRefresh =
+        status === "unavailable"
+          ? { status }
+          : { status, fetchedAt: Date.UTC(2026, 10, 16, 12) };
+      const html = renderToStaticMarkup(
+        <AgentHub
+          agents={agents}
+          onReturn={() => {}}
+          onStart={() => {}}
+          onOpenApi={() => {}}
+        />,
+      );
+      expect(html).toContain(message);
+      expect(html.includes('dateTime="2026-11-16T12:00:00.000Z"')).toBe(
+        status !== "unavailable",
+      );
+      expect(html).toContain('aria-label="管理设置 · Example"');
+    },
+  );
+
   it("hides retired catalog entries from discovery and added lists while preserving custom and local choices", () => {
     const deferred = {
       ...card,

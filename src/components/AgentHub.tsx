@@ -521,6 +521,11 @@ export function AgentHub({
       (view === "discover" || added(card) || !!agents.busy[card.id]) &&
       matchesAgentDirectory(card, query, category),
   );
+  const directoryRefresh = view === "discover" ? agents.directoryRefresh : null;
+  const directoryFetchedAt =
+    directoryRefresh && directoryRefresh.status !== "unavailable"
+      ? new Date(directoryRefresh.fetchedAt)
+      : null;
   useEffect(() => {
     if (active && seenEntry.current !== entryKey) {
       navigationRevision.current++;
@@ -645,6 +650,29 @@ export function AgentHub({
             </div>
             <p className="agent-hub-results">{S.available(visible.length)}</p>
           </div>
+          {directoryRefresh?.status === "unavailable" ? (
+            <p className="ac-error" role="alert">
+              {S.directoryUnavailable}
+            </p>
+          ) : directoryRefresh ? (
+            <p className="agent-hub-directory-refresh" role="status">
+              {directoryRefresh.status === "updated"
+                ? S.directoryUpdated
+                : S.directoryCached}
+              {directoryFetchedAt &&
+                Number.isFinite(directoryFetchedAt.getTime()) && (
+                  <>
+                    {" · "}
+                    <time dateTime={directoryFetchedAt.toISOString()}>
+                      {directoryFetchedAt.toLocaleString("zh-CN", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </time>
+                  </>
+                )}
+            </p>
+          ) : null}
           {(agents.loadError ||
             agents.errors.__scan ||
             agents.errors.__remove) && (
