@@ -5,25 +5,24 @@
   "explicitStatuses": {
     "准备未齐": 17,
     "入口有证": 21,
-    "受阻": 6,
-    "分项通过": 9,
-    "未测": 13,
+    "受阻": 7,
+    "分项通过": 10,
+    "未测": 10,
     "原账号实答": 6,
     "查找冷开续答通过": 8,
-    "已选模型有实答": 11,
+    "已选模型有实答": 12,
     "可建对话": 1,
-    "实测分项通过": 15,
+    "实测分项通过": 16,
     "前台停止分项通过": 3,
-    "已有设置实答": 2,
-    "本轮短测失败": 1,
-    "双前台分项通过": 5,
-    "停止及冷续答通过": 3,
-    "原正文已读": 1,
-    "实测失败": 3,
-    "未确认": 2,
+    "已有设置实答": 3,
+    "双前台分项通过": 6,
+    "停止及冷续答通过": 4,
+    "原正文已读": 2,
+    "实测失败": 4,
+    "未确认": 1,
     "已选服务有实答": 2,
     "默认列表为空": 1,
-    "冷开续答分项通过": 3,
+    "冷开续答分项通过": 4,
     "跨家分项通过": 2
   },
   "rows": [
@@ -485,16 +484,17 @@
     {
       "agentId": "codebuddy-code",
       "runtime": "登记版本 2.184.0（旧 2.160.0 安装保留）",
-      "liveAction": "新版从正式版通过程序检查。沿原目录与原标识只读一次，78.743 秒有回包但无可展示正文。原模型与工作交付继续分项核。",
+      "liveAction": "新版本准备能读到当前模型。原保存选项不可用，退出保留原设置，等明确选择后单独实测。旧会话无正文回包保留。",
       "standards": {
         "S1": {
-          "observed": "历史正式启动与设置有观察，当前登记可执行。\n2026-11-15 盘点：程序可执行，登记版本 2.160.0。登记所存握手版本 未报告。\n2026-11-16 复验：从正式版更新及选用 2.184.0，程序检查通过。",
-          "remaining": "正式重核原已有设置、取消返回和准备全链。",
+          "observed": "历史正式启动与设置有观察，当前登记可执行。\n2026-11-15 盘点：程序可执行，登记版本 2.160.0。登记所存握手版本 未报告。\n2026-11-16 复验：从正式版更新及选用 2.184.0，程序检查通过。\n2026-11-17 2.184.0 从正常新建进入检查模型设置并读到当前选项。退出保留原目录和原选择，无真实请求。",
+          "remaining": "接受新选项或原模型重新可用后再核正常首发。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
-            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md"
+            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
           ],
           "status": "准备未齐"
         },
@@ -520,14 +520,15 @@
           "status": "实测失败"
         },
         "S4": {
-          "observed": "旧 Hy4/High 和冷回读未知设置保护有观察，非当前实际后端证明。",
-          "remaining": "同对话设置变更、请求与冷开实际生效。",
+          "observed": "旧 Hy4/High 和冷回读未知设置保护有观察，非当前实际后端证明。\n2026-11-17 原 hy4-preview-f / High 与当前报告的 Hy4 / On (default) 不一致。保持旧设置，零发送。",
+          "remaining": "等原模型恢复，或用户明确允许用现有选项验一条独立新对话。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json"
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
           ],
-          "status": null
+          "status": "受阻"
         },
         "S5": {
           "observed": "旧真答、文件复制/返工和单次审批有有限正例。",
@@ -829,7 +830,7 @@
     {
       "agentId": "dirac",
       "runtime": "登记版本 0.5.21",
-      "liveAction": "沿实际原 Nemotron／Medium 匹配同原标识续答；精确标记旧失败保留，再验文件和审批。",
+      "liveAction": "原测试同 ID、免费 Nemotron Ultra / Medium 冷开及准确短续答通过。独立历史列表、文件、审批、隔离及停止待复验。",
       "standards": {
         "S1": {
           "observed": "当前登记可执行，旧安装有实际免费模型回复。\n2026-11-15 盘点：程序可执行，登记版本 0.5.21。登记所存握手版本 0.5.21。",
@@ -854,15 +855,16 @@
           "status": "实测分项通过"
         },
         "S3": {
-          "observed": "旧近期成功样本目录缺失。10/06 A 原目录和 runtime 配置文件仍在。旧版本曾回放回复但完整用户正文未证。 所装版本成功加载还会写回同 ID 的 Agent 配置。\n本轮实测：新版冷开同一自建原标识，原回复可读，模型与目录保持。",
-          "remaining": "另验正常发现准确旧线程及同一原对象续答。",
+          "observed": "旧近期成功样本目录缺失。10/06 A 原目录和 runtime 配置文件仍在。旧版本曾回放回复但完整用户正文未证。 所装版本成功加载还会写回同 ID 的 Agent 配置。\n本轮实测：新版冷开同一自建原标识，原回复可读，模型与目录保持。\n2026-11-17 从所有对话打开已归属原测试，沿原免费 Nemotron 及 Medium 冷开并手动续答一次。同一原 ID、正确上下文、零新建。",
+          "remaining": "独立官方历史列表、更多原测试及分页待验。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
             "docs/evidence/2026-11-15-cycle12-macos/acceptance-matrix.md#dirac",
             "https://github.com/dirac-run/dirac/blob/v0.5.21/cli/src/agent/DiracAgent.ts#L1345-L1453",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
           ],
-          "status": "实测分项通过"
+          "status": "冷开续答分项通过"
         },
         "S4": {
           "observed": "旧 Medium/Thinking Off 原选择和实际请求有观察。\n本轮实测：冷开保留已保存免费 Nemotron 与 Medium，原选择一致。",
@@ -876,15 +878,16 @@
           "status": "实测分项通过"
         },
         "S5": {
-          "observed": "既有免费模型实答和文件写入样本，回复有杂字/重试，另一旧例多一个可见步骤。\n本轮实测：单次短消息有正文，回合完成，实际多回一段，精确短消息验收失败。",
-          "remaining": "需合格实际回复、工具审批与文件任务。",
+          "observed": "既有免费模型实答和文件写入样本，回复有杂字/重试，另一旧例多一个可见步骤。\n本轮实测：单次短消息有正文，回合完成，实际多回一段，精确短消息验收失败。\n2026-11-17 原对话仅发一条无工具续问，准确返回原首条验收标记。此前短答额外文字保留为旧负例。",
+          "remaining": "从自建工作目录核真实文件和审批，避免在原应用数据目录跑工具。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/dirac-formal-c876-ack-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
           ],
-          "status": "本轮短测失败"
+          "status": "实测分项通过"
         },
         "S6": {
           "observed": "旧独立样本存在；没有当前双任务完整归属证据。",
@@ -1277,7 +1280,7 @@
     {
       "agentId": "grok-build",
       "runtime": "登记版本 1.0.46",
-      "liveAction": "已有服务和 grok-4.7 / low 的原对话冷续答已验。新自有目录单次批准写入、实际交付及从本轮产物打开通过。下一组按原条件核其他工作、并行和停止。",
+      "liveAction": "原服务文件交付、双前台只停 A 和原 A 冷开续答已实测。工具实时终态及其他工作待核。",
       "standards": {
         "S1": {
           "observed": "已安装，沿已有设置进入官方 Grok 登录提示\n2026-11-15 盘点：程序可执行，登记版本 1.0.46。登记所存握手版本 未报告。",
@@ -1325,20 +1328,22 @@
           "status": "实测分项通过"
         },
         "S6": {
-          "observed": "未运行双对话变更、审批或停止",
-          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
+          "observed": "未运行双对话变更、审批或停止\n2026-11-17 两个自建目录的前台任务同时活动，各一次审批。停 A 后 B 保持原 Shell 与子进程，并自然完成。",
+          "remaining": "其他工作、配置及更广隔离条件继续核。",
           "sources": [
-            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
           ],
-          "status": "未测"
+          "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复",
-          "remaining": "取得独立工作样本并核停止终态、原对象恢复与无重发",
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n2026-11-17 停 A 后 Shell 及 sleep 退出，B 继续。冷开 A 还原同一原 ID、原正文和原 Grok 4.7 / Low，旧命令未重跑，手动一次续问通过。A 原工具步骤仍准确保留未知。",
+          "remaining": "工具实时终态、后台任务及其他特殊组合未测。",
           "sources": [
-            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json"
+            "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
           ],
-          "status": "未测"
+          "status": "停止及冷续答通过"
         },
         "S8": {
           "observed": "未归属列表与用户需登录分开显示\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
@@ -1355,53 +1360,58 @@
     {
       "agentId": "kilo",
       "runtime": "当前登记、握手均 7.8.1，已保存已有 Kilo Gateway 免费 Ultra / none / code；当前无 Farfold 索引。",
-      "liveAction": "可先正式读取已有设置，确认原免费 Ultra 不漂移后新自有目录短测。旧缺失目录不复造，按列表匹配可确认的旧对象。历史 Dots3 测试不允许本轮自行切换。",
+      "liveAction": "免费 Ultra / None 在普通新建实答，重开同一原 ID 读回设置和正文，零自动重发。",
       "standards": {
         "S1": {
-          "observed": "旧正式登录启动/取消及 ZIP 连接有窄证；官方真实设备挑战和受控关闭已验证。\n2026-11-15 盘点：程序可执行，登记版本 7.8.1。登记所存握手版本 7.8.1。",
-          "remaining": "当前正式完整准备/终端退出与真实账号授权尚未覆盖。",
+          "observed": "旧正式登录启动/取消及 ZIP 连接有窄证；官方真实设备挑战和受控关闭已验证。\n2026-11-15 盘点：程序可执行，登记版本 7.8.1。登记所存握手版本 7.8.1。\n2026-11-17 从正常新建在独立目录沿已保存选项发出首条并准确实答。",
+          "remaining": "覆盖更多准备、登录、取消与返回。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-11-06-phase1-next/kilo-native-pty-device-cancel.json",
-            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md"
+            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
           ],
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "正式旧已有 Gateway 实际短答，官方本机记录给出提供方及模型；受控匿名冷开 Dots3 报费用 0。",
-          "remaining": "当前已有账号的有效身份与账单、退出换号需明确对象与结果。",
+          "observed": "正式旧已有 Gateway 实际短答，官方本机记录给出提供方及模型；受控匿名冷开 Dots3 报费用 0。\n2026-11-17 已有 Kilo Gateway 的所选免费 Ultra 实答。",
+          "remaining": "对应实际账号、计费字段、退出及换号仍待核。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-next/README.md",
-            "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json"
+            "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json",
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
           ],
-          "status": null
+          "status": "已有设置实答"
         },
         "S3": {
-          "observed": "旧正式原桌面对象发现、正文及依赖前文续答通过；另一旧临时对象明确因目录缺失拒绝。",
-          "remaining": "跨正式签名桌面授权另有依赖；当前没有本地索引。",
+          "observed": "旧正式原桌面对象发现、正文及依赖前文续答通过；另一旧临时对象明确因目录缺失拒绝。\n2026-11-17 冷开同一新测试原 ID，读回原正文、所选服务和模型，未自动发送。",
+          "remaining": "此前已有索引样本与这次新样本分列。补更多原历史查找、按原标识继续及分页。",
           "sources": [
             "docs/evidence/2026-10-24-agent-acceptance/kilo-formal-e954-history-continuation-summary.json",
-            "docs/evidence/2026-11-06-cycle-01/agent-conditions.json"
+            "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
           ],
-          "status": null
+          "status": "原正文已读"
         },
         "S4": {
-          "observed": "旧正式同会话切 Dots3 并实际回复，冷开显示原 Dots3/Instant，之后恢复原 Ultra/None。切回后零发送。",
-          "remaining": "当前样本沿保存 Ultra/None 核对，不将历史切回证据扩大为新实际请求。",
+          "observed": "旧正式同会话切 Dots3 并实际回复，冷开显示原 Dots3/Instant，之后恢复原 Ultra/None。切回后零发送。\n2026-11-17 在普通新建选已保存的 Kilo Gateway 免费 Nemotron Ultra / None 实答，原模型和推理随冷开保持。",
+          "remaining": "补更多允许模型、切换后失败反馈及计费证据。",
           "sources": [
             "docs/evidence/2026-11-07-stage1-formal-acceptance/kilo-model-installed.json",
-            "docs/evidence/2026-11-06-phase1-next/installed-kilo-model-switch-restore.json"
+            "docs/evidence/2026-11-06-phase1-next/installed-kilo-model-switch-restore.json",
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
           ],
-          "status": null
+          "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧批准工具取得唯一输出，拒绝时没有该次输出，其他 Agent 的审批不受影响。",
-          "remaining": "旧文件失败保留，当前文件/权限及技能实际采用范围未齐。",
+          "observed": "旧批准工具取得唯一输出，拒绝时没有该次输出，其他 Agent 的审批不受影响。\n2026-11-17 所选免费 Ultra 无工具短问一次，准确返回当前自建标记。",
+          "remaining": "文件交付、提问、审批及其他技能工作按原条件补验。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-approval/README.md",
-            "docs/evidence/2026-10-24-agent-acceptance/kilo-formal-5b31-owned-file-summary.json"
+            "docs/evidence/2026-10-24-agent-acceptance/kilo-formal-5b31-owned-file-summary.json",
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
           ],
-          "status": null
+          "status": "实测分项通过"
         },
         "S6": {
           "observed": "7.8.1 旧正式同目录双会话实际停止隔离；同官方进程的单会话 close 另有受控结果。",
@@ -1436,7 +1446,7 @@
     {
       "agentId": "minimax-code",
       "runtime": "登记版本 0.2.7",
-      "liveAction": "同一自建新草稿切回 MiMo 后首发已复验，实际文件交付和从本轮产物打开通过。审批、并行、停止及旧 M2.7 账号、模型和权益仍按各自条件核。",
+      "liveAction": "MiMo 普通新建首发和文件交付已证。双任务可独立运行，停止原回复无法结束已移交后台的命令，待官方按任务入口。",
       "standards": {
         "S1": {
           "observed": "已安装，沿已有设置到模型页，界面保留原选项且禁用不一致的保存\n2026-11-15 盘点：程序可执行，登记版本 0.2.7。登记所存握手版本 0.2.7。\n2026-11-16 续查：已用登记内同一 Node 与官方 cli.js 核普通 mcode 命令，可用绝对路径自带官方终端入口；用户小米实际配置仍待。\n2026-11-16 复验：官方选择小米后，普通新对话手动选择同模型，读回并实际回复。",
@@ -1496,20 +1506,22 @@
           "status": "实测分项通过"
         },
         "S6": {
-          "observed": "未运行双对话变更、审批或停止",
-          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
+          "observed": "未运行双对话变更、审批或停止\n2026-11-17 两条 MiMo 测试各自启动了独立目录的本机 Shell 样本。只对 A 发停止，B 未收到取消并按原任务完成。",
+          "remaining": "更广模型和权限范围的隔离、实际停止条件分别验。",
           "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
           ],
-          "status": "未测"
+          "status": "分项通过"
         },
         "S7": {
-          "observed": "旧自建请求仍未知，本轮未重试或改变该对象",
-          "remaining": "取得原可信终态，再补独立的开始、停止和恢复",
+          "observed": "旧自建请求仍未知，本轮未重试或改变该对象\n2026-11-17 测试 Bash 被官方自动移交后台。A 收到回复停止但精确进程在取消约 20.686 秒后仍在，最终写出原完成标记。B 未被取消。",
+          "remaining": "等待当前转交后台机制提供按原任务的官方停止及实际终态。移交前的前台停止和冷恢复尚待实测。",
           "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
+            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
           ],
-          "status": "未确认"
+          "status": "实测失败"
         },
         "S8": {
           "observed": "原选择不一致时提示并阻止保存，列表零导入\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 复验：首条消息短暂不可发送时错误显示待发，零出站及草稿保持有证；随后同设置手动已实答。已有定向回归核真实状态提示。",

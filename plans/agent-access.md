@@ -39,8 +39,8 @@
 
 [当前状态](../docs/status.md)维护分项证据与外部依赖。第8、10、11周期按阶段范围收口，第9周期 Windows 后置。
 
-1. **先完成 macOS。** 按[22家](../docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)续验。Cline 双前台与停止后冷续答通过，列表待官方。MiniMax 小米新对话可用，旧 M2.7 待核账号和额度。Claude 可走官方登录，托管 API 待私密交付。Gemini CLI 与 Antigravity 暂缓。[最新八项续验](../docs/evidence/2026-11-16-cycle12-eight-check/README.md)。
-2. **官方替代与复验。** Qoder、fast-agent 和 Cursor 的双前台停止及冷续答已有正例。Goose 1.59.1 实测停掉 Shell 及子进程。工具终态仍待。Pi 网页接法待实装。Copilot 的失败反馈、Amp 显式 MiMo 续答[等待官方](../docs/evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件)，原续答正例保留。
+1. **先完成 macOS。** 按[22家](../docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)续验。Grok、Dirac、Kilo 已取得分项，CodeBuddy 等[待配合事项](../docs/status.md#第-12-周期待配合)单列，其他工作继续。Gemini CLI 与 Antigravity 暂缓。
+2. **官方替代与复验。** Qoder、fast-agent、Cursor、Grok 已有双前台停止及冷续答。Goose 已停前台子进程。MiniMax 已移交后台的停止失败，Pi 网页待实装，Cline 历史列表待官方。Copilot 失败反馈与 Amp 显式 MiMo 续答[等待官方](../docs/evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件)。
 3. **再回到 Windows。** macOS 能力验收完成后，续第9周期及受影响的平台回归。第13–14周期仍以用户认可能力为前提。
 
 ## 首发逐家验收
