@@ -94,13 +94,13 @@
 
 **Qoder 双前台隔离及停止后冷续答通过。** 用户批准后单独关闭占用全局发送名额的 OpenCode 报错连接。正式版中两条 Qoder 1.1.89 对话沿用同一 MiMo，各自在独立目录运行。只点 A 的停止，A 的 Shell 和子进程实际退出，B 的同一进程继续并自然完成。正常保存退出后从侧栏冷开同一 A，只发一条依赖旧上下文的续问，沿用已有小米 MiMo 和 Default 准确回答。原标识保留且唯一，零新建、零自动重发、零工具重跑。A 的已停止工具步骤仍显示结果未知。[隔离实测](evidence/2026-11-16-cycle12-eight-check/README.md#qoder-停止及发送名额) · [续答实测](evidence/2026-11-16-cycle12-eight-check/README.md#qoder-停止后冷开续答)
 
-**Copilot 原对话读回通过，Auto 续答实测失败。** 用户确认原 GitHub 账号。正式版从原目录查到并带入已核对的原 ID，保留一条索引，原正文可读，恢复原已有服务和 Auto。唯一一次续问约 20.7 秒后，Copilot 在助手正文中报告 Auto 路由网络错误，界面显示「已完成」，未正确回答。原选择保留，路由失败原因和准确反馈仍待核。[正式实测](evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由) · [原设置](../output/2026-11-06-phase1-model-repair/original-after-confirm.json)
+**Copilot 原 Auto 续答复验通过，旧失败的反馈仍待修。** 用户确认原 GitHub 账号。正式版从原目录找到、读回并加入同一原 ID，恢复已有服务和 Auto。首次续问约 20.7 秒出现官方选模网络错误，错误作为正文返回，协议未将该轮报告为失败，Farfold 显示「已完成」。后续从正常入口在同一原对话只发一次，约 18.1 秒正确回传原标记，原配置与唯一索引保持。首次网络失败的具体地址、状态或底层异常未知。准确反馈待同一请求的官方结构化失败入口。[首次回执](evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由) · [最新复验](evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验)
 
 **Devin 普通新建的旧设置恢复已修并正式实测。** 从新对话「检查模型设置」同时核对原 `swe-2-high`、`high` 与当前 `SWE-2 Flash Medium`、未提供推理选项，明确采用后保留原目录和草稿。使用原已有服务准确实答一次，全局默认设置原样保留。此前沿原测试对话确认的设置完成文件交付，原稿散列不变，成品可从「本轮产物」打开。实际工具审批及其他工作路径继续按原条件核。[正式新建](evidence/2026-11-16-cycle12-eight-check/README.md#devin-普通新建的旧设置恢复) · [正式文件回执](evidence/2026-11-15-cycle12-pre-send/README.md#2026-11-16-devin-文件交付)
 
 **CodeBuddy 2.184.0 原对话预览无正文。** 从正式版选用目录新版，程序检查通过，旧 2.160.0 安装仍在。从正常「带入已有对话」沿用第 7 周期同一原目录及标识，只读一次。协议 `session/load` 在 78.743 秒返回，未见助手正文回放。界面显示「Agent 没有返回可展示的正文，本次未加入」，零模型请求。新版从超时变为收到回包，原正文仍待验证。[第 7 周期原样本](evidence/2026-11-13-cycle67-closure/summary.json)
 
-**Cline、Pi、siGit 的官方路径续查。** Cline 3.0.74 的 CLI 历史列表和同版 SDK 默认会启动写入式恢复，可能将失联对话及子任务标为失败并改写清单。已知 ID 继续沿原 ACP 入口读回，列表需核到同存储的只读入口。Pi 目录最新仍为 `pi-acp 0.0.34`，将网页工具转给 Pi 的实现尚在上游 PR。siGit 当前 1.5.11 裸 stdio 登记无自动加载，原选中的 1.93 GB GGUF 在默认和共享缓存均缺，当前无可确认的已配置兼容服务。[Cline 列表实现](https://github.com/cline/cline/blob/cli-v3.0.74/sdk/packages/core/src/session/services/persistence-service.ts#L445-L525) · [Pi 上游 PR](https://github.com/svkozak/pi-acp/pull/164) · [siGit 启动方式](https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L4282-L4298)
+**Cline、Pi、siGit 的官方路径续查。** Cline 3.0.74 的 CLI 历史列表和同版 SDK 默认可能改写失联状态。Cline 官方历史搜索脚本用两份真实自有清单，按原目录只读找到一条原 ID，原文件及数据库不变。脚本会按目录子串匹配、静默合并重复 ID，且无分页，暂未接成完整列表。已知 ID 继续沿原 ACP 入口读回。Pi 目录最新仍为 `pi-acp 0.0.34`，将网页工具转给 Pi 的实现尚在上游 PR。siGit 当前 1.5.11 裸 stdio 登记无自动加载，原选中的 1.93 GB GGUF 在默认和共享缓存均缺，当前无可确认的已配置兼容服务。[Cline 实测](evidence/2026-11-16-cycle12-eight-check/README.md#cline-和-amp-的官方备选入口) · [Pi 上游 PR](https://github.com/svkozak/pi-acp/pull/164) · [siGit 启动方式](https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L4282-L4298)
 
 第 6 周期按原阶段范围收口，网页许可、撤回、标签切换及同请求截图已有正式分项，新增五家逐家记录了接入正例或具体阻碍。第 7 周期已交付搜索、整理、导出、按标识带入及本批发现的焦点与栏宽缺陷修复。真实审批、提问和中断各有单次有声与正确点击证据，纯图片触发未读也有单独正式证据。五家历史样本条件和其他原条目按下表继续保留。
 

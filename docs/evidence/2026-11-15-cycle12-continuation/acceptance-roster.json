@@ -8,9 +8,9 @@
     "受阻": 6,
     "分项通过": 9,
     "未测": 14,
-    "原账号实答": 5,
-    "查找冷开续答通过": 8,
-    "已选模型有实答": 10,
+    "原账号实答": 6,
+    "查找冷开续答通过": 9,
+    "已选模型有实答": 11,
     "可建对话": 1,
     "已知标识读取声明": 1,
     "实测分项通过": 13,
@@ -19,7 +19,7 @@
     "本轮短测失败": 1,
     "双前台分项通过": 4,
     "停止及冷续答通过": 2,
-    "原正文已读": 2,
+    "原正文已读": 1,
     "实测失败": 4,
     "未确认": 2,
     "已选服务有实答": 2,
@@ -63,12 +63,13 @@
           "status": "原账号实答"
         },
         "S3": {
-          "observed": "当前所选登记无 list/load/resume。官方制造商 CLI/SDK 有原历史路径，但本机所核常见路径无该独立 CLI。\n2026-11-16 续查：找到并实测原厂商 CLI。目录 0.13.0 的适配器保存新 S-ID 映射，与已有厂商 T-ID 原历史区分。\n2026-11-16 复验：原账号对当前以及含归档的列表真实返回空数组。Farfold 有一条旧适配器本地索引，尚无可对应厂商 T-ID。\n2026-11-16 复验：从正式版搜索冷开同一原测试对话，原正文及 MiMo 恢复。原线程续答遇到官方 CLI 拒绝显式模型参数，用量与正文未新增。\n2026-11-16 复验：临时选 Default，依赖原上下文的一次续问准确完成，官方导出核同一原线程。",
+          "observed": "当前所选登记无 list/load/resume。官方制造商 CLI/SDK 有原历史路径，但本机所核常见路径无该独立 CLI。\n2026-11-16 续查：找到并实测原厂商 CLI。目录 0.13.0 的适配器保存新 S-ID 映射，与已有厂商 T-ID 原历史区分。\n2026-11-16 复验：原账号对当前以及含归档的列表真实返回空数组。Farfold 有一条旧适配器本地索引，尚无可对应厂商 T-ID。\n2026-11-16 复验：从正式版搜索冷开同一原测试对话，原正文及 MiMo 恢复。原线程续答遇到官方 CLI 拒绝显式模型参数，用量与正文未新增。\n2026-11-16 复验：临时选 Default，依赖原上下文的一次续问准确完成，官方导出核同一原线程。\n2026-11-16 续验：同一原线程沿用已有 MiMo 的旧正例能追溯。另核官方已发布 SDK 和外部 API，仍未提供显式模型的旧线程续答路径。",
           "remaining": "显式模型直接续答仍受阻，未建立映射的旧厂商线程带入仍待。",
           "sources": [
             "docs/evidence/2026-11-15-official-alternatives/amp.md",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
-            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#cline-和-amp-的官方备选入口"
           ],
           "status": "查找冷开续答通过"
         },
@@ -405,8 +406,8 @@
           "status": "原账号实答"
         },
         "S3": {
-          "observed": "10/06 A 自有失败对话 ID、原目录及原保存消息文件均确认。该版无列表，官方 load 需认证，并在原 ID 启动自己的会话管理器。\n本轮实测：当前正式历史入口连接在检查完成前结束，未向程序发列表或正文。\n2026-11-16 续验：当前正式握手确认仅声明已知标识读取，未提供官方历史列表。\n2026-11-16 续查：同发行 3.0.74 官方源码确认按已知 ID 读取，无官方默认历史列表。",
-          "remaining": "能找到原对话的正式补充入口、同原设置读取及续答仍待。",
+          "observed": "10/06 A 自有失败对话 ID、原目录及原保存消息文件均确认。该版无列表，官方 load 需认证，并在原 ID 启动自己的会话管理器。\n本轮实测：当前正式历史入口连接在检查完成前结束，未向程序发列表或正文。\n2026-11-16 续验：当前正式握手确认仅声明已知标识读取，未提供官方历史列表。\n2026-11-16 续查：同发行 3.0.74 官方源码确认按已知 ID 读取，无官方默认历史列表。\n2026-11-16 续验：官方清单脚本限定两份本机真实自有元数据，按原目录查到唯一文件交付样本 ID，7 项原存储证据不变。该路径未接进 Farfold。",
+          "remaining": "官方脚本按目录子串匹配、静默合并重复 ID 且无分页；完整发现仍缺可验证范围的官方只读入口。原设置的读回及续答继续分项验。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
             "output/2026-10-09-fourth-install/metadata-before.sqlite3",
@@ -414,7 +415,8 @@
             "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L232-L304",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-15-cycle12-pre-send/cline-startup-diagnosis-2026-11-16.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#cline-和-amp-的官方备选入口"
           ],
           "status": "已知标识读取声明"
         },
@@ -1097,7 +1099,7 @@
     {
       "agentId": "github-copilot-cli",
       "runtime": "登记及 npm-loader 包 1.0.89，保存握手 1.0.107。全局保存 Auto / Agent。当前 Farfold 索引为 0。",
-      "liveAction": "用户确认原账号。原目录列表、正文、带入同一 ID 及恢复原已有服务/Auto 均已实测。同一原 ID 唯一续问因 Auto 路由网络错误未成功，保留原选择。",
+      "liveAction": "用户确认原账号。从原目录带入同一 ID 及恢复已有服务/Auto 成功。首次续问报 Auto 路由网络错误，误显示完成；随后原账号、原 ID、原 Auto 实答通过。旧失败的准确反馈仍缺官方信号。",
       "standards": {
         "S1": {
           "observed": "旧 1.0.89 真实打开官方登录、暂离和取消；1.0.106 另有实际登录终端和空凭据拒绝受控检查。\n本轮实测：目前程序可执行，登记版本 1.0.89。登记所存握手版本 1.0.107。",
@@ -1110,35 +1112,38 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。\n2026-11-16 续验：用户确认当前使用原 GitHub 账号，沿用原已有服务。原 Auto 的续问在路由阶段报网络错误。",
+          "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。\n2026-11-16 续验：用户确认当前使用原 GitHub 账号，沿用原已有服务。原 Auto 的续问在路由阶段报网络错误。\n2026-11-16 续验：同一用户确认原账号，同一已有服务复验实答。",
           "remaining": "实际计费、换号及不同服务失效的范围保护仍待核。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-followup/README.md",
             "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验"
           ],
-          "status": null
+          "status": "原账号实答"
         },
         "S3": {
-          "observed": "旧正式从目录精确发现原 ID、读回正文并按 Auto 依赖原前文续答。\n本轮实测：正常入口找到自建原条目，核到原问题和原回复。当前返回 Auto，原选择无法确认，预览只读，零发送。\n2026-11-16 续验：正式版从原目录找到、预览并带入同一原 ID，单条索引和原正文均核同。一次依赖上下文的续问因 Auto 路由失败未通过。",
-          "remaining": "等原 Auto 路由可用后以同一原 ID 验正确续答。",
+          "observed": "旧正式从目录精确发现原 ID、读回正文并按 Auto 依赖原前文续答。\n本轮实测：正常入口找到自建原条目，核到原问题和原回复。当前返回 Auto，原选择无法确认，预览只读，零发送。\n2026-11-16 续验：正式版从原目录找到、预览并带入同一原 ID，单条索引和原正文均核同。一次依赖上下文的续问因 Auto 路由失败未通过。\n2026-11-16 续验：从正式版侧栏冷开同一个原 ID，只发一次依赖原上下文的续问，准确返回原标记，零新建，原索引唯一。",
+          "remaining": "更多原目录、跨范围发现和恢复仍按实际适用条件验。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-copilot-list/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/copilot-formal-e954-history-continuation-summary.json",
             "docs/evidence/2026-11-15-cycle12-followup/README.md",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验"
           ],
-          "status": "原正文已读"
+          "status": "查找冷开续答通过"
         },
         "S4": {
-          "observed": "正式旧 Auto 原选择及实际回复均已有证据，原生模型曾为 gpt-6-luna；历史菜单只提供 Auto。\n2026-11-16 续验：从正式版核原已有服务和 Auto，保存原设置后读取确认一致。实际续问发生 Auto 路由失败。",
-          "remaining": "核 Auto 的实际路由成功；其他模型、推理选择仍按该版本官方选项验。",
+          "observed": "正式旧 Auto 原选择及实际回复均已有证据，原生模型曾为 gpt-6-luna；历史菜单只提供 Auto。\n2026-11-16 续验：从正式版核原已有服务和 Auto，保存原设置后读取确认一致。实际续问发生 Auto 路由失败。\n2026-11-16 续验：同一原对话沿用已有服务和保存的 Auto 完成一次续答。",
+          "remaining": "Auto 实际选中的具体模型未核对；其他模型与推理选择仍按该版本声明验。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验"
           ],
-          "status": null
+          "status": "已选模型有实答"
         },
         "S5": {
           "observed": "旧正式同自测一次审批拒绝，一次批准且固定命令有专用标记与退出码。",
@@ -1165,13 +1170,14 @@
           "status": null
         },
         "S8": {
-          "observed": "旧正式显示回复已停和工具待确认；当时实际导出把工具写成等待中。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续验：官方会话记录出现 session.error，ACP 同时刻只显示错误正文，未发协议错误。Farfold 标题下此次显示已完成，实际未获得预期回复。",
+          "observed": "旧正式显示回复已停和工具待确认；当时实际导出把工具写成等待中。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续验：官方会话记录出现 session.error，ACP 同时刻只显示错误正文，未发协议错误。Farfold 标题下此次显示已完成，实际未获得预期回复。\n2026-11-16 续验：Auto 再次使用时实际实答，第一次失败仍存在错误文字映射，官方 SDK 的整段读取不能确认原失败归属。",
           "remaining": "核同一请求的官方结构化失败入口，修正实际失败的显示。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json",
             "docs/evidence/2026-11-06-phase1-copilot-list/README.md",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验"
           ],
           "status": "实测失败"
         }

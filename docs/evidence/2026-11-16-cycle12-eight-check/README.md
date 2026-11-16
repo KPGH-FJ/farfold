@@ -52,10 +52,19 @@ B 的 `protocol-v1-1794829044139-70.jsonl` 在 19:39:03.976 收到工具更新�
 
 只发一条需要原上下文的短续问，未给出预期标记。`protocol-v1-1794835087081-4.jsonl` 记录一次 `session/load` 和一次手动 `session/prompt`，零 `session/new`，续问无工具和审批。约 20.7 秒后，Copilot 原会话事件记录 `session.error`，`errorType=query`，无状态码，报告 Auto 内部尝试两次后网络错误。同一毫秒的 ACP 更新仅为助手正文，6 毫秒后协议响应无错误码。界面显示「已完成」，实际未返回预期标记。保留原账号、服务和 Auto。本次查询的官方状态页显示 Copilot 与模型提供方运行正常，单次故障原因仍待确认。反馈修复需核同一请求能否从官方接口收到可识别的失败信号。[SDK 失败事件](https://docs.github.com/en/copilot/how-tos/copilot-sdk/features/streaming-events#sessionerror) · [GitHub 状态](https://www.githubstatus.com/)
 
+### Copilot Auto 同条件复验
+
+同一轮只读取失败时对应进程的官方日志。没有找到该次已认证选模请求的目标地址、HTTP 状态或 DNS、TLS 失败细节。当前三个官方公共连通性端点返回 HTTP 200 且通过 TLS 验证。公共连通性与历史失败分别记录，保留原网络、账号及配置。
+
+当前正式版 0.1.7（CDHash `7aefe7b0116d761bf7dcfcbed3ab392e0bd4aadd`）从侧栏打开原标识 `f42b41e3-2978-4ce8-ac4d-7b92dce52646`。原目录、沿用已有服务、Auto 保持。手动发一次不含原标记的上下文续问，界面约 18.1 秒后完成，准确返回 `FARFOLD_COPILOT_A_20261006`。官方原会话中有新 `assistant.message` 和 `assistant.turn_end`，该轮无 `session.error`。`protocol-v1-1794836414146-2.jsonl` 有一次 `session/load`、一次 `session/prompt`，零新建、零工具调用或审批。Copilot 另外通过助手文字显示其自行排队的远端索引提示。原索引仍唯一，当前已认证 Auto 路由复验通过。
+
+第一次的失败反馈仍未修正。Farfold 现有路径以匹配的终态和结构化失败决定本轮状态，并按非空助手内容判断有回复。该次没有收到可归一化的错误，错误句又走助手正文，所以显示完成。同类终态与正文混用已在 Copilot CLI 的公开问题记录。当前官方 SDK 读取事件需要自己的会话连接，按会话取整段事件；该失败原事件关联的是之前的恢复事件，没有对应轮次或用户消息标识。当前 ACP 未发现能交付本轮结构化失败的接口。保留真实正文，未按文字猜测状态。[公开问题](https://github.com/github/copilot-cli/issues/5266) · [官方 ACP](https://docs.github.com/en/copilot/reference/copilot-cli-reference/acp-server) · [SDK 读取实现](https://github.com/github/copilot-sdk/blob/v1.0.34/nodejs/src/session.ts#L3073-L3112)
+
 ## Cline 和 Amp 的官方备选入口
 
 - Cline 3.0.74 对应 SDK 0.2.0。公开历史入口即使设 `hydrate:false`，仍调用可能改写失联会话的列表。内部元数据列表跳过该步骤，但公开打开同一存储仍执行初始化和迁移。保留按已知 ID 的 ACP 读取，当前缺可验证的同存储只读发现入口。[公开入口](https://github.com/cline/cline/blob/cli-v3.0.74/sdk/packages/core/src/runtime/host/host.ts#L55-L68) · [列表实现](https://github.com/cline/cline/blob/cli-v3.0.74/sdk/packages/core/src/session/services/persistence-service.ts#L516-L564)
-- Amp ACP 0.13.0 对旧线程续答仍追加显式 `--model`。官方 CLI 与 SDK 的覆盖选项限新线程，交互界面另有切换模型入口。同一旧线程沿用原 MiMo 的实测正例保留。显式选择后继续仍待官方组件或可验证的同线程接口。[组件](https://github.com/tao12345666333/amp-acp/blob/v0.13.0/src/amp-transport.ts#L205-L243) · [官方模型切换](https://ampcode.com/docs/model-selector#switch-models-in-a-thread)
+- Cline 发布的历史搜索脚本有只扫描清单的 `--no-db` 模式。独立样本确认状态和文件不变；本机实测仅将两份已核自有测试元数据链接进临时目录，按文件交付样本的原目录查找，返回唯一原 ID `1794814385032_IEsyY_cli`，与 Farfold 索引和原目录核同。原清单、正文、SQLite 和现有附属文件，共 7 项的摘要、修改时间未变。未读取 transcript、未导出、未发模型。原脚本的目录匹配为子串，重复 ID 先于过滤被合并，输出含完整提示词，接口没有分页；可证明这两个样本内的只读发现，完整 Farfold 列表仍需能确定范围、处理冲突和控制输出的官方方式。只读 SQLite 模式在没有附属文件的 WAL 夹具中也曾把错误变为空列表。[官方脚本](https://github.com/cline/skills/blob/26378461e978f2b4e2e6d67b57121b86b2a79ba5/skills/cline-session-search/scripts/search_sessions.py#L115-L187) · [选项和输出](https://github.com/cline/skills/blob/26378461e978f2b4e2e6d67b57121b86b2a79ba5/skills/cline-session-search/scripts/search_sessions.py#L480-L545)
+- Amp ACP 0.13.0 对旧线程续答仍追加显式 `--model`。已发布的 TypeScript SDK 也将其映射到同一 CLI 参数。官方 CLI 与 SDK 的覆盖选项限新线程，交互界面另有切换模型入口；公开 API 和插件没有可调用的同一旧线程模型设置入口。同一旧线程沿用原 MiMo 的实测正例保留。显式选择后继续仍待官方组件或可验证的同线程接口。[组件](https://github.com/tao12345666333/amp-acp/blob/v0.13.0/src/amp-transport.ts#L205-L243) · [官方模型切换](https://ampcode.com/docs/model-selector#switch-models-in-a-thread) · [API 规范](https://ampcode.com/api/v2/openapi.json)
 
 ## Devin 普通新建的旧设置恢复
 
