@@ -605,6 +605,9 @@ export function ThreadView({
             {thread.sessionToolRecoveryRequired && (
               <SessionToolRecovery thread={thread} active={active} />
             )}
+            {active && (
+              <StoppedWorkClose thread={thread} ownsView={ownsContent} failed />
+            )}
             {thread.historicalOutcomeUnknown && (
               <div className="banner" role="status">
                 <span>{STRINGS.thread.historicalOutcomeUnknown}</span>

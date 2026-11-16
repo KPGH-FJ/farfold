@@ -299,6 +299,8 @@ pub fn run() {
                 acp_client::session_commands::session_close,
                 acp_client::session_commands::session_check_unapproved_stopped_close,
                 acp_client::session_commands::session_close_unapproved_stopped,
+                acp_client::session_commands::prepare_failed_work_close,
+                acp_client::session_commands::close_failed_work,
                 acp_client::session_commands::session_detach_for_config_check,
                 acp_client::session_commands::session_touch,
                 acp_client::session_commands::session_meta_rename,

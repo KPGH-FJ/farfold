@@ -15,7 +15,7 @@ use tauri::{AppHandle, Manager as _};
 
 use crate::acp_client::manager::{AcpManager, require_agent_row, validate_cwd, validate_cwd_async};
 pub use crate::acp_client::pump::ProcessEndedReceipt;
-use crate::acp_client::pump::{SessionSink, StoppedToolCloseReceipt};
+use crate::acp_client::pump::{FailedWorkCloseReceipt, SessionSink, StoppedToolCloseReceipt};
 use crate::acp_client::session::{InteractionReply, SessionListEntry, SessionOpenResult};
 use crate::acp_client::session_index::{
     iso8601_millis, parse_config_map, same_dir, touch_session_row,
@@ -728,6 +728,37 @@ pub async fn session_close_unapproved_stopped(
             tool_call_id,
             proof_id,
         )
+        .await
+}
+
+/// Read whether a matched failed request can safely end its one local connection.
+#[tauri::command]
+pub async fn prepare_failed_work_close(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    connection_id: String,
+) -> Result<Option<FailedWorkCloseReceipt>, String> {
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .prepare_failed_work_close(&agent_id, &cwd, &session_id, &connection_id)
+        .await
+}
+
+/// The reply confirms local process exit only. The earlier result is unknown.
+#[tauri::command]
+pub async fn close_failed_work(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    connection_id: String,
+    proof_id: String,
+) -> Result<FailedWorkCloseReceipt, String> {
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .close_failed_work(&agent_id, &cwd, &session_id, &connection_id, proof_id)
         .await
 }
 

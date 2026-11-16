@@ -2,24 +2,36 @@ import { useEffect, useRef, useState } from "react";
 import type { ThreadState } from "../runtime/session_types";
 import { threads } from "../runtime/sessions";
 import {
-  currentStoppedWork,
+  currentWorkClose,
+  failedWorkTarget,
   STOPPED_WORK_CLOSE as S,
   stoppedWorkTarget,
-  type StoppedWorkCloseReceipt,
-  type StoppedWorkTarget,
+  type WorkCloseReceipt,
+  type WorkCloseTarget,
 } from "../runtime/stopped_work_close";
 
 type Review =
   | { phase: "checking" | "closing" | "blocked" | "unconfirmed" }
-  | { phase: "review"; proof: StoppedWorkCloseReceipt };
+  | { phase: "review"; proof: WorkCloseReceipt };
 
 type Props = { thread: ThreadState; ownsView: () => boolean };
 
-export function StoppedWorkClose(props: Props) {
-  const target = stoppedWorkTarget(props.thread);
-  return target ? (
+export function StoppedWorkClose(props: Props & { failed?: boolean }) {
+  const target = props.failed
+    ? failedWorkTarget(props.thread)
+    : stoppedWorkTarget(props.thread);
+  if (!target) return null;
+  const actions = (
     <EligibleClose key={JSON.stringify(target)} {...props} target={target} />
-  ) : null;
+  );
+  return props.failed ? (
+    <div className="banner" role="status">
+      <span>{S.failedNotice}</span>
+      {actions}
+    </div>
+  ) : (
+    actions
+  );
 }
 
 function EligibleClose({
@@ -27,12 +39,12 @@ function EligibleClose({
   ownsView,
   target,
 }: Props & {
-  target: StoppedWorkTarget;
+  target: WorkCloseTarget;
 }) {
   const [review, setReview] = useState<Review | null>(null);
   const busy = useRef(false);
   const mounted = useRef(true);
-  const approved = useRef<StoppedWorkCloseReceipt | null>(null);
+  const approved = useRef<WorkCloseReceipt | null>(null);
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -41,7 +53,7 @@ function EligibleClose({
     };
   }, []);
   const owns = () =>
-    mounted.current && ownsView() && currentStoppedWork(thread, target);
+    mounted.current && ownsView() && currentWorkClose(thread, target);
 
   const check = async () => {
     if (!owns() || busy.current) return;
@@ -49,7 +61,7 @@ function EligibleClose({
     approved.current = null;
     setReview({ phase: "checking" });
     try {
-      const proof = await threads.checkStoppedWorkClose(thread, target);
+      const proof = await threads.workConnectionClose.check(thread, target);
       if (owns()) {
         approved.current = proof;
         setReview(proof ? { phase: "review", proof } : { phase: "blocked" });
@@ -73,7 +85,7 @@ function EligibleClose({
     approved.current = null;
     setReview({ phase: "closing" });
     try {
-      await threads.closeStoppedWork(thread, target, review.proof);
+      await threads.workConnectionClose.close(thread, target, review.proof);
     } catch {
       if (owns()) setReview({ phase: "unconfirmed" });
     } finally {

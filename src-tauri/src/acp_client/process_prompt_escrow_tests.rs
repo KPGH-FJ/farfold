@@ -64,7 +64,7 @@ async fn known_terminal_releases_once_and_surviving_waiter_starts() {
     let cell = PromptEscrow::for_pool(g.clone());
     let permit = grant(&g, "first").await;
     let observation = cell
-        .commit(&permit, life.work().unwrap(), deadline())
+        .commit("owned-session", &permit, life.work().unwrap(), deadline())
         .unwrap();
     drop(permit);
     let mut next = Box::pin(grant(&g, "second"));
@@ -84,7 +84,7 @@ async fn error_unknown_eof_and_dropped_callback_keep_capacity_until_exact_reap()
     let cell = PromptEscrow::for_pool(g.clone());
     let permit = grant(&g, "first").await;
     let observation = cell
-        .commit(&permit, life.work().unwrap(), deadline())
+        .commit("owned-session", &permit, life.work().unwrap(), deadline())
         .unwrap();
     drop(permit);
     let mut next = Box::pin(grant(&g, "second"));
@@ -102,13 +102,46 @@ async fn error_unknown_eof_and_dropped_callback_keep_capacity_until_exact_reap()
 }
 
 #[tokio::test]
+async fn first_matching_wire_error_is_distinct_from_local_and_duplicate_errors() {
+    let g = gate();
+    let life = life();
+    let cell = PromptEscrow::for_pool(g.clone());
+    let permit = grant(&g, "first").await;
+    let first = cell
+        .commit("owned-session", &permit, life.work().unwrap(), deadline())
+        .unwrap();
+    let inspect = |text: &str, outgoing| {
+        cell.inspect(&serde_json::from_str(text).unwrap(), outgoing);
+    };
+    let outbound = r#"{"jsonrpc":"2.0","id":"one","method":"session/prompt","params":{"sessionId":"owned-session"}}"#;
+    let matching = r#"{"jsonrpc":"2.0","id":"one","error":{"code":-32603,"message":"fixture"}}"#;
+    first.observe(&Err("local error".into()));
+    inspect(matching, false);
+    assert!(!first.matched_wire_error());
+    inspect(outbound, true);
+    inspect(
+        r#"{"jsonrpc":"2.0","id":"other","error":{"code":-32603,"message":"fixture"}}"#,
+        false,
+    );
+    assert!(!first.matched_wire_error());
+    inspect(
+        r#"{"jsonrpc":"2.0","id":"one","result":{"stopReason":"future"}}"#,
+        false,
+    );
+    inspect(matching, false);
+    assert!(!first.matched_wire_error());
+    assert!(first.unresolved());
+    cell.process_reaped(reaped());
+}
+
+#[tokio::test]
 async fn completion_task_abort_does_not_release_the_committed_permit() {
     let g = gate();
     let life = life();
     let cell = PromptEscrow::for_pool(g.clone());
     let permit = grant(&g, "first").await;
     let observation = cell
-        .commit(&permit, life.work().unwrap(), deadline())
+        .commit("owned-session", &permit, life.work().unwrap(), deadline())
         .unwrap();
     let observer = tokio::spawn(async move {
         let _held = observation;
@@ -132,7 +165,7 @@ async fn pump_unwind_leaves_process_escrow_in_charge() {
     let cell = PromptEscrow::for_pool(g.clone());
     let permit = grant(&g, "first").await;
     let observation = cell
-        .commit(&permit, life.work().unwrap(), deadline())
+        .commit("owned-session", &permit, life.work().unwrap(), deadline())
         .unwrap();
     assert!(
         catch_unwind(AssertUnwindSafe(move || {
@@ -156,7 +189,7 @@ async fn lost_actual_owner_is_quarantined_not_falsely_reaped_or_cyclic() {
     let cell = PromptEscrow::for_pool(g.clone());
     let permit = grant(&g, "first").await;
     let observation = cell
-        .commit(&permit, life.work().unwrap(), deadline())
+        .commit("owned-session", &permit, life.work().unwrap(), deadline())
         .unwrap();
     drop(permit);
     drop(cell); // No reaped call: simulate final owner destruction.
@@ -187,25 +220,30 @@ async fn granted_cancel_window_close_deadline_and_reaped_process_cannot_offer() 
     assert_eq!(g.cancel(id, &owner), Ok(Cancel::CancelledWaiting));
     let cell = PromptEscrow::for_pool(g.clone());
     assert!(matches!(
-        cell.commit(&permit, life.work().unwrap(), deadline()),
+        cell.commit("owned-session", &permit, life.work().unwrap(), deadline()),
         Err(Failure::Cancelled)
     ));
     drop(permit);
     let permit = grant(&g, "close").await;
     g.close_window("owned-window").unwrap();
     assert!(matches!(
-        cell.commit(&permit, life.work().unwrap(), deadline()),
+        cell.commit("owned-session", &permit, life.work().unwrap(), deadline()),
         Err(Failure::Cancelled | Failure::Closed)
     ));
     drop(permit);
     let permit = grant(&g, "expired").await;
     assert!(matches!(
-        cell.commit(&permit, life.work().unwrap(), Instant::now()),
+        cell.commit(
+            "owned-session",
+            &permit,
+            life.work().unwrap(),
+            Instant::now()
+        ),
         Err(Failure::Timeout)
     ));
     cell.process_reaped(reaped());
     assert!(matches!(
-        cell.commit(&permit, life.work().unwrap(), deadline()),
+        cell.commit("owned-session", &permit, life.work().unwrap(), deadline()),
         Err(Failure::Closed)
     ));
     drop(permit);
@@ -238,7 +276,12 @@ async fn send_wait_timeout_at_atomic_commit_is_distinct_but_prior_cancel_wins() 
     let cell = PromptEscrow::for_pool(g.clone());
     let permit = grant(&g, "expired-origin").await;
     let error = cell
-        .commit(&permit, life.work().unwrap(), Instant::now())
+        .commit(
+            "owned-session",
+            &permit,
+            life.work().unwrap(),
+            Instant::now(),
+        )
         .err()
         .unwrap();
     assert_eq!(format!("{error:?}"), "Timeout");
@@ -250,7 +293,12 @@ async fn send_wait_timeout_at_atomic_commit_is_distinct_but_prior_cancel_wins() 
     let permit = waiting.acquire().await.unwrap();
     assert_eq!(g.cancel(id, &owner), Ok(Cancel::CancelledWaiting));
     let error = cell
-        .commit(&permit, life.work().unwrap(), Instant::now())
+        .commit(
+            "owned-session",
+            &permit,
+            life.work().unwrap(),
+            Instant::now(),
+        )
         .err()
         .unwrap();
     assert_eq!(format!("{error:?}"), "Cancelled");
@@ -268,7 +316,7 @@ async fn reused_public_token_cannot_let_old_receipt_cancel_a_new_request() {
     let old_id = waiting.receipt_id();
     let first = waiting.acquire().await.unwrap();
     let old = cell
-        .commit(&first, life.work().unwrap(), deadline())
+        .commit("owned-session", &first, life.work().unwrap(), deadline())
         .unwrap();
     assert_eq!(old.receipt_id(), old_id);
     old.observe(&Ok(json!({"stopReason":"end_turn"})));
@@ -279,7 +327,7 @@ async fn reused_public_token_cannot_let_old_receipt_cancel_a_new_request() {
     assert_ne!(old_id, new_id);
     assert_eq!(g.cancel(old_id, &owner), Ok(Cancel::NotFound));
     let active = cell
-        .commit(&next, life.work().unwrap(), deadline())
+        .commit("owned-session", &next, life.work().unwrap(), deadline())
         .unwrap();
     assert_eq!(active.receipt_id(), new_id);
     old.observe(&Ok(json!({"stopReason":"cancelled"})));
@@ -304,7 +352,7 @@ async fn status_error_and_inactive_group_cannot_publish_done_or_release_work() {
     let mut closed = Box::pin(control.closed());
     let cell = control.prompt_escrow();
     let permit = grant(&g, "first").await;
-    cell.commit(&permit, life.work().unwrap(), deadline())
+    cell.commit("owned-session", &permit, life.work().unwrap(), deadline())
         .unwrap();
     drop(permit);
     for (exit, group_active) in [
@@ -341,7 +389,7 @@ async fn a_process_cannot_mix_pool_local_receipt_ids() {
     let cell = PromptEscrow::for_pool(first.clone());
     let wrong = grant(&second, "same-local-id").await;
     assert!(matches!(
-        cell.commit(&wrong, life.work().unwrap(), deadline()),
+        cell.commit("owned-session", &wrong, life.work().unwrap(), deadline()),
         Err(Failure::Invalid)
     ));
     assert_eq!(first.counts(), (0, 0, 0));

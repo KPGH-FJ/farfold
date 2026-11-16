@@ -102,14 +102,14 @@ it.each([false, true])(
       return otherInvoke(command, ...args);
     });
 
-    expect(await threads.checkStoppedWorkClose(a, target)).toEqual(proof);
+    expect(await threads.workConnectionClose.check(a, target)).toEqual(proof);
     expect(
       invoke.mock.calls.some(
         ([cmd]) => cmd === "session_close_unapproved_stopped",
       ),
     ).toBe(false);
     expect(a.activeToolCallIds).toEqual(["tool"]);
-    const closing = threads.closeStoppedWork(a, target, proof);
+    const closing = threads.workConnectionClose.close(a, target, proof);
     try {
       await vi.waitFor(() =>
         expect(invoke).toHaveBeenCalledWith(
@@ -125,7 +125,7 @@ it.each([false, true])(
         threads.updateWork(a.cwd, {}, false);
         expect(stoppedWorkTarget(a)).toBeNull();
         await expect(
-          threads.checkStoppedWorkClose(a, target),
+          threads.workConnectionClose.check(a, target),
         ).resolves.toBeNull();
         expect(a.queuePaused).toBe("work_disabled");
       }
@@ -168,7 +168,7 @@ it("does not dispatch a reviewed close if a newer stopped turn appears during sa
     finishSaving = resolve;
   });
   vi.mocked(draftPersistence.flush).mockReturnValueOnce(saving);
-  const close = threads.closeStoppedWork(a, target, {
+  const close = threads.workConnectionClose.close(a, target, {
     ...target,
     proofId: "1",
   });
@@ -195,7 +195,7 @@ it("does not send a reviewed close while the existing unsent work cannot be save
     new Error("write blocked"),
   );
   await expect(
-    threads.closeStoppedWork(a, target, { ...target, proofId: "1" }),
+    threads.workConnectionClose.close(a, target, { ...target, proofId: "1" }),
   ).rejects.toThrow("write blocked");
   expect(
     invoke.mock.calls.some(

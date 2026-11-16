@@ -1237,7 +1237,7 @@ it("saves the exact stopped work before closing and restores it after a cold ope
     return baseInvoke(command, args);
   });
   await expect(
-    original.threads.checkStoppedWorkClose(a, target),
+    original.threads.workConnectionClose.check(a, target),
   ).resolves.toEqual(proof);
   let closing: Promise<void> | undefined;
   try {
@@ -1246,7 +1246,7 @@ it("saves the exact stopped work before closing and restores it after a cold ope
     expect(h.settings.get("unsentWork.v1")).toMatchObject({
       composers: { [draftKey]: draft },
     });
-    closing = original.threads.closeStoppedWork(a, target, proof);
+    closing = original.threads.workConnectionClose.close(a, target, proof);
     await Promise.resolve();
     expect(
       h.invoke.mock.calls.filter(

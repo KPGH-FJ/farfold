@@ -1383,6 +1383,7 @@ pub struct SessionListEntry {
     pub archived: bool,
 }
 
+mod failed_work_close;
 mod stopped_tool_close;
 
 #[cfg(test)]

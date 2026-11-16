@@ -103,6 +103,9 @@ for line in sys.stdin:
   if idle_burst: update('prompt-started')
   else: burst()
   if mode=='pump-panic': update('owned-pump-panic')
+  if mode=='matched-error':
+   send({'id':'another-request','error':{'code':-32603,'message':'unrelated'}})
+   send({'id':m['id'],'error':{'code':-32000,'message':'owned matched failure'}})
   if mode=='eof':
    import signal,os
    signal.signal(signal.SIGTERM,signal.SIG_IGN)
@@ -512,6 +515,93 @@ async fn offered_pump_unwind_retains_capacity_until_exact_process_close() {
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn matched_failed_work_close_reaps_only_the_captured_connection() {
+    checked(|s| {
+        Box::pin(async move {
+            let mut a = s.open(0, "failed-close-a", "matched-error").await;
+            let mut b = s.open(1, "failed-close-b", "normal").await;
+            let check = || {
+                s.manager
+                    .prepare_failed_work_close(&a.agent, &s.cwd, &a.session, &a.connection)
+            };
+            let close = |proof| {
+                s.manager
+                    .close_failed_work(&a.agent, &s.cwd, &a.session, &a.connection, proof)
+            };
+            assert!(check().await.unwrap().is_none());
+
+            let (bb, db) = blocks(1);
+            s.manager
+                .session_prompt(&b.agent, &s.cwd, &b.session, bb)
+                .await
+                .unwrap();
+            start(&mut b, &db).await;
+            let (ba, _) = blocks(0);
+            s.manager
+                .session_prompt(&a.agent, &s.cwd, &a.session, ba)
+                .await
+                .unwrap();
+            loop {
+                let event = a.events.recv().await.unwrap();
+                if event["kind"] == "turnEnd" {
+                    assert_eq!(event["failedWorkCloseAvailable"], true);
+                    assert!(event.get("error").is_some());
+                    assert!(event.get("stopReason").is_none());
+                    break;
+                }
+            }
+            let proof = check().await.unwrap().unwrap();
+            assert_eq!(proof.session_id, a.session);
+            assert_eq!(proof.connection_id, a.connection);
+            assert_eq!(s.manager.prompt_admission.counts().0, 2);
+            assert!(close(format!("stale-{}", proof.proof_id)).await.is_err());
+            assert!(
+                s.manager
+                    .close_failed_work(
+                        &a.agent,
+                        &s.cwd,
+                        &a.session,
+                        &b.connection,
+                        proof.proof_id.clone()
+                    )
+                    .await
+                    .is_err()
+            );
+            let other_operation = s.lives[0]
+                .operation("fixture-other-operation".into())
+                .unwrap();
+            assert!(check().await.unwrap().is_none());
+            assert!(close(proof.proof_id.clone()).await.is_err());
+            drop(other_operation);
+            let sibling = s.lives[0].session().unwrap().registered();
+            assert!(check().await.unwrap().is_none());
+            assert!(close(proof.proof_id.clone()).await.is_err());
+            drop(sibling);
+            assert!(crate::supervisor::owned_group_alive(a.pid));
+            assert_eq!(s.lives[0].work.load(Ordering::SeqCst), 1);
+
+            assert_eq!(close(proof.proof_id.clone()).await.unwrap(), proof);
+            assert!(!crate::supervisor::owned_group_alive(a.pid));
+            assert!(
+                s.manager
+                    .session_owner(&a.agent, &s.cwd, &a.session)
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(s.lives[0].work.load(Ordering::SeqCst), 0);
+            assert_eq!(s.manager.prompt_admission.counts().0, 1);
+            assert!(crate::supervisor::owned_group_alive(b.pid));
+            s.manager
+                .session_cancel(&b.agent, &s.cwd, &b.session)
+                .await
+                .unwrap();
+            terminal(&mut b).await;
+        })
+    })
+    .await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn real_stdio_eof_is_not_a_terminal_but_actual_reap_releases() {
     checked(|s| {
         Box::pin(async move {
@@ -544,6 +634,7 @@ async fn real_stdio_eof_is_not_a_terminal_but_actual_reap_releases() {
                 let event = a.events.recv().await.expect("owned EOF observation");
                 if event["kind"] == "turnEnd" {
                     assert!(event.get("error").is_some());
+                    assert!(event.get("failedWorkCloseAvailable").is_none());
                     break;
                 }
                 if event["kind"] == "connectionLost" {

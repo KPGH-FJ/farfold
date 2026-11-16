@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-16",
+  "timeZone": "Asia/Shanghai",
+  "appPath": "/Applications/Farfold.app",
+  "appVersion": "0.1.7",
+  "cdhash": "6a7d50de01d7eda0cde89a006a49c45147ffc3c3",
+  "stableProductInputs": 2626,
+  "protectedInstallationEntriesMatched": 236586,
+  "metadataBackupIntegrity": "ok",
+  "duplicateBuildBundleRemoved": true,
+  "scope": "Formal app, deterministic local ACP peer registered through normal custom access. No model service in the fixture.",
+  "beforeClose": {
+    "aMatchedPromptError": true,
+    "aProcessGroupPresent": true,
+    "bInFlight": true,
+    "cWaitingInUi": true,
+    "cHadNoOutboundPrompt": true
+  },
+  "normalUiAction": "检查能否关闭此对话的连接 → 关闭此对话的连接",
+  "closeClickedUnixMs": 1794803474982,
+  "queuedCReceivedPromptUnixMs": 1794803475120,
+  "afterClose": {
+    "aOriginalProcessGroupEmpty": true,
+    "aConnectedWorkOnlyClosed": true,
+    "aUiHistoricalOutcomeUnknown": true,
+    "aOriginalMessagePreserved": true,
+    "aUnsentDraftPreserved": true,
+    "aAutomaticallyResent": false,
+    "bOriginalProcessStillLive": true,
+    "bCompletedAfterControlledRelease": true,
+    "cAdmittedAndCompletedWithoutRetry": true,
+    "farfoldProcessUnchanged": true
+  },
+  "fixturePrompts": { "a": 1, "b": 1, "c": 1 },
+  "fixtureRegistrationRemoved": true,
+  "threeTestConversationsStillInLibrary": true,
+  "rosterChoicesAfterCleanup": 27,
+  "rawLocalWitnesses": [
+    "ui-before-close.json",
+    "ui-after-close.json",
+    "ui-final.json"
+  ]
+}

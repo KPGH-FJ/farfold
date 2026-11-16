@@ -6,6 +6,7 @@ use agent_client_protocol::schema::v1::{ContentBlock, PromptRequest};
 pub(super) struct Outcome {
     pub receipt_id: u64,
     pub result: Result<Value, String>,
+    pub matched_wire_error: bool,
 }
 pub(super) struct Active {
     pub owner: super::super::history_admission::Owner,
@@ -147,7 +148,7 @@ pub(super) async fn send(
     let observation = ctx
         .ops
         .prompt_escrow
-        .commit(&grant.permit, lease, grant.deadline)
+        .commit(ctx.session_id, &grant.permit, lease, grant.deadline)
         .map_err(|error| match error {
             super::super::history_admission::Failure::Timeout => "PROMPT_QUEUE_TIMEOUT",
             _ => "PROMPT_QUEUE_CANCELLED",
@@ -171,6 +172,10 @@ pub(super) async fn send(
         .on_receiving_result({
             let turn = turn.clone();
             async move |outcome| {
+                let matched_wire_error = outcome.as_ref().is_err_and(|error| {
+                    !agent_client_protocol::is_incoming_transport_closed(error)
+                        && observation.matched_wire_error()
+                });
                 let outcome = outcome
                     .and_then(|response| {
                         serde_json::to_value(&response)
@@ -181,6 +186,7 @@ pub(super) async fn send(
                 let _ = turn.send(Outcome {
                     receipt_id,
                     result: outcome,
+                    matched_wire_error,
                 });
                 Ok(())
             }

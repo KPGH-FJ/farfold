@@ -6,6 +6,7 @@ export interface CompletionEvent {
   error?: string;
   failure?: unknown;
   usage?: unknown;
+  failedWorkCloseAvailable?: true;
 }
 
 /** A normal end receipt alone does not prove an answer or tool result arrived. */

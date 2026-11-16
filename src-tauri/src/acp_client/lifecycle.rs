@@ -418,6 +418,34 @@ impl ConnectionLife {
             history,
         })
     }
+    fn failed_work_is_only_activity(&self, activity: &Activity) -> bool {
+        self.state.load(Ordering::SeqCst) == READY
+            && self.work.load(Ordering::SeqCst) == 1
+            && activity.sessions == 1
+            && activity.detached_work == 0
+            && activity.operations.is_empty()
+            && activity.closing_opens.is_empty()
+            && activity.closing_admissions.is_empty()
+            && activity.closing_history.is_empty()
+            && !self.routes.has_unclaimed()
+    }
+    pub(super) fn can_close_failed_work(&self) -> bool {
+        self.activity
+            .lock()
+            .is_ok_and(|activity| self.failed_work_is_only_activity(&activity))
+    }
+    /// The owning pump has matched a prior explicit error to its retained
+    /// prompt. Fence other work and opens before asking the process owner to exit.
+    pub(super) fn close_failed_work(&self) -> Result<(), String> {
+        let mut activity = self.activity.lock().map_err(|_| "无法读取连接状态")?;
+        if !self.failed_work_is_only_activity(&activity) {
+            return Err("现在无法关闭这条连接，请检查待处理事项".into());
+        }
+        activity.close_reason = Some(CloseReason::User);
+        self.state.store(CLOSING, Ordering::SeqCst);
+        self.stop.send_replace(true);
+        Ok(())
+    }
     /// Check and mark under the same lock used by admission; never remove a stale key.
     pub fn close(&self, force: bool, idle: Option<Duration>) -> Result<bool, String> {
         self.close_for(

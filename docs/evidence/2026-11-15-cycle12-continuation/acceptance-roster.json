@@ -367,12 +367,13 @@
           "status": "可建对话"
         },
         "S2": {
-          "observed": "旧真实请求返回 internal_error，认证/服务原因未定。\n2026-11-16 沿用已有设置，以临时 Claude Sonnet 5.5 发一条，返回内部错误，无文本，原因未定。",
+          "observed": "旧真实请求返回 internal_error，认证/服务原因未定。\n2026-11-16 沿用已有设置，以临时 Claude Sonnet 5.5 发一条，返回内部错误，无文本，原因未定。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。",
           "remaining": "既有服务成功实答与身份、费用归属正证。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
-            "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json"
+            "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json",
+            "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json"
           ],
           "status": "本轮短测失败"
         },
@@ -390,7 +391,7 @@
           "status": "已知标识读取声明"
         },
         "S4": {
-          "observed": "6日旧界面确认改免费模型，但当前持久选择显示另一原值。此版 load 用当前 provider 所选而非每会话存档。\n2026-11-16 续验：已有设置读取到 Claude Sonnet 5.5，原保存选择仍提示不一致。\n2026-11-16 临时 Claude Sonnet 5.5 仅发一次，实答未通过，保存选择前后摘要一致。",
+          "observed": "6日旧界面确认改免费模型，但当前持久选择显示另一原值。此版 load 用当前 provider 所选而非每会话存档。\n2026-11-16 续验：已有设置读取到 Claude Sonnet 5.5，原保存选择仍提示不一致。\n2026-11-16 临时 Claude Sonnet 5.5 仅发一次，实答未通过，保存选择前后摘要一致。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。",
           "remaining": "确认内部错误原因，按确认模型实答及冷开。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
@@ -398,17 +399,19 @@
             "docs/evidence/2026-10-08-ui-coverage-audit/full-review/screenshots/U001-library-start.ax.txt",
             "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L232-L304",
             "docs/evidence/2026-11-15-cycle12-pre-send/cline-startup-diagnosis-2026-11-16.json",
-            "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json"
+            "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json",
+            "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json"
           ],
           "status": "本轮短测失败"
         },
         "S5": {
-          "observed": "旧首轮 internal_error；无真实成功短答或完整工具链。\n2026-11-16 正式版新短测仍无正文，未触发工具。",
+          "observed": "旧首轮 internal_error；无真实成功短答或完整工具链。\n2026-11-16 正式版新短测仍无正文，未触发工具。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。",
           "remaining": "同源真实答复、工具与结果。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
-            "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json"
+            "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json",
+            "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json"
           ],
           "status": "本轮短测失败"
         },
@@ -1642,11 +1645,12 @@
           "status": "分项通过"
         },
         "S3": {
-          "observed": "默认列表及正式版复查命中可识别的旧测试标题\n本轮实测：用户开放全部原历史后，默认官方列表找到现存原目录的一条原对话并读回正文。旧配置未核，因此只读。",
-          "remaining": "核实原模型及服务后实际续答同一条对话。",
+          "observed": "默认列表及正式版复查命中可识别的旧测试标题\n本轮实测：用户开放全部原历史后，默认官方列表找到现存原目录的一条原对话并读回正文。旧配置未核，因此只读。\n2026-11-16 原目录与用户消息均存在的唯一官方记录使用 MiniMax-M2.7。当前默认是 MiniMax-M3。前序脱敏预览缺原标识，匹配依据为原目录和非空记录的唯一性。",
+          "remaining": "核实正式列表具体原记录、M2.7 当前是否可选、原服务和原推理设置，再续原对话。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-followup/accounts-and-api.md"
+            "docs/evidence/2026-11-15-cycle12-followup/accounts-and-api.md",
+            "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json"
           ],
           "status": "原正文已读"
         },

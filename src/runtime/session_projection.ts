@@ -871,6 +871,7 @@ export function applyTurnEnd(
     status,
     stopReason: event.stopReason,
     error,
+    ...(event.failedWorkCloseAvailable && { failedWorkCloseAvailable: true }),
     diffCount: diffCountInItems(s.items.slice(s.roundItemBase)),
     artifactCount: roundArtifactCount(s),
     artifactToolItemIds: roundToolItemIds(s),

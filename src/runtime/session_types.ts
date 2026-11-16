@@ -155,6 +155,8 @@ export type ThreadItem = (
       status: "done" | "stopped" | "failed" | "unknown";
       stopReason?: string;
       error?: string;
+      /** Recoverable only on the exact live connection that received the error. */
+      failedWorkCloseAvailable?: true;
       /** Count of file diffs seen in this round's tool calls. */
       diffCount: number;
       /** diff + command cards produced during this round. */

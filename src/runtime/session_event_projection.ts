@@ -178,6 +178,8 @@ export function applySessionEvent(
       error: typeof e.error === "string" ? e.error : undefined,
       failure: e.failure,
       usage: e.usage,
+      failedWorkCloseAvailable:
+        live && owner && e.failedWorkCloseAvailable === true ? true : undefined,
     });
     if (owner) {
       if (

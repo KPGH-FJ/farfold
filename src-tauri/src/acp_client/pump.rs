@@ -209,6 +209,8 @@ mod control;
 pub(crate) use control::{SessionControl, clear_connection_interactions};
 mod closing;
 pub(crate) use closing::{notify_connection_end, wait_for_connection_end};
+mod failed_work_close;
+pub(crate) use failed_work_close::FailedWorkCloseReceipt;
 mod fork;
 mod stopped_tool_close;
 pub(crate) use stopped_tool_close::StoppedToolCloseReceipt;
@@ -594,6 +596,7 @@ async fn session_pump(
     let mut fork_execution_known = true;
     let mut prompt_cancelling = false;
     let mut prompt_owner: Option<prompt::Active> = None;
+    let mut failed_prompt = None;
     let (task_tx, mut task_rx) = mpsc::unbounded_channel();
     let mut buffered_control = None;
     loop {
@@ -821,7 +824,8 @@ async fn session_pump(
                     None => turn_rx.recv().await,
                 }
             } => {
-                if let Some(prompt::Outcome { receipt_id, result: outcome }) = outcome {
+                if let Some(prompt::Outcome { receipt_id, result: outcome, matched_wire_error }) = outcome {
+                    failed_prompt = matched_wire_error.then_some(receipt_id);
                     ops.life.touch();
                     ctx.tools.finish_prompt(receipt_id, outcome.as_ref().is_ok_and(|reply| reply["stopReason"] == "cancelled"));
                     fork_execution_known = outcome.as_ref().is_ok_and(|reply|matches!(reply.get("stopReason").and_then(Value::as_str),Some("end_turn"|"max_tokens"|"max_turn_requests"|"refusal"|"cancelled")));
@@ -838,6 +842,7 @@ async fn session_pump(
                     let failure = failures.finish(outcome.as_ref().ok());
                     let mut event = prompt::turn_end_event(outcome);
                     event["promptReceiptId"] = serde_json::json!(receipt_id);
+                    if matched_wire_error { event["failedWorkCloseAvailable"] = true.into(); }
                     if let Some(failure) = failure { event["failure"] = failure; }
                     events(event);
                 }
@@ -1122,6 +1127,14 @@ async fn session_pump(
                         _ => unreachable!(),
                     }
                 }
+                command @ (SessionControl::CheckFailedWorkClose { .. } | SessionControl::CloseFailedWork { .. }) => {
+                    restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard, &mut permission_guard, &mut opening, &mut mutation);
+                    let ready = !prompt_in_flight && !prompt_cancelling && mutation.is_none()
+                        && identity_read.is_none() && workspace_access_read.is_none()
+                        && purpose == super::open_purpose::OpenPurpose::Conversation
+                        && mcp_requests.as_ref().is_none_or(|mcp| mcp.fork_admissible());
+                    if failed_work_close::handle(command, &ctx, prompt_owner.as_ref(), failed_prompt, ready) { break; }
+                }
                 SessionControl::Detach { result, .. } | SessionControl::DeleteDetach { result, .. } => {
                     detached = control::LocalDetach::start(&ctx, prompt_in_flight || mutation.is_some() || (!deleting && restore_config::busy(&ctx)), result);
                     if detached.is_some() { break; }
@@ -1136,6 +1149,7 @@ async fn session_pump(
                         turn: &turn_tx, in_flight: prompt_in_flight, unresolved,
                     }, blocks, *grant, &result).await {
                         Ok(started) => {
+                            failed_prompt = None;
                             prompt_in_flight = started.sent.is_ok();
                             prompt_owner = Some(started.active);
                             let _ = result.send(super::active_prompt::DispatchResult::Offered(started.sent));
