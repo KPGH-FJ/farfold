@@ -56,7 +56,7 @@
 
 **出错连接可单独回收。** 当次请求收到匹配的协议错误且连接只有该请求时，用户可检查并确认关闭。正式版用本机夹具实测，A 的进程组退出，B 保持同一进程继续，C 解除排队并完成。A 的原消息和草稿保留，旧请求结果未知、没有重发。[正式回执](evidence/2026-11-16-cycle12-failed-connection/installed-recovery.json)
 
-**Cline 认证根因与旧对话核对。** Cline 3.0.74 的官方 ACP 和无界面原服务测试均在本机记录需要重新认证，定位到 OAuth 刷新未取得可用凭据。Farfold 已安装修复，已从正式设置核到「启动设置终端」。待原账号重新登录后验真实回复。MiniMax 原模型 M2.7 当前官方目录可选，待确认与十月七日原对话的中国区官方账号相同。Pi 当前凭据可读原 OpenRouter 请求记录，原本机配置为 Ultra 免费版和 Medium。当前正式版同一原对话读取约 120 秒无回执，索引也尚缺旧配置。两家本轮未续发。[本轮回执](evidence/2026-11-16-cycle12-cline-auth/results.json)
+**Cline 认证根因与旧对话核对。** Cline 3.0.74 的两条官方路径均记录需要重新认证，定位到 OAuth 刷新未取得可用凭据。正式版恢复官方登录入口。用户用原账号重新登录后，正式设置沿 Cline 原服务临时选择 Sonnet 5.5，实测收到预期回复，用户当前默认模型保持。MiniMax 同一中国区账号下原对话已带入并重开，原正文及 M2.7 已读。Pi 当前凭据可读原 OpenRouter 请求记录，获得桌面文件夹授权后，正式预览恢复原正文、Ultra 免费版和 Medium。两家仍缺可信的原配置恢复入口，未续发。[本轮回执](evidence/2026-11-16-cycle12-cline-auth/results.json)
 
 **Autohand 文件交付实测。** 正常新对话沿用 `fantail`，按一次审批整理合成纪要并另存。可从 Farfold 的本轮产物打开新文件，原稿散列一致，负责人和日期保留。[文件交付回执](evidence/2026-11-15-cycle12-continuation/autohand-file-delivery-2026-11-16.json)
 
@@ -172,7 +172,7 @@
 
 ### P33
 
-2026-11-16：Pi 当前 OpenRouter 凭据可访问该自建对话的原生成元数据，官方原记录和旧 Farfold 备份证实原配置。正式对话库能查到同一原对话，但本次读取约 120 秒未回，当前索引无原配置，未带入、未续发。MiniMax-M2.7 同官方目录可选，原账号待确认。[本轮回执](evidence/2026-11-16-cycle12-cline-auth/results.json)
+2026-11-16：MiniMax 用户确认同一中国区账号，正式版按原目录和标识带入并重开，读回原正文及 MiniMax-M2.7。Pi 当前 OpenRouter 凭据可访问原生成元数据，原记录和旧 Farfold 备份核对原模型及 Medium。正式版首次等待桌面授权超时，随后用户授权，同一待定读取返回原正文与选项，停在只读预览。两家目前均缺可信的原配置恢复入口，零续发。[本轮回执](evidence/2026-11-16-cycle12-cline-auth/results.json)
 
 2026-11-16：Devin 与 Goose 各一条自建原对话均命中原目录官方列表，正常入口冷开同一原标识，读回原文与所选设置，并准确续答原上下文。未产生重复对话，范围限本次样本，分页与其他历史待验。Qoder 同一小米样本按原测试目录从官方列表查到，打开已有对话并用原上下文准确续答。分页和首次带入其他外部历史待验。[Devin、Goose](evidence/2026-11-15-cycle12-pre-send/history-continuations-2026-11-16.json) · [Qoder](evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json)
 

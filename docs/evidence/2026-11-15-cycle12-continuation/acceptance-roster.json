@@ -8,18 +8,18 @@
     "受阻": 7,
     "分项通过": 9,
     "未测": 23,
-    "原账号实答": 2,
+    "原账号实答": 3,
     "查找冷开续答通过": 5,
-    "已选模型有实答": 5,
+    "已选模型有实答": 6,
     "接口独立实测通过": 1,
     "正式发送认证受阻": 1,
     "可建对话": 1,
     "已知标识读取声明": 1,
     "实测分项通过": 8,
     "前台停止分项通过": 1,
-    "设置短测通过": 2,
+    "设置短测通过": 3,
     "已有设置实答": 2,
-    "本轮短测失败": 6,
+    "本轮短测失败": 3,
     "双前台分项通过": 2,
     "停止及冷续答通过": 1,
     "原正文已读": 3,
@@ -367,8 +367,8 @@
           "status": "可建对话"
         },
         "S2": {
-          "observed": "旧真实请求返回 internal_error，认证/服务原因未定。\n2026-11-16 沿用已有设置，以临时 Claude Sonnet 5.5 发一条，返回内部错误，无文本，原因未定。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。\n2026-11-16 两条官方诊断的本机回执均要求重新认证。定位到原 OAuth 刷新无可用凭据。正式版已核到官方终端登录入口。",
-          "remaining": "原账号重新登录后核服务与真实回复。",
+          "observed": "旧真实请求返回 internal_error，认证/服务原因未定。\n2026-11-16 沿用已有设置，以临时 Claude Sonnet 5.5 发一条，返回内部错误，无文本，原因未定。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。\n2026-11-16 两条官方诊断的本机回执均要求重新认证。定位到原 OAuth 刷新无可用凭据。正式版已核到官方终端登录入口。\n2026-11-16 用户从正式入口对原账号重新登录后，沿 Cline 原服务临时选择 Sonnet 5.5 发一条，界面完成且回复精确命中。",
+          "remaining": "实际账号切换、服务权益与旧对话身份仍须分别核。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
@@ -376,7 +376,7 @@
             "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json",
             "docs/evidence/2026-11-16-cycle12-cline-auth/results.json"
           ],
-          "status": "本轮短测失败"
+          "status": "原账号实答"
         },
         "S3": {
           "observed": "10/06 A 自有失败对话 ID、原目录及原保存消息文件均确认。该版无列表，官方 load 需认证，并在原 ID 启动自己的会话管理器。\n本轮实测：当前正式历史入口连接在检查完成前结束，未向程序发列表或正文。\n2026-11-16 续验：当前正式握手确认仅声明已知标识读取，未提供官方历史列表。",
@@ -392,8 +392,8 @@
           "status": "已知标识读取声明"
         },
         "S4": {
-          "observed": "6日旧界面确认改免费模型，但当前持久选择显示另一原值。此版 load 用当前 provider 所选而非每会话存档。\n2026-11-16 续验：已有设置读取到 Claude Sonnet 5.5，原保存选择仍提示不一致。\n2026-11-16 临时 Claude Sonnet 5.5 仅发一次，实答未通过，保存选择前后摘要一致。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。",
-          "remaining": "确认内部错误原因，按确认模型实答及冷开。",
+          "observed": "6日旧界面确认改免费模型，但当前持久选择显示另一原值。此版 load 用当前 provider 所选而非每会话存档。\n2026-11-16 续验：已有设置读取到 Claude Sonnet 5.5，原保存选择仍提示不一致。\n2026-11-16 临时 Claude Sonnet 5.5 仅发一次，实答未通过，保存选择前后摘要一致。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。\n2026-11-16 正式设置临时选择 Sonnet 5.5 已实答，未保存该临时选择，核对原账号重登后的 Nemotron 默认仍在。",
+          "remaining": "同一日常对话中的实际切换、保存及冷恢复仍待。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
             "output/2026-10-09-fourth-install/metadata-before.sqlite3",
@@ -401,20 +401,22 @@
             "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L232-L304",
             "docs/evidence/2026-11-15-cycle12-pre-send/cline-startup-diagnosis-2026-11-16.json",
             "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json",
-            "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json"
+            "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json",
+            "docs/evidence/2026-11-16-cycle12-cline-auth/results.json"
           ],
-          "status": "本轮短测失败"
+          "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧首轮 internal_error；无真实成功短答或完整工具链。\n2026-11-16 正式版新短测仍无正文，未触发工具。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。",
-          "remaining": "同源真实答复、工具与结果。",
+          "observed": "旧首轮 internal_error；无真实成功短答或完整工具链。\n2026-11-16 正式版新短测仍无正文，未触发工具。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。\n2026-11-16 正式设置收到原服务实际短答，本样本未调用工具。",
+          "remaining": "正式日常工作仍需验证工具、文件、审批及交付。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json",
-            "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json"
+            "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json",
+            "docs/evidence/2026-11-16-cycle12-cline-auth/results.json"
           ],
-          "status": "本轮短测失败"
+          "status": "设置短测通过"
         },
         "S6": {
           "observed": "没有当前双任务实证。",
@@ -1646,8 +1648,8 @@
           "status": "分项通过"
         },
         "S3": {
-          "observed": "默认列表及正式版复查命中可识别的旧测试标题\n本轮实测：用户开放全部原历史后，默认官方列表找到现存原目录的一条原对话并读回正文。旧配置未核，因此只读。\n2026-11-16 原目录与用户消息均存在的唯一官方记录使用 MiniMax-M2.7。当前默认是 MiniMax-M3。前序脱敏预览缺原标识，匹配依据为原目录和非空记录的唯一性。\n2026-11-16 同版官方目录列出原 MiniMax-M2.7，无另选推理档；当前中国区账号已验证，旧对话无原账号记录。",
-          "remaining": "确认原对话使用当前中国区官方托管账号，再按精确原记录复验读取及续答。",
+          "observed": "默认列表及正式版复查命中可识别的旧测试标题\n本轮实测：用户开放全部原历史后，默认官方列表找到现存原目录的一条原对话并读回正文。旧配置未核，因此只读。\n2026-11-16 原目录与用户消息均存在的唯一官方记录使用 MiniMax-M2.7。当前默认是 MiniMax-M3。前序脱敏预览缺原标识，匹配依据为原目录和非空记录的唯一性。\n2026-11-16 同版官方目录列出原 MiniMax-M2.7，无另选推理档；当前中国区账号已验证，旧对话无原账号记录。\n2026-11-16 用户确认同一中国区账号；正式版按原目录和标识带入、重开，原正文及 MiniMax-M2.7 已读，零发送。",
+          "remaining": "补可核据恢复原配置的入口，再核同一对话实际续答。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-followup/accounts-and-api.md",
@@ -1878,7 +1880,7 @@
     {
       "agentId": "pi-acp",
       "runtime": "当前本机登记 ID pi，为 pi-acp 0.0.34，同安装 Pi 0.87.1，当前无本地索引。",
-      "liveAction": "正式列表只读找原工作目录 output/2026-10-06-real-use 的 FARFOLD_PI_A_20261006_1632。旧 P32 已确权且目录仍存在；新增模型请求需先证当前原提供服务，网站任务须等官方 SDK 正式接线。",
+      "liveAction": "已从正式入口读回原工作目录的旧自建对话。OpenRouter 原请求的凭据范围已核，续发待支持恢复原配置；网页任务须等官方 SDK 正式接线。",
       "standards": {
         "S1": {
           "observed": "旧正式已有设置、官方程序准备与回选窄证；当前登记声明 terminal login。\n本轮实测：目前程序可执行，登记版本 0.0.34。登记所存握手版本 0.0.34。",
@@ -1900,8 +1902,8 @@
           "status": null
         },
         "S3": {
-          "observed": "一个自有会话曾用正式 P32 读取 23 个可见文本块，10 个命中，用户正文命中。\n本轮实测：正常入口找到并读回自建原正文与原回复。原模型和推理级别无法确认，只读且零发送。\n2026-11-16 原 OpenRouter 请求凭据范围核对通过，原模型和 Medium 有旧备份。正式列表命中同一自建原对话，读取约 120 秒未回，零发送。",
-          "remaining": "查清读取无回执，并补当前索引缺原配置的正式恢复入口。",
+          "observed": "一个自有会话曾用正式 P32 读取 23 个可见文本块，10 个命中，用户正文命中。\n本轮实测：正常入口找到并读回自建原正文与原回复。原模型和推理级别无法确认，只读且零发送。\n2026-11-16 原 OpenRouter 请求凭据范围核对通过，原模型和 Medium 有旧备份。正式列表命中同一自建原对话，读取约 120 秒未回，零发送。\n2026-11-16 授予桌面文件夹访问后，正式版同一待定读取返回原正文、OpenRouter 原模型和 Medium，预览仍只读。",
+          "remaining": "补精确原配置恢复入口，从正常入口带入后实际续答。",
           "sources": [
             "docs/evidence/2026-10-24-agent-acceptance/p32-pi-formal-e9-selected-user-body-summary.json",
             "docs/evidence/2026-11-15-cycle12-followup/README.md",

@@ -6,9 +6,9 @@ Cline 3.0.74 在原 `cline` 服务、Claude Sonnet 5.5 下的独立 ACP 复现�
 
 Cline 的协议库会把普通异常包装成 `internal_error`，把具体异常放在 `details`。Farfold 现在只将已匹配原请求、且来自 Cline 登记的固定重新认证回执当作认证要求。同批补齐 Cline 3.0.74 的官方 `auth` 终端入口，沿用现有程序、管理归属及启动参数核对。只有用户主动选择后才开始登录，原错误请求仍可单独关闭，不自动重发。[协议库错误包装](https://github.com/agentclientprotocol/typescript-sdk/blob/v0.16.1/src/acp.ts#L980-L1068) · [官方登录命令](https://github.com/cline/cline/blob/cli-v3.0.74/docs/cli/cli-reference.mdx)
 
-新版已安装并从正式设置打开 Cline 的「启动设置终端」入口。对匹配错误和认证终端的 12 项 Rust 定向回归通过，严格 Clippy、格式与正式打包通过。官方重新登录后仍需用原模型在正式 Farfold 验一次真实回复。无界面对照时，官方 CLI 把原先已生效的同一模型保存成显式选择。设置审阅已打开，之后择无认证活动的时间按官方方式恢复诊断新增字段。[脱敏回执](results.json)
+新版已安装并从正式设置打开 Cline 的「启动设置终端」入口。匹配错误和认证终端的 12 项 Rust 定向回归通过，严格 Clippy、格式与正式打包通过。用户用原账号重新登录后，在正式设置页临时选 Sonnet 5.5，只发一次。原服务约 11.4 秒后准确返回全部测试记号，界面显示完成。无界面对照曾把当时已生效的 Sonnet 保存为显式选择，新登录已写入自己的当前配置，实测后该 Nemotron 默认仍在。[脱敏回执](results.json)
 
 ## MiniMax 和 Pi
 
-- **MiniMax Code 0.2.7。** 当前官方中国区托管登录已验证。原会话模型 MiniMax-M2.7 在本机官方目录仍可选，与原记录的未分档选择对应。十月七日的旧会话在五处原生元数据均未记录旧账号。需确认原对话使用的是当前同一官方托管账号，之后才用该账号测试旧对话续答。没有发送新的模型消息。[前序预览](../2026-11-15-cycle12-followup/expanded-history-samples.json)
-- **Pi。** 官方原记录与以前的 Farfold 元数据备份都确认了 OpenRouter、Nemotron 3 Ultra 免费版和 Medium。用 Pi 当前已有凭据读原请求的官方生成元数据，HTTP 200、原请求标识及时间匹配，证实当前凭据能访问原账户范围的该条记录。服务端模型字符串与本机的选项字符串不同，原因未证。正式版正常对话库能列出同一自建原对话。实际 `session/load` 发出后 120 秒未回，预览显示正文未能读取，零发送。当前索引还缺该对话的原配置入口，未写入备份元数据、未换模型或服务。[OpenRouter 官方接口](https://openrouter.ai/docs/api/api-reference/generations/get-generation)
+- **MiniMax Code 0.2.7。** 用户确认十月七日旧对话使用当前同一中国区托管账号。正式版按原目录和精确原标识打开、带入并从对话库重开，原消息及 MiniMax-M2.7 均读回。当前索引缺原配置，页面仍明确只读，零发送。续答还需能核据恢复配置的入口。[前序预览](../2026-11-15-cycle12-followup/expanded-history-samples.json)
+- **Pi。** 官方原记录与以前的 Farfold 元数据备份都确认了 OpenRouter、Nemotron 3 Ultra 免费版和 Medium。用 Pi 当前已有凭据读原请求的官方生成元数据，HTTP 200、原请求标识及时间匹配，证实当前凭据能访问该原记录。服务端模型字符串与本机选项字符串不同，原因未证。首次在正式版读取约 120 秒无回执，macOS 当时已发起桌面文件夹授权。再次按原目录打开后，用户允许 Farfold 访问桌面文件夹，同一次待定读取返回正文、原模型及 Medium，共 39 条历史更新。预览仍明确只读，当前索引无原配置，零带入、零发送。[OpenRouter 官方接口](https://openrouter.ai/docs/api/api-reference/generations/get-generation)
