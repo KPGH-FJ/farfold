@@ -574,13 +574,15 @@ export function ThreadView({
       ),
     };
   }, [modelOption, serviceModel, serviceModelValue]);
+  const currentServiceModelLabel =
+    serviceModel &&
+    serviceModelValue &&
+    modelOption?.currentValue === serviceModelValue
+      ? serviceModel
+      : undefined;
   const modelLabel =
     modelOption && !(choicesUnchecked && modelOption.currentValue == null)
-      ? serviceModel &&
-        serviceModelValue &&
-        modelOption.currentValue === serviceModelValue
-        ? serviceModel
-        : configValueLabel(modelOption)
+      ? (currentServiceModelLabel ?? configValueLabel(modelOption))
       : choicesUnchecked
         ? STRINGS.repair.unknownModel
         : STRINGS.switcher.defaultModel;
@@ -1343,6 +1345,7 @@ export function ThreadView({
                               }
                             : displayedModelOption
                         }
+                        readOnlyLabel={currentServiceModelLabel}
                         disabled={configOptionChangeBlocked(
                           thread,
                           modelOption.id,

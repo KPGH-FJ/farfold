@@ -166,74 +166,96 @@ it("keeps an idle confirmed established model change review reachable despite th
   noImplicitWork(set);
 });
 
-it("shows the saved API model name after reopening and preserves the exact selectable wire value", () => {
-  const model = "mimo-v2.6-flash";
-  const provider = `farfold_${"a".repeat(64)}`;
-  const wire = `${provider}/${model}`;
-  const other = { value: `${provider}/different`, name: "Different" };
-  const agentId = "saved-api-model-reopen";
-  const cwd = "/owned-fixture";
-  const nativeSessionId = "saved-conversation";
-  const connectionId = "reopened-connection";
-  const opening = new OpeningBaseline({ agentId, cwd, nativeSessionId });
-  opening.identify({ cwd, sessionId: nativeSessionId, connectionId });
-  const thread = opening.accept(
-    {
-      cwd,
-      nativeSessionId,
-      connectionId,
-      resumed: true,
-      warnings: [],
-      service: { id: "saved-api", model, fingerprint: "fixture" },
-      serviceModelValue: wire,
-      configOptions: [
-        {
-          id: "model",
-          category: "model",
-          name: "Model",
-          type: "select",
-          currentValue: wire,
-          options: [{ value: wire, name: wire }, other],
-        },
-      ],
-      configCheck: {
-        status: "ready",
-        protectedIds: ["model"],
-        issues: [],
-        current: {
-          choices: [
-            { id: "model", category: "model", type: "select", value: wire },
-          ],
+it.each([
+  { scenario: "with choices", selectable: true, matchesService: true },
+  { scenario: "without choices", selectable: false, matchesService: true },
+  {
+    scenario: "after a different model is reported",
+    selectable: false,
+    matchesService: false,
+  },
+])(
+  "shows the reported API model after reopening $scenario",
+  ({ selectable, matchesService }) => {
+    const model = "mimo-v2.6-flash";
+    const provider = `farfold_${"a".repeat(64)}`;
+    const wire = `${provider}/${model}`;
+    const other = { value: `${provider}/different`, name: "Different" };
+    const currentValue = matchesService ? wire : "different-reported-model";
+    const modelLabel = matchesService ? model : currentValue;
+    const agentId = "saved-api-model-reopen";
+    const cwd = "/owned-fixture";
+    const nativeSessionId = "saved-conversation";
+    const connectionId = "reopened-connection";
+    const opening = new OpeningBaseline({ agentId, cwd, nativeSessionId });
+    opening.identify({ cwd, sessionId: nativeSessionId, connectionId });
+    const thread = opening.accept(
+      {
+        cwd,
+        nativeSessionId,
+        connectionId,
+        resumed: true,
+        warnings: [],
+        service: { id: "saved-api", model, fingerprint: "fixture" },
+        serviceModelValue: wire,
+        configOptions: [
+          {
+            id: "model",
+            category: "model",
+            name: "Model",
+            type: "select",
+            currentValue,
+            options: selectable ? [{ value: wire, name: wire }, other] : [],
+          },
+        ],
+        configCheck: {
+          status: "ready",
+          protectedIds: ["model"],
+          issues: [],
+          current: {
+            choices: [
+              {
+                id: "model",
+                category: "model",
+                type: "select",
+                value: currentValue,
+              },
+            ],
+          },
         },
       },
-    },
-    "Saved conversation",
-  );
-  expect(thread.identity).toBe("established");
-  const before = structuredClone(thread);
-  const controls = view(thread).controls;
-  const trigger = controls.find(
-    (control) => control.type === WorkspacePopover,
-  )!;
-  const triggerHtml = renderToStaticMarkup(trigger.props.label as ReactNode);
-  expect(triggerHtml).toContain(model);
-  expect(triggerHtml).not.toContain(wire);
-  expect(
-    controls.some(
-      (node) => node.type === "dd" && node.props.children === model,
-    ),
-  ).toBe(true);
+      "Saved conversation",
+    );
+    expect(thread.identity).toBe("established");
+    const before = structuredClone(thread);
+    const controls = view(thread).controls;
+    const trigger = controls.find(
+      (control) => control.type === WorkspacePopover,
+    )!;
+    const triggerHtml = renderToStaticMarkup(trigger.props.label as ReactNode);
+    expect(triggerHtml).toContain(modelLabel);
+    expect(triggerHtml).not.toContain(wire);
+    expect(
+      controls.some(
+        (node) => node.type === "dd" && node.props.children === modelLabel,
+      ),
+    ).toBe(true);
 
-  const picker = controls.find((control) => control.type === ModelPicker)!;
-  expect(picker.props.option).toMatchObject({
-    currentValue: wire,
-    options: [{ value: wire, name: model }, other],
-  });
-  const pickerHtml = renderToStaticMarkup(picker);
-  expect(pickerHtml).toContain(`aria-label="Model: ${model}"`);
-  expect(pickerHtml).not.toContain(wire);
-  expect(thread).toEqual(before);
-});
+    const picker = controls.find((control) => control.type === ModelPicker)!;
+    expect(picker.props.option).toMatchObject({
+      currentValue,
+      options: selectable ? [{ value: wire, name: model }, other] : [],
+    });
+    const pickerHtml = renderToStaticMarkup(picker);
+    if (selectable) {
+      expect(pickerHtml).toContain(`aria-label="Model: ${modelLabel}"`);
+    } else {
+      expect(pickerHtml).toBe(`<span class="sw-sel">${modelLabel}</span>`);
+    }
+    expect(pickerHtml).not.toContain(wire);
+    expect(thread).toEqual(before);
+  },
+);
 
 it("keeps a new draft gated by that same real preparation marker without a model selection or implicit send", async () => {
   const thread = seed("draft-model-read-gate", "draft");

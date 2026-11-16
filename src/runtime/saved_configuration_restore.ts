@@ -218,13 +218,17 @@ export async function confirmSavedConfiguration(
     if (current()) {
       state.configuring = false;
       // A fresh first-message editor has no history or existing work to resume.
-      // Only the completed strict confirmation may release its own empty pause.
+      // Retained configuration envelopes are setup records, not earlier work.
+      // The strict confirmation still owns whether the configuration was applied.
       if (
         confirmed &&
         state.identity === "draft" &&
         !state.resumed &&
         state.roundItemBase === 0 &&
-        state.items.length === 0
+        state.items.every(
+          (item) =>
+            item.kind === "raw" && item.label === "config_option_update",
+        )
       )
         releaseConfigurationPause(state);
       hooks.emit();

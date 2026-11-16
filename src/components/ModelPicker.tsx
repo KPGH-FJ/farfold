@@ -33,12 +33,14 @@ export function ModelPicker({
   disabled,
   className,
   label,
+  readOnlyLabel,
   onPick,
 }: {
   option: ConfigOptionView | null;
   disabled?: boolean;
   className?: string;
   label?: string;
+  readOnlyLabel?: string;
   onPick: (value: string) => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -128,7 +130,7 @@ export function ModelPicker({
   }, [open]);
 
   if (!option || option.type !== "select" || options.length === 0) {
-    return <span className="sw-sel">{STRINGS.switcher.defaultModel}</span>;
+    return <span className="sw-sel">{readOnlyLabel ?? currentName}</span>;
   }
 
   const openPanel = () => {

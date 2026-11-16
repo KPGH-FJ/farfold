@@ -229,6 +229,32 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+it.each([
+  { currentValue: "reported-model", label: "reported-model" },
+  { currentValue: null, label: STRINGS.switcher.defaultModel },
+])("shows $label without offering a choice", ({ currentValue, label }) => {
+  const onPick = vi.fn();
+  const view = mount(ModelPicker, {
+    option:
+      currentValue === null
+        ? null
+        : {
+            id: "model",
+            name: "Model",
+            category: "model",
+            type: "select",
+            currentValue,
+            options: [],
+          },
+    onPick,
+  });
+
+  const tree = view.render();
+  expect(tree.map((node) => node.type)).toEqual(["span"]);
+  expect(tree[0]?.props.children).toBe(label);
+  expect(onPick).not.toHaveBeenCalled();
+});
+
 it("names the searchable list, exposes the committed choice and keeps focus separate from selection", () => {
   const view = picker(),
     tree = view.render();

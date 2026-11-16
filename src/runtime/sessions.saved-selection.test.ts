@@ -28,6 +28,13 @@ let state: ThreadState;
 let serial = 0;
 const channels = (threads as unknown as { channels: SessionChannels }).channels;
 const saved = { model: "kept", thought_level: "medium" };
+const preservedConfigurationUpdate = {
+  update: {
+    sessionUpdate: "config_option_update",
+    configOptions: [],
+    _meta: { fixtureExtension: true },
+  },
+};
 const check = () => ({
   status: "ready" as const,
   issues: [],
@@ -92,7 +99,7 @@ afterEach(async () => {
   await draftPersistence.flush();
 });
 
-it("sends exactly one first prompt after strict confirmation of a fresh draft's changed model", async () => {
+it("sends exactly one first prompt after strict confirmation preserves the fresh draft’s raw model update", async () => {
   const model = "explicit-fresh-model";
   const selection = { ...saved, model };
   const ready = {
@@ -129,9 +136,16 @@ it("sends exactly one first prompt after strict confirmation of a fresh draft's 
   });
   await threads.setConfig(state.key, "model", model);
   expect(state.queuePaused).toBe("unavailable");
+  event(preservedConfigurationUpdate);
+  expect(state.items).toMatchObject([
+    { kind: "raw", label: "config_option_update" },
+  ]);
   await threads.confirmRestoredConfig(state.key, selection);
   expect(state.queuePaused).toBeNull();
   expect(ownsConfigurationPause(state)).toBe(false);
+  expect(state.items).toMatchObject([
+    { kind: "raw", label: "config_option_update" },
+  ]);
   const blocks = [{ type: "text" as const, text: "Owned first input" }];
   composerDrafts.update("new", () => ({
     text: blocks[0].text,
@@ -163,6 +177,7 @@ it.each([
   "established",
   "resumed",
   "history",
+  "unknown-update",
   "earlier-round",
   "queued",
   "manual",
@@ -182,6 +197,10 @@ it.each([
           content: { type: "text", text: "Owned prior history" },
         },
       });
+    if (condition === "unknown-update") {
+      event(preservedConfigurationUpdate);
+      event({ update: { sessionUpdate: "unknown_work_update" } });
+    }
     if (condition === "earlier-round") state.roundItemBase = 1;
     if (condition === "queued")
       state.queued = [[{ type: "text", text: "Existing queued input" }]];
