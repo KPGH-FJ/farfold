@@ -3,21 +3,21 @@
   "agentCount": 21,
   "cellCount": 168,
   "explicitStatuses": {
-    "准备未齐": 13,
+    "准备未齐": 12,
     "入口有证": 18,
     "受阻": 5,
-    "分项通过": 14,
+    "分项通过": 16,
     "未测": 8,
     "原账号实答": 6,
-    "查找冷开续答通过": 8,
-    "已选模型有实答": 14,
+    "查找冷开续答通过": 7,
+    "已选模型有实答": 13,
     "可建对话": 1,
-    "实测分项通过": 17,
+    "实测分项通过": 18,
     "前台停止分项通过": 2,
     "已有设置实答": 5,
     "双前台分项通过": 13,
     "停止及冷续答通过": 10,
-    "实测失败": 4,
+    "实测失败": 5,
     "已选服务有实答": 2,
     "冷开续答分项通过": 7
   },
@@ -534,14 +534,15 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧真答、文件复制/返工和单次审批有有限正例。\n2026-11-17 本次文本短问精确返回验收标记，显示已完成。\n2026-11-17 逐条批准已校对的读、独立写入和复查，成品 78 字节逐字节匹配，原件保持，正常本轮产物入口实际打开。",
+          "observed": "旧真答、文件复制/返工和单次审批有有限正例。\n2026-11-17 本次文本短问精确返回验收标记，显示已完成。\n2026-11-17 逐条批准已校对的读、独立写入和复查，成品 78 字节逐字节匹配，原件保持，正常本轮产物入口实际打开。\n2026-11-17 续验：从普通搜索冷开自有原对话，点历史成品链接取回原 result.txt，内容、末尾 LF、路径和摘要相合。",
           "remaining": "技能、更多文件及拒绝和撤回路径仍待。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
             "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
-            "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md"
+            "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -568,14 +569,15 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "11/13 正式读取失败，旧版丢焦点已在共用修复中处理。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 原选择无法使用时在本次草稿确认 Hy4 / On，审批和产物入口可完成实际文件任务。",
+          "observed": "11/13 正式读取失败，旧版丢焦点已在共用修复中处理。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 原选择无法使用时在本次草稿确认 Hy4 / On，审批和产物入口可完成实际文件任务。\n2026-11-17 续验：CodeBuddy → Kilo → CodeBuddy 同名成品逐次打开，正式文件预览、原路径和另存入口按当前对话准确显示。",
           "remaining": "当前同动作和全入口真实可用性，别依据旧失败猜认证。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
             "docs/evidence/2026-11-13-cycle67-closure/README.md#开发及正式复验",
             "docs/evidence/2026-11-15-cycle12-macos/acceptance-matrix.md#codebuddy-code",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md"
+            "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
           "status": "入口有证"
         }
@@ -1121,20 +1123,21 @@
     },
     {
       "agentId": "github-copilot-cli",
-      "runtime": "2026-11-15 盘点：登记及 npm-loader 包 1.0.89，保存握手 1.0.107，全局保存 Auto / Agent。2026-11-16 正式版原样本带入时，Farfold 索引由 0 条增至 1 条；同一原对话续答后索引仍唯一。",
-      "liveAction": "用户确认原账号。从原目录带入同一 ID 及恢复已有服务/Auto 成功。首次续问报 Auto 路由网络错误，误显示完成；随后原账号、原 ID、原 Auto 实答通过。旧失败的准确反馈仍缺官方信号。",
+      "runtime": "2026-11-15 盘点：登记及 npm-loader 包 1.0.89，保存握手 1.0.107，全局保存 Auto / Agent。2026-11-16 正式版原样本带入时，Farfold 索引由 0 条增至 1 条；同一原对话续答后索引仍唯一。 2026-11-17 macOS 正常更新并选用官方 1.0.112，旧 1.0.89 仍可选。",
+      "liveAction": "用户确认原账号。从原目录带入同一 ID 及恢复已有服务/Auto 成功。首次续问报 Auto 路由网络错误，误显示完成；随后原账号、原 ID、原 Auto 实答通过。旧失败的准确反馈仍缺官方信号。 新版同 ID 冷开、认得原 Auto，单次续答超过五分钟未回，停止未确认。登录入口补强已在正式版复验。",
       "standards": {
         "S1": {
-          "observed": "旧 1.0.89 真实打开官方登录、暂离和取消；1.0.106 另有实际登录终端和空凭据拒绝受控检查。\n2026-11-15 盘点：程序可执行，登记版本 1.0.89。登记所存握手版本 1.0.107。",
-          "remaining": "当前实际运行版本、完整准备链与正式登录的取消返回仍待核；既有账号实答见 S2。",
+          "observed": "旧 1.0.89 真实打开官方登录、暂离和取消；1.0.106 另有实际登录终端和空凭据拒绝受控检查。\n2026-11-15 盘点：程序可执行，登记版本 1.0.89。登记所存握手版本 1.0.107。\n2026-11-17 续验：同一登记更新为官方 1.0.112。先复现官方终端入口灰置，再于 86bb5f853 确认可选且出现启动终端按钮，取消临时选择。",
+          "remaining": "新的实际登录、各取消分支及登录后实际路由待验。",
           "sources": [
             "docs/evidence/2026-10-01-agent-copilot-login/installed.md",
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
-          "status": "准备未齐"
+          "status": "分项通过"
         },
         "S2": {
           "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。\n2026-11-16 续验：用户确认当前使用原 GitHub 账号，沿用原已有服务。原 Auto 的续问在路由阶段报网络错误。\n2026-11-16 续验：同一用户确认原账号，同一已有服务复验实答。",
@@ -1148,27 +1151,29 @@
           "status": "原账号实答"
         },
         "S3": {
-          "observed": "旧正式从目录精确发现原 ID、读回正文并按 Auto 依赖原前文续答。\n本轮实测：正常入口找到自建原条目，核到原问题和原回复。当前返回 Auto，原选择无法确认，预览只读，零发送。\n2026-11-16 续验：正式版从原目录找到、预览并带入同一原 ID，单条索引和原正文均核同。一次依赖上下文的续问因 Auto 路由失败未通过。\n2026-11-16 续验：从正式版侧栏冷开同一个原 ID，只发一次依赖原上下文的续问，准确返回原标记，零新建，原索引唯一。",
-          "remaining": "更多原目录、跨范围发现和恢复仍按实际适用条件验。",
+          "observed": "旧正式从目录精确发现原 ID、读回正文并按 Auto 依赖原前文续答。\n本轮实测：正常入口找到自建原条目，核到原问题和原回复。当前返回 Auto，原选择无法确认，预览只读，零发送。\n2026-11-16 续验：正式版从原目录找到、预览并带入同一原 ID，单条索引和原正文均核同。一次依赖上下文的续问因 Auto 路由失败未通过。\n2026-11-16 续验：从正式版侧栏冷开同一个原 ID，只发一次依赖原上下文的续问，准确返回原标记，零新建，原索引唯一。\n2026-11-17 续验：1.0.112 从普通搜索冷开同一原 ID 并恢复原正文及 Auto。单次手动续问超窗，退出后冷开无自动重发。",
+          "remaining": "新版同一 ID 手动续答、更多原目录和跨范围发现仍待验。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-copilot-list/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/copilot-formal-e954-history-continuation-summary.json",
             "docs/evidence/2026-11-15-cycle12-followup/README.md",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
-          "status": "查找冷开续答通过"
+          "status": "实测分项通过"
         },
         "S4": {
-          "observed": "正式旧 Auto 原选择及实际回复均已有证据，原生模型曾为 gpt-6-luna；历史菜单只提供 Auto。\n2026-11-16 续验：从正式版核原已有服务和 Auto，保存原设置后读取确认一致。实际续问发生 Auto 路由失败。\n2026-11-16 续验：同一原对话沿用已有服务和保存的 Auto 完成一次续答。",
-          "remaining": "Auto 实际选中的具体模型未核对；其他模型与推理选择仍按该版本声明验。",
+          "observed": "正式旧 Auto 原选择及实际回复均已有证据，原生模型曾为 gpt-6-luna；历史菜单只提供 Auto。\n2026-11-16 续验：从正式版核原已有服务和 Auto，保存原设置后读取确认一致。实际续问发生 Auto 路由失败。\n2026-11-16 续验：同一原对话沿用已有服务和保存的 Auto 完成一次续答。\n2026-11-17 续验：官方 1.0.112 从现有服务读到并显示原 Auto，但该次没有实答。",
+          "remaining": "新版 Auto 实答及实际选中模型待验；其他模型与推理仍按该版本声明验。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
-          "status": "已选模型有实答"
+          "status": "分项通过"
         },
         "S5": {
           "observed": "旧正式同自测一次审批拒绝，一次批准且固定命令有专用标记与退出码。",
@@ -1186,17 +1191,18 @@
           "status": null
         },
         "S7": {
-          "observed": "旧有界 shell 与 sleep 实际提前结束，正式未知标记和草稿冷开保持，旧同 ID 工具无终态。",
-          "remaining": "当前版本验证、原工具终态和更多断线/队列场景仍开。",
+          "observed": "旧有界 shell 与 sleep 实际提前结束，正式未知标记和草稿冷开保持，旧同 ID 工具无终态。\n2026-11-17 续验：1.0.112 原 Auto 续问等待超过五分钟后只点一次停止，未收到结束回执。退出冷开准确提示原请求尚未确认，零重发。",
+          "remaining": "新版实际停止及官方终态未通过，原工具停止、断线和待发保护继续。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-isolation/README.md",
-            "docs/evidence/2026-11-07-stage1-formal-acceptance/copilot-close-installed.json"
+            "docs/evidence/2026-11-07-stage1-formal-acceptance/copilot-close-installed.json",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
-          "status": null
+          "status": "实测失败"
         },
         "S8": {
-          "observed": "旧正式显示回复已停和工具待确认；当时实际导出把工具写成等待中。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续验：官方会话记录出现 session.error，ACP 同时刻只显示错误正文，未发协议错误。Farfold 标题下此次显示已完成，实际未获得预期回复。\n2026-11-16 续验：Auto 再次使用时实际实答，第一次失败仍存在错误文字映射，官方 SDK 的整段读取不能确认原失败归属。\n2026-11-17 官方目录已有 1.0.112，本机现选 1.0.89。新版发布说明未确认旧失败反馈已修。",
-          "remaining": "正常更新后先核原账号与真实恢复，再等同类失败核显式失败状态。",
+          "observed": "旧正式显示回复已停和工具待确认；当时实际导出把工具写成等待中。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续验：官方会话记录出现 session.error，ACP 同时刻只显示错误正文，未发协议错误。Farfold 标题下此次显示已完成，实际未获得预期回复。\n2026-11-16 续验：Auto 再次使用时实际实答，第一次失败仍存在错误文字映射，官方 SDK 的整段读取不能确认原失败归属。\n2026-11-17 官方目录已有 1.0.112，本机现选 1.0.89。新版发布说明未确认旧失败反馈已修。\n2026-11-17 续验：新版此次无答复，停止界面与冷开均保留结果未知，本次没有取得旧版那类官方失败终态。",
+          "remaining": "按同类真实失败核正确错误反馈；新版停止未知的可恢复路径另验。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json",
             "docs/evidence/2026-11-06-phase1-copilot-list/README.md",
@@ -1204,7 +1210,8 @@
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件",
-            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md"
+            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
           "status": "实测失败"
         }
@@ -1434,14 +1441,15 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧批准工具取得唯一输出，拒绝时没有该次输出，其他 Agent 的审批不受影响。\n2026-11-17 所选免费 Ultra 无工具短问一次，准确返回当前自建标记。\n2026-11-17 原文件保持，产物可打开。结果少末尾 LF，原工具写入输入已缺该字节，与磁盘字节相同。\n2026-11-17 逐次批准复制后通过现有编辑工具只改副本指定行，成品 73 字节逐字节匹配及末尾 LF，原件保持，从对话链接打开。",
+          "observed": "旧批准工具取得唯一输出，拒绝时没有该次输出，其他 Agent 的审批不受影响。\n2026-11-17 所选免费 Ultra 无工具短问一次，准确返回当前自建标记。\n2026-11-17 原文件保持，产物可打开。结果少末尾 LF，原工具写入输入已缺该字节，与磁盘字节相同。\n2026-11-17 逐次批准复制后通过现有编辑工具只改副本指定行，成品 73 字节逐字节匹配及末尾 LF，原件保持，从对话链接打开。\n2026-11-17 续验：从普通搜索冷开自有原对话，点历史成品链接取回原 result.txt，内容、末尾 LF、路径和摘要相合。",
           "remaining": "原直接完整写入缺 LF 保留失败，其他文件和工具能力继续分别核。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-approval/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/kilo-formal-5b31-owned-file-summary.json",
             "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md",
             "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md",
-            "docs/evidence/2026-11-17-cycle12-approval-and-lf/README.md"
+            "docs/evidence/2026-11-17-cycle12-approval-and-lf/README.md",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -1466,12 +1474,13 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "正式旧目录缺失反馈保留原对象；旧模型、审批和停止入口已有分项。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 本轮产物打开真实磁盘结果，用户可直接核对。模型自报完成与实际成品内容分别保留。",
+          "observed": "正式旧目录缺失反馈保留原对象；旧模型、审批和停止入口已有分项。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 本轮产物打开真实磁盘结果，用户可直接核对。模型自报完成与实际成品内容分别保留。\n2026-11-17 续验：CodeBuddy → Kilo → CodeBuddy 同名成品逐次打开，正式文件预览、原路径和另存入口按当前对话准确显示。",
           "remaining": "当前入口实测与失败下一步完整性待核。",
           "sources": [
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md"
+            "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
           "status": "入口有证"
         }
@@ -1578,7 +1587,7 @@
     {
       "agentId": "mistral-vibe",
       "runtime": "当前登记、保存握手 2.25.8；两条自有原会话目录均在，保存 Mistral Medium 3.5 / High。",
-      "liveAction": "前台停止和冷续答已证。正式审批卡直接展示同一请求的命令，来源明确，实际单次审批后命令成功。更多工具、拒绝撤回、恢复等条件续验。",
+      "liveAction": "前台停止和冷续答已证。正式审批卡直接展示同一请求的命令，来源明确，实际单次审批后命令成功。更多工具、拒绝撤回、恢复等条件续验。 同命令类型另有正式单次拒绝，脚本未执行。",
       "standards": {
         "S1": {
           "observed": "旧已有设置加载并得到所选模型、原目录冷看也有正例。\n2026-11-15 盘点：程序可执行，登记版本 2.25.8。登记所存握手版本 2.25.8。\n2026-11-17 两个新测试目录都能采用已有设置、模型和思考并开始首条任务。",
@@ -1623,15 +1632,16 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "正式两片段真实编辑、43 字节返工另存、公开页 PNG 同次返回并 ZIP 核对。\n2026-11-16 续查：原选定版本两处文件编辑及保留内容有分项证据。\n2026-11-17 B 单次审批后原前台脚本准确写出本机结果并在对话返回标记。\n2026-11-17 正式卡在处理过程折叠时直接展示此 Bash 命令。仅按 Allow once，执行并准确返回原产物。",
-          "remaining": "更多工具、文件、技能、拒绝撤回和其他权限方式继续。",
+          "observed": "正式两片段真实编辑、43 字节返工另存、公开页 PNG 同次返回并 ZIP 核对。\n2026-11-16 续查：原选定版本两处文件编辑及保留内容有分项证据。\n2026-11-17 B 单次审批后原前台脚本准确写出本机结果并在对话返回标记。\n2026-11-17 正式卡在处理过程折叠时直接展示此 Bash 命令。仅按 Allow once，执行并准确返回原产物。\n2026-11-17 续验：实际 Bash 只请求一次；单次拒绝后 Agent 确认结束，原脚本无成品，无替代请求。",
+          "remaining": "更多工具、文件、技能、记住后撤回和其他权限方式继续。",
           "sources": [
             "docs/evidence/2026-11-10-stage2-live-mistral/summary.json",
             "docs/evidence/2026-10-24-agent-acceptance/p22-formal-c876-versioned-rework-summary.json",
             "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
             "docs/evidence/2026-11-11-mcp-lifecycle/README.md",
             "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
-            "docs/evidence/2026-11-17-cycle12-approval-and-lf/README.md"
+            "docs/evidence/2026-11-17-cycle12-approval-and-lf/README.md",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -1656,15 +1666,16 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "正式冷开图片可显示并逐字节导出；来源未确认的旧对象仍保护发送。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 审批卡显示缺输入详情，可在同一对话处理过程找到准确 Bash 命令。\n2026-11-17 共用补显示的受控用例通过，正式卡仍无输入详情。处理过程能看到本条 Shell 命令，核对后单次批准成功。\n2026-11-17 查到审批请求无 rawInput，前一条精确同 ID 的工具报告 in_progress 且有命令。按当前证据补显示后，正式卡有完整命令和来源，单次批准后成功。",
-          "remaining": "其他审批、拒绝撤回、通知、错误与恢复仍待。",
+          "observed": "正式冷开图片可显示并逐字节导出；来源未确认的旧对象仍保护发送。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 审批卡显示缺输入详情，可在同一对话处理过程找到准确 Bash 命令。\n2026-11-17 共用补显示的受控用例通过，正式卡仍无输入详情。处理过程能看到本条 Shell 命令，核对后单次批准成功。\n2026-11-17 查到审批请求无 rawInput，前一条精确同 ID 的工具报告 in_progress 且有命令。按当前证据补显示后，正式卡有完整命令和来源，单次批准后成功。\n2026-11-17 续验：正式卡片显示准确命令和输入来源，按一次 Deny 后显示已拒绝、已通知 Agent。",
+          "remaining": "其他审批、记住后撤回、通知、错误与恢复仍待。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
             "docs/status.md",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
             "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md",
-            "docs/evidence/2026-11-17-cycle12-approval-and-lf/README.md"
+            "docs/evidence/2026-11-17-cycle12-approval-and-lf/README.md",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
           "status": "分项通过"
         }
@@ -1768,15 +1779,16 @@
     {
       "agentId": "pi-acp",
       "runtime": "当前官方适配器 0.0.34，同安装 Pi 0.87.1，原桌面会话已正常带入并续答。",
-      "liveAction": "原 OpenRouter 对话已从 Farfold 恢复设置、实答及冷开复验。网页任务待官方 SDK 正式接线。",
+      "liveAction": "原 OpenRouter 对话已从 Farfold 恢复设置、实答及冷开复验。网页任务待官方 SDK 正式接线。 新草稿已明示旧 mode 冲突并允许逐草稿恢复，重新选择原免费模型后只显示 Off，零发送；官方隔离对照可提供 Medium。",
       "standards": {
         "S1": {
-          "observed": "旧正式已有设置、官方程序准备与回选窄证；当前登记声明 terminal login。\n2026-11-15 盘点：程序可执行，登记版本 0.0.34。登记所存握手版本 0.0.34。",
+          "observed": "旧正式已有设置、官方程序准备与回选窄证；当前登记声明 terminal login。\n2026-11-15 盘点：程序可执行，登记版本 0.0.34。登记所存握手版本 0.0.34。\n2026-11-17 续验：新草稿读到旧选择与当前选项不一致，原值有保留说明，从同一草稿手动恢复进入选择器。",
           "remaining": "当前程序/服务准备、取消后继续与真实登录均未全验。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-11-15-official-alternatives/pi.md",
-            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md"
+            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
           "status": "准备未齐"
         },
@@ -1802,12 +1814,13 @@
           "status": "查找冷开续答通过"
         },
         "S4": {
-          "observed": "历史 DeepSeek/off 可读；当前保存 OpenRouter 免费 Ultra，属于另一配置。\n2026-11-16 同一旧对话以 OpenRouter 的 Nemotron 3 Ultra 免费版和 Medium 实答，重启后的选项保持。",
-          "remaining": "模型切换与其他配置组合待验。",
+          "observed": "历史 DeepSeek/off 可读；当前保存 OpenRouter 免费 Ultra，属于另一配置。\n2026-11-16 同一旧对话以 OpenRouter 的 Nemotron 3 Ultra 免费版和 Medium 实答，重启后的选项保持。\n2026-11-17 续验：旧 mode 在现代配置中不存在。新草稿选中原 OpenRouter 免费模型之后只显示 Off，未发送。受控原 Pi 与 ACP 均可对精确模型读回 Medium 与 Off/Medium/High。",
+          "remaining": "定位正常入口的实际模型 ID、设置回执和思考档差异，再验新草稿实答、原配置保护和其他配置组合。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-11-15-official-alternatives/pi.md",
-            "docs/evidence/2026-11-16-cycle12-original-config/results.json"
+            "docs/evidence/2026-11-16-cycle12-original-config/results.json",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
           "status": "已选模型有实答"
         },
@@ -1834,12 +1847,13 @@
           "status": null
         },
         "S8": {
-          "observed": "正式 P32 可展示原用户命中和来源未知；配置错误保持未通过。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "observed": "正式 P32 可展示原用户命中和来源未知；配置错误保持未通过。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 续验：新草稿配置变化明确显示暂停发送和原选择保留，逐草稿修复能回到模型选择。",
           "remaining": "完整统一入口及实际失败恢复提示待核。",
           "sources": [
             "docs/evidence/2026-10-24-agent-acceptance/p32-pi-formal-e9-selected-user-body-summary.json",
             "docs/evidence/2026-10-24-agent-acceptance/configuration-preparation-failures-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
           ],
           "status": "入口有证"
         }

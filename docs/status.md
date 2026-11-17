@@ -30,9 +30,9 @@
 
 | 范围           | 当前核对结果                                                                                                                                                                                                                                                                                                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 第 12 周期基线 | 正式应用仍为 `a036904e1`。21 家据原八项续验，整家 0/21。Kilo、CodeBuddy、Devin 实际双前台停止与冷恢复有证。Dirac 现选 0.6.0 修复短前台子进程停止，已停止的原对话缺官方用户正文。                                                                                                                                                                                                            |
-| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `3a0a31f4d81fd0b19866dff0d610c610a1b22e56`，可执行文件 SHA-256 `6f73b4e054a3298a8ef974794813294e6c4240f872309647efd38938e9aa2fe5`。首发目录 21 家。                                                                                                                                                           |
-| Mac 工程与安装 | 2026-11-17 审批命令与换行续验，前端 10,978 项、Rust 2,814 项（11 项既有忽略）、格式、类型、Clippy、生产构建、内部打包及独立复核通过。两次正常保存退出、安装前三处数据 247,491 项前后摘要一致，SQLite 副本通过。[最新正式回执](evidence/2026-11-17-cycle12-four-agent-control/README.md)                                                                                                     |
+| 第 12 周期基线 | 正式应用 `86bb5f853`。21 家据原八项续验，整家 0/21。Copilot 1.0.112 官方登录入口已复验，原 Auto 续答超窗且停止未确认。Mistral Vibe 实测拒绝原命令，CodeBuddy 与 Kilo 冷开取回各自同名成品。Pi 新草稿仅有 Off 的差异待定位。                                                                                                                                                                 |
+| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `72bb689a04befbfe5ecc22460e326732a38347d4`，可执行文件 SHA-256 `37215cc507130acbd744ddbb751023c83940c5b19c87217d0dc17efcebe57e88`。首发目录 21 家。                                                                                                                                                           |
+| Mac 工程与安装 | 2026-11-17 前端 10,979 项、Rust 2,815 项（11 项既有忽略）、格式、类型、Clippy、生产构建、内部打包通过。正常保存退出后更换正式应用，三处数据 263,005 项前后摘要一致，SQLite 副本检查通过。[正式回执](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)                                                                                                                                  |
 | 当前开发环境   | macOS 27.0（26A425），Node 22.22.3、锁定 pnpm 9.15.0、Rust/Cargo 1.96.0、Xcode Command Line Tools 可识别。[环境恢复证据](evidence/2026-11-04-development-environment-restoration/README.md)。                                                                                                                                                                                               |
 | Windows        | 最后完整 CI 成功为固定源码 `2e23056cc` 的 [41931045918](https://github.com/KPGH-FJ/farfold/actions/runs/41931045918)，含未签名 NSIS 构建。后续固定 `5598138f2` 定向原生 30 项、前端 20 项通过。安装修复版 `5b9f1449a` 的 [41984263036](https://github.com/KPGH-FJ/farfold/actions/runs/41984263036) 因付款或支出额度未获运行机器；安装、卸载及桌面流程未执行，当前源码未重跑 Windows 全量。 |
 
@@ -186,6 +186,8 @@
 
 ### ARCH-08
 
+2026-11-17 Copilot 1.0.112 正常更新后，已有设置能读取 Auto；正式版原账号的单次续答超窗。其终端登录方法经实际握手核实，修复并安装后「Log in with Copilot CLI」可选，可见「启动设置终端」。已取消本次临时选择，实际登录、取消后续和新版实答保留待验。[正式回执](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)
+
 2026-11-16。macOS 正式版中，Cline 3.0.74 走官方入口恢复原账号，沿原服务用 Sonnet 5.5 实答。Autohand 0.9.11 和 Grok Build 1.0.46 沿原配置完成冷续答。Amp 新增独立官方登录终端，已用用户授权的账号和所选 MiMo 从 Farfold 实答，官方使用记录核同一小米连接。旧适配器密钥与厂商登录仍是两条方式，先前 `auth_required` 按原请求留证。[Cline 原账号](evidence/2026-11-16-cycle12-cline-auth/results.json) · [Autohand 与 Grok](evidence/2026-11-15-cycle12-pre-send/README.md) · [Amp 登录入口](evidence/2026-11-16-cycle12-amp-native/README.md) · [Amp 实答与用量](evidence/2026-11-16-cycle12-account-retest/README.md#amp-小米单次正式实测)
 
 Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时的认证要求仍保留。各已核官方方式的失败、拒绝、取消、换号及方法级密钥边界仍按逐家证据验收。[第 10 周期](evidence/2026-11-15-cycle10-macos/README.md) · [第 11 周期](evidence/2026-11-15-cycle11-macos/README.md) · [当前验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)
@@ -195,6 +197,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 <!-- task-current: ARCH-44 -->
 
 ### ARCH-44
+
+2026-11-17 Mistral Vibe 正式卡片显示准确命令，点一次拒绝，原脚本未执行。Copilot 1.0.112 原账号已有设置的 Auto 续答超窗，取消未获确认，冷开原对话提示未确认且未自动重发。两家分别保留审批正例和实际停止缺口。[续验](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)
 
 2026-11-17 Kilo、CodeBuddy、Devin 正式双前台只点 A 停止，原 Shell 和子进程退出，B 继续并交付。三家冷开原 A 保留草稿与原配置并续答。Dirac 0.5.21 遗留 sleep，按官方入口升级 0.6.0 用同样长度的新双任务复验，A 原 Shell 和 sleep 均停，B 继续；此版长任务未验。[正式回执](evidence/2026-11-17-cycle12-four-agent-control/README.md)
 
@@ -261,6 +265,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: P33 -->
 
 ### P33
+
+2026-11-17 Copilot 1.0.112 从正常搜索打开同一原 ID、读回正文和现有 Auto。只发一次续问，超过五分钟无回、停止无确认；保存退出再开，正确提示此前请求结果未确认，零自动重发。旧版原样本续答正例保持。[正式回执](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)
 
 2026-11-17 Kilo、CodeBuddy、Devin 停止后的原 ID 可冷开、续答，草稿和模型保留。Dirac 0.6.0 的两个已停止原 ID 都收到成功加载和工具历史，但没有用户/助手正文，Farfold 保留读取失败。完成的新版 B 有助手正文可读，原用户提示仍缺。[正式回执](evidence/2026-11-17-cycle12-four-agent-control/README.md)
 
@@ -605,6 +611,8 @@ e32正式所选历史读取可Tab聚焦执行并Enter启动；匹配文字弹窗
 
 ### P18
 
+2026-11-17 CodeBuddy 与 Kilo 各冷开自有对话并实际打开历史交付的 `result.txt`，在两家之间往返核对来源与原文。两份成品分别 78、73 字节，末尾一个 LF，与原交付摘要一致，均可见完整另存入口。零发送、零审批和零写入，另存动作及原差异验收保持分开。[正式回执](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md#两家同名文件冷开取回)
+
 2026-11-15 第12周期：Cursor 自有 TXT 样本实际整理并另存，152 字节逐字节准确、原件保持，能从本轮产物打开。仅覆盖本样本的结果交付，余下多文件、差异及失败条件依原项。[第 12 周期](evidence/2026-11-15-cycle12-macos/README.md)
 
 2026-11-11核。**一次编辑多个片段已有正式正例，完整P18仍开放。** macOS正式97479b185的Mistral Vibe沿用已有服务、Mistral Medium 3.5及High，一条请求、一次编辑返回第3和18行两片段，正式面板逐片打开；494字节改后文件完整核合，除两处标记外其余字节保持。前序OpenCode实时输出与零输出入口、Goose容量呈现及失败/成功编辑、当前文件核验仍限各自样本。[多片段原件](evidence/2026-11-10-stage2-live-mistral/summary.json) · [前序编辑分项](evidence/2026-11-02-p18-edit-diff-formal/failed-edit-diff-and-source-summary.json) · [完整历史及原链接](maintenance/2026-11-11-task-current-source/previous-progress.json)。
@@ -879,7 +887,7 @@ Goose实验SQLite打开失败、Kilo实验临时子进程判定属于夹具调�
 - **Claude Code**。Farfold 独立小米 Messages 测试已有实答，官方适配器的私密凭据交接仍待支持。若要测独立官方账号来源，可在用户方便时从 Farfold 官方账号入口使用所选 Claude 订阅或 Anthropic Console 登录。
 - **Gemini CLI 与 Antigravity**。保持暂缓，后续恢复该验收时由用户本人完成官方登录。
 
-[C12 逐家验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json) · [最新正式回执](evidence/2026-11-17-cycle12-four-agent-control/README.md)
+[C12 逐家验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json) · [最新正式回执](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)
 
 ## 历史、原件与维护
 
