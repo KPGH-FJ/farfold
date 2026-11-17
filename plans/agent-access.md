@@ -1,6 +1,6 @@
 # Farfold 当前工作计划
 
-更新：2026-11-16。五阶段十四周期保持。第1阶段及第4–8周期按各自阶段范围收口。首发22家按[产品契约](../PRODUCT.md)八项验收；[要求参考](../docs/agent-access-requirements.md)保留151条原条件，[当前状态](../docs/status.md)记录证据与缺项。
+更新：2026-11-17。五阶段十四周期保持。第1阶段及第4–8周期按各自阶段范围收口。首发21家按[产品契约](../PRODUCT.md)八项验收；[要求参考](../docs/agent-access-requirements.md)保留151条原条件，[当前状态](../docs/status.md)记录证据与缺项。
 
 ## 五阶段十四周期
 
@@ -39,13 +39,13 @@
 
 [当前状态](../docs/status.md)维护分项证据与外部依赖。第8、10、11周期按阶段范围收口，第9周期 Windows 后置。
 
-1. **先完成 macOS。** 按[22家](../docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)续验。Grok、Dirac、Kilo 已取得分项，CodeBuddy 等[待配合事项](../docs/status.md#第-12-周期待配合)单列，其他工作继续。Gemini CLI 与 Antigravity 暂缓。
+1. **先完成 macOS。** 按[21家](../docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)续验。Grok、Dirac、Kilo 已取得分项，CodeBuddy 等[待配合事项](../docs/status.md#第-12-周期待配合)单列，其他工作继续。Gemini CLI 与 Antigravity 暂缓。
 2. **官方替代与复验。** Qoder、fast-agent、Cursor、Grok 已有双前台停止及冷续答。Goose 已停前台子进程。MiniMax 已移交后台的停止失败，Pi 网页待实装，Cline 历史列表待官方。Copilot 失败反馈与 Amp 显式 MiMo 续答[等待官方](../docs/evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件)。
 3. **再回到 Windows。** macOS 能力验收完成后，续第9周期及受影响的平台回归。第13–14周期仍以用户认可能力为前提。
 
 ## 首发逐家验收
 
-按[实际使用验收](../docs/agent-access-requirements.md#实际使用验收)，22家逐家从正式 Farfold 正常入口验八项。找到旧对话、打开正文、续答分别核。真实工作做到成果交付。点停止后核目标工作实际结束，另一任务继续。冷开核配置和未发材料。
+按[实际使用验收](../docs/agent-access-requirements.md#实际使用验收)，21家逐家从正式 Farfold 正常入口验八项。找到旧对话、打开正文、续答分别核。真实工作做到成果交付。点停止后核目标工作实际结束，另一任务继续。冷开核配置和未发材料。
 
 条件独立时同批并行，逐家留版本、原请求及实际结果。共享条件影响归因时错峰。按已验证的行为复用官方接法。
 

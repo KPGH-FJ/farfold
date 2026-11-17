@@ -297,7 +297,7 @@ Windows沿同一UI和协议模型实现：[process_platform.rs](../src-tauri/src
 
 [browser_workspace/windows](../src-tauri/src/browser_workspace/windows) 使用WebView2并保持网页与应用桥分离；工具通道使用当前用户管道。[desktop_notifications/windows.rs](../src-tauri/src/desktop_notifications/windows.rs) 的点击定位需要应用仍运行，不承诺冷启动激活。Windows依赖布局、安装配置与交叉编译分别留证，不能替代真实系统的路径、凭据、终端、通知、浏览器和恢复验证。
 
-Linux、移动端、多窗口、编辑器及远程项目等边界按产品契约。首发八项的当前范围以[目录](agent-first-release.md#当前保留的-22-项)为准，逐家未验能力、长期稳定性和 Windows 实机任务继续按[活动计划](../plans/agent-access.md)推进。
+Linux、移动端、多窗口、编辑器及远程项目等边界按产品契约。首发八项的当前范围以[目录](agent-first-release.md#当前保留的-21-项)为准，逐家未验能力、长期稳定性和 Windows 实机任务继续按[活动计划](../plans/agent-access.md)推进。
 
 [docx_parse.ts](../src/runtime/docx_parse.ts)在单次解析内按不可变部分树缓存完整主动内容检查，并为脚注/尾注创建字面ID索引。索引的重复标记只在该ID被引用时拒绝；被读取部分内未被引用的注释节点仍须经过整树检查，原XML/块/文字上限、故事顺序与来源路径保持。缓存不跨文件或解析调用。
 

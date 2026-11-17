@@ -702,6 +702,7 @@ mod tests {
             "factory-droid",
             "poolside",
             "kimchi",
+            "sigit",
             "unreviewed",
         ]
         .into_iter()
@@ -720,7 +721,7 @@ mod tests {
             ..Default::default()
         })
         .collect::<Vec<_>>();
-        let registered = ["factory-droid", "poolside", "kimchi"]
+        let registered = ["factory-droid", "poolside", "kimchi", "sigit"]
             .into_iter()
             .map(|id| {
                 serde_json::from_value::<AgentRow>(serde_json::json!({
@@ -738,16 +739,16 @@ mod tests {
         assert!(entries.iter().any(|entry| entry.registry_id == "qoder"));
         assert!(entries.iter().all(|entry| !matches!(
             entry.registry_id.as_str(),
-            "factory-droid" | "poolside" | "kimchi" | "unreviewed"
+            "factory-droid" | "poolside" | "kimchi" | "sigit" | "unreviewed"
         )));
         assert_eq!(serde_json::to_value(&registered).unwrap(), original);
-        assert_eq!(registry.len(), 6);
+        assert_eq!(registry.len(), 7);
     }
 
     #[test]
     fn out_of_scope_installation_does_not_refresh_or_delete_saved_data() {
         let root = tempfile::tempdir().unwrap();
-        let retired = ["factory-droid", "poolside", "kimchi"];
+        let retired = ["factory-droid", "poolside", "kimchi", "sigit"];
         let registry = retired
             .into_iter()
             .map(|id| RegistryAgent {

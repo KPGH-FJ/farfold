@@ -10,7 +10,9 @@
 
 范围决定（2026-11-16）：按用户要求移出 Factory Droid（`factory-droid`）与 Poolside（`poolside`）的首发目录、新接入入口和整家验收，剩余 23 项。Factory 原账号未关联可用组织，Poolside 原托管推理已停用。已有登记、程序、配置、凭据、历史与证据保留。 [移出前的 25 家验收记录](https://github.com/KPGH-FJ/farfold/blob/fd244d5b882d8b7710e00d0b1a9eba3eb669b0f2/docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)
 
-当前范围决定（2026-11-16）：按用户要求将 Kimchi（`kimchi`）移出首发目录、新接入入口和整家验收，剩余 22 项。已有登记、程序、配置、凭据、历史与证据保留。 [移出前的 23 家验收记录](https://github.com/KPGH-FJ/farfold/blob/f2f9b7436e698e38c7325806b713cc7e1164b59c/docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)
+范围决定（2026-11-16）：按用户要求将 Kimchi（`kimchi`）移出首发目录、新接入入口和整家验收，剩余 22 项。已有登记、程序、配置、凭据、历史与证据保留。 [移出前的 23 家验收记录](https://github.com/KPGH-FJ/farfold/blob/f2f9b7436e698e38c7325806b713cc7e1164b59c/docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)
+
+当前范围决定（2026-11-17）：按用户授权，在原 Onde 模型和可用且已选的兼容服务均无法确认时，将 siGit Code（`sigit`）移出首发目录、新接入入口和整家验收，剩余 21 项。已有登记、程序、配置、凭据、历史与证据保留。 [本次复核](evidence/2026-11-17-cycle12-retire-sigit/README.md) · [移出前的 22 家验收记录](https://github.com/KPGH-FJ/farfold/blob/2d1e7326f77c27c15c8b60cad180a5dab13e389d/docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)
 
 历史范围决定（2026-10-07）：用户明确将 Corust Agent（`corust-agent`）、Junie（`junie`）、Stakpak（`stakpak`，用户消息拼作 starpak）和 Auggie CLI（`auggie`）移出首批，并删除相关专属内容。当时范围为 29 项，八项接入标准保持。未来增加须审核，没有自动重新纳入条件。
 
@@ -77,13 +79,13 @@
 
 ## 实现与再审核
 
-集中名单在 [first_release.rs](../src-tauri/src/acp_client/first_release.rs)，保留当前 22 项精确目录 ID。`catalog_list` 只给出当前目录条目，目录安装和准备入口也核对当前范围；完整远端缓存不因范围变化清除。客户端仍用通用卡片处理已有登记；目录外旧登记退出日常列表，历史访问与自定义接入沿共用规则保留，不删除外部程序或用户配置。
+集中名单在 [first_release.rs](../src-tauri/src/acp_client/first_release.rs)，保留当前 21 项精确目录 ID。`catalog_list` 只给出当前目录条目，目录安装和准备入口也核对当前范围；完整远端缓存不因范围变化清除。客户端仍用通用卡片处理已有登记；目录外旧登记退出日常列表，历史访问与自定义接入沿共用规则保留，不删除外部程序或用户配置。
 
-安装版 `b751575` 曾观察到探索 33 项及已有 40 项管理入口，见[原安装记录](evidence/2026-10-02-agent-onboarding-consistency/installed.md)。先前 28 项另有正式验收原件。当前 22 项按本轮正式验收记录跟踪。每家认证与实测状态分别留证。
+安装版 `b751575` 曾观察到探索 33 项及已有 40 项管理入口，见[原安装记录](evidence/2026-10-02-agent-onboarding-consistency/installed.md)。先前 28 项另有正式验收原件。当前 21 项按本轮正式验收记录跟踪。每家认证与实测状态分别留证。
 
-## 当前保留的 22 项
+## 当前保留的 21 项
 
-下表 22 个目录身份与当前[源码允许名单](../src-tauri/src/acp_client/first_release.rs)逐项一致。已有登记、历史分项和整家八项通过分别核对，验收见[当前状态](status.md)及[当前逐家验收记录](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)。
+下表 21 个目录身份与当前[源码允许名单](../src-tauri/src/acp_client/first_release.rs)逐项一致。已有登记、历史分项和整家八项通过分别核对，验收见[当前状态](status.md)及[当前逐家验收记录](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)。
 
 | Agent / 目录 ID                       |
 | ------------------------------------- |
@@ -108,4 +110,3 @@
 | OpenCode / `opencode`                 |
 | Pi / `pi-acp`                         |
 | Qoder / `qoder`                       |
-| siGit / `sigit`                       |

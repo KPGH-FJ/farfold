@@ -1,4 +1,4 @@
-//! Current product directory scope, last reviewed on 2026-11-16.
+//! Current product directory scope, last reviewed on 2026-11-17.
 //! Compatibility still comes from initialize; existing user data is retained.
 
 const INCLUDED: &[&str] = &[
@@ -23,7 +23,6 @@ const INCLUDED: &[&str] = &[
     "opencode",
     "pi-acp",
     "qoder",
-    "sigit",
 ];
 
 /// Unknown new registry identities wait for review; names, versions and local
@@ -39,14 +38,14 @@ mod tests {
     use std::collections::HashSet;
 
     #[test]
-    fn current_directory_has_22_unique_reviewed_identities() {
-        assert_eq!(INCLUDED.len(), 22);
+    fn current_directory_has_21_unique_reviewed_identities() {
+        assert_eq!(INCLUDED.len(), 21);
         let mut reviewed = HashSet::new();
         for id in INCLUDED {
             assert!(reviewed.insert(*id));
             assert!(first_batch_visible(id));
         }
-        assert_eq!(reviewed.len(), 22);
+        assert_eq!(reviewed.len(), 21);
         assert!(!first_batch_visible("future-agent"));
         assert!(!first_batch_visible("Cline"));
         assert!(!first_batch_visible("registry:cline"));
@@ -60,6 +59,7 @@ mod tests {
         assert!(!first_batch_visible("factory-droid"));
         assert!(!first_batch_visible("poolside"));
         assert!(!first_batch_visible("kimchi"));
+        assert!(!first_batch_visible("sigit"));
         assert!(first_batch_visible("qoder"));
     }
 }

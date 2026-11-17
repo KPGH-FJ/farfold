@@ -24,11 +24,13 @@
 
 2026-11-16 首发范围续调：按用户决定将 Kimchi 移出首发目录、新接入入口和第 12 周期整家验收，正式版探索目录显示 22 家，新对话选择器搜索 Kimchi 无匹配。已有程序、登记、配置、凭据、历史和旧证据保留。[范围](agent-first-release.md) · [当前验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json) · [正式复验](evidence/2026-11-16-cycle12-retire-kimchi/README.md)
 
+2026-11-17 首发范围续调：当前已选的本地 Onde 模型找不到，且未发现可用且已选的兼容服务。依用户授权将 siGit Code 移出首发目录、新接入入口和第 12 周期整家验收，源码名单剩 21 家。已有程序、登记、配置、凭据、历史和旧证据保留。正式版目录待新构建复验。[范围与依据](evidence/2026-11-17-cycle12-retire-sigit/README.md)
+
 ## 正式应用与最近功能基线
 
 | 范围           | 当前核对结果                                                                                                                                                                                                                                                                                                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 第 12 周期基线 | 当前安装代码见 `9d43e7f89`。首发 22 家八项继续，整家通过 0/22。新增两项共用历史修复、Dirac/Kilo 正例、Grok 实际停止和 MiniMax 后台停止负例。                                                                                                                                                                                                                                                |
+| 第 12 周期基线 | 当前安装代码见 `9d43e7f89`。源码首发 21 家八项继续，整家通过 0/21。新增两项共用历史修复、Dirac/Kilo 正例、Grok 实际停止和 MiniMax 后台停止负例。                                                                                                                                                                                                                                            |
 | 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `85f94257ca7931e60c2e9b97af0fb7b746c46868`，可执行文件 SHA-256 `e189d49d83b49aed4efb30a5c3d6802f25119664909841529d246626677bac89`。首发目录 22 家。                                                                                                                                                           |
 | Mac 工程与安装 | 2026-11-17 历史和停止批全量前端 10,971 项、Rust 2,805 项（另有 11 项既有忽略）、工程检查及内部打包通过。正常退出并安装，三处数据根的 247,491 项前后核对一致。正式版复验精确搜索、两家冷开和 Grok 原对话续答。[本批回执](evidence/2026-11-17-cycle12-history-and-stop/README.md)                                                                                                             |
 | 当前开发环境   | macOS 27.0（26A425），Node 22.22.3、锁定 pnpm 9.15.0、Rust/Cargo 1.96.0、Xcode Command Line Tools 可识别。[环境恢复证据](evidence/2026-11-04-development-environment-restoration/README.md)。                                                                                                                                                                                               |
@@ -56,7 +58,7 @@
 
 **第 11 周期按既定阶段范围收口。** Cursor、Gemini、Grok Build、Kimchi、Nova 均走正式版历史与账号入口，当时 28 家均已纳入分批验收。Cursor 新自测成功，冷开同一原对话读取原正文并准确续答，原标识和配置一致。Gemini、Grok、Nova 需认证，Gemini 当前未提供列表且旧版历史读取有上游修复，Nova 权限待官方兼容。Kimchi 新测试返回内部错误，一次停止未获确认。其原目录连接超时的同动作已在新版复验准确提示，历史文件保持。本批整家八项和真实审批仍未通过。[逐家结果](evidence/2026-11-15-cycle11-macos/README.md)
 
-**macOS 第 12 周期保持开放。** 原 28 家的 224 格已逐家对照并列缺口，当前首发 22 家的 176 格继续，整家 0/22。前序正常入口 28 家逐个点验，12 个无索引退役条目退出选择，Nova、Qwen Code、DimCode、Factory Droid、Poolside 和 Kimchi 后续移出首发，原登记保留。Cursor 文件交付与单次批准有正例。旧 2026.09.28 实测停止失败；升级 2026.11.13 后，已从正常入口停掉前台 Shell 及其子进程，工具终态仍未知。正常退出并冷开同一原对话后，沿用 Auto 明确续答通过，无自动重发。受监视的后台 Shell 仍缺官方精确停止入口。双前台隔离最新复验见下。Copilot 与 Pi 找到并预览原正文，原配置未确认而保留只读。Dirac 冷开同原正文与配置；Qwen Code 移出前的单次无正文后停止已确认，Poolside 新请求曾报告内部错误，Devin 旧样本曾读取失败，Cline 旧版曾初始化早退。依赖涉及账号、原历史、官方能力与实测负结果。Windows 与公开交付仍按既有顺序。[续验](evidence/2026-11-15-cycle12-followup/README.md) · [本轮细节](evidence/2026-11-15-cycle12-macos/README.md) · [28 家八项](evidence/2026-11-15-cycle12-macos/acceptance-matrix.md)
+**macOS 第 12 周期保持开放。** 原 28 家的 224 格已逐家对照并列缺口，当前首发 21 家的 168 格继续，整家 0/21。前序正常入口 28 家逐个点验，12 个无索引退役条目退出选择，Nova、Qwen Code、DimCode、Factory Droid、Poolside、Kimchi 和 siGit Code 后续移出首发，原登记保留。Cursor 文件交付与单次批准有正例。旧 2026.09.28 实测停止失败；升级 2026.11.13 后，已从正常入口停掉前台 Shell 及其子进程，工具终态仍未知。正常退出并冷开同一原对话后，沿用 Auto 明确续答通过，无自动重发。受监视的后台 Shell 仍缺官方精确停止入口。双前台隔离最新复验见下。Copilot 与 Pi 找到并预览原正文，原配置未确认而保留只读。Dirac 冷开同原正文与配置；Qwen Code 移出前的单次无正文后停止已确认，Poolside 新请求曾报告内部错误，Devin 旧样本曾读取失败，Cline 旧版曾初始化早退。依赖涉及账号、原历史、官方能力与实测负结果。Windows 与公开交付仍按既有顺序。[续验](evidence/2026-11-15-cycle12-followup/README.md) · [本轮细节](evidence/2026-11-15-cycle12-macos/README.md) · [28 家八项](evidence/2026-11-15-cycle12-macos/acceptance-matrix.md)
 
 **11 月 17 日历史和停止续验。** Dirac 原免费模型准确续答，Kilo 免费 Ultra 普通新建实答并冷开原正文。Grok 两条前台命令并行时只停 A，A Shell 及子进程退出，B 原任务完成，冷开 A 后手动续答通过。MiniMax 已移交后台的命令仍继续运行，S7 保留失败。CodeBuddy 原模型与当前选项不同，保留原选择且零发送。已修正常搜索优先级和发现、预览、带入时的目录冲突。[本批证据](evidence/2026-11-17-cycle12-history-and-stop/README.md)
 
@@ -169,6 +171,8 @@
 2026-11-17 正式版在「探索 Agent」显示官方目录已更新及获取时间，手动点「重新发现」后实际出现刷新失败和使用上次目录的提示，22 家仍可见，显示原获取时间。无已保存目录时的提示和本机发现保留已有 Rust 与前端受控回归，未从正式数据清空缓存复验。完整项保持开放。[正式摘要](evidence/2026-11-17-baseline-alignment/summary.json) · [目录实现](../src-tauri/src/agent_catalog.rs) · [界面回归](../src/components/AgentHub.test.tsx)
 
 移出 Kimchi 后，已有正式版探索目录 22 家、新对话搜索 Kimchi 无匹配，原登记与三条对话索引保留。[原正式复验](evidence/2026-11-16-cycle12-retire-kimchi/README.md)
+
+2026-11-17 按用户授权从源码目录及新接入入口移出 siGit Code，当前范围 21 家。定向用例检查范围过滤、旧登记和目录缓存保护。正式版目录待新构建复验。[本批依据](evidence/2026-11-17-cycle12-retire-sigit/README.md)
 
 <!-- /task-current -->
 
@@ -430,7 +434,7 @@ ee4c已将官方导出接回fast冷开工具/图片。原同一历史正式零�
 
 2026-11-17 续核：当前本机目录仍为 `pi-acp 0.0.34`，已选 Pi `0.87.1`。SDK 1.5.2 接法未进入正式版。只读预览需要以有界方式读取选定历史后调用官方解析及内存接口，`SessionManager.open` 对特定旧格式会写回。网页接线须复用原会话进程身份、直接子进程及撤回检查。[本轮路径与限制](evidence/2026-11-17-cycle12-file-validation/README.md#pi-sdk-路径续查)
 
-2026-11-15 接入复核：目录的 `pi-acp` 0.0.34 读取但不向 Pi 传递会话 MCP 设置。厂商 SDK 1.5.2 受控验到独立会话内的 stdio 工具、拒绝、撤回断开及旧版合成历史同 ID 恢复。全运行启动可能补写默认思考档，只读预览应走官方 SessionManager。Farfold 新版接线、实际页面权限和图片回包待实装复验。该批调查的首发范围为当时的 28 家，当前按 22 家逐项续验。[Pi 核验原件](evidence/2026-11-15-official-alternatives/pi.md)
+2026-11-15 接入复核：目录的 `pi-acp` 0.0.34 读取但不向 Pi 传递会话 MCP 设置。厂商 SDK 1.5.2 受控验到独立会话内的 stdio 工具、拒绝、撤回断开及旧版合成历史同 ID 恢复。全运行启动可能补写默认思考档，只读预览应走官方 SessionManager。Farfold 新版接线、实际页面权限和图片回包待实装复验。该批调查的首发范围为当时的 28 家，当前按 21 家逐项续验。[Pi 核验原件](evidence/2026-11-15-official-alternatives/pi.md)
 
 2026-11-13后续：用户手动更新OpenCode并添加小米服务后，本次实际握手为2.2.7。原对话已确认保存xiaomi/MiMo-V2.6-Flash，单次observe_page(screenshot=true)经一次许可返回正确W3C标题/网址及可见PNG，随后恢复未授权；正常退出Farfold后零发送重开，工具、答复和显式展开图片仍可见。原索引/草稿与新模型保存已独立核合；新版本实际原生存储未定位，MiMo原始记录/PNG字节哈希仍未核，不把旧数据库缺marker判为失败。未验证图像理解及其他原组合。[本次分层证据](evidence/2026-11-13-cycle7/history-supplement-summary.json)。
 
@@ -440,7 +444,7 @@ cce3已正式安装fast-agent/Mistral无秘密多连接接入，避免将可用�
 
 同包官方fast-agent只读导出已单次成功，精确原对话/工具ID及90,330字节PNG核合，三个原历史文件字节和元数据不变；当时确认存在可用补充出口；ee4c现已接回普通冷开，并正式验证原工具及截图，原正文/工具/PNG/配置保持。该格式转换工具文字且带系统字段，不作为无损原始历史或完整恢复证明。[实际出口验证](evidence/2026-11-13-cycle7/fast-export-summary.json)。
 
-Pi官方未桥接MCP；Codex受NEW-24暂停；OpenCode两次免费服务失败保留，当前小米MiMo网页与重开显示正例见本项开头；fast工具/图片冷回放已正式修复，Mistral正式未加入历史的图片预览及其余恢复/停止仍待验证；e32只读媒体接线和带入工具显示已实装，分层验证见[本批摘要](evidence/2026-11-13-cycle7/preview-media-summary.json)。最新fast正式补充恢复、OpenCode错误核查见[本批记录](evidence/2026-11-13-cycle7/history-supplement-summary.json)。五家调查仅覆盖当批范围。当前 22 家和各适用原条件继续按第 12 周期验收。[本轮分层证据](evidence/2026-11-13-cycle7/README.md)；[共用正式摘要](evidence/2026-11-12-cycle6/formal-summary.json)；[OpenCode此前分层](evidence/2026-11-12-cycle6/opencode-summary.json)；[此前进度](evidence/2026-11-12-cycle6/previous-browser-progress.json)。
+Pi官方未桥接MCP；Codex受NEW-24暂停；OpenCode两次免费服务失败保留，当前小米MiMo网页与重开显示正例见本项开头；fast工具/图片冷回放已正式修复，Mistral正式未加入历史的图片预览及其余恢复/停止仍待验证；e32只读媒体接线和带入工具显示已实装，分层验证见[本批摘要](evidence/2026-11-13-cycle7/preview-media-summary.json)。最新fast正式补充恢复、OpenCode错误核查见[本批记录](evidence/2026-11-13-cycle7/history-supplement-summary.json)。五家调查仅覆盖当批范围。当前 21 家和各适用原条件继续按第 12 周期验收。[本轮分层证据](evidence/2026-11-13-cycle7/README.md)；[共用正式摘要](evidence/2026-11-12-cycle6/formal-summary.json)；[OpenCode此前分层](evidence/2026-11-12-cycle6/opencode-summary.json)；[此前进度](evidence/2026-11-12-cycle6/previous-browser-progress.json)。
 
 <!-- /task-current -->
 
@@ -846,7 +850,7 @@ Goose实验SQLite打开失败、Kilo实验临时子进程判定属于夹具调�
 - **官方契约与版本。** 当前首发中 Antigravity 和 Devin 的具体回调路由仍缺证，Grok 1.0.46 发行与公开源码映射未齐。Nova、DimCode、Factory Droid 和 Poolside 的原调查随历史保留。已实测的 fast-agent 委托终端与 Cursor 前台停止分别见 [ARCH-44](#arch-44)。
 - **Windows验证边界**：最新固定2e完整CI41931045918已取得2391/0/75、前端9506/3跳过、NSIS构建与聚合成功；原17失败名同轮17/17通过。固定b714新增MCP/队列范围另有18后端与15前端定向通过，均非Windows实际安装或用户流程。原69完整2389/2/75及更早72/26/17失败材料保留为历史，不能反称其当时成功，也不继续作当前待修数量；随后559定向41980895597原生30/前端20通过；5b9安装解析修复运行41984263036未获runner，用户选择先推进独立工作。844及后续批次按各自范围完成本机验证；本批未重派Windows安装任务。固定候选及原生复验的版本、失败与后续通过见[归档中的Windows记录](archive/2026-11-09-progress-alignment/status-history.md#windows-创建eof-与恢复包定向核验)。
 - **数据与更新**：保留历史、草稿、附件、未知请求、证据与备份；每次更新重新核活动工作、正常退出和新基线。206的P35/P40分项、ef788首次失败/正例与343 R2安装/实际观察分开。关闭态清单不延伸到启动后，正常退出不补停止。原冻结回执中的要求文件属于检查当时输入，后续进度文档另核，不称最终文档重跑七项；不以新快照覆盖旧数据。
-- **现行范围。** [首发目录 22 家](agent-first-release.md#当前保留的-22-项)按八项验收，151 条原始条件保留。原 29 家和 28 家记录供追溯。既有六旅程和另一台 Mac 验收门槛维持撤销。签名、公证、公开分发/更新渠道仍后置；LifeModel 真实采集/注入及编辑器等边界见产品契约。
+- **现行范围。** [首发目录 21 家](agent-first-release.md#当前保留的-21-项)按八项验收，151 条原始条件保留。原 29 家和 28 家记录供追溯。既有六旅程和另一台 Mac 验收门槛维持撤销。签名、公证、公开分发/更新渠道仍后置；LifeModel 真实采集/注入及编辑器等边界见产品契约。
 
 ## 第 12 周期待配合
 
@@ -856,7 +860,6 @@ Goose实验SQLite打开失败、Kilo实验临时子进程判定属于夹具调�
 - **MiniMax 旧 M2.7**。确认历史使用的原账号和原服务能否恢复额度。已在新对话验证的小米 MiMo 可继续使用。后台停止等官方接口。
 - **CodeBuddy**。原 `hy4-preview-f / High` 当前不可用。确认是否允许单独用官方现报的 `Hy4 / On (default)` 做新对话实测。原选择已保留。
 - **Mistral Vibe**。原单次和追加单次已用完。若继续真实续答或任务验证，需明确追加的次数与沿用服务。历史与既有结果可继续只读核对。
-- **siGit**。需要可用的原 Onde 文件，或明确选定已配置的兼容服务后验独立新对话。
 - **Gemini CLI 与 Antigravity**。保持暂缓，后续需要本人登录官方账号。
 
 [C12 逐家验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json) · [最新正式回执](evidence/2026-11-17-cycle12-history-and-stop/README.md)

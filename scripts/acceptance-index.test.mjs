@@ -69,8 +69,8 @@ function observation(changes = {}) {
 describe("derived acceptance authority and complete scope", () => {
   it("derives all identities, original standards and 151 conditions without a second catalog", () => {
     const index = buildAcceptanceIndex({ authorities });
-    expect(index.cells).toHaveLength(176);
-    expect(index.authorities.agents).toHaveLength(22);
+    expect(index.cells).toHaveLength(168);
+    expect(index.authorities.agents).toHaveLength(21);
     expect(index.authorities.standards.map((item) => item.id)).toEqual([
       "S1",
       "S2",
@@ -97,10 +97,10 @@ describe("derived acceptance authority and complete scope", () => {
       mechanicallyValid: true,
       acceptanceVerified: false,
       requiresIndependentReview: true,
-      agents: 22,
+      agents: 21,
       standards: 8,
       requirements: 151,
-      cells: 176,
+      cells: 168,
     });
   });
 
@@ -111,7 +111,7 @@ describe("derived acceptance authority and complete scope", () => {
     );
     const ids = parseAgentIds(source);
     expect(() => parseAgentIds(source.replace(`    "${ids[0]}",`, ""))).toThrow(
-      /22/,
+      /21/,
     );
     expect(() =>
       parseAgentIds(source.replace(`    "${ids[1]}",`, `    "${ids[0]}",`)),
@@ -165,7 +165,7 @@ describe("derived acceptance authority and complete scope", () => {
     const ids = parseAgentIds(firstReleaseText);
     expect(() =>
       parseAgentIds(firstReleaseText.replace(`    "${ids[0]}",`, "")),
-    ).toThrow(/22/);
+    ).toThrow(/21/);
     expect(() =>
       parseStandards(productText.replace(/^4\. .+\r?\n/m, "")),
     ).toThrow(/eight/);
@@ -275,7 +275,7 @@ describe("evidence observations cannot become acceptance", () => {
         coverage: [only],
       });
       expect(index.coverage).toEqual([only]);
-      expect(index.cells).toHaveLength(176);
+      expect(index.cells).toHaveLength(168);
       expect(
         index.cells.every(
           (cell) =>

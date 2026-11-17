@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "agentCount": 22,
-  "cellCount": 176,
+  "agentCount": 21,
+  "cellCount": 168,
   "explicitStatuses": {
-    "准备未齐": 17,
-    "入口有证": 21,
-    "受阻": 7,
-    "分项通过": 10,
-    "未测": 10,
+    "准备未齐": 16,
+    "入口有证": 20,
+    "受阻": 6,
+    "分项通过": 9,
+    "未测": 8,
     "原账号实答": 6,
     "查找冷开续答通过": 8,
     "已选模型有实答": 12,
@@ -19,9 +19,7 @@
     "停止及冷续答通过": 4,
     "原正文已读": 2,
     "实测失败": 4,
-    "未确认": 1,
     "已选服务有实答": 2,
-    "默认列表为空": 1,
     "冷开续答分项通过": 4,
     "跨家分项通过": 2
   },
@@ -1902,82 +1900,6 @@
         }
       },
       "name": "Qoder"
-    },
-    {
-      "agentId": "sigit",
-      "runtime": "登记版本 1.5.11",
-      "liveAction": "先核已选本地 Onde 的具体来源与缓存、是否有进程级覆盖。只有现选本地或用户明确选定的官方第三方才做新样本；旧请求仍未知。",
-      "standards": {
-        "S1": {
-          "observed": "沿已有设置读取成功并显示该安装的模型选项\n2026-11-15 盘点：程序可执行，登记版本 1.5.11。登记所存握手版本 1.5.11。",
-          "remaining": "核真实账号和已确认的原服务选项",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md"
-          ],
-          "status": "准备未齐"
-        },
-        "S2": {
-          "observed": "已有设置在当前登记成功创建用于准备的空会话",
-          "remaining": "身份、权益及账号范围未核",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
-          ],
-          "status": "分项通过"
-        },
-        "S3": {
-          "observed": "同一已归属原目录查找成功但为空\n本轮实测：当前本机默认官方列表实际返回空。",
-          "remaining": "从官方范围再定位有效原 ID、目录和原服务，核正文和续答。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-followup/accounts-and-api.md"
-          ],
-          "status": "默认列表为空"
-        },
-        "S4": {
-          "observed": "当前选项显示 Onde，旧自测为本地 HuggingFace\n2026-11-16 续查：同版官方 ACP 有 OpenAI 兼容环境或官方配置。界面 Ready 可早于本地模型真正加载；字符显示 Onde 也不能排除进程级覆盖。\n2026-11-16 续查：登记未设置已知来源覆盖，共用 Onde 模型目录未找到且默认 HuggingFace 缓存无模型库。仅核常见路径，尚无可执行本地模型证据。",
-          "remaining": "确认实际加载的本地模型、确切缓存和体量，或者用户选定官方第三方服务后独立验真实结果。",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
-          ],
-          "status": "受阻"
-        },
-        "S5": {
-          "observed": "无本项实际验收样本",
-          "remaining": "在同一可用账号、服务、配置及已归属对话上补实测",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
-          ],
-          "status": "未测"
-        },
-        "S6": {
-          "observed": "未运行双对话变更、审批或停止",
-          "remaining": "核对配置只作用于目标对话，且共享范围如实呈现",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
-          ],
-          "status": "未测"
-        },
-        "S7": {
-          "observed": "旧结果仍未知，无新发送或复查证实原请求已停",
-          "remaining": "以原任务自有确证或另建可观察独立工作测停止恢复",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json"
-          ],
-          "status": "未确认"
-        },
-        "S8": {
-          "observed": "可区分模型选项已读与身份未读，空列表没有假记录\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
-          "remaining": "核可用服务和旧原对象后验反馈",
-          "sources": [
-            "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
-          ],
-          "status": "入口有证"
-        }
-      },
-      "name": "siGit"
     }
   ],
   "fullPassedCount": 0,

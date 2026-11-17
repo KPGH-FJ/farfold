@@ -83,6 +83,7 @@ export function parseAgentConditions(
       "factory-droid",
       "poolside",
       "kimchi",
+      "sigit",
     ]),
   ];
   const checkedPaths = new Set();
