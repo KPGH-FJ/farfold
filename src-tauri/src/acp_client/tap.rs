@@ -5,6 +5,9 @@ use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
 
+mod permission_input;
+pub(super) use permission_input::PermissionObservation;
+
 #[cfg(test)]
 use agent_client_protocol::LineDirection;
 
@@ -72,6 +75,14 @@ fn update_class(update: &serde_json::Value) -> &'static str {
 }
 
 pub(crate) fn diagnostic_record(line: &str, direction: &str) -> serde_json::Value {
+    diagnostic_record_with_permission(line, direction, None)
+}
+
+pub(super) fn diagnostic_record_with_permission(
+    line: &str,
+    direction: &str,
+    observation: Option<&mut PermissionObservation>,
+) -> serde_json::Value {
     let value = serde_json::from_str::<serde_json::Value>(line).ok();
     let event = value
         .as_ref()
@@ -102,6 +113,11 @@ pub(crate) fn diagnostic_record(line: &str, direction: &str) -> serde_json::Valu
             .and_then(|value| value.pointer("/params/update"))
             .map_or("other", update_class)
             .into();
+    }
+    if direction == "in"
+        && let Some(observation) = observation
+    {
+        observation.annotate(value.as_ref(), &mut record);
     }
     record
 }
@@ -138,6 +154,14 @@ pub(crate) fn safe_record(value: &serde_json::Value) -> Option<serde_json::Value
         && UPDATE_CLASSES.contains(&class)
     {
         safe["updateClass"] = class.into();
+    }
+    if dir == "in"
+        && event == "session/request_permission"
+        && error == "none"
+        && let Some(summary) = value.get("permissionInput")
+        && let Some(checked) = permission_input::safe_permission_input(summary)
+    {
+        safe["permissionInput"] = checked;
     }
     // Additive v1 group: old records stay readable. A partial/untrusted group
     // is omitted together; no arbitrary error, request or code value survives.

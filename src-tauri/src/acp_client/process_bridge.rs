@@ -3,6 +3,7 @@ use super::{
     ingress_permit::{ConsumerProbe, Forwarded, Gate, PermittedRead, QueueSnapshot},
     process::{ProcessControl, PromptEscrow},
     startup_diagnostics::Diagnostics,
+    tap::PermissionObservation,
 };
 use agent_client_protocol::{
     Agent, ByteStreams, Channel, Client, ConnectTo, RawJsonRpcMessage, TransportBatchEntry,
@@ -22,13 +23,21 @@ fn inspect(
     prompts: &PromptEscrow,
     outgoing: bool,
     wire_sequence: &AtomicU64,
+    mut permission: Option<&mut PermissionObservation>,
 ) {
-    let inspect_one = |message: &RawJsonRpcMessage| {
+    let mut inspect_one = |message: &RawJsonRpcMessage| {
         diagnostics.inspect(message, outgoing);
         prompts.inspect(message, outgoing);
         if let Ok(line) = serde_json::to_string(message) {
-            let mut record =
-                super::tap::diagnostic_record(&line, if outgoing { "out" } else { "in" });
+            let mut record = if outgoing {
+                super::tap::diagnostic_record(&line, "out")
+            } else {
+                super::tap::diagnostic_record_with_permission(
+                    &line,
+                    "in",
+                    permission.as_deref_mut(),
+                )
+            };
             // Count before the bounded diagnostic queue so gaps remain visible.
             record["wireSequence"] = (wire_sequence.fetch_add(1, Ordering::Relaxed) + 1).into();
             if outgoing {
@@ -97,6 +106,7 @@ pub(super) async fn run(
                 &outgoing_prompts,
                 true,
                 outgoing_wire_sequence,
+                None,
             );
             source
                 .unbounded_send(frame)
@@ -106,8 +116,16 @@ pub(super) async fn run(
         Ok::<(), agent_client_protocol::Error>(())
     };
     let incoming = async {
+        let mut permission = PermissionObservation::default();
         while let Some(frame) = incoming.next().await {
-            inspect(&frame, &diagnostics, &prompts, false, &wire_sequence);
+            inspect(
+                &frame,
+                &diagnostics,
+                &prompts,
+                false,
+                &wire_sequence,
+                Some(&mut permission),
+            );
             match gate.forward(frame, |frame| {
                 destination
                     .unbounded_send(frame)
