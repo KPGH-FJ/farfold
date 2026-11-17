@@ -30,9 +30,9 @@
 
 | 范围           | 当前核对结果                                                                                                                                                                                                                                                                                                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 第 12 周期基线 | 当前安装 `c923ccb10`，21 家八项续验，整家通过 0/21。OpenCode 和 Goose 同家双前台停止、草稿附件冷恢复和续答有证，CodeBuddy 精确交付通过，Kilo 和 Dirac 末尾 LF 未达要求，Mistral 审批卡正式复验仍缺输入。                                                                                                                                                                                    |
-| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `73c8c75dea688325042fe9c5e66e622f6a61f808`，可执行文件 SHA-256 `4cbd9547e451f488f711d5ba9e36724b1b88f5a31e4cbf910d7458d01b3c8dc1`。首发目录 21 家。                                                                                                                                                           |
-| Mac 工程与安装 | 2026-11-17 停止、交付及审批批，前端 10,976 项、Rust 2,811 项（另有 11 项忽略）、格式、类型、Clippy、生产构建及内部打包通过。关闭态数据相关三处目录 247,491 项前后相同，SQLite 副本完整性通过。[最新正式回执](evidence/2026-11-17-cycle12-stop-delivery-approval/README.md)                                                                                                                  |
+| 第 12 周期基线 | 当前安装 `a036904e1`，21 家八项续验，整家通过 0/21。Mistral 审批卡直接显示命令有证，Kilo 与 Dirac 替代路径精确交付，MiniMax 前台早停和冷续答通过。各家旧失败按路径保留。                                                                                                                                                                                                                    |
+| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `3a0a31f4d81fd0b19866dff0d610c610a1b22e56`，可执行文件 SHA-256 `6f73b4e054a3298a8ef974794813294e6c4240f872309647efd38938e9aa2fe5`。首发目录 21 家。                                                                                                                                                           |
+| Mac 工程与安装 | 2026-11-17 审批命令与换行续验，前端 10,978 项、Rust 2,814 项（11 项既有忽略）、格式、类型、Clippy、生产构建、内部打包及独立复核通过。两次正常保存退出、安装前三处数据 247,491 项前后摘要一致，SQLite 副本通过。[最新正式回执](evidence/2026-11-17-cycle12-approval-and-lf/README.md)                                                                                                        |
 | 当前开发环境   | macOS 27.0（26A425），Node 22.22.3、锁定 pnpm 9.15.0、Rust/Cargo 1.96.0、Xcode Command Line Tools 可识别。[环境恢复证据](evidence/2026-11-04-development-environment-restoration/README.md)。                                                                                                                                                                                               |
 | Windows        | 最后完整 CI 成功为固定源码 `2e23056cc` 的 [41931045918](https://github.com/KPGH-FJ/farfold/actions/runs/41931045918)，含未签名 NSIS 构建。后续固定 `5598138f2` 定向原生 30 项、前端 20 项通过。安装修复版 `5b9f1449a` 的 [41984263036](https://github.com/KPGH-FJ/farfold/actions/runs/41984263036) 因付款或支出额度未获运行机器；安装、卸载及桌面流程未执行，当前源码未重跑 Windows 全量。 |
 
@@ -64,7 +64,9 @@
 
 **11 月 17 日文件交付与首发复验。** Grok 以原服务及 Grok 4.7 / Low 实际读写，一次批准后成品从本轮产物打开。MiniMax 小米 MiMo 新草稿原先因保留的配置通知卡在发送前。新版保存退出冷开保留同一草稿，实际切换和读回已选 MiMo 后只手动发送一次，成品从本轮产物打开。两份磁盘成品逐字节核合且原件未改。MiniMax 本次未触发审批，两家的其他权限、双任务及停止继续按原条件验证。模型无替代选项时的只读显示已改并通过受控回归。[实测记录](evidence/2026-11-17-cycle12-file-validation/README.md)
 
-**第 12 周期文件交付复验。** CodeBuddy 成品 78 字节准确并从「本轮产物」打开。Kilo 已写出并打开，但原写入参数与成品均缺末尾 LF。Dirac 两次待批准内容也缺末尾 LF，拒绝后原件保持且无成品。Mistral 共用审批输入补显示通过受控工程，正式卡仍缺命令详情。[本批证据](evidence/2026-11-17-cycle12-stop-delivery-approval/README.md)
+**第 12 周期精确交付续验。** Kilo 复制副本再编辑、Dirac 逐次批准确定性命令，原件保持，成品逐字节准确且都能从 Farfold 打开。Kilo 成品有对话链接，Dirac 手动打开。两家的原完整写入参数均已在各自工具调用中缺 LF，未把正例倒填到原失败。 [本轮正式回执](evidence/2026-11-17-cycle12-approval-and-lf/README.md#kilo-与-dirac-的换行)
+
+**第 12 周期前一批文件交付复验。** CodeBuddy 成品 78 字节准确并从「本轮产物」打开。Kilo 已写出并打开，但原写入参数与成品均缺末尾 LF。Dirac 两次待批准内容也缺末尾 LF，拒绝后原件保持且无成品。Mistral 共用审批输入补显示通过受控工程，正式卡仍缺命令详情。[本批证据](evidence/2026-11-17-cycle12-stop-delivery-approval/README.md)
 
 **第 12 周期八项续查。** 22 家 176 格的既有证据已逐项复核。正式版修复 Qoder 新对话设置校验后的入口，核实并采用用户已配置的 MiMo / Default，原未发草稿保持，实际成品可从本轮产物打开。Cline 从原免费模型单次审批读写，成品可手动打开，缺官方结构化文件回执。Autohand 双任务点停只结束 A 的 Shell，子进程当时仍活跃，B 实际完成，停止项保留失败。Amp 原厂商 CLI 此前未保存账号，独立密钥终端曾失败。Amp 和 MiniMax 随后均有小米服务实答，见下文。Claude 可从选定的官方账号来源准备。Gemini CLI 与 Antigravity 暂缓。[正式证据](evidence/2026-11-16-cycle12-eight-check/README.md)
 
@@ -192,7 +194,9 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 
 ### ARCH-44
 
-2026-11-17 在两个 Agent 各自的双前台任务中，仅点停 A。OpenCode 与 Goose 的 A 原 Shell 和子进程退出，B 保持并交付。两家冷开读回原配置和未发草稿及附件，手动续答成功。Goose 未确认实时工具终态。Mistral 共用审批输入补显示已实现，正式试验卡仍缺命令，待确认官方状态及对应标识。[本批正式回执](evidence/2026-11-17-cycle12-stop-delivery-approval/README.md)
+2026-11-17 Mistral 正式诊断确认审批请求无输入，紧邻同一标识工具报告 `in_progress` 与有输入无输出。新版卡片显示「该步骤报告的输入」和完整命令，单次批准后运行完成。MiniMax 用 MiMo 实际早停前台，官方报告 `managed_foreground` / `canceled`，真实 Shell 和子进程退出且无完成标记；重开原 ID 续答。该 Agent 的后台停止仍失败。[正式回执](evidence/2026-11-17-cycle12-approval-and-lf/README.md)
+
+2026-11-17 在两个 Agent 各自的双前台任务中，仅点停 A。OpenCode 与 Goose 的 A 原 Shell 和子进程退出，B 保持并交付。两家冷开读回原配置和未发草稿及附件，手动续答成功。Goose 未确认实时工具终态。Mistral 当批共用补显示通过受控检查，正式试验卡当时仍缺命令。后续修复见本项开头。[本批正式回执](evidence/2026-11-17-cycle12-stop-delivery-approval/README.md)
 
 fast-agent 0.10.1 的官方终端委托已经在 macOS 正式版限定启用。用户从 Farfold 逐次批准实际程序、参数和工作目录。两条不同目录的前台命令同时运行时，点击停止使 A 的 Shell 和子进程退出，B 继续并自然完成。A 冷开同一原对话后的手动续答通过，工具实时终态仍未知。Agent 自管及外部工作继续按各自官方入口核验。[受控原件](evidence/2026-11-15-official-alternatives/fast-agent.md) · [正式审批](evidence/2026-11-15-cycle12-fast-approved/README.md) · [正式隔离与续答](evidence/2026-11-15-cycle12-continuation/README.md#fast-agent-双任务与停止后续答)
 
@@ -253,6 +257,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: P33 -->
 
 ### P33
+
+2026-11-17 Kilo 文件样本冷开同一原 ID，正文及免费 Ultra / None 保持，手动一次续问准确回答。MiniMax 实际早停的原 MiMo 对话冷开后保持原目录、配置及原状态，未自动重发，手动续答准确。两次无新建。[最新正式回执](evidence/2026-11-17-cycle12-approval-and-lf/README.md)
 
 2026-11-17 OpenCode 与 Goose 重开各自已停止的同一原 ID，目录、原正文、配置及未发草稿和附件保持。两家各一次手动续问，均准确返回原上下文标记，记录无新建和无自动重发。[本批原件](evidence/2026-11-17-cycle12-stop-delivery-approval/README.md#opencode-与-goose-同家双任务)
 
@@ -867,7 +873,7 @@ Goose实验SQLite打开失败、Kilo实验临时子进程判定属于夹具调�
 - **Claude Code**。Farfold 独立小米 Messages 测试已有实答，官方适配器的私密凭据交接仍待支持。若要测独立官方账号来源，可在用户方便时从 Farfold 官方账号入口使用所选 Claude 订阅或 Anthropic Console 登录。
 - **Gemini CLI 与 Antigravity**。保持暂缓，后续恢复该验收时由用户本人完成官方登录。
 
-[C12 逐家验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json) · [最新正式回执](evidence/2026-11-17-cycle12-stop-delivery-approval/README.md)
+[C12 逐家验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json) · [最新正式回执](evidence/2026-11-17-cycle12-approval-and-lf/README.md)
 
 ## 历史、原件与维护
 
