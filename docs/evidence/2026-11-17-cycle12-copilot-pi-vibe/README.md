@@ -12,6 +12,8 @@ Mistral Vibe 2.25.8，在普通新对话选用现有 Mistral Medium 3.5 / High�
 
 Pi 0.87.1 / pi-acp 0.0.34。一个独立普通新草稿读到保存的 OpenRouter Nemotron 3 Ultra 免费版、Medium 和额外的 `mode`。当前选项未提供该 `mode`。Farfold 明示原选择保留并暂停发送。仅在这份草稿用「沿用当前设置」解除旧选项冲突，再明确选回 `openrouter/NVIDIA: Nemotron 3 Ultra (free)` 并重开模型选择器确认该行已选。思考选择器只提供 `Thinking: off`，本次未发送，未碰原已续答对话和全局原选择。设置诊断 `protocol-v1-1794902875374-3.jsonl` 只有新建与设置更新，零 `session/prompt`。
 
+后续用正式版截图、实际选择和官方回报核对。这里的「只提供 Off」来自辅助功能树只列出当前行。Medium 实际可选，另有保存设置后发送仍暂停的缺陷，见[后续复验](../2026-11-17-cycle12-pi-history-scope/README.md#pi-新目录复现)。
+
 同一套官方 Pi 0.87.1 在独立临时空会话以官方 RPC 模式从启动选项指定 `openrouter/nvidia/nemotron-3-ultra-550b-a55b:free`。`get_state` 回报精确模型、reasoning true、当前 `medium`、零消息、无历史文件，`get_available_thinking_levels` 实际回报 `off`、`medium`、`high`。在禁止网络和临时目录外写入的独立进程中，`get_available_models` 可用列表为空，通过列表切换的 `set_model` 返回 `Model not found`。该边界与直接指定模型的能力回报分别成立。仍需沿实际接线核清 Farfold 选中模型和回报思考档是否一致，随后再从正常入口验本机工具、双任务和停止。 [原对话按配置实答](../2026-11-16-cycle12-original-config/results.json)
 
 独立调用同装 pi-acp 时，真实配置在 `session/new` 返回 `auth_required`。另一隔离样本显式禁网、禁止目录外写入、使用临时官方配置目录和进程内合成凭据，`initialize` 和 `session/new` 成功。`session/set_config_option` 选精确免费版，回执和同一会话 `config_option_update` 都回报 `medium`，选项为 `off`、`medium`、`high`，没有独立 `mode`。两种独立探针均为零模型请求。该受控结果证明桥接能刷新选项，真实 Farfold 的差异仍待定位。

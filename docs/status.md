@@ -30,9 +30,9 @@
 
 | 范围           | 当前核对结果                                                                                                                                                                                                                                                                                                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 第 12 周期基线 | 正式应用 `86bb5f853`。21 家据原八项续验，整家 0/21。Copilot 1.0.112 官方登录入口已复验，原 Auto 续答超窗且停止未确认。Mistral Vibe 实测拒绝原命令，CodeBuddy 与 Kilo 冷开取回各自同名成品。Pi 新草稿仅有 Off 的差异待定位。                                                                                                                                                                 |
-| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `72bb689a04befbfe5ecc22460e326732a38347d4`，可执行文件 SHA-256 `37215cc507130acbd744ddbb751023c83940c5b19c87217d0dc17efcebe57e88`。首发目录 21 家。                                                                                                                                                           |
-| Mac 工程与安装 | 2026-11-17 前端 10,979 项、Rust 2,815 项（11 项既有忽略）、格式、类型、Clippy、生产构建、内部打包通过。正常保存退出后更换正式应用，三处数据 263,005 项前后摘要一致，SQLite 副本检查通过。[正式回执](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)                                                                                                                                  |
+| 第 12 周期基线 | 正式应用 `0b7195dd3`，21 家据原八项续验，整家 0/21。Pi 新草稿恢复发送、双前台停止和冷续答已正式复验。Qoder 默认历史缺位置提示及按原目录查找有证，Goose 范围隔离、Cline 按原索引冷开有证。                                                                                                                                                                                                   |
+| 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `f5d15afc17616ba38f266b53afdf9d8e1e76f5ee`，可执行文件 SHA-256 `749bd4d3b40a475ecdf4c13d110f9732a18e73b19e0eecb2994348590ca44e75`。首发目录 21 家。                                                                                                                                                           |
+| Mac 工程与安装 | 2026-11-17 前端 10,986 项、Rust 2,821 项（11 项既有忽略）、格式、类型、Clippy、生产包通过。两次正常退出后安装，各三处数据共 263,005 项前后摘要一致，SQLite 副本通过。[正式回执](evidence/2026-11-17-cycle12-pi-history-scope/README.md)                                                                                                                                                     |
 | 当前开发环境   | macOS 27.0（26A425），Node 22.22.3、锁定 pnpm 9.15.0、Rust/Cargo 1.96.0、Xcode Command Line Tools 可识别。[环境恢复证据](evidence/2026-11-04-development-environment-restoration/README.md)。                                                                                                                                                                                               |
 | Windows        | 最后完整 CI 成功为固定源码 `2e23056cc` 的 [41931045918](https://github.com/KPGH-FJ/farfold/actions/runs/41931045918)，含未签名 NSIS 构建。后续固定 `5598138f2` 定向原生 30 项、前端 20 项通过。安装修复版 `5b9f1449a` 的 [41984263036](https://github.com/KPGH-FJ/farfold/actions/runs/41984263036) 因付款或支出额度未获运行机器；安装、卸载及桌面流程未执行，当前源码未重跑 Windows 全量。 |
 
@@ -186,6 +186,8 @@
 
 ### ARCH-08
 
+2026-11-17 Pi 新草稿实际回报免费 Ultra 具备 Medium，截图及配置确认复核通过。原发送暂停来自同一新草稿的文本启动说明，修复后原配置允许正常发送，后台和权限仍按原项核。启动说明版本来自另一 PATH 程序，实际会话使用现选 Pi 0.87.1。[实测](evidence/2026-11-17-cycle12-pi-history-scope/README.md)
+
 2026-11-17 Copilot 1.0.112 正常更新后，已有设置能读取 Auto；正式版原账号的单次续答超窗。其终端登录方法经实际握手核实，修复并安装后「Log in with Copilot CLI」可选，可见「启动设置终端」。已取消本次临时选择，实际登录、取消后续和新版实答保留待验。[正式回执](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)
 
 2026-11-16。macOS 正式版中，Cline 3.0.74 走官方入口恢复原账号，沿原服务用 Sonnet 5.5 实答。Autohand 0.9.11 和 Grok Build 1.0.46 沿原配置完成冷续答。Amp 新增独立官方登录终端，已用用户授权的账号和所选 MiMo 从 Farfold 实答，官方使用记录核同一小米连接。旧适配器密钥与厂商登录仍是两条方式，先前 `auth_required` 按原请求留证。[Cline 原账号](evidence/2026-11-16-cycle12-cline-auth/results.json) · [Autohand 与 Grok](evidence/2026-11-15-cycle12-pre-send/README.md) · [Amp 登录入口](evidence/2026-11-16-cycle12-amp-native/README.md) · [Amp 实答与用量](evidence/2026-11-16-cycle12-account-retest/README.md#amp-小米单次正式实测)
@@ -197,6 +199,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 <!-- task-current: ARCH-44 -->
 
 ### ARCH-44
+
+2026-11-17 Pi 已在正式版用原 OpenRouter 免费 Ultra / Medium 分别运行两个自有目录的前台脚本。只点 A 停止，A Shell 与子进程退出，B 保持并写出独立成品。正常退出后原 A 正文、配置与草稿保持，手动续答成功。Pi 本机工具未发 Farfold 审批请求，后台和外部工具的停止仍待。[实测](evidence/2026-11-17-cycle12-pi-history-scope/README.md#pi-本机任务双前台停止和冷续答)
 
 2026-11-17 Mistral Vibe 正式卡片显示准确命令，点一次拒绝，原脚本未执行。Copilot 1.0.112 原账号已有设置的 Auto 续答超窗，取消未获确认，冷开原对话提示未确认且未自动重发。两家分别保留审批正例和实际停止缺口。[续验](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)
 
@@ -265,6 +269,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: P33 -->
 
 ### P33
+
+2026-11-17 Goose 与 Qoder 指定对方目录各为空，选原目录各准确命中，往返切换不串结果。Qoder 默认回包的 28 条无原位置，新版说明缺位置并保留有效行和游标，正式原目录照常可查。Cline 无列表，以已知 ID 提示已有记录，从搜索冷开核原文；Pi 原 A 同 ID 冷开并续答。Qoder 和 Cline 的默认列表缺口继续。[本批回执](evidence/2026-11-17-cycle12-pi-history-scope/README.md)
 
 2026-11-17 Copilot 1.0.112 从正常搜索打开同一原 ID、读回正文和现有 Auto。只发一次续问，超过五分钟无回、停止无确认；保存退出再开，正确提示此前请求结果未确认，零自动重发。旧版原样本续答正例保持。[正式回执](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)
 
@@ -887,7 +893,7 @@ Goose实验SQLite打开失败、Kilo实验临时子进程判定属于夹具调�
 - **Claude Code**。Farfold 独立小米 Messages 测试已有实答，官方适配器的私密凭据交接仍待支持。若要测独立官方账号来源，可在用户方便时从 Farfold 官方账号入口使用所选 Claude 订阅或 Anthropic Console 登录。
 - **Gemini CLI 与 Antigravity**。保持暂缓，后续恢复该验收时由用户本人完成官方登录。
 
-[C12 逐家验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json) · [最新正式回执](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)
+[C12 逐家验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json) · [最新正式回执](evidence/2026-11-17-cycle12-pi-history-scope/README.md)
 
 ## 历史、原件与维护
 
