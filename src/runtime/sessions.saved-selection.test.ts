@@ -99,7 +99,18 @@ afterEach(async () => {
   await draftPersistence.flush();
 });
 
-it("sends exactly one first prompt after strict confirmation preserves the fresh draft’s raw model update", async () => {
+function announcement(sessionId = state.nativeSessionId) {
+  return {
+    sessionId,
+    update: {
+      sessionUpdate: "agent_message_chunk",
+      content: { type: "text", text: "Program startup notice" },
+    },
+  };
+}
+
+async function sendFirstPromptAfterConfirmation(startupText: boolean) {
+  if (startupText) event(announcement());
   const model = "explicit-fresh-model";
   const selection = { ...saved, model };
   const ready = {
@@ -111,7 +122,10 @@ it("sends exactly one first prompt after strict confirmation preserves the fresh
     },
   };
   state.workEnabled = true;
-  state.configOptions[0].options.push({ value: model, name: "Explicit model" });
+  state.configOptions[0].options.push({
+    value: model,
+    name: "Explicit model",
+  });
   applyConfigCheck(state, { ...check(), status: "blocked" });
   applyConfigCheck(state, check());
   expect(state.queuePaused).toBe("unavailable");
@@ -137,15 +151,15 @@ it("sends exactly one first prompt after strict confirmation preserves the fresh
   await threads.setConfig(state.key, "model", model);
   expect(state.queuePaused).toBe("unavailable");
   event(preservedConfigurationUpdate);
-  expect(state.items).toMatchObject([
+  const beforeSend = [
+    ...(startupText ? [{ kind: "agent", text: "Program startup notice" }] : []),
     { kind: "raw", label: "config_option_update" },
-  ]);
+  ];
+  expect(state.items).toMatchObject(beforeSend);
   await threads.confirmRestoredConfig(state.key, selection);
   expect(state.queuePaused).toBeNull();
   expect(ownsConfigurationPause(state)).toBe(false);
-  expect(state.items).toMatchObject([
-    { kind: "raw", label: "config_option_update" },
-  ]);
+  expect(state.items).toMatchObject(beforeSend);
   const blocks = [{ type: "text" as const, text: "Owned first input" }];
   composerDrafts.update("new", () => ({
     text: blocks[0].text,
@@ -171,14 +185,22 @@ it("sends exactly one first prompt after strict confirmation preserves the fresh
   } finally {
     composerDrafts.clear("new");
   }
-});
+}
+
+it.each([false, true])(
+  "sends one first prompt after strict confirmation with startup text: %s",
+  sendFirstPromptAfterConfirmation,
+);
 
 it.each([
   "established",
   "resumed",
   "history",
+  "foreign-announcement",
+  "unverified-continuation",
   "unknown-update",
   "earlier-round",
+  "historical-unknown",
   "queued",
   "manual",
   "work-disabled",
@@ -197,11 +219,20 @@ it.each([
           content: { type: "text", text: "Owned prior history" },
         },
       });
+    if (condition === "foreign-announcement") event(announcement("foreign"));
+    if (condition === "unverified-continuation") {
+      event(announcement());
+      event({ update: announcement().update });
+    }
     if (condition === "unknown-update") {
       event(preservedConfigurationUpdate);
       event({ update: { sessionUpdate: "unknown_work_update" } });
     }
-    if (condition === "earlier-round") state.roundItemBase = 1;
+    if (condition === "earlier-round" || condition === "historical-unknown") {
+      event(announcement());
+      if (condition === "earlier-round") state.roundItemBase = 1;
+      else state.historicalOutcomeUnknown = true;
+    }
     if (condition === "queued")
       state.queued = [[{ type: "text", text: "Existing queued input" }]];
     if (condition === "manual") pauseQueue(state, "unavailable");
@@ -228,11 +259,18 @@ it.each([
   },
 );
 
-it.each(["rejected", "not-ready", "owner-changed", "busy-after"] as const)(
+it.each([
+  "rejected",
+  "not-ready",
+  "owner-changed",
+  "busy-after",
+  "first-attempt-unknown",
+] as const)(
   "keeps a fresh draft's configuration pause when confirmation is %s",
   async (failure) => {
     applyConfigCheck(state, { ...check(), status: "blocked" });
     applyConfigCheck(state, check());
+    if (failure === "first-attempt-unknown") event(announcement());
     h.invoke.mockImplementation(async (name) => {
       if (name !== "session_confirm_config")
         return name === "settings_get" ? null : [];
@@ -241,6 +279,8 @@ it.each(["rejected", "not-ready", "owner-changed", "busy-after"] as const)(
       if (failure === "not-ready") return { ...check(), status: "blocked" };
       if (failure === "owner-changed") state.connectionId = "replaced-owner";
       if (failure === "busy-after") state.running = true;
+      if (failure === "first-attempt-unknown")
+        state.connectionOutcomeUnknown = true;
       return check();
     });
     await expect(

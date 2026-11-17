@@ -5,7 +5,7 @@ import {
   type ConfigCheck,
 } from "./config_check";
 import { configChangeBusyReason, protectedConfigIds } from "./protected_config";
-import { modelConfigOption } from "./session_projection";
+import { isDraftAnnouncement, modelConfigOption } from "./session_projection";
 import type { ThreadState } from "./session_types";
 import { STRINGS } from "./strings";
 import {
@@ -224,10 +224,15 @@ export async function confirmSavedConfiguration(
         confirmed &&
         state.identity === "draft" &&
         !state.resumed &&
+        !state.promptSubmission &&
+        !state.historicalOutcomeUnknown &&
+        !state.sessionToolRecoveryRequired &&
+        state.workEnabled &&
         state.roundItemBase === 0 &&
         state.items.every(
           (item) =>
-            item.kind === "raw" && item.label === "config_option_update",
+            (item.kind === "raw" && item.label === "config_option_update") ||
+            isDraftAnnouncement(item),
         )
       )
         releaseConfigurationPause(state);

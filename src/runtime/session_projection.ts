@@ -108,6 +108,42 @@ export function freshThreadState(
 let itemSeq = 0;
 export const nextItemId = () => `it-${++itemSeq}`;
 
+// Classification stays with the existing rendered item, never in history or a log.
+const draftAnnouncements = new WeakSet<ThreadItem>();
+
+export function isDraftAnnouncement(item: ThreadItem): boolean {
+  return draftAnnouncements.has(item);
+}
+
+function isPrePromptText(
+  s: ThreadState,
+  update: unknown,
+  envelope: unknown,
+): boolean {
+  const frame = envelope as Record<string, unknown> | null | undefined;
+  const message = update as Record<string, unknown> | null;
+  const content = message?.content as Record<string, unknown> | null;
+  return (
+    s.identity === "draft" &&
+    !s.resumed &&
+    !s.running &&
+    !s.submitting &&
+    !s.promptSubmission &&
+    !s.historicalOutcomeUnknown &&
+    !s.connectionOutcomeUnknown &&
+    s.roundItemBase === 0 &&
+    !!s.nativeSessionId &&
+    frame?.sessionId === s.nativeSessionId &&
+    frame.update === update &&
+    Object.keys(frame).length === 2 &&
+    message?.sessionUpdate === "agent_message_chunk" &&
+    Object.keys(message).length === 2 &&
+    content?.type === "text" &&
+    typeof content.text === "string" &&
+    Object.keys(content).length === 2
+  );
+}
+
 function textOf(content: unknown): string | null {
   if (
     content &&
@@ -169,6 +205,7 @@ function appendStreamText(
   kind: "user" | "agent" | "thought",
   content: unknown,
   declaredMessageId?: unknown,
+  announcement = false,
 ): void {
   const messageId =
     typeof declaredMessageId === "string" ? declaredMessageId : undefined;
@@ -194,6 +231,7 @@ function appendStreamText(
       kind === "thought" ? null : normalizeMessageAttachment(content);
     if (attachment && kind !== "thought") {
       if (sameMessage && (tail.kind === "user" || tail.kind === "agent")) {
+        draftAnnouncements.delete(tail);
         const start = tail.attachments?.length ?? 0;
         tail.attachments = [...(tail.attachments ?? []), attachment];
         if (tail.kind === "agent")
@@ -246,6 +284,7 @@ function appendStreamText(
     return;
   }
   if (sameMessage) {
+    if (!announcement) draftAnnouncements.delete(tail);
     if (tail.kind === "agent")
       tail.contentOrder = appendMessageContentPart(tail.contentOrder, {
         kind: "text",
@@ -269,7 +308,7 @@ function appendStreamText(
     return;
   }
   if (kind !== "user" || messageId !== undefined) sealStreams(s);
-  s.items.push({
+  const item: ThreadItem = {
     kind,
     id: nextItemId(),
     ...(messageId === undefined ? {} : { messageId }),
@@ -284,7 +323,9 @@ function appendStreamText(
     streaming: true,
     time: Date.now(),
     ...(kind === "user" ? { attachments: [] } : {}),
-  } as ThreadItem);
+  } as ThreadItem;
+  s.items.push(item);
+  if (announcement) draftAnnouncements.add(item);
 }
 
 function normalizeLocations(raw: unknown): ToolLocation[] {
@@ -717,6 +758,7 @@ export function applyUpdate(
     projectedTool = applyUpdateContent(
       s,
       point ? { ...u, messageId: point.messageId } : update,
+      isPrePromptText(s, update, envelope),
     );
     const last = lastItem(s);
     if (
@@ -734,6 +776,7 @@ export function applyUpdate(
 function applyUpdateContent(
   s: ThreadState,
   update: unknown,
+  announcement: boolean,
 ): ToolCallView | undefined {
   const u = update as Record<string, unknown> | null;
   const kind = u?.sessionUpdate;
@@ -746,7 +789,7 @@ function applyUpdateContent(
       appendStreamText(s, "user", u?.content, u?.messageId);
       return;
     case "agent_message_chunk":
-      appendStreamText(s, "agent", u?.content, u?.messageId);
+      appendStreamText(s, "agent", u?.content, u?.messageId, announcement);
       return;
     case "agent_thought_chunk":
       appendStreamText(s, "thought", u?.content, u?.messageId);
