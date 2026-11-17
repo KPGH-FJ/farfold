@@ -68,9 +68,7 @@ export function readOpeningPermission(
       : [],
     options: Array.isArray(event.options)
       ? event.options.flatMap((option) =>
-          record(option) &&
-          typeof option.optionId === "string" &&
-          option.optionId
+          record(option) && typeof option.optionId === "string"
             ? [
                 {
                   optionId: option.optionId,
@@ -209,7 +207,12 @@ export class OpeningPermissions {
   private async submit(entry: Entry) {
     const p = entry.request,
       optionId = p.decision?.optionId;
-    if (!optionId || !entry.ports.canSubmit() || p.status !== "pending") return;
+    if (
+      optionId === undefined ||
+      !entry.ports.canSubmit() ||
+      p.status !== "pending"
+    )
+      return;
     p.status = "submitting";
     entry.ports.changed();
     let reply: { status?: string; message?: string };

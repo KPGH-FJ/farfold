@@ -178,6 +178,36 @@ it("keeps ambiguous opening choices pending while allowing a separate exact opti
   );
 });
 
+it("submits an explicit empty string rejection ID during opening", async () => {
+  vi.useFakeTimers();
+  const value = owner();
+  const rejection = { optionId: "", name: "Reject once", kind: "reject_once" };
+  value.receive({
+    ...permission,
+    options: [
+      rejection,
+      { name: "Missing ID", kind: "allow_once" },
+      { optionId: 0, name: "Numeric ID", kind: "allow_once" },
+    ],
+  });
+  expect(value.snapshot().permissions[0].options).toEqual([rejection]);
+
+  value.decidePermission(permission.requestId, "");
+  value.decidePermission(permission.requestId, "");
+  await vi.runAllTimersAsync();
+
+  expect(h.invoke).toHaveBeenCalledExactlyOnceWith(
+    "session_permission_respond",
+    {
+      requestId: permission.requestId,
+      requestOwner: permission.owner,
+      sessionId: permission.owner.sessionId,
+      optionId: "",
+    },
+  );
+  expect(value.snapshot().permissions).toEqual([]);
+});
+
 it("keeps the common remember undo window and does not submit an aborted caller's queued choice", async () => {
   vi.useFakeTimers();
   const abort = new AbortController();
