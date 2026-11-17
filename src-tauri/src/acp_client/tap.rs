@@ -5,7 +5,9 @@ use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
 
+mod configuration_shape;
 mod permission_input;
+pub(super) use configuration_shape::ConfigurationObservation;
 pub(super) use permission_input::PermissionObservation;
 
 #[cfg(test)]
@@ -74,14 +76,16 @@ fn update_class(update: &serde_json::Value) -> &'static str {
     }
 }
 
+#[cfg(test)]
 pub(crate) fn diagnostic_record(line: &str, direction: &str) -> serde_json::Value {
-    diagnostic_record_with_permission(line, direction, None)
+    diagnostic_record_observed(line, direction, None, None)
 }
 
-pub(super) fn diagnostic_record_with_permission(
+pub(super) fn diagnostic_record_observed(
     line: &str,
     direction: &str,
     observation: Option<&mut PermissionObservation>,
+    configuration: Option<(&ConfigurationObservation, u64)>,
 ) -> serde_json::Value {
     let value = serde_json::from_str::<serde_json::Value>(line).ok();
     let event = value
@@ -118,6 +122,12 @@ pub(super) fn diagnostic_record_with_permission(
         && let Some(observation) = observation
     {
         observation.annotate(value.as_ref(), &mut record);
+    }
+    if let Some(shape) = value
+        .as_ref()
+        .and_then(|value| configuration_shape::observe(value, direction, event, configuration))
+    {
+        record["configurationShape"] = shape;
     }
     record
 }
@@ -162,6 +172,14 @@ pub(crate) fn safe_record(value: &serde_json::Value) -> Option<serde_json::Value
         && let Some(checked) = permission_input::safe_permission_input(summary)
     {
         safe["permissionInput"] = checked;
+    }
+    if dir == "in"
+        && error == "none"
+        && let Some(checked) = value
+            .get("configurationShape")
+            .and_then(|shape| configuration_shape::safe_shape(shape, value, event))
+    {
+        safe["configurationShape"] = checked;
     }
     // Additive v1 group: old records stay readable. A partial/untrusted group
     // is omitted together; no arbitrary error, request or code value survives.
@@ -320,6 +338,34 @@ impl Drop for DebugTap {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn configuration_update_tap_records_only_bounded_choice_shape() {
+        let update = serde_json::json!({"jsonrpc":"2.0","method":"session/update","params":{
+            "sessionId":"private-session-canary",
+            "update":{"sessionUpdate":"config_option_update","configOptions":[
+                {"id":"private-model-option-canary","category":"model","type":"select","currentValue":"private-model-canary","options":[
+                    {"name":"private-group-canary","options":[{"value":"private-model-canary","name":"private-label-canary"}]}
+                ]},
+                {"id":"thought_level","category":"thought_level","type":"select","currentValue":"off","options":[
+                    {"value":"off","name":"private-label-canary"},{"value":"medium"},{"value":"high"},{"value":"private-level-canary"}
+                ]}
+            ]}
+        }});
+        let record = diagnostic_record(&update.to_string(), "in");
+        let shape = serde_json::json!({"source":"update","optionCount":2,
+            "modelChoiceCount":1,"reasoningChoiceCount":4,
+            "reasoningOffersOff":true,"reasoningOffersMedium":true,"reasoningOffersHigh":true});
+        assert_eq!(record["configurationShape"], shape);
+        let saved = safe_record(&record).unwrap();
+        assert_eq!(saved["configurationShape"], shape);
+        assert!(!saved.to_string().contains("canary"));
+        assert!(
+            diagnostic_record(&update.to_string(), "out")
+                .get("configurationShape")
+                .is_none()
+        );
+    }
     #[test]
     fn incoming_update_diagnostics_keep_only_fixed_content_classes() {
         let updates = [

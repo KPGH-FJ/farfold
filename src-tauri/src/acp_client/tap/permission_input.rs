@@ -163,10 +163,11 @@ mod tests {
             }})
         };
         let mut inspect = |line: Value| {
-            super::super::diagnostic_record_with_permission(
+            super::super::diagnostic_record_observed(
                 &line.to_string(),
                 "in",
                 Some(&mut observation),
+                None,
             )
         };
 

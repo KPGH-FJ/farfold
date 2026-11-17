@@ -3,7 +3,7 @@ use super::{
     ingress_permit::{ConsumerProbe, Forwarded, Gate, PermittedRead, QueueSnapshot},
     process::{ProcessControl, PromptEscrow},
     startup_diagnostics::Diagnostics,
-    tap::PermissionObservation,
+    tap::{ConfigurationObservation, PermissionObservation},
 };
 use agent_client_protocol::{
     Agent, ByteStreams, Channel, Client, ConnectTo, RawJsonRpcMessage, TransportBatchEntry,
@@ -23,23 +23,22 @@ fn inspect(
     prompts: &PromptEscrow,
     outgoing: bool,
     wire_sequence: &AtomicU64,
+    configuration: &ConfigurationObservation,
     mut permission: Option<&mut PermissionObservation>,
 ) {
     let mut inspect_one = |message: &RawJsonRpcMessage| {
         diagnostics.inspect(message, outgoing);
         prompts.inspect(message, outgoing);
         if let Ok(line) = serde_json::to_string(message) {
-            let mut record = if outgoing {
-                super::tap::diagnostic_record(&line, "out")
-            } else {
-                super::tap::diagnostic_record_with_permission(
-                    &line,
-                    "in",
-                    permission.as_deref_mut(),
-                )
-            };
             // Count before the bounded diagnostic queue so gaps remain visible.
-            record["wireSequence"] = (wire_sequence.fetch_add(1, Ordering::Relaxed) + 1).into();
+            let sequence = wire_sequence.fetch_add(1, Ordering::Relaxed) + 1;
+            let mut record = super::tap::diagnostic_record_observed(
+                &line,
+                if outgoing { "out" } else { "in" },
+                permission.as_deref_mut(),
+                Some((configuration, sequence)),
+            );
+            record["wireSequence"] = sequence.into();
             if outgoing {
                 diagnostics.annotate_outgoing_error(message, &mut record);
             } else {
@@ -98,6 +97,8 @@ pub(super) async fn run(
     let outgoing_prompts = prompts.clone();
     let wire_sequence = AtomicU64::new(0);
     let outgoing_wire_sequence = &wire_sequence;
+    let configuration = ConfigurationObservation::default();
+    let outgoing_configuration = &configuration;
     let outgoing = async move {
         while let Some(frame) = outgoing.next().await {
             inspect(
@@ -106,6 +107,7 @@ pub(super) async fn run(
                 &outgoing_prompts,
                 true,
                 outgoing_wire_sequence,
+                outgoing_configuration,
                 None,
             );
             source
@@ -124,6 +126,7 @@ pub(super) async fn run(
                 &prompts,
                 false,
                 &wire_sequence,
+                &configuration,
                 Some(&mut permission),
             );
             match gate.forward(frame, |frame| {
