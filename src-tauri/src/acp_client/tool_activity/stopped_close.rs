@@ -29,11 +29,11 @@ pub(super) fn reports_output_extension(update: &Value) -> bool {
             == Some("live_output")
 }
 
-fn reports_execution_metadata(update: &Value) -> bool {
+pub(super) fn reports_execution_metadata(update: &Value) -> bool {
     update.get("rawOutput").is_some_and(|v| !v.is_null()) || reports_output_extension(update)
 }
 
-fn reports_output(update: &Value) -> bool {
+pub(super) fn reports_output(update: &Value) -> bool {
     reports_execution_metadata(update)
         || update
             .get("content")

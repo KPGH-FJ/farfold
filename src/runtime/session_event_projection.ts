@@ -28,6 +28,7 @@ import {
   applyTurnEnd,
   applyConnectionLost,
   applyPermissionRequest,
+  withdrawReportedPermissionInput,
   normalizeConfigOptions,
   replaceConfigOptions,
   clearPendingRequests,
@@ -163,6 +164,7 @@ export function applySessionEvent(
       toolCall: e.toolCall,
       options: e.options,
       request: e.request,
+      reportedToolInput: e.reportedToolInput,
       terminalCommand: e.terminalCommand,
     });
   } else if (kind === "turnEnd") {
@@ -254,7 +256,8 @@ export function applySessionEvent(
   } else if (kind === "elicitation") {
     applyElicitation(s, e);
   } else if (kind === "toolOutput") {
-    appendToolOutput(s, e);
+    if (appendToolOutput(s, e))
+      withdrawReportedPermissionInput(s, e.toolCallId);
   } else if (kind === "toolFileInput") {
     receiveFileInput(s, e);
   } else if (kind === "notification") {

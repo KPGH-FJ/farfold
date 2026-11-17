@@ -164,6 +164,130 @@ it("does not borrow an earlier request's input when a new approval for the same 
   expect(s.pendingPermissions[0].options).toEqual(options);
 });
 
+it.each([
+  ["input", { rawInput: { command: "later unconfirmed change" } }],
+  ["output", { rawOutput: "later unconfirmed change" }],
+  [
+    "content",
+    {
+      content: [
+        { type: "content", content: { type: "text", text: "later output" } },
+      ],
+    },
+  ],
+])(
+  "shows separately reported input until the matching tool reports %s",
+  (name, change) => {
+    const s = state(`approval-reported-tool-${name}`);
+    const toolCall = { toolCallId: "running" };
+    const request = {
+      sessionId: "fixture",
+      toolCall,
+      options,
+      _meta: { opaque: 1 },
+    };
+    const reportedToolInput = {
+      command: "printf 'linked fixture'",
+      cwd: "/tmp/owned workspace",
+    };
+    channel.applyChannelEvent(s.key, {
+      kind: "permissionRequest",
+      requestId: "with-reported-input",
+      toolCall,
+      options,
+      request,
+      reportedToolInput,
+    });
+    expect(approval(render(s))).toContain("linked fixture");
+    expect(approval(render(s))).toContain("/tmp/owned workspace");
+    expect(s.pendingPermissions[0].requestSnapshot).toEqual(request);
+    expect(s.pendingPermissions[0].toolCallSnapshot).toEqual(toolCall);
+
+    channel.applyChannelEvent(s.key, {
+      update: {
+        sessionUpdate: "tool_call_update",
+        toolCallId: "different",
+        rawInput: { command: "unrelated" },
+      },
+    });
+    expect(approval(render(s))).toContain("linked fixture");
+
+    channel.applyChannelEvent(s.key, {
+      update: {
+        sessionUpdate: "tool_call_update",
+        toolCallId: "running",
+        ...change,
+      },
+    });
+    const card = approval(render(s));
+    expect(card).toContain("Agent 未提供本次操作的输入详情");
+    expect(card).not.toMatch(/linked fixture|later unconfirmed change/);
+    expect(h.invoke).not.toHaveBeenCalled();
+  },
+);
+
+it("withdraws a queued remembered choice when matching tool output is accepted", async () => {
+  vi.useFakeTimers();
+  try {
+    const s = state("approval-output-withdrawal");
+    const requestId = "approval";
+    channel.applyChannelEvent(s.key, {
+      kind: "permissionRequest",
+      requestId,
+      toolCall: { toolCallId: "tool" },
+      options: [
+        { optionId: "remember", name: "Remember", kind: "allow_always" },
+      ],
+      reportedToolInput: { command: "fixture input" },
+    });
+    threads.decidePermission(
+      s.key,
+      requestId,
+      "remember",
+      "Remember",
+      true,
+      true,
+    );
+    expect(s.pendingPermissions[0].decision?.undoable).toBe(true);
+
+    const output = {
+      kind: "toolOutput",
+      toolCallId: "tool",
+      source: "reported",
+      data: "fixture output",
+      truncated: false,
+    };
+    channel.applyChannelEvent(s.key, { ...output, sequence: 0 });
+    expect(s.pendingPermissions[0].decision?.undoable).toBe(true);
+    channel.applyChannelEvent(s.key, { ...output, sequence: 1 });
+    expect(s.pendingPermissions[0].decision).toBeNull();
+    expect(approval(render(s))).toContain("Agent 未提供本次操作的输入详情");
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(h.invoke).not.toHaveBeenCalled();
+  } finally {
+    vi.useRealTimers();
+  }
+});
+
+it("withdraws reported input when another approval reuses that tool ID", () => {
+  const s = state("approval-reused-tool-id");
+  const event = {
+    kind: "permissionRequest",
+    toolCall: { toolCallId: "shared" },
+    options,
+  };
+  channel.applyChannelEvent(s.key, {
+    ...event,
+    requestId: "first",
+    reportedToolInput: { command: "initial fixture input" },
+  });
+  expect(approval(render(s))).toContain("initial fixture input");
+  channel.applyChannelEvent(s.key, { ...event, requestId: "next" });
+  expect(render(s)).not.toContain("initial fixture input");
+  expect(s.pendingPermissions).toHaveLength(2);
+  expect(h.invoke).not.toHaveBeenCalled();
+});
+
 it("shows an owned command's exact program, argv boundaries, and directory before its one-time choices", () => {
   const s = state("terminal-approval");
   const command = {

@@ -12,6 +12,10 @@ impl Drop for Stop {
     }
 }
 
+fn pending_tool(input: &Value) -> Value {
+    json!({"sessionUpdate":"tool_call","toolCallId":"fixture-tool","title":"Fixture pending tool","kind":"execute","rawInput":input})
+}
+
 #[tokio::test(flavor = "multi_thread")]
 async fn permission_request_preserves_full_params_and_compatibility_fields() {
     let request = json!({
@@ -28,7 +32,26 @@ async fn permission_request_preserves_full_params_and_compatibility_fields() {
         "_meta": {"futureRootField": {"nested": [null, false, "untouched"]}},
         "futureRootField": {"arbitrary": ["unchanged", 23]}
     });
-    exercise_request(request, "yes", &[]).await;
+    exercise_request(
+        request,
+        "yes",
+        &[],
+        &[pending_tool(&json!({"command":"earlier tool input"}))],
+        None,
+    )
+    .await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn permission_request_with_only_tool_id_carries_separate_reported_pending_input() {
+    let request = json!({
+        "sessionId": "fixture-session",
+        "toolCall": {"toolCallId": "fixture-tool"},
+        "options": [{"optionId": "yes", "name": "Allow once", "kind": "allow_once"}],
+        "_meta": {"opaque": [null, "unchanged"]}
+    });
+    let input = json!({"command":"fixture only; never executed","cwd":"/fixture path"});
+    exercise_request(request, "yes", &[], &[pending_tool(&input)], Some(input)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
@@ -43,10 +66,16 @@ async fn ambiguous_permission_option_cannot_consume_the_original_responder() {
         ],
         "_meta": {"opaque": [null, "unchanged"]}
     });
-    exercise_request(request, "safe", &["same", "same"]).await;
+    exercise_request(request, "safe", &["same", "same"], &[], None).await;
 }
 
-async fn exercise_request(request: Value, selected: &str, blocked: &[&str]) {
+async fn exercise_request(
+    request: Value,
+    selected: &str,
+    blocked: &[&str],
+    updates: &[Value],
+    reported_input: Option<Value>,
+) {
     let dir = tempfile::tempdir().unwrap();
     let script = dir.path().join("permission.py");
     std::fs::write(
@@ -54,6 +83,7 @@ async fn exercise_request(request: Value, selected: &str, blocked: &[&str]) {
         r#"
 import sys,json
 permission=json.loads('__REQUEST__')
+updates=json.loads('__UPDATES__')
 def send(v): print(json.dumps(dict(jsonrpc='2.0',**v)),flush=True)
 def reply(m,r): send({'id':m['id'],'result':r})
 prompt=None
@@ -63,12 +93,14 @@ for line in sys.stdin:
  elif method=='session/new': reply(m,{'sessionId':'fixture-session'})
  elif method=='session/prompt':
   prompt=m
+  for u in updates: send({'method':'session/update','params':{'sessionId':'fixture-session','update':u}})
   send({'id':100,'method':'session/request_permission','params':permission})
  elif method is None and m.get('id')==100:
   assert m['result']['outcome']['optionId']=='__SELECTED__'
   reply(prompt,{'stopReason':'end_turn'})
 "#
         .replace("__REQUEST__", &request.to_string())
+        .replace("__UPDATES__", &serde_json::to_string(updates).unwrap())
         .replace("__SELECTED__", selected),
     )
     .unwrap();
@@ -118,6 +150,7 @@ for line in sys.stdin:
     assert_eq!(event["request"], request);
     assert_eq!(event["toolCall"], request["toolCall"]);
     assert_eq!(event["options"], request["options"]);
+    assert_eq!(event.get("reportedToolInput"), reported_input.as_ref());
     let owner = &event["owner"];
     assert_eq!(owner["sessionId"], opened.session_id);
     assert_eq!(owner["connectionId"], opened.connection_id);

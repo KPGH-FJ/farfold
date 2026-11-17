@@ -232,6 +232,8 @@ export interface PendingPermission extends PendingRequest {
   toolCallSnapshot?: Record<string, unknown> | null;
   /** Original request params, including opaque extensions; memory only. */
   requestSnapshot?: unknown;
+  /** Input separately reported by this prompt's pending tool before approval. */
+  reportedToolInput?: unknown;
   title: string;
   kind: string;
   locations: ToolLocation[];

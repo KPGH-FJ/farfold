@@ -1,6 +1,19 @@
 use super::*;
 use serde_json::json;
 
+#[test]
+fn local_approval_and_output_kinds_are_not_notification_discriminators() {
+    for kind in ["permissionRequest", "toolOutput"] {
+        let raw = json!({"sessionId":"owned","kind":kind,"futureField":true});
+        assert_eq!(
+            guard_notification(raw.clone()),
+            json!({"kind":"notification","method":"session/update","params":raw})
+        );
+        let with_update = json!({"sessionId":"owned","kind":kind,"update":null});
+        assert_eq!(guard_notification(with_update.clone()), with_update);
+    }
+}
+
 // Shape of the owned official Mistral 2.25.8 effect captured 2026-11-13.
 // Public synthetic bytes replace the captured image; this is not a codec test.
 fn sample(kind: &str) -> Value {

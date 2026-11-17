@@ -122,11 +122,11 @@ function commandOutput(call: ToolCallView): {
 export function appendToolOutput(
   s: ThreadState,
   event: Record<string, unknown>,
-): void {
+): boolean {
   const item = s.items.find(
     (i) => i.kind === "tool" && i.call.toolCallId === event.toolCallId,
   );
-  if (item?.kind !== "tool" || typeof event.data !== "string") return;
+  if (item?.kind !== "tool" || typeof event.data !== "string") return false;
   if (event.source === "reported") {
     if (
       typeof event.sequence !== "number" ||
@@ -134,9 +134,9 @@ export function appendToolOutput(
       event.sequence <= 0 ||
       typeof event.truncated !== "boolean"
     )
-      return;
+      return false;
     const previous = item.call.streamedOutput;
-    if (event.sequence <= (previous?.sequence ?? 0)) return;
+    if (event.sequence <= (previous?.sequence ?? 0)) return false;
     const tail = outputTail((previous?.text ?? "") + event.data);
     item.call.streamedOutput = {
       text: tail.output,
@@ -147,19 +147,20 @@ export function appendToolOutput(
         event.truncated ||
         event.sequence !== (previous?.sequence ?? 0) + 1,
     };
-    return;
+    return true;
   }
-  if (event.source !== undefined) return;
+  if (event.source !== undefined) return false;
   if (
     !item.call.content.some(
       (c) => c.type === "terminal" && c.terminalId === event.terminalId,
     )
   )
-    return;
+    return false;
   const tail = outputTail((item.call.terminalOutput ?? "") + event.data);
   item.call.terminalOutput = tail.output;
   item.call.terminalOutputTruncated =
     item.call.terminalOutputTruncated === true || tail.outputTruncated;
+  return true;
 }
 
 /** Some agents report an edit/write call without a `type:"diff"` content

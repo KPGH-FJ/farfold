@@ -473,14 +473,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                     // Publication can synchronously serialize/dispatch IPC or
                     // re-enter a responder. Never hold the shared table here.
                     if publish {
-                        (ctx.events)(serde_json::json!({
-                            "kind": "permissionRequest",
-                            "requestId": request_id,
-                            "owner": owner,
-                            "request": params.clone(),
-                            "toolCall": params.get("toolCall").cloned().unwrap_or(Value::Null),
-                            "options": params.get("options").cloned().unwrap_or(Value::Null),
-                        }));
+                        (ctx.events)(ctx.tools.permission_event(request_id, owner, params));
                     }
                 }
                 "elicitation/create" => {

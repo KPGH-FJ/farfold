@@ -360,6 +360,25 @@ function typedToolUpdate(update: Record<string, unknown>): update is Record<
   );
 }
 
+export function withdrawReportedPermissionInput(
+  s: ThreadState,
+  toolCallId: unknown,
+): void {
+  if (typeof toolCallId !== "string" || !toolCallId) return;
+  for (const pending of s.pendingPermissions) {
+    if (
+      pending.toolCallId !== toolCallId ||
+      pending.reportedToolInput === undefined
+    )
+      continue;
+    delete pending.reportedToolInput;
+    // The queued remembered choice checks this exact decision identity again
+    // before submission. The user reviewed an input that is no longer current.
+    if (pending.status === "pending" && pending.decision?.undoable)
+      pending.decision = null;
+  }
+}
+
 function upsertToolCall(
   s: ThreadState,
   update: Record<string, unknown>,
@@ -733,8 +752,22 @@ function applyUpdateContent(
       appendStreamText(s, "thought", u?.content, u?.messageId);
       return;
     case "tool_call":
-    case "tool_call_update":
-      return upsertToolCall(s, u as Record<string, unknown>);
+    case "tool_call_update": {
+      const tool = u!;
+      if (
+        kind === "tool_call" ||
+        (tool.status != null && tool.status !== "pending") ||
+        tool.rawInput != null ||
+        tool.rawOutput != null ||
+        (tool.content != null &&
+          (!Array.isArray(tool.content) || tool.content.length > 0))
+      ) {
+        // A later change cannot describe the previous approval. Keep the
+        // exact request untouched and withdraw the earlier step's detail.
+        withdrawReportedPermissionInput(s, tool.toolCallId);
+      }
+      return upsertToolCall(s, tool);
+    }
     case "plan": {
       sealStreams(s);
       const entries = normalizePlanEntries(u?.entries);
@@ -964,6 +997,7 @@ export function applyPermissionRequest(
     toolCall: unknown;
     options: unknown;
     request?: unknown;
+    reportedToolInput?: unknown;
     terminalCommand?: unknown;
   },
 ): void {
@@ -1013,6 +1047,7 @@ export function applyPermissionRequest(
   }
   const locations = normalizeLocations(toolCall?.locations);
   if (s.pendingPermissions.some((p) => p.requestId === event.requestId)) return;
+  withdrawReportedPermissionInput(s, toolCall?.toolCallId);
   s.pendingPermissions = [
     ...s.pendingPermissions,
     {
@@ -1030,6 +1065,12 @@ export function applyPermissionRequest(
         terminalCommand === undefined
           ? structuredClone(event.request)
           : undefined,
+      ...(typeof toolCall?.toolCallId === "string" &&
+      toolCall.toolCallId &&
+      toolCall.rawInput == null &&
+      event.reportedToolInput != null
+        ? { reportedToolInput: structuredClone(event.reportedToolInput) }
+        : {}),
       title: String(toolCall?.title ?? ""),
       kind: String(toolCall?.kind ?? "other"),
       locations,
