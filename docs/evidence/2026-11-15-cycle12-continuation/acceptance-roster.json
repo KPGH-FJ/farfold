@@ -6,11 +6,11 @@
     "准备未齐": 11,
     "入口有证": 16,
     "受阻": 5,
-    "分项通过": 19,
+    "分项通过": 18,
     "未测": 8,
     "原账号实答": 6,
     "查找冷开续答通过": 7,
-    "已选模型有实答": 13,
+    "已选模型有实答": 14,
     "可建对话": 1,
     "实测分项通过": 19,
     "前台停止分项通过": 3,
@@ -1134,10 +1134,10 @@
     {
       "agentId": "github-copilot-cli",
       "runtime": "2026-11-15 盘点：登记及 npm-loader 包 1.0.89，保存握手 1.0.107，全局保存 Auto / Agent。2026-11-16 正式版原样本带入时，Farfold 索引由 0 条增至 1 条；同一原对话续答后索引仍唯一。 2026-11-17 macOS 正常更新并选用官方 1.0.112，旧 1.0.89 仍可选。",
-      "liveAction": "用户确认原账号。从原目录带入同一 ID 及恢复已有服务/Auto 成功。首次续问报 Auto 路由网络错误，误显示完成；随后原账号、原 ID、原 Auto 实答通过。旧失败的准确反馈仍缺官方信号。 新版同 ID 冷开、认得原 Auto，单次续答超过五分钟未回，停止未确认。登录入口补强已在正式版复验。",
+      "liveAction": "用户确认原账号。从原目录带入同一 ID 及恢复已有服务/Auto 成功。首次续问报 Auto 路由网络错误，误显示完成；随后原账号、原 ID、原 Auto 实答通过。旧失败的准确反馈仍缺官方信号。 新版同 ID 冷开、认得原 Auto，单次续答超过五分钟未回，停止未确认。登录入口补强已在正式版复验。 现选 1.0.112 新建沿用已有设置及 Auto 实答，冷开原样本提示原配置未确认。官方关闭入口实线受控通过，真实新对话自然完成未进入停止。",
       "standards": {
         "S1": {
-          "observed": "旧 1.0.89 真实打开官方登录、暂离和取消；1.0.106 另有实际登录终端和空凭据拒绝受控检查。\n2026-11-15 盘点：程序可执行，登记版本 1.0.89。登记所存握手版本 1.0.107。\n2026-11-17 续验：同一登记更新为官方 1.0.112。先复现官方终端入口灰置，再于 86bb5f853 确认可选且出现启动终端按钮，取消临时选择。",
+          "observed": "旧 1.0.89 真实打开官方登录、暂离和取消；1.0.106 另有实际登录终端和空凭据拒绝受控检查。\n2026-11-15 盘点：程序可执行，登记版本 1.0.89。登记所存握手版本 1.0.107。\n2026-11-17 续验：同一登记更新为官方 1.0.112。先复现官方终端入口灰置，再于 86bb5f853 确认可选且出现启动终端按钮，取消临时选择。\n2026-11-17 续验：新版正式普通新建取得 Auto 可用设置，手动首答成功。",
           "remaining": "新的实际登录、各取消分支及登录后实际路由待验。",
           "sources": [
             "docs/evidence/2026-10-01-agent-copilot-login/installed.md",
@@ -1145,45 +1145,49 @@
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
-            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
           "status": "分项通过"
         },
         "S2": {
-          "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。\n2026-11-16 续验：用户确认当前使用原 GitHub 账号，沿用原已有服务。原 Auto 的续问在路由阶段报网络错误。\n2026-11-16 续验：同一用户确认原账号，同一已有服务复验实答。",
+          "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。\n2026-11-16 续验：用户确认当前使用原 GitHub 账号，沿用原已有服务。原 Auto 的续问在路由阶段报网络错误。\n2026-11-16 续验：同一用户确认原账号，同一已有服务复验实答。\n2026-11-17 续验：新版正式正常新建沿已有账号实答，厂商记录为 Copilot 来源。",
           "remaining": "实际计费、换号及不同服务失效的范围保护仍待核。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-followup/README.md",
             "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
           "status": "原账号实答"
         },
         "S3": {
-          "observed": "旧正式从目录精确发现原 ID、读回正文并按 Auto 依赖原前文续答。\n本轮实测：正常入口找到自建原条目，核到原问题和原回复。当前返回 Auto，原选择无法确认，预览只读，零发送。\n2026-11-16 续验：正式版从原目录找到、预览并带入同一原 ID，单条索引和原正文均核同。一次依赖上下文的续问因 Auto 路由失败未通过。\n2026-11-16 续验：从正式版侧栏冷开同一个原 ID，只发一次依赖原上下文的续问，准确返回原标记，零新建，原索引唯一。\n2026-11-17 续验：1.0.112 从普通搜索冷开同一原 ID 并恢复原正文及 Auto。单次手动续问超窗，退出后冷开无自动重发。",
-          "remaining": "新版同一 ID 手动续答、更多原目录和跨范围发现仍待验。",
+          "observed": "旧正式从目录精确发现原 ID、读回正文并按 Auto 依赖原前文续答。\n本轮实测：正常入口找到自建原条目，核到原问题和原回复。当前返回 Auto，原选择无法确认，预览只读，零发送。\n2026-11-16 续验：正式版从原目录找到、预览并带入同一原 ID，单条索引和原正文均核同。一次依赖上下文的续问因 Auto 路由失败未通过。\n2026-11-16 续验：从正式版侧栏冷开同一个原 ID，只发一次依赖原上下文的续问，准确返回原标记，零新建，原索引唯一。\n2026-11-17 续验：1.0.112 从普通搜索冷开同一原 ID 并恢复原正文及 Auto。单次手动续问超窗，退出后冷开无自动重发。\n2026-11-17 续验：本批旧原样本仍可读正文，配置确认失败，未发送。",
+          "remaining": "确认新版原配置并手动续答；其他原目录和跨范围发现仍待。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-copilot-list/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/copilot-formal-e954-history-continuation-summary.json",
             "docs/evidence/2026-11-15-cycle12-followup/README.md",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
-            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
           "status": "实测分项通过"
         },
         "S4": {
-          "observed": "正式旧 Auto 原选择及实际回复均已有证据，原生模型曾为 gpt-6-luna；历史菜单只提供 Auto。\n2026-11-16 续验：从正式版核原已有服务和 Auto，保存原设置后读取确认一致。实际续问发生 Auto 路由失败。\n2026-11-16 续验：同一原对话沿用已有服务和保存的 Auto 完成一次续答。\n2026-11-17 续验：官方 1.0.112 从现有服务读到并显示原 Auto，但该次没有实答。",
-          "remaining": "新版 Auto 实答及实际选中模型待验；其他模型与推理仍按该版本声明验。",
+          "observed": "正式旧 Auto 原选择及实际回复均已有证据，原生模型曾为 gpt-6-luna；历史菜单只提供 Auto。\n2026-11-16 续验：从正式版核原已有服务和 Auto，保存原设置后读取确认一致。实际续问发生 Auto 路由失败。\n2026-11-16 续验：同一原对话沿用已有服务和保存的 Auto 完成一次续答。\n2026-11-17 续验：官方 1.0.112 从现有服务读到并显示原 Auto，但该次没有实答。\n2026-11-17 续验：1.0.112 普通新建选原 Auto，一条自有短问成功；原助手回合的实际模型为 gpt-6-luna。",
+          "remaining": "旧对话配置恢复、模型切换及推理设置实际采用待验。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
-            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
-          "status": "分项通过"
+          "status": "已选模型有实答"
         },
         "S5": {
           "observed": "旧正式同自测一次审批拒绝，一次批准且固定命令有专用标记与退出码。",
@@ -1201,19 +1205,20 @@
           "status": null
         },
         "S7": {
-          "observed": "旧有界 shell 与 sleep 实际提前结束，正式未知标记和草稿冷开保持，旧同 ID 工具无终态。\n2026-11-17 续验：1.0.112 原 Auto 续问等待超过五分钟后只点一次停止，未收到结束回执。退出冷开准确提示原请求尚未确认，零重发。\n2026-11-17 续验：1.0.112 原请求卡在厂商启动阶段，旧历史未追加；随后退出应用回收了 Farfold 自有进程组。实际停止按钮仍未获得终态；官方声明的活动对话关闭另待实测。",
-          "remaining": "新版实际停止及官方终态未通过，原工具停止、断线和待发保护继续。",
+          "observed": "旧有界 shell 与 sleep 实际提前结束，正式未知标记和草稿冷开保持，旧同 ID 工具无终态。\n2026-11-17 续验：1.0.112 原 Auto 续问等待超过五分钟后只点一次停止，未收到结束回执。退出冷开准确提示原请求尚未确认，零重发。\n2026-11-17 续验：1.0.112 原请求卡在厂商启动阶段，旧历史未追加；随后退出应用回收了 Farfold 自有进程组。实际停止按钮仍未获得终态；官方声明的活动对话关闭另待实测。\n2026-11-17 续验：原未确认停止的官方关闭入口实现并实线受控验证。新版普通请求自然完成，实际未知后关闭未触发。",
+          "remaining": "新版真实停止及关闭、后台原工具、断线和待发保护继续。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-isolation/README.md",
             "docs/evidence/2026-11-07-stage1-formal-acceptance/copilot-close-installed.json",
             "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
-            "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md"
+            "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
           "status": "实测失败"
         },
         "S8": {
-          "observed": "旧正式显示回复已停和工具待确认；当时实际导出把工具写成等待中。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续验：官方会话记录出现 session.error，ACP 同时刻只显示错误正文，未发协议错误。Farfold 标题下此次显示已完成，实际未获得预期回复。\n2026-11-16 续验：Auto 再次使用时实际实答，第一次失败仍存在错误文字映射，官方 SDK 的整段读取不能确认原失败归属。\n2026-11-17 官方目录已有 1.0.112，本机现选 1.0.89。新版发布说明未确认旧失败反馈已修。\n2026-11-17 续验：新版此次无答复，停止界面与冷开均保留结果未知，本次没有取得旧版那类官方失败终态。",
-          "remaining": "按同类真实失败核正确错误反馈；新版停止未知的可恢复路径另验。",
+          "observed": "旧正式显示回复已停和工具待确认；当时实际导出把工具写成等待中。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续验：官方会话记录出现 session.error，ACP 同时刻只显示错误正文，未发协议错误。Farfold 标题下此次显示已完成，实际未获得预期回复。\n2026-11-16 续验：Auto 再次使用时实际实答，第一次失败仍存在错误文字映射，官方 SDK 的整段读取不能确认原失败归属。\n2026-11-17 官方目录已有 1.0.112，本机现选 1.0.89。新版发布说明未确认旧失败反馈已修。\n2026-11-17 续验：新版此次无答复，停止界面与冷开均保留结果未知，本次没有取得旧版那类官方失败终态。\n2026-11-17 续验：新版正常首答显示完成；原对话仍明确提示结果未知及不能确认原设置。",
+          "remaining": "同类真实失败、正式关闭反馈仍待。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json",
             "docs/evidence/2026-11-06-phase1-copilot-list/README.md",
@@ -1222,7 +1227,8 @@
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件",
             "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md",
-            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
           "status": "实测失败"
         }
