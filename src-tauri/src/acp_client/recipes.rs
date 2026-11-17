@@ -18,14 +18,15 @@ pub(crate) fn goose_acp(agent: &AgentRow) -> bool {
             .is_some_and(|s| s == "goose" || (cfg!(windows) && s.eq_ignore_ascii_case("goose.exe")))
 }
 
-/// Official @github/copilot 1.0.89 loader forwards argv to this platform export.
+/// Verified official @github/copilot loaders forward argv to this platform export.
 /// Supplement scope only, never an Agent installation/connection version gate.
-/// Source: https://github.com/github/copilot-cli/releases/tag/v1.0.89 and the
-/// same-version published package.json/npm-loader.js; login is documented at
+/// Releases 1.0.89 and 1.0.112 use matching published package.json/npm-loader.js.
+/// The 1.0.112 macOS ARM64 ACP handshake advertises the same native login invocation.
+/// Login is documented at
 /// https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli
 pub(crate) struct PackageLoginDeclaration {
     pub registry_id: &'static str,
-    pub version: &'static str,
+    pub versions: &'static [&'static str],
     pub package: &'static str,
     pub platform_package: &'static str,
     pub loader: &'static str,
@@ -35,7 +36,11 @@ pub(crate) struct PackageLoginDeclaration {
 
 pub(crate) const COPILOT_LOGIN: PackageLoginDeclaration = PackageLoginDeclaration {
     registry_id: "registry:github-copilot-cli",
-    version: "1.0.89",
+    versions: &[
+        "1.0.89",
+        #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+        "1.0.112",
+    ],
     package: "@github/copilot",
     platform_package: if cfg!(windows) {
         if cfg!(target_arch = "aarch64") {

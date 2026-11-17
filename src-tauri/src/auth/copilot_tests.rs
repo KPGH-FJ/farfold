@@ -25,9 +25,9 @@ fn executable(path: &Path, body: &str) {
 
 impl Fixture {
     fn new() -> Self {
-        Self::with_layout(cfg!(windows))
+        Self::with_layout(cfg!(windows), "1.0.89")
     }
-    fn with_layout(encoded: bool) -> Self {
+    fn with_layout(encoded: bool, version: &str) -> Self {
         let temp = tempfile::tempdir().unwrap();
         let data = temp.path().canonicalize().unwrap().join("data");
         let root = data.join(if encoded || cfg!(windows) {
@@ -67,8 +67,22 @@ for line in sys.stdin:
  print(json.dumps({'jsonrpc':'2.0','id':m['id'],'result':result}),flush=True)
 "#.replace("FIXTURE_PLATFORM_PACKAGE", DECLARATION.platform_package.strip_prefix("@github/").unwrap()).replace("FIXTURE_PLATFORM_ENTRY", DECLARATION.platform_entry).as_str(),
         );
-        std::fs::write(loader.with_file_name("package.json"), json!({"name":DECLARATION.package,"version":DECLARATION.version,"bin":{"copilot":DECLARATION.loader},"optionalDependencies":{(DECLARATION.platform_package):DECLARATION.version}}).to_string()).unwrap();
-        std::fs::write(target.with_file_name("package.json"), json!({"name":DECLARATION.platform_package,"version":DECLARATION.version,"os":[if cfg!(windows) {"win32"} else {"darwin"}],"cpu":[if cfg!(target_arch="aarch64") {"arm64"} else {"x64"}],"exports":{".":format!("./{}", DECLARATION.platform_entry)}}).to_string()).unwrap();
+        std::fs::write(
+            loader.with_file_name("package.json"),
+            json!({"name":DECLARATION.package,"version":version,"bin":{"copilot":DECLARATION.loader},
+                "optionalDependencies":{(DECLARATION.platform_package):version}})
+            .to_string(),
+        )
+        .unwrap();
+        std::fs::write(
+            target.with_file_name("package.json"),
+            json!({"name":DECLARATION.platform_package,"version":version,
+                "os":[if cfg!(windows) {"win32"} else {"darwin"}],
+                "cpu":[if cfg!(target_arch="aarch64") {"arm64"} else {"x64"}],
+                "exports":{".":format!("./{}", DECLARATION.platform_entry)}})
+            .to_string(),
+        )
+        .unwrap();
         let row = AgentRow {
             id: "registry:github-copilot-cli".into(),
             name: "Fixture".into(),
@@ -76,7 +90,7 @@ for line in sys.stdin:
             command: node.display().to_string(),
             args: vec![loader.display().to_string(), "--acp".into()],
             env: vec![],
-            version: Some("1.0.89".into()),
+            version: Some(version.into()),
             handshake: Some(
                 json!({"authMethods":[{"id":"copilot-login","name":"Login","_meta":{"terminal-auth":{"command":target,"args":["login"]}}}]}),
             ),
@@ -531,7 +545,7 @@ async fn copilot_actual_sdk_target_and_owned_pty_dispatch_share_the_current_proo
 
 #[test]
 fn copilot_encoded_root_keeps_the_same_exact_loader_proof() {
-    let f = Fixture::with_layout(true);
+    let f = Fixture::with_layout(true, "1.0.89");
     let info = f.info(&f.row);
     assert!(info.methods[0].unavailable_reason.is_none());
     assert_eq!(
@@ -543,5 +557,27 @@ fn copilot_encoded_root_keeps_the_same_exact_loader_proof() {
         ])
     );
     f.receipts(|items| items[0]["programOnly"] = json!(true));
+    f.denied();
+}
+
+#[test]
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn copilot_updated_macos_package_offers_login_only_for_the_matching_native_version() {
+    let f = Fixture::with_layout(true, "1.0.112");
+    let info = f.info(&f.row);
+    assert!(info.methods[0].unavailable_reason.is_none());
+    assert_eq!(
+        info.methods[0].terminal_command,
+        Some(vec![
+            f.row.command.clone(),
+            f.loader.display().to_string(),
+            "login".into()
+        ])
+    );
+
+    let path = f.target.with_file_name("package.json");
+    let mut native: Value = serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+    native["version"] = json!("1.0.89");
+    std::fs::write(path, native.to_string()).unwrap();
     f.denied();
 }

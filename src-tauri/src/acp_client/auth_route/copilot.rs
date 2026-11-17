@@ -7,19 +7,29 @@ use std::io::Read as _;
 const MAX_MANIFEST_BYTES: u64 = 64 * 1024;
 
 pub(super) struct Target {
+    version: &'static str,
     node: String,
     loader: String,
     platform: PathBuf,
 }
 
-fn row_scope(row: &AgentRow) -> bool {
-    row.id == DECLARATION.registry_id
-        && row.source == "registry"
-        && row.version.as_deref() == Some(DECLARATION.version)
-        && Path::new(&row.command).is_absolute()
-        && crate::process_platform::program_name(Path::new(&row.command)).as_deref() == Some("node")
-        && row.args.len() == 2
-        && row.args[1] == "--acp"
+fn scoped_version(row: &AgentRow) -> Option<&'static str> {
+    let command = Path::new(&row.command);
+    if row.id != DECLARATION.registry_id
+        || row.source != "registry"
+        || !command.is_absolute()
+        || crate::process_platform::program_name(command).as_deref() != Some("node")
+        || row.args.len() != 2
+        || row.args[1] != "--acp"
+    {
+        return None;
+    }
+    let version = row.version.as_deref()?;
+    DECLARATION
+        .versions
+        .iter()
+        .copied()
+        .find(|allowed| *allowed == version)
 }
 
 /// Flat layout only: no intermediate package/root aliases can change Node's
@@ -49,9 +59,7 @@ fn absent(path: &Path) -> bool {
 }
 
 pub(super) fn verify(row: &AgentRow, store: &MetaStore, data: &Path) -> Option<Target> {
-    if !row_scope(row) {
-        return None;
-    }
+    let version = scoped_version(row)?;
     executable(Path::new(&row.command))?;
     let items: Vec<Installation> =
         serde_json::from_value(store.get_setting("installations.v1").ok()??).ok()?;
@@ -106,15 +114,15 @@ pub(super) fn verify(row: &AgentRow, store: &MetaStore, data: &Path) -> Option<T
     let main = manifest(&package.join("package.json"))?;
     let native = manifest(&platform.join("package.json"))?;
     if main.get("name")?.as_str()? != DECLARATION.package
-        || main.get("version")?.as_str()? != DECLARATION.version
+        || main.get("version")?.as_str()? != version
         || main.pointer("/bin/copilot")?.as_str()? != DECLARATION.loader
         || main
             .get("optionalDependencies")?
             .get(DECLARATION.platform_package)?
             .as_str()?
-            != DECLARATION.version
+            != version
         || native.get("name")?.as_str()? != DECLARATION.platform_package
-        || native.get("version")?.as_str()? != DECLARATION.version
+        || native.get("version")?.as_str()? != version
         || native.get("os")? != &serde_json::json!([if cfg!(windows) { "win32" } else { "darwin" }])
         || native.get("cpu")?
             != &serde_json::json!([if cfg!(target_arch = "aarch64") {
@@ -130,6 +138,7 @@ pub(super) fn verify(row: &AgentRow, store: &MetaStore, data: &Path) -> Option<T
     exact_file(&target)?;
     let target = executable(&target)?;
     Some(Target {
+        version,
         node: row.command.clone(),
         loader: row.args[0].clone(),
         platform: target,
@@ -148,7 +157,7 @@ impl Target {
         command: &str,
         args: &[String],
     ) -> Option<Vec<String>> {
-        if !row_scope(row)
+        if scoped_version(row)? != self.version
             || row.command != self.node
             || row.args[0] != self.loader
             || method.get("id")?.as_str()? != DECLARATION.method
