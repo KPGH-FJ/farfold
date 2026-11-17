@@ -679,6 +679,7 @@ export function ApprovalCard({
   kind,
   locations,
   rawInput,
+  reportedToolInput,
   terminalCommand,
   options,
   onPick,
@@ -690,6 +691,7 @@ export function ApprovalCard({
   kind: string;
   locations: { path: string }[];
   rawInput?: unknown;
+  reportedToolInput?: unknown;
   terminalCommand?: TerminalCommandPermission | null;
   options: PermissionOption[];
   onPick: (option: PermissionOption) => void;
@@ -720,7 +722,12 @@ export function ApprovalCard({
       ) : (
         <>
           <div className="ap-sub">{permissionSubtitle(kind, locations)}</div>
-          <ToolInput input={rawInput} showMissing />
+          {rawInput == null && reportedToolInput != null && (
+            <div className="ap-sub">
+              {STRINGS.thread.permissionInputFromTool}
+            </div>
+          )}
+          <ToolInput input={rawInput ?? reportedToolInput} showMissing />
         </>
       )}
       {options.some(

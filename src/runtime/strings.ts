@@ -552,6 +552,7 @@ export const STRINGS = {
     inputCommand: "命令",
     inputCwd: "执行目录",
     fullInput: "完整输入",
+    permissionInputFromTool: "该步骤报告的输入",
     permissionInputMissing: "Agent 未提供本次操作的输入详情",
     permissionEdit: "写入文件",
     permissionOther: "操作请求",

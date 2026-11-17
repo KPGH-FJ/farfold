@@ -755,12 +755,26 @@ function applyUpdateContent(
     case "tool_call_update": {
       const tool = u!;
       if (
-        kind === "tool_call" ||
-        (tool.status != null && tool.status !== "pending") ||
-        tool.rawInput != null ||
-        tool.rawOutput != null ||
-        (tool.content != null &&
-          (!Array.isArray(tool.content) || tool.content.length > 0))
+        s.pendingPermissions.length > 0 &&
+        (kind === "tool_call" ||
+          Object.entries(tool).some(([key, value]) => {
+            switch (key) {
+              case "sessionUpdate":
+              case "toolCallId":
+                return false;
+              case "title":
+              case "name":
+              case "kind":
+              case "status":
+              case "rawInput":
+              case "rawOutput":
+              case "locations":
+              case "content":
+                return value != null;
+              default:
+                return true;
+            }
+          }))
       ) {
         // A later change cannot describe the previous approval. Keep the
         // exact request untouched and withdraw the earlier step's detail.

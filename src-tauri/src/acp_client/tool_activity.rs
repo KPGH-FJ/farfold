@@ -176,7 +176,10 @@ mod tests {
         let life = ConnectionLife::new();
         life.ready().unwrap();
         let mut tools = ToolActivity::new(life);
-        let tool = |id| json!({"update":{"sessionUpdate":"tool_call","toolCallId":id,"rawInput":"fixture"}});
+        let tool = |id| {
+            json!({"update":{"sessionUpdate":"tool_call","toolCallId":id,
+            "status":"in_progress","rawInput":"fixture"}})
+        };
         let decision = |tools: &mut ToolActivity, session, id| {
             tools.permission_event(
                 "permission".into(),

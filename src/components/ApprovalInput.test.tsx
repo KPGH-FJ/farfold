@@ -159,6 +159,7 @@ it("does not borrow an earlier request's input when a new approval for the same 
   });
   const html = render(s);
   expect(approval(html)).toContain("Agent 未提供本次操作的输入详情");
+  expect(approval(html)).not.toContain("该步骤报告的输入");
   expect(approval(html)).not.toContain("echo old approval");
   expect(s.pendingPermissions).toHaveLength(1);
   expect(s.pendingPermissions[0].options).toEqual(options);
@@ -167,6 +168,8 @@ it("does not borrow an earlier request's input when a new approval for the same 
 it.each([
   ["input", { rawInput: { command: "later unconfirmed change" } }],
   ["output", { rawOutput: "later unconfirmed change" }],
+  ["title", { title: "later unconfirmed change" }],
+  ["status", { status: "completed" }],
   [
     "content",
     {
@@ -200,6 +203,7 @@ it.each([
     });
     expect(approval(render(s))).toContain("linked fixture");
     expect(approval(render(s))).toContain("/tmp/owned workspace");
+    expect(approval(render(s))).toContain("该步骤报告的输入");
     expect(s.pendingPermissions[0].requestSnapshot).toEqual(request);
     expect(s.pendingPermissions[0].toolCallSnapshot).toEqual(toolCall);
 
@@ -208,6 +212,14 @@ it.each([
         sessionUpdate: "tool_call_update",
         toolCallId: "different",
         rawInput: { command: "unrelated" },
+      },
+    });
+    expect(approval(render(s))).toContain("linked fixture");
+    channel.applyChannelEvent(s.key, {
+      update: {
+        sessionUpdate: "tool_call_update",
+        toolCallId: "running",
+        rawInput: null,
       },
     });
     expect(approval(render(s))).toContain("linked fixture");
@@ -221,6 +233,7 @@ it.each([
     });
     const card = approval(render(s));
     expect(card).toContain("Agent 未提供本次操作的输入详情");
+    expect(card).not.toContain("该步骤报告的输入");
     expect(card).not.toMatch(/linked fixture|later unconfirmed change/);
     expect(h.invoke).not.toHaveBeenCalled();
   },

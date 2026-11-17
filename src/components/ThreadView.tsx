@@ -1116,10 +1116,8 @@ export function ThreadView({
                       title={permission.title}
                       kind={permission.kind}
                       locations={permission.locations}
-                      rawInput={
-                        permission.toolCallSnapshot?.rawInput ??
-                        permission.reportedToolInput
-                      }
+                      rawInput={permission.toolCallSnapshot?.rawInput}
+                      reportedToolInput={permission.reportedToolInput}
                       terminalCommand={permission.terminalCommand}
                       options={
                         permission.status === "pending"
