@@ -3,24 +3,24 @@
   "agentCount": 21,
   "cellCount": 168,
   "explicitStatuses": {
-    "准备未齐": 16,
+    "准备未齐": 14,
     "入口有证": 20,
-    "受阻": 6,
-    "分项通过": 9,
+    "受阻": 5,
+    "分项通过": 11,
     "未测": 8,
     "原账号实答": 6,
     "查找冷开续答通过": 8,
-    "已选模型有实答": 12,
+    "已选模型有实答": 14,
     "可建对话": 1,
-    "实测分项通过": 16,
+    "实测分项通过": 17,
     "前台停止分项通过": 3,
-    "已有设置实答": 3,
-    "双前台分项通过": 6,
-    "停止及冷续答通过": 4,
-    "原正文已读": 2,
+    "已有设置实答": 5,
+    "双前台分项通过": 7,
+    "停止及冷续答通过": 5,
+    "原正文已读": 1,
     "实测失败": 4,
     "已选服务有实答": 2,
-    "冷开续答分项通过": 4,
+    "冷开续答分项通过": 6,
     "跨家分项通过": 2
   },
   "rows": [
@@ -291,8 +291,8 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "未确认可用原账号或所选模型；旧正式设置声明可读但保存选择未确认。\n最新复验：新保存的小米 Messages 设置独立 API 实答；普通对话见相应真实复验及官方适配程序认证头对照。\n2026-11-16 已暂停会将认证头交给进程参数的官方托管路径。正式设置保留原 Messages 服务，Claude 已退出其适用列表。",
-          "remaining": "用户完成选定的官方订阅或 Console 登录后验身份和实际服务；托管 Messages 另等官方私密交付且核实际路由。",
+          "observed": "未确认可用原账号或所选模型；旧正式设置声明可读但保存选择未确认。\n最新复验：新保存的小米 Messages 设置独立 API 实答；普通对话见相应真实复验及官方适配程序认证头对照。\n2026-11-16 已暂停会将认证头交给进程参数的官方托管路径。正式设置保留原 Messages 服务，Claude 已退出其适用列表。\n2026-11-17 公开源码验证 0.107.3 与既测 0.107.0 的流式 Messages 认证配置相同。小米独立 Messages 实答和普通对话 auth_required 的分层证据保持。",
+          "remaining": "等待适配器支持官方私密交付，或由用户从官方账号入口单独选可用来源。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
@@ -300,7 +300,8 @@
             "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
             "docs/evidence/2026-11-16-cycle12-original-config/results.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
           "status": "受阻"
         },
@@ -316,7 +317,7 @@
           "status": null
         },
         "S4": {
-          "observed": "旧官方模型声明能显示，保存基线不一致。\n最新复验：用户保存 mimo-v2.6-flash，正式 0.81.2 确认该服务和模型并出站，等待后停止，未观察到助手正文。 官方更新至 0.107.0，正向准备和真实出站成功，182.1 秒后收到该请求的 auth_required。\n2026-11-16 托管路径因已核的认证交付限制暂停，已保存的服务仍存在。",
+          "observed": "旧官方模型声明能显示，保存基线不一致。\n最新复验：用户保存 mimo-v2.6-flash，正式 0.81.2 确认该服务和模型并出站，等待后停止，未观察到助手正文。 官方更新至 0.107.0，正向准备和真实出站成功，182.1 秒后收到该请求的 auth_required。\n2026-11-16 托管路径因已核的认证交付限制暂停，已保存的服务仍存在。\n2026-11-17 小米官方有原生 Claude Code 接法。现有适配器负结果只支持继续调查认证交接，真实服务 HTTP 状态未知。",
           "remaining": "补安全的官方接法，再验模型实答和冷恢复。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
@@ -324,7 +325,8 @@
             "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
             "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
-            "docs/evidence/2026-11-16-cycle12-original-config/results.json"
+            "docs/evidence/2026-11-16-cycle12-original-config/results.json",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
           "status": "受阻"
         },
@@ -482,29 +484,31 @@
     {
       "agentId": "codebuddy-code",
       "runtime": "登记版本 2.184.0（旧 2.160.0 安装保留）",
-      "liveAction": "新版本准备能读到当前模型。原保存选项不可用，退出保留原设置，等明确选择后单独实测。旧会话无正文回包保留。",
+      "liveAction": "按用户授权从正常入口确认本次草稿的 Hy4 / On，沿已有服务单次短问实答。原旧会话的正文缺失保留。",
       "standards": {
         "S1": {
-          "observed": "历史正式启动与设置有观察，当前登记可执行。\n2026-11-15 盘点：程序可执行，登记版本 2.160.0。登记所存握手版本 未报告。\n2026-11-16 复验：从正式版更新及选用 2.184.0，程序检查通过。\n2026-11-17 2.184.0 从正常新建进入检查模型设置并读到当前选项。退出保留原目录和原选择，无真实请求。",
-          "remaining": "接受新选项或原模型重新可用后再核正常首发。",
+          "observed": "历史正式启动与设置有观察，当前登记可执行。\n2026-11-15 盘点：程序可执行，登记版本 2.160.0。登记所存握手版本 未报告。\n2026-11-16 复验：从正式版更新及选用 2.184.0，程序检查通过。\n2026-11-17 2.184.0 从正常新建进入检查模型设置并读到当前选项。退出保留原目录和原选择，无真实请求。\n2026-11-17 原保存选择不可用。按用户授权确认本次草稿新选择，用原入口继续并实答。",
+          "remaining": "退出、取消及其他准备路径待验。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
-            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
-          "status": "准备未齐"
+          "status": "分项通过"
         },
         "S2": {
-          "observed": "旧样本沿原已有设置实答。",
-          "remaining": "实际身份、服务费用归属及换号隔离待证。",
+          "observed": "旧样本沿原已有设置实答。\n2026-11-17 沿用已有设置实际完成一条新对话短问。",
+          "remaining": "账号实际身份、服务费率与切换待验。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json"
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
-          "status": null
+          "status": "已有设置实答"
         },
         "S3": {
           "observed": "旧成功正文样本的原临时目录缺失。10/06 A 自有目录与原 ID 可确认，11/13 同对象正式读取约120秒失败。\n2026-11-16 复验：2.184.0 同目标 session/load 于 78.743 秒回包，未返回可展示正文，零加入、零模型请求。",
@@ -518,25 +522,27 @@
           "status": "实测失败"
         },
         "S4": {
-          "observed": "旧 Hy4/High 和冷回读未知设置保护有观察，非当前实际后端证明。\n2026-11-17 原 hy4-preview-f / High 与当前报告的 Hy4 / On (default) 不一致。保持旧设置，零发送。",
-          "remaining": "等原模型恢复，或用户明确允许用现有选项验一条独立新对话。",
+          "observed": "旧 Hy4/High 和冷回读未知设置保护有观察，非当前实际后端证明。\n2026-11-17 原 hy4-preview-f / High 与当前报告的 Hy4 / On (default) 不一致。保持旧设置，零发送。\n2026-11-17 本次独立草稿确认 Hy4 / On (default)，持久化模型为 hy4std，单次短问精确响应。",
+          "remaining": "冷开、切换及原 hy4-preview-f / High 仍待。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
-            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
-          "status": "受阻"
+          "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧真答、文件复制/返工和单次审批有有限正例。",
-          "remaining": "当前实际交付、已有技能和其他适用工具路径。",
+          "observed": "旧真答、文件复制/返工和单次审批有有限正例。\n2026-11-17 本次文本短问精确返回验收标记，显示已完成。",
+          "remaining": "实际工具、权限及成果交付待验。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
-            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json"
+            "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
-          "status": null
+          "status": "实测分项通过"
         },
         "S6": {
           "observed": "未找到当前版跨任务实证。",
@@ -1444,7 +1450,7 @@
     {
       "agentId": "minimax-code",
       "runtime": "登记版本 0.2.7",
-      "liveAction": "MiMo 普通新建首发和文件交付已证。双任务可独立运行，停止原回复无法结束已移交后台的命令，待官方按任务入口。",
+      "liveAction": "MiMo 独立新建实答及同一原 ID 按配置冷续答通过。其余历史和旧 M2.7 原额度单列。停止不结束已移交后台的命令，待官方按任务入口。",
       "standards": {
         "S1": {
           "observed": "已安装，沿已有设置到模型页，界面保留原选项且禁用不一致的保存\n2026-11-15 盘点：程序可执行，登记版本 0.2.7。登记所存握手版本 0.2.7。\n2026-11-16 续查：已用登记内同一 Node 与官方 cli.js 核普通 mcode 命令，可用绝对路径自带官方终端入口；用户小米实际配置仍待。\n2026-11-16 复验：官方选择小米后，普通新对话手动选择同模型，读回并实际回复。",
@@ -1471,25 +1477,27 @@
           "status": "已选服务有实答"
         },
         "S3": {
-          "observed": "默认列表及正式版复查命中可识别的旧测试标题\n本轮实测：用户开放全部原历史后，默认官方列表找到现存原目录的一条原对话并读回正文。旧配置未核，因此只读。\n2026-11-16 原目录与用户消息均存在的唯一官方记录使用 MiniMax-M2.7。当前默认是 MiniMax-M3。前序脱敏预览缺原标识，匹配依据为原目录和非空记录的唯一性。\n2026-11-16 同版官方目录列出原 MiniMax-M2.7，无另选推理档；当前中国区账号已验证，旧对话无原账号记录。\n2026-11-16 用户确认同一中国区账号；正式版按原目录和标识带入、重开，原正文及 MiniMax-M2.7 已读，零发送。\n2026-11-16 新版正常冷开已带入原对话，恢复预览显示 M2.7 来自 Agent 当前报告。用户不确定当时是否登录，未确认、未保存，零发送。",
-          "remaining": "确认原账号与服务后，再验同一对话实际续答。",
+          "observed": "默认列表及正式版复查命中可识别的旧测试标题\n本轮实测：用户开放全部原历史后，默认官方列表找到现存原目录的一条原对话并读回正文。旧配置未核，因此只读。\n2026-11-16 原目录与用户消息均存在的唯一官方记录使用 MiniMax-M2.7。当前默认是 MiniMax-M3。前序脱敏预览缺原标识，匹配依据为原目录和非空记录的唯一性。\n2026-11-16 同版官方目录列出原 MiniMax-M2.7，无另选推理档；当前中国区账号已验证，旧对话无原账号记录。\n2026-11-16 用户确认同一中国区账号；正式版按原目录和标识带入、重开，原正文及 MiniMax-M2.7 已读，零发送。\n2026-11-16 新版正常冷开已带入原对话，恢复预览显示 M2.7 来自 Agent 当前报告。用户不确定当时是否登录，未确认、未保存，零发送。\n2026-11-17 新建 MiMo 对话首答后重启，从侧栏恢复同一原标识、正文、目录和模型。单次原上下文追问精确回答，零新建。",
+          "remaining": "其他历史继续按原服务和原目录复验。旧 M2.7 无额度。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-followup/accounts-and-api.md",
             "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json",
             "docs/evidence/2026-11-16-cycle12-cline-auth/results.json",
-            "docs/evidence/2026-11-16-cycle12-original-config/results.json"
+            "docs/evidence/2026-11-16-cycle12-original-config/results.json",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
-          "status": "原正文已读"
+          "status": "冷开续答分项通过"
         },
         "S4": {
-          "observed": "当前显示 MiniMax-M3 thinking，保存的模型与该选项不一致，已留原选择\n2026-11-16 续查：当前默认 M3 已与原冷开读出的 M2.7 分开核对；用户未确认原账号，M2.7 未确认、未保存、未发送。独立 M2.7 原服务已报 50110。\n2026-11-16 复验：独立新对话从已保存 M2.7 切到官方小米的 MiMo，模型在同一索引中持久化，实际精确回复。\n2026-11-16 冷开新版同一小米测试对话，原回复、模型和已有设置可见，零新建、零重发。\n2026-11-17 正式版在同一恢复的未发草稿临时回到原模型，再切回 MiMo，原输入保持。唯一实答和保存选项均为小米自定义 MiMo。",
+          "observed": "当前显示 MiniMax-M3 thinking，保存的模型与该选项不一致，已留原选择\n2026-11-16 续查：当前默认 M3 已与原冷开读出的 M2.7 分开核对；用户未确认原账号，M2.7 未确认、未保存、未发送。独立 M2.7 原服务已报 50110。\n2026-11-16 复验：独立新对话从已保存 M2.7 切到官方小米的 MiMo，模型在同一索引中持久化，实际精确回复。\n2026-11-16 冷开新版同一小米测试对话，原回复、模型和已有设置可见，零新建、零重发。\n2026-11-17 正式版在同一恢复的未发草稿临时回到原模型，再切回 MiMo，原输入保持。唯一实答和保存选项均为小米自定义 MiMo。\n2026-11-17 既有小米配置从新对话首答到原对话冷开续答均采用同一报告模型，持久化配置保持。",
           "remaining": "其他模型及换源受影响场景按原条件验证；旧 M2.7 在核对原配置及有额度的原服务后另验证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
             "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
-            "docs/evidence/2026-11-17-cycle12-file-validation/README.md"
+            "docs/evidence/2026-11-17-cycle12-file-validation/README.md",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
           "status": "已选模型有实答"
         },
@@ -1537,82 +1545,90 @@
     {
       "agentId": "mistral-vibe",
       "runtime": "当前登记、保存握手 2.25.8；两条自有原会话目录均在，保存 Mistral Medium 3.5 / High。",
-      "liveAction": "现只用 FF_MISTRAL_WEB… 既有原对话冷开读同调用截图或查看既有合成文件结果。具体原单次及追加单次授权已用，零新增模型；旧初始化超时输入未变时不重复。",
+      "liveAction": "用户已授权继续真实验收，沿用已有 Medium 3.5 / High。新验双前台命令、单条实际停止、另一条完成及原对话冷续答。其余按八项逐项继续。",
       "standards": {
         "S1": {
-          "observed": "旧已有设置加载并得到所选模型、原目录冷看也有正例。\n2026-11-15 盘点：程序可执行，登记版本 2.25.8。登记所存握手版本 2.25.8。",
-          "remaining": "当前实际认证与准备取消全链未齐，曾有原目录初始化超时。",
+          "observed": "旧已有设置加载并得到所选模型、原目录冷看也有正例。\n2026-11-15 盘点：程序可执行，登记版本 2.25.8。登记所存握手版本 2.25.8。\n2026-11-17 两个新测试目录都能采用已有设置、模型和思考并开始首条任务。",
+          "remaining": "原初始化超时、完整准备及取消另验。",
           "sources": [
             "docs/evidence/2026-10-24-agent-acceptance/mistral-formal-cb43-history-discovery-summary.json",
             "docs/status.md",
-            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md"
+            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
-          "status": "准备未齐"
+          "status": "分项通过"
         },
         "S2": {
-          "observed": "旧正式选定 Medium 3.5/High 有实际回复；当前沿原服务保存，没有新核实的账号和额度。",
-          "remaining": "原额度及真实身份/计费来源待确认，现许可不覆盖新请求。",
+          "observed": "旧正式选定 Medium 3.5/High 有实际回复；当前沿原服务保存，没有新核实的账号和额度。\n2026-11-17 已有设置两条工作实测，停后一条同配置实际续答。",
+          "remaining": "账号与实际计费身份仍待。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
-            "docs/status.md"
+            "docs/status.md",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
-          "status": null
+          "status": "已有设置实答"
         },
         "S3": {
-          "observed": "旧原对象发现和依赖前文续答各有证据；16ee 真实冷开重新展开原工具图片。",
-          "remaining": "旧连接检查超时对象原因未定；当前截图恢复与原 ID 续答范围不互相替代。",
+          "observed": "旧原对象发现和依赖前文续答各有证据；16ee 真实冷开重新展开原工具图片。\n2026-11-17 从侧栏冷开已停止的自有任务，原正文及工具回放读回，在同一原标识准确续答。",
+          "remaining": "其它历史查找、带入及错误恢复按原项核。",
           "sources": [
             "docs/evidence/2026-10-24-agent-acceptance/mistral-formal-c876-context-continuation-summary.json",
-            "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json"
+            "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
-          "status": null
+          "status": "冷开续答分项通过"
         },
         "S4": {
-          "observed": "所选 Medium 3.5/High 实际回复和正式只读显示有证。",
-          "remaining": "实际同会话切换成功及冷开采用未全验，不能越过原选择保护。",
+          "observed": "所选 Medium 3.5/High 实际回复和正式只读显示有证。\n2026-11-17 两条任务及冷续答采用原服务与 Medium 3.5 / High，持久化模型和思考读回。",
+          "remaining": "其它模型切换及配置失败按原条件验。",
           "sources": [
             "docs/evidence/2026-11-10-stage2-live-mistral/summary.json",
             "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
-            "docs/status.md"
+            "docs/status.md",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
-          "status": null
+          "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "正式两片段真实编辑、43 字节返工另存、公开页 PNG 同次返回并 ZIP 核对。\n2026-11-16 续查：原选定版本两处文件编辑及保留内容有分项证据。",
-          "remaining": "本轮既有两次模型测试额度用完，现只复用原记录和零发送路径。",
+          "observed": "正式两片段真实编辑、43 字节返工另存、公开页 PNG 同次返回并 ZIP 核对。\n2026-11-16 续查：原选定版本两处文件编辑及保留内容有分项证据。\n2026-11-17 B 单次审批后原前台脚本准确写出本机结果并在对话返回标记。",
+          "remaining": "审批卡的缺少输入详情、更多文件交付及权限路径仍待。",
           "sources": [
             "docs/evidence/2026-11-10-stage2-live-mistral/summary.json",
             "docs/evidence/2026-10-24-agent-acceptance/p22-formal-c876-versioned-rework-summary.json",
             "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
-            "docs/evidence/2026-11-11-mcp-lifecycle/README.md"
+            "docs/evidence/2026-11-11-mcp-lifecycle/README.md",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
           "status": "实测分项通过"
         },
         "S6": {
-          "observed": "未找到当前正式同 Agent 双任务实际归属隔离的完整证据。",
-          "remaining": "需要原服务可测及受控独立目录，再验实际审批/停止的并行后果。",
+          "observed": "未找到当前正式同 Agent 双任务实际归属隔离的完整证据。\n2026-11-17 同一 Agent 的两条原 Shell 与子进程独立运行，只停 A 后 B 的原进程保持并自然完成。",
+          "remaining": "另核更多工具、多来源与并发条件。",
           "sources": [
             "docs/status.md",
-            "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json"
+            "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
-          "status": null
+          "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "旧 cb43 精确自有命令在自然截止前实际消失。",
-          "remaining": "当前停止、旧止后恢复和未知结果所需终态未全验。",
+          "observed": "旧 cb43 精确自有命令在自然截止前实际消失。\n2026-11-17 从 Farfold 只停 A，Shell 和子进程实际退出且未写完成标记。原 A 冷开保留模型并实际续答。",
+          "remaining": "后台任务、断线与未知结果继续按原条件核。",
           "sources": [
             "docs/evidence/2026-10-24-agent-acceptance/mistral-formal-cb43-owned-stop-summary.json",
-            "docs/status.md"
+            "docs/status.md",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
-          "status": null
+          "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "正式冷开图片可显示并逐字节导出；来源未确认的旧对象仍保护发送。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
-          "remaining": "当前完整设置、通知、错误与恢复体验仍按路径补验。",
+          "observed": "正式冷开图片可显示并逐字节导出；来源未确认的旧对象仍保护发送。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 审批卡显示缺输入详情，可在同一对话处理过程找到准确 Bash 命令。",
+          "remaining": "审批卡完整输入，以及当前通知、错误与恢复路径仍待。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
             "docs/status.md",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
           ],
           "status": "入口有证"
         }
