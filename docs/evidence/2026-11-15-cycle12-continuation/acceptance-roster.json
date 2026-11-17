@@ -4,18 +4,18 @@
   "cellCount": 168,
   "explicitStatuses": {
     "准备未齐": 11,
-    "入口有证": 17,
+    "入口有证": 16,
     "受阻": 5,
-    "分项通过": 18,
+    "分项通过": 19,
     "未测": 8,
     "原账号实答": 6,
     "查找冷开续答通过": 7,
     "已选模型有实答": 13,
     "可建对话": 1,
     "实测分项通过": 19,
-    "前台停止分项通过": 2,
+    "前台停止分项通过": 3,
     "已有设置实答": 5,
-    "双前台分项通过": 14,
+    "双前台分项通过": 15,
     "停止及冷续答通过": 11,
     "实测失败": 5,
     "已选服务有实答": 2,
@@ -25,7 +25,7 @@
     {
       "agentId": "amp-acp",
       "runtime": "登记组件 0.13.0 / 官方 Amp CLI 0.0.1794816357-gc47859",
-      "liveAction": "用已登录官方账号，从小米 MiMo 新对话实答并核同线程真实路由。原测试对话冷开及正文读回，临时沿用原线程模型后收到同一T-ID的小米续答，随后恢复显式MiMo。显式参数被拒的缺口保留。",
+      "liveAction": "用已登录官方账号，从小米 MiMo 新对话实答并核同线程真实路由。原测试对话冷开及正文读回，临时沿用原线程模型后收到同一T-ID的小米续答，随后恢复显式MiMo。显式参数被拒的缺口保留。 正式双前台任务只点 A 停止，原 Shell 和 sleep 退出，B 独立交付；A 冷开保留原显式 MiMo、草稿与未知结果。",
       "standards": {
         "S1": {
           "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n2026-11-15 盘点：程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。\n2026-11-16 续查：新版正式 Amp 账号页显示独立厂商账户登录。查看详情核原已装厂商程序和固定 login，仍需手动启动。\n2026-11-16 续查：修复前次误拦截并安装；从原入口确实启动官方 CLI 登录终端，原适配器密钥文件保留。\n2026-11-16 复验：用户完成官方 CLI 登录，厂商程序能列出保存的账号。\n2026-11-16 复验：正式版选中官方 0.13.0 组件及新版官方 CLI，备份旧独立密钥后正常入口读出并选中 MiMo。",
@@ -43,7 +43,7 @@
           "status": "分项通过"
         },
         "S2": {
-          "observed": "旧真实样本认证要求和结果未知。\n2026-11-16 续查：原厂商程序 account list 无保存账号，一次只读线程查询需要认证。目录适配器的认证来源另核。\n2026-11-16 续查：用户反馈 Farfold 的 Amp API Key Setup 登录失败；该项为适配器独立密钥配置，已告知本机原厂商 CLI 的官方 login 路径。\n2026-11-16 续查：已有独立厂商账号入口，用户尚未回报新入口真实结果。原适配器密钥配置保留。\n2026-11-16 复验：厂商 CLI 登录确认，普通 Farfold 既有请求的实际回执为 auth_required。\n2026-11-16 复验：已登录账号从正式 Farfold 发出首条并收到实答。同线程官方用量确认选用用户配置的小米连接。",
+          "observed": "旧真实样本认证要求和结果未知。\n2026-11-16 续查：原厂商程序 account list 无保存账号，一次只读线程查询需要认证。目录适配器的认证来源另核。\n2026-11-16 续查：用户反馈 Farfold 的 Amp API Key Setup 登录失败；该项为适配器独立密钥配置，已告知本机原厂商 CLI 的官方 login 路径。\n2026-11-16 续查：已有独立厂商账号入口，用户尚未回报新入口真实结果。原适配器密钥配置保留。\n2026-11-16 复验：厂商 CLI 登录确认，普通 Farfold 既有请求的实际回执为 auth_required。\n2026-11-16 复验：已登录账号从正式 Farfold 发出首条并收到实答。同线程官方用量确认选用用户配置的小米连接。\n2026-11-17 续验：两条新自有任务的厂商独立用量均确认小米的同一既有 Custom URL 和 MiMo，未变更原账号。",
           "remaining": "账号变化、服务失效时的恢复仍待。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
@@ -52,19 +52,21 @@
             "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
             "docs/evidence/2026-11-16-cycle12-amp-native/README.md",
-            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
           "status": "原账号实答"
         },
         "S3": {
-          "observed": "当前所选登记无 list/load/resume。官方制造商 CLI/SDK 有原历史路径，但本机所核常见路径无该独立 CLI。\n2026-11-16 续查：找到并实测原厂商 CLI。目录 0.13.0 的适配器保存新 S-ID 映射，与已有厂商 T-ID 原历史区分。\n2026-11-16 复验：原账号对当前以及含归档的列表真实返回空数组。Farfold 有一条旧适配器本地索引，尚无可对应厂商 T-ID。\n2026-11-16 复验：从正式版搜索冷开同一原测试对话，原正文及 MiMo 恢复。原线程续答遇到官方 CLI 拒绝显式模型参数，用量与正文未新增。\n2026-11-16 复验：临时选 Default，依赖原上下文的一次续问准确完成，官方导出核同一原线程。\n2026-11-16 续验：同一原线程沿用已有 MiMo 的旧正例能追溯。另核官方已发布 SDK 和外部 API，仍未提供显式模型的旧线程续答路径。",
+          "observed": "当前所选登记无 list/load/resume。官方制造商 CLI/SDK 有原历史路径，但本机所核常见路径无该独立 CLI。\n2026-11-16 续查：找到并实测原厂商 CLI。目录 0.13.0 的适配器保存新 S-ID 映射，与已有厂商 T-ID 原历史区分。\n2026-11-16 复验：原账号对当前以及含归档的列表真实返回空数组。Farfold 有一条旧适配器本地索引，尚无可对应厂商 T-ID。\n2026-11-16 复验：从正式版搜索冷开同一原测试对话，原正文及 MiMo 恢复。原线程续答遇到官方 CLI 拒绝显式模型参数，用量与正文未新增。\n2026-11-16 复验：临时选 Default，依赖原上下文的一次续问准确完成，官方导出核同一原线程。\n2026-11-16 续验：同一原线程沿用已有 MiMo 的旧正例能追溯。另核官方已发布 SDK 和外部 API，仍未提供显式模型的旧线程续答路径。\n2026-11-17 续验：新已停 A 冷开同一映射原 ID 和正文、配置、草稿，零新建和零发送。",
           "remaining": "等待 Amp 官方可在原线程保持显式所选模型的续答接口。未建立映射的旧厂商线程带入仍待。",
           "sources": [
             "docs/evidence/2026-11-15-official-alternatives/amp.md",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
             "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#cline-和-amp-的官方备选入口",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
           "status": "冷开续答分项通过"
         },
@@ -79,40 +81,46 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧单次真实请求需要认证；公开替代事件目前未证明可回传结构化工具审批。\n2026-11-16 复验：正常新对话已收到单条合成实答。",
-          "remaining": "真实工具、审批和结果交付仍待。",
+          "observed": "旧单次真实请求需要认证；公开替代事件目前未证明可回传结构化工具审批。\n2026-11-16 复验：正常新对话已收到单条合成实答。\n2026-11-17 续验：B 的原本机工具产出正确文件，实际读取文件摘要及成品存在。两次均无 Farfold 审批。",
+          "remaining": "当前正式样本无逐次审批；更多文件、技能和工具权限仍待。",
           "sources": [
             "docs/evidence/2026-11-15-official-alternatives/amp.md",
-            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
           "status": "实测分项通过"
         },
         "S6": {
-          "observed": "缺当前双任务隔离证据。",
-          "remaining": "先确认两个自有任务的官方原身份和精准归属。",
-          "sources": ["docs/evidence/2026-11-15-official-alternatives/amp.md"],
-          "status": null
-        },
-        "S7": {
-          "observed": "旧结果未知，所核 SDK 只传本地取消，不能证明远端工具结束。\n2026-11-16 复验：在正式界面按范围关闭已出错的原测试连接，原正文重新打开，先前请求未自动重发。",
-          "remaining": "真实执行中的目标任务、子进程和工具步骤停止仍待。",
+          "observed": "缺当前双任务隔离证据。\n2026-11-17 续验：不同自有目录两个 Amp 任务真实并行。只点停 A，B 原 Shell 和 sleep 维持，随后完成。",
+          "remaining": "不同模型和账号、多种权限与共享文件条件按原要求。",
           "sources": [
             "docs/evidence/2026-11-15-official-alternatives/amp.md",
-            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
-          "status": null
+          "status": "双前台分项通过"
+        },
+        "S7": {
+          "observed": "旧结果未知，所核 SDK 只传本地取消，不能证明远端工具结束。\n2026-11-16 复验：在正式界面按范围关闭已出错的原测试连接，原正文重新打开，先前请求未自动重发。\n2026-11-17 续验：正式停 A 后原 Shell 和 sleep 退出，回合停止但工具终态仍未知；重启按原 ID 冷开恢复未发材料和设置。",
+          "remaining": "显式 MiMo 续答、后台与独立外部工具实际停止及更多中断场景继续。",
+          "sources": [
+            "docs/evidence/2026-11-15-official-alternatives/amp.md",
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
+          ],
+          "status": "前台停止分项通过"
         },
         "S8": {
-          "observed": "已有设置完成与请求认证提示是两个真实阶段。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
-          "remaining": "正常入口应落实明确原因和可恢复步骤。",
+          "observed": "已有设置完成与请求认证提示是两个真实阶段。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 续验：停止只报告已停止回复，未确认工具保留未知；冷开明确未自动重发。",
+          "remaining": "继续复验原工具反馈、失败及不同权限。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
-          "status": "入口有证"
+          "status": "分项通过"
         }
       },
       "name": "Amp"
@@ -1498,13 +1506,14 @@
       "liveAction": "MiMo 新答和同配置冷开续答有证。可在移交后台前实际停止原 Shell 与子进程，冷开原会话续答。已移交后台的停止失败，需官方精确入口及终态。",
       "standards": {
         "S1": {
-          "observed": "已安装，沿已有设置到模型页，界面保留原选项且禁用不一致的保存\n2026-11-15 盘点：程序可执行，登记版本 0.2.7。登记所存握手版本 0.2.7。\n2026-11-16 续查：已用登记内同一 Node 与官方 cli.js 核普通 mcode 命令，可用绝对路径自带官方终端入口；用户小米实际配置仍待。\n2026-11-16 复验：官方选择小米后，普通新对话手动选择同模型，读回并实际回复。",
-          "remaining": "登录与取消返回、原服务及准备其他方式仍按原条件。",
+          "observed": "已安装，沿已有设置到模型页，界面保留原选项且禁用不一致的保存\n2026-11-15 盘点：程序可执行，登记版本 0.2.7。登记所存握手版本 0.2.7。\n2026-11-16 续查：已用登记内同一 Node 与官方 cli.js 核普通 mcode 命令，可用绝对路径自带官方终端入口；用户小米实际配置仍待。\n2026-11-16 复验：官方选择小米后，普通新对话手动选择同模型，读回并实际回复。\n2026-11-17 续验：正常管理设置仍选 0.2.7；官方 0.7.7 单独启动包在禁网环境真实握手 ACP 1。",
+          "remaining": "官方目录更新后核原登记升级、原登录与模型保留。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-16-cycle12-amp-native/README.md",
-            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
           "status": "分项通过"
         },
@@ -1566,13 +1575,14 @@
           "status": "分项通过"
         },
         "S7": {
-          "observed": "旧自建请求仍未知，本轮未重试或改变该对象\n2026-11-17 测试 Bash 被官方自动移交后台。A 收到回复停止但精确进程在取消约 20.686 秒后仍在，最终写出原完成标记。B 未被取消。\n2026-11-17 移交前发取消距 PID 文件 1.133 秒，官方唯一原命令记录保持 managed_foreground 并 canceled。真实原进程退出，无完成标记；重开原 ID 用原 MiMo 续答。\n2026-11-17 官方 npm 0.7.7 活跃取消已连原会话、轮次的后台清理。当前 ACP 目录与正式选用仍为 0.2.7。",
+          "observed": "旧自建请求仍未知，本轮未重试或改变该对象\n2026-11-17 测试 Bash 被官方自动移交后台。A 收到回复停止但精确进程在取消约 20.686 秒后仍在，最终写出原完成标记。B 未被取消。\n2026-11-17 移交前发取消距 PID 文件 1.133 秒，官方唯一原命令记录保持 managed_foreground 并 canceled。真实原进程退出，无完成标记；重开原 ID 用原 MiMo 续答。\n2026-11-17 官方 npm 0.7.7 活跃取消已连原会话、轮次的后台清理。当前 ACP 目录与正式选用仍为 0.2.7。\n2026-11-17 续验：0.7.7 发布包取消在活跃 prompt 下按原会话和轮次启动后台清理，无活跃 prompt 时早退。独立启动通过，尚无新版本的正式后台进程实停。",
           "remaining": "等官方目录更新或允许明确选用官方 0.7.7，再实测原后台子进程、B、终态和冷开。旧失败保留。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md",
             "docs/evidence/2026-11-17-cycle12-approval-and-lf/README.md",
-            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md"
+            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
           "status": "实测失败"
         },
@@ -1834,13 +1844,14 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "当前登记的官方桥未转发 MCP，不能完成网页工具。官方 SDK 已受控验证注册/授权和撤回。\n2026-11-16 续查：同版适配器接收网页工具配置但未传给 Pi；官方 SDK 1.5.2 受控可会话内注册。\n2026-11-17 续验：B 使用本机 Bash 和读取交付自己目录的 result.txt，按原字节见测试回执。模型还在自有目录读取并列举，未发 Farfold 审批请求。",
-          "remaining": "官方网页接入、客户端实际逐次批准、撤回及更多文件与技能仍待。",
+          "observed": "当前登记的官方桥未转发 MCP，不能完成网页工具。官方 SDK 已受控验证注册/授权和撤回。\n2026-11-16 续查：同版适配器接收网页工具配置但未传给 Pi；官方 SDK 1.5.2 受控可会话内注册。\n2026-11-17 续验：B 使用本机 Bash 和读取交付自己目录的 result.txt，按原字节见测试回执。模型还在自有目录读取并列举，未发 Farfold 审批请求。\n2026-11-17 续验：现选官方桥的两个受控扩展确认分别证明批准执行、拒绝无执行。两条原 ACP 扩展请求均无终态。",
+          "remaining": "从正式入口逐次批准及真实反馈仍待，网页、外部工具和撤回亦未验。",
           "sources": [
             "docs/evidence/2026-11-15-official-alternatives/pi.md",
             "docs/status.md",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
-            "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md"
+            "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md",
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
           ],
           "status": "实测分项通过"
         },

@@ -30,7 +30,7 @@
 
 | 范围           | 当前核对结果                                                                                                                                                                                                                                                                                                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 第 12 周期基线 | 正式应用 `0b7195dd3`，21 家据原八项续验，整家 0/21。Pi 新草稿恢复发送、双前台停止和冷续答已正式复验。Qoder 默认历史缺位置提示及按原目录查找有证，Goose 范围隔离、Cline 按原索引冷开有证。                                                                                                                                                                                                   |
+| 第 12 周期基线 | 正式应用 `0b7195dd3`，首发 21 家，整家 0/21。Amp 正式双前台实停及原对话冷开有证。MiniMax 0.7.7 独立启动已核，原目录仍为 0.2.7。Pi 现行桥审批的受控回传有证，正式网页和审批仍待。                                                                                                                                                                                                            |
 | 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `f5d15afc17616ba38f266b53afdf9d8e1e76f5ee`，可执行文件 SHA-256 `749bd4d3b40a475ecdf4c13d110f9732a18e73b19e0eecb2994348590ca44e75`。首发目录 21 家。                                                                                                                                                           |
 | Mac 工程与安装 | 2026-11-17 前端 10,986 项、Rust 2,821 项（11 项既有忽略）、格式、类型、Clippy、生产包通过。两次正常退出后安装，各三处数据共 263,005 项前后摘要一致，SQLite 副本通过。[正式回执](evidence/2026-11-17-cycle12-pi-history-scope/README.md)                                                                                                                                                     |
 | 当前开发环境   | macOS 27.0（26A425），Node 22.22.3、锁定 pnpm 9.15.0、Rust/Cargo 1.96.0、Xcode Command Line Tools 可识别。[环境恢复证据](evidence/2026-11-04-development-environment-restoration/README.md)。                                                                                                                                                                                               |
@@ -200,6 +200,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 
 ### ARCH-44
 
+2026-11-17 Amp 同程序两条 MiMo 前台任务并发，点击停止仅结束 A 的原 Shell 和子进程，B 保持并交付。A 工具终态仍未知，冷开保留原对话、原模型和未发草稿。MiniMax 0.7.7 独立禁网可启动，但原登记仍 0.2.7，后台停止负例保持。Pi 0.0.34 的官方扩展确认可以回传允许或拒绝，受控扩展请求未回终态，正式审批、网页仍待。[回执](evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md)
+
 2026-11-17 Pi 已在正式版用原 OpenRouter 免费 Ultra / Medium 分别运行两个自有目录的前台脚本。只点 A 停止，A Shell 与子进程退出，B 保持并写出独立成品。正常退出后原 A 正文、配置与草稿保持，手动续答成功。Pi 本机工具未发 Farfold 审批请求，后台和外部工具的停止仍待。[实测](evidence/2026-11-17-cycle12-pi-history-scope/README.md#pi-本机任务双前台停止和冷续答)
 
 2026-11-17 Mistral Vibe 正式卡片显示准确命令，点一次拒绝，原脚本未执行。Copilot 1.0.112 原账号已有设置的 Auto 续答超窗，取消未获确认，冷开原对话提示未确认且未自动重发。两家分别保留审批正例和实际停止缺口。[续验](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)
@@ -269,6 +271,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: P33 -->
 
 ### P33
+
+2026-11-17 Amp 停止后正常退出并冷开同一原对象，正文、显式 MiMo / Auto 及未发草稿保持。界面保留未知状态，无自动发送。显式模型的同线程续答仍待官方调整。[正式回执](evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md)
 
 2026-11-17 Goose 与 Qoder 指定对方目录各为空，选原目录各准确命中，往返切换不串结果。Qoder 默认回包的 28 条无原位置，新版说明缺位置并保留有效行和游标，正式原目录照常可查。Cline 无列表，以已知 ID 提示已有记录，从搜索冷开核原文；Pi 原 A 同 ID 冷开并续答。Qoder 和 Cline 的默认列表缺口继续。[本批回执](evidence/2026-11-17-cycle12-pi-history-scope/README.md)
 
@@ -893,7 +897,7 @@ Goose实验SQLite打开失败、Kilo实验临时子进程判定属于夹具调�
 - **Claude Code**。Farfold 独立小米 Messages 测试已有实答，官方适配器的私密凭据交接仍待支持。若要测独立官方账号来源，可在用户方便时从 Farfold 官方账号入口使用所选 Claude 订阅或 Anthropic Console 登录。
 - **Gemini CLI 与 Antigravity**。保持暂缓，后续恢复该验收时由用户本人完成官方登录。
 
-[C12 逐家验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json) · [最新正式回执](evidence/2026-11-17-cycle12-pi-history-scope/README.md)
+[C12 逐家验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json) · [最新正式回执](evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md)
 
 ## 历史、原件与维护
 
