@@ -98,14 +98,16 @@ pub(super) struct HeldTurn {
     processes: Vec<Arc<Process>>,
 }
 
-#[cfg(all(test, unix))]
+#[cfg(all(test, target_os = "macos"))]
 #[tokio::test]
 async fn scoped_close_waits_for_the_terminal_group_even_with_a_sealed_gate() {
+    let root = tempfile::tempdir().unwrap();
+    let cwd = root.path().canonicalize().unwrap();
     let mut command = std::process::Command::new("/bin/sleep");
-    command.arg("30");
+    command.current_dir(&cwd).arg("30");
     let process = Arc::new(Process::spawn(command, 128, None).unwrap());
     process.started().await.unwrap();
-    let terminal = Session::new("/private/tmp");
+    let terminal = Session::new(cwd.to_str().unwrap());
     terminal.gate.lock().unwrap().terminals.insert(
         "owned".into(),
         Terminal {
