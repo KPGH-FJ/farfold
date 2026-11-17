@@ -5,6 +5,7 @@ import type { HistoryForkPoint } from "./history_fork_point";
 export interface SessionOperations {
   forkCurrentContext: boolean;
   forkHistoricalPoint?: boolean;
+  closeAfterUnconfirmedStop?: true;
 }
 
 /** Memory-only delivery state, separate from the Agent's transcript. */
@@ -41,6 +42,12 @@ export interface ForkResult {
 
 export function sessionOperations(value: unknown): SessionOperations {
   return {
+    ...(!!value &&
+      typeof value === "object" &&
+      "closeAfterUnconfirmedStop" in value &&
+      value.closeAfterUnconfirmedStop === true && {
+        closeAfterUnconfirmedStop: true as const,
+      }),
     forkHistoricalPoint:
       !!value &&
       typeof value === "object" &&

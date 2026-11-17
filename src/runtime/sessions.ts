@@ -1303,6 +1303,7 @@ class ThreadsStore {
       this.stopConfirmation.clear(thread.key);
       this.emit(thread.key);
     },
+    (thread) => this.channels.get(thread.key),
   );
 
   async close(key: string): Promise<void> {

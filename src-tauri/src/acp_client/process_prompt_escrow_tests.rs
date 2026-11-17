@@ -135,6 +135,45 @@ async fn first_matching_wire_error_is_distinct_from_local_and_duplicate_errors()
 }
 
 #[tokio::test]
+async fn close_waits_for_wire_answer_before_its_event_is_projected() {
+    let pool = gate();
+    let life = life();
+    let cell = PromptEscrow::for_pool(pool.clone());
+    let permit = grant(&pool, "first").await;
+    let observation = cell
+        .commit("owned-session", &permit, life.work().unwrap(), deadline())
+        .unwrap();
+    for (outgoing, frame) in [
+        (
+            true,
+            r#"{"jsonrpc":"2.0","id":1,"method":"session/prompt","params":{"sessionId":"owned-session"}}"#,
+        ),
+        (
+            false,
+            r#"{"jsonrpc":"2.0","id":1,"result":{"stopReason":"cancelled"}}"#,
+        ),
+    ] {
+        cell.inspect(&serde_json::from_str(frame).unwrap(), outgoing);
+    }
+    for terminal_already_decoded in [false, true] {
+        if terminal_already_decoded {
+            observation.observe(&Ok(json!({"stopReason":"cancelled"})));
+        }
+        assert!(matches!(
+            observation.confirm_session_close("owned-session", false, || panic!(
+                "close published ahead of original reply"
+            )),
+            SessionCloseConfirmation::WaitForOriginal
+        ));
+    }
+    assert!(matches!(
+        observation.confirm_session_close("owned-session", true, || true),
+        SessionCloseConfirmation::Confirmed
+    ));
+    assert_eq!(life.work.load(Ordering::SeqCst), 0);
+}
+
+#[tokio::test]
 async fn completion_task_abort_does_not_release_the_committed_permit() {
     let g = gate();
     let life = life();

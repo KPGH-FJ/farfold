@@ -30,6 +30,7 @@ pub use point::HistoryPoint;
 pub struct SessionOperations {
     pub fork_current_context: bool,
     pub fork_historical_point: bool,
+    pub close_after_unconfirmed_stop: bool,
 }
 
 pub(crate) fn capabilities(connection: &ManagedConnection, session_id: &str) -> SessionOperations {
@@ -38,12 +39,13 @@ pub(crate) fn capabilities(connection: &ManagedConnection, session_id: &str) -> 
             .get(session_id)
             .is_some_and(|entry| entry.workspace.as_ref().is_some_and(Vec::is_empty))
     });
-    let base = workspace_known
-        && connection.handshake.get().is_some_and(|h| {
-            let caps = &h.typed.agent_capabilities;
-            caps.load_session && caps.session_capabilities.close.is_some()
-        });
+    let close_after_unconfirmed_stop = connection.handshake.get().is_some_and(|h| {
+        let caps = &h.typed.agent_capabilities;
+        caps.load_session && caps.session_capabilities.close.is_some()
+    });
+    let base = workspace_known && close_after_unconfirmed_stop;
     SessionOperations {
+        close_after_unconfirmed_stop,
         fork_current_context: base
             && connection.handshake.get().is_some_and(|h| {
                 h.typed

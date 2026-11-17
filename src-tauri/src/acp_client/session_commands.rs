@@ -15,7 +15,9 @@ use tauri::{AppHandle, Manager as _};
 
 use crate::acp_client::manager::{AcpManager, require_agent_row, validate_cwd, validate_cwd_async};
 pub use crate::acp_client::pump::ProcessEndedReceipt;
-use crate::acp_client::pump::{FailedWorkCloseReceipt, SessionSink, StoppedToolCloseReceipt};
+use crate::acp_client::pump::{
+    FailedWorkCloseReceipt, SessionSink, StoppedToolCloseReceipt, UnconfirmedStopCloseReceipt,
+};
 use crate::acp_client::session::{InteractionReply, SessionListEntry, SessionOpenResult};
 use crate::acp_client::session_index::{
     iso8601_millis, parse_config_map, same_dir, touch_session_row,
@@ -732,6 +734,35 @@ pub async fn session_close_unapproved_stopped(
 }
 
 /// Read whether a matched failed request can safely end its one local connection.
+#[tauri::command]
+pub async fn session_check_unconfirmed_stop_close(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    connection_id: String,
+) -> Result<Option<UnconfirmedStopCloseReceipt>, String> {
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .check_unconfirmed_stop_close(&agent_id, &cwd, &session_id, &connection_id)
+        .await
+}
+
+#[tauri::command]
+pub async fn session_close_unconfirmed_stop(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    connection_id: String,
+    proof_id: String,
+) -> Result<UnconfirmedStopCloseReceipt, String> {
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .close_unconfirmed_stop(&agent_id, &cwd, &session_id, &connection_id, proof_id)
+        .await
+}
+
 #[tauri::command]
 pub async fn prepare_failed_work_close(
     app: AppHandle,

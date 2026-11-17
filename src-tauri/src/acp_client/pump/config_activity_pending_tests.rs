@@ -229,6 +229,7 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
                     &opening,
                     &mut ctx,
                     &permissions,
+                    None,
                     || true,
                 ));
                 let poll =
@@ -270,6 +271,7 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
                 &opening,
                 &mut ctx,
                 &permissions,
+                None,
                 || mode != "context-changed",
             )
             .await

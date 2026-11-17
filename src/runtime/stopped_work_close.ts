@@ -20,6 +20,8 @@ export const STOPPED_WORK_CLOSE = {
   blocked: "目前不能安全关闭这段对话的连接，请等待原步骤的结果。",
   unconfirmed: "尚未确认连接已关闭，原内容和状态仍保留。",
   failedNotice: "上次请求结果未知，当前连接仍保留一个任务名额。",
+  stopReview:
+    "请 Agent 关闭这段对话的连接。原对话、草稿和待发消息仍可找回。关闭后请先核对上次请求的结果，待发消息不会自动发送。",
 } as const;
 
 interface ConnectionOwner {
@@ -46,7 +48,11 @@ interface ConnectionCloseTarget extends ConnectionOwner {
 export interface StoppedWorkTarget
   extends ConnectionCloseTarget, StoppedWorkOwner {}
 type FailedWorkTarget = ConnectionCloseTarget;
-export type WorkCloseTarget = StoppedWorkTarget | FailedWorkTarget;
+interface UnconfirmedStopTarget extends ConnectionCloseTarget {
+  unconfirmedStop: true;
+}
+export type WorkCloseTarget =
+  StoppedWorkTarget | FailedWorkTarget | UnconfirmedStopTarget;
 export interface WorkCloseReceipt extends ConnectionOwner {
   toolCallId?: string;
   proofId: string;
@@ -129,6 +135,40 @@ export function failedWorkTarget(thread: ThreadState): FailedWorkTarget | null {
   return null;
 }
 
+export function unconfirmedStopTarget(
+  thread: ThreadState,
+): UnconfirmedStopTarget | null {
+  const user = thread.items[thread.roundItemBase - 1];
+  if (
+    !thread.sessionOperations?.closeAfterUnconfirmedStop ||
+    !thread.connectionId ||
+    !thread.nativeSessionId ||
+    thread.identity !== "established" ||
+    thread.connectionLost ||
+    !thread.running ||
+    !thread.stopUnconfirmed ||
+    thread.stopping ||
+    thread.submitting ||
+    thread.openError ||
+    thread.sourceError ||
+    thread.historyUnavailable ||
+    thread.uncertainPrompt ||
+    hasActiveWork(thread) ||
+    hasPendingRequests(thread) ||
+    user?.kind !== "user"
+  )
+    return null;
+  return {
+    unconfirmedStop: true,
+    connectionId: thread.connectionId,
+    sessionId: thread.nativeSessionId,
+    turnItemId: user.id,
+    key: thread.key,
+    agentId: thread.agentId,
+    cwd: thread.cwd,
+  };
+}
+
 function matchesWork(
   expected: WorkCloseTarget,
   receipt: (ConnectionOwner & { toolCallId?: string }) | null,
@@ -159,7 +199,9 @@ export function currentWorkClose(
   const current =
     "toolCallId" in expected
       ? stoppedWorkTarget(thread)
-      : failedWorkTarget(thread);
+      : "unconfirmedStop" in expected
+        ? unconfirmedStopTarget(thread)
+        : failedWorkTarget(thread);
   return (
     current?.turnItemId === expected.turnItemId &&
     current.key === expected.key &&
@@ -167,6 +209,36 @@ export function currentWorkClose(
     current.cwd === expected.cwd &&
     matchesWork(expected, current)
   );
+}
+
+function applyUnconfirmedStopClose(
+  thread: ThreadState,
+  target: UnconfirmedStopTarget,
+): boolean {
+  // A real terminal can be delivered while the confirmed close is in flight.
+  // Accept the close for the same original message without overwriting it.
+  const currentUser = thread.items[thread.roundItemBase - 1];
+  if (
+    thread.connectionLost ||
+    thread.connectionId !== target.connectionId ||
+    thread.nativeSessionId !== target.sessionId ||
+    thread.key !== target.key ||
+    thread.agentId !== target.agentId ||
+    thread.cwd !== target.cwd ||
+    currentUser?.kind !== "user" ||
+    currentUser.id !== target.turnItemId
+  )
+    return false;
+  const unresolved =
+    thread.running ||
+    thread.stopUnconfirmed ||
+    thread.connectionOutcomeUnknown ||
+    hasActiveWork(thread);
+  applyConnectionLost(thread, "user");
+  thread.connectionOutcomeUnknown = false;
+  thread.historicalOutcomeUnknown ||= unresolved;
+  pauseQueue(thread, thread.workEnabled ? "stopped" : "work_disabled");
+  return true;
 }
 
 /** Only called with a typed response to the explicit IPC action. The actual
@@ -223,6 +295,9 @@ export class WorkConnectionClosures {
   constructor(
     private owns: (thread: ThreadState) => boolean,
     private publish: (thread: ThreadState) => void,
+    private delivery?: (
+      thread: ThreadState,
+    ) => { settle(deadline: number): Promise<void> } | undefined,
   ) {}
 
   async check(
@@ -239,7 +314,9 @@ export class WorkConnectionClosures {
     const proof = await invoke<WorkCloseReceipt | null>(
       "toolCallId" in target
         ? "session_check_unapproved_stopped_close"
-        : "prepare_failed_work_close",
+        : "unconfirmedStop" in target
+          ? "session_check_unconfirmed_stop_close"
+          : "prepare_failed_work_close",
       { agentId, cwd, sessionId, connectionId },
     );
     return this.owns(thread) &&
@@ -263,6 +340,10 @@ export class WorkConnectionClosures {
       throw new Error(STOPPED_WORK_CLOSE.unconfirmed);
     this.closing.add(thread);
     try {
+      const delivery =
+        "unconfirmedStop" in target ? this.delivery?.(thread) : undefined;
+      if ("unconfirmedStop" in target && this.delivery && !delivery)
+        throw new Error(STOPPED_WORK_CLOSE.unconfirmed);
       await draftPersistence.flush();
       if (!this.owns(thread) || !currentWorkClose(thread, target))
         throw new Error(STOPPED_WORK_CLOSE.unconfirmed);
@@ -279,17 +360,31 @@ export class WorkConnectionClosures {
             ...args,
             toolCallId: target.toolCallId,
           })
-        : invoke<WorkCloseReceipt>("close_failed_work", args));
+        : invoke<WorkCloseReceipt>(
+            "unconfirmedStop" in target
+              ? "session_close_unconfirmed_stop"
+              : "close_failed_work",
+            args,
+          ));
       if (
         !this.owns(thread) ||
         !validWorkCloseProof(target, receipt) ||
         proof.proofId !== receipt.proofId
       )
         throw new Error(STOPPED_WORK_CLOSE.unconfirmed);
+      if (delivery) {
+        // Events from the closed route, including a preceding real terminal,
+        // must be consumed before we close its renderer-owned delivery queue.
+        await delivery.settle(performance.now() + 5_000);
+        if (!this.owns(thread) || this.delivery?.(thread) !== delivery)
+          throw new Error(STOPPED_WORK_CLOSE.unconfirmed);
+      }
       const applied =
         "toolCallId" in target
           ? applyStoppedWorkClose(thread, target, proof, receipt)
-          : applyFailedWorkClose(thread, target);
+          : "unconfirmedStop" in target
+            ? applyUnconfirmedStopClose(thread, target)
+            : applyFailedWorkClose(thread, target);
       if (!applied) throw new Error(STOPPED_WORK_CLOSE.unconfirmed);
       this.publish(thread);
     } finally {

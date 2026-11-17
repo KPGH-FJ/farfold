@@ -190,6 +190,7 @@ async fn exercise(mode: &str, expected_polls: usize) {
             &opening,
             &mut ctx,
             &permissions,
+            None,
             || true,
         ));
         let first =
@@ -264,6 +265,7 @@ async fn exercise(mode: &str, expected_polls: usize) {
         &opening,
         &mut ctx,
         &permissions,
+        None,
         || true,
     )
     .await;

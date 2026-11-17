@@ -98,6 +98,33 @@ pub(super) struct HeldTurn {
     processes: Vec<Arc<Process>>,
 }
 
+#[cfg(all(test, unix))]
+#[tokio::test]
+async fn scoped_close_waits_for_the_terminal_group_even_with_a_sealed_gate() {
+    let mut command = std::process::Command::new("/bin/sleep");
+    command.arg("30");
+    let process = Arc::new(Process::spawn(command, 128, None).unwrap());
+    process.started().await.unwrap();
+    let terminal = Session::new("/private/tmp");
+    terminal.gate.lock().unwrap().terminals.insert(
+        "owned".into(),
+        Terminal {
+            receipt: 1,
+            process: process.clone(),
+        },
+    );
+    let was_blocked = !terminal.can_close_after_stop();
+    terminal.stop();
+    tokio::time::timeout(std::time::Duration::from_secs(6), process.wait_for_group())
+        .await
+        .unwrap()
+        .unwrap();
+    assert!(was_blocked);
+    assert!(terminal.can_close_after_stop());
+    terminal.gate.lock().unwrap().uncertain = true;
+    assert!(!terminal.can_close_after_stop());
+}
+
 impl Session {
     pub(super) fn new(cwd: &str) -> Self {
         Self {
@@ -109,6 +136,18 @@ impl Session {
 
     pub(super) fn blocked(&self) -> bool {
         self.gate.lock().map_or(true, |gate| gate.uncertain)
+    }
+
+    pub(super) fn can_close_after_stop(&self) -> bool {
+        self.gate.lock().is_ok_and(|gate| {
+            !gate.uncertain
+                && gate.active.is_none()
+                && gate.pending.is_none()
+                && gate
+                    .terminals
+                    .values()
+                    .all(|terminal| terminal.process.finished())
+        })
     }
 
     pub(super) fn begin(

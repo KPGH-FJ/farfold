@@ -256,6 +256,38 @@ pub(super) async fn send(
     Ok(Started { active, sent })
 }
 
+pub(super) fn send_session_cancel(
+    cx: &ConnectionTo<Agent>,
+    ctx: &mut DispatchContext<'_>,
+    result: oneshot::Sender<Result<(), String>>,
+    prompt_in_flight: bool,
+    mcp_requests: Option<&super::super::transient_mcp::SessionMcpRequests>,
+) {
+    if let Some(terminals) = ctx.terminals {
+        terminals.stop();
+    }
+    let sent = cx
+        .send_notification_to(Agent, CancelNotification::new(ctx.session_id.to_owned()))
+        .map_err(describe_acp_error);
+    if sent.is_ok() {
+        let first = ctx.tools.first_permission_id().map(str::to_owned);
+        let cancelled = stopped_tool_close::cancel_permissions_recording(
+            ctx.pending,
+            ctx.permission_ids,
+            first.as_deref().map(|id| (id, &ctx.ops.life)),
+        );
+        ctx.tools
+            .cancel_first_permission(prompt_in_flight && !ctx.prompt_cancelling && cancelled);
+        ctx.prompt_cancelling = prompt_in_flight;
+        cancel_elicitations(&ctx.ops.elicitations, ctx.elicitation_ids);
+        if let Some(requests) = mcp_requests {
+            requests.set_prompt_active(false);
+        }
+        (ctx.events)(serde_json::json!({"kind":"interactionsCancelled"}));
+    }
+    let _ = result.send(sent);
+}
+
 pub(super) fn cancel(
     cx: &ConnectionTo<Agent>,
     ctx: &mut DispatchContext<'_>,

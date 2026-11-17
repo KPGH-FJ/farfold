@@ -90,9 +90,18 @@ def observe_drift():
  while not drift.exists() and time.monotonic()<until: time.sleep(.005)
  if drift.exists(): send({'method':'session/update','params':{'sessionId':sid,'update':{'sessionUpdate':'config_option_update','configOptions':options()}}})
 if mode=='drift': threading.Thread(target=observe_drift,daemon=True).start()
+def late_terminal(original,stop_reason):
+ until=time.monotonic()+10
+ while not fence.with_suffix('.settle').exists():
+  assert time.monotonic()<until
+  time.sleep(.005)
+ if stop_reason=='end_turn': update('owned-neighbor-completed')
+ reply(original,{'stopReason':stop_reason})
 for line in sys.stdin:
  m=json.loads(line); method=m.get('method')
- if method=='initialize': reply(m,{'protocolVersion':1,'agentCapabilities':{},'authMethods':[]})
+ if method=='initialize':
+  caps={'loadSession':True,'sessionCapabilities':{'close':{}}} if mode.startswith('override-close') else {}
+  reply(m,{'protocolVersion':1,'agentCapabilities':caps,'authMethods':[]})
  elif method=='session/new': reply(m,{'sessionId':sid,'configOptions':options()})
  elif method=='session/prompt':
   prompt=m
@@ -103,6 +112,7 @@ for line in sys.stdin:
   if idle_burst: update('prompt-started')
   else: burst()
   if mode=='pump-panic': update('owned-pump-panic')
+  if mode=='close-neighbor': threading.Thread(target=late_terminal,args=(m,'end_turn'),daemon=True).start()
   if mode=='matched-error':
    send({'id':'another-request','error':{'code':-32603,'message':'unrelated'}})
    send({'id':m['id'],'error':{'code':-32000,'message':'owned matched failure'}})
@@ -116,10 +126,18 @@ for line in sys.stdin:
   assert m.get('error',{}).get('code')==-32601, m
   ready=fence.with_suffix('.tmp'); ready.write_text('prior-updates-dispatched'); ready.replace(fence)
  elif method=='session/cancel':
-  if prompt is None: update('cancel-without-prompt')
+  if mode.startswith('override-close'):
+   assert m['params']['sessionId']==sid
+   if mode=='override-close-late-before': threading.Thread(target=late_terminal,args=(prompt,'cancelled'),daemon=True).start()
+  elif prompt is None: update('cancel-without-prompt')
   else:
    update('cleanup-after-cancel')
    reply(prompt,{'stopReason':'cancelled'}); prompt=None
+ elif method=='session/close' and mode.startswith('override-close'):
+  assert m['params']['sessionId']==sid
+  with fence.with_suffix('.close').open('a') as marker: marker.write(sid+'\n')
+  if mode=='override-close-late-during': reply(prompt,{'stopReason':'cancelled'})
+  reply(m,{'unexpected':True} if mode=='override-close-bad-reply' else {})
 "#;
 
 struct Suite {
@@ -596,6 +614,231 @@ async fn matched_failed_work_close_reaps_only_the_captured_connection() {
                 .await
                 .unwrap();
             terminal(&mut b).await;
+        })
+    })
+    .await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn official_close_after_unconfirmed_stop_releases_only_its_live_conversation() {
+    for mode in ["override-close", "override-close-late-during"] {
+        checked(|s| {
+            Box::pin(async move {
+                let mut a = s.open(0, "unconfirmed-stop-a", mode).await;
+                let mut b = s.open(1, "unconfirmed-stop-b", "close-neighbor").await;
+                let check = || {
+                    s.manager.check_unconfirmed_stop_close(
+                        &a.agent,
+                        &s.cwd,
+                        &a.session,
+                        &a.connection,
+                    )
+                };
+                assert!(check().await.unwrap().is_none());
+
+                let (ba, da) = blocks(0);
+                s.manager
+                    .session_prompt(&a.agent, &s.cwd, &a.session, ba)
+                    .await
+                    .unwrap();
+                let (bb, db) = blocks(1);
+                s.manager
+                    .session_prompt(&b.agent, &s.cwd, &b.session, bb)
+                    .await
+                    .unwrap();
+                start(&mut a, &da).await;
+                start(&mut b, &db).await;
+                let check = || {
+                    s.manager.check_unconfirmed_stop_close(
+                        &a.agent,
+                        &s.cwd,
+                        &a.session,
+                        &a.connection,
+                    )
+                };
+                assert!(check().await.unwrap().is_none());
+                assert!(
+                    s.manager
+                        .check_unconfirmed_stop_close(&a.agent, &s.cwd, &a.session, &b.connection)
+                        .await
+                        .is_err()
+                );
+                s.manager
+                    .session_cancel(&a.agent, &s.cwd, &a.session)
+                    .await
+                    .unwrap();
+                let proof = check().await.unwrap().unwrap();
+                assert!(
+                    s.manager
+                        .close_unconfirmed_stop(
+                            &a.agent,
+                            &s.cwd,
+                            &a.session,
+                            &a.connection,
+                            "wrong-proof".into()
+                        )
+                        .await
+                        .is_err()
+                );
+                assert!(!a.fence.with_extension("close").exists());
+                assert_eq!(s.manager.prompt_admission.counts().0, 2);
+
+                assert_eq!(
+                    s.manager
+                        .close_unconfirmed_stop(
+                            &a.agent,
+                            &s.cwd,
+                            &a.session,
+                            &a.connection,
+                            proof.proof_id.clone()
+                        )
+                        .await
+                        .unwrap(),
+                    proof
+                );
+                assert_eq!(
+                    std::fs::read_to_string(a.fence.with_extension("close")).unwrap(),
+                    format!("{}\n", a.session)
+                );
+                assert!(
+                    s.manager
+                        .session_owner(&a.agent, &s.cwd, &a.session)
+                        .unwrap()
+                        .is_none()
+                );
+                assert!(
+                    s.manager
+                        .session_owner(&b.agent, &s.cwd, &b.session)
+                        .unwrap()
+                        .is_some_and(|owner| owner.connection_id == b.connection)
+                );
+                assert_eq!(s.manager.prompt_admission.counts().0, 1);
+                assert!(crate::supervisor::owned_group_alive(a.pid));
+                assert!(crate::supervisor::owned_group_alive(b.pid));
+                let ends: Vec<_> = std::iter::from_fn(|| a.events.try_recv().ok())
+                    .filter(|event| event["kind"] == "turnEnd")
+                    .collect();
+                if mode == "override-close" {
+                    assert!(ends.is_empty());
+                } else {
+                    assert_eq!(ends.len(), 1);
+                    assert_eq!(ends[0]["stopReason"], "cancelled");
+                }
+                std::fs::write(b.fence.with_extension("settle"), "").unwrap();
+                let mut reply_seen = false;
+                loop {
+                    let event = b.events.recv().await.unwrap();
+                    reply_seen |= event.pointer("/update/content/text")
+                        == Some(&json!("owned-neighbor-completed"));
+                    if event["kind"] == "turnEnd" {
+                        assert_eq!(event["stopReason"], "end_turn");
+                        break;
+                    }
+                }
+                assert!(reply_seen);
+            })
+        })
+        .await;
+    }
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn original_terminal_before_confirmation_invalidates_the_reviewed_close() {
+    checked(|s| {
+        Box::pin(async move {
+            let mut a = s.open(0, "late-stop-a", "override-close-late-before").await;
+            let (ba, da) = blocks(0);
+            s.manager
+                .session_prompt(&a.agent, &s.cwd, &a.session, ba)
+                .await
+                .unwrap();
+            start(&mut a, &da).await;
+            s.manager
+                .session_cancel(&a.agent, &s.cwd, &a.session)
+                .await
+                .unwrap();
+            let proof = s
+                .manager
+                .check_unconfirmed_stop_close(&a.agent, &s.cwd, &a.session, &a.connection)
+                .await
+                .unwrap()
+                .unwrap();
+            std::fs::write(a.fence.with_extension("settle"), "").unwrap();
+            while a.events.recv().await.unwrap()["kind"] != "turnEnd" {}
+
+            assert!(
+                s.manager
+                    .close_unconfirmed_stop(
+                        &a.agent,
+                        &s.cwd,
+                        &a.session,
+                        &a.connection,
+                        proof.proof_id
+                    )
+                    .await
+                    .is_err()
+            );
+            assert!(!a.fence.with_extension("close").exists());
+            assert!(
+                s.manager
+                    .session_owner(&a.agent, &s.cwd, &a.session)
+                    .unwrap()
+                    .is_some()
+            );
+            assert_eq!(s.manager.prompt_admission.counts().0, 0);
+        })
+    })
+    .await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn nonmatching_official_close_result_neither_releases_nor_completes_the_prompt() {
+    checked(|s| {
+        Box::pin(async move {
+            let mut a = s
+                .open(0, "invalid-close-a", "override-close-bad-reply")
+                .await;
+            let (blocks, digest) = blocks(0);
+            s.manager
+                .session_prompt(&a.agent, &s.cwd, &a.session, blocks)
+                .await
+                .unwrap();
+            start(&mut a, &digest).await;
+            s.manager
+                .session_cancel(&a.agent, &s.cwd, &a.session)
+                .await
+                .unwrap();
+            let proof = s
+                .manager
+                .check_unconfirmed_stop_close(&a.agent, &s.cwd, &a.session, &a.connection)
+                .await
+                .unwrap()
+                .unwrap();
+
+            assert!(
+                s.manager
+                    .close_unconfirmed_stop(
+                        &a.agent,
+                        &s.cwd,
+                        &a.session,
+                        &a.connection,
+                        proof.proof_id
+                    )
+                    .await
+                    .is_err()
+            );
+            assert!(a.fence.with_extension("close").exists());
+            assert!(
+                s.manager
+                    .session_owner(&a.agent, &s.cwd, &a.session)
+                    .unwrap()
+                    .is_some()
+            );
+            assert_eq!(s.manager.prompt_admission.counts().0, 1);
+            assert!(
+                std::iter::from_fn(|| a.events.try_recv().ok())
+                    .all(|event| event["kind"] != "turnEnd")
+            );
         })
     })
     .await;

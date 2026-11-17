@@ -217,8 +217,11 @@ mod fork;
 mod stopped_tool_close;
 pub(crate) use stopped_tool_close::StoppedToolCloseReceipt;
 use stopped_tool_close::{cancel_permissions, observe_cancellation};
+mod unconfirmed_stop_close;
+pub(crate) use unconfirmed_stop_close::UnconfirmedStopCloseReceipt;
 #[path = "pump/prompt.rs"]
 mod prompt;
+use prompt::send_session_cancel;
 
 /// Result of opening a session inside the connection task.
 pub(crate) struct OpenedSession {
@@ -499,38 +502,6 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
     }
 }
 
-fn send_session_cancel(
-    cx: &ConnectionTo<Agent>,
-    ctx: &mut DispatchContext<'_>,
-    result: oneshot::Sender<Result<(), String>>,
-    prompt_in_flight: bool,
-    mcp_requests: Option<&super::transient_mcp::SessionMcpRequests>,
-) {
-    if let Some(terminals) = ctx.terminals {
-        terminals.stop();
-    }
-    let sent = cx
-        .send_notification_to(Agent, CancelNotification::new(ctx.session_id.to_owned()))
-        .map_err(describe_acp_error);
-    if sent.is_ok() {
-        let first = ctx.tools.first_permission_id().map(str::to_owned);
-        let cancelled = stopped_tool_close::cancel_permissions_recording(
-            ctx.pending,
-            ctx.permission_ids,
-            first.as_deref().map(|id| (id, &ctx.ops.life)),
-        );
-        ctx.tools
-            .cancel_first_permission(prompt_in_flight && !ctx.prompt_cancelling && cancelled);
-        ctx.prompt_cancelling = prompt_in_flight;
-        cancel_elicitations(&ctx.ops.elicitations, ctx.elicitation_ids);
-        if let Some(requests) = mcp_requests {
-            requests.set_prompt_active(false);
-        }
-        (ctx.events)(serde_json::json!({"kind":"interactionsCancelled"}));
-    }
-    let _ = result.send(sent);
-}
-
 /// The session pump: owns one session's inbox, control channel, and event
 /// sink for the life of the session. Exits when the inbox or control channel
 /// closes (session closed or connection dead), then unregisters its pending
@@ -611,6 +582,23 @@ async fn session_pump(
             && identity_read.is_none()
             && workspace_access_read.is_none()
             && purpose == super::open_purpose::OpenPurpose::Conversation;
+        let close_prompt = (prompt_in_flight
+            && prompt_cancelling
+            && identity_read.is_none()
+            && workspace_access_read.is_none()
+            && purpose == super::open_purpose::OpenPurpose::Conversation
+            && model_guard.is_established()
+            && model_guard.admissible()
+            && permission_guard.admissible()
+            && mcp_requests
+                .as_ref()
+                .is_none_or(|mcp| mcp.fork_admissible()))
+        .then_some(prompt_owner.as_ref())
+        .flatten();
+        let waiting_for_original = prompt_in_flight
+            && mutation
+                .as_ref()
+                .is_some_and(Mutation::waiting_for_original_prompt);
         live_status.set_display_allowed(opening.is_none());
         let mut ctx = DispatchContext {
             live_status: &live_status,
@@ -853,12 +841,20 @@ async fn session_pump(
                     events(serde_json::json!({"kind":"interactionExpired", "requestId":request_id}));
                 }
             }
-            outcome = restore_config::next_mutation(&mut mutation, &opening, &mut ctx, &permission_guard, || {
+            outcome = restore_config::next_mutation(&mut mutation, &opening, &mut ctx, &permission_guard, close_prompt, || {
                 stopped_close_ready && model_guard.is_established() && model_guard.admissible()
                     && mcp_requests.as_ref().is_none_or(|mcp| mcp.fork_admissible())
-            }) => {
+            }), if !waiting_for_original => {
                 if let Some(outcome) = outcome {
                     let mut completed = mutation.take().expect("completed mutation exists");
+                    if matches!(&completed.kind, MutationKind::UnconfirmedStopClose(..)) {
+                        match unconfirmed_stop_close::complete(&sessions, completed, outcome, !prompt_in_flight) {
+                            unconfirmed_stop_close::Completion::Closed => break,
+                            unconfirmed_stop_close::Completion::KeptOpen => {},
+                            unconfirmed_stop_close::Completion::WaitForOriginal(pending) => mutation = Some(*pending),
+                        }
+                        continue;
+                    }
                     if matches!(&completed.kind, MutationKind::StoppedToolClose(_)) {
                         restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard,
                             &mut permission_guard, &mut opening, &mut mutation);
@@ -1133,6 +1129,11 @@ async fn session_pump(
                         && purpose == super::open_purpose::OpenPurpose::Conversation
                         && mcp_requests.as_ref().is_none_or(|mcp| mcp.fork_admissible());
                     if failed_work_close::handle(command, &ctx, prompt_owner.as_ref(), failed_prompt, ready) { break; }
+                }
+                command @ (SessionControl::CheckUnconfirmedStopClose { .. } | SessionControl::CloseUnconfirmedStop { .. }) => {
+                    restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard, &mut permission_guard, &mut opening, &mut mutation);
+                    let eligible = mutation.is_none().then_some(close_prompt).flatten();
+                    if let Some(pending) = unconfirmed_stop_close::handle(command, &cx, &ctx, eligible) { mutation = Some(pending); }
                 }
                 SessionControl::Detach { result, .. } | SessionControl::DeleteDetach { result, .. } => {
                     detached = control::LocalDetach::start(&ctx, prompt_in_flight || mutation.is_some() || (!deleting && restore_config::busy(&ctx)), result);

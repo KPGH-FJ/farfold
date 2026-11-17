@@ -128,16 +128,23 @@ pub(super) fn start(
         operation,
         lease,
         deadline,
-        async move {
-            let request =
-                UntypedMessage::new("session/close", serde_json::json!({"sessionId":session}))
-                    .map_err(describe_acp_error)?;
-            cx.send_request_to(Agent, request)
-                .block_task()
-                .await
-                .map_err(describe_acp_error)
-        },
+        send_close(cx, session),
     ))
+}
+
+pub(super) async fn send_close(cx: ConnectionTo<Agent>, session: String) -> Result<Value, String> {
+    let request = UntypedMessage::new("session/close", serde_json::json!({"sessionId":session}))
+        .map_err(describe_acp_error)?;
+    cx.send_request_to(Agent, request)
+        .block_task()
+        .await
+        .map_err(describe_acp_error)
+}
+
+pub(super) fn empty_result(outcome: &Result<Value, String>) -> bool {
+    outcome
+        .as_ref()
+        .is_ok_and(|reply| reply.as_object().is_some_and(|object| object.is_empty()))
 }
 
 pub(super) fn complete(
@@ -151,9 +158,7 @@ pub(super) fn complete(
         unreachable!();
     };
     let started = completed.started();
-    let success = outcome
-        .as_ref()
-        .is_ok_and(|reply| reply.as_object().is_some_and(|object| object.is_empty()))
+    let success = empty_result(&outcome)
         && ready
         && completed.awaiting_reply()
         && candidate(ctx).as_ref() == Some(expected);

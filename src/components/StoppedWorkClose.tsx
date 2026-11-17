@@ -6,6 +6,7 @@ import {
   failedWorkTarget,
   STOPPED_WORK_CLOSE as S,
   stoppedWorkTarget,
+  unconfirmedStopTarget,
   type WorkCloseReceipt,
   type WorkCloseTarget,
 } from "../runtime/stopped_work_close";
@@ -16,10 +17,14 @@ type Review =
 
 type Props = { thread: ThreadState; ownsView: () => boolean };
 
-export function StoppedWorkClose(props: Props & { failed?: boolean }) {
+export function StoppedWorkClose(
+  props: Props & { failed?: boolean; unconfirmed?: boolean },
+) {
   const target = props.failed
     ? failedWorkTarget(props.thread)
-    : stoppedWorkTarget(props.thread);
+    : props.unconfirmed
+      ? unconfirmedStopTarget(props.thread)
+      : stoppedWorkTarget(props.thread);
   if (!target) return null;
   const actions = (
     <EligibleClose key={JSON.stringify(target)} {...props} target={target} />
@@ -96,7 +101,7 @@ function EligibleClose({
   if (review?.phase === "review")
     return (
       <div>
-        <p>{S.review}</p>
+        <p>{"unconfirmedStop" in target ? S.stopReview : S.review}</p>
         <button
           type="button"
           className="btn btn-ghost"

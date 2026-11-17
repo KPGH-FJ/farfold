@@ -22,6 +22,10 @@ pub(crate) enum Kind {
     Close,
     DeleteClose,
     StoppedToolClose(super::pump::StoppedToolCloseReceipt),
+    UnconfirmedStopClose(
+        super::pump::UnconfirmedStopCloseReceipt,
+        super::process::PromptObservation,
+    ),
     Delete,
 }
 
@@ -38,6 +42,7 @@ pub(crate) enum Reply {
     Delete(oneshot::Sender<Result<(), DeleteFailure>>),
     DeleteClose(oneshot::Sender<Result<bool, String>>),
     StoppedToolClose(oneshot::Sender<Result<super::pump::StoppedToolCloseReceipt, String>>),
+    UnconfirmedStopClose(oneshot::Sender<Result<super::pump::UnconfirmedStopCloseReceipt, String>>),
 }
 impl Reply {
     fn is_closed(&self) -> bool {
@@ -48,6 +53,7 @@ impl Reply {
             Self::Delete(reply) => reply.is_closed(),
             Self::DeleteClose(reply) => reply.is_closed(),
             Self::StoppedToolClose(reply) => reply.is_closed(),
+            Self::UnconfirmedStopClose(reply) => reply.is_closed(),
         }
     }
     pub fn send(self, value: Result<Value, String>) {
@@ -76,6 +82,11 @@ impl Reply {
                     .err()
                     .unwrap_or_else(|| "关闭结果尚未确认，请等待".into())));
             }
+            Self::UnconfirmedStopClose(reply) => {
+                let _ = reply.send(Err(value
+                    .err()
+                    .unwrap_or_else(|| "关闭结果尚未确认，请等待".into())));
+            }
         }
     }
     pub(super) fn reject_before_dispatch(self, error: String) {
@@ -94,6 +105,7 @@ impl Reply {
             Self::Delete(reply) => reply.closed().await,
             Self::DeleteClose(reply) => reply.closed().await,
             Self::StoppedToolClose(reply) => reply.closed().await,
+            Self::UnconfirmedStopClose(reply) => reply.closed().await,
         }
     }
 }
@@ -107,6 +119,7 @@ pub(crate) struct Mutation {
     _lease: OperationLease,
     started: bool,
     actual_reply: bool,
+    waiting_for_original_prompt: bool,
 }
 impl Mutation {
     pub(crate) fn awaiting_reply(&self) -> bool {
@@ -116,6 +129,14 @@ impl Mutation {
     }
     pub(crate) fn started(&self) -> bool {
         self.started
+    }
+    pub(crate) fn waiting_for_original_prompt(&self) -> bool {
+        self.waiting_for_original_prompt
+    }
+    pub(crate) fn defer_close_until_original(mut self, outcome: Result<Value, String>) -> Self {
+        self.waiting_for_original_prompt = true;
+        self.request = Box::pin(std::future::ready(outcome));
+        self
     }
     pub(crate) fn finish(mut self, outcome: Result<Value, String>) {
         let reply = self.reply.take();
@@ -145,6 +166,18 @@ impl Mutation {
             return false;
         }
         reply.send(outcome).is_ok()
+    }
+    pub(crate) fn deliver_unconfirmed_stop_close(
+        &mut self,
+        receipt: super::pump::UnconfirmedStopCloseReceipt,
+    ) -> bool {
+        if !self.awaiting_reply() {
+            return false;
+        }
+        let Some(Reply::UnconfirmedStopClose(reply)) = self.reply.take() else {
+            return false;
+        };
+        reply.send(Ok(receipt)).is_ok()
     }
     pub(crate) fn finish_open(
         mut self,
@@ -186,6 +219,7 @@ impl Mutation {
             _lease: lease,
             started: false,
             actual_reply: false,
+            waiting_for_original_prompt: false,
             deadline,
             request: Box::pin(request),
         }
@@ -226,7 +260,10 @@ impl Mutation {
         }
         self.operation.abandon();
         if let Some(reply) = self.reply.take() {
-            let error = if matches!(self.kind, Kind::StoppedToolClose(_)) {
+            let error = if matches!(
+                self.kind,
+                Kind::StoppedToolClose(_) | Kind::UnconfirmedStopClose(..)
+            ) {
                 "关闭结果尚未确认，请等待"
             } else {
                 "Agent 无响应，设置结果尚未确认，请等待或断开后重试"

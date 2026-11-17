@@ -27,7 +27,7 @@ struct State {
 }
 struct Resource {
     id: u64,
-    session_id: String,
+    session_id: Arc<str>,
     wire: WirePrompt,
     slot: Option<OfferedSlot>,
     work: Option<WorkLease>,
@@ -39,7 +39,7 @@ enum WirePrompt {
     Answered { error: bool },
 }
 impl Resource {
-    // Called only after a known result or the exact process owner's OS boundary.
+    // Called after a known result, confirmed exact session close or owner reap.
     fn finish(mut self) {
         // Release outside both escrow and lifecycle locks. Slot release may
         // synchronously wake another waiter. The old WorkLease is released
@@ -69,7 +69,14 @@ impl Drop for Resource {
 pub(in crate::acp_client) struct PromptObservation {
     cell: Weak<Mutex<State>>,
     id: u64,
+    session_id: Arc<str>,
     completed: Arc<AtomicBool>,
+}
+
+pub(in crate::acp_client) enum SessionCloseConfirmation {
+    Confirmed,
+    WaitForOriginal,
+    Rejected,
 }
 impl PromptEscrow {
     pub(in crate::acp_client) fn for_pool(
@@ -112,7 +119,7 @@ impl PromptEscrow {
             .resources
             .try_reserve(1)
             .map_err(|_| Failure::Unavailable)?;
-        let session_id = session_id.to_owned();
+        let session_id: Arc<str> = session_id.into();
         let completed = Arc::new(AtomicBool::new(false));
         // The scheduler lock linearizes actual-window closure, queued or
         // granted cancellation, the absolute deadline, and SDK-offer authority.
@@ -121,7 +128,7 @@ impl PromptEscrow {
         let id = slot.id();
         state.resources.push(Resource {
             id,
-            session_id,
+            session_id: session_id.clone(),
             wire: WirePrompt::Unsent,
             slot: Some(slot),
             work: Some(work),
@@ -130,6 +137,7 @@ impl PromptEscrow {
         Ok(PromptObservation {
             cell: Arc::downgrade(&self.state),
             id,
+            session_id,
             completed,
         })
     }
@@ -149,7 +157,7 @@ impl PromptEscrow {
                 };
                 if let Ok(mut state) = self.state.lock()
                     && let Some(resource) = state.resources.iter_mut().find(|resource| {
-                        resource.session_id == session_id
+                        resource.session_id.as_ref() == session_id
                             && matches!(resource.wire, WirePrompt::Unsent)
                     })
                 {
@@ -202,6 +210,63 @@ impl PromptObservation {
                 })
             })
         })
+    }
+
+    pub(in crate::acp_client) fn awaits_wire_response(&self, session_id: &str) -> bool {
+        if self.session_id.as_ref() != session_id {
+            return false;
+        }
+        self.cell.upgrade().is_some_and(|cell| {
+            cell.lock().is_ok_and(|state| {
+                state.resources.iter().any(|resource| {
+                    resource.id == self.id && matches!(resource.wire, WirePrompt::Sent(_))
+                })
+            })
+        })
+    }
+
+    /// Only an accepted, matched official close for this live session may
+    /// retire an unanswered prompt without manufacturing its original result.
+    pub(in crate::acp_client) fn confirm_session_close(
+        &self,
+        session_id: &str,
+        original_projected: bool,
+        deliver_close_receipt: impl FnOnce() -> bool,
+    ) -> SessionCloseConfirmation {
+        use SessionCloseConfirmation::{Confirmed, Rejected, WaitForOriginal};
+        if self.session_id.as_ref() != session_id {
+            return Rejected;
+        }
+        let Some(cell) = self.cell.upgrade() else {
+            return Rejected;
+        };
+        let resource = {
+            let Ok(mut state) = cell.lock() else {
+                return Rejected;
+            };
+            let index = state
+                .resources
+                .iter()
+                .position(|resource| resource.id == self.id);
+            let wire = index.map(|index| &state.resources[index].wire);
+            if state.reaped || matches!(wire, Some(WirePrompt::Unsent)) {
+                return Rejected;
+            }
+            // Serializes with wire observation. The SDK may have received
+            // the original response or released its slot before the pump
+            // has published the corresponding event.
+            if !original_projected && !matches!(wire, Some(WirePrompt::Sent(_))) {
+                return WaitForOriginal;
+            }
+            if !deliver_close_receipt() {
+                return Rejected;
+            }
+            index.map(|index| state.resources.swap_remove(index))
+        };
+        if let Some(resource) = resource {
+            resource.finish();
+        }
+        Confirmed
     }
     /// Input is the existing successfully decoded/serialized response result;
     /// no raw Agent event, error string, timeout or UI state grants authority.

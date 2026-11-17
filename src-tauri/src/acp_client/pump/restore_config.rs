@@ -303,6 +303,7 @@ pub(super) async fn next_mutation(
     opening: &Option<Opening>,
     ctx: &mut DispatchContext<'_>,
     permissions: &super::super::permission_guard::PermissionGuard,
+    close_prompt: Option<&prompt::Active>,
     stopped_close_ready: impl FnOnce() -> bool,
 ) -> Option<Result<Value, String>> {
     // This async body runs only when the select branch is polled. An inbox
@@ -329,6 +330,12 @@ pub(super) async fn next_mutation(
                     || stopped_tool_close::candidate(ctx).as_ref() != Some(expected) =>
             {
                 Some(stopped_tool_close::INELIGIBLE)
+            }
+            MutationKind::UnconfirmedStopClose(expected, _)
+                if unconfirmed_stop_close::candidate(ctx, close_prompt).as_ref()
+                    != Some(expected) =>
+            {
+                Some(unconfirmed_stop_close::UNAVAILABLE)
             }
             _ => None,
         };

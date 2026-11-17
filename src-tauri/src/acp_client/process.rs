@@ -20,6 +20,7 @@ use tokio::sync::watch;
 pub(super) mod io;
 #[path = "process_prompt_escrow.rs"]
 mod prompt_escrow;
+pub(super) use prompt_escrow::SessionCloseConfirmation;
 pub(super) use prompt_escrow::{PromptEscrow, PromptObservation};
 
 #[cfg(test)]

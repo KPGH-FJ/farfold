@@ -615,6 +615,13 @@ export function ThreadView({
             {active && (
               <StoppedWorkClose thread={thread} ownsView={ownsContent} failed />
             )}
+            {active && thread.stopUnconfirmed && (
+              <StoppedWorkClose
+                thread={thread}
+                ownsView={ownsContent}
+                unconfirmed
+              />
+            )}
             {thread.historicalOutcomeUnknown && (
               <div className="banner" role="status">
                 <span>{STRINGS.thread.historicalOutcomeUnknown}</span>

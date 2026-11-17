@@ -127,6 +127,15 @@ pub(crate) enum SessionControl {
         deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<StoppedToolCloseReceipt, String>>,
     },
+    CheckUnconfirmedStopClose {
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<Result<Option<UnconfirmedStopCloseReceipt>, String>>,
+    },
+    CloseUnconfirmedStop {
+        proof_id: String,
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<Result<UnconfirmedStopCloseReceipt, String>>,
+    },
     CheckFailedWorkClose {
         deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<Option<FailedWorkCloseReceipt>, String>>,
@@ -288,6 +297,12 @@ impl SessionControl {
             Self::CloseUnapprovedStopped { result, .. } => {
                 let _ = result.send(Err(error));
             }
+            Self::CheckUnconfirmedStopClose { result, .. } => {
+                let _ = result.send(Err(error));
+            }
+            Self::CloseUnconfirmedStop { result, .. } => {
+                let _ = result.send(Err(error));
+            }
             Self::CheckFailedWorkClose { result, .. } => {
                 let _ = result.send(Err(error));
             }
@@ -358,6 +373,10 @@ impl SessionControl {
                 (*deadline, result.is_closed())
             }
             Self::CloseUnapprovedStopped {
+                deadline, result, ..
+            } => (*deadline, result.is_closed()),
+            Self::CheckUnconfirmedStopClose { deadline, result } => (*deadline, result.is_closed()),
+            Self::CloseUnconfirmedStop {
                 deadline, result, ..
             } => (*deadline, result.is_closed()),
             Self::CheckFailedWorkClose { deadline, result } => (*deadline, result.is_closed()),
