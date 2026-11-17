@@ -356,6 +356,7 @@ pub struct DiscoveryPage {
     pub can_load: bool,
     pub sessions: Vec<DiscoveredSession>,
     pub next_cursor: Option<String>,
+    pub missing_location_count: usize,
 }
 
 fn decode_page(
@@ -386,17 +387,21 @@ fn decode_page(
         .ok_or("Agent 未返回有效的对话列表，请重试")?;
     let mut seen = std::collections::HashSet::new();
     let mut sessions = Vec::new();
+    let mut missing_location_count = 0;
     for row in rows {
         let id = row
             .get("sessionId")
             .and_then(Value::as_str)
             .filter(|value| !value.is_empty())
             .ok_or("Agent 返回的对话信息不完整，请重新查找")?;
-        let cwd = row
+        let Some(cwd) = row
             .get("cwd")
             .and_then(Value::as_str)
-            .filter(|value| Path::new(value).is_absolute())
-            .ok_or("Agent 未提供对话的有效文件位置，请重新查找")?;
+            .filter(|value| Path::new(value).is_absolute() && !value.contains('\0'))
+        else {
+            missing_location_count += 1;
+            continue;
+        };
         // Preserve conflicting locations so discovery can block ambiguous rows.
         if !seen.insert((id, cwd)) {
             continue;
@@ -420,6 +425,7 @@ fn decode_page(
         can_load,
         sessions,
         next_cursor,
+        missing_location_count,
     })
 }
 
@@ -458,6 +464,7 @@ pub async fn session_discover(
             can_load,
             sessions: vec![],
             next_cursor: None,
+            missing_location_count: 0,
         });
     };
     let mut page = decode_page(response, can_load, cursor.as_deref())?;
@@ -599,12 +606,58 @@ mod tests {
     }
 
     #[test]
+    fn discovery_keeps_valid_locations_and_ignores_incomplete_rows_before_deduplication() {
+        let root = tempfile::tempdir().unwrap();
+        let cwd = root.path();
+        let page = decode_page(
+            json!({"sessions":[
+                {"sessionId":"same","cwd":""},
+                {"sessionId":"same","cwd":cwd,"title":"With location"},
+                {"sessionId":"same","cwd":cwd,"title":"Exact repeat"},
+                {"sessionId":"missing"},
+                {"sessionId":"relative","cwd":"relative"},
+            ],"nextCursor":"next"}),
+            true,
+            None,
+        )
+        .unwrap();
+        assert_eq!(page.sessions.len(), 1);
+        assert_eq!(page.sessions[0].title.as_deref(), Some("With location"));
+        assert_eq!(page.next_cursor.as_deref(), Some("next"));
+        assert_eq!(
+            serde_json::to_value(page).unwrap()["missingLocationCount"],
+            3
+        );
+    }
+
+    #[test]
+    fn discovery_reports_an_entire_page_without_locations_and_keeps_its_cursor() {
+        let page = decode_page(
+            json!({"sessions":[
+                {"sessionId":"empty","cwd":""},
+                {"sessionId":"null","cwd":null},
+            ],"nextCursor":"next"}),
+            true,
+            None,
+        )
+        .unwrap();
+        assert!(page.sessions.is_empty());
+        assert!(page.can_load);
+        assert_eq!(page.next_cursor.as_deref(), Some("next"));
+        assert_eq!(
+            serde_json::to_value(page).unwrap()["missingLocationCount"],
+            2
+        );
+    }
+
+    #[test]
     fn malformed_or_repeated_page_never_becomes_empty_success() {
         for response in [
             json!({}),
             json!({"sessions":null}),
-            json!({"sessions":[{"sessionId":"s"}]}),
-            json!({"sessions":[{"sessionId":"s","cwd":"relative"}]}),
+            json!({"sessions":[{"sessionId":"","cwd":""}]}),
+            json!({"sessions":[{"cwd":""}]}),
+            json!({"sessions":[],"nextCursor":1}),
             json!({"sessions":[],"nextCursor":"same"}),
         ] {
             assert!(decode_page(response, false, Some("same")).is_err());

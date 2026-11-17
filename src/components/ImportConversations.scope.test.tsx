@@ -362,6 +362,82 @@ it("leaves the first lookup in the Agent default range and keeps pagination acce
   expect(h.discover).toHaveBeenLastCalledWith("a", "old-page-2", null);
 });
 
+it("keeps valid results and isolates the omitted-location notice by lookup", async () => {
+  h.discover.mockResolvedValueOnce({
+    status: "supported",
+    sessions: [row],
+    nextCursor: null,
+    missingLocationCount: 2,
+  });
+  const notice = () => render().find((node) => node.props.role === "alert");
+  const showsCount = (count: number) =>
+    render().some((node) => node.props.children === S.missingLocations(count));
+
+  click(S.search);
+  await idle();
+  expect(notice()).toBeDefined();
+  expect(showsCount(2)).toBe(true);
+  expect(render().some((node) => node.props["aria-label"] === row.title)).toBe(
+    true,
+  );
+  expect(h.preview).not.toHaveBeenCalled();
+
+  h.choose.mockResolvedValueOnce("/different");
+  click(S.chooseLocation);
+  await idle();
+  expect(notice()).toBeUndefined();
+  click(S.resetScope);
+  await idle();
+  expect(notice()).toBeDefined();
+  expect(h.discover).toHaveBeenCalledOnce();
+  click(S.again);
+  await idle();
+  expect(notice()).toBeUndefined();
+});
+
+it("distinguishes an omitted first page from empty history and accepts a later valid location", async () => {
+  h.discover
+    .mockResolvedValueOnce({
+      status: "supported",
+      sessions: [],
+      nextCursor: "fixed-row-next",
+      missingLocationCount: 3,
+    })
+    .mockRejectedValueOnce(new Error("test listing failed"))
+    .mockResolvedValueOnce({
+      status: "supported",
+      sessions: [row],
+      nextCursor: null,
+    });
+
+  click(S.search);
+  await idle();
+  expect(render().some((node) => node.props.role === "alert")).toBe(true);
+  expect(render().some((node) => node.props.children === S.empty)).toBe(false);
+  expect(button(S.add)?.props.disabled).toBe(true);
+  expect(h.preview).not.toHaveBeenCalled();
+  expect(h.commit).not.toHaveBeenCalled();
+
+  click(S.more);
+  await idle();
+  expect(
+    render().some((node) => node.props.children === S.operationIncomplete),
+  ).toBe(true);
+  expect(
+    render().some((node) => node.props.children === S.missingLocations(3)),
+  ).toBe(true);
+
+  click(S.more);
+  await idle();
+  expect(h.discover).toHaveBeenLastCalledWith(agent.id, "fixed-row-next", null);
+  expect(render().some((node) => node.props.role === "alert")).toBe(true);
+  expect(
+    render().find((node) => node.props["aria-label"] === row.title)?.props
+      .disabled,
+  ).toBe(false);
+  expect(h.preview).not.toHaveBeenCalled();
+});
+
 it("does not import a different folder through a selected result on a later page", async () => {
   const unchanged = {
     ...row,

@@ -24,6 +24,8 @@ export const IMPORT_STRINGS = {
   outcomeDetails: "失败详情",
   unsupportedTitle: "Agent 不提供已有对话列表",
   emptyHint: "可以选择原文件夹重新查找，或更换 Agent。",
+  missingLocations: (count: number) =>
+    `Agent 返回的 ${count} 条记录缺少有效的原文件夹。请选择原文件夹重新查找。`,
   queryHint: "试试其他关键词，或清除搜索查看全部结果。",
   partialHint: "成功项不会重复加入。失败项保留选择，可单独重试。",
   joinedHint: "已加入的对话保留原 Agent 和位置，没有自动发送消息。",

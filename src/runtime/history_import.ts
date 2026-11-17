@@ -49,6 +49,8 @@ export interface DiscoveryPage {
   canLoad?: boolean;
   sessions: DiscoveredConversation[];
   nextCursor: string | null;
+  /** Rows the Agent listed without a usable original working directory. */
+  missingLocationCount?: number;
 }
 export type HistoryPreviewPurpose = "importPreview" | "searchReadOnly";
 export type HistoryPreviewInterest = Pick<

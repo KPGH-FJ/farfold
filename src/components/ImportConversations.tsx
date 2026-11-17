@@ -61,6 +61,7 @@ type ListedConversation = DiscoveredConversation & { locationConflict?: true };
 interface LookupDraft {
   rows: ListedConversation[];
   cursor: string | null;
+  missingLocationCount: number;
   searched: boolean;
   choosing: boolean;
   unsupported: boolean;
@@ -183,6 +184,7 @@ export function ImportConversations({
   requestedContextRef.current = requestedContext;
   const [rows, setRows] = useState<ListedConversation[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
+  const [missingLocationCount, setMissingLocationCount] = useState(0);
   const [searched, setSearched] = useState(false);
   const [choosing, setChoosing] = useState(true);
   const [unsupported, setUnsupported] = useState(false);
@@ -220,6 +222,7 @@ export function ImportConversations({
     lookupDrafts.current.set(JSON.stringify([agentId, lookupCwd]), {
       rows,
       cursor,
+      missingLocationCount,
       searched,
       choosing,
       unsupported,
@@ -235,6 +238,7 @@ export function ImportConversations({
     lookupCwd,
     rows,
     cursor,
+    missingLocationCount,
     searched,
     choosing,
     unsupported,
@@ -253,6 +257,7 @@ export function ImportConversations({
     setAgentId(nextAgent);
     setLookupCwd(nextCwd);
     setRows(saved?.rows ?? []);
+    setMissingLocationCount(saved?.missingLocationCount ?? 0);
     setSearched(saved?.searched ?? false);
     setChoosing(!saved?.searched);
     setUnsupported(saved?.unsupported ?? false);
@@ -642,6 +647,9 @@ export function ImportConversations({
           ? page.nextCursor
           : null,
       );
+      setMissingLocationCount(
+        (count) => (more ? count : 0) + (page.missingLocationCount ?? 0),
+      );
       setSearched(true);
       setChoosing(false);
       setUnsupported(page.status === "unsupported");
@@ -705,6 +713,7 @@ export function ImportConversations({
       const originalDraft: LookupDraft = {
         rows,
         cursor,
+        missingLocationCount,
         searched,
         choosing,
         unsupported,
@@ -881,12 +890,17 @@ export function ImportConversations({
   // Exactly three user-visible results: joined, nothing to join, or an
   // incomplete/uncertain outcome whose technical detail stays collapsed.
   const failedRows = rows.filter((r) => failed.has(r.nativeSessionId));
+  const omittedAllLocations = rows.length === 0 && missingLocationCount > 0;
   const outcome =
     error || failed.size
       ? "incomplete"
       : message
         ? "imported"
-        : searched && !listing && !choosing && (unsupported || !visible.length)
+        : searched &&
+            !listing &&
+            !choosing &&
+            !omittedAllLocations &&
+            (unsupported || !visible.length)
           ? "none"
           : null;
   const chooseAgent = (nextAgent: string) => {
@@ -1137,6 +1151,12 @@ export function ImportConversations({
                 )}
               </details>
             </div>
+          </div>
+        )}
+        {!choosing && !listing && missingLocationCount > 0 && (
+          <div className="history-outcome partial" role="alert">
+            <WarningCircleIcon size={20} />
+            <p>{S.missingLocations(missingLocationCount)}</p>
           </div>
         )}
         {onPrepare && needsPreparation && available.length > 0 && (
