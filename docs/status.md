@@ -192,7 +192,7 @@
 
 ### ARCH-08
 
-2026-11-19 正式 OpenCode 从草稿内的模型入口实开官方设置终端，取消并放弃后直接回原草稿，目录、模型和焦点恢复，零发送。另从目录管理实开并取消 Copilot 官方终端，回原 Copilot 管理按钮。此两条认证均止于取消，其他登录、换号与服务切换依原条件。[正式回执](evidence/2026-11-19-cycle12-draft-auth-return/README.md)
+2026-11-19 正式 OpenCode 从草稿内的模型入口实开官方设置终端，取消并放弃后直接回原草稿，目录、模型和焦点恢复，零发送。另从目录管理实开并取消 Copilot 官方登录、Cline 模型服务和 Amp 密钥设置终端，分别回各自原管理按钮。四条均止于取消，其他登录、换号与服务切换依原条件。[正式回执](evidence/2026-11-19-cycle12-draft-auth-return/README.md)
 
 2026-11-18 Claude 正式新对话沿用 Claude Code 自己配置的小米 Messages 收到首答，原生模型回执与小米同 Key 用量核合。原订阅和 Console 官方认证取消及托管安全交付仍待。[单次正式实测](evidence/2026-11-18-cycle12-claude-mimo/README.md)
 
