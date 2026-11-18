@@ -4,17 +4,17 @@
   "cellCount": 168,
   "explicitStatuses": {
     "准备未齐": 10,
-    "入口有证": 15,
-    "受阻": 3,
+    "入口有证": 20,
+    "受阻": 4,
     "分项通过": 19,
-    "未测": 8,
+    "未测": 9,
     "原账号实答": 6,
     "查找冷开续答通过": 8,
     "已选模型有实答": 15,
     "可建对话": 1,
     "实测分项通过": 21,
     "前台停止分项通过": 3,
-    "已有设置实答": 6,
+    "已有设置实答": 7,
     "双前台分项通过": 17,
     "停止及冷续答通过": 12,
     "实测失败": 6,
@@ -661,7 +661,7 @@
           "observed": "旧 6 Astra/Ultra 首发成功；本次仅核到保存选择和已登记途径。",
           "remaining": "没有当前实际身份、费用、账户退出/换号证明。",
           "sources": ["docs/agent-first-release.md"],
-          "status": null
+          "status": "入口有证"
         },
         "S3": {
           "observed": "旧冷开能进入原对象但返回模型漂移，发送保护仍阻止续接。",
@@ -671,7 +671,7 @@
             "docs/evidence/2026-11-03-conversation-controls/control-formal-summary.json",
             "docs/status.md"
           ],
-          "status": null
+          "status": "受阻"
         },
         "S4": {
           "observed": "原保存 gpt-6-astra/ultra 已核；旧实际首发正例与冷开漂移反例各自保留。",
@@ -681,25 +681,25 @@
             "docs/agent-access-requirements.md",
             "docs/status.md"
           ],
-          "status": null
+          "status": "入口有证"
         },
         "S5": {
           "observed": "正式只读管理曾对本机停用 HTTP 条目完成加、核查、移除，未发模型请求。",
           "remaining": "实际采用、真实权限范围和工作能力仍待，受影响新发送暂停。",
           "sources": ["docs/status.md", "docs/agent-access-requirements.md"],
-          "status": null
+          "status": "入口有证"
         },
         "S6": {
           "observed": "无当前相同版本的实际并行配置、审批和停止隔离确证。",
           "remaining": "在权限条件明确后按各原对象实测，保持旧未知。",
           "sources": ["docs/status.md", "docs/agent-access-requirements.md"],
-          "status": null
+          "status": "未测"
         },
         "S7": {
           "observed": "前批界面冷开漂移和权限未知会要求修复或阻止发送。",
           "remaining": "当前停止、任务实际结束/恢复及附件回读各自实测。",
           "sources": ["docs/agent-first-release.md", "docs/status.md"],
-          "status": null
+          "status": "入口有证"
         },
         "S8": {
           "observed": "已见正式原模型漂移反馈及暂停发送。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
@@ -1039,10 +1039,13 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "一次正式原记录报告 codexplan→codexresponses / gpt-5.6-sol；当前原会话选择未露出模型/身份。",
+          "observed": "一次正式原记录报告 codexplan→codexresponses / gpt-5.6-sol；当前原会话选择未露出模型/身份。\n2026-11-19 正式版沿用已有设置，厂商记录核合 codexresponses / gpt-5.6-sol，B 返回同一任务的准确答复。",
           "remaining": "当前账户和计费、退出换号未证；alias 的默认 high 不算官方确认。",
-          "sources": ["docs/evidence/2026-11-13-cycle7/fast-page-summary.json"],
-          "status": null
+          "sources": [
+            "docs/evidence/2026-11-13-cycle7/fast-page-summary.json",
+            "docs/evidence/2026-11-19-cycle12-fast-terminal-exit/README.md"
+          ],
+          "status": "已有设置实答"
         },
         "S3": {
           "observed": "官方批准的同安装只读 export 叠加普通冷开，正式回读原正文、工具、PNG。\n2026-11-16 续查：两目录实测后正常退出并冷开 A，按原会话 session/load，手动一轮准确续答，无 session/new 或自动重发。",
@@ -1055,13 +1058,14 @@
           "status": "冷开续答分项通过"
         },
         "S4": {
-          "observed": "原实际后端明确一次，当前 Farfold 保存选择为空，不伪造可选模型及思考档。",
+          "observed": "原实际后端明确一次，当前 Farfold 保存选择为空，不伪造可选模型及思考档。\n2026-11-19 正式版沿用当前模型，厂商记录核合实际采用 gpt-5.6-sol。",
           "remaining": "本安装提供的可改能力、真实效应与恢复仍待。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/fast-page-summary.json",
-            "docs/evidence/2026-11-13-cycle7/history-supplement-summary.json"
+            "docs/evidence/2026-11-13-cycle7/history-supplement-summary.json",
+            "docs/evidence/2026-11-19-cycle12-fast-terminal-exit/README.md"
           ],
-          "status": null
+          "status": "入口有证"
         },
         "S5": {
           "observed": "正式一次公开网页两层许可与同调用 90,330 字节 PNG 交付。\n2026-11-16 续查：正式从正常入口各单次批准 Agent 权限与明列程序、参数和目录的客户端权限，B 命令完成并返回记号。",
