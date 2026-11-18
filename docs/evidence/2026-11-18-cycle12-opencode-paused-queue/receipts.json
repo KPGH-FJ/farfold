@@ -1,0 +1,142 @@
+{
+  "fixture": "/private/tmp/ff-c12-opencode-queue.fmMCk3xh",
+  "processEvents": [
+    {
+      "at": "2026-11-18T15:56:32.558+00:00",
+      "tasks": {
+        "a": {
+          "pids": {},
+          "processes": {},
+          "result": null,
+          "cwd": {}
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T15:57:02.330+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 82310,
+            "child": 82312
+          },
+          "processes": {
+            "shell": "82310 82267 82310 Ss   Wed Nov 18 23:57:02 2026     /bin/sh ./task.sh",
+            "child": "82312 82310 82310 S    Wed Nov 18 23:57:02 2026     /bin/sleep 120"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-opencode-queue.fmMCk3xh",
+            "child": "/private/tmp/ff-c12-opencode-queue.fmMCk3xh"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T15:57:28.049+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 82310,
+            "child": 82312
+          },
+          "processes": {
+            "shell": null,
+            "child": null
+          },
+          "result": null,
+          "cwd": {}
+        }
+      }
+    }
+  ],
+  "queueCheckpoints": {
+    "beforeQuit": {
+      "time": "2026-11-18T15:58:13.751+00:00",
+      "nativeId": "ses_e10a08256ffeQYB3FYsUWCUTkl",
+      "agentId": "opencode",
+      "serviceKind": "configured",
+      "model": "mimo-v2.6-flash",
+      "configSha256": "daac1c074656bcad587c2c6300f02d0c1136e2a5f6a872b96574e6e6a762c459",
+      "ownedQueue": {
+        "blocks": [
+          [
+            {
+              "type": "text",
+              "text": "请只回复 FF_C12_OPENCODE_QUEUE_B_EXPLICIT。不要运行工具，不要重复上一条任务。"
+            }
+          ]
+        ],
+        "uncertainIndex": null
+      },
+      "activity": {
+        "lastActivityAt": 1795017447998,
+        "ended": true
+      }
+    },
+    "afterQuit": {
+      "time": "2026-11-18T15:58:31.222+00:00",
+      "nativeId": "ses_e10a08256ffeQYB3FYsUWCUTkl",
+      "agentId": "opencode",
+      "serviceKind": "configured",
+      "model": "mimo-v2.6-flash",
+      "configSha256": "daac1c074656bcad587c2c6300f02d0c1136e2a5f6a872b96574e6e6a762c459",
+      "ownedQueue": {
+        "blocks": [
+          [
+            {
+              "type": "text",
+              "text": "请只回复 FF_C12_OPENCODE_QUEUE_B_EXPLICIT。不要运行工具，不要重复上一条任务。"
+            }
+          ]
+        ],
+        "uncertainIndex": null
+      },
+      "activity": {
+        "lastActivityAt": 1795017447998,
+        "ended": true
+      }
+    },
+    "coldPaused": {
+      "time": "2026-11-18T15:58:48.542+00:00",
+      "nativeId": "ses_e10a08256ffeQYB3FYsUWCUTkl",
+      "agentId": "opencode",
+      "serviceKind": "configured",
+      "model": "mimo-v2.6-flash",
+      "configSha256": "daac1c074656bcad587c2c6300f02d0c1136e2a5f6a872b96574e6e6a762c459",
+      "ownedQueue": {
+        "blocks": [
+          [
+            {
+              "type": "text",
+              "text": "请只回复 FF_C12_OPENCODE_QUEUE_B_EXPLICIT。不要运行工具，不要重复上一条任务。"
+            }
+          ]
+        ],
+        "uncertainIndex": null
+      },
+      "activity": {
+        "lastActivityAt": 1795017447998,
+        "ended": true
+      }
+    },
+    "afterExplicitContinue": {
+      "time": "2026-11-18T15:59:48.531+00:00",
+      "nativeId": "ses_e10a08256ffeQYB3FYsUWCUTkl",
+      "agentId": "opencode",
+      "serviceKind": "configured",
+      "model": "mimo-v2.6-flash",
+      "configSha256": "daac1c074656bcad587c2c6300f02d0c1136e2a5f6a872b96574e6e6a762c459",
+      "ownedQueue": null,
+      "activity": {
+        "lastActivityAt": 1795017548788,
+        "ended": true
+      }
+    }
+  },
+  "aResultAbsentAfterContinue": true,
+  "frozenColdWirePrefix": {
+    "rows": 14,
+    "sha256": "68068ab63b29b8393bd0ca5d8b56fcb14099388998c29629b9ca07a88582719a"
+  }
+}
