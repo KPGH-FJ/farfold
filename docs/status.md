@@ -30,7 +30,7 @@
 
 | 范围           | 当前核对结果                                                                                                                                                                                                                                                                                                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 第 12 周期基线 | 正式应用 `6ca11aa5a`，首发 21 家，整家 0/21。CodeBuddy 原目录 Hy4 / On 实答、切换和冷续答有证。S1 普通取消返回已验 19 家，18 家恢复目录后可发送，零模型请求。Amp 双前台实停及冷开有证。Copilot 双前台实停为 A 1.0.114、B 1.0.112，工具终态待官方。Dirac 正式入口可各自读取两个目录的规则。MiniMax 官方分发仍 0.2.7。                                                                        |
+| 第 12 周期基线 | 正式应用 `6ca11aa5a`，首发 21 家，整家 0/21。CodeBuddy 原目录 Hy4 / On 实答、切换、双前台实停、同会话冷续答有证。S1 普通取消返回已验 19 家，18 家恢复目录后可发送，零模型请求。Amp 双前台实停及冷开有证。Copilot 双前台实停为 A 1.0.114、B 1.0.112，工具终态待官方。Dirac 正式入口可各自读取两个目录的规则。MiniMax 官方分发仍 0.2.7。                                                      |
 | 唯一正式应用   | `/Applications/Farfold.app`，`ai.farfold.desktop`，0.1.7，macOS arm64。CDHash `948e677f8bb57b8eec3f44100473329b9979ab33`，可执行文件 SHA-256 `208e347d25c2a426a3d2b885621013eca95c8fa4ec64cd583ac4679d780465ab`。首发目录 21 家。                                                                                                                                                           |
 | Mac 工程与安装 | 2026-11-18 CodeBuddy 选模批完整前端 10,997 项、Rust 2,830 项通过（11 项已有忽略），类型、Clippy、定向格式和正式包通过。正常保存退出后更新应用，262,996 项数据元信息及关键文件摘要保持。[最新正式回执](evidence/2026-11-18-cycle12-codebuddy-registry-model/README.md)                                                                                                                       |
 | 当前开发环境   | macOS 27.0（26A425），Node 22.22.3、锁定 pnpm 9.15.0、Rust/Cargo 1.96.0、Xcode Command Line Tools 可识别。[环境恢复证据](evidence/2026-11-04-development-environment-restoration/README.md)。                                                                                                                                                                                               |
@@ -242,6 +242,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 
 2026-11-17 Mistral Vibe 正式卡片显示准确命令，点一次拒绝，原脚本未执行。Copilot 1.0.112 原账号已有设置的 Auto 续答超窗，取消未获确认，冷开原对话提示未确认且未自动重发。两家分别保留审批正例和实际停止缺口。[续验](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)
 
+2026-11-18 CodeBuddy 正式 `6ca11aa5a` 从原目录以实际 Hy4 / On 在独立工作目录并行，各批准一次原命令。只停 A 后 A 原 Shell 和子进程退出、原工具中止，B 原进程独立交付。 [正式回执](evidence/2026-11-18-cycle12-codebuddy-registry-stop/README.md)
+
 2026-11-17 Kilo、CodeBuddy、Devin 正式双前台只点 A 停止，原 Shell 和子进程退出，B 继续并交付。三家冷开原 A 保留草稿与原配置并续答。Dirac 0.5.21 遗留 sleep，按官方入口升级 0.6.0 用同样长度的新双任务复验，A 原 Shell 和 sleep 均停，B 继续；此版长任务未验。[正式回执](evidence/2026-11-17-cycle12-four-agent-control/README.md)
 
 2026-11-17 Mistral 正式诊断确认审批请求无输入，紧邻同一标识工具报告 `in_progress` 与有输入无输出。新版卡片显示「该步骤报告的输入」和完整命令，单次批准后运行完成。MiniMax 用 MiMo 实际早停前台，官方报告 `managed_foreground` / `canceled`，真实 Shell 和子进程退出且无完成标记；重开原 ID 续答。该 Agent 的后台停止仍失败。[正式回执](evidence/2026-11-17-cycle12-approval-and-lf/README.md)
@@ -323,6 +325,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 2026-11-17 Goose 与 Qoder 指定对方目录各为空，选原目录各准确命中，往返切换不串结果。Qoder 默认回包的 28 条无原位置，新版说明缺位置并保留有效行和游标，正式原目录照常可查。Cline 无列表，以已知 ID 提示已有记录，从搜索冷开核原文；Pi 原 A 同 ID 冷开并续答。Qoder 和 Cline 的默认列表缺口继续。[本批回执](evidence/2026-11-17-cycle12-pi-history-scope/README.md)
 
 2026-11-17 Copilot 1.0.112 从正常搜索打开同一原 ID、读回正文和现有 Auto。只发一次续问，超过五分钟无回、停止无确认；保存退出再开，正确提示此前请求结果未确认，零自动重发。旧版原样本续答正例保持。[正式回执](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)
+
+2026-11-18 CodeBuddy 原目录 Hy4 / On 自有 A 停止后正常退出，冷开同原 ID 显示原 Bash 中止，零自动发送或重跑。手动续问一次准确复述原标记，厂商记录继续使用标准 Hy4 / On。 [正式回执](evidence/2026-11-18-cycle12-codebuddy-registry-stop/README.md#冷开同一原-a并明确续问)
 
 2026-11-17 Kilo、CodeBuddy、Devin 停止后的原 ID 可冷开、续答，草稿和模型保留。Dirac 0.6.0 的两个已停止原 ID 都收到成功加载和工具历史，但没有用户/助手正文，Farfold 保留读取失败。完成的新版 B 有助手正文可读，原用户提示仍缺。[正式回执](evidence/2026-11-17-cycle12-four-agent-control/README.md)
 
@@ -956,11 +960,11 @@ Goose实验SQLite打开失败、Kilo实验临时子进程判定属于夹具调�
 
 ## 第 12 周期待配合
 
-Copilot、Cursor 与 Kilo 工具终态、Claude 原 Bash 成品位置、Dirac 正文和撤回、Cline 精确目录列表、Pi 网页工具和回执、Qoder 默认历史位置与实时工具终态、MiniMax 后台新版，以及 Amp 显式模型及未映射线程均列有[官方复验条件](evidence/2026-11-18-cycle12-copilot-grok/README.md#等待官方的条件)。CodeBuddy 的官方启动接法及原目录余项见下。
+Copilot、Cursor 与 Kilo 工具终态、Claude 原 Bash 成品位置、Dirac 正文和撤回、Cline 精确目录列表、Pi 网页工具和回执、Qoder 默认历史位置与实时工具终态、MiniMax 后台新版，以及 Amp 显式模型及未映射线程均列有[官方复验条件](evidence/2026-11-18-cycle12-copilot-grok/README.md#等待官方的条件)。CodeBuddy 的原目录验收及余项见下。
 
 2026-11-17 用户允许 CodeBuddy 在独立样本采用 Hy4 / On、MiniMax 用小米 MiMo 首答及原配置续答，并授权继续 Mistral Vibe 实测。MiniMax 与 Mistral 已有实答。旧 MiniMax M2.7 无额度，保留旧会话原配置，恢复额度后再验。siGit 已按用户决定移出首发。
 
-- **CodeBuddy**。正式 `6ca11aa5a` 修复原目录同值选模漏发设置。本机 2.184.0 原目录实答 Hy4 / On，同原对话切到免费 Flash，再切回后冷开续答实际仍走 Hy4 / On。冷开续问的正文先返回，厂商周期总结使整轮又等约 130 秒才结束。旧 `hy4-preview-f / High` 和原目录标准 Hy4 的停止隔离仍待。 [原目录正式实测](evidence/2026-11-18-cycle12-codebuddy-registry-model/README.md) · [独立入口对照](evidence/2026-11-18-cycle12-codebuddy-hy4-official-launch/README.md)
+- **CodeBuddy**。正式 `6ca11aa5a` 修复原目录同值选模漏发设置。本机 2.184.0 原目录实答 Hy4 / On，同原对话切到免费 Flash，再切回后冷开续答实际仍走 Hy4 / On。冷开续问的正文先返回，厂商周期总结使整轮又等约 130 秒才结束。原目录两条标准 Hy4 / On 前台同时运行时只停 A，A Shell 及子进程退出，B 按原请求完成。冷开 A 保留原步骤中止状态，零自动执行；手动续答仍走 Hy4 / On。旧 `hy4-preview-f / High`、后台及其他原条件继续。 [双任务与冷续答](evidence/2026-11-18-cycle12-codebuddy-registry-stop/README.md) · [原目录正式实测](evidence/2026-11-18-cycle12-codebuddy-registry-model/README.md) · [独立入口对照](evidence/2026-11-18-cycle12-codebuddy-hy4-official-launch/README.md)
 - **Kilo**。当前正式 7.8.1 实时与冷开都未在原步骤摘要显示中止。现行目录 7.8.27 的工具映射仍把同类完成记录映射为 `completed`。等同一工具的可归属失败或中止信号，再复验两种界面呈现。 [正式实测](evidence/2026-11-18-cycle12-kilo-stop-display/README.md)
 
 - **Claude Code**。Farfold 独立小米 Messages 测试已有实答，官方适配器的私密凭据交接仍待支持。若要测独立官方账号来源，可在用户方便时从 Farfold 官方账号入口使用所选 Claude 订阅或 Anthropic Console 登录。

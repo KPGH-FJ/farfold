@@ -1,0 +1,176 @@
+{
+  "fixture": "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV",
+  "processEvents": [
+    {
+      "at": "2026-11-18T15:49:05.808+00:00",
+      "tasks": {
+        "a": {
+          "pids": {},
+          "processes": {},
+          "result": null,
+          "cwd": {}
+        },
+        "b": {
+          "pids": {},
+          "processes": {},
+          "result": null,
+          "cwd": {}
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T15:49:13.200+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 78286,
+            "child": 78288
+          },
+          "processes": {
+            "shell": "78286 78285 78285 S+   Wed Nov 18 23:49:12 2026     /bin/sh ./task.sh",
+            "child": "78288 78286 78285 S+   Wed Nov 18 23:49:13 2026     /bin/sleep 150"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV/a",
+            "child": "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV/a"
+          }
+        },
+        "b": {
+          "pids": {},
+          "processes": {},
+          "result": null,
+          "cwd": {}
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T15:49:14.641+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 78286,
+            "child": 78288
+          },
+          "processes": {
+            "shell": "78286 78285 78285 S+   Wed Nov 18 23:49:12 2026     /bin/sh ./task.sh",
+            "child": "78288 78286 78285 S+   Wed Nov 18 23:49:13 2026     /bin/sleep 150"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV/a",
+            "child": "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV/a"
+          }
+        },
+        "b": {
+          "pids": {
+            "shell": 78302,
+            "child": 78304
+          },
+          "processes": {
+            "shell": "78302 78301 78301 S+   Wed Nov 18 23:49:14 2026     /bin/sh ./task.sh",
+            "child": "78304 78302 78301 S+   Wed Nov 18 23:49:14 2026     /bin/sleep 70"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV/b",
+            "child": "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV/b"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T15:49:25.831+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 78286,
+            "child": 78288
+          },
+          "processes": {
+            "shell": null,
+            "child": null
+          },
+          "result": null,
+          "cwd": {}
+        },
+        "b": {
+          "pids": {
+            "shell": 78302,
+            "child": 78304
+          },
+          "processes": {
+            "shell": "78302 78301 78301 S+   Wed Nov 18 23:49:14 2026     /bin/sh ./task.sh",
+            "child": "78304 78302 78301 S+   Wed Nov 18 23:49:14 2026     /bin/sleep 70"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV/b",
+            "child": "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV/b"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T15:50:24.597+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 78286,
+            "child": 78288
+          },
+          "processes": {
+            "shell": null,
+            "child": null
+          },
+          "result": null,
+          "cwd": {}
+        },
+        "b": {
+          "pids": {
+            "shell": 78302,
+            "child": 78304
+          },
+          "processes": {
+            "shell": null,
+            "child": null
+          },
+          "result": {
+            "sha256": "27285aa71759ae48ad90a6f28e04552515f0b30851d6678eec9074a076b50e1a",
+            "text": "FF_C12_CB_ORDINARY_B_DONE\n"
+          },
+          "cwd": {}
+        }
+      }
+    }
+  ],
+  "expectedB": "FF_C12_CB_ORDINARY_B_DONE\n",
+  "beforeAndAfterColdFileIdentitiesMatch": true,
+  "fileIdentities": {
+    "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV/a/task.sh": {
+      "mtimeNs": 1795016816420441309,
+      "bytes": 306,
+      "sha256": "5e3ee7e27690b9c7dcbb1c4d34dc353537c637229f86e7ca9f124a2222df3616"
+    },
+    "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV/a/shell.pid": {
+      "mtimeNs": 1795016953004029641,
+      "bytes": 6,
+      "sha256": "3404a10e1a88674fee398f2cd843223ac26e76d2ba8feca1e1a8ec8fb45ab7f2"
+    },
+    "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV/a/child.pid": {
+      "mtimeNs": 1795016953004805019,
+      "bytes": 6,
+      "sha256": "76869b9b43d29ebed1a7c650ee599f883cf04454674a0631c26cdeba64fa2058"
+    },
+    "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV/a/result.txt": null,
+    "/private/tmp/ff-c12-cb-ordinary-stop.ovSZ0LOV/b/result.txt": {
+      "mtimeNs": 1795017024436022374,
+      "bytes": 26,
+      "sha256": "27285aa71759ae48ad90a6f28e04552515f0b30851d6678eec9074a076b50e1a"
+    },
+    "/Users/tw/.codebuddy/settings.json": null,
+    "/Users/tw/.codebuddy/settings.local.json": null,
+    "/Users/tw/.codebuddy/models.json": null,
+    "/Users/tw/.codebuddy.json": null
+  }
+}
