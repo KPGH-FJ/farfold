@@ -4,7 +4,7 @@
   "cellCount": 168,
   "explicitStatuses": {
     "准备未齐": 10,
-    "入口有证": 16,
+    "入口有证": 15,
     "受阻": 3,
     "分项通过": 19,
     "未测": 8,
@@ -17,7 +17,7 @@
     "已有设置实答": 6,
     "双前台分项通过": 17,
     "停止及冷续答通过": 12,
-    "实测失败": 6,
+    "实测失败": 7,
     "已选服务有实答": 3,
     "冷开续答分项通过": 7
   },
@@ -561,15 +561,16 @@
           "status": "冷开续答分项通过"
         },
         "S4": {
-          "observed": "旧 Hy4/High 和冷回读未知设置保护有观察，非当前实际后端证明。\n2026-11-17 原 hy4-preview-f / High 与当前报告的 Hy4 / On (default) 不一致。保持旧设置，零发送。\n2026-11-17 本次独立草稿确认 Hy4 / On (default)，持久化模型为 hy4std，单次短问精确响应。\n2026-11-18 当前 A/B 和旧短问、文件任务、双前台及旧 A 续答均显示保存选择 Hy4 或 hy4std，厂商实际请求 ID 为 hy4flash-free。当前两条会话发送前均无显式模型设置请求。",
-          "remaining": "确认安全且作用于原会话的官方模型设置，核实际请求模型，再用 Hy4 / On 复验；冷开、切换及原 hy4-preview-f / High 按原项。",
+          "observed": "旧 Hy4/High 和冷回读未知设置保护有观察，非当前实际后端证明。\n2026-11-17 原 hy4-preview-f / High 与当前报告的 Hy4 / On (default) 不一致。保持旧设置，零发送。\n2026-11-17 本次独立草稿确认 Hy4 / On (default)，持久化模型为 hy4std，单次短问精确响应。\n2026-11-18 A/B 和旧样本实际请求 hy4flash-free。原 A/B 厂商日志确认界面 Hy4 来自目录快照，两处会话模型均为空，实际解析为 Flash Free。2.184.0 与 2.185.0 的普通模型设置会同步写 CLI 全局默认。本次根因核对零发送。",
+          "remaining": "等官方原会话选模或受支持的启动选项。先从 Farfold 发一次短测核真实 Hy4 / On，再验双任务、停止和冷开。已核官方 --model 可供用户显式配置独立入口；本机真实权益及选模仍待。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
             "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md",
             "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
-            "docs/evidence/2026-11-18-cycle12-codebuddy-stop-display/README.md#模型显示与实际请求不一致"
+            "docs/evidence/2026-11-18-cycle12-codebuddy-stop-display/README.md#模型显示与实际请求不一致",
+            "docs/evidence/2026-11-18-cycle12-codebuddy-hy4-routing/README.md"
           ],
           "status": "实测失败"
         },
@@ -588,26 +589,28 @@
         },
         "S6": {
           "observed": "未找到当前版跨任务实证。\n2026-11-17 同一 Agent 的两条真实命令独立逐次批准，各自 Shell 与 sleep 同时存在。点停 A 后 B 原进程保持并交付。\n2026-11-18 再验独立 A/B 均单次审批，实际 Hy4 Flash Free 下前台并行，只停 A 后 B 原进程照常交付。",
-          "remaining": "更多工作方式、共享目录、跨模型服务及权限组合按原项续验。",
+          "remaining": "指定 Hy4 / On 先实证选模，再从独立目录双任务复验。更多工作方式、共享目录、跨模型服务及权限组合按原项续验。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
             "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md",
-            "docs/evidence/2026-11-18-cycle12-codebuddy-stop-display/README.md"
+            "docs/evidence/2026-11-18-cycle12-codebuddy-stop-display/README.md",
+            "docs/evidence/2026-11-18-cycle12-codebuddy-hy4-routing/README.md"
           ],
           "status": "双前台分项通过"
         },
         "S7": {
           "observed": "旧在途停止精确子进程仍活；旧暂停队列、草稿及附件保留有观察。\n2026-11-17 仅点停 A 时同一原 Shell 和 sleep 退出且无完成标记，B 照常完成。重开原 A 读回草稿和原配置，手动续答成功，零自动重发。\n2026-11-18 只读查同原工具回执，CodeBuddy A 在 Farfold 停止后记录用户中止，B 同一原工具记录成功及实际标记。旧实时和冷开诊断只保留事件类别，界面如何呈现 A 工具终态仍待核。\n2026-11-18 实际 Hy4 Flash Free 的新样本，实时原步骤详情为 cancelled，零发送冷开同原 A 仍显示 Interrupted by user。原进程退出、原工具归属及启动记录不变分别核合。",
-          "remaining": "指定 Hy4 / On 的复验待模型生效。真实断线、待发、附件、后台工作及其他条件按适用原项续验。",
+          "remaining": "指定 Hy4 / On 先实证选模，再复验停止只作用于 A、原工具终态及冷开未重跑。真实断线、待发、附件、后台工作及其他条件按适用原项续验。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
             "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md",
             "docs/evidence/2026-11-18-cycle12-codebuddy-stop-receipt/README.md",
-            "docs/evidence/2026-11-18-cycle12-codebuddy-stop-display/README.md"
+            "docs/evidence/2026-11-18-cycle12-codebuddy-stop-display/README.md",
+            "docs/evidence/2026-11-18-cycle12-codebuddy-hy4-routing/README.md"
           ],
           "status": "停止及冷续答通过"
         },
@@ -1565,26 +1568,28 @@
           "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "旧 A 明确停止且同目录 B 完成，旧目录缺失时没有造空会话。\n2026-11-17 仅点停 A 时同一原 Shell 和 sleep 退出且无完成标记，B 照常完成。重开原 A 读回草稿和原配置，手动续答成功，零自动重发。\n2026-11-18 只读精确核对厂商原回执，A 工具保存 completed 信封但输出明确为用户中止，退出码为空；B 原工具明确退出码为 0 并含完成标记。",
-          "remaining": "真实断线、实际界面中原工具状态的实时及冷开呈现、待发、附件、后台工作及其他条件按适用原项续验。",
+          "observed": "旧 A 明确停止且同目录 B 完成，旧目录缺失时没有造空会话。\n2026-11-17 仅点停 A 时同一原 Shell 和 sleep 退出且无完成标记，B 照常完成。重开原 A 读回草稿和原配置，手动续答成功，零自动重发。\n2026-11-18 原 A 厂商工具保存 completed，输出明确为用户中止，退出码为空；B 退出码为 0。正式新样本实停两原进程，冷开同一原对话零重跑；原步骤的准确反馈失败见 S8。",
+          "remaining": "原工具终态实时和冷开复验见 S8。真实断线、待发、附件、后台工作及其他条件按适用原项续验。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-isolation/README.md",
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
             "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md",
-            "docs/evidence/2026-11-18-cycle12-kilo-stop-receipt/README.md"
+            "docs/evidence/2026-11-18-cycle12-kilo-stop-receipt/README.md",
+            "docs/evidence/2026-11-18-cycle12-kilo-stop-display/README.md"
           ],
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "正式旧目录缺失反馈保留原对象；旧模型、审批和停止入口已有分项。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 本轮产物打开真实磁盘结果，用户可直接核对。模型自报完成与实际成品内容分别保留。\n2026-11-17 续验：CodeBuddy → Kilo → CodeBuddy 同名成品逐次打开，正式文件预览、原路径和另存入口按当前对话准确显示。",
-          "remaining": "当前入口实测与失败下一步完整性待核。",
+          "observed": "正式旧目录缺失反馈保留原对象；旧模型、审批和停止入口已有分项。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 本轮产物打开真实磁盘结果，用户可直接核对。模型自报完成与实际成品内容分别保留。\n2026-11-17 续验：CodeBuddy → Kilo → CodeBuddy 同名成品逐次打开，正式文件预览、原路径和另存入口按当前对话准确显示。\n2026-11-18 正式版点停实际 Shell 和子进程后，原步骤实时和冷开都显示勾号与「步骤已结束」，仅技术详情保留原中止文本。",
+          "remaining": "等同一工具 ID 的结构化中止或失败回执，复验实时及冷开原步骤准确显示。其他入口及失败下一步仍按原项。",
           "sources": [
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md",
-            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
+            "docs/evidence/2026-11-18-cycle12-kilo-stop-display/README.md"
           ],
-          "status": "入口有证"
+          "status": "实测失败"
         }
       },
       "name": "Kilo"

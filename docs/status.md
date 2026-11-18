@@ -212,9 +212,9 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 
 ### ARCH-44
 
-2026-11-18 CodeBuddy A 实际前台 Shell 与子进程退出，B 完成交付。原 A 实时工具详情为 cancelled，正常退出冷开仍为 Interrupted by user，原任务未重跑。界面 Hy4 / On 的实际模型为 Hy4 Flash Free。Kilo 旧原工具记录核到 A 中止及 B 退出码 0，Farfold 对应呈现另验。 [CodeBuddy 正式复验](evidence/2026-11-18-cycle12-codebuddy-stop-display/README.md) · [Kilo 原工具回执](evidence/2026-11-18-cycle12-kilo-stop-receipt/README.md)
+2026-11-18 CodeBuddy A 实际前台 Shell 与子进程退出，B 完成交付。原 A 实时工具详情为 cancelled，正常退出冷开仍为 Interrupted by user，原任务未重跑。上述样本实际使用 Hy4 Flash Free。Kilo 在新正式样本中确认原 Shell 与 sleep 均退出、冷开同一原对象未重跑。实时和冷开原 Bash 都显示勾号及「步骤已结束」，只有技术详情保留用户中止原文，准确反馈实测失败。 [CodeBuddy 正式复验](evidence/2026-11-18-cycle12-codebuddy-stop-display/README.md) · [Kilo 界面实测](evidence/2026-11-18-cycle12-kilo-stop-display/README.md)
 
-2026-11-18 CodeBuddy 2.184.0 原记录复核，同请求和工具的 A 厂商回执为用户中止，B 原工具正常结束并有准确标记。Farfold 过去的实时及冷开诊断仅有事件类别，A 的工具终态呈现仍待核。[原回执复核](evidence/2026-11-18-cycle12-codebuddy-stop-receipt/README.md)
+2026-11-18 CodeBuddy 2.184.0 原记录复核，早期样本同请求和工具的 A 厂商回执为用户中止，B 原工具正常结束并有准确标记。早期 Farfold 实时及冷开诊断仅有事件类别，后来用上段新样本验证呈现。[早期原回执](evidence/2026-11-18-cycle12-codebuddy-stop-receipt/README.md)
 
 2026-11-18 Cursor A 官方入口续核。现用 2026.11.13 加载会写会话元数据，回放重新生成工具 ID 并统报 completed。A 进程退出仍有正式证据，原工具终态需官方确切回执或可核归属的只读入口。[官方入口核对](evidence/2026-11-18-cycle12-cursor-stop-receipt/README.md#a-原工具终态的官方入口核对)
 
@@ -954,9 +954,12 @@ Goose实验SQLite打开失败、Kilo实验临时子进程判定属于夹具调�
 
 ## 第 12 周期待配合
 
-Copilot 与 Cursor 工具终态、Claude 原 Bash 成品位置、Dirac 正文和撤回、Cline 精确目录列表、Pi 网页工具和回执、Qoder 默认历史位置与实时工具终态、MiniMax 后台新版，以及 Amp 显式模型及未映射线程均列有[官方复验条件](evidence/2026-11-18-cycle12-copilot-grok/README.md#等待官方的条件)。两家按用户要求暂缓见下。
+Copilot、Cursor 与 Kilo 工具终态、CodeBuddy 会话级选模、Claude 原 Bash 成品位置、Dirac 正文和撤回、Cline 精确目录列表、Pi 网页工具和回执、Qoder 默认历史位置与实时工具终态、MiniMax 后台新版，以及 Amp 显式模型及未映射线程均列有[官方复验条件](evidence/2026-11-18-cycle12-copilot-grok/README.md#等待官方的条件)。两家按用户要求暂缓见下。
 
-2026-11-17 用户允许 CodeBuddy 单独采用 Hy4 / On、MiniMax 用小米 MiMo 首答及原配置续答，并授权继续 Mistral Vibe 实测。MiniMax 与 Mistral 已有实答。CodeBuddy 实答及停止证据有效，原请求核出的实际模型为 Hy4 Flash Free，界面的 Hy4 / On 生效未通过。[模型核对](evidence/2026-11-18-cycle12-codebuddy-stop-display/README.md#模型显示与实际请求不一致)。旧 MiniMax M2.7 无额度，保留该旧会话的原配置，恢复额度后再验。siGit 已按用户决定移出首发。
+2026-11-17 用户允许 CodeBuddy 在独立样本采用 Hy4 / On、MiniMax 用小米 MiMo 首答及原配置续答，并授权继续 Mistral Vibe 实测。MiniMax 与 Mistral 已有实答。旧 MiniMax M2.7 无额度，保留旧会话原配置，恢复额度后再验。siGit 已按用户决定移出首发。
+
+- **CodeBuddy**。原 A、B 厂商日志确认 Hy4 来自目录快照，会话实际模型为空，运行选了 Flash Free。现行显式模型设置还会修改 CLI 全局默认。普通入口等待会话级模型设置或官方目录支持的安全启动选项；用户明确配置独立 `--model` 启动入口后可单验首答。本次零发送，Hy4 / On 的短测、双任务、停止及冷开仍待。 [模型根因及复验条件](evidence/2026-11-18-cycle12-codebuddy-hy4-routing/README.md)
+- **Kilo**。当前正式 7.8.1 实时与冷开都未在原步骤摘要显示中止。现行目录 7.8.27 的工具映射仍把同类完成记录映射为 `completed`。等同一工具的可归属失败或中止信号，再复验两种界面呈现。 [正式实测](evidence/2026-11-18-cycle12-kilo-stop-display/README.md)
 
 - **Claude Code**。Farfold 独立小米 Messages 测试已有实答，官方适配器的私密凭据交接仍待支持。若要测独立官方账号来源，可在用户方便时从 Farfold 官方账号入口使用所选 Claude 订阅或 Anthropic Console 登录。
 - **Gemini CLI 与 Antigravity**。保持暂缓，后续恢复该验收时由用户本人完成官方登录。
