@@ -198,6 +198,8 @@
 
 2026-11-18 补录。Goose 自有会话冷开后以选定的 OpenRouter 免费 Ultra 实答，官方账单仅该条成本为 0，随后恢复 Super VL / Off。Copilot 1.0.112 已有账号的新版自有 Auto 实答和冷续答可核。其他换号、服务失效和账单条件仍开放。 [证据对齐](evidence/2026-11-18-cycle12-goal-reconciliation/README.md)
 
+2026-11-19 从管理设置核 Pi 所选程序 0.87.1；程序检查通过，已有和现用设置不一致时保留原选择。账号页「暂时返回」回到原列表及 Pi 管理按钮，零发送。厂商启动文字仍待按原条件核。 [正式回执](evidence/2026-11-19-cycle12-pi-preparation/README.md)
+
 2026-11-17 Pi 新草稿实际回报免费 Ultra 具备 Medium，截图及配置确认复核通过。原发送暂停来自同一新草稿的文本启动说明，修复后原配置允许正常发送，后台和权限仍按原项核。启动说明版本来自另一 PATH 程序，实际会话使用现选 Pi 0.87.1。[实测](evidence/2026-11-17-cycle12-pi-history-scope/README.md)
 
 2026-11-17 Copilot 1.0.112 正常更新后，已有设置能读取 Auto；正式版原账号的单次续答超窗。其终端登录方法经实际握手核实，修复并安装后「Log in with Copilot CLI」可选，可见「启动设置终端」。已取消本次临时选择，该次未核实际登录、取消后续和实答，新版实答见本项开头。[正式回执](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)
