@@ -265,6 +265,7 @@ pub fn run() {
                 acp_client::manager::agent_status,
                 acp_client::manager::connection_retention::agent_connection_hold,
                 acp_client::session_commands::session_open,
+                acp_client::draft_wait::session_cancel_waiting_draft,
                 acp_client::delivery_flow::session_delivery_pull,
                 acp_client::delivery_flow::session_delivery_ack,
                 acp_client::delivery_flow::session_delivery_retire,

@@ -435,6 +435,7 @@ impl AcpManager {
             browser_unavailable,
             history,
             None,
+            None,
         )
         .await
     }
@@ -453,9 +454,13 @@ impl AcpManager {
         browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
         history: Option<super::history_admission::Permit>,
         opening_token: Option<String>,
+        draft_wait: Option<&super::draft_wait::DraftWait>,
     ) -> Result<OpenedSession, String> {
         if native_session_id.is_some() && history.is_none() {
             return Err("无法确认读取许可，本次尚未开始".into());
+        }
+        if draft_wait.is_some() && (native_session_id.is_some() || history.is_some()) {
+            return Err("无法确认草稿连接，本次未开始".into());
         }
         self.open_session_owned_with_mcp(
             agent,
@@ -472,6 +477,7 @@ impl AcpManager {
             None,
             history,
             opening_token,
+            draft_wait,
         )
         .await
     }
@@ -506,6 +512,7 @@ impl AcpManager {
             None,
             history,
             opening_token,
+            None,
         )
         .await
     }
@@ -538,6 +545,7 @@ impl AcpManager {
             Some(reservation),
             history,
             opening_token,
+            None,
         )
         .await
     }
@@ -559,6 +567,7 @@ impl AcpManager {
         reserved: Option<super::lifecycle::OpenReservation>,
         history: Option<super::history_admission::Permit>,
         opening_token: Option<String>,
+        draft_wait: Option<&super::draft_wait::DraftWait>,
     ) -> Result<OpenedSession, String> {
         use super::service_connection::{ServiceRecord, recorded_service, selection_for_open};
         purpose.validate(
@@ -613,6 +622,7 @@ impl AcpManager {
                 expected,
                 true,
                 history.clone(),
+                draft_wait,
             )
             .await?;
         if let Some(id) = &native_session_id {

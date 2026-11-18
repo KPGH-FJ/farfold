@@ -98,6 +98,7 @@ it.each([false, true])(
           outcome: "acknowledged",
         });
       if (command !== "session_open") return Promise.resolve([]);
+      expect(args).not.toHaveProperty("draftWaitChannel");
       raw = args.channel;
       progress = args.admissionChannel;
       token = args.openToken;
@@ -105,7 +106,11 @@ it.each([false, true])(
     });
     const a = new AbortController(),
       b = new AbortController();
-    const first = threads.open({ ...input, inquirySignal: a.signal });
+    const first = threads.open({
+      ...input,
+      inquirySignal: a.signal,
+      cancelWaitingDraft: true,
+    });
     const second = threads.open({ ...input, inquirySignal: b.signal });
     expect(second).toBe(first);
     expect(raw).not.toBe(progress);

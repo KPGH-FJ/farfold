@@ -563,6 +563,7 @@ export function EmptyState({
           throw new Error(R.selectionReview);
         return threads.open({
           inquirySignal: inquiryAbort.signal,
+          cancelWaitingDraft: true,
           inquiryCurrent: () =>
             !cancelled &&
             mounted.current &&

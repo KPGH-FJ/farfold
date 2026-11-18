@@ -235,6 +235,7 @@ async fn run(mode: &'static str) {
                     None,
                     history,
                     Some("owned-prefix-token".into()),
+                    None,
                 )
                 .await
                 .expect("load and its original notification consumer must progress concurrently");

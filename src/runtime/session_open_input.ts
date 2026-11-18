@@ -8,6 +8,8 @@ export interface OpenInput {
   nativeSessionId?: string;
   configOptions?: Record<string, unknown> | null;
   fresh?: boolean;
+  /** Allow an abandoned ordinary draft to withdraw only its waiting open. */
+  cancelWaitingDraft?: true;
   /** Separate preparation drafts from the ordinary unsent conversation. Memory only. */
   draftScope?: string;
   service?: import("./credentials").ServiceSelection | null;

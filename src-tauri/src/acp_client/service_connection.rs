@@ -86,8 +86,17 @@ impl AcpManager {
         expected: Option<ServiceIdentity>,
         conversation: bool,
     ) -> Result<(AgentConnectionStatus, ManagedConnection), String> {
-        self.connect_selected_owned(agent, cwd, store, selection, expected, conversation, None)
-            .await
+        self.connect_selected_owned(
+            agent,
+            cwd,
+            store,
+            selection,
+            expected,
+            conversation,
+            None,
+            None,
+        )
+        .await
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -100,8 +109,16 @@ impl AcpManager {
         expected: Option<ServiceIdentity>,
         conversation: bool,
         history: Option<super::history_admission::Permit>,
+        draft_wait: Option<&super::draft_wait::DraftWait>,
     ) -> Result<(AgentConnectionStatus, ManagedConnection), String> {
-        let _configuration = crate::install_job::configuration_guard(&agent.id).await;
+        let _configuration = if let Some(wait) = draft_wait {
+            wait.admit(&agent.id, |owner| {
+                self.history_admission.current_owner(owner)
+            })
+            .await?
+        } else {
+            crate::install_job::configuration_guard(&agent.id).await
+        };
         if self.shutting_down.load(Ordering::SeqCst) {
             return Err("应用正在退出，请稍后重试".into());
         }

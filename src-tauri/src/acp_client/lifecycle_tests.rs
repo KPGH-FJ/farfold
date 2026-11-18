@@ -41,6 +41,9 @@ mod history_delivery_manager_tests;
 #[path = "cold_history_open_tests.rs"]
 mod cold_history_open_tests;
 
+#[path = "draft_wait_tests.rs"]
+mod draft_wait_tests;
+
 #[path = "permission_publication_tests.rs"]
 mod permission_publication_tests;
 

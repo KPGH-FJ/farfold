@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api/core";
+import { Channel, invoke } from "@tauri-apps/api/core";
 import { readElicitation, replyToElicitation } from "./elicitation";
 import { INQUIRY as S } from "./elicitation_strings";
 import type { PendingElicitation } from "./session_types";
@@ -28,6 +28,11 @@ export class OpeningInquiryOwner {
   private epoch = 0;
   private cleanup: (() => void)[] = [];
   private interested: (() => boolean)[] = [];
+  private draftWithdrawal?: Promise<boolean>;
+  private waitingDraft?: {
+    abandon(): void;
+    finish(): void;
+  };
   private permissions = new OpeningPermissions(
     (p) => ({
       current: () => this.current() && this.view.permissions.includes(p),
@@ -77,6 +82,51 @@ export class OpeningInquiryOwner {
   }
   private current() {
     return this.available && this.interested.some((fn) => fn());
+  }
+  watchWaitingDraft(openToken: string): Channel<unknown> {
+    const channel = new Channel<unknown>();
+    let abandoned = !this.available;
+    let received = false;
+    let cancelRequested = false;
+    let confirmWithdrawal!: (value: boolean) => void;
+    this.draftWithdrawal = new Promise<boolean>((resolve) => {
+      confirmWithdrawal = resolve;
+    });
+    const cancel = () => {
+      if (!abandoned || !received || cancelRequested) return;
+      cancelRequested = true;
+      void invoke<boolean>("session_cancel_waiting_draft", { openToken }).then(
+        (result) => confirmWithdrawal(result === true),
+        () => confirmWithdrawal(false),
+      );
+    };
+    channel.onmessage = (event) => {
+      if (
+        received ||
+        !event ||
+        typeof event !== "object" ||
+        !Object.hasOwn(event, "openToken") ||
+        Object.keys(event).length !== 1 ||
+        (event as { openToken: unknown }).openToken !== openToken
+      )
+        return;
+      received = true;
+      cancel();
+    };
+    this.waitingDraft = {
+      abandon: () => {
+        abandoned = true;
+        cancel();
+      },
+      finish: () => {
+        channel.onmessage = () => {};
+        if (!cancelRequested) confirmWithdrawal(false);
+      },
+    };
+    return channel;
+  }
+  pendingDraftWithdrawal(): Promise<boolean> | undefined {
+    if (!this.available) return this.draftWithdrawal;
   }
   private update(patch: Partial<OpeningInquiryView>) {
     this.view = { ...this.view, ...patch };
@@ -154,6 +204,7 @@ export class OpeningInquiryOwner {
   retire() {
     if (!this.available) return;
     this.available = false;
+    this.waitingDraft?.abandon();
     this.interested = [];
     this.cleanup.splice(0).forEach((fn) => fn());
     this.view.requests.forEach((p) => this.cancelReply(p));
@@ -172,6 +223,8 @@ export class OpeningInquiryOwner {
   }
   finish(failed = false) {
     this.available = false;
+    this.waitingDraft?.finish();
+    this.waitingDraft = undefined;
     this.interested = [];
     this.cleanup.splice(0).forEach((fn) => fn());
     this.permissions.retire();
@@ -285,7 +338,10 @@ class OpeningInquiries {
     return owner;
   }
   join(key: string, current?: () => boolean, signal?: AbortSignal) {
-    this.owners.get(key)?.addInterest(current, signal);
+    const owner = this.owners.get(key);
+    const withdrawal = owner?.pendingDraftWithdrawal();
+    if (!withdrawal) owner?.addInterest(current, signal);
+    return withdrawal;
   }
   owner(id: string) {
     return [...this.owners.values()].find((item) => item.snapshot().id === id);

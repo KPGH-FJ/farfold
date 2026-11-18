@@ -30,6 +30,112 @@ afterEach(async () => {
   await draftPersistence.flush();
 });
 
+const waitTarget = { agentId: "draft-wait", cancelWaitingDraft: true } as const;
+type DraftOpening = {
+  wire: Parameters<typeof emitOpeningHeader>[0] & {
+    draftWaitChannel: { onmessage(event: unknown): void };
+  };
+  ready(): void;
+  reject(reason: string): void;
+};
+
+function draftOpens() {
+  const opens: DraftOpening[] = [];
+  const cancellations: { token: string; confirm(result: boolean): void }[] = [];
+  h.invoke.mockImplementation((command: string, args) => {
+    if (command === "session_cancel_waiting_draft")
+      return new Promise<boolean>((resolve) => {
+        cancellations.push({ token: args.openToken, confirm: resolve });
+      });
+    if (command !== "session_open")
+      return Promise.resolve(localCommand(command, args));
+    return new Promise((resolve, reject) => {
+      const result = {
+        cwd: args.cwd,
+        nativeSessionId: `draft-wait-${args.openToken}`,
+        connectionId: `connection-${args.openToken}`,
+        resumed: false,
+      };
+      opens.push({
+        wire: args,
+        ready: () => {
+          emitOpeningHeader(args, result);
+          resolve(result);
+        },
+        reject,
+      });
+    });
+  });
+  return { opens, cancellations };
+}
+
+it("keeps a shared draft open when another interested caller joins as the first leaves", async () => {
+  const { opens, cancellations } = draftOpens();
+  const a = new AbortController();
+  const b = new AbortController();
+  const input = { ...waitTarget, cwd: "/coalesced" };
+  const first = threads.open({ ...input, inquirySignal: a.signal });
+  const { openToken, draftWaitChannel } = opens[0].wire;
+  draftWaitChannel.onmessage({ openToken });
+  a.abort();
+  const second = threads.open({ ...input, inquirySignal: b.signal });
+  expect(second).toBe(first);
+  await Promise.resolve();
+  expect(cancellations).toEqual([]);
+  opens[0].ready();
+  expect((await second).cwd).toBe(input.cwd);
+  b.abort();
+  draftWaitChannel.onmessage({ openToken });
+  expect(cancellations).toEqual([]);
+});
+
+it.each([
+  { case: "confirmed", confirmed: true, stillCurrent: true },
+  { case: "unconfirmed", confirmed: false, stillCurrent: true },
+  { case: "caller-left", confirmed: true, stillCurrent: false },
+])(
+  "lets a late same-target caller proceed only after confirmed withdrawal: $case",
+  async ({ case: name, confirmed, stillCurrent }) => {
+    const { opens, cancellations } = draftOpens();
+    const a = new AbortController();
+    const b = new AbortController();
+    const input = { ...waitTarget, cwd: `/late-${name}` };
+    const first = threads.open({ ...input, inquirySignal: a.signal });
+    const firstResult = first.catch((error) => error);
+    const { openToken, draftWaitChannel } = opens[0].wire;
+    a.abort();
+    await Promise.resolve();
+    const late = threads.open({ ...input, inquirySignal: b.signal });
+    const lateResult = late.catch((error) => error);
+    expect(late).not.toBe(first);
+    draftWaitChannel.onmessage({ openToken: "foreign-token" });
+    draftWaitChannel.onmessage({ openToken, extra: true });
+    expect(cancellations).toEqual([]);
+    draftWaitChannel.onmessage({ openToken });
+    draftWaitChannel.onmessage({ openToken });
+    expect(cancellations.map(({ token }) => token)).toEqual([openToken]);
+    opens[0].reject("original waiting open ended");
+    expect(await firstResult).toBe("original waiting open ended");
+    expect(opens).toHaveLength(1);
+    if (!stillCurrent) b.abort();
+    cancellations[0].confirm(confirmed);
+    if (confirmed && stillCurrent) {
+      await vi.waitFor(() => expect(opens).toHaveLength(2));
+      expect(opens[1].wire.openToken).not.toBe(openToken);
+      opens[1].ready();
+      expect(await lateResult).toMatchObject({ cwd: input.cwd });
+    } else {
+      expect(await lateResult).toBe("original waiting open ended");
+      expect(opens).toHaveLength(1);
+    }
+    expect(
+      h.invoke.mock.calls.filter(
+        ([name]) => name === "session_cancel_waiting_draft",
+      ),
+    ).toEqual([["session_cancel_waiting_draft", { openToken }]]);
+  },
+);
+
 it("isolates simultaneous preparation and ordinary drafts even when both request a fresh session", async () => {
   const opens: ((
     result: Parameters<typeof emitOpeningHeader>[1] & { resumed: boolean },
@@ -69,6 +175,9 @@ it("isolates simultaneous preparation and ordinary drafts even when both request
     resumed: false,
   });
   const [a, b] = await Promise.all([ordinary, preparing]);
+  for (const [command, args] of h.invoke.mock.calls)
+    if (command === "session_open")
+      expect(args).not.toHaveProperty("draftWaitChannel");
   expect(a.key).not.toBe(b.key);
   expect(await threads.open({ agentId: "scope-test", cwd: "/work" })).toBe(a);
   expect(

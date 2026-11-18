@@ -554,11 +554,23 @@ class ThreadsStore {
     const pending = this.openings.get(openingKey);
     if (pending) {
       historyReads.join(openingKey, input);
-      openingInquiries.join(
+      const withdrawal = openingInquiries.join(
         openingKey,
         input.inquiryCurrent,
         input.inquirySignal,
       );
+      if (withdrawal)
+        return pending.catch(async (error: unknown) => {
+          // A new still-current caller can start after the old wait is proven
+          // unoffered. A lost or late cancellation never retries an Agent open.
+          if (
+            (await withdrawal) &&
+            !input.inquirySignal?.aborted &&
+            (input.inquiryCurrent?.() ?? true)
+          )
+            return this.openTarget(input, recheck);
+          throw error;
+        });
       return pending;
     }
     const inquiry = openingInquiries.begin(openingKey, input);
@@ -570,6 +582,13 @@ class ThreadsStore {
       undefined,
       () => !retryState || this.thread(retryState.key) === retryState,
     );
+    const draftWaitChannel =
+      input.cancelWaitingDraft &&
+      input.inquirySignal &&
+      input.nativeSessionId === undefined &&
+      input.draftScope === undefined
+        ? inquiry.watchWaitingDraft(replay.token)
+        : undefined;
     let resumeDelivery: (() => void) | undefined;
     const delivery = new SessionDeliveryObserver(input.agentId, replay.token);
     const channel = new OwnedSessionChannel(delivery);
@@ -659,6 +678,7 @@ class ThreadsStore {
             }
           : null,
         openToken,
+        ...(draftWaitChannel && { draftWaitChannel }),
         admissionChannel: admission?.channel ?? new Channel<unknown>(),
         channel,
       });

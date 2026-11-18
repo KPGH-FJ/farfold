@@ -79,6 +79,7 @@ for line in sys.stdin:
             None,
             Some(history),
             Some("exact-open".into()),
+            None,
         )
         .await
         .unwrap();

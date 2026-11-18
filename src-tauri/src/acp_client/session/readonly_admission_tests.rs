@@ -72,6 +72,7 @@ for line in sys.stdin:
             None,
             None,
             None,
+            None,
         )
         .await;
     manager.stop_for_shutdown();

@@ -63,6 +63,7 @@ async fn actual_manager_load_returns_but_the_next_load_waits_for_original_render
             None,
             Some(permit),
             None,
+            None,
         )
         .await
         .unwrap();

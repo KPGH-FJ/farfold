@@ -31,14 +31,17 @@ pub(super) struct Owner {
 }
 impl PartialEq for Owner {
     fn eq(&self, other: &Self) -> bool {
-        self.window == other.window
-            && self.open_token == other.open_token
-            && self.agent == other.agent
-            && Arc::ptr_eq(&self.authority, &other.authority)
+        self.agent == other.agent && self.same_window_token(other)
     }
 }
 impl Eq for Owner {}
 impl Owner {
+    pub(super) fn same_window_token(&self, other: &Self) -> bool {
+        self.window == other.window
+            && self.open_token == other.open_token
+            && Arc::ptr_eq(&self.authority, &other.authority)
+    }
+
     pub(super) fn belongs_to(&self, agent: &str) -> bool {
         self.agent == agent
     }

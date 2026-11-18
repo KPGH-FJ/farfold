@@ -689,6 +689,7 @@ it("opens a saved offline Agent on selection without changing its source or send
     fresh: false,
     inquiryCurrent: expect.any(Function),
     inquirySignal: expect.any(AbortSignal),
+    cancelWaitingDraft: true,
   });
   const inquiry = h.open.mock.calls[0][0];
   expect(inquiry.inquiryCurrent()).toBe(true);

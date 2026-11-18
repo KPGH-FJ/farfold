@@ -182,6 +182,7 @@ pub(crate) fn runtime() -> &'static tokio::runtime::Runtime {
 pub struct AcpManager {
     pub(crate) shutting_down: Arc<AtomicBool>,
     pub(crate) opening_sessions: super::lifecycle::OpenReservations,
+    pub(super) draft_waits: super::draft_wait::DraftWaits,
     pub(super) history_admission: Arc<super::history_admission::Admission>,
     pub(super) delivery_observations: Arc<super::delivery_observation::Registry>,
     pub(super) prompt_admission: Arc<super::history_admission::Admission>,
@@ -221,6 +222,7 @@ impl AcpManager {
         let manager = Self {
             shutting_down: Arc::new(AtomicBool::new(false)),
             opening_sessions: super::lifecycle::OpenReservations::default(),
+            draft_waits: super::draft_wait::DraftWaits::default(),
             history_admission: super::history_admission::Admission::production(),
             delivery_observations: Arc::new(super::delivery_observation::Registry::default()),
             prompt_admission: super::active_prompt::production(),

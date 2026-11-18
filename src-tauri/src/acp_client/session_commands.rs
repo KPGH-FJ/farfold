@@ -7,10 +7,11 @@ use std::sync::atomic::{AtomicBool, Ordering};
 
 use super::delivery_flow::Wake;
 use super::delivery_observation::DeliveryChannel;
+use super::draft_wait::DraftWaitReceipt;
 use super::mutation::DeleteFailure;
 use agent_client_protocol::schema::v1::ContentBlock;
 use serde_json::Value;
-use tauri::ipc::Channel;
+use tauri::ipc::{Channel, JavaScriptChannelId};
 use tauri::{AppHandle, Manager as _};
 
 use crate::acp_client::manager::{AcpManager, require_agent_row, validate_cwd, validate_cwd_async};
@@ -33,6 +34,7 @@ use crate::meta_store::{LocalSessionDeleteError, MetaStore, SessionRow};
 #[allow(clippy::too_many_arguments)]
 pub async fn session_open(
     app: AppHandle,
+    webview: tauri::Webview,
     window: tauri::Window,
     agent_id: String,
     cwd: String,
@@ -43,12 +45,32 @@ pub async fn session_open(
     channel: Channel<Wake>,
     process_ended_channel: Channel<ProcessEndedReceipt>,
     admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
+    draft_wait_channel: Option<JavaScriptChannelId>,
 ) -> Result<SessionOpenResult, String> {
     // An empty native id means "create", never "load".
     let native_session_id = native_session_id.filter(|id| !id.is_empty());
     let resumed = native_session_id.is_some();
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
+    let draft_wait = if let Some(channel) = draft_wait_channel {
+        if resumed || !crate::browser_workspace::caller_allowed(&webview) {
+            return Err("无法确认草稿连接，本次未开始".into());
+        }
+        let owner = manager
+            .history_admission
+            .owner(&window, &open_token, &agent_id)
+            .map_err(super::cold_history_open::error)?;
+        let wait = manager.draft_waits.register(&open_token, owner)?;
+        channel
+            .channel_on(webview)
+            .send(DraftWaitReceipt {
+                open_token: open_token.clone(),
+            })
+            .map_err(|_| "无法确认草稿连接，本次未开始")?;
+        Some(wait)
+    } else {
+        None
+    };
     // One authoritative cold admission, before any browser transport or
     // process preparation. The admitted-open method must never enqueue again.
     let request = native_session_id
@@ -130,6 +152,7 @@ pub async fn session_open(
                 browser_unavailable,
                 history,
                 Some(open_token.clone()),
+                draft_wait.as_deref(),
             )
             .await
     };
