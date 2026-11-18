@@ -1,0 +1,27 @@
+{
+  "fixture": "/private/tmp/ff-c12-approval-denial.j0gXgKIQ",
+  "formalSource": "6ca11aa5a",
+  "formalCdHash": "948e677f8bb57b8eec3f44100473329b9979ab33",
+  "sourceFilesSha256BeforeEqualsAfter": {
+    "codebuddy/input.txt": "7aa91bf83684eb2ec75b15729c125b77d76fcc31af0ddcbb66a36fc5778d6d30",
+    "codebuddy/task.sh": "eec16e9b03bc3d815fac2db19f19ec5c8be7946ee5bbe36f332904ceb9673bbc",
+    "qoder/input.txt": "be9e6d8e0fb057c3f280bc1ed728828945e38c688efcd2ba63b5337c4c9db7d8",
+    "qoder/task.sh": "cd90dfdadba2d22281bdd96e4656c7c4443075eff05997291e62b2750d64cee8",
+    "claude/input.txt": "f3c9f12ffaf095e265bc82daa24a15b5c3256f7e51aeefdbb583c8e660165497",
+    "claude/task.sh": "ee82aa19ccfb4f6a58b08208d0d708dcc081cb88235b70031b601b508cb27834"
+  },
+  "samples": {
+    "codebuddy": {
+      "entriesAfter": ["input.txt", "task.sh"],
+      "ranMarkerAbsent": true
+    },
+    "qoder": {
+      "entriesAfter": ["input.txt", "task.sh"],
+      "ranMarkerAbsent": true
+    },
+    "claude": {
+      "entriesAfter": ["input.txt", "task.sh"],
+      "ranMarkerAbsent": true
+    }
+  }
+}

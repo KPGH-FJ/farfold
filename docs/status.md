@@ -242,6 +242,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 
 2026-11-17 Mistral Vibe 正式卡片显示准确命令，点一次拒绝，原脚本未执行。Copilot 1.0.112 原账号已有设置的 Auto 续答超窗，取消未获确认，冷开原对话提示未确认且未自动重发。两家分别保留审批正例和实际停止缺口。[续验](evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md)
 
+2026-11-19 正式 CodeBuddy、Qoder 与 Claude 各在自建目录拒绝一个准确的 Bash 命令，均未执行。Qoder 和 Claude 同工具拒绝后原轮正常答复。CodeBuddy 拒绝已送达，原轮结束，缺该原工具的协议终态，界面保留未知。 [正式回执](evidence/2026-11-19-cycle12-approval-denial/README.md)
+
 2026-11-18 OpenCode 2.2.7 的正式 Xiaomi MiMo / Build 在前台命令执行期间入队 B。只点停止后 A 原 Shell 和子进程退出，B 保持暂停。冷开同一原对话约 24.5 秒零自动发送；点击一次继续后 B 实答，队列清空。 [正式回执](evidence/2026-11-18-cycle12-opencode-paused-queue/README.md)
 
 2026-11-18 CodeBuddy 正式 `6ca11aa5a` 从原目录以实际 Hy4 / On 在独立工作目录并行，各批准一次原命令。只停 A 后 A 原 Shell 和子进程退出、原工具中止，B 原进程独立交付。 [正式回执](evidence/2026-11-18-cycle12-codebuddy-registry-stop/README.md)

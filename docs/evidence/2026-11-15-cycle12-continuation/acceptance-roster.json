@@ -353,8 +353,8 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧多片段实测未取得，不当做已支持的使用结果。\n2026-11-18 已有 MiMo 设置，两条真实 Bash 单次审批，B 原工具成功，实际写出独立结果，Farfold 显示真实标记。\n2026-11-18 只读冷开 B，原工具成功及 stdout 保持。文件与输出报告 0 个文件位置。通过打开文件手动选取原目录 result.txt，正式预览内容及原 31 字节摘要核合。\n2026-11-18 同 B 同 MiMo 一次官方 Read 读取原 result.txt。正常退出重开后，从 Read 历史工具的原路径按钮直接预览原 31 字节成品，脚本、启动记录和成品摘要及修改时间一致。原 Bash 回放只报告命令输出，所核版本没有成品位置。\n2026-11-18 原 MiMo 正常新建，官方 Write 单次批准写入独立目录的 71 字节 result.txt。正常退出后零发送重开同原对话，从原 Write 工具路径直接预览，原文件字节、摘要、inode 和修改时间保持。",
-          "remaining": "原 Bash 成品自动关联仍需官方文件位置。已有文件覆盖、取消失败、提问、审批拒绝、技能及更多任务类型按原项续验。",
+          "observed": "旧多片段实测未取得，不当做已支持的使用结果。\n2026-11-18 已有 MiMo 设置，两条真实 Bash 单次审批，B 原工具成功，实际写出独立结果，Farfold 显示真实标记。\n2026-11-18 只读冷开 B，原工具成功及 stdout 保持。文件与输出报告 0 个文件位置。通过打开文件手动选取原目录 result.txt，正式预览内容及原 31 字节摘要核合。\n2026-11-18 同 B 同 MiMo 一次官方 Read 读取原 result.txt。正常退出重开后，从 Read 历史工具的原路径按钮直接预览原 31 字节成品，脚本、启动记录和成品摘要及修改时间一致。原 Bash 回放只报告命令输出，所核版本没有成品位置。\n2026-11-18 原 MiMo 正常新建，官方 Write 单次批准写入独立目录的 71 字节 result.txt。正常退出后零发送重开同原对话，从原 Write 工具路径直接预览，原文件字节、摘要、inode 和修改时间保持。\n2026-11-19 正式 6ca11aa5a 沿 已有小米 MiMo 的普通对话仅拒绝一次原 Bash 审批。同工具明确拒绝及原轮准确答复，脚本未执行，磁盘输入字节保持。",
+          "remaining": "原 Bash 成品位置等官方。已有文件覆盖、取消失败、提问、其他审批、技能及更多任务按原项续验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
@@ -363,7 +363,8 @@
             "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md",
             "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-冷开取回结果",
             "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-通过官方-read-冷开直达同一成品",
-            "docs/evidence/2026-11-18-cycle12-claude-write/README.md"
+            "docs/evidence/2026-11-18-cycle12-claude-write/README.md",
+            "docs/evidence/2026-11-19-cycle12-approval-denial/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -393,11 +394,12 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "旧登录/准备呈现有观察。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "observed": "旧登录/准备呈现有观察。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-19 正式 6ca11aa5a 沿 已有小米 MiMo 的普通对话仅拒绝一次原 Bash 审批。同工具明确拒绝及原轮准确答复，脚本未执行，磁盘输入字节保持。",
           "remaining": "当前一致入口及作用域、具体失败或恢复。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-19-cycle12-approval-denial/README.md"
           ],
           "status": "入口有证"
         }
@@ -577,15 +579,16 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧真答、文件复制/返工和单次审批有有限正例。\n2026-11-17 本次文本短问精确返回验收标记，显示已完成。\n2026-11-17 逐条批准已校对的读、独立写入和复查，成品 78 字节逐字节匹配，原件保持，正常本轮产物入口实际打开。\n2026-11-17 续验：从普通搜索冷开自有原对话，点历史成品链接取回原 result.txt，内容、末尾 LF、路径和摘要相合。",
-          "remaining": "技能、更多文件及拒绝和撤回路径仍待。",
+          "observed": "旧真答、文件复制/返工和单次审批有有限正例。\n2026-11-17 本次文本短问精确返回验收标记，显示已完成。\n2026-11-17 逐条批准已校对的读、独立写入和复查，成品 78 字节逐字节匹配，原件保持，正常本轮产物入口实际打开。\n2026-11-17 续验：从普通搜索冷开自有原对话，点历史成品链接取回原 result.txt，内容、末尾 LF、路径和摘要相合。\n2026-11-19 正式 6ca11aa5a 沿 Hy4 / On 的普通对话仅拒绝一次原 Bash 审批。拒绝送达、原轮取消，未收到同一工具的协议终态，脚本未执行，磁盘输入字节保持。",
+          "remaining": "技能、更多文件、其他拒绝和授权撤回按原条件。当前 Bash 拒绝后，原工具终态等官方通过协议报告。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
             "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
             "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md",
-            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
+            "docs/evidence/2026-11-19-cycle12-approval-denial/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -621,15 +624,16 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "11/13 正式读取失败，旧版丢焦点已在共用修复中处理。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 原选择无法使用时在本次草稿确认 Hy4 / On，审批和产物入口可完成实际文件任务。\n2026-11-17 续验：CodeBuddy → Kilo → CodeBuddy 同名成品逐次打开，正式文件预览、原路径和另存入口按当前对话准确显示。",
-          "remaining": "当前同动作和全入口真实可用性，别依据旧失败猜认证。",
+          "observed": "11/13 正式读取失败，旧版丢焦点已在共用修复中处理。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 原选择无法使用时在本次草稿确认 Hy4 / On，审批和产物入口可完成实际文件任务。\n2026-11-17 续验：CodeBuddy → Kilo → CodeBuddy 同名成品逐次打开，正式文件预览、原路径和另存入口按当前对话准确显示。\n2026-11-19 正式 6ca11aa5a 沿 Hy4 / On 的普通对话仅拒绝一次原 Bash 审批。拒绝送达、原轮取消，未收到同一工具的协议终态，脚本未执行，磁盘输入字节保持。",
+          "remaining": "当前同动作和全入口真实可用性。厂商应为这次已拒绝的原工具提交确切终态；收到后复验在线与冷开。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/wave7-followup.json",
             "docs/evidence/2026-11-13-cycle67-closure/README.md#开发及正式复验",
             "docs/evidence/2026-11-15-cycle12-macos/acceptance-matrix.md#codebuddy-code",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md",
-            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
+            "docs/evidence/2026-11-19-cycle12-approval-denial/README.md"
           ],
           "status": "入口有证"
         }
@@ -1891,13 +1895,14 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "真实中断通知送达并原对话定位、未知保护，纯图未读单独实测。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "observed": "真实中断通知送达并原对话定位、未知保护，纯图未读单独实测。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-18 正式 Xiaomi MiMo / Build，运行中加入待发、停止后明示暂停、重开原对话保持、一次点继续并显示已完成。从未自动续发。",
           "remaining": "最新版其他失败、冷开后反馈与准备正常入口仍逐项核。",
           "sources": [
             "docs/evidence/2026-11-15-cycle7-p47-p46/README.md",
             "docs/evidence/2026-11-15-cycle7-final-validation/README.md",
             "docs/status.md",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-18-cycle12-opencode-paused-queue/README.md"
           ],
           "status": "入口有证"
         }
@@ -2071,13 +2076,14 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧成功短答范围窄。\n2026-11-16 续查：从正常新对话，批准写入 result.md 一次，完成后从本轮产物打开，原稿散列一致，负责人和日期保留。",
-          "remaining": "更多工具、技能、提问、拒绝和撤回按原条件。",
+          "observed": "旧成功短答范围窄。\n2026-11-16 续查：从正常新对话，批准写入 result.md 一次，完成后从本轮产物打开，原稿散列一致，负责人和日期保留。\n2026-11-19 正式 6ca11aa5a 沿 小米 MiMo / Default 的普通对话仅拒绝一次原 Bash 审批。同工具明确拒绝及原轮准确答复，脚本未执行，磁盘输入字节保持。",
+          "remaining": "更多工具、技能、提问、其他拒绝及撤回条件待补。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-19-cycle12-approval-denial/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -2106,7 +2112,7 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "旧短答成功和冷开失败分列。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续查：设置不一致时跳到该 Agent 的模型设置，再返回保留原未发草稿。文件产物可直接打开。\n2026-11-17 续验：缺原位置不再显示笼统准备失败，正式版提示选择原文件夹，保留有位置结果的安全查找路径。",
+          "observed": "旧短答成功和冷开失败分列。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续查：设置不一致时跳到该 Agent 的模型设置，再返回保留原未发草稿。文件产物可直接打开。\n2026-11-17 续验：缺原位置不再显示笼统准备失败，正式版提示选择原文件夹，保留有位置结果的安全查找路径。\n2026-11-19 正式 6ca11aa5a 沿 小米 MiMo / Default 的普通对话仅拒绝一次原 Bash 审批。同工具明确拒绝及原轮准确答复，脚本未执行，磁盘输入字节保持。",
           "remaining": "其他准备失败、取消退出和冷恢复反馈仍待抽验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
@@ -2114,7 +2120,8 @@
             "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
-            "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md"
+            "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md",
+            "docs/evidence/2026-11-19-cycle12-approval-denial/README.md"
           ],
           "status": "入口有证"
         }
