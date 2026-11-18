@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-18",
+  "appSource": "addd85cf7",
+  "catalogVersionAtTest": "1.0.112",
+  "originalA": {
+    "id": "ccef6e89-5ecd-4696-94da-284beaf1852a",
+    "runtimeVersion": "1.0.114",
+    "nativeToolId": "call_6uyT804TFOmpU8WXRomYJgAE",
+    "toolTerminalLines": [],
+    "typeOfStop": "user_abort",
+    "processVerifiedExited": "../2026-11-18-cycle12-dirac-copilot/copilot/summary.json"
+  },
+  "originalB": {
+    "id": "f811816c-77cf-41d7-be83-46af51c5f621",
+    "runtimeVersion": "1.0.112",
+    "nativeToolId": "call_4MapaTH4V1JL4nWQnKJh95XP",
+    "toolTerminalLines": [15],
+    "reportedSuccess": true
+  },
+  "officialAutoUpdate": {
+    "processLog": "process-1794987414980-15404.log",
+    "downloadLine": 31,
+    "readyLine": 48,
+    "installedBeforeAStarted": true
+  },
+  "coldRecheck": {
+    "normalFarfold": true,
+    "sameOriginalA": true,
+    "toolUi": "步骤结果未知",
+    "wire": {
+      "file": "protocol-v1-1794990553059-1.jsonl",
+      "frames": [
+        {
+          "line": 8,
+          "ts": 1794990553334,
+          "dir": "out",
+          "event": "session/load",
+          "wireSequence": 3,
+          "error": "none"
+        }
+      ]
+    }
+  }
+}

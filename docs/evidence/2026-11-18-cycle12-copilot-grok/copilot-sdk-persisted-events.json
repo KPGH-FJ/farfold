@@ -1,0 +1,78 @@
+{
+  "nativeCliPackageVersion": "1.0.112",
+  "runtime": {
+    "version": null,
+    "protocolVersion": 3
+  },
+  "temporaryOfficialConfig": true,
+  "networkDenied": true,
+  "nativeAndScratchInputsSame": true,
+  "inputDigests": {
+    "A/workspace.yaml": "eae440fd2f003fa781647bcae7c4042030d87e378eff798e25b3819074417045",
+    "A/events.jsonl": "c408ec3875faca8f84e45f5f135ada21d358c9c1a5689a99dee80c76d3ca8bfc",
+    "B/workspace.yaml": "91765b47c1385bb5b83cc01c430a7257e3acbdc442594541e1219ec02bf993cb",
+    "B/events.jsonl": "589410f81490761ba589b46d68acda92f91271c30216171321b7290ec62b7721"
+  },
+  "onlyOwnSessions": {
+    "A": [
+      "ccef6e89-5ecd-4696-94da-284beaf1852a",
+      "call_6uyT804TFOmpU8WXRomYJgAE"
+    ],
+    "B": [
+      "f811816c-77cf-41d7-be83-46af51c5f621",
+      "call_4MapaTH4V1JL4nWQnKJh95XP"
+    ]
+  },
+  "sentMethods": [
+    "ping",
+    "sessions.readPersistedEvents",
+    "sessions.readPersistedEvents"
+  ],
+  "clientCallbacks": 0,
+  "results": {
+    "ping": {
+      "state": "ok"
+    },
+    "A": {
+      "state": "ok",
+      "count": 18,
+      "cursorStatus": "ok",
+      "hasMore": false,
+      "matchingEvents": [
+        {
+          "type": "tool.execution_start",
+          "toolCallId": "call_6uyT804TFOmpU8WXRomYJgAE",
+          "turnId": "0"
+        },
+        {
+          "type": "abort",
+          "reason": "user_abort"
+        }
+      ]
+    },
+    "B": {
+      "state": "ok",
+      "count": 22,
+      "cursorStatus": "ok",
+      "hasMore": false,
+      "matchingEvents": [
+        {
+          "type": "tool.execution_start",
+          "toolCallId": "call_4MapaTH4V1JL4nWQnKJh95XP",
+          "turnId": "0"
+        },
+        {
+          "type": "tool.execution_complete",
+          "toolCallId": "call_4MapaTH4V1JL4nWQnKJh95XP",
+          "success": true,
+          "turnId": "0",
+          "exitCode": 0
+        }
+      ]
+    }
+  },
+  "failure": null,
+  "exitCode": 0,
+  "sanitizedDiagnosticTags": [],
+  "stderrBytes": 0
+}

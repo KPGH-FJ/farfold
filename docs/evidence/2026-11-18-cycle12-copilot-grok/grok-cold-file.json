@@ -1,0 +1,59 @@
+{
+  "date": "2026-11-18",
+  "appSource": "addd85cf7",
+  "cdHash": "47b352da5f04af22fa4fb631590c9626288a278c",
+  "agent": "grok-build",
+  "selectedModel": "grok-4.7 / low",
+  "service": "已有设置",
+  "nativeSessionId": "01a1edc0-fc1e-78e1-a567-93cc9ffc2ab8",
+  "normalSaveAndExit": true,
+  "priorWorktreeReceipt": "settled unknown, retained without review",
+  "sameOriginalViaSearch": true,
+  "coldArtifactEntry": "查看处理过程中的原文件按钮",
+  "coldRoundArtifactsObserved": false,
+  "originalInputSha256": "f587b6743fe4c62d9329f945f5184359e0d900ac884e676a67ea8a6430cd268d",
+  "resultSha256BeforeAndAfterRestart": "d45d626cba2033930d7868dfa524064dadf3d5dd780832e9fa420e73728c1c9b",
+  "resultBytes": 106,
+  "warm": {
+    "file": "protocol-v1-1794990209943-6.jsonl",
+    "frames": [
+      {
+        "line": 8,
+        "ts": 1794990210075,
+        "dir": "out",
+        "event": "session/new",
+        "wireSequence": 3,
+        "error": "none"
+      },
+      {
+        "line": 35,
+        "ts": 1794990242079,
+        "dir": "out",
+        "event": "session/prompt",
+        "wireSequence": 30,
+        "error": "none"
+      },
+      {
+        "line": 217,
+        "ts": 1794990252659,
+        "dir": "in",
+        "event": "session/request_permission",
+        "wireSequence": 212,
+        "error": "none"
+      }
+    ]
+  },
+  "cold": {
+    "file": "protocol-v1-1794990444138-0.jsonl",
+    "frames": [
+      {
+        "line": 8,
+        "ts": 1794990444274,
+        "dir": "out",
+        "event": "session/load",
+        "wireSequence": 3,
+        "error": "none"
+      }
+    ]
+  }
+}
