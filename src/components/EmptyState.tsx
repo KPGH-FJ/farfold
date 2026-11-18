@@ -13,6 +13,7 @@ import {
   usePreparedComposerOwner,
   usePreparedComposerPortal,
   useSavedPreparedConversation,
+  type DraftPreparationNavigation,
   type PreparedConversationTransition,
 } from "./usePreparedComposerOwner";
 import { useDraftWorkLocation } from "./useDraftWorkLocation";
@@ -106,10 +107,7 @@ import {
   useAuthentication,
 } from "../runtime/authentication";
 import { authActive } from "../runtime/auth_activity";
-import {
-  newDraftRepairRequest,
-  type AgentRepairRequest,
-} from "../runtime/agent_repair";
+import { newDraftRepairRequest } from "../runtime/agent_repair";
 import {
   AirplaneTiltIcon,
   BookOpenIcon,
@@ -158,7 +156,7 @@ export function EmptyState({
     service: ServiceChoice | null;
     config: Record<string, unknown>;
   };
-  onGoSettings: (agentId?: string, repair?: AgentRepairRequest) => void;
+  onGoSettings: DraftPreparationNavigation;
   onManageServices?: () => void;
   onStarted: (key: string) => void;
   onProjectChange: (cwd: string | null) => void;
@@ -303,17 +301,15 @@ export function EmptyState({
   const needsAuthentication =
     !!agentId &&
     authenticationRequired(authentication, agentId, requestCwd, sourceContext);
-  const openRepair = () =>
-    onGoSettings(
-      agentId ?? undefined,
-      newDraftRepairRequest(
-        draft,
-        needsAuthentication,
-        sourceContext,
-        explicitReadRequired,
-        draftError,
-      ),
+  const draftRepair = () =>
+    newDraftRepairRequest(
+      draft,
+      needsAuthentication,
+      sourceContext,
+      explicitReadRequired,
+      draftError,
     );
+  const openRepair = () => onGoSettings(agentId ?? undefined, draftRepair());
   const failedPairRef = useRef<string | null>(null);
   const pendingInquiryAbort = useRef<AbortController | null>(null);
   useEffect(() => {
@@ -924,10 +920,8 @@ export function EmptyState({
     requestSend: () => setSendRequest((value) => value + 1),
     folderCancelled: setFolderCancelled,
   });
-  const { editorRoot, editorHome } = usePreparedComposerPortal(
-    composerTarget,
-    active,
-  );
+  const { editorRoot, editorHome, captureReturnFocus } =
+    usePreparedComposerPortal(composerTarget, active);
   const presentedDraft = useRef<string | null>(null);
   const workspaceKey =
     draft?.key === draftKey &&
@@ -1017,17 +1011,16 @@ export function EmptyState({
     newConversationChoice.config = { ...selection.config };
   };
   const prepareFromChoice = (id?: string) => {
-    if (
-      id &&
-      !currentAgents.current.some(
-        (card) => card.id === id && isAgentPresentable(card),
-      )
-    )
-      return;
+    if (!activeRef.current) return;
+    const card = currentAgents.current.find((entry) => entry.id === id);
+    if (id && (!card || !isAgentPresentable(card))) return;
+    const trigger =
+      choiceDialog === "model" ? modelChoiceTrigger : agentChoiceTrigger;
+    const restoreFocus = captureReturnFocus(trigger.current);
     setChoiceDialog(null);
-    if (choiceDialog === "model" && isConfigurationRestoreNotice(draftError))
-      openRepair();
-    else onGoSettings(id);
+    const repair =
+      choiceDialog === "model" && isConfigurationRestoreNotice(draftError);
+    onGoSettings(id, repair ? draftRepair() : undefined, restoreFocus);
   };
   const applyDraftConfig = async (id: string, value: unknown) => {
     const state = draft;

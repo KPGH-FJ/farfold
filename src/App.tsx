@@ -96,7 +96,7 @@ import {
 } from "./runtime/agent_repair";
 
 type View = (
-  | { kind: "start" }
+  | { kind: "start"; draftFocus?: () => void }
   | { kind: "thread"; key: string }
   | { kind: "library"; returnFocus?: LibraryReturnFocus }
   | {
@@ -159,6 +159,12 @@ export default function App() {
       : { kind: "start" },
   );
   const currentView = useRef(view);
+  useEffect(() => {
+    if (view.kind === "start" && view.draftFocus)
+      queueMicrotask(() => {
+        if (currentView.current === view) view.draftFocus?.();
+      });
+  }, [view]);
   const draftRepairOwner = useRef<object | null>(null);
   const threadNavigationFocus = useRef<ThreadNavigationFocus | null>(null);
   const [attachmentSearchRequest, setAttachmentSearchRequest] =
@@ -384,7 +390,7 @@ export default function App() {
     routeHistory.current = [];
     setView({ kind: "start" });
   });
-  const rememberOrigin = (historyImport = false) => {
+  const rememberOrigin = (historyImport = false, draftFocus?: () => void) => {
     const originView = currentView.current;
     const origin: View =
       originView.kind === "settings"
@@ -401,7 +407,9 @@ export default function App() {
                 draft: originatingDraft.current,
               },
             }
-          : originView;
+          : originView.kind === "start"
+            ? { kind: "start", draftFocus }
+            : originView;
     routeHistory.current.push(
       historyImport ? { ...origin, historyImport: true } : origin,
     );
@@ -440,6 +448,7 @@ export default function App() {
       intent: "use" | "manage" = "use",
       repair?: AgentRepairRequest,
       ownsSelection?: ReturnType<typeof captureDraftConfigurationRepair>,
+      draftFocus?: () => void,
     ) => {
       const draftCwd = newConversationChoice.cwd ?? defaultCwd;
       let applyToDraft: AgentPreparationContext["applyToDraft"];
@@ -475,7 +484,11 @@ export default function App() {
           return true;
         };
       } else draftRepairOwner.current = null;
-      if (view.kind !== "agents") rememberOrigin();
+      if (view.kind !== "agents")
+        rememberOrigin(
+          false,
+          agentId && intent === "use" ? draftFocus : undefined,
+        );
       setHubTarget(agentId ?? null);
       setHubRestoredState(undefined);
       setHubIntent(intent);
@@ -528,6 +541,7 @@ export default function App() {
     agentId?: string,
     intent?: "use" | "manage",
     repair?: AgentRepairRequest,
+    draftFocus?: () => void,
   ) =>
     openAgentsAfterClose(
       agentId,
@@ -536,6 +550,7 @@ export default function App() {
       repair?.draftConfiguration && currentView.current.kind === "start"
         ? captureDraftConfigurationRepair()
         : undefined,
+      draftFocus,
     );
   const prepareHistoryAgent = afterBrowserClose(
     (agentId: string | undefined, cwd: string | null) => {
@@ -1083,8 +1098,8 @@ export default function App() {
                 </header>
               }
               onProjectChange={() => undefined}
-              onGoSettings={(agentId, repair) =>
-                openAgents(agentId, "use", repair)
+              onGoSettings={(agentId, repair, draftFocus) =>
+                openAgents(agentId, "use", repair, draftFocus)
               }
               onManageServices={() => openSettings("keys")}
               availableFeedbackOwners={availableFeedbackOwners}

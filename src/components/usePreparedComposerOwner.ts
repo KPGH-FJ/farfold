@@ -9,6 +9,7 @@ import { useDraftSaveStatus } from "../runtime/draft_storage";
 import type { ThreadState } from "../runtime/session_types";
 import { threads } from "../runtime/sessions";
 import { captureConfigurationOwner } from "../runtime/saved_configuration_restore";
+import type { AgentRepairRequest } from "../runtime/agent_repair";
 
 const selectedSource = () =>
   JSON.stringify([
@@ -92,6 +93,42 @@ export function usePreparedComposerOwner(context: string, active: boolean) {
   };
 }
 
+export type DraftPreparationNavigation = (
+  agentId?: string,
+  repair?: AgentRepairRequest,
+  restoreFocus?: () => void,
+) => void;
+
+function visibleFocusTarget(target: Element | null): target is HTMLElement {
+  return (
+    target instanceof HTMLElement &&
+    target.isConnected &&
+    !target.closest("[hidden], [inert], :disabled") &&
+    target.getClientRects().length > 0
+  );
+}
+
+export function restoreDraftPreparationFocus(
+  root: HTMLElement,
+  opener: HTMLButtonElement | null,
+): void {
+  if (!root.isConnected) return;
+  const doc = root.ownerDocument;
+  const current = doc.activeElement;
+  if (
+    (current !== doc.body &&
+      current !== doc.documentElement &&
+      visibleFocusTarget(current)) ||
+    doc.querySelector("dialog[open]")
+  )
+    return;
+  const target =
+    visibleFocusTarget(opener) && root.contains(opener)
+      ? opener
+      : root.querySelector("textarea.c-input");
+  if (visibleFocusTarget(target)) target.focus({ preventScroll: true });
+}
+
 /** Moving the portal does not replace the draft or invalidate file reads. */
 export function usePreparedComposerPortal(
   target: HTMLElement | null | undefined,
@@ -114,7 +151,11 @@ export function usePreparedComposerPortal(
     if (activeRef.current) focused?.focus({ preventScroll: true });
   }, [editorRoot, target]);
   useEffect(() => () => editorRoot?.remove(), [editorRoot]);
-  return { editorRoot, editorHome };
+  const captureReturnFocus = (opener: HTMLButtonElement | null) => () => {
+    const root = editorRoot ?? editorHome.current;
+    if (activeRef.current && root) restoreDraftPreparationFocus(root, opener);
+  };
+  return { editorRoot, editorHome, captureReturnFocus };
 }
 
 /** Persistence can establish a prepared conversation before its first prompt.

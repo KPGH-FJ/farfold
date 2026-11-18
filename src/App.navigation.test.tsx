@@ -648,10 +648,11 @@ it("does not open a draft repair for content replaced while the browser hides", 
   }
 });
 
-it("routes direct Agent preparation back to its draft and leaves directory browsing untargeted", () => {
+it("routes direct Agent preparation back to its draft and restores its chooser focus once", async () => {
   const originalDraft = h.draft;
   const originalChoice = structuredClone(h.choice);
-  call("EmptyState", "onGoSettings", "A");
+  const focus = vi.fn();
+  call("EmptyState", "onGoSettings", "A", undefined, focus);
   expect(component("AgentHub")).toMatchObject({
     initialAgentId: "A",
     initialIntent: "use",
@@ -662,12 +663,29 @@ it("routes direct Agent preparation back to its draft and leaves directory brows
   expect(h.draft).toBe(originalDraft);
   expect(h.choice).toEqual(originalChoice);
   expect(h.open).not.toHaveBeenCalled();
+  await Promise.resolve();
+  expect(focus).toHaveBeenCalledOnce();
 
   call("Sidebar", "onExplore");
   expect(component("AgentHub")).toMatchObject({
     initialAgentId: null,
     returnToDraftOnClose: false,
   });
+  call("AgentHub", "onReturn");
+  render();
+  await Promise.resolve();
+  expect(focus).toHaveBeenCalledOnce();
+});
+
+it("drops chooser focus if a different destination wins before it is applied", async () => {
+  const focus = vi.fn();
+  call("EmptyState", "onGoSettings", "A", undefined, focus);
+  call("AgentHub", "onReturn");
+  expect(component("EmptyState").active).toBe(true);
+  call("Sidebar", "onLibrary", { kind: "all" });
+  expect(component("ConversationLibrary").active).toBe(true);
+  await Promise.resolve();
+  expect(focus).not.toHaveBeenCalled();
 });
 
 it("restores A's preparation and draft origin after API settings temporarily manages B", () => {

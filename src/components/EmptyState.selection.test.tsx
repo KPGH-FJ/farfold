@@ -508,6 +508,53 @@ it.each([
   },
 );
 
+it.each([
+  ["选择 Agent", picker],
+  ["模型与来源", modelPicker],
+] as const)(
+  "carries the %s opener to preparation and restores it only while its draft is active",
+  (label, open) => {
+    class Trigger {
+      isConnected = true;
+      closest = () => null;
+      getClientRects = () => [{}];
+      focus = vi.fn();
+    }
+    const opener = new Trigger();
+    const page = {
+      body: {},
+      activeElement: null,
+      querySelector: () => null,
+      createElement: (): unknown => editor,
+    };
+    const editor = {
+      ownerDocument: page,
+      isConnected: true,
+      contains: (element: unknown) => element === opener,
+      remove: vi.fn(),
+    };
+    vi.stubGlobal("document", page);
+    vi.stubGlobal("HTMLElement", Trigger);
+    const trigger = nodes(composer().props.controls as ReactNode).find(
+      (node) => node.props["aria-label"] === label,
+    )!;
+    (trigger.props.ref as { current: unknown }).current = opener;
+    (open().props.onPrepare as (id?: string) => void)("A");
+    const restore = vi.mocked(props.onGoSettings).mock.calls[0]?.[2];
+    expect(restore).toBeTypeOf("function");
+    props.active = false;
+    render();
+    restore!();
+    expect(opener.focus).not.toHaveBeenCalled();
+    props.active = true;
+    render();
+    restore!();
+    expect(opener.focus).toHaveBeenCalledExactlyOnceWith({
+      preventScroll: true,
+    });
+  },
+);
+
 it("closes model selection before opening API management and keeps the draft and original choice", () => {
   const before = structuredClone(newConversationChoice.config);
   (modelPicker().props.onManageServices as () => void)();

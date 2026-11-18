@@ -844,12 +844,16 @@ it("opens model settings from a blocked picker without applying an obsolete save
   });
   expect(failed.dialog!.props.existingOption).toBeNull();
   (failed.dialog!.props.onPrepare as () => void)();
-  expect(props.onGoSettings).toHaveBeenCalledExactlyOnceWith("A", {
-    panel: "model",
-    needsAuthentication: false,
-    sourceContext: undefined,
-    draftConfiguration: true,
-  });
+  expect(props.onGoSettings).toHaveBeenCalledExactlyOnceWith(
+    "A",
+    {
+      panel: "model",
+      needsAuthentication: false,
+      sourceContext: undefined,
+      draftConfiguration: true,
+    },
+    expect.any(Function),
+  );
   const closed = render();
   expect(closed.dialog).toBeUndefined();
   expect(closed.composer.props.disabled).toBe(true);

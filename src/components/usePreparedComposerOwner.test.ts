@@ -14,7 +14,10 @@ vi.mock("react", () => ({
     }
   },
 }));
-import { usePreparedComposerOwner } from "./usePreparedComposerOwner";
+import {
+  restoreDraftPreparationFocus,
+  usePreparedComposerOwner,
+} from "./usePreparedComposerOwner";
 const render = (
   pair = "A|/selected-alias|/canonical|service",
   active = true,
@@ -27,7 +30,10 @@ beforeEach(() => {
   h.slots = [];
   h.cleanup = [];
 });
-afterEach(() => h.cleanup.forEach((cleanup) => cleanup()));
+afterEach(() => {
+  h.cleanup.forEach((cleanup) => cleanup());
+  vi.unstubAllGlobals();
+});
 it("only a completed preparation can own its visible input, including an aliased work folder", () => {
   const view = render();
   expect(view.current("draft-A")).toBeNull();
@@ -71,3 +77,68 @@ it.each(["choice-return", "hide-return"])(
     expect(next()).toBe(false);
   },
 );
+
+function focusFixture() {
+  class Target {
+    isConnected = true;
+    unavailable = false;
+    closest = () => (this.unavailable ? this : null);
+    getClientRects = () => [{}];
+    focus = vi.fn();
+  }
+  vi.stubGlobal("HTMLElement", Target);
+  const opener = new Target();
+  const input = new Target();
+  const body = new Target();
+  const doc = {
+    body,
+    documentElement: new Target(),
+    activeElement: body,
+    querySelector: vi.fn().mockReturnValue(null),
+  };
+  const root = {
+    ownerDocument: doc,
+    isConnected: true,
+    contains: (target: Target) => target === opener || target === input,
+    querySelector: (selector: string) =>
+      selector === "textarea.c-input" ? input : null,
+  };
+  return {
+    opener,
+    input,
+    doc,
+    Target,
+    restore: () =>
+      restoreDraftPreparationFocus(
+        root as unknown as HTMLElement,
+        opener as unknown as HTMLButtonElement,
+      ),
+  };
+}
+
+it("returns document focus to the still-live chooser even when body has a visible rect", () => {
+  const { doc, input, opener, restore } = focusFixture();
+  doc.activeElement = doc.documentElement;
+  restore();
+  expect(opener.focus).toHaveBeenCalledWith({ preventScroll: true });
+  expect(input.focus).not.toHaveBeenCalled();
+});
+
+it("returns to the preserved draft input if the chooser is no longer available", () => {
+  const { input, opener, restore } = focusFixture();
+  opener.unavailable = true;
+  restore();
+  expect(input.focus).toHaveBeenCalledWith({ preventScroll: true });
+  expect(opener.focus).not.toHaveBeenCalled();
+});
+
+it("does not take focus from another visible control or modal", () => {
+  const { doc, input, opener, restore, Target } = focusFixture();
+  doc.activeElement = new Target();
+  restore();
+  doc.activeElement = doc.body;
+  doc.querySelector.mockReturnValue({});
+  restore();
+  expect(opener.focus).not.toHaveBeenCalled();
+  expect(input.focus).not.toHaveBeenCalled();
+});
