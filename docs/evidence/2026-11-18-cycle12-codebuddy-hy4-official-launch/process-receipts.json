@@ -1,0 +1,81 @@
+{
+  "beforeStop": {
+    "timestamp": "2026-11-18T21:07:35.135+08:00",
+    "samples": {
+      "a": {
+        "ids": [30734, 30736],
+        "processes": [
+          "30734 30733 30733 /bin/sh",
+          "30736 30734 30733 /bin/sleep"
+        ],
+        "cwd": "/private/tmp/ff-c12-codebuddy-hy4.VPP4BXjL/a",
+        "resultExists": false
+      },
+      "b": {
+        "ids": [30738, 30740],
+        "processes": [
+          "30738 30737 30737 /bin/sh",
+          "30740 30738 30737 /bin/sleep"
+        ],
+        "cwd": "/private/tmp/ff-c12-codebuddy-hy4.VPP4BXjL/b",
+        "resultExists": false
+      }
+    }
+  },
+  "afterStop": {
+    "timestamp": "2026-11-18T21:07:54.805+08:00",
+    "samples": {
+      "a": {
+        "processes": [],
+        "resultExists": false
+      },
+      "b": {
+        "processes": [
+          "30738 30737 30737 /bin/sh",
+          "30740 30738 30737 /bin/sleep"
+        ],
+        "resultExists": false
+      }
+    }
+  },
+  "coldReopen": {
+    "formalAppExitedObserved": "2026-11-18T21:10:05.039+08:00",
+    "nativeSession": "01a1eec3-b87f-7ea5-979d-a7f1493c5f4a",
+    "newSessions": 0,
+    "prompts": 0,
+    "permissions": 0,
+    "unchangedFixtureFiles": {
+      "a/task.sh": {
+        "sha256": "88dc70bce2a8550104b26e0a6114a2f9ebfdfbde22e5bbad0c6d8cfede54f890",
+        "mtimeNs": 1795006880702818134,
+        "bytes": 346
+      },
+      "a/started.txt": {
+        "sha256": "c2e40ca73ecf51460428a0472ed901cbe2599050d81aa3d76b6fa0967469cf07",
+        "mtimeNs": 1795007241786965145,
+        "bytes": 32
+      },
+      "b/task.sh": {
+        "sha256": "449bcfed4bf3d157444b9b09b3cb812d2e66ccaa7346d8c455427d36374457dc",
+        "mtimeNs": 1795006880707485568,
+        "bytes": 346
+      },
+      "b/started.txt": {
+        "sha256": "a45f4d038f57050bed1e2dbb754f77d73250e3ca4ae4dca573c8cd90772c0ac7",
+        "mtimeNs": 1795007243115168305,
+        "bytes": 32
+      }
+    },
+    "aResultExists": false,
+    "nativeJsonlSha256AfterCold": {
+      "a": "4de5ebacfe201b6bb48567ef491014d93425cb18120f00ff4401e317d4a2aa71",
+      "b": "13e4da1c29bbda9775dd37edf5cea5f1249d15a88adea438b698ce1b7dfbad10"
+    }
+  },
+  "bArtifact": {
+    "marker": "FF_C12_CODEBUDDY_HY4_B_DONE",
+    "bytes": 28,
+    "sha256": "551c4741aa779306fb62ae5caea5373f53711e1c7ba412431eb1b30f9ae3db67",
+    "mtimeNs": 1795007313122337709
+  }
+}

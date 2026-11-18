@@ -6,7 +6,7 @@
 
 Farfold 读到 Agent 返回的 `currentValue` 已经等于所保存的模型，便跳过显式设置。原 A、B 发送前均没有此设置请求。CodeBuddy 的 `getModelsInfo` 用初始化目录的 `currentModelId` 作为界面回读。厂商日志显示两条会话都从 `snapshot` 回读 `hy4std`，同时 `requestOptions.model` 和 `options.model` 均为空。实际推理另外按这两个会话字段选模型。原请求的解析日志明确走到运行中 Agent 的默认 `hy4flash-free`，与原请求和返回记录一致。
 
-直接补发模型设置会触发另外一个问题。普通 `--acp` 连接的 `session/set_config_option` 模型项及旧 `session/set_model` 都调用 `applyRuntimeSessionModel`。该函数给当前会话设置模型后还会同步 CLI 的全局 `model`。`/model <id>` 同样是全局设置。2.184.0 安装源码与官方已发布的 2.185.0 在该分支一致。`thought_level` 可对准确会话单独设置，模型与思考档须分别核对。
+普通 `--acp` 连接的 `session/set_config_option` 模型项及旧 `session/set_model` 都调用 `applyRuntimeSessionModel`。该函数给当前会话设置模型后还会同步当前 CLI 进程的默认 `model`。新增源码复核确认这是 `CliSettingsProvider` 的内存更新。`/model <id>` 另有写用户设置文件的路径。2.184.0 安装源码与官方已发布的 2.185.0 在该设置分支一致。`thought_level` 可对准确会话单独设置，模型与思考档须分别核对。 [追加的源码核对和正式试验](../2026-11-18-cycle12-codebuddy-hy4-official-launch/README.md#原登记与全局设置)
 
 | 核对原件                                  | 定位                                                                                                                                                                                                 |
 | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -20,4 +20,4 @@ Farfold 读到 Agent 返回的 `currentValue` 已经等于所保存的模型，�
 
 CLI 文档支持当前会话启动参数 `--model`。2.184.0 解析和新建源码显示启动参数可传入会话 `options.model`，仍需用当前账号实测实际模型。当前官方登记只带 `--acp`。启动参数可由用户显式配置在独立入口，正式首发登记仍需安全的会话级选模。官方 HTTP 的 ACP 传输复用当前设置分支。TypeScript SDK 可按查询选择模型及申请权限，但需要另验接入、同原会话恢复和停止。原登记、用户配置和历史保持。本批 CodeBuddy 零发送。 [CLI 模型参数](https://www.codebuddy.ai/docs/cli/cli-reference) · [官方 HTTP](https://www.codebuddy.ai/docs/cli/http-api) · [官方 TypeScript SDK](https://www.codebuddy.ai/docs/cli/sdk-typescript)
 
-第一个实测应从 Farfold 新建独立短问，核对同一请求的厂商 `requestModelId`、返回 `model` 和思考档。须先证明实际 Hy4 / On，再在两条独立自建任务复验只停 A、A 的进程与工具终态、B 继续，以及正常退出后重开原 A、读取原工具状态且零自动重跑。本轮 S4 仍是实测失败，已有双任务和停止证据限 Flash Free。 [官方 ACP 启动方式](https://www.codebuddy.ai/docs/cli/acp) · [产品约定](../../../PRODUCT.md#8-架构边界开发者约束)
+本批 S4 实测失败，已有双任务和停止证据限 Flash Free。后续获授权从 Farfold 另建独立测试入口，先通过一条 Hy4 / On 短问，再完成双任务和冷开。原目录的实际选模仍单独验。 [后续实测](../2026-11-18-cycle12-codebuddy-hy4-official-launch/README.md) · [官方 ACP 启动方式](https://www.codebuddy.ai/docs/cli/acp) · [产品约定](../../../PRODUCT.md#8-架构边界开发者约束)
