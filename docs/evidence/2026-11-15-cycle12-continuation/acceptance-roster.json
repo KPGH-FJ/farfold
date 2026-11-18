@@ -664,12 +664,13 @@
           "status": "入口有证"
         },
         "S3": {
-          "observed": "旧冷开能进入原对象但返回模型漂移，发送保护仍阻止续接。",
+          "observed": "旧冷开能进入原对象但返回模型漂移，发送保护仍阻止续接。\n2026-11-19 本机所选 ACP 1.13.1 的启动代码与原失败相同。官方同一原连接缺可读的完整实际权限，NEW-24 暂停发送保持。",
           "remaining": "需可确认原配置、正文完整性及同 ID 上下文续答；受 NEW-24 影响部分暂停。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-11-03-conversation-controls/control-formal-summary.json",
-            "docs/status.md"
+            "docs/status.md",
+            "docs/evidence/2026-11-19-cycle12-official-route-recheck/README.md"
           ],
           "status": "受阻"
         },
@@ -2057,7 +2058,7 @@
           "status": "已有设置实答"
         },
         "S3": {
-          "observed": "旧短答对应原目录不存在，冷开失败另有记录。\n本轮实测：当前本机默认官方列表实际返回空。\n续验：官方默认列表仍为空。在新的持久目录准备合规样本时连接检查超时，未发送。\n最新复验：本轮能创建空新对话，原历史查找/回放的状态仍按原证据。\n2026-11-16 续验：小米实答样本从正式侧栏冷开。同一标识、原文与原回复一致。\n2026-11-16 同一小米样本从正常入口按原目录查到并打开，沿原设置准确续答，未产生重复记录。\n2026-11-17 续验：默认列表原回包 28 条均缺工作位置，修复后明确提示；选择原目录命中已加入的同一对象，选另家目录为空。",
+          "observed": "旧短答对应原目录不存在，冷开失败另有记录。\n本轮实测：当前本机默认官方列表实际返回空。\n续验：官方默认列表仍为空。在新的持久目录准备合规样本时连接检查超时，未发送。\n最新复验：本轮能创建空新对话，原历史查找/回放的状态仍按原证据。\n2026-11-16 续验：小米实答样本从正式侧栏冷开。同一标识、原文与原回复一致。\n2026-11-16 同一小米样本从正常入口按原目录查到并打开，沿原设置准确续答，未产生重复记录。\n2026-11-17 续验：默认列表原回包 28 条均缺工作位置，修复后明确提示；选择原目录命中已加入的同一对象，选另家目录为空。\n2026-11-19 静态核对官方目录 1.1.92 的发布包，默认列表仍只从历史首条记录取 cwd。两个已核原样本的首条都缺 cwd，等待从明确权威记录取得原目录的官方版本。",
           "remaining": "默认发现原目录仍需官方提供，分页及其他外部对象按原项。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
@@ -2068,7 +2069,8 @@
             "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/qoder-xiaomi-formal-2026-11-16.json",
             "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json",
-            "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md"
+            "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md",
+            "docs/evidence/2026-11-19-cycle12-official-route-recheck/README.md"
           ],
           "status": "查找冷开续答通过"
         },

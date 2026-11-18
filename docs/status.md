@@ -374,6 +374,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 
 ### ARCH-31
 
+2026-11-19 官方 Qoder 1.1.92 发布代码的默认列表仍从历史第一条记录取原目录，已核自建样本首条缺字段。保留本机 1.1.89 的正式复验结论，等待能准确报告原目录的发行。 [发布代码复核](evidence/2026-11-19-cycle12-official-route-recheck/README.md)
+
 2026-11-18 Claude 停止后的自有 A 再从正常搜索命中原 ID。冷开恢复原指令和历史步骤，原设置下只续答一次，正确复述原标记及命令，原任务未重跑。[正式实测](evidence/2026-11-18-cycle12-claude-pair-stop/README.md#被停止的-a-冷开续答)
 
 2026-11-18 Claude 从正式 Farfold 自有历史索引按标题查找，正常退出后重开同一原 ID，读回原问答，按原小米配置准确续答。厂商独立历史默认发现和分页仍待。[正式冷开续答](evidence/2026-11-18-cycle12-claude-mimo/README.md#正常退出后查找重开与续答)
@@ -983,6 +985,7 @@ Autohand 前台子进程及工具终态、Copilot、Cursor 与 Kilo 工具终态
 - **CodeBuddy**。正式 `6ca11aa5a` 修复原目录同值选模漏发设置。本机 2.184.0 原目录实答 Hy4 / On，同原对话切到免费 Flash，再切回后冷开续答实际仍走 Hy4 / On。冷开续问的正文先返回，厂商周期总结使整轮又等约 130 秒才结束。原目录两条标准 Hy4 / On 前台同时运行时只停 A，A Shell 及子进程退出，B 按原请求完成。冷开 A 保留原步骤中止状态，零自动执行；手动续答仍走 Hy4 / On。旧 `hy4-preview-f / High`、后台及其他原条件继续。 [双任务与冷续答](evidence/2026-11-18-cycle12-codebuddy-registry-stop/README.md) · [原目录正式实测](evidence/2026-11-18-cycle12-codebuddy-registry-model/README.md) · [独立入口对照](evidence/2026-11-18-cycle12-codebuddy-hy4-official-launch/README.md)
 - **Kilo**。当前正式 7.8.1 实时与冷开都未在原步骤摘要显示中止。现行目录 7.8.27 的工具映射仍把同类完成记录映射为 `completed`。等同一工具的可归属失败或中止信号，再复验两种界面呈现。 [正式实测](evidence/2026-11-18-cycle12-kilo-stop-display/README.md)
 
+- **Codex**。本机所选 ACP 1.13.1 的适配器与原权限案归档字节一致。NEW-24 仍等原连接可核实完整实际文件范围、网络和审批及冷开恢复回执。 [官方接口复核](evidence/2026-11-19-cycle12-official-route-recheck/README.md#codex-的-new-24-发送保护)
 - **Claude Code**。Farfold 独立小米 Messages 测试已有实答，官方适配器的私密凭据交接仍待支持。若要测独立官方账号来源，可在用户方便时从 Farfold 官方账号入口使用所选 Claude 订阅或 Anthropic Console 登录。
 - **Gemini CLI 与 Antigravity**。保持暂缓，后续恢复该验收时由用户本人完成官方登录。
 
