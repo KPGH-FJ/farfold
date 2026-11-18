@@ -24,3 +24,7 @@
 | `~/Library/Logs/Farfold/protocol-v1-1794813695086-1.jsonl`                                   | A 前台任务，第 15、24、29、31、35、36 行   | `76a35a2bc9f4d2a329b1e0d4064e1aa1f5a7f69c6f02b5b18c67ccf1b39fbc97` |
 | `~/Library/Logs/Farfold/protocol-v1-1794813753323-3.jsonl`                                   | B 前台任务，第 15、24、29、31、155 行      | `10fcd441e8434a6baea74b5092c2d99b4546c458531d032db7fd7a466b76ec32` |
 | `~/Library/Logs/Farfold/protocol-v1-1794915706083-0.jsonl`                                   | A 冷开和续答，第 10、16、17、22、25、26 行 | `f811603dd6dd4ee91378a7b974ae82d501a961f6f8a00df627ec37525f21d428` |
+
+## 11 月 19 日复验条件
+
+只读核对 Farfold 原登记 `registry:autohand`，已用厂商 Autohand Code 0.9.11 内置 `--acp`，登记及握手均为 0.9.11。厂商 GitHub 最新稳定发行和 npm `autohand-cli` 的 `latest` 均为 0.9.11。旧 0.2.1 适配器已由厂商归档，旧安装不属于原入口。本轮没有重新发消息。进入下一次正式验证的条件是官方可针对原前台命令终止其子进程并发出同工具的终态。届时从 Farfold 沿已有 Fantail 复验只停 A、B 保持、原 A 冷开及手动续答。 [稳定发行](https://github.com/autohandai/code-cli/releases/tag/v0.9.11) · [厂商内置接法](https://docs.autohand.ai/integrations/acp-mode) · [旧适配器归档](https://github.com/autohandai/autohand-acp)

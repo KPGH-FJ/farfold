@@ -964,7 +964,7 @@ Goose实验SQLite打开失败、Kilo实验临时子进程判定属于夹具调�
 
 ## 第 12 周期待配合
 
-Copilot、Cursor 与 Kilo 工具终态、Claude 原 Bash 成品位置、Dirac 正文和撤回、Cline 精确目录列表、Pi 网页工具和回执、Qoder 默认历史位置与实时工具终态、MiniMax 后台新版，以及 Amp 显式模型及未映射线程均列有[官方复验条件](evidence/2026-11-18-cycle12-copilot-grok/README.md#等待官方的条件)。CodeBuddy 的原目录验收及余项见下。
+Autohand 前台子进程及工具终态、Copilot、Cursor 与 Kilo 工具终态、Claude 原 Bash 成品位置、Dirac 正文和撤回、Cline 精确目录列表、Pi 网页工具和回执、Qoder 默认历史位置与实时工具终态、MiniMax 后台新版，以及 Amp 显式模型及未映射线程均列有[官方复验条件](evidence/2026-11-18-cycle12-copilot-grok/README.md#等待官方的条件)。CodeBuddy 的原目录验收及余项见下。
 
 2026-11-17 用户允许 CodeBuddy 在独立样本采用 Hy4 / On、MiniMax 用小米 MiMo 首答及原配置续答，并授权继续 Mistral Vibe 实测。MiniMax 与 Mistral 已有实答。旧 MiniMax M2.7 无额度，保留旧会话原配置，恢复额度后再验。siGit 已按用户决定移出首发。
 
