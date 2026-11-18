@@ -1,0 +1,12 @@
+{
+  "A": {
+    "durationSeconds": 175,
+    "expectedMarker": "FF_C12_COPILOT_PHYSICAL_STOP_A_DONE",
+    "runnerSha256": "c9d3f3222a7e0b361e6ab839ce9c6244752ee557ce8c39d0fb7dffa5c296a6d3"
+  },
+  "B": {
+    "durationSeconds": 150,
+    "expectedMarker": "FF_C12_COPILOT_PHYSICAL_STOP_B_DONE",
+    "runnerSha256": "0d2d1efafec38ec4986212ded79913c1f4f5d89035df33076380ef06b164ae3d"
+  }
+}

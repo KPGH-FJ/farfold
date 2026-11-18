@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-18",
+  "environment": "macOS arm64, isolated locally registered Dirac process",
+  "baseCommit": "64b61fbd4",
+  "diracVersion": "0.6.0",
+  "sdkVersion": "2.2.0",
+  "sdkType": "UntypedMessage",
+  "methods": ["dev.dirac/permissions.list", "dev.dirac/permissions.delete"],
+  "advertisedBoth": true,
+  "exitCode": 0,
+  "modelRequests": 0,
+  "networkDeniedForAgent": true,
+  "writeScope": "owned scratch folder",
+  "programState": "owned scratch folder",
+  "targetRuleRemoved": true,
+  "otherRuleInSameFolderAfter": {
+    "tool": "execute_command",
+    "pattern": "/usr/bin/printf FARFOLD_SDK_OTHER",
+    "action": "deny"
+  },
+  "otherFolderRuleAfter": {
+    "tool": "execute_command",
+    "pattern": "/usr/bin/printf FARFOLD_SDK_B",
+    "action": "allow"
+  },
+  "sha256": {
+    "probeSource": "7c90f0d4a28e16d0e4e9ea7c10b768144d6daaa4b36ae52bb6b2441820253736",
+    "folderAAfter": "afff6888e5624edac9964f6bdc38affbff0cabb447872f3e16680214b5a2822b",
+    "folderBAfter": "146e82ab10d182af19cfb2a05d88245126b41cf00a2802950205ba03bb5ee45e"
+  },
+  "limits": [
+    "Proof covers SDK transport and two owned folders.",
+    "Rules are shared per official project scope.",
+    "No installed Farfold UI tested."
+  ]
+}

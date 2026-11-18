@@ -1,0 +1,129 @@
+{
+  "status": "observed A parent and child gone early, B original processes continued and B result matched",
+  "firstOverlap": {
+    "observedAtUtc": "2026-11-18T07:40:45.339+00:00",
+    "observedAtUnix": 1794987645.339468,
+    "sides": {
+      "A": {
+        "runnerUnchanged": true,
+        "parentPid": 16615,
+        "childPid": 16620,
+        "startUnixSeconds": 1794987644,
+        "sleepSeconds": 175,
+        "parent": {
+          "ppid": 16148,
+          "pgid": 16615,
+          "state": "Ss",
+          "creation": "Wed Nov 18 15:40:44 2026",
+          "command": "/bin/sh"
+        },
+        "child": {
+          "ppid": 16615,
+          "pgid": 16615,
+          "state": "S",
+          "creation": "Wed Nov 18 15:40:44 2026",
+          "command": "/bin/sleep"
+        }
+      },
+      "B": {
+        "runnerUnchanged": true,
+        "parentPid": 16257,
+        "childPid": 16262,
+        "startUnixSeconds": 1794987589,
+        "sleepSeconds": 150,
+        "parent": {
+          "ppid": 15404,
+          "pgid": 16257,
+          "state": "Ss",
+          "creation": "Wed Nov 18 15:39:49 2026",
+          "command": "/bin/sh"
+        },
+        "child": {
+          "ppid": 16257,
+          "pgid": 16257,
+          "state": "S",
+          "creation": "Wed Nov 18 15:39:49 2026",
+          "command": "/bin/sleep"
+        }
+      }
+    }
+  },
+  "firstEarlyAbsenceConfirmed": {
+    "observedAtUtc": "2026-11-18T07:40:57.132+00:00",
+    "observedAtUnix": 1794987657.1329741,
+    "sides": {
+      "A": {
+        "runnerUnchanged": true,
+        "parentPid": 16615,
+        "childPid": 16620,
+        "startUnixSeconds": 1794987644,
+        "sleepSeconds": 175,
+        "parent": null,
+        "child": null
+      },
+      "B": {
+        "runnerUnchanged": true,
+        "parentPid": 16257,
+        "childPid": 16262,
+        "startUnixSeconds": 1794987589,
+        "sleepSeconds": 150,
+        "parent": {
+          "ppid": 15404,
+          "pgid": 16257,
+          "state": "Ss",
+          "creation": "Wed Nov 18 15:39:49 2026",
+          "command": "/bin/sh"
+        },
+        "child": {
+          "ppid": 16257,
+          "pgid": 16257,
+          "state": "S",
+          "creation": "Wed Nov 18 15:39:49 2026",
+          "command": "/bin/sleep"
+        }
+      }
+    }
+  },
+  "bSameProcessWhileAAbsent": true,
+  "final": {
+    "observedAtUtc": "2026-11-18T07:42:19.696+00:00",
+    "observedAtUnix": 1794987739.696171,
+    "sides": {
+      "A": {
+        "runnerUnchanged": true,
+        "parentPid": 16615,
+        "childPid": 16620,
+        "startUnixSeconds": 1794987644,
+        "sleepSeconds": 175,
+        "parent": null,
+        "child": null
+      },
+      "B": {
+        "runnerUnchanged": true,
+        "parentPid": 16257,
+        "childPid": 16262,
+        "startUnixSeconds": 1794987589,
+        "sleepSeconds": 150,
+        "parent": null,
+        "child": null,
+        "result": {
+          "bytes": 36,
+          "sha256": "86aad71e1014c998df3137643290d1d7859b517085c35b144527d7c8757bd012",
+          "expectedBytes": true
+        }
+      }
+    }
+  },
+  "fixture": {
+    "A": {
+      "durationSeconds": 175,
+      "expectedMarker": "FF_C12_COPILOT_PHYSICAL_STOP_A_DONE",
+      "runnerSha256": "c9d3f3222a7e0b361e6ab839ce9c6244752ee557ce8c39d0fb7dffa5c296a6d3"
+    },
+    "B": {
+      "durationSeconds": 150,
+      "expectedMarker": "FF_C12_COPILOT_PHYSICAL_STOP_B_DONE",
+      "runnerSha256": "0d2d1efafec38ec4986212ded79913c1f4f5d89035df33076380ef06b164ae3d"
+    }
+  }
+}
