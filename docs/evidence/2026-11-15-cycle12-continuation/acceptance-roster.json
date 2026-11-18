@@ -381,25 +381,27 @@
           "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "未见当前实际停止与同原恢复的闭环。\n2026-11-18 正式 Farfold 按停止仅结束 A 的原前台 Shell 和 sleep，A 无完成文件。同一工具 ID 有失败回执。B 保持并自然完成。\n2026-11-18 正常退出后从搜索重开被停止的 A，同原 ID 下准确续答并继续走 MiMo。原命令计数、脚本与启动记录不变，零新增工具或自动重发。",
-          "remaining": "后台任务、带草稿附件或待发的停止和恢复按原条件继续。",
+          "observed": "未见当前实际停止与同原恢复的闭环。\n2026-11-18 正式 Farfold 按停止仅结束 A 的原前台 Shell 和 sleep，A 无完成文件。同一工具 ID 有失败回执。B 保持并自然完成。\n2026-11-18 正常退出后从搜索重开被停止的 A，同原 ID 下准确续答并继续走 MiMo。原命令计数、脚本与启动记录不变，零新增工具或自动重发。\n2026-11-19 正式从原 MiMo 对话停止前台，只停 A 的原 Shell 和子进程，冷开原 ID 保留单条暂停待发 B、独立草稿 C 与附件。约 29.8 秒无自动发送。只点一次继续，B 用同原 MiMo 实答、队列清空，C 保持未发，A 未重跑。",
+          "remaining": "后台独立任务、待发消息本身带附件、真实断线以及多条队列等按原项继续。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
             "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
             "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md",
-            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#被停止的-a-冷开续答"
+            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#被停止的-a-冷开续答",
+            "docs/evidence/2026-11-19-cycle12-claude-paused-queue/README.md"
           ],
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "旧登录/准备呈现有观察。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-19 正式 6ca11aa5a 沿 已有小米 MiMo 的普通对话仅拒绝一次原 Bash 审批。同工具明确拒绝及原轮准确答复，脚本未执行，磁盘输入字节保持。",
-          "remaining": "当前一致入口及作用域、具体失败或恢复。",
+          "observed": "旧登录/准备呈现有观察。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-19 正式 6ca11aa5a 沿 已有小米 MiMo 的普通对话仅拒绝一次原 Bash 审批。同工具明确拒绝及原轮准确答复，脚本未执行，磁盘输入字节保持。\n2026-11-19 正式停止后显示回复已停止、待发已暂停，冷开同一已保存对话仍清楚标明暂停和原附件，明确继续后仅 B 显示已完成。",
+          "remaining": "更多失败、恢复与不同入口按原条件续验。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-19-cycle12-approval-denial/README.md"
+            "docs/evidence/2026-11-19-cycle12-approval-denial/README.md",
+            "docs/evidence/2026-11-19-cycle12-claude-paused-queue/README.md"
           ],
           "status": "入口有证"
         }
@@ -1211,8 +1213,8 @@
       "liveAction": "原自有 Auto 冷开续答、文件读写及单连接关闭有证。正式双任务实际 A 1.0.114、B 1.0.112，A 使用 Farfold 按钮实停子进程且 B 继续。官方只读事件及冷开均无 A 工具结束回执，等待官方为原工具 ID 回报终态。",
       "standards": {
         "S1": {
-          "observed": "旧 1.0.89 真实打开官方登录、暂离和取消；1.0.106 另有实际登录终端和空凭据拒绝受控检查。\n2026-11-15 盘点：程序可执行，登记版本 1.0.89。登记所存握手版本 1.0.107。\n2026-11-17 续验：同一登记更新为官方 1.0.112。先复现官方终端入口灰置，再于 86bb5f853 确认可选且出现启动终端按钮，取消临时选择。\n2026-11-17 续验：新版正式普通新建取得 Auto 可用设置，手动首答成功。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
-          "remaining": "实际登录、认证取消分支及登录后实际路由待验。",
+          "observed": "旧 1.0.89 真实打开官方登录、暂离和取消；1.0.106 另有实际登录终端和空凭据拒绝受控检查。\n2026-11-15 盘点：程序可执行，登记版本 1.0.89。登记所存握手版本 1.0.107。\n2026-11-17 续验：同一登记更新为官方 1.0.112。先复现官方终端入口灰置，再于 86bb5f853 确认可选且出现启动终端按钮，取消临时选择。\n2026-11-17 续验：新版正式普通新建取得 Auto 可用设置，手动首答成功。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-19 正式 180a872bf 从目录管理启动官方登录终端，未输入凭据，取消及放弃后回原管理按钮，零模型请求。",
+          "remaining": "本版走完重新登录及登录后的实际路由、从未发草稿进入认证后的返回待验。目录管理的终端取消与返回有证。",
           "sources": [
             "docs/evidence/2026-10-01-agent-copilot-login/installed.md",
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
@@ -1222,7 +1224,8 @@
             "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
             "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md",
             "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
-            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json",
+            "docs/evidence/2026-11-19-cycle12-draft-auth-return/README.md#copilot-从目录进入管理设置"
           ],
           "status": "分项通过"
         },
@@ -1305,7 +1308,7 @@
         },
         "S8": {
           "observed": "旧正式显示回复已停和工具待确认；当时实际导出把工具写成等待中。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续验：官方会话记录出现 session.error，ACP 同时刻只显示错误正文，未发协议错误。Farfold 标题下此次显示已完成，实际未获得预期回复。\n2026-11-16 续验：Auto 再次使用时实际实答，第一次失败仍存在错误文字映射，官方 SDK 的整段读取不能确认原失败归属。\n2026-11-17 官方目录已有 1.0.112，本机现选 1.0.89。新版发布说明未确认旧失败反馈已修。\n2026-11-17 续验：新版此次无答复，停止界面与冷开均保留结果未知，本次没有取得旧版那类官方失败终态。\n2026-11-17 续验：新版正常首答显示完成；原对话仍明确提示结果未知及不能确认原设置。\n2026-11-18 补录 11-17：停止未确认的真实样本可单独检查并关闭，仍保留原结果未知且不重发。旧 Auto 错误被显示为完成的失败保持。\n2026-11-18 续验：已停样本 A 冷开时继续保留工具结果未知，零自动重发。该条没有把官方轮次取消推成原工具成功或收到终态。",
-          "remaining": "同类真实失败、正式关闭反馈仍待。",
+          "remaining": "等官方为同一次 Auto 请求返回可归属的结构化失败。到位后复验失败提示、无完成通知、草稿和待发保留且不自动重发。该自有连接已正式单独关闭，原结果保持未知。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json",
             "docs/evidence/2026-11-06-phase1-copilot-list/README.md",
@@ -1836,14 +1839,15 @@
       "liveAction": "同家双任务沿已有 Xiaomi MiMo / Build，A 实际停止且 B 交付。重开原 A 恢复草稿和附件并续答。其他后台、断线和工具终态依适用范围续验。 停止后单条待发冷恢复及明确续发通过。",
       "standards": {
         "S1": {
-          "observed": "旧正式自定义程序与原实际配置、新对话、明确保存原服务有窄证。\n2026-11-15 盘点：程序可执行，登记版本 1.18.31。登记所存握手版本 2.2.7。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
-          "remaining": "程序与账号准备全链及认证取消返回仍待按原条件实际核验。",
+          "observed": "旧正式自定义程序与原实际配置、新对话、明确保存原服务有窄证。\n2026-11-15 盘点：程序可执行，登记版本 1.18.31。登记所存握手版本 2.2.7。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-19 正式 42ffe103e 从已有草稿模型菜单实开 OpenCode 2.2.7 官方终端并取消，放弃后直接回同一草稿、相同目录与原模型，发送可用。零模型请求。",
+          "remaining": "其他程序和账号实际准备仍按原条件续验；本次从模型选择进入的官方终端取消已通过。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-11-12-cycle6/README.md",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
-            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json",
+            "docs/evidence/2026-11-19-cycle12-draft-auth-return/README.md"
           ],
           "status": "准备未齐"
         },
@@ -1914,14 +1918,15 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "真实中断通知送达并原对话定位、未知保护，纯图未读单独实测。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-18 正式 Xiaomi MiMo / Build，运行中加入待发、停止后明示暂停、重开原对话保持、一次点继续并显示已完成。从未自动续发。",
-          "remaining": "最新版其他失败、冷开后反馈与准备正常入口仍逐项核。",
+          "observed": "真实中断通知送达并原对话定位、未知保护，纯图未读单独实测。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-18 正式 Xiaomi MiMo / Build，运行中加入待发、停止后明示暂停、重开原对话保持、一次点继续并显示已完成。从未自动续发。\n2026-11-19 正式 42ffe103e 取消官方终端并放弃后直接回原草稿，键盘焦点回模型与来源，Tab 到更多设置。",
+          "remaining": "其余失败恢复、冷开反馈和不同准备入口继续逐项核。",
           "sources": [
             "docs/evidence/2026-11-15-cycle7-p47-p46/README.md",
             "docs/evidence/2026-11-15-cycle7-final-validation/README.md",
             "docs/status.md",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-18-cycle12-opencode-paused-queue/README.md"
+            "docs/evidence/2026-11-18-cycle12-opencode-paused-queue/README.md",
+            "docs/evidence/2026-11-19-cycle12-draft-auth-return/README.md"
           ],
           "status": "入口有证"
         }
