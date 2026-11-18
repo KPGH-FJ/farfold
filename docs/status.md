@@ -92,6 +92,8 @@
 
 **Claude Code 的小米原生配置已验首答及冷开续答。** 从 Farfold 新对话沿用已有设置完成首答。正常退出后，从搜索打开同一原 ID 并读回原问答，只发一条续问，正确复述上一轮标记。原生回执及小米同 Key 用量核实两次都使用 `mimo-v2.6-flash`。厂商独立历史默认发现、订阅和 Console 流程、其他模型切换仍待。[正式回执](evidence/2026-11-18-cycle12-claude-mimo/README.md)
 
+**Claude 双前台实停已复验。** 两条独立前台任务分别单次批准，同用 `mimo-v2.6-flash`。从 Farfold 只点停 A，A 原 Shell 与 sleep 退出且未写完成文件，B 原进程继续并按原标记交付。同一 A 工具返回失败终态，实际退出通过进程观察独立确认。被停止 A 的冷开续答、后台及待发恢复仍待。[正式证据](evidence/2026-11-18-cycle12-claude-pair-stop/README.md)
+
 **Claude 托管 API 暂停。** 官方适配器 0.107.0 把服务认证头放进 SDK 设置，SDK 0.3.323 将设置带进子进程参数。Farfold 在建立托管连接前拒绝该路径，保存的服务及「沿用已有设置」入口保留。官方私密交付仍待验证。[核对依据](evidence/2026-11-16-cycle12-original-config/README.md#claude-环境核对)
 
 **移出 DimCode 前的 26 家账号和 API 盘点。** 正式版「探索 Agent」与新对话选择器核对 Qoder 保留、Qwen Code 移出，两家已有登记和对话索引保持。当批 MiniMax 的独立 M2.7 请求因余额或额度不足终止，旧 M2.7 的原账号和服务仍需核对。Claude 当前可用官方订阅或 Console 登录入口，托管 API 暂停。Gemini CLI 和 Antigravity 的登录继续暂缓。其余逐家按现有实答、待排障或待官方条件核对。[实装与盘点](evidence/2026-11-16-cycle12-qwen-exit/README.md)
@@ -209,6 +211,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 <!-- task-current: ARCH-44 -->
 
 ### ARCH-44
+
+2026-11-18 正式 Claude 同一 MiMo 配置、两个独立目录均单次批准原 Bash。只在 A 点停止，A Shell 与子进程退出，B 按原标记交付。Autohand 旧样本只读核得 B 的原工具成功及 A 终态仍缺，原实际子进程停止失败保持。 [Claude 实停](evidence/2026-11-18-cycle12-claude-pair-stop/README.md) · [Autohand 回执](evidence/2026-11-18-cycle12-autohand-stop-receipt/README.md)
 
 2026-11-18 只读补查 Qoder 1.1.89 原停止样本，厂商记录按原请求及工具精确核得 A 中断、B 完成。A 实时连接未收到工具终态，两份旧加载日志只记事件类型，无法确认冷开时该工具状态。[原回执补证](evidence/2026-11-18-cycle12-qoder-stop-receipt/README.md)
 

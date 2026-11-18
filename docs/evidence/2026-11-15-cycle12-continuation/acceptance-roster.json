@@ -12,10 +12,10 @@
     "查找冷开续答通过": 8,
     "已选模型有实答": 15,
     "可建对话": 1,
-    "实测分项通过": 20,
-    "前台停止分项通过": 3,
+    "实测分项通过": 21,
+    "前台停止分项通过": 4,
     "已有设置实答": 6,
-    "双前台分项通过": 16,
+    "双前台分项通过": 17,
     "停止及冷续答通过": 11,
     "实测失败": 5,
     "已选服务有实答": 3,
@@ -266,12 +266,13 @@
           "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n2026-11-16 续查：A 的回复停止且原 Shell 退出；约 9.5 秒后其 sleep 子进程仍活跃。工具结果未知正确保留。B 独立完成。\n2026-11-18 补录 11-17：同原样本冷开后一次手动续问，等待 167.454 秒无回复，一次取消后无该请求终态。随后独立的连接清理不计此次停止。",
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n2026-11-16 续查：A 的回复停止且原 Shell 退出；约 9.5 秒后其 sleep 子进程仍活跃。工具结果未知正确保留。B 独立完成。\n2026-11-18 补录 11-17：同原样本冷开后一次手动续问，等待 167.454 秒无回复，一次取消后无该请求终态。随后独立的连接清理不计此次停止。\n2026-11-18 只读核对厂商原记录：A 保存原 Bash 调用及次日续问，缺同一工具终态与续答；B 原工具回执成功并包含实际标记。A 后续独立关闭只证明清理连接。原子进程实停失败保持。",
           "remaining": "官方前台停止覆盖实际子进程；之后验原对象冷续答、草稿附件和无重发。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
-            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md",
+            "docs/evidence/2026-11-18-cycle12-autohand-stop-receipt/README.md"
           ],
           "status": "实测失败"
         },
@@ -291,7 +292,7 @@
     {
       "agentId": "claude-acp",
       "runtime": "当前正式登记 0.107.0",
-      "liveAction": "正式新对话沿用 Claude Code 自己配置的小米 MiMo 实答。正常退出后从搜索找到同一自有原对话，原问答读回，沿原 MiMo 仅续问一条正确引用旧上下文，同原 ID 及小米用量核合。托管 Messages 等官方安全交付。",
+      "liveAction": "正式新对话沿用 Claude Code 自己配置的小米 MiMo 实答。正常退出后从搜索找到同一自有原对话，原问答读回，沿原 MiMo 仅续问一条正确引用旧上下文，同原 ID 及小米用量核合。托管 Messages 等官方安全交付。 正式双前台两条原 Bash 单次批准。在 A 点停，目标 Shell 和 sleep 退出且无产出，B 原进程继续并自然交付。",
       "standards": {
         "S1": {
           "observed": "装机握手成功，旧状态明确提示未登录并呈现订阅与 Console。\n2026-11-15 盘点：程序可执行，登记版本 0.81.2。登记所存握手版本 0.81.2。\n2026-11-16 续查：已正式升级至 0.107.0，实发后的 auth_required 有证据。官方订阅及 Console 仍有入口。\n2026-11-18 新版正式零发送复验：关闭模型与来源、取消原生目录选择后，原文字、路径和测试附件保留。仍提示 Claude 的 API 配置暂时不可用。\n2026-11-18 正式新对话使用 Claude Code 已有设置，原生小米配置完成准备并收到真实首答。",
@@ -350,37 +351,40 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧多片段实测未取得，不当做已支持的使用结果。",
-          "remaining": "实时工作工具及审批需要已有可用原选择。",
+          "observed": "旧多片段实测未取得，不当做已支持的使用结果。\n2026-11-18 已有 MiMo 设置，两条真实 Bash 单次审批，B 原工具成功，实际写出独立结果，Farfold 显示真实标记。",
+          "remaining": "其他工具、文件从 Farfold 打开、提问、审批拒绝、技能及更多任务类型待验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
-            "docs/evidence/2026-11-10-notification-and-selected-search/README.md"
+            "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
+            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md"
           ],
-          "status": null
+          "status": "实测分项通过"
         },
         "S6": {
-          "observed": "未见当前双任务证据。",
-          "remaining": "实际独立审批停止及设置。",
+          "observed": "未见当前双任务证据。\n2026-11-18 正式 Farfold 两条同配置的独立 Claude 对话在各自目录并行。各自审批。只停 A，B 同一进程和子进程保持并交付。",
+          "remaining": "共享目录、不同配置和其他授权范围仍待隔离实测。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
-            "docs/evidence/2026-11-10-notification-and-selected-search/README.md"
+            "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
+            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md"
           ],
-          "status": null
+          "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "未见当前实际停止与同原恢复的闭环。",
-          "remaining": "有可用原来源后验停止、草稿、附件、待发。",
+          "observed": "未见当前实际停止与同原恢复的闭环。\n2026-11-18 正式 Farfold 按停止仅结束 A 的原前台 Shell 和 sleep，A 无完成文件。同一工具 ID 有失败回执。B 保持并自然完成。",
+          "remaining": "同一被停止对话的冷开续答、后台任务、草稿、附件和待发恢复按原条件继续。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
-            "docs/evidence/2026-11-10-notification-and-selected-search/README.md"
+            "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
+            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md"
           ],
-          "status": null
+          "status": "前台停止分项通过"
         },
         "S8": {
           "observed": "旧登录/准备呈现有观察。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
