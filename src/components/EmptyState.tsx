@@ -327,8 +327,9 @@ export function EmptyState({
   activeRef.current = active;
   const preparationIntent = useRef<{ pair: string } | null>(null);
   if (!active) preparationIntent.current = null;
-  const requestPreparation = () => {
+  const requestPreparation = (refreshFolder = false) => {
     if (!activeRef.current) return;
+    if (refreshFolder) work.retry();
     if (opening && preparationIntent.current?.pair === pair) return;
     preparationIntent.current = { pair };
     if (!draft || draft.connectionLost || draft.openError || draftError) {
@@ -393,7 +394,7 @@ export function EmptyState({
         failedPairRef.current = null;
         newConversationChoice.cwd = path;
         setFolder(path);
-        requestPreparation();
+        requestPreparation(path === cwd && Boolean(work.error));
       },
     });
   const beginPreparation = useDraftPreparation({
@@ -722,7 +723,7 @@ export function EmptyState({
         setDraftError(null);
         failedPairRef.current = null;
         setFolder(picked);
-        requestPreparation();
+        requestPreparation(picked === cwd && Boolean(work.error));
         return true;
       }
       return false;
@@ -966,8 +967,6 @@ export function EmptyState({
       : null) ??
     (explicitReadRequired ? C.readRequired : null) ??
     (!connectionAllowed ? A.disconnectedHint : null) ??
-    work.error ??
-    (sendingPaused ? STRINGS.repair.workOff : null) ??
     confirmationFeedback(draftError, draft?.configError) ??
     (draft?.connectionLost ? STRINGS.thread.connectionIdle : null) ??
     (draft?.sourceError ? STRINGS.service.reconnect : null) ??
@@ -1300,6 +1299,7 @@ export function EmptyState({
       <Composer
         suppressThreadOpenError={archiveBlocked}
         thread={draft}
+        workPolicy={work}
         workLocation={cwd}
         workContext={
           agentId && requestCwd ? { agentId, cwd: requestCwd } : undefined

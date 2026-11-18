@@ -67,7 +67,6 @@ import { captureSubmissionStop } from "../runtime/stop_confirmation";
 import { hasActiveCompaction } from "../runtime/compaction_activity";
 import { LIBRARY } from "../runtime/library_strings";
 import { abandonPendingConversation } from "../runtime/pending_conversation";
-
 import {
   composerDrafts,
   useComposerDraft,
@@ -118,6 +117,7 @@ export function Composer({
   placeholder,
   workContext,
   workLocation,
+  workPolicy,
   caption,
   contextChips,
   queueEditing = false,
@@ -160,8 +160,8 @@ export function Composer({
   sendRequest?: number;
   placeholder?: string;
   workContext?: { agentId: string; cwd: string };
-  /** Diagnostic location even before an Agent is selected; not a work grant. */
   workLocation?: string | null;
+  workPolicy?: ReturnType<typeof useWorkPolicy>;
   caption?: ReactNode;
   contextChips?: ReactNode;
   queueEditing?: boolean;
@@ -268,7 +268,8 @@ export function Composer({
   }, [text, storageKey]);
   const workCwd = thread?.cwd ?? workContext?.cwd ?? null;
   const workAgentId = thread?.agentId ?? workContext?.agentId ?? null;
-  const work = useWorkPolicy(workCwd);
+  const ownWork = useWorkPolicy(workPolicy ? null : workCwd);
+  const work = workPolicy ?? ownWork;
   const running = thread?.running ?? false;
   const stopPending = Boolean(
     thread?.stopping ||
@@ -659,7 +660,6 @@ export function Composer({
         setSendError({ message: STRINGS.repair.requestFailed });
     }
   };
-
   const onPaste = (e: React.ClipboardEvent) => {
     const files = [...e.clipboardData.files].filter((f) =>
       f.type.startsWith("image/"),

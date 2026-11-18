@@ -21,6 +21,10 @@ const h = vi.hoisted(() => ({
   discard: vi.fn(),
   threads: new Map<string, ThreadState>(),
   workReady: true,
+  workError: null as string | null,
+  workRetry: vi.fn(),
+  renderingComposer: false,
+  composerWorkReady: false,
   catalogue: {
     ready: true,
     loading: false,
@@ -57,6 +61,7 @@ vi.mock("react", async (original) => ({
       slot.deps = deps;
     }
   },
+  useLayoutEffect: () => {},
   useSyncExternalStore: (_subscribe: unknown, read: () => unknown) => read(),
 }));
 vi.mock("@tauri-apps/api/core", () => ({
@@ -72,11 +77,21 @@ vi.mock("../runtime/worktrees", () => ({
 }));
 vi.mock("../runtime/dialogs", () => ({ chooseDirectory: vi.fn() }));
 vi.mock("../runtime/work_policy", () => ({
-  useWorkPolicy: (cwd: string) => ({
-    cwd,
-    ready: h.workReady,
-    enabled: () => h.workReady,
-  }),
+  useWorkPolicy: (cwd: string | null) => {
+    const child = h.renderingComposer;
+    const ready = cwd !== null && (child ? h.composerWorkReady : h.workReady);
+    return {
+      cwd: ready ? cwd : undefined,
+      ready,
+      error: cwd && !ready ? h.workError : null,
+      enabled: () => cwd === null || ready,
+      retry: () => {
+        if (!cwd) return;
+        if (child) h.composerWorkReady = true;
+        else h.workRetry(cwd);
+      },
+    };
+  },
 }));
 vi.mock("../runtime/connection_hold", () => ({ useConnectionHold: () => {} }));
 vi.mock("../runtime/credentials", async (original) => ({
@@ -110,8 +125,13 @@ vi.mock("../runtime/sessions", async (original) => ({
 }));
 import { EmptyState } from "./EmptyState";
 import { Composer } from "./Composer";
+import { ComposerWorkNotice } from "./ComposerWorkNotice";
 import { PreservedDrafts } from "./PreservedDrafts";
 import { NewConversationAgentDialog } from "./NewConversationPickers";
+import { chooseDirectory } from "../runtime/dialogs";
+import { ERROR_STRINGS } from "../runtime/error_strings";
+import { STRINGS } from "../runtime/strings";
+import { WORKSPACE_STRINGS } from "../runtime/workspace_strings";
 import {
   composerDrafts,
   draftPersistence,
@@ -168,6 +188,19 @@ function control(label: string): Element {
   return nodes(composer().props.controls as ReactNode).find(
     (node) => node.props["aria-label"] === label,
   )!;
+}
+function composerControls(): Element[] {
+  const view = composer();
+  const { slots, cursor, effects } = h;
+  h.slots = [];
+  h.cursor = 0;
+  h.effects = [];
+  h.renderingComposer = true;
+  try {
+    return nodes(Composer(view.props as ComponentProps<typeof Composer>));
+  } finally {
+    Object.assign(h, { slots, cursor, effects, renderingComposer: false });
+  }
 }
 function chooseSameAgent() {
   (control("选择 Agent").props.onClick as () => void)();
@@ -237,6 +270,10 @@ beforeEach(() => {
   h.slots = [];
   h.effects = [];
   h.workReady = true;
+  h.workError = null;
+  h.composerWorkReady = false;
+  h.workRetry.mockReset();
+  vi.mocked(chooseDirectory).mockReset();
   h.catalogue = {
     ready: true,
     loading: false,
@@ -304,6 +341,61 @@ it("restores a complete ready choice and draft without opening a new conversatio
   expect(composerDrafts.read("new")).toBe(original);
   expect({ ...newConversationChoice }).toEqual(choice);
 });
+
+it.each(["retry", "reselect"] as const)(
+  "recovers the same restored working folder through %s with the draft intact",
+  async (action) => {
+    const original = composerDrafts.read("new");
+    const choice = structuredClone({ ...newConversationChoice });
+    h.workReady = false;
+    h.workError = ERROR_STRINGS.workDirectoryUnavailable;
+    h.workRetry.mockImplementation(() => {
+      h.workReady = true;
+      h.workError = null;
+    });
+    const sendButton = () =>
+      composerControls().find(
+        (node) => node.props["aria-label"] === STRINGS.composer.sendTitle,
+      )!;
+    const workNotice = () =>
+      composerControls().find((node) => node.type === ComposerWorkNotice);
+    expect(sendButton().props.disabled).toBe(true);
+    expect(workNotice()?.props.message).toBe(
+      ERROR_STRINGS.workDirectoryUnavailable,
+    );
+    if (action === "retry") {
+      const notice = workNotice()!;
+      const retry = nodes(
+        ComposerWorkNotice(
+          notice.props as ComponentProps<typeof ComposerWorkNotice>,
+        ),
+      ).find(
+        (node) =>
+          node.type === "button" &&
+          node.props.children === STRINGS.service.retry,
+      )!;
+      (retry.props.onClick as () => void)();
+    } else {
+      vi.mocked(chooseDirectory).mockResolvedValue("/project");
+      const folder = render().find(
+        (node) => node.props["aria-label"] === WORKSPACE_STRINGS.changeFolder,
+      )!;
+      (folder.props.onClick as () => void)();
+      await settle();
+    }
+    render();
+    await vi.advanceTimersByTimeAsync(300);
+    expect(h.workRetry).toHaveBeenCalledExactlyOnceWith("/project");
+    if (action === "retry") expect(h.open).not.toHaveBeenCalled();
+    expect(workNotice()?.props.message).not.toBe(
+      ERROR_STRINGS.workDirectoryUnavailable,
+    );
+    expect(sendButton().props.disabled).toBe(false);
+    expect(h.send).not.toHaveBeenCalled();
+    expect(composerDrafts.read("new")).toBe(original);
+    expect({ ...newConversationChoice }).toEqual(choice);
+  },
+);
 
 it.each(["hidden-return", "remount", "ready-refresh"])(
   "%s does not turn the restored choice into a new preparation intent",
