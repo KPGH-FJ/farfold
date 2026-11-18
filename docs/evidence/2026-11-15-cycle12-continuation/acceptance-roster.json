@@ -1068,12 +1068,13 @@
           "status": "入口有证"
         },
         "S5": {
-          "observed": "正式一次公开网页两层许可与同调用 90,330 字节 PNG 交付。\n2026-11-16 续查：正式从正常入口各单次批准 Agent 权限与明列程序、参数和目录的客户端权限，B 命令完成并返回记号。",
-          "remaining": "其他工具与技能、完整文件交付、拒绝和撤回仍待。",
+          "observed": "正式一次公开网页两层许可与同调用 90,330 字节 PNG 交付。\n2026-11-16 续查：正式从正常入口各单次批准 Agent 权限与明列程序、参数和目录的客户端权限，B 命令完成并返回记号。\n2026-11-19 正式 2a4ee8627。Agent 第一层批准一次，随后在 Farfold 原程序、参数及目录对应的执行卡拒绝一次。原工具收到拒绝，脚本不执行，原轮准确答复。",
+          "remaining": "其他工具与技能、完整文件交付、其他拒绝组合及撤回按原条件。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/fast-page-summary.json",
             "docs/status.md",
-            "docs/evidence/2026-11-15-cycle12-fast-approved/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-fast-approved/live-results.json",
+            "docs/evidence/2026-11-19-cycle12-fast-delegated-denial/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -1099,13 +1100,14 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "正式冷开能显示旧工具截图，从普通入口无需识别导出命令。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-19 正式 2a4ee8627。点停 A 显示回复已停止、Farfold 执行的 1 条命令已退出及原工具步骤未知。B 执行和完成均无 A 的回执。",
+          "observed": "正式冷开能显示旧工具截图，从普通入口无需识别导出命令。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-19 正式 2a4ee8627。点停 A 显示回复已停止、Farfold 执行的 1 条命令已退出及原工具步骤未知。B 执行和完成均无 A 的回执。\n2026-11-19 正式 2a4ee8627。两层分别显示已批准、已拒绝且已告知 Agent。原工具步骤未成功，界面不误给命令退出回执，原轮正常完成。",
           "remaining": "自管工作、Agent 原工具终态、其他真实失败及准备反馈继续按原条件。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/history-supplement-summary.json",
             "docs/evidence/2026-11-15-official-alternatives/fast-agent.md",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-19-cycle12-fast-terminal-exit/README.md"
+            "docs/evidence/2026-11-19-cycle12-fast-terminal-exit/README.md",
+            "docs/evidence/2026-11-19-cycle12-fast-delegated-denial/README.md"
           ],
           "status": "入口有证"
         }

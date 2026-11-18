@@ -246,6 +246,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 
 2026-11-19 Goose 1.59.1 原 OpenRouter 免费模型，A 前台 Shell 和子进程实停，原工具状态未知。重启同原 ID 后 B 仍暂停，约 22 秒零自动发送，点一次继续才实际发送并正常完成，原 A 警示保持。 [正式回执](evidence/2026-11-19-cycle12-goose-paused-queue/README.md)
 
+2026-11-19 fast-agent 从正式入口先批准 Agent 的第一层请求，再拒绝 Farfold 的原命令执行。原工具收到拒绝，未执行或生成结果，界面不给本机退出回执，原轮正常答复。 [正式回执](evidence/2026-11-19-cycle12-fast-delegated-denial/README.md)
+
 2026-11-19 正式 `2a4ee8627` 只停止 fast-agent 的 A 后，独立回执显示 Farfold 执行的 1 条命令已退出，原 Shell 和子进程确实退出。B 原进程继续并成功交付，A 原 Agent 工具终态保持未知。 [正式回执](evidence/2026-11-19-cycle12-fast-terminal-exit/README.md)
 
 2026-11-19 正式 CodeBuddy、Qoder 与 Claude 各在自建目录拒绝一个准确的 Bash 命令，均未执行。Qoder 和 Claude 同工具拒绝后原轮正常答复。CodeBuddy 拒绝已送达，原轮结束，缺该原工具的协议终态，界面保留未知。 [正式回执](evidence/2026-11-19-cycle12-approval-denial/README.md)
