@@ -1438,13 +1438,14 @@
       "liveAction": "原服务文件交付、双前台只停 A 和原 A 冷开续答已实测。工具实时终态及其他工作待核。 新自有 Grok 4.7／Low 样本从正式版搜索冷开同一原对话，历史工具文件入口打开 106 字节成品，零发送。",
       "standards": {
         "S1": {
-          "observed": "已安装，沿已有设置进入官方 Grok 登录提示\n2026-11-15 盘点：程序可执行，登记版本 1.0.46。登记所存握手版本 未报告。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
-          "remaining": "用户所选认证及其取消返回仍待。",
+          "observed": "已安装，沿已有设置进入官方 Grok 登录提示\n2026-11-15 盘点：程序可执行，登记版本 1.0.46。登记所存握手版本 未报告。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-19 正式 5e12e06d9，从原设置再开后切两次目录。既有历史初始化超时退出后只启动最终目录，原未发文字、目录与 Grok Low 保留，发送可用；零模型请求。",
+          "remaining": "用户所选认证及其取消返回仍待。原历史此次初始化超时原因仍未知。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
-            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json",
+            "docs/evidence/2026-11-19-cycle12-grok-approval-isolation/README.md#旧准备撤回的正式复验"
           ],
           "status": "准备未齐"
         },
@@ -1510,14 +1511,15 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "未归属列表与用户需登录分开显示\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-18 补录 11-17：冷开时的模型不匹配停止发送，正常重新检查取得原模型后手动恢复。首次加载零发送。\n2026-11-18 续验：正常入口在原对话的历史步骤可直接打开精确成品，成品内容和原文件摘要一致。\n2026-11-19 正式 42ffe103e 两张审批各自显示实际绝对路径；拒绝 A 后确认已告知，B 保持需要你。仅批准后 B 完成，成品从正常入口准确打开。另一次启动被旧目录准备拖延，在本轮首发前已恢复，未发生自动发送。",
-          "remaining": "失败、其他权限和目录切换时退役等待中的准备按原条件继续。",
+          "observed": "未归属列表与用户需登录分开显示\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-18 补录 11-17：冷开时的模型不匹配停止发送，正常重新检查取得原模型后手动恢复。首次加载零发送。\n2026-11-18 续验：正常入口在原对话的历史步骤可直接打开精确成品，成品内容和原文件摘要一致。\n2026-11-19 正式 42ffe103e 两张审批各自显示实际绝对路径；拒绝 A 后确认已告知，B 保持需要你。仅批准后 B 完成，成品从正常入口准确打开。另一次启动被旧目录准备拖延，在本轮首发前已恢复，未发生自动发送。\n2026-11-19 正式 5e12e06d9 复验实际旧初始化占用；切换两次后只启动最终目录，旧排队准备未启动，未发输入保留，零自动发送。",
+          "remaining": "更多失败和权限反馈按原条件续验；旧历史的此次初始化超时另查。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md",
             "docs/evidence/2026-11-18-cycle12-copilot-grok/README.md#grok-build-成品冷开",
-            "docs/evidence/2026-11-19-cycle12-grok-approval-isolation/README.md"
+            "docs/evidence/2026-11-19-cycle12-grok-approval-isolation/README.md",
+            "docs/evidence/2026-11-19-cycle12-grok-approval-isolation/README.md#旧准备撤回的正式复验"
           ],
           "status": "入口有证"
         }
