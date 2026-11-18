@@ -28,8 +28,8 @@
       "liveAction": "用已登录官方账号，从小米 MiMo 新对话实答并核同线程真实路由。原测试对话冷开及正文读回，临时沿用原线程模型后收到同一T-ID的小米续答，随后恢复显式MiMo。显式参数被拒的缺口保留。 正式双前台任务只点 A 停止，原 Shell 和 sleep 退出，B 独立交付；A 冷开保留原显式 MiMo、草稿与未知结果。 显式模型与未映射旧线程接入等官方。",
       "standards": {
         "S1": {
-          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n2026-11-15 盘点：程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。\n2026-11-16 续查：新版正式 Amp 账号页显示独立厂商账户登录。查看详情核原已装厂商程序和固定 login，仍需手动启动。\n2026-11-16 续查：修复前次误拦截并安装；从原入口确实启动官方 CLI 登录终端，原适配器密钥文件保留。\n2026-11-16 复验：用户完成官方 CLI 登录，厂商程序能列出保存的账号。\n2026-11-16 复验：正式版选中官方 0.13.0 组件及新版官方 CLI，备份旧独立密钥后正常入口读出并选中 MiMo。",
-          "remaining": "取消返回及原账号变化仍需按原条件核。",
+          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n2026-11-15 盘点：程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。\n2026-11-16 续查：新版正式 Amp 账号页显示独立厂商账户登录。查看详情核原已装厂商程序和固定 login，仍需手动启动。\n2026-11-16 续查：修复前次误拦截并安装；从原入口确实启动官方 CLI 登录终端，原适配器密钥文件保留。\n2026-11-16 复验：用户完成官方 CLI 登录，厂商程序能列出保存的账号。\n2026-11-16 复验：正式版选中官方 0.13.0 组件及新版官方 CLI，备份旧独立密钥后正常入口读出并选中 MiMo。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
+          "remaining": "原账号变化与认证入口的取消返回仍需按原条件核。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
@@ -38,7 +38,9 @@
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
             "docs/evidence/2026-11-16-cycle12-amp-native/README.md",
-            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "分项通过"
         },
@@ -206,12 +208,14 @@
       "liveAction": "已有设置与 Fantail 可用。正式双前台点停暴露仍运行的子进程；待官方停止覆盖后复验，同次核原对象冷恢复与准确工具状态。",
       "standards": {
         "S1": {
-          "observed": "可打开现行登记的 Autohand 账号入口，已有设置明确要求认证\n2026-11-15 盘点：程序可执行，登记版本 0.2.1。登记所存握手版本 0.2.1。\n2026-11-16 续查：0.9.11 已从正常新对话准备，沿原服务和 Fantail 成功发送双任务。",
-          "remaining": "进一步核账号准备各种入口及取消返回。",
+          "observed": "可打开现行登记的 Autohand 账号入口，已有设置明确要求认证\n2026-11-15 盘点：程序可执行，登记版本 0.2.1。登记所存握手版本 0.2.1。\n2026-11-16 续查：0.9.11 已从正常新对话准备，沿原服务和 Fantail 成功发送双任务。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
+          "remaining": "认证准备的其他实际入口及各自取消返回仍待。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "准备未齐"
         },
@@ -290,12 +294,13 @@
       "liveAction": "托管 Messages 保持暂停。用户可单独在 Claude 官方入口选原订阅或 Console 登录，之后沿用同来源准备与短测。",
       "standards": {
         "S1": {
-          "observed": "装机握手成功，旧状态明确提示未登录并呈现订阅与 Console。\n2026-11-15 盘点：程序可执行，登记版本 0.81.2。登记所存握手版本 0.81.2。\n2026-11-16 续查：已正式升级至 0.107.0，实发后的 auth_required 有证据。官方订阅及 Console 仍有入口。",
-          "remaining": "官方原订阅或 Console 登录、实答及准备取消返回；新托管来源等待有安全凭据和有效路由回执的官方接口。",
+          "observed": "装机握手成功，旧状态明确提示未登录并呈现订阅与 Console。\n2026-11-15 盘点：程序可执行，登记版本 0.81.2。登记所存握手版本 0.81.2。\n2026-11-16 续查：已正式升级至 0.107.0，实发后的 auth_required 有证据。官方订阅及 Console 仍有入口。\n2026-11-18 新版正式零发送复验：关闭模型与来源、取消原生目录选择后，原文字、路径和测试附件保留。仍提示 Claude 的 API 配置暂时不可用。",
+          "remaining": "官方原订阅或 Console 登录、实答及认证取消仍待。托管来源等待有安全凭据和有效路由回执的官方接口。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "准备未齐"
         },
@@ -390,15 +395,17 @@
       "liveAction": "普通前台真实文件任务通过。正式双任务只停止 A，A 的 Shell 和子进程退出，B 自然完成；原 A 冷开同一 ID 并续答。只读历史列表等待官方支持精确原目录与重复冲突。 等官方发布只读精确目录历史列表。",
       "standards": {
         "S1": {
-          "observed": "旧程序连接和三类认证方式曾展示；旧同版空白连接有超时。\n2026-11-15 盘点：程序可执行，登记版本 3.0.65。登记所存握手版本 3.0.65。\n2026-11-16 续验：正式从签名无效的旧版更新至厂商 3.0.74，程序检查握手和新建均有回执。\n2026-11-16 正式设置沿已有来源实际收到发送回执，握手和新建通过，试发后回到测试对话可见错误。\n2026-11-16 续查：用户原账号重登已在正式设置短测获正确回复。普通入口沿原默认 Nemotron 完成真实文件工作。",
-          "remaining": "认证取消返回、所有准备方式、当前安装选择与旧错误恢复各依原条件。",
+          "observed": "旧程序连接和三类认证方式曾展示；旧同版空白连接有超时。\n2026-11-15 盘点：程序可执行，登记版本 3.0.65。登记所存握手版本 3.0.65。\n2026-11-16 续验：正式从签名无效的旧版更新至厂商 3.0.74，程序检查握手和新建均有回执。\n2026-11-16 正式设置沿已有来源实际收到发送回执，握手和新建通过，试发后回到测试对话可见错误。\n2026-11-16 续查：用户原账号重登已在正式设置短测获正确回复。普通入口沿原默认 Nemotron 完成真实文件工作。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
+          "remaining": "认证取消返回、其他准备方式、当前安装选择与原连接报错恢复仍按原条件。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/cline-startup-diagnosis-2026-11-16.json",
             "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "可建对话"
         },
@@ -500,7 +507,7 @@
       "liveAction": "Hy4 / On 独立文件返工从正常入口实测，单次审批、精确成品和本轮产物打开均有证。旧会话正文缺失保留。 CodeBuddy 同家两条前台命令及实际停止、冷开原配置、保留草稿和续答已有正式证据。",
       "standards": {
         "S1": {
-          "observed": "历史正式启动与设置有观察，当前登记可执行。\n2026-11-15 盘点：程序可执行，登记版本 2.160.0。登记所存握手版本 未报告。\n2026-11-16 复验：从正式版更新及选用 2.184.0，程序检查通过。\n2026-11-17 2.184.0 从正常新建进入检查模型设置并读到当前选项。退出保留原目录和原选择，无真实请求。\n2026-11-17 原保存选择不可用。按用户授权确认本次草稿新选择，用原入口继续并实答。\n2026-11-17 旧选择不可用时明确显示差异；取消后回原草稿，同一测试文字和工作目录保持。本次独立草稿确认可用模型后正常运行。",
+          "observed": "历史正式启动与设置有观察，当前登记可执行。\n2026-11-15 盘点：程序可执行，登记版本 2.160.0。登记所存握手版本 未报告。\n2026-11-16 复验：从正式版更新及选用 2.184.0，程序检查通过。\n2026-11-17 2.184.0 从正常新建进入检查模型设置并读到当前选项。退出保留原目录和原选择，无真实请求。\n2026-11-17 原保存选择不可用。按用户授权确认本次草稿新选择，用原入口继续并实答。\n2026-11-17 旧选择不可用时明确显示差异；取消后回原草稿，同一测试文字和工作目录保持。本次独立草稿确认可用模型后正常运行。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：原目录恢复后，旧设置不可用。取消修复保留原草稿文字及路径并继续禁止发送；明确采用只用于本草稿的现用设置后发送恢复可用。",
           "remaining": "其他账号、程序和准备情形按原条件。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
@@ -509,7 +516,9 @@
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md",
             "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
-            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md"
+            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "分项通过"
         },
@@ -605,12 +614,14 @@
       "liveAction": "只跑配置与官方历史的只读、且仅打开已查实归属的原样本。NEW-24 涉及的发送保持暂停，待官方完整文件/网络范围设置、采用和恢复证据。",
       "standards": {
         "S1": {
-          "observed": "旧正式已有设置、官方服务交付路径及首发有窄证；保存握手有 API key、登录和设备授权声明。\n2026-11-15 盘点：程序可执行，登记版本 1.13.1。登记所存握手版本 1.13.1。",
-          "remaining": "当前认证、全部服务路径和取消继续尚无全项结果。",
+          "observed": "旧正式已有设置、官方服务交付路径及首发有窄证；保存握手有 API key、登录和设备授权声明。\n2026-11-15 盘点：程序可执行，登记版本 1.13.1。登记所存握手版本 1.13.1。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：原目录恢复后点「重试」，目录提示清除并开始准备。后续重新选择 Codex，原文字、路径保持，发送按钮可用。",
+          "remaining": "当前认证、其他服务路径和认证取消仍待；既有发送限制保持。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-11-03-conversation-controls/control-formal-summary.json",
-            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md"
+            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "准备未齐"
         },
@@ -677,11 +688,13 @@
       "liveAction": "以新版原 Auto 补受监视后台工具的实际停止与官方终态。前台双任务已验，继续查真实授权覆盖及共享范围。",
       "standards": {
         "S1": {
-          "observed": "读取已有设置成功，保存的 Auto／Agent 下短请求真实成功\n2026-11-15 盘点：程序可执行，登记版本 2026.09.28。登记所存握手版本 未报告。",
-          "remaining": "实测取消准备后回原位置，以及其他适用接入方式",
+          "observed": "读取已有设置成功，保存的 Auto／Agent 下短请求真实成功\n2026-11-15 盘点：程序可执行，登记版本 2026.09.28。登记所存握手版本 未报告。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：原目录恢复后，只点「重试」即可保留原文字和路径并恢复发送。另用一个测试附件冷开复验，核对保留后可发送。",
+          "remaining": "账号或安装准备被取消后的返回，以及其他适用接入方式仍待。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md"
+            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "准备未齐"
         },
@@ -757,7 +770,7 @@
       "liveAction": "已有 SWE-2 Flash Medium 原样本已冷开续答并完成文件交付。普通新建现可恢复原草稿的过期模型和思考设置，按原已有服务实答，原默认保持。工具审批、并行、停止仍分项核。 Devin 同家两条前台命令及实际停止、冷开原配置、保留草稿和续答已有正式证据。",
       "standards": {
         "S1": {
-          "observed": "旧安装连接成功，早期短测观察到认证要求。\n2026-11-15 盘点：程序可执行，登记版本 3000.11.3。登记所存握手版本 0.0.0-dev。\n最新复验：固定非桌面目录后，旧版从正式入口在 95 毫秒取得新会话；新版 3000.12.57 经正常更新、检查及已有设置也能创建。\n2026-11-16 设置短测：官方 3000.12.57 在正常设置页以临时选择完成一次短测。\n2026-11-16 续验：普通新建被原默认拦住后，从检查模型设置明确采用当前选项，返回同一草稿。原文字和目录读回并实答。\n2026-11-17 旧选择不可用时明确显示差异；取消后回原草稿，同一测试文字和工作目录保持。本次独立草稿确认可用模型后正常运行。",
+          "observed": "旧安装连接成功，早期短测观察到认证要求。\n2026-11-15 盘点：程序可执行，登记版本 3000.11.3。登记所存握手版本 0.0.0-dev。\n最新复验：固定非桌面目录后，旧版从正式入口在 95 毫秒取得新会话；新版 3000.12.57 经正常更新、检查及已有设置也能创建。\n2026-11-16 设置短测：官方 3000.12.57 在正常设置页以临时选择完成一次短测。\n2026-11-16 续验：普通新建被原默认拦住后，从检查模型设置明确采用当前选项，返回同一草稿。原文字和目录读回并实答。\n2026-11-17 旧选择不可用时明确显示差异；取消后回原草稿，同一测试文字和工作目录保持。本次独立草稿确认可用模型后正常运行。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：原目录恢复后，旧设置不可用。取消修复保留原草稿文字及路径并继续禁止发送；明确采用只用于本草稿的现用设置后发送恢复可用。",
           "remaining": "其他账号、程序和准备情形按原条件。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
@@ -766,7 +779,9 @@
             "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/approved-setup-smokes-2026-11-16.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#devin-普通新建的旧设置恢复",
-            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md"
+            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "分项通过"
         },
@@ -864,14 +879,16 @@
       "liveAction": "已通过正式目录选用 0.6.0，原免费 Ultra / Medium 的短前台 A 实际停止 Shell 与子进程，B 继续交付。已停止对话的官方回放漏用户正文，重开续答受阻。 已从正式共用权限入口读取两个新对话各自目录规则。旧对话目录和写入风险仍待。 等官方补原正文回放、原对话实际目录及规则撤回确认。",
       "standards": {
         "S1": {
-          "observed": "当前登记可执行，旧安装有实际免费模型回复。\n2026-11-15 盘点：程序可执行，登记版本 0.5.21。登记所存握手版本 0.5.21。\n2026-11-17 通过正式程序管理安装并选用官方 0.6.0，握手可用，原 0.5.21 安装仍可回退。原配置可从普通入口继续发新任务。",
-          "remaining": "准备取消、登录及其他来源按原条件。",
+          "observed": "当前登记可执行，旧安装有实际免费模型回复。\n2026-11-15 盘点：程序可执行，登记版本 0.5.21。登记所存握手版本 0.5.21。\n2026-11-17 通过正式程序管理安装并选用官方 0.6.0，握手可用，原 0.5.21 安装仍可回退。原配置可从普通入口继续发新任务。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
+          "remaining": "登录、其他来源及其准备取消仍待。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/dirac-formal-c876-ack-summary.json",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
-            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md"
+            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "分项通过"
         },
@@ -976,12 +993,14 @@
       "liveAction": "从正常入口复用已验证的同一原 ID 冷开、网页与正式单次命令。双任务及冷续答已实证，实时工具终态和各 Agent 自管工具仍须验证。",
       "standards": {
         "S1": {
-          "observed": "所选正式程序已有准备、连接和真实窄首发。\n2026-11-15 盘点：程序可执行，登记版本 0.10.1。登记所存握手版本 0.10.1。",
-          "remaining": "当前具体后端与资源选择、完整认证取消仍待。",
+          "observed": "所选正式程序已有准备、连接和真实窄首发。\n2026-11-15 盘点：程序可执行，登记版本 0.10.1。登记所存握手版本 0.10.1。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
+          "remaining": "当前具体后端与资源选择、认证取消仍待。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-11-13-cycle7/fast-page-summary.json",
-            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md"
+            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "准备未齐"
         },
@@ -1149,8 +1168,8 @@
       "liveAction": "原自有 Auto 冷开续答、文件读写及单连接关闭有证。正式双任务实际 A 1.0.114、B 1.0.112，A 使用 Farfold 按钮实停子进程且 B 继续。官方只读事件及冷开均无 A 工具结束回执，等待官方为原工具 ID 回报终态。",
       "standards": {
         "S1": {
-          "observed": "旧 1.0.89 真实打开官方登录、暂离和取消；1.0.106 另有实际登录终端和空凭据拒绝受控检查。\n2026-11-15 盘点：程序可执行，登记版本 1.0.89。登记所存握手版本 1.0.107。\n2026-11-17 续验：同一登记更新为官方 1.0.112。先复现官方终端入口灰置，再于 86bb5f853 确认可选且出现启动终端按钮，取消临时选择。\n2026-11-17 续验：新版正式普通新建取得 Auto 可用设置，手动首答成功。",
-          "remaining": "新的实际登录、各取消分支及登录后实际路由待验。",
+          "observed": "旧 1.0.89 真实打开官方登录、暂离和取消；1.0.106 另有实际登录终端和空凭据拒绝受控检查。\n2026-11-15 盘点：程序可执行，登记版本 1.0.89。登记所存握手版本 1.0.107。\n2026-11-17 续验：同一登记更新为官方 1.0.112。先复现官方终端入口灰置，再于 86bb5f853 确认可选且出现启动终端按钮，取消临时选择。\n2026-11-17 续验：新版正式普通新建取得 Auto 可用设置，手动首答成功。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
+          "remaining": "实际登录、认证取消分支及登录后实际路由待验。",
           "sources": [
             "docs/evidence/2026-10-01-agent-copilot-login/installed.md",
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
@@ -1158,7 +1177,9 @@
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
             "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
-            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "分项通过"
         },
@@ -1266,12 +1287,14 @@
       "liveAction": "同家双任务沿已有 OpenRouter 免费 Super VL / Off，A 实际停止且 B 交付。重开原 A 恢复草稿和附件并续答。其他后台、断线和工具终态依适用范围续验。",
       "standards": {
         "S1": {
-          "observed": "正式更新到 1.59.1，旧 67 会话与 312 消息 ID 保持。旧配置终端有暂离、取消和重查样本。\n2026-11-15 盘点：程序可执行，登记版本 1.59.1。登记所存握手版本 1.59.1。",
-          "remaining": "当前安装的全部准备回路及各认证入口未覆盖。",
+          "observed": "正式更新到 1.59.1，旧 67 会话与 312 消息 ID 保持。旧配置终端有暂离、取消和重查样本。\n2026-11-15 盘点：程序可执行，登记版本 1.59.1。登记所存握手版本 1.59.1。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
+          "remaining": "当前安装的其他准备回路及各认证入口未覆盖。",
           "sources": [
             "docs/evidence/2026-11-15-cycle7-goose-retest/README.md",
             "docs/agent-first-release.md",
-            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md"
+            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "准备未齐"
         },
@@ -1364,11 +1387,13 @@
       "liveAction": "原服务文件交付、双前台只停 A 和原 A 冷开续答已实测。工具实时终态及其他工作待核。 新自有 Grok 4.7／Low 样本从正式版搜索冷开同一原对话，历史工具文件入口打开 106 字节成品，零发送。",
       "standards": {
         "S1": {
-          "observed": "已安装，沿已有设置进入官方 Grok 登录提示\n2026-11-15 盘点：程序可执行，登记版本 1.0.46。登记所存握手版本 未报告。",
-          "remaining": "用户所选认证及可靠的取消返回",
+          "observed": "已安装，沿已有设置进入官方 Grok 登录提示\n2026-11-15 盘点：程序可执行，登记版本 1.0.46。登记所存握手版本 未报告。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
+          "remaining": "用户所选认证及其取消返回仍待。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md"
+            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "准备未齐"
         },
@@ -1451,13 +1476,15 @@
       "liveAction": "原直接完整写入缺 LF。采用复制副本并只编辑状态行的真实路径，字节正确且可打开。正式冷开同一原 ID 读回文件和原模型并准确续答。 Kilo 同家两条前台命令及实际停止、冷开原配置、保留草稿和续答已有正式证据。",
       "standards": {
         "S1": {
-          "observed": "旧正式登录启动/取消及 ZIP 连接有窄证；官方真实设备挑战和受控关闭已验证。\n2026-11-15 盘点：程序可执行，登记版本 7.8.1。登记所存握手版本 7.8.1。\n2026-11-17 从正常新建在独立目录沿已保存选项发出首条并准确实答。",
-          "remaining": "覆盖更多准备、登录、取消与返回。",
+          "observed": "旧正式登录启动/取消及 ZIP 连接有窄证；官方真实设备挑战和受控关闭已验证。\n2026-11-15 盘点：程序可执行，登记版本 7.8.1。登记所存握手版本 7.8.1。\n2026-11-17 从正常新建在独立目录沿已保存选项发出首条并准确实答。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
+          "remaining": "其他准备方式、登录及认证取消返回仍待。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-11-06-phase1-next/kilo-native-pty-device-cancel.json",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
-            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "准备未齐"
         },
@@ -1546,14 +1573,16 @@
       "liveAction": "MiMo 新答和同配置冷开续答有证。可在移交后台前实际停止原 Shell 与子进程，冷开原会话续答。已移交后台的停止失败，需官方精确入口及终态。 等官方目录分发 0.7.7 后按原 MiMo 复验后台。",
       "standards": {
         "S1": {
-          "observed": "已安装，沿已有设置到模型页，界面保留原选项且禁用不一致的保存\n2026-11-15 盘点：程序可执行，登记版本 0.2.7。登记所存握手版本 0.2.7。\n2026-11-16 续查：已用登记内同一 Node 与官方 cli.js 核普通 mcode 命令，可用绝对路径自带官方终端入口；用户小米实际配置仍待。\n2026-11-16 复验：官方选择小米后，普通新对话手动选择同模型，读回并实际回复。\n2026-11-17 续验：正常管理设置仍选 0.2.7；官方 0.7.7 单独启动包在禁网环境真实握手 ACP 1。",
+          "observed": "已安装，沿已有设置到模型页，界面保留原选项且禁用不一致的保存\n2026-11-15 盘点：程序可执行，登记版本 0.2.7。登记所存握手版本 0.2.7。\n2026-11-16 续查：已用登记内同一 Node 与官方 cli.js 核普通 mcode 命令，可用绝对路径自带官方终端入口；用户小米实际配置仍待。\n2026-11-16 复验：官方选择小米后，普通新对话手动选择同模型，读回并实际回复。\n2026-11-17 续验：正常管理设置仍选 0.2.7；官方 0.7.7 单独启动包在禁网环境真实握手 ACP 1。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
           "remaining": "官方目录更新后核原登记升级、原登录与模型保留。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-16-cycle12-amp-native/README.md",
             "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
-            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "分项通过"
         },
@@ -1649,13 +1678,15 @@
       "liveAction": "前台停止和冷续答已证。正式审批卡直接展示同一请求的命令，来源明确，实际单次审批后命令成功。更多工具、拒绝撤回、恢复等条件续验。 同命令类型另有正式单次拒绝，脚本未执行。",
       "standards": {
         "S1": {
-          "observed": "旧已有设置加载并得到所选模型、原目录冷看也有正例。\n2026-11-15 盘点：程序可执行，登记版本 2.25.8。登记所存握手版本 2.25.8。\n2026-11-17 两个新测试目录都能采用已有设置、模型和思考并开始首条任务。",
-          "remaining": "原初始化超时、完整准备及取消另验。",
+          "observed": "旧已有设置加载并得到所选模型、原目录冷看也有正例。\n2026-11-15 盘点：程序可执行，登记版本 2.25.8。登记所存握手版本 2.25.8。\n2026-11-17 两个新测试目录都能采用已有设置、模型和思考并开始首条任务。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
+          "remaining": "原初始化超时、完整准备及认证取消另验。",
           "sources": [
             "docs/evidence/2026-10-24-agent-acceptance/mistral-formal-cb43-history-discovery-summary.json",
             "docs/status.md",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
-            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "分项通过"
         },
@@ -1749,12 +1780,14 @@
       "liveAction": "同家双任务沿已有 Xiaomi MiMo / Build，A 实际停止且 B 交付。重开原 A 恢复草稿和附件并续答。其他后台、断线和工具终态依适用范围续验。",
       "standards": {
         "S1": {
-          "observed": "旧正式自定义程序与原实际配置、新对话、明确保存原服务有窄证。\n2026-11-15 盘点：程序可执行，登记版本 1.18.31。登记所存握手版本 2.2.7。",
-          "remaining": "当前程序与账号准备全链及取消继续仍要原条件实际结果。",
+          "observed": "旧正式自定义程序与原实际配置、新对话、明确保存原服务有窄证。\n2026-11-15 盘点：程序可执行，登记版本 1.18.31。登记所存握手版本 2.2.7。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
+          "remaining": "程序与账号准备全链及认证取消返回仍待按原条件实际核验。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-11-12-cycle6/README.md",
-            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md"
+            "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "准备未齐"
         },
@@ -1843,14 +1876,16 @@
       "liveAction": "原 OpenRouter 对话已恢复设置并续答。正常新草稿确认 Ultra 免费版 / Medium 后可发送；两前台本机任务并行，A 正式实停 Shell 与子进程，B 独立交付，A 原 ID 冷开续答。Pi 本机工具无 Farfold 审批，网页接线和后台仍待。 等官方发布会话工具转发、撤回及扩展命令终态。",
       "standards": {
         "S1": {
-          "observed": "旧正式已有设置、官方程序准备与回选窄证；当前登记声明 terminal login。\n2026-11-15 盘点：程序可执行，登记版本 0.0.34。登记所存握手版本 0.0.34。\n2026-11-17 续验：新草稿读到旧选择与当前选项不一致，原值有保留说明，从同一草稿手动恢复进入选择器。\n2026-11-17 续验：截图与实际选择确认 Medium 可用。纯文本启动说明阻挡新草稿配置暂停的缺陷已修，重开恢复原草稿，正常首发通过。",
-          "remaining": "账号准备、其他服务与取消返回仍按原项。",
+          "observed": "旧正式已有设置、官方程序准备与回选窄证；当前登记声明 terminal login。\n2026-11-15 盘点：程序可执行，登记版本 0.0.34。登记所存握手版本 0.0.34。\n2026-11-17 续验：新草稿读到旧选择与当前选项不一致，原值有保留说明，从同一草稿手动恢复进入选择器。\n2026-11-17 续验：截图与实际选择确认 Medium 可用。纯文本启动说明阻挡新草稿配置暂停的缺陷已修，重开恢复原草稿，正常首发通过。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。 原目录恢复后另外复现旧设置不可用。返回原稿仍暂停。只对独立测试草稿采用当前免费 Ultra，回原稿时原文、目录保持并恢复可发送。\n2026-11-18 新版正式零发送复验：原目录恢复后，旧设置不可用。取消修复保留原草稿文字及路径并继续禁止发送；明确采用只用于本草稿的现用设置后发送恢复可用。",
+          "remaining": "账号准备、其他服务与其取消返回仍按原项。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-11-15-official-alternatives/pi.md",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
-            "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md"
+            "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "分项通过"
         },
@@ -1942,8 +1977,8 @@
       "liveAction": "官方 Custom 的 MiMo 通过正常新建文件交付及原对话恢复。两条前台任务同时运行，A 实际停止、B 继续完成；冷开同一 A 沿用 MiMo 准确续答。工具实时终态和其他适用组合仍留。",
       "standards": {
         "S1": {
-          "observed": "旧安装和一条正常真实短答，当前可执行。\n2026-11-15 盘点：程序可执行，登记版本 0.2.14。登记所存握手版本 0.2.14。\n最新复验：0.2.14 从正式入口在非桌面目录完成握手及新建，已官方更新到 1.1.89。旧正式超时已发现桌面文件夹授权提示，需按实际目录补验。\n2026-11-16 设置短测：正式设置页按用户批准发送一次，程序在创建对话后接收请求，随后报默认 Auto 不可用。\n2026-11-16 续验：用户从 Qoder Custom 配置小米后，正式设置一次短测通过。\n2026-11-16 续查：普通新对话在非桌面自建目录握手及 session/new 成功。恢复旧 qfmodel 设置卡在缺少一项选择，未发送。\n2026-11-16 续查：新版「检查模型设置」打开同一 Qoder 模型页，读回用户在官方向导配置的 MiMo / Default；更新 Farfold 记住的旧 qfmodel 后保留草稿、从正常入口成功执行。",
-          "remaining": "换号及取消返回仍按原条件验证。",
+          "observed": "旧安装和一条正常真实短答，当前可执行。\n2026-11-15 盘点：程序可执行，登记版本 0.2.14。登记所存握手版本 0.2.14。\n最新复验：0.2.14 从正式入口在非桌面目录完成握手及新建，已官方更新到 1.1.89。旧正式超时已发现桌面文件夹授权提示，需按实际目录补验。\n2026-11-16 设置短测：正式设置页按用户批准发送一次，程序在创建对话后接收请求，随后报默认 Auto 不可用。\n2026-11-16 续验：用户从 Qoder Custom 配置小米后，正式设置一次短测通过。\n2026-11-16 续查：普通新对话在非桌面自建目录握手及 session/new 成功。恢复旧 qfmodel 设置卡在缺少一项选择，未发送。\n2026-11-16 续查：新版「检查模型设置」打开同一 Qoder 模型页，读回用户在官方向导配置的 MiMo / Default；更新 Farfold 记住的旧 qfmodel 后保留草稿、从正常入口成功执行。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
+          "remaining": "换号及认证取消返回仍按原条件验证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
@@ -1952,7 +1987,9 @@
             "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/approved-setup-smokes-2026-11-16.json",
             "docs/evidence/2026-11-15-cycle12-pre-send/qoder-xiaomi-formal-2026-11-16.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
           ],
           "status": "分项通过"
         },

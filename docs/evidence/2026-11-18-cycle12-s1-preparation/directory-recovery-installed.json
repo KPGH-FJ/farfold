@@ -1,0 +1,243 @@
+{
+  "date": "2026-11-18",
+  "installed": {
+    "path": "/Applications/Farfold.app",
+    "buildSource": "98d365c08caec658a78ba047faed238aba3d80fe",
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "cdHash": "a373426cac1c3553e6b772ffaf423f1bed7303c6",
+    "executableSha256": "749040dacd7f55051eec89b9184449d6c4ca6832cfe78621d5f4480921545a56",
+    "deepSignatureVerified": true,
+    "candidateExecutableMatched": true,
+    "preservedDataMetadataEntries": 262996,
+    "protectedInventorySha256": "f7321b1e34c1cc72bd0909f1b9427b46ddc81fa4126c58ea8397a69df76166f0",
+    "protectedInventoryAndCriticalFileHashesMatched": true
+  },
+  "ownedDirectory": "output/2026-11-18-cycle12-s1-tests/workspace",
+  "marker": "FF_C12_S1_1118_recovery｜只用于未发送草稿验证",
+  "sharedNewDraft": true,
+  "folderRestoredAtExactPath": true,
+  "directUiRetry": {
+    "agentId": "cursor",
+    "originalError": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+    "draftTextKeptBeforeAndAfter": true,
+    "exactOriginalPathKeptBeforeAndAfter": true,
+    "sendBeforeRetryDisabled": true,
+    "sendAfterRetryEnabled": true,
+    "folderRechosen": false,
+    "anotherAgentPickedBetweenFailureAndReady": false,
+    "modelSent": false
+  },
+  "firstRetryObservation": {
+    "agentId": "codex",
+    "errorRemovedAndPreparationStarted": true,
+    "nextObservedHint": "正在创建会话…",
+    "sendEnabledObservedOnLaterSelection": true
+  },
+  "preparedAfterRestorationByAgent": [
+    {
+      "agentId": "amp-acp",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "autohand",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "cline",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "codebuddy-code",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false,
+      "unavailableSavedSetting": {
+        "detail": "已保存的选择当前不可用。",
+        "scopeInUi": "仅用于这份草稿",
+        "returnedWithoutConfirmation": true,
+        "draftAndPathKeptOnCancel": true,
+        "sendDisabledOnCancel": true,
+        "usedReportedCurrentSettingsExplicitly": true,
+        "draftAndPathKeptOnConfirm": true,
+        "sendEnabledAfterConfirm": true
+      }
+    },
+    {
+      "agentId": "cursor",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "devin",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false,
+      "unavailableSavedSetting": {
+        "detail": "已保存的选择当前不可用。",
+        "scopeInUi": "仅用于这份草稿",
+        "returnedWithoutConfirmation": true,
+        "draftAndPathKeptOnCancel": true,
+        "sendDisabledOnCancel": true,
+        "usedReportedCurrentSettingsExplicitly": true,
+        "draftAndPathKeptOnConfirm": true,
+        "sendEnabledAfterConfirm": true
+      }
+    },
+    {
+      "agentId": "dirac",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "fast-agent",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "github-copilot-cli",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "goose",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "grok-build",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "kilo",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "minimax-code",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "mistral-vibe",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "opencode",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "pi-acp",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false,
+      "unavailableSavedSetting": {
+        "detail": "Agent 当前未提供某项已保存设置。",
+        "scopeInUi": "仅用于这份草稿",
+        "returnedWithoutConfirmation": true,
+        "draftAndPathKeptOnCancel": true,
+        "sendDisabledOnCancel": true,
+        "usedReportedCurrentSettingsExplicitly": true,
+        "draftAndPathKeptOnConfirm": true,
+        "sendEnabledAfterConfirm": true
+      }
+    },
+    {
+      "agentId": "qoder",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    },
+    {
+      "agentId": "codex-acp",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendButtonEnabled": true,
+      "folderErrorVisibleAfter": false
+    }
+  ],
+  "protocolWindow": {
+    "earliestMs": 1794992460000,
+    "throughLocal": "2026-11-18T17:37:53+08:00",
+    "files": 71,
+    "events": 1881,
+    "outboundSessionNew": 69,
+    "outboundSessionPrompt": 0,
+    "malformedLines": 0
+  },
+  "checks": {
+    "frontendFilesPassed": 787,
+    "frontendTestsPassed": 10994,
+    "affectedFrontendTestsPassed": 327,
+    "typecheckPassed": true,
+    "prettierPassed": true,
+    "appBundleBuilt": true
+  },
+  "notExercised": [
+    "实答和账单路由",
+    "重新登录、账号切换及连接授权的全部取消分支",
+    "Gemini CLI",
+    "Antigravity",
+    "Claude Code 官方登录"
+  ],
+  "attachmentRecovery": {
+    "agentId": "cursor",
+    "testFile": "owner.txt",
+    "restartedWithOriginalFolderUnavailable": true,
+    "draftTextPathAndAttachmentListedAfterRestart": true,
+    "sendDisabledWhileFolderUnavailable": true,
+    "samePathPickerDidNotConfirmAndWasCancelled": true,
+    "directRetryClearedFolderError": true,
+    "sendDisabledUntilReviewingRecoveredAttachment": true,
+    "keptSelectedAttachment": true,
+    "draftTextPathAndAttachmentKeptAfterConfirmation": true,
+    "sendEnabledAfterConfirmation": true
+  },
+  "claudeExistingSetupCancellation": {
+    "agentId": "claude-acp",
+    "uiName": "Claude Agent",
+    "sourceUiFeedback": "Claude 的 API 配置暂时不可用，所保存的服务仍可在设置中管理",
+    "closedModelAndSourcePicker": true,
+    "cancelledNativeFolderPicker": true,
+    "draftTextPathAndAttachmentKept": true,
+    "sendButtonEnabled": true,
+    "officialLoginVerified": false,
+    "modelSent": false
+  }
+}

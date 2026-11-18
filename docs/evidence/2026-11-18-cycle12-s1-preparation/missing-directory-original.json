@@ -1,0 +1,166 @@
+{
+  "date": "2026-11-18",
+  "installedSource": "addd85cf7",
+  "cdHash": "47b352da5f04af22fa4fb631590c9626288a278c",
+  "normalExitAndRelaunch": true,
+  "ownedDirectory": "output/2026-11-18-cycle12-s1-tests/workspace",
+  "marker": "FF_C12_S1_1118_recovery｜只用于未发送草稿验证",
+  "absenceMadeByReversibleRename": true,
+  "directoryRestored": true,
+  "each": [
+    {
+      "agentId": "amp-acp",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "autohand",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "cline",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "codebuddy-code",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "cursor",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "devin",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "dirac",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "fast-agent",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "github-copilot-cli",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "goose",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "grok-build",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "kilo",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "minimax-code",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "mistral-vibe",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "opencode",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "pi-acp",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "qoder",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    },
+    {
+      "agentId": "codex-acp",
+      "error": "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+      "draftTextKept": true,
+      "exactOriginalPathKept": true,
+      "sendDisabled": true
+    }
+  ],
+  "directRetryOriginalApp": {
+    "agent": "codex-acp",
+    "folderExistsBeforeClick": true,
+    "pressedVisibleRetry": true,
+    "buttonDisappeared": true,
+    "sameErrorRemained": true,
+    "sendDisabled": true,
+    "draftTextKept": true,
+    "sameFolderSelectedAgainStillFailed": true
+  },
+  "workaroundOriginalApp": {
+    "movedToOtherOwnedFolderThenBack": true,
+    "readyConfirmedAgents": ["codex-acp", "cursor"],
+    "noModelRequest": true
+  },
+  "PiOriginalOptions": {
+    "statusBefore": "Agent 当前未提供某项已保存设置",
+    "cancelVia": "返回草稿",
+    "afterCancelDraftAndDirectoryKept": true,
+    "sendDisabledAfterCancel": true,
+    "explicitScope": "仅用于这份草稿",
+    "appliedVia": ["沿用当前设置", "用这些设置返回草稿"],
+    "reportedModel": "openrouter/NVIDIA: Nemotron 3 Ultra (free)",
+    "reportedThinkingAfter": "Thinking: off",
+    "draftTextAndExactDirectoryKept": true,
+    "sendEnabledAfter": true,
+    "newPromptCount": 0
+  }
+}
