@@ -27,11 +27,14 @@ for line in sys.stdin:
  m=json.loads(line);method=m.get('method')
  with open('trust-trace.jsonl','a') as f:f.write(json.dumps({'method':method,'params':m.get('params')})+'\n')
  if method=='initialize':
-  caps={'_meta': {'dev.dirac/permissions.list':True}} if pathlib.Path('rules-supported').exists() else {}
+  caps={'loadSession':True, '_meta': {'dev.dirac/permissions.list':True}} if pathlib.Path('rules-supported').exists() else {}
   reply(m,{'protocolVersion':1,'agentCapabilities':caps,'authMethods':[]})
  elif method=='session/new':
   extra={'_meta':{'dev.dirac/worktree':{'path':'/other/worktree'}}} if pathlib.Path('rules-worktree').exists() else {}
   reply(m,{'sessionId':'owned-trust','configOptions':[],**extra})
+ elif method=='session/load':
+  send({'method':'session/update','params':{'sessionId':m['params']['sessionId'],'update':{'sessionUpdate':'user_message_chunk','content':{'type':'text','text':'original controlled history'}}}})
+  reply(m,{'configOptions':[]})
  elif method=='_trust/status':threading.Thread(target=status,args=(m,),daemon=True).start()
  elif method=='dev.dirac/permissions.list':
   rules=[{'tool':'execute_command','pattern':'test-owned','action':'allow'}]
@@ -140,6 +143,40 @@ async fn workspace_access_saved_rules_respects_advertisement_owner_and_folder() 
         ));
         assert_eq!(trace(&f).len(), 3);
     }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn workspace_access_saved_rules_never_uses_the_requested_directory_for_a_loaded_session() {
+    let f = Fixture::new();
+    std::fs::write(f.cwd.join("rules-supported"), "").unwrap();
+    std::fs::write(f.cwd.join("peer.py"), PEER).unwrap();
+    let opened = f
+        .manager
+        .open_session(
+            &f.row,
+            &f.cwd,
+            Some("existing-original".into()),
+            vec![],
+            Arc::new(|_| {}),
+            &f.store,
+        )
+        .await
+        .unwrap();
+    let connection = f
+        .manager
+        .session_connection(&f.row.id, &f.cwd, "existing-original")
+        .unwrap();
+    assert!(
+        !crate::acp_client::session_fork::capabilities(&connection, "existing-original")
+            .permission_rules_read
+    );
+    assert!(matches!(
+        f.manager.permission_rules(&f.row.id, &f.cwd, "existing-original", &opened.connection_id).await,
+        Err(error) if error.code == ErrorKind::Changed
+    ));
+    let methods = trace(&f);
+    assert_eq!(methods.len(), 2);
+    assert_eq!(methods[1]["method"], "session/load");
 }
 
 #[tokio::test(flavor = "multi_thread")]

@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-18",
+  "sourceCommit": "addd85cf72b687960a1346ce999a64ca96c66a72",
+  "os": "macOS arm64",
+  "productVersion": "0.1.7",
+  "bundleId": "ai.farfold.desktop",
+  "installedApp": "/Applications/Farfold.app",
+  "cdHash": "47b352da5f04af22fa4fb631590c9626288a278c",
+  "binarySha256": "bcfab9b0bbf07c3a97009cb7bb888ad082d4c6126543b5a7e777288be6ad60b2",
+  "normalSaveAndExit": true,
+  "deepStrictCodeSignVerified": true,
+  "dataBeforeAndAfterInstallMatched": {
+    "roots": [
+      {
+        "name": "Application Support/ai.farfold.desktop",
+        "entries": 262410,
+        "metadataSha256": "3d959bb626a1a5f68c0f08a74939e9fe8260c7f42627bd83943b3617ad56f2de"
+      },
+      {
+        "name": "WebKit/ai.farfold.desktop",
+        "entries": 585,
+        "metadataSha256": "bdf8df6e34f124908343dc165c436d80905baf3994ca927d9ef53f7476b3bc80"
+      },
+      {
+        "name": "Preferences/ai.farfold.desktop.plist",
+        "entries": 1,
+        "metadataSha256": "74cee219d85765c2834a8f8adbcb72c4277ca8d54c131e455f7c72b27f0a29eb"
+      }
+    ],
+    "criticalFileHashes": {
+      "farfold.sqlite3": "cbb7c0d927fd91120f91a848b713ff55f6f8708d54ec8b3b3a77f91da3525697",
+      "farfold.sqlite3-wal": "1e8a94a5b3561381eb3357ee8261138219cd381c5429ae6b530323c729e4a47a",
+      "ai.farfold.desktop.plist": "f8bf2b8423a940aed3dea6d85a8e5f7b9ca19929da63e99d5aeae15b2bcdacf9"
+    }
+  },
+  "frontendTests": {
+    "files": 787,
+    "passed": 10992,
+    "failed": 0
+  },
+  "rustTests": {
+    "passed": 2827,
+    "failed": 0,
+    "previouslyIgnored": 11
+  },
+  "followUpRustScopeTests": {
+    "passed": 2,
+    "loadedConversationSuppressedWithoutRulesRpc": true,
+    "productionCodeChanged": false
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "date": "2026-11-18",
+  "appSource": "addd85cf7",
+  "appCdHash": "47b352da5f04af22fa4fb631590c9626288a278c",
+  "diracVersion": "0.6.0",
+  "selectedModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "testWorkflow": "Normal New Chat in each folder, one short message to establish, Permission menu, explicit saved-rules read",
+  "ownedCases": [
+    {
+      "ownedCase": "A",
+      "cwd": "/private/tmp/ff-c12-dirac-formal.2S8otkBS/A",
+      "nativeSessionId": "4fc1247d-92e6-4c0b-87b3-db7238ed7307",
+      "rulesObservedInFarfold": [
+        {
+          "tool": "execute_command",
+          "pattern": "/usr/bin/printf FARFOLD_DIRAC_FORMAL_RULE_A",
+          "action": "allow"
+        }
+      ],
+      "fixtureStillByteExact": true,
+      "fixtureSha256": "4fd3ad1c673dc46e493e5e7b6ddc92cbb6704ec74c7dc5da4d72d75393d11e37",
+      "logFile": "protocol-v1-1794988707552-1.jsonl",
+      "outgoingFrames": {
+        "initialize": 1,
+        "session/new": 1,
+        "session/prompt": 1,
+        "other": 1
+      },
+      "permissionReadFrame": {
+        "line": 79,
+        "version": 1,
+        "ts": 1794988779279,
+        "dir": "out",
+        "event": "other",
+        "bytes": 161,
+        "error": "none",
+        "wireSequence": 74
+      },
+      "followingResponseFrame": {
+        "line": 80,
+        "version": 1,
+        "ts": 1794988779280,
+        "dir": "in",
+        "event": "response",
+        "bytes": 182,
+        "error": "none",
+        "wireSequence": 75
+      }
+    },
+    {
+      "ownedCase": "B",
+      "cwd": "/private/tmp/ff-c12-dirac-formal.2S8otkBS/B",
+      "nativeSessionId": "086f1140-f892-4dc2-b840-bd0398f61229",
+      "rulesObservedInFarfold": [
+        {
+          "tool": "execute_command",
+          "pattern": "/usr/bin/printf FARFOLD_DIRAC_FORMAL_RULE_B",
+          "action": "allow"
+        }
+      ],
+      "fixtureStillByteExact": true,
+      "fixtureSha256": "c773a15bad4409b59d0d0fb009f90a18430e90ab0fc2dfd652662424f1029148",
+      "logFile": "protocol-v1-1794988806448-2.jsonl",
+      "outgoingFrames": {
+        "initialize": 1,
+        "session/new": 1,
+        "session/prompt": 1,
+        "other": 1
+      },
+      "permissionReadFrame": {
+        "line": 55,
+        "version": 1,
+        "ts": 1794988859361,
+        "dir": "out",
+        "event": "other",
+        "bytes": 161,
+        "error": "none",
+        "wireSequence": 50
+      },
+      "followingResponseFrame": {
+        "line": 56,
+        "version": 1,
+        "ts": 1794988859362,
+        "dir": "in",
+        "event": "response",
+        "bytes": 182,
+        "error": "none",
+        "wireSequence": 51
+      }
+    }
+  ],
+  "rulesVisibleBeforeExplicitRead": false,
+  "rulesFromBVisibleWhenReturningToA": false,
+  "unsupportedCopilotControl": {
+    "ruleEntryPresent": false,
+    "extraPrompts": 0,
+    "log": "protocol-v1-1794988891144-3.jsonl"
+  },
+  "ruleMutations": 0,
+  "note": "Diagnostic logging classifies custom methods as other. Exact method name and official provider independently verified in SDK probe and application wire regression.",
+  "coldDiracReopen": "Not performed. Application requested separate review of an unconfirmed worktree operation on second exit; dialog cancelled."
+}
