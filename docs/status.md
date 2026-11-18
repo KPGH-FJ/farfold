@@ -90,6 +90,8 @@
 
 **Cline 重新认证与旧对话原设置。** Cline 3.0.74 已恢复官方登录入口，用原账号重登后沿原服务临时选 Sonnet 5.5，实际收到预期回复，默认模型保持。[Cline 实测](evidence/2026-11-16-cycle12-cline-auth/results.json) 正式版新增「恢复原对话设置」。Pi 用旧 Farfold 备份核对并保存原 OpenRouter 模型和 Medium，在同一原对话准确续答一轮，重启后原配置和新回复保持。MiniMax 已冷开原文并预览 M2.7，原请求报余额不足，用户无法确认当时是否登录，原账号待核，零保存、零发送。[原设置实测](evidence/2026-11-16-cycle12-original-config/README.md)
 
+**Claude Code 的小米原生配置已有正式首答。** 用户配置小米 Messages 后，从 Farfold 新对话沿用已有设置，一条短消息收到预期答复。同一条原生会话回执及小米同 Key 日用量核实 `mimo-v2.6-flash`。S1、S2 和 S4 补入对应正例。订阅及 Console 流程、模型切换与冷开仍待。[正式回执](evidence/2026-11-18-cycle12-claude-mimo/README.md)
+
 **Claude 托管 API 暂停。** 官方适配器 0.107.0 把服务认证头放进 SDK 设置，SDK 0.3.323 将设置带进子进程参数。Farfold 在建立托管连接前拒绝该路径，保存的服务及「沿用已有设置」入口保留。官方私密交付仍待验证。[核对依据](evidence/2026-11-16-cycle12-original-config/README.md#claude-环境核对)
 
 **移出 DimCode 前的 26 家账号和 API 盘点。** 正式版「探索 Agent」与新对话选择器核对 Qoder 保留、Qwen Code 移出，两家已有登记和对话索引保持。当批 MiniMax 的独立 M2.7 请求因余额或额度不足终止，旧 M2.7 的原账号和服务仍需核对。Claude 当前可用官方订阅或 Console 登录入口，托管 API 暂停。Gemini CLI 和 Antigravity 的登录继续暂缓。其余逐家按现有实答、待排障或待官方条件核对。[实装与盘点](evidence/2026-11-16-cycle12-qwen-exit/README.md)
@@ -188,7 +190,9 @@
 
 ### ARCH-08
 
-2026-11-18 S1 零发送续验。18 家逐一取消模型与来源、原生目录选择后，原文字和路径保留。修复工作目录恢复后旧错误卡住的问题，Cursor 在新版正式入口恢复同一路径并点「重试」后可发送，另核实冷开后确认并保留中文草稿和自有测试附件。目录恢复后 18 家的发送入口逐家可用，CodeBuddy、Devin 和 Pi 需要先明确采用只用于本草稿的现用设置，取消均保留文字与路径。Claude 另有普通取消及附件保留证据，应用仍提示托管 API 暂不可用，原订阅或 Console 登录、实答和认证取消仍待。S1 分类与整家通过数保持原判。[正式回执](evidence/2026-11-18-cycle12-s1-preparation/README.md)
+2026-11-18 Claude 正式新对话沿用 Claude Code 自己配置的小米 Messages 收到首答，原生模型回执与小米同 Key 用量核合。原订阅和 Console 官方认证取消及托管安全交付仍待。[单次正式实测](evidence/2026-11-18-cycle12-claude-mimo/README.md)
+
+2026-11-18 S1 零发送续验。18 家逐一取消模型与来源、原生目录选择后，原文字和路径保留。修复工作目录恢复后旧错误卡住的问题，Cursor 在新版正式入口恢复同一路径并点「重试」后可发送，另核实冷开后确认并保留中文草稿和自有测试附件。目录恢复后 18 家的发送入口逐家可用，CodeBuddy、Devin 和 Pi 需要先明确采用只用于本草稿的现用设置，取消均保留文字与路径。Claude 另有普通取消及附件保留证据，应用仍提示托管 API 暂不可用，原订阅或 Console 登录、实答和认证取消仍待。当批分类保持原判，后续 Claude 单次首答见上文。[正式回执](evidence/2026-11-18-cycle12-s1-preparation/README.md)
 
 2026-11-18 补录。Goose 自有会话冷开后以选定的 OpenRouter 免费 Ultra 实答，官方账单仅该条成本为 0，随后恢复 Super VL / Off。Copilot 1.0.112 已有账号的新版自有 Auto 实答和冷续答可核。其他换号、服务失效和账单条件仍开放。 [证据对齐](evidence/2026-11-18-cycle12-goal-reconciliation/README.md)
 

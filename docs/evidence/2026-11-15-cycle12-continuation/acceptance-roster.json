@@ -3,18 +3,18 @@
   "agentCount": 21,
   "cellCount": 168,
   "explicitStatuses": {
-    "准备未齐": 11,
+    "准备未齐": 10,
     "入口有证": 16,
-    "受阻": 5,
-    "分项通过": 18,
+    "受阻": 3,
+    "分项通过": 19,
     "未测": 8,
     "原账号实答": 6,
     "查找冷开续答通过": 7,
-    "已选模型有实答": 14,
+    "已选模型有实答": 15,
     "可建对话": 1,
     "实测分项通过": 20,
     "前台停止分项通过": 3,
-    "已有设置实答": 5,
+    "已有设置实答": 6,
     "双前台分项通过": 16,
     "停止及冷续答通过": 11,
     "实测失败": 5,
@@ -291,22 +291,23 @@
     {
       "agentId": "claude-acp",
       "runtime": "当前正式登记 0.107.0",
-      "liveAction": "托管 Messages 保持暂停。用户可单独在 Claude 官方入口选原订阅或 Console 登录，之后沿用同来源准备与短测。",
+      "liveAction": "用户通过 Claude Code 既有设置选择小米 MiMo。正式新对话沿用已有设置，一条短消息收到精确回复，原记录与小米用量核为 mimo-v2.6-flash。托管 Messages 仍需官方私密交付。",
       "standards": {
         "S1": {
-          "observed": "装机握手成功，旧状态明确提示未登录并呈现订阅与 Console。\n2026-11-15 盘点：程序可执行，登记版本 0.81.2。登记所存握手版本 0.81.2。\n2026-11-16 续查：已正式升级至 0.107.0，实发后的 auth_required 有证据。官方订阅及 Console 仍有入口。\n2026-11-18 新版正式零发送复验：关闭模型与来源、取消原生目录选择后，原文字、路径和测试附件保留。仍提示 Claude 的 API 配置暂时不可用。",
-          "remaining": "官方原订阅或 Console 登录、实答及认证取消仍待。托管来源等待有安全凭据和有效路由回执的官方接口。",
+          "observed": "装机握手成功，旧状态明确提示未登录并呈现订阅与 Console。\n2026-11-15 盘点：程序可执行，登记版本 0.81.2。登记所存握手版本 0.81.2。\n2026-11-16 续查：已正式升级至 0.107.0，实发后的 auth_required 有证据。官方订阅及 Console 仍有入口。\n2026-11-18 新版正式零发送复验：关闭模型与来源、取消原生目录选择后，原文字、路径和测试附件保留。仍提示 Claude 的 API 配置暂时不可用。\n2026-11-18 正式新对话使用 Claude Code 已有设置，原生小米配置完成准备并收到真实首答。",
+          "remaining": "原订阅或 Console 的官方登录、实答和认证取消待验。托管凭据安全交付等官方。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
-            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json",
+            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md"
           ],
-          "status": "准备未齐"
+          "status": "分项通过"
         },
         "S2": {
-          "observed": "未确认可用原账号或所选模型；旧正式设置声明可读但保存选择未确认。\n最新复验：新保存的小米 Messages 设置独立 API 实答；普通对话见相应真实复验及官方适配程序认证头对照。\n2026-11-16 已暂停会将认证头交给进程参数的官方托管路径。正式设置保留原 Messages 服务，Claude 已退出其适用列表。\n2026-11-17 公开源码验证 0.107.3 与既测 0.107.0 的流式 Messages 认证配置相同。小米独立 Messages 实答和普通对话 auth_required 的分层证据保持。",
-          "remaining": "等待适配器支持官方私密交付，或由用户从官方账号入口单独选可用来源。",
+          "observed": "未确认可用原账号或所选模型；旧正式设置声明可读但保存选择未确认。\n最新复验：新保存的小米 Messages 设置独立 API 实答；普通对话见相应真实复验及官方适配程序认证头对照。\n2026-11-16 已暂停会将认证头交给进程参数的官方托管路径。正式设置保留原 Messages 服务，Claude 已退出其适用列表。\n2026-11-17 公开源码验证 0.107.3 与既测 0.107.0 的流式 Messages 认证配置相同。小米独立 Messages 实答和普通对话 auth_required 的分层证据保持。\n2026-11-18 用户在 Claude Code 自己的设置配小米 Messages，Farfold 沿用已有设置收到实答，同一把 Key 的小米官方在线用量出现新记录。",
+          "remaining": "原订阅、Console 与换号等按原条件核。Farfold 托管 API 继续等待官方的安全凭据交付与实际路由证明。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
@@ -315,9 +316,10 @@
             "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
             "docs/evidence/2026-11-16-cycle12-original-config/results.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
-            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
+            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md"
           ],
-          "status": "受阻"
+          "status": "已有设置实答"
         },
         "S3": {
           "observed": "登记声明 list/load/resume，无可安全归属旧样本。",
@@ -331,8 +333,8 @@
           "status": null
         },
         "S4": {
-          "observed": "旧官方模型声明能显示，保存基线不一致。\n最新复验：用户保存 mimo-v2.6-flash，正式 0.81.2 确认该服务和模型并出站，等待后停止，未观察到助手正文。 官方更新至 0.107.0，正向准备和真实出站成功，182.1 秒后收到该请求的 auth_required。\n2026-11-16 托管路径因已核的认证交付限制暂停，已保存的服务仍存在。\n2026-11-17 小米官方有原生 Claude Code 接法。现有适配器负结果只支持继续调查认证交接，真实服务 HTTP 状态未知。",
-          "remaining": "补安全的官方接法，再验模型实答和冷恢复。",
+          "observed": "旧官方模型声明能显示，保存基线不一致。\n最新复验：用户保存 mimo-v2.6-flash，正式 0.81.2 确认该服务和模型并出站，等待后停止，未观察到助手正文。 官方更新至 0.107.0，正向准备和真实出站成功，182.1 秒后收到该请求的 auth_required。\n2026-11-16 托管路径因已核的认证交付限制暂停，已保存的服务仍存在。\n2026-11-17 小米官方有原生 Claude Code 接法。现有适配器负结果只支持继续调查认证交接，真实服务 HTTP 状态未知。\n2026-11-18 已有设置中的 Haiku 别名显示映射至 MiMo。同一正式请求的 Claude Code 原会话记录及小米用量均显示 mimo-v2.6-flash。",
+          "remaining": "模型切换和冷开恢复仍待实测，Farfold 托管路径保持暂停。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
@@ -340,9 +342,10 @@
             "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
             "docs/evidence/2026-11-16-cycle12-original-config/results.json",
-            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md"
+            "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
+            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md"
           ],
-          "status": "受阻"
+          "status": "已选模型有实答"
         },
         "S5": {
           "observed": "旧多片段实测未取得，不当做已支持的使用结果。",
