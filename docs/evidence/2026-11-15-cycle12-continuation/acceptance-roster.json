@@ -9,7 +9,7 @@
     "分项通过": 19,
     "未测": 8,
     "原账号实答": 6,
-    "查找冷开续答通过": 7,
+    "查找冷开续答通过": 8,
     "已选模型有实答": 15,
     "可建对话": 1,
     "实测分项通过": 20,
@@ -291,7 +291,7 @@
     {
       "agentId": "claude-acp",
       "runtime": "当前正式登记 0.107.0",
-      "liveAction": "用户通过 Claude Code 既有设置选择小米 MiMo。正式新对话沿用已有设置，一条短消息收到精确回复，原记录与小米用量核为 mimo-v2.6-flash。托管 Messages 仍需官方私密交付。",
+      "liveAction": "正式新对话沿用 Claude Code 自己配置的小米 MiMo 实答。正常退出后从搜索找到同一自有原对话，原问答读回，沿原 MiMo 仅续问一条正确引用旧上下文，同原 ID 及小米用量核合。托管 Messages 等官方安全交付。",
       "standards": {
         "S1": {
           "observed": "装机握手成功，旧状态明确提示未登录并呈现订阅与 Console。\n2026-11-15 盘点：程序可执行，登记版本 0.81.2。登记所存握手版本 0.81.2。\n2026-11-16 续查：已正式升级至 0.107.0，实发后的 auth_required 有证据。官方订阅及 Console 仍有入口。\n2026-11-18 新版正式零发送复验：关闭模型与来源、取消原生目录选择后，原文字、路径和测试附件保留。仍提示 Claude 的 API 配置暂时不可用。\n2026-11-18 正式新对话使用 Claude Code 已有设置，原生小米配置完成准备并收到真实首答。",
@@ -322,19 +322,20 @@
           "status": "已有设置实答"
         },
         "S3": {
-          "observed": "登记声明 list/load/resume，无可安全归属旧样本。",
-          "remaining": "确权及真实读回与续接。",
+          "observed": "登记声明 list/load/resume，无可安全归属旧样本。\n2026-11-18 从正式搜索按原标记找到 Farfold 已登记自有对话，正常退出后重开读回原问答，原 ID 上续答复述旧标记；零新建和自动重发。",
+          "remaining": "厂商独立历史默认发现、原目录和分页等其他样本仍待验证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
-            "docs/evidence/2026-11-10-notification-and-selected-search/README.md"
+            "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
+            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md#正常退出后查找重开与续答"
           ],
-          "status": null
+          "status": "查找冷开续答通过"
         },
         "S4": {
-          "observed": "旧官方模型声明能显示，保存基线不一致。\n最新复验：用户保存 mimo-v2.6-flash，正式 0.81.2 确认该服务和模型并出站，等待后停止，未观察到助手正文。 官方更新至 0.107.0，正向准备和真实出站成功，182.1 秒后收到该请求的 auth_required。\n2026-11-16 托管路径因已核的认证交付限制暂停，已保存的服务仍存在。\n2026-11-17 小米官方有原生 Claude Code 接法。现有适配器负结果只支持继续调查认证交接，真实服务 HTTP 状态未知。\n2026-11-18 已有设置中的 Haiku 别名显示映射至 MiMo。同一正式请求的 Claude Code 原会话记录及小米用量均显示 mimo-v2.6-flash。",
-          "remaining": "模型切换和冷开恢复仍待实测，Farfold 托管路径保持暂停。",
+          "observed": "旧官方模型声明能显示，保存基线不一致。\n最新复验：用户保存 mimo-v2.6-flash，正式 0.81.2 确认该服务和模型并出站，等待后停止，未观察到助手正文。 官方更新至 0.107.0，正向准备和真实出站成功，182.1 秒后收到该请求的 auth_required。\n2026-11-16 托管路径因已核的认证交付限制暂停，已保存的服务仍存在。\n2026-11-17 小米官方有原生 Claude Code 接法。现有适配器负结果只支持继续调查认证交接，真实服务 HTTP 状态未知。\n2026-11-18 已有设置中的 Haiku 别名显示映射至 MiMo。同一正式请求的 Claude Code 原会话记录及小米用量均显示 mimo-v2.6-flash。\n2026-11-18 正常退出后原对话仍沿用已有设置与 MiMo Haiku 别名，实际续答及小米同 Key 用量确认为 mimo-v2.6-flash。",
+          "remaining": "其他模型切换仍待实测，Farfold 托管路径保持暂停。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
@@ -343,7 +344,8 @@
             "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
             "docs/evidence/2026-11-16-cycle12-original-config/results.json",
             "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
-            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md"
+            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md",
+            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md#正常退出后查找重开与续答"
           ],
           "status": "已选模型有实答"
         },
@@ -1928,7 +1930,7 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "当前登记的官方桥未转发 MCP，不能完成网页工具。官方 SDK 已受控验证注册/授权和撤回。\n2026-11-16 续查：同版适配器接收网页工具配置但未传给 Pi；官方 SDK 1.5.2 受控可会话内注册。\n2026-11-17 续验：B 使用本机 Bash 和读取交付自己目录的 result.txt，按原字节见测试回执。模型还在自有目录读取并列举，未发 Farfold 审批请求。\n2026-11-17 续验：现选官方桥的两个受控扩展确认分别证明批准执行、拒绝无执行。两条原 ACP 扩展请求均无终态。\n2026-11-18 续验：本机和官方目录的适配器仍为 0.0.34，官方会话 MCP 转发 PR 尚未合并。\n2026-11-18 续验：官方适配器 0.0.34 仍未发布会话 MCP 转发和扩展命令终态两项改动。",
+          "observed": "当前登记的官方桥未转发 MCP，不能完成网页工具。官方 SDK 已受控验证注册/授权和撤回。\n2026-11-16 续查：同版适配器接收网页工具配置但未传给 Pi；官方 SDK 1.5.2 受控可会话内注册。\n2026-11-17 续验：B 使用本机 Bash 和读取交付自己目录的 result.txt，按原字节见测试回执。模型还在自有目录读取并列举，未发 Farfold 审批请求。\n2026-11-17 续验：现选官方桥的两个受控扩展确认分别证明批准执行、拒绝无执行。两条原 ACP 扩展请求均无终态。\n2026-11-18 续验：本机和官方目录的适配器仍为 0.0.34，官方会话 MCP 转发 PR 尚未合并。\n2026-11-18 续验：官方适配器 0.0.34 仍未发布会话 MCP 转发和扩展命令终态两项改动。\n2026-11-18 共用实际签名网页助手工程测试通过，验证两个自有助手隔离和撤回后拒绝，Pi 正式接线及真网页未覆盖。",
           "remaining": "官方转发、撤回及实际扩展回执可核后复验网页、截图、权限与冷开隔离。官方 SDK 实验暂限受控样本。",
           "sources": [
             "docs/evidence/2026-11-15-official-alternatives/pi.md",
@@ -1937,7 +1939,8 @@
             "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md",
             "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md",
             "docs/evidence/2026-11-18-cycle12-dirac-copilot/README.md",
-            "docs/evidence/2026-11-18-cycle12-copilot-grok/README.md#等待官方的条件"
+            "docs/evidence/2026-11-18-cycle12-copilot-grok/README.md#等待官方的条件",
+            "docs/evidence/2026-11-18-cycle12-copilot-grok/README.md#pi-网页传输前置复核"
           ],
           "status": "实测分项通过"
         },
@@ -1977,7 +1980,7 @@
     {
       "agentId": "qoder",
       "runtime": "当前正式登记 1.1.89",
-      "liveAction": "官方 Custom 的 MiMo 通过正常新建文件交付及原对话恢复。两条前台任务同时运行，A 实际停止、B 继续完成；冷开同一 A 沿用 MiMo 准确续答。工具实时终态和其他适用组合仍留。",
+      "liveAction": "官方 Custom 的 MiMo 通过正常新建文件交付及原对话恢复。两条前台任务同时运行，A 实际停止、B 继续完成；冷开同一 A 沿用 MiMo 准确续答。工具实时终态和其他适用组合仍留。 厂商原回执补证 A 工具中断及 B 工具正常结束，实时反馈仍待。",
       "standards": {
         "S1": {
           "observed": "旧安装和一条正常真实短答，当前可执行。\n2026-11-15 盘点：程序可执行，登记版本 0.2.14。登记所存握手版本 0.2.14。\n最新复验：0.2.14 从正式入口在非桌面目录完成握手及新建，已官方更新到 1.1.89。旧正式超时已发现桌面文件夹授权提示，需按实际目录补验。\n2026-11-16 设置短测：正式设置页按用户批准发送一次，程序在创建对话后接收请求，随后报默认 Auto 不可用。\n2026-11-16 续验：用户从 Qoder Custom 配置小米后，正式设置一次短测通过。\n2026-11-16 续查：普通新对话在非桌面自建目录握手及 session/new 成功。恢复旧 qfmodel 设置卡在缺少一项选择，未发送。\n2026-11-16 续查：新版「检查模型设置」打开同一 Qoder 模型页，读回用户在官方向导配置的 MiMo / Default；更新 Farfold 记住的旧 qfmodel 后保留草稿、从正常入口成功执行。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
@@ -2061,14 +2064,15 @@
           "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "旧一次完成有回执，旧冷开失败保留。\n2026-11-16 续验：从正式 Farfold 点停止，Qoder 1.1.89 前台 Shell 和实际子进程均在足时前退出；界面如实提示工具步骤结果未确认。\n2026-11-16 冷续答：正常退出后从侧栏加载同一 A，原小米 MiMo 及 Default 保持。一次手动上下文续问正确，零新建、零重发、零工具重跑。",
-          "remaining": "实际停止和原对话冷续答已覆盖前台夹具。旧工具实时终态仍未知，真实中断和草稿、附件、待发恢复仍待核。",
+          "observed": "旧一次完成有回执，旧冷开失败保留。\n2026-11-16 续验：从正式 Farfold 点停止，Qoder 1.1.89 前台 Shell 和实际子进程均在足时前退出；界面如实提示工具步骤结果未确认。\n2026-11-16 冷续答：正常退出后从侧栏加载同一 A，原小米 MiMo 及 Default 保持。一次手动上下文续问正确，零新建、零重发、零工具重跑。\n2026-11-18 只读补查，Qoder 原对象逐请求和工具记录确认 A 同一工具中断、B 同一工具完成。A 停止后的 Farfold 实时事件缺工具终态，既有冷加载更新无法核对该工具的具体状态。",
+          "remaining": "实时工具终态仍待官方同一工具回执或可精确核归属的官方读取接口。真实中断和草稿、附件、待发恢复仍待核。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#qoder-停止及发送名额",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#qoder-停止后冷开续答"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md#qoder-停止后冷开续答",
+            "docs/evidence/2026-11-18-cycle12-qoder-stop-receipt/README.md"
           ],
           "status": "停止及冷续答通过"
         },

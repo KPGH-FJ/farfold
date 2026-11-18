@@ -90,7 +90,7 @@
 
 **Cline 重新认证与旧对话原设置。** Cline 3.0.74 已恢复官方登录入口，用原账号重登后沿原服务临时选 Sonnet 5.5，实际收到预期回复，默认模型保持。[Cline 实测](evidence/2026-11-16-cycle12-cline-auth/results.json) 正式版新增「恢复原对话设置」。Pi 用旧 Farfold 备份核对并保存原 OpenRouter 模型和 Medium，在同一原对话准确续答一轮，重启后原配置和新回复保持。MiniMax 已冷开原文并预览 M2.7，原请求报余额不足，用户无法确认当时是否登录，原账号待核，零保存、零发送。[原设置实测](evidence/2026-11-16-cycle12-original-config/README.md)
 
-**Claude Code 的小米原生配置已有正式首答。** 用户配置小米 Messages 后，从 Farfold 新对话沿用已有设置，一条短消息收到预期答复。同一条原生会话回执及小米同 Key 日用量核实 `mimo-v2.6-flash`。S1、S2 和 S4 补入对应正例。订阅及 Console 流程、模型切换与冷开仍待。[正式回执](evidence/2026-11-18-cycle12-claude-mimo/README.md)
+**Claude Code 的小米原生配置已验首答及冷开续答。** 从 Farfold 新对话沿用已有设置完成首答。正常退出后，从搜索打开同一原 ID 并读回原问答，只发一条续问，正确复述上一轮标记。原生回执及小米同 Key 用量核实两次都使用 `mimo-v2.6-flash`。厂商独立历史默认发现、订阅和 Console 流程、其他模型切换仍待。[正式回执](evidence/2026-11-18-cycle12-claude-mimo/README.md)
 
 **Claude 托管 API 暂停。** 官方适配器 0.107.0 把服务认证头放进 SDK 设置，SDK 0.3.323 将设置带进子进程参数。Farfold 在建立托管连接前拒绝该路径，保存的服务及「沿用已有设置」入口保留。官方私密交付仍待验证。[核对依据](evidence/2026-11-16-cycle12-original-config/README.md#claude-环境核对)
 
@@ -108,7 +108,7 @@
 
 **Qoder 历史和 Cline 短测。** Qoder CLI 1.1.89 沿用官方 Custom 配置的小米 `mimo-v2.6-flash`，按原目录从 Farfold 对话库命中同一原对话，打开原文并准确续答。Auto 旧失败保留。Cline 3.0.74 修复了旧版签名导致的启动失败。此次沿用已有设置，以 `Claude Sonnet 5.5` 只发了一条，程序约 3 秒返回 `internal_error`，没有文本，当时未取得具体原因。原账号登录及后续实答见上文。Farfold 保存的原选择未变。当前 Cline 声明按已知标识读取，未声明历史列表。[正式复验](evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json) · [Cline 启动证据](evidence/2026-11-15-cycle12-pre-send/cline-startup-diagnosis-2026-11-16.json)
 
-**Qoder 双前台隔离及停止后冷续答通过。** 用户批准后单独关闭占用全局发送名额的 OpenCode 报错连接。正式版中两条 Qoder 1.1.89 对话沿用同一 MiMo，各自在独立目录运行。只点 A 的停止，A 的 Shell 和子进程实际退出，B 的同一进程继续并自然完成。正常保存退出后从侧栏冷开同一 A，只发一条依赖旧上下文的续问，沿用已有小米 MiMo 和 Default 准确回答。原标识保留且唯一，零新建、零自动重发、零工具重跑。A 的已停止工具步骤仍显示结果未知。[隔离实测](evidence/2026-11-16-cycle12-eight-check/README.md#qoder-停止及发送名额) · [续答实测](evidence/2026-11-16-cycle12-eight-check/README.md#qoder-停止后冷开续答)
+**Qoder 双前台隔离及停止后冷续答通过。** 用户批准后单独关闭占用全局发送名额的 OpenCode 报错连接。正式版中两条 Qoder 1.1.89 对话沿用同一 MiMo，各自在独立目录运行。只点 A 的停止，A 的 Shell 和子进程实际退出，B 的同一进程继续并自然完成。正常保存退出后从侧栏冷开同一 A，只发一条依赖旧上下文的续问，沿用已有小米 MiMo 和 Default 准确回答。原标识保留且唯一，零新建、零自动重发、零工具重跑。A 的已停止工具步骤当时仍显示结果未知。11 月 18 日核得厂商原回执已精确记录 A 工具中断、B 工具正常结束，A 的 Farfold 实时回执缺口保持。[原回执补证](evidence/2026-11-18-cycle12-qoder-stop-receipt/README.md) · [隔离实测](evidence/2026-11-16-cycle12-eight-check/README.md#qoder-停止及发送名额) · [续答实测](evidence/2026-11-16-cycle12-eight-check/README.md#qoder-停止后冷开续答)
 
 **Copilot 原 Auto 续答复验通过，失败反馈等待官方。** 用户确认原 GitHub 账号。正式版从原目录找到、读回并加入同一原 ID，恢复已有服务和 Auto。首次续问约 20.7 秒出现官方选模网络错误，错误作为正文返回，协议未将该轮报告为失败，Farfold 显示「已完成」。后续从正常入口在同一原对话只发一次，约 18.1 秒正确回传原标记，原配置与唯一索引保持。首次网络失败的具体地址、状态或底层异常未知。等待官方回传可对应于同一请求的失败信号。[最新复验](evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验) · [等待与复验条件](evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件)
 
@@ -209,6 +209,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 <!-- task-current: ARCH-44 -->
 
 ### ARCH-44
+
+2026-11-18 只读补查 Qoder 1.1.89 原停止样本，厂商记录按原请求及工具精确核得 A 中断、B 完成。A 实时连接未收到工具终态，两份旧加载日志只记事件类型，无法确认冷开时该工具状态。[原回执补证](evidence/2026-11-18-cycle12-qoder-stop-receipt/README.md)
 
 2026-11-18 官方只读事件回查可读取自有会话副本。Copilot A 1.0.114 有原 Bash 启动、用户停止以及独立进程退出，整份事件无同工具 ID 的结束回执。B 1.0.112 同工具 ID 有成功对照。正式 Farfold 零发送冷开 A 继续显示步骤结果未知。等官方为原工具 ID 提供结束事件。 [正式证据及剩余条件](evidence/2026-11-18-cycle12-copilot-grok/README.md#copilot-工具回执)
 
@@ -337,6 +339,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: ARCH-31 -->
 
 ### ARCH-31
+
+2026-11-18 Claude 从正式 Farfold 自有历史索引按标题查找，正常退出后重开同一原 ID，读回原问答，按原小米配置准确续答。厂商独立历史默认发现和分页仍待。[正式冷开续答](evidence/2026-11-18-cycle12-claude-mimo/README.md#正常退出后查找重开与续答)
 
 2026-11-16：Devin 与 Goose 分别按自建样本的准确原目录完成正常带入入口查找，显示同一原对象已加入，未再次加入。正常冷开与依赖原上下文的续答均有正式记录。分页和其他样本仍待验。[原目录和原标识回执](evidence/2026-11-15-cycle12-pre-send/history-continuations-2026-11-16.json)
 
@@ -497,6 +501,8 @@ ee4c已将官方导出接回fast冷开工具/图片。原同一历史正式零�
 <!-- task-current: P28 -->
 
 ### P28
+
+2026-11-18 共用签名网页助手的本机工程测试通过。两个真实助手使用相同编号仍各读各自受控页面，并分别确认撤回后拒绝。Pi 0.0.34 转发与扩展终态仍待，未覆盖 Pi 正式网页或审批。[前置测试](evidence/2026-11-18-cycle12-copilot-grok/README.md#pi-网页传输前置复核)
 
 2026-11-17 隔离 Pi 验证确认 SDK 1.5.2 可用内存会话保留原字节，直接 `open` 会写回特定旧格式或空副本。官方 MCP stdio 可以使用直接子进程，只在网页助手上关闭继承环境，合成调用和进程清退通过。已发布 pi-acp 仍待转发，正式会话 SDK 接线、签名助手和页面授权回包待实现与实测。[本轮核验](evidence/2026-11-17-cycle12-history-and-stop/README.md#pi-sdk-零请求核验)
 
@@ -928,7 +934,7 @@ Goose实验SQLite打开失败、Kilo实验临时子进程判定属于夹具调�
 
 ## 第 12 周期待配合
 
-Copilot 工具终态、Dirac 正文和撤回、Cline 精确目录列表、Pi 网页工具和回执、MiniMax 后台新版，以及 Amp 显式模型及未映射线程均列有[官方复验条件](evidence/2026-11-18-cycle12-copilot-grok/README.md#等待官方的条件)。两家按用户要求暂缓见下。
+Copilot 工具终态、Dirac 正文和撤回、Cline 精确目录列表、Pi 网页工具和回执、Qoder 默认历史位置与实时工具终态、MiniMax 后台新版，以及 Amp 显式模型及未映射线程均列有[官方复验条件](evidence/2026-11-18-cycle12-copilot-grok/README.md#等待官方的条件)。两家按用户要求暂缓见下。
 
 2026-11-17 用户允许 CodeBuddy 单独采用 Hy4 / On、MiniMax 用小米 MiMo 首答及原配置续答，并授权继续 Mistral Vibe 实测。这些路径已有实答。旧 MiniMax M2.7 无额度，保留该旧会话的原配置，恢复额度后再验。siGit 已按用户决定移出首发。
 

@@ -24,7 +24,14 @@
 | Dirac   | 目录已分发 0.6.1。所查历史回放仍优先返回已有事件，规则写入没有精确的并发冲突保障。                                         | 正文回放补齐或出现能核原 ID 与目录的只读原文接口。正式撤回需要官方确认实际作用范围和精确写入效果。 [官方回放](https://github.com/dirac-run/dirac/blob/225d7cf86d1bd500352b0ef4875b86a1a17b6622/cli/src/agent/DiracAgent.ts#L2316-L2365)                                                                       |
 | Cline   | 3.0.74 列表查询未传入工作目录，打开与查询均可能改变失联任务状态，另一路径会提前合并重复 ID。                               | 官方提供精确目录、保留冲突且从打开到查询都只读的列表。 [目录传递](https://github.com/cline/cline/blob/071e1b25b48f9ef5dff7fc32085e6a16f02bf02e/apps/cli/src/session/session.ts#L103-L115)                                                                                                                     |
 | Pi      | 0.0.34 仍未转发每个对话的 MCP 工具。扩展命令终态修复亦未发布。                                                             | 官方发布可核的转发及撤回后，复验正常网页审批、截图、撤回和冷开范围。独立 SDK 1.5.2 仍是受控可行路径。 [转发改动](https://github.com/svkozak/pi-acp/pull/164) · [命令终态改动](https://github.com/svkozak/pi-acp/pull/118)                                                                                     |
+| Qoder   | 已知目录可精确查找。同版原工具结束可从厂商记录核对，Farfold 实时未收到 A 的同一工具结束回执。                              | 默认历史列表提供准确原目录。停止后通过官方回执或只读接口返回同一请求与工具的真实终态，再核实 Farfold 实时及重开表现。 [原回执补证](../2026-11-18-cycle12-qoder-stop-receipt/README.md)                                                                                                                        |
 | MiniMax | 官方包 0.7.7，原登记正式分发仍为 0.2.7。                                                                                   | 目录正式分发新版后保留原 MiMo 与原登记，复验后台 A 实停、B 继续、终态和冷开。 [目录更新](https://github.com/agentclientprotocol/registry/pull/780)                                                                                                                                                            |
 | Amp     | 官方适配器仍为 0.13.0。显式 MiMo 续答仍把只供新线程的 `--model` 加到原线程续接，CLI 导出与未映射原线程的接入分属两条路径。 | 适配器支持先核原模型再续答，或官方提供原线程模型更新及精确的原标识和目录映射。已验证的 Default 沿用原 MiMo 分项保持。 [适配器实现](https://github.com/tao12345666333/amp-acp/blob/v0.13.0/src/amp-transport.ts#L223-L244) · [Amp 模型说明](https://ampcode.com/docs/model-selector#switch-models-in-a-thread) |
 
 Gemini CLI 与 Antigravity 按用户要求暂缓。
+
+### Pi 网页传输前置复核
+
+2026-11-18 并行复核已发布适配器 `0.0.34` 与厂商 SDK `1.5.2`。当前仍需正式接法将 MCP 工具传入原 Pi 对话，并让每次批准、拒绝和结束对应原请求。
+
+本机运行一项既有 macOS 工程测试，1 项通过。两个实际签名的助手进程均通过归属检查，各用相同的请求编号读取各自的受控页面；撤回后两边分别回复结束，再读取均被拒绝。测试只覆盖 Farfold 的实际助手进程与合成页面。Pi 到实际签名助手的归属、正式网页、截图及真实命令审批仍待验。测试无模型请求。[工程测试](../../../src-tauri/src/browser_sharing/transport_multi_native_tests.rs)
