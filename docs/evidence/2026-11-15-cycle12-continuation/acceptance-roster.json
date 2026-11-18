@@ -1416,15 +1416,16 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "正式版明确显示回复已停止而工具待确认、旧模式等原信息保留。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 实际前台脚本结束时未宣称所有工具步骤已结束，冷开保留原请求未知提示。\n2026-11-17 续验：实际查找的目录与已加入反馈准确，无跨 Agent 串项或重复加入。\n2026-11-19 正式 2a4ee8627，Goose 1.59.1 沿原 OpenRouter 免费模型。正常入口看到「已排队 1 条」「回复已停止」「待发消息已暂停」。冷开仍提示此前结果未确认，明确继续 B 后显示已完成，A 原警示保持。",
-          "remaining": "只覆盖已核入口、停止和冷开反馈。",
+          "observed": "正式版明确显示回复已停止而工具待确认、旧模式等原信息保留。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 实际前台脚本结束时未宣称所有工具步骤已结束，冷开保留原请求未知提示。\n2026-11-17 续验：实际查找的目录与已加入反馈准确，无跨 Agent 串项或重复加入。\n2026-11-19 正式 2a4ee8627，Goose 1.59.1 沿原 OpenRouter 免费模型。正常入口看到「已排队 1 条」「回复已停止」「待发消息已暂停」。冷开仍提示此前结果未确认，明确继续 B 后显示已完成，A 原警示保持。\n2026-11-19 正式 42ffe103e 从探索页筛选 goose 后打开管理，关闭准备回原搜索结果和原管理按钮焦点。",
+          "remaining": "仍待实际适用的更多准备、失败和恢复反馈。",
           "sources": [
             "docs/evidence/2026-11-15-cycle7-goose-retest/README.md",
             "docs/evidence/2026-11-12-cycle6/README.md",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md",
             "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md",
-            "docs/evidence/2026-11-19-cycle12-goose-paused-queue/README.md"
+            "docs/evidence/2026-11-19-cycle12-goose-paused-queue/README.md",
+            "docs/evidence/2026-11-19-cycle12-draft-auth-return/README.md#goose-目录筛选与焦点"
           ],
           "status": "入口有证"
         }
@@ -1478,22 +1479,24 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "无本项实际验收样本\n2026-11-17 正式版沿已有服务、grok-4.7 / low 发一次合成文件分类任务。Farfold 显示本次 result.txt 写入范围，单次批准后实际另存。从本轮产物打开，成品 54 字节逐字节匹配，原件散列不变。\n2026-11-18 补录 11-17：昨晚现场再次冷开并读取上一批的同一成品，原生留准确的文件上下文续答。临时工作目录已失，文件字节沿用上一批已归档的正式回执。\n2026-11-18 续验：新自有任务暖态从本轮产物打开。正式冷开同一原对话后，从原工具步骤的文件按钮打开同一 106 字节成品，摘要一致，输入保持，零重发。",
-          "remaining": "该次冷开从原工具步骤直达，其余权限、文件和交付条件待补。冷开不出现本轮产物入口。",
+          "observed": "无本项实际验收样本\n2026-11-17 正式版沿已有服务、grok-4.7 / low 发一次合成文件分类任务。Farfold 显示本次 result.txt 写入范围，单次批准后实际另存。从本轮产物打开，成品 54 字节逐字节匹配，原件散列不变。\n2026-11-18 补录 11-17：昨晚现场再次冷开并读取上一批的同一成品，原生留准确的文件上下文续答。临时工作目录已失，文件字节沿用上一批已归档的正式回执。\n2026-11-18 续验：新自有任务暖态从本轮产物打开。正式冷开同一原对话后，从原工具步骤的文件按钮打开同一 106 字节成品，摘要一致，输入保持，零重发。\n2026-11-19 正式 42ffe103e 两个独立目录的写入均真实待批准。拒绝 A 后 A 没有成品；只批准 B，准确写出 28 字节含尾 LF，从本轮产物直接打开，原件保持。",
+          "remaining": "其他权限、文件、取消和交付条件待补；已核冷开从原工具步骤直达，冷开未显示本轮产物入口。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
             "docs/evidence/2026-11-17-cycle12-file-validation/README.md",
             "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md",
-            "docs/evidence/2026-11-18-cycle12-copilot-grok/README.md#grok-build-成品冷开"
+            "docs/evidence/2026-11-18-cycle12-copilot-grok/README.md#grok-build-成品冷开",
+            "docs/evidence/2026-11-19-cycle12-grok-approval-isolation/README.md"
           ],
           "status": "实测分项通过"
         },
         "S6": {
-          "observed": "未运行双对话变更、审批或停止\n2026-11-17 两个自建目录的前台任务同时活动，各一次审批。停 A 后 B 保持原 Shell 与子进程，并自然完成。",
-          "remaining": "其他工作、配置及更广隔离条件继续核。",
+          "observed": "未运行双对话变更、审批或停止\n2026-11-17 两个自建目录的前台任务同时活动，各一次审批。停 A 后 B 保持原 Shell 与子进程，并自然完成。\n2026-11-19 正式 42ffe103e，两条 Grok 4.7 / Low 的写入审批同时等待。只拒绝 A，B 的原位置和待确认卡保持。再只批准 B，只有 B 写出目标文件。",
+          "remaining": "配置、共享位置及其他适用隔离条件继续核。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md",
+            "docs/evidence/2026-11-19-cycle12-grok-approval-isolation/README.md"
           ],
           "status": "双前台分项通过"
         },
@@ -1507,13 +1510,14 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "未归属列表与用户需登录分开显示\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-18 补录 11-17：冷开时的模型不匹配停止发送，正常重新检查取得原模型后手动恢复。首次加载零发送。\n2026-11-18 续验：正常入口在原对话的历史步骤可直接打开精确成品，成品内容和原文件摘要一致。",
-          "remaining": "在当前发行真实工作和权限链路复验反馈",
+          "observed": "未归属列表与用户需登录分开显示\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-18 补录 11-17：冷开时的模型不匹配停止发送，正常重新检查取得原模型后手动恢复。首次加载零发送。\n2026-11-18 续验：正常入口在原对话的历史步骤可直接打开精确成品，成品内容和原文件摘要一致。\n2026-11-19 正式 42ffe103e 两张审批各自显示实际绝对路径；拒绝 A 后确认已告知，B 保持需要你。仅批准后 B 完成，成品从正常入口准确打开。另一次启动被旧目录准备拖延，在本轮首发前已恢复，未发生自动发送。",
+          "remaining": "失败、其他权限和目录切换时退役等待中的准备按原条件继续。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md",
-            "docs/evidence/2026-11-18-cycle12-copilot-grok/README.md#grok-build-成品冷开"
+            "docs/evidence/2026-11-18-cycle12-copilot-grok/README.md#grok-build-成品冷开",
+            "docs/evidence/2026-11-19-cycle12-grok-approval-isolation/README.md"
           ],
           "status": "入口有证"
         }
