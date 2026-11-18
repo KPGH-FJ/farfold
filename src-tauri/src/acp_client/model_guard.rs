@@ -35,6 +35,8 @@ pub struct ConfigCheck {
     pub issues: Vec<ConfigIssue>,
     pub current: Value,
     pub protected_ids: Vec<String>,
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub explicit_model_apply: bool,
 }
 
 fn category(value: &str) -> &'static str {
@@ -312,6 +314,7 @@ impl ModelGuard {
             issues,
             current: self.current_value(),
             protected_ids: self.protected_ids(),
+            explicit_model_apply: self.dialect.requires_explicit_model(),
         }
     }
     pub(crate) fn admissible(&self) -> bool {

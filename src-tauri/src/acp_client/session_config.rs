@@ -14,8 +14,36 @@ pub(crate) const LEGACY_MODEL_ID: &str = "__farfold_legacy_model";
 mod deferred;
 mod vibe;
 pub(crate) use deferred::Deferred;
-pub(crate) use vibe::Dialect;
 pub(super) use vibe::THINKING_ID;
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub(crate) enum Dialect {
+    #[default]
+    Standard,
+    CodeBuddy,
+    Vibe,
+    UnverifiedVibe,
+}
+
+impl Dialect {
+    /// CodeBuddy's catalog can report a default without configuring the session.
+    pub(crate) fn requires_explicit_model(self) -> bool {
+        self == Self::CodeBuddy
+    }
+}
+
+pub(super) fn ordinary_codebuddy_launch(
+    environment: &std::collections::HashMap<String, String>,
+) -> bool {
+    // CodeBuddy's job mode persists respawn options. The ordinary ACP setter
+    // synchronizes only the default in this dedicated conversation process.
+    const JOB_ID: &str = "CODEBUDDY_JOB_ID";
+    let inherited_is_empty =
+        || std::env::var_os(JOB_ID).is_none_or(|value| value.to_string_lossy().trim().is_empty());
+    crate::shell_env::EnvNames::current()
+        .get(environment, JOB_ID)
+        .is_ok_and(|value| value.map_or_else(inherited_is_empty, |value| value.trim().is_empty()))
+}
 
 const UNCONFIRMED: &str = "Agent 未确认所选模型，请检查后重试";
 
@@ -28,6 +56,7 @@ pub(crate) struct SessionConfig {
     options_revision: u64,
     invalid_options_revision: u64,
     model_update: Option<(u64, Option<String>)>,
+    applied_model: Option<String>,
 }
 
 #[derive(Clone)]
@@ -127,6 +156,24 @@ impl SessionConfig {
         self.options.as_ref()
     }
 
+    pub(crate) fn model_applied(&self, model: Option<&str>) -> bool {
+        !self.dialect.requires_explicit_model()
+            || model.is_some_and(|value| self.applied_model.as_deref() == Some(value))
+    }
+
+    fn declared_model(options: &Value) -> Option<&str> {
+        let mut matching = options
+            .as_array()?
+            .iter()
+            .filter(|option| option["id"] == "model");
+        let option = matching.next()?;
+        if matching.next().is_some() || option["category"] != "model" || option["type"] != "select"
+        {
+            return None;
+        }
+        option["currentValue"].as_str()
+    }
+
     pub(crate) fn prepare(&self, id: &str, value: &Value) -> Result<ConfigRequest, String> {
         if self.has_invalid_options() {
             return Err(UNCONFIRMED.into());
@@ -221,7 +268,16 @@ impl SessionConfig {
                 return Err(UNCONFIRMED.into());
             }
         }
-        self.options().ok_or_else(|| UNCONFIRMED.into())
+        let options = self.options().ok_or(UNCONFIRMED)?;
+        if self.dialect.requires_explicit_model() && request.id == "model" {
+            let model = Self::declared_model(&options)
+                .filter(|model| Some(*model) == request.value.as_str())
+                .ok_or(UNCONFIRMED)?;
+            self.applied_model = Some(model.to_owned());
+        } else {
+            self.invalidate_model_if_changed(&options);
+        }
+        Ok(options)
     }
 
     /// An already observed protected change may contradict this full reply.
@@ -291,7 +347,17 @@ impl SessionConfig {
             _ => return None,
         }
         self.revision += 1;
-        self.options()
+        let options = self.options()?;
+        self.invalidate_model_if_changed(&options);
+        Some(options)
+    }
+
+    fn invalidate_model_if_changed(&mut self, options: &Value) {
+        if self.applied_model.is_some()
+            && self.applied_model.as_deref() != Self::declared_model(options)
+        {
+            self.applied_model = None;
+        }
     }
 }
 

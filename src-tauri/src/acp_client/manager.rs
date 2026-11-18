@@ -570,6 +570,10 @@ impl AcpManager {
             connection_id.clone(),
         );
         let account_query = super::account_launch::reviewed(agent);
+        let codebuddy_conversation = !candidate
+            && key.conversation_id.is_some()
+            && account_query == Some(super::account_query::AccountQuery::CodeBuddy)
+            && super::session_config::ordinary_codebuddy_launch(&environment);
         let managed_vibe = if agent.id == "registry:mistral-vibe" {
             let verified = if account_query == Some(super::account_query::AccountQuery::Vibe) {
                 let row = agent.clone();
@@ -751,7 +755,11 @@ impl AcpManager {
                         }
                     };
                     let mut ops = ops;
-                    ops.configuration_dialect = super::session_config::Dialect::for_connection(managed_vibe, &init_response);
+                    ops.configuration_dialect = if codebuddy_conversation {
+                        super::session_config::Dialect::CodeBuddy
+                    } else {
+                        super::session_config::Dialect::for_connection(managed_vibe, &init_response)
+                    };
                     ops.async_tasks_supported.store(super::async_tasks::supported(&init_response.public_json()), Ordering::SeqCst);
                     // A configured service owns this fresh process. Do not
                     // publish ready or admit session work until the official

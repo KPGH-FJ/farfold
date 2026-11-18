@@ -1,16 +1,8 @@
 use serde_json::Value;
 
-use super::super::handshake::Handshake;
+use super::{super::handshake::Handshake, Dialect};
 
 pub(in crate::acp_client) const THINKING_ID: &str = "thinking";
-
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
-pub(crate) enum Dialect {
-    #[default]
-    Standard,
-    Vibe,
-    UnverifiedVibe,
-}
 
 impl Dialect {
     /// `None` is an unrelated Agent. A Vibe registration still needs its
@@ -32,7 +24,7 @@ impl Dialect {
     }
 
     pub(crate) fn is_vibe_family(self) -> bool {
-        self != Self::Standard
+        matches!(self, Self::Vibe | Self::UnverifiedVibe)
     }
 
     pub(crate) fn is_vibe_thinking(self, id: &str) -> bool {

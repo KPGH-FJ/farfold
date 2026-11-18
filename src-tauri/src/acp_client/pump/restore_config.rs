@@ -45,6 +45,8 @@ impl Opening {
 
 pub(crate) struct Plan {
     pub record: Value,
+    pub persist: bool,
+    explicit_model_apply: bool,
     required_vibe_thinking: Option<Choice>,
     remaining: VecDeque<Choice>,
     confirmed: Vec<Choice>,
@@ -63,9 +65,25 @@ impl Plan {
         let Some(record) = opening.recorded.as_ref().filter(|_| opening.restored) else {
             return Ok(None);
         };
-        if record["_farfoldConfig"] != 2 {
+        let explicit_model_apply = dialect.requires_explicit_model()
+            && opening.purpose == super::super::open_purpose::OpenPurpose::Conversation;
+        let persist = record["_farfoldConfig"] == 2;
+        let legacy_record;
+        let record = if persist {
+            record
+        } else if explicit_model_apply {
+            // Materialize an exact, already-known flat record without
+            // replacing it. Unknown historical settings stay read-only.
+            let options = opening.options.as_ref().unwrap_or(&Value::Null);
+            let guard = ModelGuard::for_connection(options, Some(record), true, dialect);
+            if !guard.admissible() {
+                return Ok(None);
+            }
+            legacy_record = store.record_with_source(guard.record())?;
+            &legacy_record
+        } else {
             return Ok(None);
-        }
+        };
         let object = record.as_object().ok_or(UNCONFIRMED)?;
         if object.keys().any(|key| {
             !matches!(
@@ -75,10 +93,12 @@ impl Plan {
         }) {
             return Err(UNCONFIRMED.into());
         }
-        let source = object.get("_farfoldService").ok_or(UNCONFIRMED)?;
-        let source: ServiceRecord =
-            serde_json::from_value(source.clone()).map_err(|_| UNCONFIRMED)?;
-        if store.service_record.as_ref() != Some(&source) {
+        let source: Option<ServiceRecord> = object
+            .get("_farfoldService")
+            .map(|source| serde_json::from_value(source.clone()))
+            .transpose()
+            .map_err(|_| UNCONFIRMED)?;
+        if (persist && source.is_none()) || store.service_record != source {
             return Err("此对话的 API 来源无法确认，请保持原设置".into());
         }
         let saved: Snapshot = serde_json::from_value(record.clone()).map_err(|_| UNCONFIRMED)?;
@@ -107,7 +127,7 @@ impl Plan {
             if models.len() != 1 || models[0].value != *expected {
                 return Err("此对话已保存的模型与所选 API 不一致，请检查原设置".into());
             }
-        } else if matches!(source, ServiceRecord::Configured { .. }) {
+        } else if matches!(source, Some(ServiceRecord::Configured { .. })) {
             return Err("无法确认此对话的 API 模型，请检查原设置".into());
         }
         let required_vibe_thinking = if dialect.is_vibe_family() {
@@ -128,6 +148,8 @@ impl Plan {
         });
         Ok(Some(Self {
             record: record.clone(),
+            persist,
+            explicit_model_apply,
             required_vibe_thinking,
             remaining: choices.into(),
             confirmed: Vec::new(),
@@ -177,7 +199,9 @@ impl Plan {
         self.validate_confirmed(options)?;
         while let Some(choice) = self.remaining.pop_front() {
             let option = declared(options, &choice)?;
-            if option["currentValue"] == choice.value {
+            if option["currentValue"] == choice.value
+                && !(self.explicit_model_apply && choice.category == "model")
+            {
                 self.confirmed.push(choice);
                 continue;
             }

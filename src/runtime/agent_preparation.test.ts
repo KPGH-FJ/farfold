@@ -83,6 +83,7 @@ function fixture() {
       states.get(key)!.queued.splice(index, 1);
     }),
     rename: vi.fn(async () => {}),
+    setConfig: vi.fn(async () => {}),
   };
   const controller = new AgentPreparation(port, () => "challenge");
   const input: PreparationInput = {
@@ -361,6 +362,41 @@ describe("real Agent preparation request ownership", () => {
     expect(f.port.send).toHaveBeenCalledOnce();
     f.admission.resolve({ status: "rejected", reason: "failed" });
     await sending;
+  });
+
+  it("does not send a setup test before the required model is applied", async () => {
+    const f = fixture();
+    await f.controller.prepare(f.input);
+    const thread = f.state();
+    thread.configOptions = [
+      {
+        id: "model",
+        category: "model",
+        name: "Model",
+        type: "select",
+        currentValue: "A",
+        options: [{ value: "A", name: "A" }],
+      },
+    ];
+    thread.configCheck = {
+      status: "ready",
+      issues: [],
+      current: {},
+      explicitModelApply: true,
+    };
+    const applying = deferred<void>();
+    f.port.setConfig.mockReturnValueOnce(applying.promise);
+    const started = f.controller.start();
+    expect(f.port.setConfig).toHaveBeenCalledExactlyOnceWith(
+      thread.key,
+      "model",
+      "A",
+    );
+    expect(f.port.send).not.toHaveBeenCalled();
+    applying.resolve();
+    f.admission.resolve({ status: "rejected", reason: "failed" });
+    await started;
+    expect(f.port.send).toHaveBeenCalledOnce();
   });
 
   it.each(["empty", "changed", "failed", "busy", "stale", "source"])(

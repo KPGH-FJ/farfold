@@ -7,6 +7,76 @@ use std::future::Future;
 use std::time::Duration;
 const SESSION: &str = "restore-proof";
 
+#[test]
+fn codebuddy_cold_restore_applies_the_saved_model_even_when_catalog_matches() {
+    use crate::acp_client::{
+        model_guard::ConfigStore, open_purpose::OpenPurpose, service_connection::ServiceRecord,
+        session_config::Dialect,
+    };
+    let options = json!([
+        {"id":"model","name":"Model","category":"model","type":"select","currentValue":"saved","options":[{"value":"saved","name":"Saved"}]},
+        {"id":"thought_level","name":"Thinking","category":"thought_level","type":"select","currentValue":"enabled","options":[{"value":"enabled","name":"On"}]}
+    ]);
+    let directory = tempfile::tempdir().unwrap();
+    let store = ConfigStore {
+        store: MetaStore::open(&directory.path().join("owned.db")).unwrap(),
+        agent_id: "owned".into(),
+        cwd: directory.path().to_string_lossy().into(),
+        service_record: Some(ServiceRecord::Existing),
+        expected_model: None,
+        verified_permission_option: false,
+    };
+    let mut opening = restore_config::Opening {
+        purpose: OpenPurpose::Conversation,
+        reply: None,
+        operation: Operation::new(),
+        recorded: Some(
+            json!({"_farfoldConfig":2,"_farfoldService":{"kind":"existing"},"choices":[
+                {"id":"model","type":"select","category":"model","value":"saved"},
+                {"id":"thought_level","type":"select","category":"thought_level","value":"enabled"}
+            ]}),
+        ),
+        restored: true,
+        options: Some(options.clone()),
+        config_options_modern: true,
+        warnings: vec![],
+    };
+    let next = |opening: &restore_config::Opening, dialect| {
+        restore_config::Plan::new(opening, &store, dialect)
+            .unwrap()
+            .unwrap()
+    };
+    let mut plan = next(&opening, Dialect::CodeBuddy);
+    assert!(plan.persist);
+    assert_eq!(plan.next(&options).unwrap().unwrap().id, "model");
+    plan.complete(&options).unwrap();
+    assert!(plan.next(&options).unwrap().is_none());
+    assert!(
+        next(&opening, Dialect::Standard)
+            .next(&options)
+            .unwrap()
+            .is_none()
+    );
+    opening.purpose = OpenPurpose::ImportPreview;
+    assert!(
+        next(&opening, Dialect::CodeBuddy)
+            .next(&options)
+            .unwrap()
+            .is_none()
+    );
+    opening.purpose = OpenPurpose::Conversation;
+    opening.recorded = Some(json!({"model":"saved","thought_level":"enabled"}));
+    let legacy_store = ConfigStore {
+        service_record: None,
+        ..store
+    };
+    let mut plan = restore_config::Plan::new(&opening, &legacy_store, Dialect::CodeBuddy)
+        .unwrap()
+        .unwrap();
+    assert!(!plan.persist);
+    assert_eq!(plan.next(&options).unwrap().unwrap().value, "saved");
+}
+
 async fn exercise(mode: &str, expected_polls: usize) {
     use crate::acp_client::{
         compaction_activity::CompactionActivity,

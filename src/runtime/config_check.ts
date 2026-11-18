@@ -78,6 +78,7 @@ export interface ConfigCheck {
   }[];
   current: unknown;
   protectedIds?: string[];
+  explicitModelApply?: boolean;
 }
 export function confirmingMissingModel(check: ConfigCheck | null): boolean {
   return (

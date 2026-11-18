@@ -27,6 +27,8 @@ function check(value: unknown): ConfigCheck | null {
     !Array.isArray(value.issues) ||
     value.issues.length ||
     !Object.hasOwn(value, "current") ||
+    (value.explicitModelApply !== undefined &&
+      typeof value.explicitModelApply !== "boolean") ||
     (value.protectedIds !== undefined &&
       (!Array.isArray(value.protectedIds) || !value.protectedIds.every(text)))
   )
@@ -35,6 +37,7 @@ function check(value: unknown): ConfigCheck | null {
     status: "ready",
     issues: [],
     current: value.current,
+    ...(value.explicitModelApply === true ? { explicitModelApply: true } : {}),
     ...(value.protectedIds === undefined
       ? {}
       : { protectedIds: value.protectedIds as string[] }),

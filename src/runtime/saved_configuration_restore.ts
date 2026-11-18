@@ -39,7 +39,7 @@ export function mirroredConfigurationChoice(
   ]);
 }
 
-/** Original intent only: service model values come from the explicit source choice. */
+/** Restore direct choices and materialize a model when the connection requires it. */
 export function configurationRestoreIntent(
   state: ThreadState,
   selection: Record<string, unknown>,
@@ -62,6 +62,14 @@ export function configurationRestoreIntent(
       throw new Error(STRINGS.repair.configFailed);
     saved[model.id] = expectedModelValue;
   }
+  if (
+    state.configCheck?.explicitModelApply &&
+    model?.type === "select" &&
+    typeof model.currentValue === "string" &&
+    !Object.hasOwn(saved, model.id)
+  ) {
+    saved[model.id] = model.currentValue;
+  }
   return saved;
 }
 
@@ -83,7 +91,11 @@ export async function restoreSavedConfiguration(
       id,
       value,
     );
-    if (value !== option.currentValue) await hooks.set(id, value);
+    if (
+      value !== option.currentValue ||
+      (id === modelId && state.configCheck?.explicitModelApply)
+    )
+      await hooks.set(id, value);
     if (!hooks.current()) return false;
     requireRestoredConfigurationValues(state.configOptions, [[id, value]]);
   }

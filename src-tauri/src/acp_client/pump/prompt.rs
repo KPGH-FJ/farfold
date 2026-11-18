@@ -142,6 +142,11 @@ pub(super) async fn send(
     if model_guard.current_value() != grant.expected_current {
         return Err("CONFIG_BLOCKED".into());
     }
+    if !configuration.model_applied(model_guard.single_model_value()) {
+        model_guard.change_unknown();
+        (ctx.events)(serde_json::json!({"kind":"configCheck","check":model_guard.check()}));
+        return Err("CONFIG_BLOCKED".into());
+    }
     if in_flight || unresolved || mutation.is_some() {
         return Err("上次请求尚未结束，请先停止或等待".into());
     }
@@ -180,6 +185,9 @@ pub(super) async fn send(
     if !permission_guard.admissible() {
         (ctx.events)(permission_guard.event());
         return Err("请重新确认权限后再发送".into());
+    }
+    if !configuration.model_applied(model_guard.single_model_value()) {
+        model_guard.change_unknown();
     }
     if !model_guard.admissible()
         || model_guard.record() != saved_config

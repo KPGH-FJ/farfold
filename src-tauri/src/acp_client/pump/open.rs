@@ -538,7 +538,7 @@ pub(crate) async fn open_session_on_connection(
         .await
         .map_err(|_| "会话未能打开，请重试".to_string())??;
     opening_route.delivered = true;
-    if dialect == super::super::session_config::Dialect::Standard
+    if !dialect.is_vibe_family()
         && let Some(options) = &ready.options
     {
         response["configOptions"] = options.clone();

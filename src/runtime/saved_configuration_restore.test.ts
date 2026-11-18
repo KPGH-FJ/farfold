@@ -155,6 +155,41 @@ it.each(["thought-only", "service-model"])(
     expect(set).not.toHaveBeenCalled();
   },
 );
+it.each([true, false])(
+  "applies the reported model explicitly before confirming (acknowledged: %s)",
+  async (acknowledged) => {
+    const value = state();
+    value.configCheck = {
+      status: "ready",
+      issues: [],
+      current: {},
+      explicitModelApply: true,
+    };
+    const selection = configurationRestoreIntent(value, { thought: "medium" });
+    const calls: string[] = [];
+    const set = vi.fn(async () => {
+      calls.push("set");
+      if (!acknowledged) throw new Error("fixture rejected model");
+    });
+    const confirm = vi.fn(async () => {
+      calls.push("confirm");
+    });
+    const result = restoreSavedConfiguration(value, selection, {
+      current: () => true,
+      validateService: async () => {},
+      set,
+      confirm,
+    });
+    if (acknowledged) {
+      await expect(result).resolves.toBe(true);
+      expect(confirm).toHaveBeenCalledWith(selection);
+    } else {
+      await expect(result).rejects.toThrow("fixture rejected model");
+    }
+    expect(set.mock.calls).toEqual([["model", "chosen-model"]]);
+    expect(calls).toEqual(acknowledged ? ["set", "confirm"] : ["set"]);
+  },
+);
 it.each(["service-failed", "owner-retired"])(
   "does not confirm after %s or change the original map",
   async (kind) => {

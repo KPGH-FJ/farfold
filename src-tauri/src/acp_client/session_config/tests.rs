@@ -23,6 +23,28 @@ fn vibe_options() -> Value {
 }
 
 #[test]
+fn codebuddy_snapshot_is_not_a_model_receipt() {
+    let response = json!({"configOptions":vibe_options()});
+    let mut config = SessionConfig::from_connection(&response, Dialect::CodeBuddy);
+    assert!(!config.model_applied(Some("m")));
+    let request = config.prepare("model", &json!("m")).unwrap();
+    let mut wrong = vibe_options();
+    wrong[0]["currentValue"] = json!("other");
+    assert!(config.complete(&request, wrong.clone()).is_err());
+    assert!(!config.model_applied(Some("m")));
+    config.complete(&request, vibe_options()).unwrap();
+    assert!(config.model_applied(Some("m")));
+    assert!(!config.model_applied(Some("other")));
+    for options in [wrong, vibe_options()] {
+        config.observe(&update(json!({
+           "sessionUpdate":"config_option_update", "configOptions":options
+        })));
+    }
+    assert!(!config.model_applied(Some("m")));
+    assert!(SessionConfig::from_response(&response).model_applied(Some("m")));
+}
+
+#[test]
 fn vibe_thinking_reuses_the_same_projection_for_load_updates_and_setter_receipts() {
     let original = vibe_options();
     let response = json!({"configOptions":original});

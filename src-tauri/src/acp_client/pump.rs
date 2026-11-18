@@ -923,8 +923,8 @@ async fn session_pump(
                             else if let Err(error)=config_store.validate_model(options) { failure=Some(error); }
                         }
                         if failure.is_none() {
-                            let record = match &completed.kind { MutationKind::Restore { plan, .. } => plan.record.clone(), _=>unreachable!() };
-                            if config_store.save(&session_id, record).await.is_err() {
+                            let MutationKind::Restore { plan, .. } = &completed.kind else { unreachable!() };
+                            if plan.persist && config_store.save(&session_id, plan.record.clone()).await.is_err() {
                                 model_guard.record_failed();
                                 failure=Some("Agent 已恢复原选择，但未能确认保存，请检查后重试".into());
                             }

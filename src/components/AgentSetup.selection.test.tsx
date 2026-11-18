@@ -623,6 +623,7 @@ it("keeps a failed automatic model read visible across renders and navigation un
     retirePreparationDraft: vi.fn(),
     dequeue: vi.fn(),
     rename: vi.fn(),
+    setConfig: vi.fn(),
   };
   const controller = new AgentPreparation(port, () => "own-model-read");
   h.snapshot = controller.getSnapshot();

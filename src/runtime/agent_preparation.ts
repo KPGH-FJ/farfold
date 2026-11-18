@@ -13,6 +13,7 @@ import { uiError } from "./ui_error";
 import { subscribeAuthenticationChanges } from "./authentication";
 import type { AuthTarget } from "./auth_activity";
 import { AUTH_ACTIVITY_STRINGS as A } from "./auth_strings";
+import { modelConfigOption } from "./session_projection";
 
 export interface PreparationInput {
   agentId: string;
@@ -74,6 +75,7 @@ type Port = Pick<
   | "retirePreparationDraft"
   | "dequeue"
   | "rename"
+  | "setConfig"
 >;
 type Attempt = {
   thread: ThreadState;
@@ -83,6 +85,7 @@ type Attempt = {
   admission: SendAdmission | null;
   sending: boolean;
   cancelled: boolean;
+  applyingModel: boolean;
 };
 
 export function preparationProgram(card: AgentCardModel): string {
@@ -498,11 +501,32 @@ export class AgentPreparation {
       admission: null,
       sending: true,
       cancelled: false,
+      applyingModel: false,
     };
     this.attempt = attempt;
     const blocks = [{ type: "text" as const, text: this.snapshot.prompt }];
     this.publish({ phase: "submitting", reply: "", error: null });
     try {
+      if (thread.configCheck?.explicitModelApply) {
+        const model = modelConfigOption(thread.configOptions);
+        if (!model || typeof model.currentValue !== "string")
+          throw new Error(S.testSelectionNotApplied);
+        attempt.applyingModel = true;
+        try {
+          await this.port.setConfig(thread.key, model.id, model.currentValue);
+        } finally {
+          attempt.applyingModel = false;
+        }
+        if (this.attempt !== attempt || attempt.cancelled) return;
+        if (
+          this.currentThread() !== thread ||
+          thread.configError ||
+          thread.modelDrift ||
+          thread.connectionLost ||
+          configKey(selectedConfig(thread)) !== attempt.config
+        )
+          throw new Error(S.testSelectionNotApplied);
+      }
       attempt.admission = await this.port.send(thread.key, blocks);
       if (attempt.admission.status === "accepted") {
         // This is a normal, visible conversation; only its metadata is named here.
@@ -550,7 +574,7 @@ export class AgentPreparation {
       thread !== attempt.thread ||
       configKey(config) !== attempt.config ||
       thread.modelDrift ||
-      thread.configuring
+      (thread.configuring && !attempt.applyingModel)
     ) {
       attempt.cancelled = true;
       this.publish({ phase: "stale", config, error: S.testSelectionChanged });
