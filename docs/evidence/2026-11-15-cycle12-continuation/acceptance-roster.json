@@ -353,8 +353,8 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧多片段实测未取得，不当做已支持的使用结果。\n2026-11-18 已有 MiMo 设置，两条真实 Bash 单次审批，B 原工具成功，实际写出独立结果，Farfold 显示真实标记。\n2026-11-18 只读冷开 B，原工具成功及 stdout 保持。文件与输出报告 0 个文件位置。通过打开文件手动选取原目录 result.txt，正式预览内容及原 31 字节摘要核合。\n2026-11-18 同 B 同 MiMo 一次官方 Read 读取原 result.txt。正常退出重开后，从 Read 历史工具的原路径按钮直接预览原 31 字节成品，脚本、启动记录和成品摘要及修改时间一致。原 Bash 回放只报告命令输出，所核版本没有成品位置。",
-          "remaining": "原 Bash 步骤直接关联须官方报告该工具的精确成品位置。结构化写入后的直接交付、提问、审批拒绝、技能及更多任务类型待验。",
+          "observed": "旧多片段实测未取得，不当做已支持的使用结果。\n2026-11-18 已有 MiMo 设置，两条真实 Bash 单次审批，B 原工具成功，实际写出独立结果，Farfold 显示真实标记。\n2026-11-18 只读冷开 B，原工具成功及 stdout 保持。文件与输出报告 0 个文件位置。通过打开文件手动选取原目录 result.txt，正式预览内容及原 31 字节摘要核合。\n2026-11-18 同 B 同 MiMo 一次官方 Read 读取原 result.txt。正常退出重开后，从 Read 历史工具的原路径按钮直接预览原 31 字节成品，脚本、启动记录和成品摘要及修改时间一致。原 Bash 回放只报告命令输出，所核版本没有成品位置。\n2026-11-18 原 MiMo 正常新建，官方 Write 单次批准写入独立目录的 71 字节 result.txt。正常退出后零发送重开同原对话，从原 Write 工具路径直接预览，原文件字节、摘要、inode 和修改时间保持。",
+          "remaining": "原 Bash 成品自动关联仍需官方文件位置。已有文件覆盖、取消失败、提问、审批拒绝、技能及更多任务类型按原项续验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
@@ -362,7 +362,8 @@
             "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
             "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md",
             "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-冷开取回结果",
-            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-通过官方-read-冷开直达同一成品"
+            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-通过官方-read-冷开直达同一成品",
+            "docs/evidence/2026-11-18-cycle12-claude-write/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -596,13 +597,14 @@
           "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "旧在途停止精确子进程仍活；旧暂停队列、草稿及附件保留有观察。\n2026-11-17 仅点停 A 时同一原 Shell 和 sleep 退出且无完成标记，B 照常完成。重开原 A 读回草稿和原配置，手动续答成功，零自动重发。",
-          "remaining": "真实断线、原工具终态和待发、附件、后台工作及其他条件按适用原项续验。",
+          "observed": "旧在途停止精确子进程仍活；旧暂停队列、草稿及附件保留有观察。\n2026-11-17 仅点停 A 时同一原 Shell 和 sleep 退出且无完成标记，B 照常完成。重开原 A 读回草稿和原配置，手动续答成功，零自动重发。\n2026-11-18 只读查同原工具回执，CodeBuddy A 在 Farfold 停止后记录用户中止，B 同一原工具记录成功及实际标记。旧实时和冷开诊断只保留事件类别，界面如何呈现 A 工具终态仍待核。",
+          "remaining": "真实断线、Farfold 实时及冷开的原工具终态呈现、待发、附件、后台工作及其他条件按适用原项续验。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
             "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
-            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md"
+            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md",
+            "docs/evidence/2026-11-18-cycle12-codebuddy-stop-receipt/README.md"
           ],
           "status": "停止及冷续答通过"
         },

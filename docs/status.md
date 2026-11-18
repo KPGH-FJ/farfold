@@ -212,6 +212,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 
 ### ARCH-44
 
+2026-11-18 CodeBuddy 2.184.0 原记录复核，同请求和工具的 A 厂商回执为用户中止，B 原工具正常结束并有准确标记。Farfold 过去的实时及冷开诊断仅有事件类别，A 的工具终态呈现仍待核。[原回执复核](evidence/2026-11-18-cycle12-codebuddy-stop-receipt/README.md)
+
 2026-11-18 Cursor A 官方入口续核。现用 2026.11.13 加载会写会话元数据，回放重新生成工具 ID 并统报 completed。A 进程退出仍有正式证据，原工具终态需官方确切回执或可核归属的只读入口。[官方入口核对](evidence/2026-11-18-cycle12-cursor-stop-receipt/README.md#a-原工具终态的官方入口核对)
 
 2026-11-18 复验已停止的 Claude A 正常退出后重开，原工具步骤保留，原 ID 按保存的 MiMo 续答；无自动重跑或重发。同批只读补核 Cursor 的 B 退出码 0，A 工具终态仍未知。 [Claude 冷开](evidence/2026-11-18-cycle12-claude-pair-stop/README.md#被停止的-a-冷开续答) · [Cursor 回执](evidence/2026-11-18-cycle12-cursor-stop-receipt/README.md)
@@ -668,6 +670,8 @@ e32正式所选历史读取可Tab聚焦执行并Enter启动；匹配文字弹窗
 <!-- task-current: P18 -->
 
 ### P18
+
+2026-11-18 Claude 以原小米 MiMo 从正式入口单次批准官方 Write，独立目录的两行成品共 71 字节，末尾换行准确。正常退出后冷开同一原对话，点原 Write 工具行直接打开同一文件，字节、摘要和磁盘身份保持。原 Bash 回放直达仍需官方文件位置。[正式复验](evidence/2026-11-18-cycle12-claude-write/README.md)
 
 2026-11-18 Claude B 的原 Bash 记录只有命令和输出，无成品精确位置。沿原 MiMo 只用一次官方 Read 读取同一文件，冷开从 Read 历史步骤直接打开原 31 字节成品，摘要和修改时间保持。Bash 原步骤的直接入口仍需官方成品位置。[正式复验](evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-通过官方-read-冷开直达同一成品)
 
