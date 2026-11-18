@@ -1,0 +1,233 @@
+{
+  "officialSource": "https://cdn.agentclientprotocol.com/registry/v1/latest/registry.json",
+  "directoryMerge": "3dae41b7a618a2786e40f42afa58fd34f950389e",
+  "before": {
+    "id": "registry:minimax-code",
+    "name": "MiniMax Code",
+    "source": "registry",
+    "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+    "args": "[\"/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minimax-code/install-jp9GJE/node_modules/@minimax-ai/code/cli.js\",\"acp\"]",
+    "version": "0.2.7",
+    "oldCommandExists": true,
+    "oldCommandSha256": "5d9d3872911e2340a43b707962e68143de8a4e8d54628845c0c4f2de1fb7cd5c",
+    "sessionCount": 10,
+    "sessionsSha256": "c59cb482f30bb7e4c32f783f65e551d1d1ccb1e7663a125980d0719f2ccbbce8"
+  },
+  "after": {
+    "id": "registry:minimax-code",
+    "name": "MiniMax Code",
+    "source": "registry",
+    "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+    "args": "[\"/Users/tw/Library/Application Support/ai.farfold.desktop/agent-installations/agent-registry%3Aminimax-code/install-GTBMNd/node_modules/@minimax-ai/code-acp/acp.js\",\"acp\"]",
+    "version": "0.7.7",
+    "oldCommandHealth": {
+      "originalShimUnchanged": true,
+      "oldAgentScriptExists": true
+    },
+    "preservedSessionCount": 10,
+    "priorSessionsExact": true
+  },
+  "processEvents": [
+    {
+      "at": "2026-11-18T17:17:34.304+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 59232,
+            "child": 59235
+          },
+          "processes": {
+            "shell": "59232 58979 59232 Ss   Thu Nov 19 01:17:33 2026     /bin/sh ./task.sh",
+            "child": "59235 59232 59232 S    Thu Nov 19 01:17:33 2026     /bin/sleep 150"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-minimax-077.vLZN6A9A/a",
+            "child": "/private/tmp/ff-c12-minimax-077.vLZN6A9A/a"
+          }
+        },
+        "b": {
+          "pids": {},
+          "processes": {},
+          "result": null,
+          "cwd": {}
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T17:18:10.085+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 59232,
+            "child": 59235
+          },
+          "processes": {
+            "shell": "59232 58979 59232 Ss   Thu Nov 19 01:17:33 2026     /bin/sh ./task.sh",
+            "child": "59235 59232 59232 S    Thu Nov 19 01:17:33 2026     /bin/sleep 150"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-minimax-077.vLZN6A9A/a",
+            "child": "/private/tmp/ff-c12-minimax-077.vLZN6A9A/a"
+          }
+        },
+        "b": {
+          "pids": {
+            "shell": 59577,
+            "child": 59617
+          },
+          "processes": {
+            "shell": "59577 59299 59577 Ss   Thu Nov 19 01:18:09 2026     /bin/sh ./task.sh",
+            "child": "59617 59577 59577 S    Thu Nov 19 01:18:09 2026     /bin/sleep 70"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-minimax-077.vLZN6A9A/b",
+            "child": "/private/tmp/ff-c12-minimax-077.vLZN6A9A/b"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T17:18:47.130+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 59232,
+            "child": 59235
+          },
+          "processes": {
+            "shell": null,
+            "child": null
+          },
+          "result": null,
+          "cwd": {}
+        },
+        "b": {
+          "pids": {
+            "shell": 59577,
+            "child": 59617
+          },
+          "processes": {
+            "shell": "59577 59299 59577 Ss   Thu Nov 19 01:18:09 2026     /bin/sh ./task.sh",
+            "child": "59617 59577 59577 S    Thu Nov 19 01:18:09 2026     /bin/sleep 70"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-minimax-077.vLZN6A9A/b",
+            "child": "/private/tmp/ff-c12-minimax-077.vLZN6A9A/b"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T17:19:20.107+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 59232,
+            "child": 59235
+          },
+          "processes": {
+            "shell": null,
+            "child": null
+          },
+          "result": null,
+          "cwd": {}
+        },
+        "b": {
+          "pids": {
+            "shell": 59577,
+            "child": 59617
+          },
+          "processes": {
+            "shell": null,
+            "child": null
+          },
+          "result": {
+            "sha256": "559288b64fc31104c00b665bf6c61b2baa64a0f5958a7acce610a1912828fcce",
+            "text": "FF_C12_MM077_B_DONE\n"
+          },
+          "cwd": {}
+        }
+      }
+    }
+  ],
+  "aAfterNaturalDeadlineResultAbsent": true,
+  "aScriptAndPidsAndBResultSameHashesAfterCold": true,
+  "protocol": {
+    "a": {
+      "file": "protocol-v1-1795022219328-7.jsonl",
+      "rows": 187,
+      "sha256": "147d366fda986651dcc6b0f123bd1a8bf3740837a90a2cee7145bb87536d8157",
+      "events": [
+        {
+          "line": 8,
+          "ts": 1795022220093,
+          "event": "session/new"
+        },
+        {
+          "line": 13,
+          "ts": 1795022243554,
+          "event": "session/prompt"
+        },
+        {
+          "line": 180,
+          "ts": 1795022326924,
+          "event": "session/cancel"
+        }
+      ]
+    },
+    "b": {
+      "file": "protocol-v1-1795022263414-8.jsonl",
+      "rows": 232,
+      "sha256": "30c9642b1f5f5007b74a550f4383b6e11235dc29b04a55b7c847952cceb84532",
+      "events": [
+        {
+          "line": 8,
+          "ts": 1795022264196,
+          "event": "session/new"
+        },
+        {
+          "line": 13,
+          "ts": 1795022278118,
+          "event": "session/prompt"
+        }
+      ]
+    },
+    "coldA": {
+      "file": "protocol-v1-1795022426939-0.jsonl",
+      "rows": 44,
+      "sha256": "43e4dfd0ff3b41bf7402a2d9d88ec679f7babdb051efe504783736428f3c130d",
+      "events": [
+        {
+          "line": 8,
+          "ts": 1795022427675,
+          "event": "session/load"
+        },
+        {
+          "line": 23,
+          "ts": 1795022467279,
+          "event": "session/prompt"
+        }
+      ]
+    }
+  },
+  "coldBeforeManual": {
+    "file": "protocol-v1-1795022426939-0.jsonl",
+    "rows": 22,
+    "sha256": "693dabb32c5c260926315ea1152ed6df9b61eae611ae48089ce49b021bb2a733",
+    "load": [8, "session/load", 1795022427675]
+  },
+  "coldReply": {
+    "sameUiAndNativeSession": true,
+    "nativeCompletedAtMs": 1795022469924,
+    "protocolFinishedAtMs": 1795023070217,
+    "terminalDelayMs": 600293,
+    "uiText": "FF_C12_MM077_A",
+    "uiDone": true,
+    "reexecutedTool": false
+  },
+  "nativeUse": "custom_provider:xiaomi/mimo-v2.6-flash"
+}
