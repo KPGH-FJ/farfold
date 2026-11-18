@@ -27,3 +27,5 @@
 源码 `c923ccb10`，macOS arm64 正式 `/Applications/Farfold.app`，0.1.7。CDHash `73c8c75dea688325042fe9c5e66e622f6a61f808`，可执行文件 SHA-256 `4cbd9547e451f488f711d5ba9e36724b1b88f5a31e4cbf910d7458d01b3c8dc1`。已核严格签名，构建目录中的重复应用包已移除。关闭态应用数据、WebKit 和应用缓存共 247,491 项前后摘要一致，SQLite 与 WAL 的隔离副本完整性通过。
 
 前端全量 786 个文件 10,976 项通过。Rust 全量发布配置 2,811 项通过，另有 11 项既有忽略。格式、类型、Clippy、生产构建和内部打包通过。首发 21 家八项继续，整家通过 0/21。
+
+11 月 18 日补核 CodeBuddy 自有文件任务实际使用 Hy4 Flash Free，Hy4 / On 是界面与保存选择。单次批准的各工具和 78 字节成品证据按原记录追溯。 [模型复核](../2026-11-18-cycle12-codebuddy-stop-display/README.md#模型显示与实际请求不一致)

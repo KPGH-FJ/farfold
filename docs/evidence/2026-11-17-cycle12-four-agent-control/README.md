@@ -37,3 +37,5 @@ CodeBuddy、Devin 的原已保存选择不可用时，准备页面分别呈现�
 - **MiniMax**。现选安装和官方 ACP 目录仍为 0.2.7。公开 npm 0.7.7 的实际包已把活跃请求取消带入原会话、原轮次的后台清理逻辑，无活跃请求的分支仍提前返回。待官方目录更新，或明确选择该官方程序后，验 A 脚本转后台且仍有活跃请求时只停 A，核原进程及 B 结果。当前 0.2.7 的负例保持。 [官方目录](https://cdn.agentclientprotocol.com/registry/v1/latest/registry.json) · [0.7.7 发布包](https://www.npmjs.com/package/@minimax-ai/code/v/0.7.7) · [官方停止语义](https://github.com/MiniMax-AI/minimax-code/blob/main/docs/tui-capabilities.md#stopping-a-conversation-and-its-background-work)
 - **Copilot**。已选 1.0.89，当前官方目录有 1.0.112。正常更新可独立安装并保留回退，原账号复用和程序信号转发须复验。发布说明未确认旧错误反馈已修，仍要等同类真实失败来核验。 [官方发布](https://github.com/github/copilot-cli/releases/tag/v1.0.112) · [同类上游问题](https://github.com/github/copilot-cli/issues/5266)
 - **Pi**。现选正式适配器 0.0.34 仍缺网页转发。可先独立用原 OpenRouter 免费模型验 Pi 自管的本机 Shell 和文件。官方 SDK 的新会话网页方案仍需明确选定实际程序、验证签名页面助手的直接子进程归属，再做真实权限、撤回和截图。 [适配器发行](https://github.com/svkozak/pi-acp/releases/latest) · [Pi SDK](https://docs.pi.dev/latest/sdk)
+
+11 月 18 日补核 CodeBuddy 两条原任务及 A 冷开续问实际均使用 Hy4 Flash Free，表中的 Hy4 / On 是界面与保存选择。实际进程停止、B 交付和同一 A 冷续答的结果保持。 [模型复核](../2026-11-18-cycle12-codebuddy-stop-display/README.md#模型显示与实际请求不一致)
