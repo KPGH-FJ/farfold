@@ -1,0 +1,103 @@
+{
+  "formal": {
+    "source": "6ca11aa5a",
+    "identifier": "ai.farfold.desktop",
+    "cdhash": "948e677f8bb57b8eec3f44100473329b9979ab33",
+    "binarySha256": "208e347d25c2a426a3d2b885621013eca95c8fa4ec64cd583ac4679d780465ab",
+    "closedInventoryBeforeEqualsAfter": true,
+    "inventory": {
+      "roots": [
+        {
+          "name": "Application Support/ai.farfold.desktop",
+          "entries": 262410,
+          "metadataSha256": "21c8f7a788518f3bfc5a3e34975c576922f755cd9834f1a6227b4d8d29edfea9"
+        },
+        {
+          "name": "WebKit/ai.farfold.desktop",
+          "entries": 585,
+          "metadataSha256": "b0eb674811d4e725a7971259062fea5bde1af50345ad71f1abfdea399e309adb"
+        },
+        {
+          "name": "Preferences/ai.farfold.desktop.plist",
+          "entries": 1,
+          "metadataSha256": "973ca760c4cad715322e07719b4b67e58ddf598c05b9383714bafa274b225998"
+        }
+      ],
+      "criticalFileHashes": {
+        "farfold.sqlite3": "127bdb2f4370fcc5f3013ec09c7e679cd03297923285996ceff5c880674ce7eb",
+        "farfold.sqlite3-wal": "5aa473160d22d27dd306cbd36663851a2d4628672c0175e84c9a72d8e83dbb25",
+        "ai.farfold.desktop.plist": "662445210c0accddb41d59a129850d64d21e37b7bf9e9e28532af8709857cdda"
+      }
+    }
+  },
+  "agentId": "registry:codebuddy-code",
+  "version": "2.184.0",
+  "nativeSessionId": "01a1eee0-6043-74b6-95a8-fc7f7103f7a0",
+  "nativePathUnderVendorProjects": "private-tmp-ff-c12-codebuddy-registry-formal.oBybsJN8-cb-c12-registry-model-n18/01a1eee0-6043-74b6-95a8-fc7f7103f7a0.jsonl",
+  "nativeSha256": "5f157d6abc391366342533419777a6e869c13a5c414d6ac760323504cae66081",
+  "attempts": [
+    {
+      "label": "initial",
+      "requestId": "01a1eee23f1879df87bbe2aa01550ada",
+      "nativeLines": [3, 7, 9],
+      "requestModelId": "hy4std",
+      "providerModel": "hy4",
+      "thinking": "on"
+    },
+    {
+      "label": "beforeSwitchConfirmation",
+      "requestId": "01a1eee374cf78ff907fee6dc56c10d8",
+      "nativeLines": [10, 12, 13],
+      "requestModelId": "hy4std",
+      "providerModel": "hy4",
+      "thinking": "on"
+    },
+    {
+      "label": "confirmedFlashFree",
+      "requestId": "01a1eee5f24d7bea9dc2f0869411b193",
+      "nativeLines": [14, 16, 17],
+      "requestModelId": "hy4flash-free",
+      "providerModel": "hy4-flash-free",
+      "thinking": "on"
+    },
+    {
+      "label": "manualAfterCold",
+      "requestId": "01a1eee82a667285835763aff3e5764b",
+      "nativeLines": [20, 23, 24],
+      "requestModelId": "hy4std",
+      "providerModel": "hy4",
+      "thinking": "on"
+    }
+  ],
+  "wire": [
+    {
+      "name": "protocol-v1-1795009043786-1.jsonl",
+      "lines": 162,
+      "sha256": "2a402786c8681f6f99398835f7975a295da52d5318877d093fa9b6d862e35a1e",
+      "outboundNew": [10],
+      "outboundLoad": [],
+      "outboundSetters": [19, 129, 156],
+      "outboundPrompts": [22, 65, 132],
+      "outboundCancel": []
+    },
+    {
+      "name": "protocol-v1-1795009512180-0.jsonl",
+      "lines": 78,
+      "sha256": "71a36012f9f602f10d9632cd7df864a11cecf075d5a290d8c50184052bcee3bf",
+      "outboundNew": [],
+      "outboundLoad": [10],
+      "outboundSetters": [28],
+      "outboundPrompts": [34],
+      "outboundCancel": []
+    }
+  ],
+  "coldAuxiliary": {
+    "kind": "periodic",
+    "scope": "vendor",
+    "mainReplyLogLine": 3447,
+    "summaryFinalLogLine": 3518,
+    "nativeSummaryLine": 25,
+    "wireEndLine": 78,
+    "outboundAdditionalPrompt": false
+  }
+}

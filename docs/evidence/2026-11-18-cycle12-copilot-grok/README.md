@@ -33,7 +33,7 @@
 
 Gemini CLI 与 Antigravity 按用户要求暂缓。
 
-CodeBuddy 已从独立 `--model hy4std` 入口正式通过 Hy4 / On 短问、双前台、实际停止和零发送冷开。原官方目录入口仍需使用官方设置补验实际选模、切换和恢复。 [独立入口实测](../2026-11-18-cycle12-codebuddy-hy4-official-launch/README.md)
+CodeBuddy 原官方目录入口已通过 Hy4 / On 首答、同原对话切换和冷续答。标准 Hy4 的双前台停止此前已在独立启动入口验证。 [原目录实测](../2026-11-18-cycle12-codebuddy-registry-model/README.md) · [独立入口实测](../2026-11-18-cycle12-codebuddy-hy4-official-launch/README.md)
 
 ### Pi 网页传输前置复核
 
