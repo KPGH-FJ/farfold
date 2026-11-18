@@ -108,6 +108,20 @@ export function applySessionEvent(
   }
   const updateEnvelope = hasOwnUpdate(e);
   const kind = updateEnvelope ? undefined : e.kind;
+  if (kind === "ownedTerminalExit") {
+    if (Object.hasOwn(e, "sessionId")) {
+      pushRaw(s, e);
+      effects?.emit();
+    } else if (
+      live &&
+      effects?.owns() &&
+      (activityConnectionId === undefined ||
+        activityConnectionId === s.connectionId) &&
+      receiveOwnedTerminalExit(s, e)
+    )
+      effects.emit();
+    return;
+  }
   const endingOwner = kind === "turnEnd" ? effects?.promptOwner() : undefined;
   // Validate before projection can treat work evidence as ours.
   // Unknown Agent envelopes and foreign receipts remain raw observations.
@@ -355,6 +369,34 @@ export function applySessionEvent(
     if (effects) flushSessionMetadata(s, effects.refresh);
   }
   effects?.emit();
+}
+
+function receiveOwnedTerminalExit(
+  thread: ThreadState,
+  event: Record<string, unknown>,
+): boolean {
+  const stop = thread.ownedTerminalStop;
+  const terminalId = event.terminalId;
+  if (
+    !stop ||
+    thread.connectionLost ||
+    thread.connectionId !== stop.connectionId ||
+    event.promptReceiptId !== stop.promptReceiptId ||
+    typeof terminalId !== "string" ||
+    !terminalId ||
+    (Object.hasOwn(event, "exitCode") &&
+      !Number.isSafeInteger(event.exitCode)) ||
+    (Object.hasOwn(event, "signal") && !Number.isSafeInteger(event.signal)) ||
+    stop.terminalIds.has(terminalId)
+  )
+    return false;
+  if (stop.settledId) {
+    const item = thread.items.find(({ id }) => id === stop.settledId);
+    if (item?.kind !== "settled") return false;
+    item.ownedTerminalExitCount = stop.terminalIds.size + 1;
+  }
+  stop.terminalIds.add(terminalId);
+  return true;
 }
 
 /** One metadata write after the accepted view has an actual live owner. */

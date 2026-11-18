@@ -17,6 +17,7 @@ export function SettledLine({
   onOpenArtifacts: MouseEventHandler<HTMLButtonElement>;
 }) {
   const maintenance = maintenanceLabel(result);
+  const { ownedTerminalExitCount = 0 } = item;
   const label =
     item.status === "done"
       ? (maintenance ??
@@ -65,6 +66,11 @@ export function SettledLine({
         </span>
         {reasonLabel && reasonLabel !== label && (
           <span className="tick">{reasonLabel}</span>
+        )}
+        {ownedTerminalExitCount > 0 && (
+          <span role="status">
+            {STRINGS.thread.ownedTerminalExit(ownedTerminalExitCount)}
+          </span>
         )}
         {item.error && <span className="no">{item.error}</span>}
         <span>{timeLabel(item.time)}</span>

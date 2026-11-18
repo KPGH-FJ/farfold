@@ -497,6 +497,8 @@ export const STRINGS = {
     noResultNote:
       "没有收到可展示的回答或工具结果。不会自动重试；你可以检查对话后再决定下一步。",
     stopped: "回复已停止",
+    ownedTerminalExit: (count: number) =>
+      `Farfold 执行的 ${count} 条命令已退出`,
     failed: "出错了",
     unknown: "结果未知",
     historicalOutcomeUnknown: "此前请求结果未确认，未自动重发",

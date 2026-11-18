@@ -11,6 +11,7 @@ import type { ThreadState } from "./session_types";
 import { PROMPT_ADMISSION as S } from "./prompt_admission_strings";
 import { STRINGS } from "./strings";
 import { PromptAdmissionStatus } from "../components/PromptAdmissionStatus";
+import { SettledLine } from "../components/SettledLine";
 
 type PromptArgs = {
   promptToken: string;
@@ -60,6 +61,100 @@ afterEach(() => {
   vi.useRealTimers();
   invoke.mockReset();
 });
+
+it.each(["before", "after"])(
+  "shows a local command exit %s the matching reply stops without changing the tool's status",
+  async (order) => {
+    const id = `owned-command-exit-${order}`;
+    const state = threads.markOpenFailed(
+      `a:/p:${id}`,
+      "a",
+      "/p",
+      id,
+      "fixture",
+    );
+    ready(state);
+    const channel = threads as unknown as {
+      applyChannelEvent(
+        key: string,
+        event: unknown,
+        live?: boolean,
+        connectionId?: string,
+      ): void;
+    };
+    const apply = (
+      event: unknown,
+      live = true,
+      connectionId = state.connectionId,
+    ) => channel.applyChannelEvent(state.key, event, live, connectionId);
+    const handle = invoke.getMockImplementation()!;
+    invoke.mockImplementation(async (command, args) =>
+      command === "session_prompt_cancel"
+        ? cancelReply(args)
+        : handle(command, args),
+    );
+    await threads.send(state.key, [{ type: "text", text: "Wait briefly" }]);
+    const prompt = invoke.mock.calls.find(
+      ([command]) => command === "session_prompt",
+    )![1] as PromptArgs;
+    const promptReceiptId = receipt(prompt);
+    const localExit = {
+      kind: "ownedTerminalExit",
+      promptReceiptId,
+      terminalId: "local-command",
+      signal: 15,
+    };
+    apply({
+      sessionId: id,
+      update: {
+        sessionUpdate: "tool_call",
+        toolCallId: "vendor-tool",
+        title: "Wait",
+        status: "in_progress",
+      },
+    });
+    apply({ kind: "toolActivity", toolCallIds: ["vendor-tool"] });
+    apply(localExit);
+    expect(state.ownedTerminalStop).toBeUndefined();
+
+    await threads.cancel(state.key);
+    const end = { kind: "turnEnd", promptReceiptId, stopReason: "cancelled" };
+    if (order === "after") apply(end);
+    apply(localExit, false);
+    apply(localExit, true, "retired-connection");
+    apply({ ...localExit, promptReceiptId: promptReceiptId + 1 });
+    apply({ ...localExit, sessionId: id });
+    apply({ ...localExit, signal: "15" });
+    apply({ ...localExit, update: { sessionUpdate: "_example/receipt" } });
+    expect(state.ownedTerminalStop?.terminalIds.size).toBe(0);
+
+    apply(localExit);
+    apply(localExit);
+    expect(state.ownedTerminalStop?.terminalIds.size).toBe(1);
+    expect(state.running).toBe(order === "before");
+    expect(state.stopping).toBe(order === "before");
+    expect(state.queuePaused).toBe("stopped");
+    if (order === "before") apply(end);
+    const settled = state.items.find((item) => item.kind === "settled")!;
+    expect(settled).toMatchObject({
+      status: "stopped",
+      ownedTerminalExitCount: 1,
+    });
+    expect(state.activeToolCallIds).toEqual(["vendor-tool"]);
+    expect(state.items.find((item) => item.kind === "tool")).toMatchObject({
+      call: { status: "in_progress" },
+    });
+    const footer = renderToStaticMarkup(
+      SettledLine({
+        item: settled,
+        artifactCount: 0,
+        onOpenArtifacts: () => {},
+      }),
+    );
+    expect(footer).toContain(STRINGS.thread.ownedTerminalExit(1));
+    expect(footer).toContain(STRINGS.thread.stopped);
+  },
+);
 
 it.each(
   ["attachment", "draft-save", "activity-save"].flatMap((stage) =>

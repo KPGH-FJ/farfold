@@ -77,11 +77,13 @@ impl Connection {
 struct Terminal {
     receipt: u64,
     process: Arc<Process>,
+    stop_receipt_requested: bool,
 }
 
 #[derive(Default)]
 struct Gate {
     active: Option<(u64, super::super::process::PromptObservation)>,
+    latest_prompt: Option<u64>,
     pending: Option<u64>,
     uncertain: bool,
     terminals: HashMap<String, Terminal>,
@@ -91,6 +93,7 @@ pub(super) struct Session {
     cwd: PathBuf,
     gate: Arc<Mutex<Gate>>,
     callbacks: Arc<tokio::sync::Semaphore>,
+    receipt_lifetime: tokio::sync::watch::Sender<()>,
 }
 
 pub(super) struct HeldTurn {
@@ -113,6 +116,7 @@ async fn scoped_close_waits_for_the_terminal_group_even_with_a_sealed_gate() {
         Terminal {
             receipt: 1,
             process: process.clone(),
+            stop_receipt_requested: false,
         },
     );
     let was_blocked = !terminal.can_close_after_stop();
@@ -133,6 +137,7 @@ impl Session {
             cwd: cwd.into(),
             gate: Arc::default(),
             callbacks: Arc::new(tokio::sync::Semaphore::new(16)),
+            receipt_lifetime: tokio::sync::watch::channel(()).0,
         }
     }
 
@@ -159,6 +164,7 @@ impl Session {
     ) {
         if let Ok(mut gate) = self.gate.lock() {
             gate.active = Some((receipt, observation));
+            gate.latest_prompt = Some(receipt);
         }
     }
 
@@ -188,6 +194,64 @@ impl Session {
             for terminal in gate.terminals.values() {
                 terminal.process.request_stop();
             }
+        }
+    }
+
+    pub(super) fn stop_prompt(
+        &self,
+        receipt: u64,
+        events: &SessionSink,
+        life: &Arc<ConnectionLife>,
+    ) {
+        let Ok(mut gate) = self.gate.lock() else {
+            return;
+        };
+        if gate.latest_prompt != Some(receipt) {
+            return;
+        }
+        gate.active = None;
+        gate.pending = None;
+        for (id, terminal) in &mut gate.terminals {
+            if terminal.receipt != receipt
+                || terminal.process.finished()
+                || terminal.stop_receipt_requested
+            {
+                continue;
+            }
+            terminal.stop_receipt_requested = true;
+            terminal.process.request_stop();
+            let process = terminal.process.clone();
+            let terminal_id = id.clone();
+            let events = Arc::downgrade(events);
+            let mut closing_connection = life.stop_receiver();
+            let mut retiring_session = self.receipt_lifetime.subscribe();
+            let life = Arc::downgrade(life);
+            let gate = Arc::downgrade(&self.gate);
+            super::super::manager::runtime().spawn(async move {
+                // The owned OS worker keeps responsibility for the group.
+                // This receipt watcher only lives as long as its route.
+                let result = tokio::select! {
+                    biased;
+                    _ = retiring_session.changed() => return,
+                    _ = closing_connection.wait_for(|stopping| *stopping) => return,
+                    result = async {
+                        process.started().await?;
+                        process.wait().await
+                    } => result,
+                };
+                let Ok(status) = result else {
+                    return;
+                };
+                if life.upgrade().is_some_and(|life| {
+                    life.state.load(Ordering::SeqCst) == super::super::lifecycle::READY
+                }) && gate.upgrade().is_some_and(|gate| {
+                    gate.lock()
+                        .is_ok_and(|gate| gate.latest_prompt == Some(receipt))
+                }) && let Some(events) = events.upgrade()
+                {
+                    events(owned_terminal_exit(receipt, terminal_id, status));
+                }
+            });
         }
     }
 
@@ -315,6 +379,7 @@ impl Session {
                     Terminal {
                         receipt,
                         process: process.clone(),
+                        stop_receipt_requested: false,
                     },
                 );
                 let worker = process.clone();
@@ -453,6 +518,29 @@ impl Drop for Session {
     fn drop(&mut self) {
         self.stop();
     }
+}
+
+fn owned_terminal_exit(
+    receipt: u64,
+    terminal_id: String,
+    status: std::process::ExitStatus,
+) -> Value {
+    let mut event = json!({
+        "kind": "ownedTerminalExit",
+        "promptReceiptId": receipt,
+        "terminalId": terminal_id,
+    });
+    if let Some(code) = status.code() {
+        event["exitCode"] = json!(code);
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::process::ExitStatusExt;
+        if let Some(signal) = status.signal() {
+            event["signal"] = json!(signal);
+        }
+    }
+    event
 }
 
 fn exit_status(status: std::process::ExitStatus) -> wire::TerminalExitStatus {

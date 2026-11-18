@@ -67,6 +67,7 @@ export async function drainPrompt(
   };
   s.items.push(item);
   s.roundItemBase = s.items.length;
+  delete s.ownedTerminalStop;
   beginSuccessDesktopNotification(s, () => hooks.thread(key) === s);
   hooks.emit();
   const receivedEnding = () =>

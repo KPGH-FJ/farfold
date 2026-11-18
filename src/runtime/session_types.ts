@@ -167,6 +167,8 @@ export type ThreadItem = (
       compactionItemIds?: string[];
       /** Whether this live round received readable Agent content, never thoughts. */
       replyReceived?: boolean;
+      /** Confirmed exits of local commands from this live round's requested stop. */
+      ownedTerminalExitCount?: number;
       time: number;
     }
 ) &
@@ -305,6 +307,13 @@ export interface ThreadState extends ReportedDetailsOwner {
   stopping: boolean;
   /** Cancel sent but completion was not confirmed; request may still execute. */
   stopUnconfirmed: boolean;
+  /** Only the current live stop, so a local exit can arrive after the reply ended. */
+  ownedTerminalStop?: {
+    connectionId: string;
+    promptReceiptId: number;
+    terminalIds: Set<string>;
+    settledId?: string;
+  };
   /** Pending `elicitation/create` form awaiting the user's values. */
   pendingElicitations: PendingElicitation[];
   /** Artifact drawer open state. */

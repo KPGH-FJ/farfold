@@ -126,6 +126,7 @@ export function persistedQueue(thread: ThreadState) {
 export class PromptRequestOwner {
   readonly token = crypto.randomUUID();
   readonly channel = new Channel<unknown>();
+  private readonly connectionId: string | undefined;
   private receipt: number | null = null;
   private ended = false;
   private endingObserved = false;
@@ -144,6 +145,7 @@ export class PromptRequestOwner {
     private onEarlyStopAcknowledged: () => void,
     readonly confirmDelivery: () => void,
   ) {
+    this.connectionId = thread.connectionId;
     thread.promptAdmission = { phase: "preparing", cancelling: false };
     this.channel.onmessage = (value) => this.receive(value);
   }
@@ -232,11 +234,24 @@ export class PromptRequestOwner {
       async (): Promise<CancelDispatch> => {
         try {
           if (this.ended || !this.current()) return "inactive";
+          const connectionId = this.thread.connectionId;
+          const ownedStop = this.thread.ownedTerminalStop;
+          if (
+            connectionId &&
+            connectionId === this.connectionId &&
+            (ownedStop?.connectionId !== connectionId ||
+              ownedStop.promptReceiptId !== receipt)
+          )
+            this.thread.ownedTerminalStop = {
+              connectionId,
+              promptReceiptId: receipt,
+              terminalIds: new Set(),
+            };
           const reply = await invoke<CancelReply>("session_prompt_cancel", {
             agentId: this.thread.agentId,
             cwd: this.thread.cwd,
             sessionId: this.thread.nativeSessionId,
-            connectionId: this.thread.connectionId,
+            connectionId,
             promptToken: this.token,
             receiptId: receipt,
           });

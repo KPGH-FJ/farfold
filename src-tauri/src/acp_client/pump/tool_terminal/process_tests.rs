@@ -18,8 +18,20 @@ fn retained_output_stays_at_character_boundaries_and_neutralizes_controls() {
 
 #[cfg(target_os = "macos")]
 mod macos {
+    use super::super::super::{ConnectionLife, Session, SessionSink, Terminal};
     use super::super::Process;
-    use std::{fs, path::Path, process::Command, sync::Arc, time::Duration};
+    use crate::acp_client::lifecycle::CloseReason;
+    use std::{
+        fs, io,
+        path::Path,
+        process::{Command, ExitStatus},
+        sync::{
+            Arc, Mutex,
+            atomic::{AtomicBool, Ordering},
+        },
+        time::Duration,
+    };
+    use tokio::sync::{mpsc, watch};
     use tokio::time::{sleep, timeout};
 
     const DEADLINE: Duration = Duration::from_secs(8);
@@ -141,6 +153,99 @@ mod macos {
                 .success()
         );
         assert!(pids.iter().all(|pid| !exists(*pid)));
+    }
+
+    fn pending_owned_terminal(
+        session: &Session,
+        receipt: u64,
+    ) -> (
+        Arc<Process>,
+        watch::Sender<Option<Result<ExitStatus, io::ErrorKind>>>,
+    ) {
+        let (start, started) = watch::channel(Some(Ok(())));
+        let (end, exit) = watch::channel(None);
+        let process = Arc::new(Process {
+            output: Arc::new(Mutex::new(super::Tail::new(128))),
+            started,
+            exit,
+            stop: Arc::new(AtomicBool::new(false)),
+            worker: std::thread::current(),
+        });
+        drop(start);
+        {
+            let mut gate = session.gate.lock().unwrap();
+            gate.latest_prompt = Some(receipt);
+            gate.terminals.insert(
+                "owned".into(),
+                Terminal {
+                    receipt,
+                    process: process.clone(),
+                    stop_receipt_requested: false,
+                },
+            );
+        }
+        (process, end)
+    }
+
+    #[tokio::test]
+    async fn unconfirmed_group_exit_does_not_publish_a_stop_receipt() {
+        let session = Session::new("/private/tmp");
+        let receipt = 23;
+        let (process, end) = pending_owned_terminal(&session, receipt);
+        let life = ConnectionLife::new();
+        life.ready().unwrap();
+        let (send, mut received) = mpsc::unbounded_channel();
+        let events: SessionSink = Arc::new(move |event| {
+            let _ = send.send(event);
+        });
+
+        session.stop_prompt(receipt, &events, &life);
+        assert!(process.stop.load(Ordering::Acquire));
+        assert!(
+            timeout(Duration::from_millis(50), received.recv())
+                .await
+                .is_err()
+        );
+        end.send_replace(Some(Err(io::ErrorKind::Other)));
+        assert!(process.wait().await.is_err());
+        assert!(
+            timeout(Duration::from_millis(50), received.recv())
+                .await
+                .is_err()
+        );
+    }
+
+    #[tokio::test]
+    async fn pending_stop_receipt_releases_its_observer_on_retirement() {
+        for retire_session in [true, false] {
+            let session = Session::new("/private/tmp");
+            let receipt = 24;
+            let (process, _end) = pending_owned_terminal(&session, receipt);
+            let life = ConnectionLife::new();
+            life.ready().unwrap();
+            let events: SessionSink = Arc::new(|event| panic!("unexpected receipt: {event}"));
+            let sink = Arc::downgrade(&events);
+
+            session.stop_prompt(receipt, &events, &life);
+            assert_eq!(Arc::strong_count(&process), 3);
+            drop(events);
+            assert!(sink.upgrade().is_none());
+
+            let expected_process_refs = if retire_session {
+                drop(session);
+                1
+            } else {
+                assert!(life.close_for(true, None, CloseReason::User).unwrap());
+                2
+            };
+            timeout(DEADLINE, async {
+                while Arc::strong_count(&process) != expected_process_refs {
+                    sleep(Duration::from_millis(5)).await;
+                }
+            })
+            .await
+            .unwrap();
+        }
     }
 
     #[tokio::test]

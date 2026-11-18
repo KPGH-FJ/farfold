@@ -1,9 +1,17 @@
 //! A synthetic ACP peer delegates only self-created test commands to Farfold.
-use super::{manager::AcpManager, pump::SessionSink};
+use super::{
+    active_prompt::{CancelRequest, Input, Phase, Request},
+    history_admission::Owner,
+    manager::AcpManager,
+    pump::{SessionControl, SessionSink},
+};
 use crate::meta_store::{AgentRow, MetaStore};
 use serde_json::{Value, json};
 use std::{path::Path, sync::Arc, time::Duration};
-use tokio::sync::mpsc;
+use tokio::{
+    sync::{mpsc, oneshot},
+    time::Instant,
+};
 
 struct Cleanup(Arc<AcpManager>);
 impl Drop for Cleanup {
@@ -13,7 +21,7 @@ impl Drop for Cleanup {
 }
 
 const PEER: &str = r#"
-import sys,json,os
+import sys,json,os,threading,time
 prompts={}
 locations={}
 owners={}
@@ -26,6 +34,12 @@ def create(s,n):
 def watch(s,n,tid):
  owners[n]=s
  send({'id':n,'method':'terminal/wait_for_exit','params':{'sessionId':s,'terminalId':tid}})
+def finish_cancelled_prompt(s,m):
+ deadline=time.monotonic()+10
+ while not os.path.exists(os.path.join(locations[s],'finish-vendor-prompt')):
+  assert time.monotonic()<deadline
+  time.sleep(.01)
+ reply(m,{'stopReason':'cancelled'})
 for line in sys.stdin:
  m=json.loads(line); method=m.get('method'); n=m.get('id')
  if method=='initialize':
@@ -39,7 +53,7 @@ for line in sys.stdin:
   create(s,{'a':101,'b':102,'denied':103}[s])
  elif method=='session/cancel':
   s=m['params']['sessionId']
-  reply(prompts.pop(s),{'stopReason':'cancelled'})
+  threading.Thread(target=finish_cancelled_prompt,args=(s,prompts.pop(s)),daemon=True).start()
   create(s,104)
  elif method is None and n in (101,102):
   watch(owners[n], n+10, m['result']['terminalId'])
@@ -71,6 +85,7 @@ async fn await_event(rx: &mut mpsc::UnboundedReceiver<Value>, kind: &str) -> Val
             if event["kind"] == kind {
                 return event;
             }
+            assert_ne!(event["kind"], "ownedTerminalExit", "unexpected {event}");
         }
     })
     .await
@@ -110,6 +125,72 @@ async fn owned_ids(cwd: &Path, session: &str) -> [i32; 2] {
 fn process_exists(pid: i32) -> bool {
     // Zero checks the owned test PID without sending a termination signal.
     unsafe { libc::kill(pid, 0) == 0 }
+}
+
+async fn offer_a(manager: &AcpManager, agent: &str, cwd: &Path) -> (Owner, u64) {
+    let (connection_id, expected_current, store) =
+        manager.prompt_snapshot(agent, cwd, "a").unwrap();
+    let owner = manager
+        .prompt_admission
+        .fixture_owner("tool-test-window", "owned-a", agent);
+    let (progress, mut events) = mpsc::unbounded_channel();
+    manager
+        .admit_prompt(Input {
+            agent,
+            cwd,
+            session: "a",
+            blocks: serde_json::from_value(json!([{"type":"text","text":"fixture"}])).unwrap(),
+            store: &store,
+            request: Request {
+                owner: owner.clone(),
+                connection_id,
+                expected_current,
+                deadline: Instant::now() + Duration::from_secs(15),
+                progress: Arc::new(move |event| {
+                    progress.send(event).map_err(|_| "fixture closed".into())
+                }),
+            },
+        })
+        .await
+        .unwrap();
+    let receipt = tokio::time::timeout(Duration::from_secs(3), async {
+        loop {
+            let progress = events.recv().await.unwrap();
+            if progress.phase == Phase::Offered {
+                break progress.receipt_id;
+            }
+        }
+    })
+    .await
+    .unwrap();
+    (owner, receipt)
+}
+
+async fn stop_receipt(
+    manager: &AcpManager,
+    agent: &str,
+    cwd: &Path,
+    owner: Owner,
+    receipt_id: u64,
+) -> bool {
+    let (result, receive) = oneshot::channel();
+    manager
+        .session_control_tx(agent, cwd, "a")
+        .unwrap()
+        .send(SessionControl::CancelPrompt {
+            request: CancelRequest {
+                owner,
+                receipt_id,
+                result,
+            },
+            deadline: Instant::now() + Duration::from_secs(3),
+        })
+        .unwrap();
+    tokio::time::timeout(Duration::from_secs(3), receive)
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap()
 }
 
 #[tokio::test(flavor = "multi_thread")]
@@ -156,17 +237,17 @@ async fn delegated_command_cancel_keeps_the_sibling_and_blocks_late_creation() {
         directories.push(directory);
         channels.push(rx);
     }
-    for (session, directory) in sessions[..2].iter().copied().zip(&directories) {
-        manager
-            .session_prompt(
-                &row.id,
-                directory,
-                session,
-                serde_json::from_value(json!([{"type":"text","text":"fixture"}])).unwrap(),
-            )
-            .await
-            .unwrap();
-    }
+    let (owner, receipt) = offer_a(&manager, &row.id, &directories[0]).await;
+    manager
+        .session_prompt(
+            &row.id,
+            &directories[1],
+            "b",
+            serde_json::from_value(json!([{"type":"text","text":"fixture"}])).unwrap(),
+        )
+        .await
+        .unwrap();
+    let mut terminal_a = None;
     for ((session, directory), rx) in sessions[..2]
         .iter()
         .copied()
@@ -179,14 +260,32 @@ async fn delegated_command_cancel_keeps_the_sibling_and_blocks_late_creation() {
         assert_eq!(request["terminalCommand"]["cwd"], json!(directory));
         assert!(!directory.join(format!("{session}.shell")).exists());
         decision(&manager, &request, "allow_once");
+        if session == "a" {
+            terminal_a = request["requestId"].as_str().map(str::to_owned);
+        }
     }
     let a = owned_ids(&directories[0], "a").await;
     let b = owned_ids(&directories[1], "b").await;
     assert!(a.iter().chain(&b).copied().all(process_exists));
-    manager
-        .session_cancel(&row.id, &directories[0], "a")
+    assert!(
+        !stop_receipt(
+            &manager,
+            &row.id,
+            &directories[0],
+            owner.clone(),
+            receipt + 10
+        )
         .await
-        .unwrap();
+    );
+    assert!(a.into_iter().all(process_exists));
+    assert!(stop_receipt(&manager, &row.id, &directories[0], owner, receipt).await);
+    let exited = await_event(&mut channels[0], "ownedTerminalExit").await;
+    assert_eq!(exited["promptReceiptId"], receipt);
+    assert_eq!(exited["terminalId"], terminal_a.unwrap());
+    assert!(exited["signal"].as_i64().is_some());
+    assert!(!a.into_iter().any(process_exists));
+    assert!(b.into_iter().all(process_exists));
+    std::fs::write(directories[0].join("finish-vendor-prompt"), "").unwrap();
     let stopped = await_event(&mut channels[0], "turnEnd").await;
     assert_eq!(stopped["stopReason"], "cancelled");
     assert!(!a.into_iter().any(process_exists));
@@ -216,5 +315,11 @@ async fn delegated_command_cancel_keeps_the_sibling_and_blocks_late_creation() {
     assert!(!directories[2].join("denied.shell").exists());
     while let Ok(event) = channels[0].try_recv() {
         assert_ne!(event["kind"], "permissionRequest");
+        assert_ne!(event["kind"], "ownedTerminalExit");
+    }
+    for channel in &mut channels[1..] {
+        while let Ok(event) = channel.try_recv() {
+            assert_ne!(event["kind"], "ownedTerminalExit");
+        }
     }
 }

@@ -955,7 +955,7 @@ export function applyTurnEnd(
               : "no_result"
           : status,
     );
-  s.items.push({
+  appendSettledRound(s, {
     kind: "settled",
     id: nextItemId(),
     status,
@@ -1002,7 +1002,7 @@ export function applyConnectionLost(s: ThreadState, reason?: unknown): void {
   sealStreams(s);
   if (s.running) {
     s.running = false;
-    s.items.push({
+    appendSettledRound(s, {
       kind: "settled",
       id: nextItemId(),
       status: "unknown",
@@ -1012,6 +1012,19 @@ export function applyConnectionLost(s: ThreadState, reason?: unknown): void {
       time: Date.now(),
     });
   }
+}
+
+function appendSettledRound(
+  thread: ThreadState,
+  item: Extract<ThreadItem, { kind: "settled" }>,
+): void {
+  const stop = thread.ownedTerminalStop;
+  if (stop && stop.connectionId === thread.connectionId && !stop.settledId) {
+    stop.settledId = item.id;
+    if (stop.terminalIds.size)
+      item.ownedTerminalExitCount = stop.terminalIds.size;
+  }
+  thread.items.push(item);
 }
 
 function roundToolItemIds(s: ThreadState): string[] {

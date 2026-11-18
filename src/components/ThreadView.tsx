@@ -532,6 +532,13 @@ export function ThreadView({
   const blocks = itemBlocks(thread.items);
   const forkableItems = onForkFromMessage && historyForkableItems(thread);
   const stoppedToolCalls = unfinishedStoppedToolCallIds(thread);
+  const terminalStop = thread.ownedTerminalStop;
+  const liveTerminalExitCount =
+    terminalStop &&
+    terminalStop.connectionId === thread.connectionId &&
+    !terminalStop.settledId
+      ? terminalStop.terminalIds.size
+      : 0;
   const stepActivity = (call: ToolCallView) =>
     toolActivityState(thread, call, stoppedToolCalls);
   const artifactCounts = reportedArtifactCounts(thread);
@@ -1069,6 +1076,11 @@ export function ThreadView({
                   return null;
               }
             })}
+            {liveTerminalExitCount > 0 && (
+              <div className="settled" role="status">
+                {STRINGS.thread.ownedTerminalExit(liveTerminalExitCount)}
+              </div>
+            )}
             <ReportedDetails details={thread.reportedDetails} />
             <div
               ref={requestsRef}

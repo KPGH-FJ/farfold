@@ -274,6 +274,16 @@ pub(super) fn send_session_cancel(
     if let Some(terminals) = ctx.terminals {
         terminals.stop();
     }
+    send_cancel_notification(cx, ctx, result, prompt_in_flight, mcp_requests);
+}
+
+fn send_cancel_notification(
+    cx: &ConnectionTo<Agent>,
+    ctx: &mut DispatchContext<'_>,
+    result: oneshot::Sender<Result<(), String>>,
+    prompt_in_flight: bool,
+    mcp_requests: Option<&super::super::transient_mcp::SessionMcpRequests>,
+) {
     let sent = cx
         .send_notification_to(Agent, CancelNotification::new(ctx.session_id.to_owned()))
         .map_err(describe_acp_error);
@@ -315,8 +325,11 @@ pub(super) fn cancel(
         let _ = request.result.send(Ok(false));
         return;
     }
+    if let Some(terminals) = ctx.terminals {
+        terminals.stop_prompt(request.receipt_id, ctx.events, &ctx.ops.life);
+    }
     let (sent, mut received) = oneshot::channel();
-    send_session_cancel(cx, ctx, sent, true, mcp);
+    send_cancel_notification(cx, ctx, sent, true, mcp);
     let sent = received
         .try_recv()
         .map_err(|_| "无法确认停止请求".to_owned())
