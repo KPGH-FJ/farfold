@@ -92,7 +92,7 @@
 
 **Claude Code 的小米原生配置已验首答及冷开续答。** 从 Farfold 新对话沿用已有设置完成首答。正常退出后，从搜索打开同一原 ID 并读回原问答，只发一条续问，正确复述上一轮标记。原生回执及小米同 Key 用量核实两次都使用 `mimo-v2.6-flash`。厂商独立历史默认发现、订阅和 Console 流程、其他模型切换仍待。[正式回执](evidence/2026-11-18-cycle12-claude-mimo/README.md)
 
-**Claude 双前台实停已复验。** 两条独立前台任务分别单次批准，同用 `mimo-v2.6-flash`。从 Farfold 只点停 A，A 原 Shell 与 sleep 退出且未写完成文件，B 原进程继续并按原标记交付。同一 A 工具返回失败终态，实际退出通过进程观察独立确认。被停止 A 的冷开续答、后台及待发恢复仍待。[正式证据](evidence/2026-11-18-cycle12-claude-pair-stop/README.md)
+**Claude 双前台实停已复验。** 两条独立前台任务分别单次批准，同用 `mimo-v2.6-flash`。从 Farfold 只点停 A，A 原 Shell 与 sleep 退出且未写完成文件，B 原进程继续并按原标记交付。同一 A 工具返回失败终态，实际退出通过进程观察独立确认。被停止 A 正常退出后从搜索冷开同一原对话，按原 MiMo 单次准确续答，原命令未重跑。后台及带待发的恢复仍待。[正式证据](evidence/2026-11-18-cycle12-claude-pair-stop/README.md)
 
 **Claude 托管 API 暂停。** 官方适配器 0.107.0 把服务认证头放进 SDK 设置，SDK 0.3.323 将设置带进子进程参数。Farfold 在建立托管连接前拒绝该路径，保存的服务及「沿用已有设置」入口保留。官方私密交付仍待验证。[核对依据](evidence/2026-11-16-cycle12-original-config/README.md#claude-环境核对)
 
@@ -211,6 +211,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 <!-- task-current: ARCH-44 -->
 
 ### ARCH-44
+
+2026-11-18 复验已停止的 Claude A 正常退出后重开，原工具步骤保留，原 ID 按保存的 MiMo 续答；无自动重跑或重发。同批只读补核 Cursor 的 B 退出码 0，A 工具终态仍未知。 [Claude 冷开](evidence/2026-11-18-cycle12-claude-pair-stop/README.md#被停止的-a-冷开续答) · [Cursor 回执](evidence/2026-11-18-cycle12-cursor-stop-receipt/README.md)
 
 2026-11-18 正式 Claude 同一 MiMo 配置、两个独立目录均单次批准原 Bash。只在 A 点停止，A Shell 与子进程退出，B 按原标记交付。Autohand 旧样本只读核得 B 的原工具成功及 A 终态仍缺，原实际子进程停止失败保持。 [Claude 实停](evidence/2026-11-18-cycle12-claude-pair-stop/README.md) · [Autohand 回执](evidence/2026-11-18-cycle12-autohand-stop-receipt/README.md)
 
@@ -343,6 +345,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: ARCH-31 -->
 
 ### ARCH-31
+
+2026-11-18 Claude 停止后的自有 A 再从正常搜索命中原 ID。冷开恢复原指令和历史步骤，原设置下只续答一次，正确复述原标记及命令，原任务未重跑。[正式实测](evidence/2026-11-18-cycle12-claude-pair-stop/README.md#被停止的-a-冷开续答)
 
 2026-11-18 Claude 从正式 Farfold 自有历史索引按标题查找，正常退出后重开同一原 ID，读回原问答，按原小米配置准确续答。厂商独立历史默认发现和分页仍待。[正式冷开续答](evidence/2026-11-18-cycle12-claude-mimo/README.md#正常退出后查找重开与续答)
 
@@ -662,6 +666,8 @@ e32正式所选历史读取可Tab聚焦执行并Enter启动；匹配文字弹窗
 <!-- task-current: P18 -->
 
 ### P18
+
+2026-11-18 Claude B 冷开恢复 Bash 步骤与 stdout 标记。「文件与输出」报告 0 个位置，手动在原目录选择成品后已从 Farfold 预览，原 31 字节摘要一致。直接关联原工具仍待适用的结构化文件位置。[冷开回执](evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-冷开取回结果)
 
 2026-11-18 Grok Build 沿已选 Grok 4.7／Low 一次手动新建任务，一次写入批准。本轮产物可打开 106 字节成品。正常保存退出，再从搜索冷开同一原对话，从原工具步骤打开同一个文件，原件和成品摘要核合，冷开无新建或发送。冷开未见「本轮产物」入口，其他工作、权限和恢复条件继续验。 [正式证据及剩余条件](evidence/2026-11-18-cycle12-copilot-grok/README.md#grok-build-成品冷开)
 

@@ -21,4 +21,20 @@ B 原 Shell 及子进程在点停后保持同一 PID、父子关系、开始时�
 
 小米同一脱敏 Key 的 `mimo-v2.6-flash` 在线记录，发送前为 4 次、37,952 Token、用量金额 ¥0.012435，18:35:11 核对为 8 次、64,547 Token、¥0.035576。增量为 4 次推理、26,595 Token、¥0.023141。另一脱敏 Key 的同模型记录保持 38 次。日用量只给合计，Farfold 侧两条手动发送由各自协议原件核实。 [小米日用量口径](https://mimo.mi.com/docs/zh-CN/api/asset/consumption-get)
 
-本批覆盖前台命令的单次批准、双任务隔离、实际停止与自然交付。同一被停止对话的冷开续答、后台任务、其他工具类型、草稿及待发恢复仍按原项核验。
+本批覆盖前台命令的单次批准、双任务隔离、实际停止与自然交付。后台任务、其他工具类型、草稿及待发恢复仍按原项核验。
+
+## 被停止的 A 冷开续答
+
+19:42 正常保存后退出，确认 Farfold 的原进程已结束。重新启动同一正式应用，从「搜索对话」精确打开 A。原指令与一条未成功的工具步骤显示在历史中，恢复后的对话为「未在运行」。模型仍显示「沿用已有设置」与 `mimo-v2.6-flash (haiku)`。Farfold 的唯一索引和 Claude Code 的唯一原记录均为 `a0557613-06b5-4ee9-8a18-53b50be9e58f`，工作目录、创建时间和标识前后相同。
+
+19:43:22 只手动发送一条不含原标记或原命令的续问。19:43:27，助手从旧上下文准确写出 `FF_C12_CLAUDE_MIMO_PAIR_A`、`/bin/sh ./task.sh` 和新的验收标记 `FF_C12_CLAUDE_MIMO_STOP_RESUME_1943`，各占一行。原 Claude Code 记录的响应模型为 `mimo-v2.6-flash`，Farfold 显示「已完成」。
+
+A 对应协议 `protocol-v1-1795002170981-0.jsonl` 记录一次 `session/load`、一次手动 `session/prompt`、零 `session/new`、零权限请求及零新取消。重开前、手动发送前、发送后，原记录均只含原先的一次 Bash 调用及一次对应结果。原 `task.sh` 和 `started.txt` 的字节摘要与修改时间保持，A 没有 `result.txt`。这证明本条重开和续答均未重跑原任务。
+
+小米同一脱敏 Key 的当日 `mimo-v2.6-flash` 在线记录从 19:42:05 的 10 次、89,613 Token、¥0.036822，变为 19:45:30 的 12 次、115,352 Token、¥0.038739。另一个脱敏 Key 在两次查询间保持 38 次。此次对账增量为 2 次推理、25,739 Token、用量金额 ¥0.001917，第二次推理的用途未单独核实。 [小米日用量口径](https://mimo.mi.com/docs/zh-CN/api/asset/consumption-get)
+
+## B 冷开取回结果
+
+同次重启后，从侧栏只读打开原 B，读取成功工具步骤、命令 `/bin/sh ./task.sh` 与原完成标记。冷开的「文件与输出」报告 0 个文件位置。通过「打开文件」从原目录手动选取 `result.txt`，Farfold 预览显示同一完成标记，磁盘 31 字节及 SHA-256 与上一批一致。B 的协议 `protocol-v1-1795002259433-1.jsonl` 为一次加载、零新建、零发送。
+
+运行结束时看到了「本轮产物 1」。该计数也包含命令输出，当时未展开列表核文件位置。这次恢复了 Bash 的文本输出，原工具详情未给出文件直达入口。Claude 官方的文件变更报告范围不含 Bash，自动关联仍需原回放中的结构化文件位置或原对话报告的文件链接。[产物计数](../../../src/runtime/reported_artifacts.ts) · [Claude 官方报告范围](https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.107.0/docs/air-extensions.md#agent-file-change-report)

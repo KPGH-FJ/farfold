@@ -13,10 +13,10 @@
     "已选模型有实答": 15,
     "可建对话": 1,
     "实测分项通过": 21,
-    "前台停止分项通过": 4,
+    "前台停止分项通过": 3,
     "已有设置实答": 6,
     "双前台分项通过": 17,
-    "停止及冷续答通过": 11,
+    "停止及冷续答通过": 12,
     "实测失败": 5,
     "已选服务有实答": 3,
     "冷开续答分项通过": 7
@@ -292,7 +292,7 @@
     {
       "agentId": "claude-acp",
       "runtime": "当前正式登记 0.107.0",
-      "liveAction": "正式新对话沿用 Claude Code 自己配置的小米 MiMo 实答。正常退出后从搜索找到同一自有原对话，原问答读回，沿原 MiMo 仅续问一条正确引用旧上下文，同原 ID 及小米用量核合。托管 Messages 等官方安全交付。 正式双前台两条原 Bash 单次批准。在 A 点停，目标 Shell 和 sleep 退出且无产出，B 原进程继续并自然交付。",
+      "liveAction": "正式新对话沿用 Claude Code 自己配置的小米 MiMo 实答。正常退出后从搜索找到同一自有原对话，原问答读回，沿原 MiMo 仅续问一条正确引用旧上下文，同原 ID 及小米用量核合。托管 Messages 等官方安全交付。 正式双前台两条原 Bash 单次批准。在 A 点停，目标 Shell 和 sleep 退出且无产出，B 原进程继续并自然交付。 A 停止后正常退出并从搜索冷开同一原对话，沿用 MiMo 单次准确续答，原命令未重新运行。",
       "standards": {
         "S1": {
           "observed": "装机握手成功，旧状态明确提示未登录并呈现订阅与 Console。\n2026-11-15 盘点：程序可执行，登记版本 0.81.2。登记所存握手版本 0.81.2。\n2026-11-16 续查：已正式升级至 0.107.0，实发后的 auth_required 有证据。官方订阅及 Console 仍有入口。\n2026-11-18 新版正式零发送复验：关闭模型与来源、取消原生目录选择后，原文字、路径和测试附件保留。仍提示 Claude 的 API 配置暂时不可用。\n2026-11-18 正式新对话使用 Claude Code 已有设置，原生小米配置完成准备并收到真实首答。",
@@ -323,19 +323,20 @@
           "status": "已有设置实答"
         },
         "S3": {
-          "observed": "登记声明 list/load/resume，无可安全归属旧样本。\n2026-11-18 从正式搜索按原标记找到 Farfold 已登记自有对话，正常退出后重开读回原问答，原 ID 上续答复述旧标记；零新建和自动重发。",
+          "observed": "登记声明 list/load/resume，无可安全归属旧样本。\n2026-11-18 从正式搜索按原标记找到 Farfold 已登记自有对话，正常退出后重开读回原问答，原 ID 上续答复述旧标记；零新建和自动重发。\n2026-11-18 再验被实际停止的 A，从搜索冷开后原 ID 与原工具步骤保持，只发一条续问，正确复述原标记和命令。",
           "remaining": "厂商独立历史默认发现、原目录和分页等其他样本仍待验证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
             "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
-            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md#正常退出后查找重开与续答"
+            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md#正常退出后查找重开与续答",
+            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#被停止的-a-冷开续答"
           ],
           "status": "查找冷开续答通过"
         },
         "S4": {
-          "observed": "旧官方模型声明能显示，保存基线不一致。\n最新复验：用户保存 mimo-v2.6-flash，正式 0.81.2 确认该服务和模型并出站，等待后停止，未观察到助手正文。 官方更新至 0.107.0，正向准备和真实出站成功，182.1 秒后收到该请求的 auth_required。\n2026-11-16 托管路径因已核的认证交付限制暂停，已保存的服务仍存在。\n2026-11-17 小米官方有原生 Claude Code 接法。现有适配器负结果只支持继续调查认证交接，真实服务 HTTP 状态未知。\n2026-11-18 已有设置中的 Haiku 别名显示映射至 MiMo。同一正式请求的 Claude Code 原会话记录及小米用量均显示 mimo-v2.6-flash。\n2026-11-18 正常退出后原对话仍沿用已有设置与 MiMo Haiku 别名，实际续答及小米同 Key 用量确认为 mimo-v2.6-flash。",
+          "observed": "旧官方模型声明能显示，保存基线不一致。\n最新复验：用户保存 mimo-v2.6-flash，正式 0.81.2 确认该服务和模型并出站，等待后停止，未观察到助手正文。 官方更新至 0.107.0，正向准备和真实出站成功，182.1 秒后收到该请求的 auth_required。\n2026-11-16 托管路径因已核的认证交付限制暂停，已保存的服务仍存在。\n2026-11-17 小米官方有原生 Claude Code 接法。现有适配器负结果只支持继续调查认证交接，真实服务 HTTP 状态未知。\n2026-11-18 已有设置中的 Haiku 别名显示映射至 MiMo。同一正式请求的 Claude Code 原会话记录及小米用量均显示 mimo-v2.6-flash。\n2026-11-18 正常退出后原对话仍沿用已有设置与 MiMo Haiku 别名，实际续答及小米同 Key 用量确认为 mimo-v2.6-flash。\n2026-11-18 停止后的 A 同原对话冷开，保留已有设置与 MiMo Haiku 别名，续答及小米同 Key 用量核为 mimo-v2.6-flash。",
           "remaining": "其他模型切换仍待实测，Farfold 托管路径保持暂停。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
@@ -346,19 +347,21 @@
             "docs/evidence/2026-11-16-cycle12-original-config/results.json",
             "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
             "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md",
-            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md#正常退出后查找重开与续答"
+            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md#正常退出后查找重开与续答",
+            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#被停止的-a-冷开续答"
           ],
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧多片段实测未取得，不当做已支持的使用结果。\n2026-11-18 已有 MiMo 设置，两条真实 Bash 单次审批，B 原工具成功，实际写出独立结果，Farfold 显示真实标记。",
-          "remaining": "其他工具、文件从 Farfold 打开、提问、审批拒绝、技能及更多任务类型待验。",
+          "observed": "旧多片段实测未取得，不当做已支持的使用结果。\n2026-11-18 已有 MiMo 设置，两条真实 Bash 单次审批，B 原工具成功，实际写出独立结果，Farfold 显示真实标记。\n2026-11-18 只读冷开 B，原工具成功及 stdout 保持。文件与输出报告 0 个文件位置。通过打开文件手动选取原目录 result.txt，正式预览内容及原 31 字节摘要核合。",
+          "remaining": "按原工具步骤直接定位冷开成品、其他工具、提问、审批拒绝、技能及更多任务类型待验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
             "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
-            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md"
+            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md",
+            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-冷开取回结果"
           ],
           "status": "实测分项通过"
         },
@@ -375,16 +378,17 @@
           "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "未见当前实际停止与同原恢复的闭环。\n2026-11-18 正式 Farfold 按停止仅结束 A 的原前台 Shell 和 sleep，A 无完成文件。同一工具 ID 有失败回执。B 保持并自然完成。",
-          "remaining": "同一被停止对话的冷开续答、后台任务、草稿、附件和待发恢复按原条件继续。",
+          "observed": "未见当前实际停止与同原恢复的闭环。\n2026-11-18 正式 Farfold 按停止仅结束 A 的原前台 Shell 和 sleep，A 无完成文件。同一工具 ID 有失败回执。B 保持并自然完成。\n2026-11-18 正常退出后从搜索重开被停止的 A，同原 ID 下准确续答并继续走 MiMo。原命令计数、脚本与启动记录不变，零新增工具或自动重发。",
+          "remaining": "后台任务、带草稿附件或待发的停止和恢复按原条件继续。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
             "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
-            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md"
+            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md",
+            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#被停止的-a-冷开续答"
           ],
-          "status": "前台停止分项通过"
+          "status": "停止及冷续答通过"
         },
         "S8": {
           "observed": "旧登录/准备呈现有观察。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
@@ -751,13 +755,14 @@
           "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n本轮实测：一次取消后 Farfold 显示已停止和步骤已结束，同一 shell 与 sleep 仍继续，约一分钟后自然写下完成标记。\n2026.11.13 Auto 前台复验，正式按钮后 380 毫秒已观察到原 Shell 与 sleep 同时退出，55 秒后没有完成标记。界面步骤结果未知。 正常退出后冷开同一对话，原服务与 Auto 保持，明确短消息正确报回首条独有记号。原请求未自动重发。",
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n本轮实测：一次取消后 Farfold 显示已停止和步骤已结束，同一 shell 与 sleep 仍继续，约一分钟后自然写下完成标记。\n2026.11.13 Auto 前台复验，正式按钮后 380 毫秒已观察到原 Shell 与 sleep 同时退出，55 秒后没有完成标记。界面步骤结果未知。 正常退出后冷开同一对话，原服务与 Auto 保持，明确短消息正确报回首条独有记号。原请求未自动重发。\n2026-11-18 只读核对原双任务，B 厂商终端原件对应原命令与目录，退出码为 0；确认 A 实际进程退出，A 实时与原记录仍缺同一工具终态。",
           "remaining": "原前台 Shell/子进程已停止并同原对象续答；持久后台 Shell 的官方精确停止和工具终态未证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-15-cycle12-followup/README.md",
-            "docs/evidence/2026-11-15-cycle12-followup/cursor-foreground-pair-2026-11-16.json"
+            "docs/evidence/2026-11-15-cycle12-followup/cursor-foreground-pair-2026-11-16.json",
+            "docs/evidence/2026-11-18-cycle12-cursor-stop-receipt/README.md"
           ],
           "status": "前台停止分项通过"
         },
