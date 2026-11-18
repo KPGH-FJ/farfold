@@ -488,6 +488,10 @@ pub(crate) async fn open_session_on_connection(
                 connection_id: ops.connection_id.clone(),
                 purpose,
                 preview_token,
+                // A loaded conversation can resolve to a persisted location
+                // different from cwd. The rules response has no location echo.
+                permission_rules_scope_verified: !resumed
+                    && response.pointer("/_meta/dev.dirac~1worktree").is_none(),
                 workspace: Some(Vec::new()),
                 browser_unavailable,
                 tools_report: Arc::new(super::super::session_tools::Slot::new(

@@ -239,28 +239,27 @@ async fn workspace_access_unstarted_expired_or_closed_interest_never_polls_reque
         let polled = Arc::new(AtomicBool::new(false));
         let marker = polled.clone();
         let (reply, receive) = oneshot::channel();
-        if closed {
-            drop(receive);
-        }
-        let mut pending = Pending {
-            reply: Some(reply),
-            future: Box::pin(async move {
+        let mut pending = Some(Pending::start(
+            async move {
                 marker.store(true, Ordering::SeqCst);
-                Err(ErrorKind::QueryFailed.into())
-            }),
-            deadline: tokio::time::Instant::now()
+                Err::<(), _>(ErrorKind::QueryFailed.into())
+            },
+            reply,
+            tokio::time::Instant::now()
                 + if closed {
                     Duration::from_secs(1)
                 } else {
                     Duration::ZERO
                 },
-            _lease: life.operation("open:owned".into()).unwrap(),
-            started: false,
-        };
-        assert_eq!(
-            pending.poll().await.unwrap().unwrap_err().code,
-            ErrorKind::Timeout
-        );
+            life.operation("open:owned".into()).unwrap(),
+        ));
+        if closed {
+            drop(receive);
+            next(&mut pending).await;
+        } else {
+            next(&mut pending).await;
+            assert_eq!(receive.await.unwrap().unwrap_err().code, ErrorKind::Timeout);
+        }
         assert!(!polled.load(Ordering::SeqCst));
     }
 }
@@ -270,29 +269,26 @@ async fn workspace_access_timeout_retains_only_read_lease_until_actual_late_repl
     let life = ConnectionLife::new();
     life.ready().unwrap();
     let (release, receive) = oneshot::channel();
-    let (reply, delivered) = oneshot::channel();
-    let mut pending = Pending {
-        reply: Some(reply),
-        future: Box::pin(async move {
+    let (reply, mut delivered) = oneshot::channel();
+    let mut pending = Some(Pending::start(
+        async move {
             receive.await.unwrap();
-            Err(ErrorKind::QueryFailed.into())
-        }),
-        deadline: tokio::time::Instant::now() + Duration::from_millis(20),
-        _lease: life.operation("open:owned".into()).unwrap(),
-        started: false,
-    };
-    assert!(pending.poll().await.is_none());
-    assert_eq!(
-        delivered.await.unwrap().unwrap_err().code,
-        ErrorKind::Timeout
-    );
+            Err::<(), _>(ErrorKind::QueryFailed.into())
+        },
+        reply,
+        tokio::time::Instant::now() + Duration::from_millis(20),
+        life.operation("open:owned".into()).unwrap(),
+    ));
+    tokio::select! {
+        value = &mut delivered => assert_eq!(value.unwrap().unwrap_err().code, ErrorKind::Timeout),
+        () = next(&mut pending) => panic!("read completed before the late reply"),
+    }
     assert!(life.operation("open:owned".into()).is_err());
     // Reading creates no model-work unknown or new global prompt prohibition.
     let work = life.work().unwrap();
     drop(work);
     release.send(()).unwrap();
-    let value = pending.poll().await.unwrap();
-    pending.complete(value);
+    next(&mut pending).await;
     assert!(life.operation("open:owned".into()).is_ok());
 }
 

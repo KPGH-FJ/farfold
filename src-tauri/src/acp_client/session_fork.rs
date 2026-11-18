@@ -31,14 +31,24 @@ pub struct SessionOperations {
     pub fork_current_context: bool,
     pub fork_historical_point: bool,
     pub close_after_unconfirmed_stop: bool,
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub permission_rules_read: bool,
 }
 
 pub(crate) fn capabilities(connection: &ManagedConnection, session_id: &str) -> SessionOperations {
-    let workspace_known = connection.sessions.lock().ok().is_some_and(|entries| {
-        entries
-            .get(session_id)
-            .is_some_and(|entry| entry.workspace.as_ref().is_some_and(Vec::is_empty))
-    });
+    let (workspace_known, permission_rules_scope_verified) = connection
+        .sessions
+        .lock()
+        .ok()
+        .and_then(|entries| {
+            entries.get(session_id).map(|entry| {
+                (
+                    entry.workspace.as_ref().is_some_and(Vec::is_empty),
+                    entry.permission_rules_scope_verified,
+                )
+            })
+        })
+        .unwrap_or_default();
     let close_after_unconfirmed_stop = connection.handshake.get().is_some_and(|h| {
         let caps = &h.typed.agent_capabilities;
         caps.load_session && caps.session_capabilities.close.is_some()
@@ -46,6 +56,8 @@ pub(crate) fn capabilities(connection: &ManagedConnection, session_id: &str) -> 
     let base = workspace_known && close_after_unconfirmed_stop;
     SessionOperations {
         close_after_unconfirmed_stop,
+        permission_rules_read: permission_rules_scope_verified
+            && super::workspace_access::permission_rules::supported(connection),
         fork_current_context: base
             && connection.handshake.get().is_some_and(|h| {
                 h.typed

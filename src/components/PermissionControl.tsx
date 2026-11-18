@@ -13,7 +13,9 @@ import { LIBRARY } from "../runtime/library_strings";
 import { uiError } from "../runtime/ui_error";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { WorkspacePopover } from "./WorkspacePopover";
+import { PermissionRules } from "./PermissionRules";
 import { hasNextOrdinaryPermissionEffect } from "../runtime/permission_effect";
+import { configChangeBusy } from "../runtime/protected_config";
 
 interface PermissionReview {
   owner: ThreadState;
@@ -53,7 +55,14 @@ export function PermissionControl({
   const option = thread.configOptions.find(
     (item) => item.id === thread.permissionConfigId,
   );
-  if (!thread.permissionConfigId) return null;
+  const hasSetting = Boolean(thread.permissionConfigId);
+  const { connectionId } = thread;
+  const showRules =
+    thread.identity === "established" &&
+    Boolean(thread.agentId && thread.cwd && thread.nativeSessionId) &&
+    thread.sessionOperations?.permissionRulesRead === true;
+  if (!hasSetting && (!showRules || !connectionId)) return null;
+  const rulesBlocked = showRules && configChangeBusy(thread);
   const unavailable =
     !option || option.type !== "select" || !option.options.length;
   const optionsIdentity = JSON.stringify({
@@ -131,25 +140,26 @@ export function PermissionControl({
           <>
             <ShieldCheckIcon size={14} />
             <span>
-              {C.permissionShort} · {label}
+              {C.permissionShort}
+              {hasSetting && <> · {label}</>}
             </span>
           </>
         }
-        disabled={blocked}
+        disabled={blocked || (!hasSetting && rulesBlocked)}
       >
         {(close) => (
           <>
-            {thread.permissionState === "required" && (
+            {hasSetting && thread.permissionState === "required" && (
               <p className="workspace-control-note">
                 {C.permissionRequiredNote}
               </p>
             )}
-            {thread.permissionState === "unknown" && (
+            {hasSetting && thread.permissionState === "unknown" && (
               <p className="workspace-control-note">
                 {C.permissionUnknownNote}
               </p>
             )}
-            {unavailable && (
+            {hasSetting && unavailable && (
               <>
                 <p className="workspace-control-note">
                   {C.permissionUnavailable}
@@ -176,55 +186,73 @@ export function PermissionControl({
                 </button>
               </>
             )}
-            {error && (
+            {hasSetting && error && (
               <p role="alert" className="ac-error">
                 {error}
               </p>
             )}
-            <div role="radiogroup" aria-label={C.permission}>
-              {!unavailable &&
-                option?.options.map((item) => (
-                  <button
-                    type="button"
-                    key={item.value}
-                    className="permission-choice"
-                    role="radio"
-                    aria-checked={
-                      thread.permissionState === "ready" &&
-                      item.value === option.currentValue
-                    }
-                    onClick={() => {
-                      changeReview({
-                        owner: thread,
-                        choice: item,
-                        options: optionsIdentity,
-                      });
-                      setFailure(null);
-                      close();
-                    }}
-                  >
-                    <strong>
-                      {item.name}
-                      {thread.permissionState === "ready" &&
-                        item.value === option.currentValue && (
-                          <small>
-                            {" "}
-                            ✓{" "}
-                            {nextMessage
-                              ? C.permissionNextMessage
-                              : C.permissionSelected}
-                          </small>
-                        )}
-                    </strong>
-                    {item.description && <span>{item.description}</span>}
-                  </button>
-                ))}
-            </div>
-            <p className="workspace-control-note">{scopeNote}</p>
+            {hasSetting && (
+              <div role="radiogroup" aria-label={C.permission}>
+                {!unavailable &&
+                  option?.options.map((item) => (
+                    <button
+                      type="button"
+                      key={item.value}
+                      className="permission-choice"
+                      role="radio"
+                      aria-checked={
+                        thread.permissionState === "ready" &&
+                        item.value === option.currentValue
+                      }
+                      onClick={() => {
+                        changeReview({
+                          owner: thread,
+                          choice: item,
+                          options: optionsIdentity,
+                        });
+                        setFailure(null);
+                        close();
+                      }}
+                    >
+                      <strong>
+                        {item.name}
+                        {thread.permissionState === "ready" &&
+                          item.value === option.currentValue && (
+                            <small>
+                              {" "}
+                              ✓{" "}
+                              {nextMessage
+                                ? C.permissionNextMessage
+                                : C.permissionSelected}
+                            </small>
+                          )}
+                      </strong>
+                      {item.description && <span>{item.description}</span>}
+                    </button>
+                  ))}
+              </div>
+            )}
+            {hasSetting && (
+              <p className="workspace-control-note">{scopeNote}</p>
+            )}
+            {showRules && connectionId && !blocked && !rulesBlocked && (
+              <PermissionRules
+                key={JSON.stringify([
+                  thread.key,
+                  thread.agentId,
+                  thread.cwd,
+                  thread.nativeSessionId,
+                  connectionId,
+                  thread.serviceContext,
+                ])}
+                thread={thread}
+                connectionId={connectionId}
+              />
+            )}
           </>
         )}
       </WorkspacePopover>
-      {choice && (
+      {hasSetting && choice && (
         <WorkspaceDialog
           title={C.permissionConfirm}
           onClose={() => changeReview(null)}

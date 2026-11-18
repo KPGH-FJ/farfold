@@ -26,9 +26,16 @@ def status(m):
 for line in sys.stdin:
  m=json.loads(line);method=m.get('method')
  with open('trust-trace.jsonl','a') as f:f.write(json.dumps({'method':method,'params':m.get('params')})+'\n')
- if method=='initialize':reply(m,{'protocolVersion':1,'agentCapabilities':{},'authMethods':[]})
- elif method=='session/new':reply(m,{'sessionId':'owned-trust','configOptions':[]})
+ if method=='initialize':
+  caps={'_meta': {'dev.dirac/permissions.list':True}} if pathlib.Path('rules-supported').exists() else {}
+  reply(m,{'protocolVersion':1,'agentCapabilities':caps,'authMethods':[]})
+ elif method=='session/new':
+  extra={'_meta':{'dev.dirac/worktree':{'path':'/other/worktree'}}} if pathlib.Path('rules-worktree').exists() else {}
+  reply(m,{'sessionId':'owned-trust','configOptions':[],**extra})
  elif method=='_trust/status':threading.Thread(target=status,args=(m,),daemon=True).start()
+ elif method=='dev.dirac/permissions.list':
+  rules=[{'tool':'execute_command','pattern':'test-owned','action':'allow'}]
+  reply(m,{'rules':rules})
  else:send({'id':m.get('id'),'error':{'code':-32601,'message':'PRIVATE_SENTINEL'}})
 "#;
 async fn owned(
@@ -62,6 +69,77 @@ fn queries(f: &Fixture) -> usize {
         .iter()
         .filter(|v| v["method"] == "_trust/status")
         .count()
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn workspace_access_saved_rules_respects_advertisement_owner_and_folder() {
+    let unsupported = Fixture::new();
+    let (id, connection) = owned(&unsupported, false).await;
+    assert!(
+        !crate::acp_client::session_fork::capabilities(&connection, "owned-trust")
+            .permission_rules_read
+    );
+    assert!(matches!(
+        unsupported.manager.permission_rules(&unsupported.row.id, &unsupported.cwd, "owned-trust", &id).await,
+        Err(error) if error.code == ErrorKind::Unavailable
+    ));
+    assert_eq!(trace(&unsupported).len(), 2);
+
+    let changed_folder = Fixture::new();
+    std::fs::write(changed_folder.cwd.join("rules-supported"), "").unwrap();
+    std::fs::write(changed_folder.cwd.join("rules-worktree"), "").unwrap();
+    let (id, connection) = owned(&changed_folder, false).await;
+    assert!(
+        !crate::acp_client::session_fork::capabilities(&connection, "owned-trust")
+            .permission_rules_read
+    );
+    assert!(matches!(
+        changed_folder.manager.permission_rules(&changed_folder.row.id, &changed_folder.cwd, "owned-trust", &id).await,
+        Err(error) if error.code == ErrorKind::Changed
+    ));
+    assert_eq!(trace(&changed_folder).len(), 2);
+
+    let f = Fixture::new();
+    std::fs::write(f.cwd.join("rules-supported"), "").unwrap();
+    let (id, connection) = owned(&f, false).await;
+    assert!(
+        crate::acp_client::session_fork::capabilities(&connection, "owned-trust")
+            .permission_rules_read
+    );
+    assert!(matches!(
+        f.manager.permission_rules(&f.row.id, &f.cwd, "owned-trust", "wrong-connection").await,
+        Err(error) if error.code == ErrorKind::Changed
+    ));
+    let result = f
+        .manager
+        .permission_rules(&f.row.id, &f.cwd, "owned-trust", &id)
+        .await
+        .unwrap();
+    assert_eq!(
+        serde_json::to_value(result).unwrap(),
+        json!({
+            "connectionId":id, "nativeSessionId":"owned-trust", "cwd":f.cwd,
+            "rules":[{"tool":"execute_command","pattern":"test-owned","action":"allow"}]
+        })
+    );
+    let calls = trace(&f);
+    assert_eq!(calls.len(), 3);
+    assert_eq!(
+        calls[2],
+        json!({
+            "method":"dev.dirac/permissions.list","params":{"sessionId":"owned-trust"}
+        })
+    );
+    #[cfg(unix)]
+    {
+        let foreign = tempfile::tempdir().unwrap();
+        std::os::unix::fs::symlink(foreign.path(), f.cwd.join(".dirac")).unwrap();
+        assert!(matches!(
+            f.manager.permission_rules(&f.row.id, &f.cwd, "owned-trust", &id).await,
+            Err(error) if error.code == ErrorKind::Changed
+        ));
+        assert_eq!(trace(&f).len(), 3);
+    }
 }
 
 #[tokio::test(flavor = "multi_thread")]

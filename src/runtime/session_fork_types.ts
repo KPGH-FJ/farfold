@@ -6,6 +6,7 @@ export interface SessionOperations {
   forkCurrentContext: boolean;
   forkHistoricalPoint?: boolean;
   closeAfterUnconfirmedStop?: true;
+  permissionRulesRead?: true;
 }
 
 /** Memory-only delivery state, separate from the Agent's transcript. */
@@ -42,6 +43,12 @@ export interface ForkResult {
 
 export function sessionOperations(value: unknown): SessionOperations {
   return {
+    ...(!!value &&
+      typeof value === "object" &&
+      "permissionRulesRead" in value &&
+      value.permissionRulesRead === true && {
+        permissionRulesRead: true as const,
+      }),
     ...(!!value &&
       typeof value === "object" &&
       "closeAfterUnconfirmedStop" in value &&

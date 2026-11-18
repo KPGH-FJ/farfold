@@ -167,6 +167,7 @@ pub(crate) struct SessionEntry {
     connection_id: String,
     pub(crate) purpose: super::open_purpose::OpenPurpose,
     pub(crate) preview_token: Option<String>,
+    pub(crate) permission_rules_scope_verified: bool,
     /// Parameters accepted by this client's successful new/load, not Agent permissions.
     pub(crate) workspace: Option<Vec<std::path::PathBuf>>,
     pub(crate) browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
@@ -692,10 +693,8 @@ async fn session_pump(
             // update the agent sent before the prompt response.
             biased;
             _ = stopping.changed() => break,
-            outcome = super::workspace_access::next(&mut workspace_access_read) => {
-                if let Some(outcome) = outcome {
-                    workspace_access_read.take().expect("completed workspace read exists").complete(outcome);
-                }
+            () = super::workspace_access::next(&mut workspace_access_read) => {
+                workspace_access_read = None;
             },
             completion = task_rx.recv() => {
                 if let Some(completion) = completion
@@ -1185,26 +1184,13 @@ async fn session_pump(
                     }
                     identity_read=Some(super::identity_read::Pending::start(*request,cx.clone(),result,deadline,scope,ops.life.clone()));
                 }
-                SessionControl::WorkspaceAccessStatus { request, result, deadline } => {
-                    if !request.matches(&ops.connection_id, &session_id) {
-                        let _ = result.send(Err(super::workspace_access::ErrorKind::Changed.into()));
-                        continue;
-                    }
-                    if ops.workspace_access.capability().is_none() {
-                        let _ = result.send(Err(super::workspace_access::ErrorKind::Unavailable.into()));
-                        continue;
-                    }
-                    if workspace_access_read.is_some() || mutation.is_some() || prompt_in_flight
+                SessionControl::WorkspaceAccessRead { request, deadline } => {
+                    let busy = workspace_access_read.is_some() || mutation.is_some() || prompt_in_flight
                         || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved)
-                        || ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy() {
-                        let _ = result.send(Err(super::workspace_access::ErrorKind::Busy.into()));
-                        continue;
+                        || ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy();
+                    if let Some(read) = request.start(&ops, &session_id, busy, cx.clone(), deadline) {
+                        workspace_access_read = Some(read);
                     }
-                    let lease = match ops.life.operation(format!("open:{session_id}")) {
-                        Ok(lease) => lease,
-                        Err(_) => { let _ = result.send(Err(super::workspace_access::ErrorKind::Busy.into())); continue; }
-                    };
-                    workspace_access_read = Some(super::workspace_access::Pending::start(*request, cx.clone(), result, deadline, lease));
                 }
                 SessionControl::WorkspaceAccessDecision { request, result, .. } => {
                     use super::workspace_access::decision::{Admission,Code,DecisionError,Snapshot};

@@ -261,76 +261,196 @@ impl Request {
     }
 }
 
-/// Caller expiry ends delivery, not the actual outstanding read. The existing
-/// lifecycle lease remains until the actual response or owning session actor termination.
-/// No prompt unknown flag or persistent account-wide mutation scope is created.
-pub(crate) struct Pending {
-    reply: Option<oneshot::Sender<Reply>>,
-    future: Pin<Box<dyn Future<Output = Reply> + Send>>,
-    deadline: tokio::time::Instant,
-    _lease: OperationLease,
-    started: bool,
-}
+/// Caller expiry ends delivery, not the outstanding read. The actor keeps
+/// the same lease until the official response or owning actor termination.
+pub(crate) struct Pending(Pin<Box<dyn Future<Output = ()> + Send>>);
+
 impl Pending {
-    pub(crate) fn start(
-        request: Request,
-        cx: ConnectionTo<Agent>,
-        reply: oneshot::Sender<Reply>,
+    fn start<T: Send + 'static>(
+        read: impl Future<Output = Result<T, AccessError>> + Send + 'static,
+        mut reply: oneshot::Sender<Result<T, AccessError>>,
         deadline: tokio::time::Instant,
         lease: OperationLease,
     ) -> Self {
-        Self {
-            reply: Some(reply),
-            future: Box::pin(request.read(cx)),
-            deadline,
-            _lease: lease,
-            started: false,
-        }
-    }
-    async fn poll(&mut self) -> Option<Reply> {
-        if let Some(reply) = &mut self.reply {
-            if reply.is_closed() || tokio::time::Instant::now() >= self.deadline {
-                if !self.started {
-                    return Some(Err(ErrorKind::Timeout.into()));
-                }
-                if let Some(reply) = self.reply.take() {
-                    let _ = reply.send(Err(ErrorKind::Timeout.into()));
-                }
-                return None;
-            }
-            tokio::select! {
-                biased;
-                _ = reply.closed() => {},
-                _ = tokio::time::sleep_until(self.deadline) => {},
-                value = std::future::poll_fn(|cx| { self.started = true; self.future.as_mut().poll(cx) }) => return Some(value),
-            }
-            if !self.started {
-                return Some(Err(ErrorKind::Timeout.into()));
-            }
-            if let Some(reply) = self.reply.take() {
+        Self(Box::pin(async move {
+            if reply.is_closed() || tokio::time::Instant::now() >= deadline {
+                drop(lease);
                 let _ = reply.send(Err(ErrorKind::Timeout.into()));
+                return;
             }
-            None
-        } else {
-            Some(self.future.as_mut().await)
-        }
-    }
-    pub(crate) fn complete(mut self, value: Reply) {
-        let reply = self.reply.take();
-        drop(self);
-        if let Some(reply) = reply {
-            let _ = reply.send(value);
-        }
+            let mut read = std::pin::pin!(read);
+            let mut started = false;
+            let value = tokio::select! {
+                biased;
+                _ = reply.closed() => None,
+                _ = tokio::time::sleep_until(deadline) => None,
+                value = std::future::poll_fn(|cx| {
+                    started = true;
+                    read.as_mut().poll(cx)
+                }) => Some(value),
+            };
+            if let Some(value) = value {
+                drop(lease);
+                let _ = reply.send(value);
+            } else {
+                let _ = reply.send(Err(ErrorKind::Timeout.into()));
+                if started {
+                    let _ = read.await;
+                }
+                drop(lease);
+            }
+        }))
     }
 }
-pub(crate) async fn next(pending: &mut Option<Pending>) -> Option<Reply> {
+
+pub(crate) async fn next(pending: &mut Option<Pending>) {
     match pending {
-        Some(pending) => pending.poll().await,
+        Some(pending) => pending.0.as_mut().await,
         None => std::future::pending().await,
     }
 }
 
+pub(crate) enum Read {
+    Status(Request, oneshot::Sender<Reply>),
+    PermissionRules(Request, oneshot::Sender<permission_rules::Reply>),
+}
+
+impl Read {
+    pub(crate) fn closed(&self) -> bool {
+        match self {
+            Self::Status(_, reply) => reply.is_closed(),
+            Self::PermissionRules(_, reply) => reply.is_closed(),
+        }
+    }
+
+    pub(crate) fn reject(self, code: ErrorKind) {
+        match self {
+            Self::Status(_, reply) => {
+                let _ = reply.send(Err(code.into()));
+            }
+            Self::PermissionRules(_, reply) => {
+                let _ = reply.send(Err(code.into()));
+            }
+        }
+    }
+
+    pub(crate) fn start(
+        self,
+        ops: &super::pump::SessionOps,
+        session_id: &str,
+        busy: bool,
+        cx: ConnectionTo<Agent>,
+        deadline: tokio::time::Instant,
+    ) -> Option<Pending> {
+        let request = match &self {
+            Self::Status(request, _) | Self::PermissionRules(request, _) => request,
+        };
+        if !request.matches(&ops.connection_id, session_id) {
+            self.reject(ErrorKind::Changed);
+            return None;
+        }
+        if matches!(&self, Self::Status(..)) && ops.workspace_access.capability().is_none() {
+            self.reject(ErrorKind::Unavailable);
+            return None;
+        }
+        if busy {
+            self.reject(ErrorKind::Busy);
+            return None;
+        }
+        let Ok(lease) = ops.life.operation(format!("open:{session_id}")) else {
+            self.reject(ErrorKind::Busy);
+            return None;
+        };
+        Some(match self {
+            Self::Status(request, reply) => {
+                Pending::start(request.read(cx), reply, deadline, lease)
+            }
+            Self::PermissionRules(request, reply) => Pending::start(
+                permission_rules::read(request, cx, deadline),
+                reply,
+                deadline,
+                lease,
+            ),
+        })
+    }
+}
+
+struct Owner {
+    request: Request,
+    control: tokio::sync::mpsc::UnboundedSender<super::pump::SessionControl>,
+}
+
 impl AcpManager {
+    fn workspace_read_owner(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+        connection_id: &str,
+        permission_rules: bool,
+    ) -> Result<Owner, AccessError> {
+        let connection = self
+            .session_connection(agent_id, cwd, session_id)
+            .map_err(|_| ErrorKind::Changed)?;
+        if connection.connection_id != connection_id {
+            return Err(ErrorKind::Changed.into());
+        }
+        let available = if permission_rules {
+            permission_rules::supported(&connection)
+        } else {
+            connection.workspace_access.capability().is_some()
+        };
+        if !available {
+            return Err(ErrorKind::Unavailable.into());
+        }
+        let readable = move |entry: &super::pump::SessionEntry| {
+            entry.preview_token.is_none()
+                && !entry.control.is_closed()
+                && (!permission_rules
+                    || (entry.purpose == super::open_purpose::OpenPurpose::Conversation
+                        && entry.permission_rules_scope_verified))
+        };
+        let control = {
+            let entries = connection.sessions.lock().map_err(|_| ErrorKind::Changed)?;
+            let entry = entries
+                .get(session_id)
+                .filter(|entry| readable(entry))
+                .ok_or(ErrorKind::Changed)?;
+            entry.control.clone()
+        };
+        let (manager, agent, directory, session, owner, original_control) = (
+            self.clone(),
+            agent_id.to_owned(),
+            cwd.to_path_buf(),
+            session_id.to_owned(),
+            connection.clone(),
+            control.clone(),
+        );
+        let current_owner = Arc::new(move || {
+            manager
+                .session_connection(&agent, &directory, &session)
+                .is_ok_and(|current| {
+                    current.connection_id == owner.connection_id
+                        && Arc::ptr_eq(&current.state, &owner.state)
+                        && current.sessions.lock().is_ok_and(|entries| {
+                            entries.get(&session).is_some_and(|entry| {
+                                readable(entry) && entry.control.same_channel(&original_control)
+                            })
+                        })
+                })
+        });
+        Ok(Owner {
+            request: Request {
+                connection_id: connection_id.into(),
+                session_id: session_id.into(),
+                cwd: cwd.into(),
+                availability: connection.workspace_access.clone(),
+                current_owner,
+            },
+            control,
+        })
+    }
+
     pub(crate) async fn workspace_access_status(
         &self,
         agent_id: &str,
@@ -338,49 +458,21 @@ impl AcpManager {
         session_id: &str,
         connection_id: &str,
     ) -> Reply {
-        let connection = self
-            .session_connection(agent_id, cwd, session_id)
-            .map_err(|_| ErrorKind::Changed)?;
-        if connection.connection_id != connection_id {
-            return Err(ErrorKind::Changed.into());
-        }
-        if connection.workspace_access.capability().is_none() {
-            return Err(ErrorKind::Unavailable.into());
-        }
-        let control = {
-            let entries = connection.sessions.lock().map_err(|_| ErrorKind::Changed)?;
-            let entry = entries
-                .get(session_id)
-                .filter(|e| e.preview_token.is_none())
-                .ok_or(ErrorKind::Changed)?;
-            entry.control.clone()
-        };
-        let (manager, agent, directory, session, owner) = (
-            self.clone(),
-            agent_id.to_owned(),
-            cwd.to_path_buf(),
-            session_id.to_owned(),
-            connection.clone(),
-        );
-        let current_owner = Arc::new(move || {
-            manager
-                .session_connection(&agent, &directory, &session)
-                .is_ok_and(|c| {
-                    c.connection_id == owner.connection_id && Arc::ptr_eq(&c.state, &owner.state)
-                })
-        });
-        let request = Request {
-            connection_id: connection_id.into(),
-            session_id: session_id.into(),
-            cwd: cwd.into(),
-            availability: connection.workspace_access.clone(),
-            current_owner,
-        };
+        let owner = self.workspace_read_owner(agent_id, cwd, session_id, connection_id, false)?;
+        owner.read(Read::Status).await
+    }
+}
+
+impl Owner {
+    async fn read<T>(
+        self,
+        request: impl FnOnce(Request, oneshot::Sender<Result<T, AccessError>>) -> Read,
+    ) -> Result<T, AccessError> {
         let (result, receive) = oneshot::channel();
-        control
-            .send(super::pump::SessionControl::WorkspaceAccessStatus {
-                request: Box::new(request),
-                result,
+        let current = self.request.current_owner.clone();
+        self.control
+            .send(super::pump::SessionControl::WorkspaceAccessRead {
+                request: Box::new(request(self.request, result)),
                 deadline: tokio::time::Instant::now() + BUDGET,
             })
             .map_err(|_| ErrorKind::Changed)?;
@@ -388,16 +480,15 @@ impl AcpManager {
             .await
             .map_err(|_| ErrorKind::Timeout)?
             .map_err(|_| ErrorKind::Changed)??;
-        let current = self
-            .session_connection(agent_id, cwd, session_id)
-            .map_err(|_| ErrorKind::Changed)?;
-        if current.connection_id != connection_id || !Arc::ptr_eq(&current.state, &connection.state)
-        {
+        if !current() {
             return Err(ErrorKind::Changed.into());
         }
         Ok(value)
     }
 }
+
+#[path = "permission_rules.rs"]
+pub(crate) mod permission_rules;
 
 pub(crate) fn capability(connection: &ManagedConnection) -> Option<Capability> {
     connection.workspace_access.capability()
