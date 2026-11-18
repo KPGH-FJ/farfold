@@ -1,0 +1,203 @@
+{
+  "baseline": "2a4ee8627",
+  "fixture": "/private/tmp/ff-c12-goose-queue.8U7cg6gd",
+  "queueSnapshots": {
+    "before-cold": {
+      "at": "2026-11-18T16:40:38.741+00:00",
+      "nativeId": "20261118_3",
+      "choices": {
+        "model": "nvidia/nemotron-3.5-super-vl:free",
+        "thinking_effort": "off"
+      },
+      "source": "existing",
+      "ownedQueue": {
+        "blocks": [
+          [
+            {
+              "type": "text",
+              "text": "请只回复 FF_C12_N19_GOOSE_B_EXPLICIT。不要运行工具，不要重复上一条任务。"
+            }
+          ]
+        ],
+        "uncertainIndex": null,
+        "outcomeUnknown": true
+      },
+      "activity": {
+        "lastActivityAt": 1795019996577,
+        "ended": false
+      },
+      "aResultAbsent": true
+    },
+    "after-exit": {
+      "at": "2026-11-18T16:40:57.452+00:00",
+      "nativeId": "20261118_3",
+      "choices": {
+        "model": "nvidia/nemotron-3.5-super-vl:free",
+        "thinking_effort": "off"
+      },
+      "source": "existing",
+      "ownedQueue": {
+        "blocks": [
+          [
+            {
+              "type": "text",
+              "text": "请只回复 FF_C12_N19_GOOSE_B_EXPLICIT。不要运行工具，不要重复上一条任务。"
+            }
+          ]
+        ],
+        "uncertainIndex": null,
+        "outcomeUnknown": true
+      },
+      "activity": {
+        "lastActivityAt": 1795019996577,
+        "ended": false
+      },
+      "aResultAbsent": true
+    },
+    "cold-paused": {
+      "at": "2026-11-18T16:41:21.232+00:00",
+      "nativeId": "20261118_3",
+      "choices": {
+        "model": "nvidia/nemotron-3.5-super-vl:free",
+        "thinking_effort": "off"
+      },
+      "source": "existing",
+      "ownedQueue": {
+        "blocks": [
+          [
+            {
+              "type": "text",
+              "text": "请只回复 FF_C12_N19_GOOSE_B_EXPLICIT。不要运行工具，不要重复上一条任务。"
+            }
+          ]
+        ],
+        "uncertainIndex": null,
+        "outcomeUnknown": true
+      },
+      "activity": {
+        "lastActivityAt": 1795019996577,
+        "ended": false
+      },
+      "aResultAbsent": true
+    },
+    "after-continue": {
+      "at": "2026-11-18T16:42:27.857+00:00",
+      "nativeId": "20261118_3",
+      "choices": {
+        "model": "nvidia/nemotron-3.5-super-vl:free",
+        "thinking_effort": "off"
+      },
+      "source": "existing",
+      "ownedQueue": {
+        "blocks": [],
+        "uncertainIndex": null,
+        "outcomeUnknown": true
+      },
+      "activity": {
+        "lastActivityAt": 1795020091253,
+        "ended": true
+      },
+      "aResultAbsent": true
+    }
+  },
+  "processEvents": [
+    {
+      "at": "2026-11-18T16:39:01.343+00:00",
+      "tasks": {
+        "a": {
+          "pids": {},
+          "processes": {},
+          "result": null,
+          "cwd": {}
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T16:39:11.758+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 47979,
+            "child": 47981
+          },
+          "processes": {
+            "shell": "47979 47755 47979 S    Thu Nov 19 00:39:11 2026     /bin/sh ./task.sh",
+            "child": "47981 47979 47979 S    Thu Nov 19 00:39:11 2026     /bin/sleep 120"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-goose-queue.8U7cg6gd",
+            "child": "/private/tmp/ff-c12-goose-queue.8U7cg6gd"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T16:40:04.260+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 47979,
+            "child": 47981
+          },
+          "processes": {
+            "shell": null,
+            "child": null
+          },
+          "result": null,
+          "cwd": {}
+        }
+      }
+    }
+  ],
+  "wire": {
+    "warm": {
+      "file": "protocol-v1-1795019930740-4.jsonl",
+      "length": 55,
+      "sha256": "e53621b773e98785b03d6033365b1deca890142a10d13e55c44201abc343f506",
+      "relevantLines": [
+        {
+          "line": 8,
+          "ts": 1795019930877,
+          "event": "session/new"
+        },
+        {
+          "line": 16,
+          "ts": 1795019949797,
+          "event": "session/prompt"
+        },
+        {
+          "line": 47,
+          "ts": 1795020004139,
+          "event": "session/cancel"
+        }
+      ]
+    },
+    "cold": {
+      "file": "protocol-v1-1795020066920-0.jsonl",
+      "length": 42,
+      "sha256": "9a660e502cc75c50e505abaa45c094f083b3570af1f98aff4c28f4a4c5e53111",
+      "relevantLines": [
+        {
+          "line": 8,
+          "ts": 1795020067006,
+          "event": "session/load"
+        },
+        {
+          "line": 18,
+          "ts": 1795020089065,
+          "event": "session/prompt"
+        }
+      ]
+    }
+  },
+  "coldPausedWirePrefix": {
+    "rows": 17,
+    "sha256": "18d6f3236cf6bb2c17e3bb526fafcf3df2437544b5b1652c5ea968c2e0985c6d"
+  },
+  "filesAfterExitAndAfterContinueHaveSameSha256": {
+    "task.sh": "bf5d068a3d305a1895c217eb6e6b0d1f4d29fb80a13e48083d6c33fa2ce06554",
+    "shell.pid": "ac256830f2f8e03c1c317a52d2030c4a67619b3780183d274dbe003abcc4f4e9",
+    "child.pid": "82df3264466d855978f6be333e479b83caaceb4963066e92ff16ff935e42250b"
+  }
+}
