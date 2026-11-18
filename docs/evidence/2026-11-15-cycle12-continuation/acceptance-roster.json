@@ -353,15 +353,16 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧多片段实测未取得，不当做已支持的使用结果。\n2026-11-18 已有 MiMo 设置，两条真实 Bash 单次审批，B 原工具成功，实际写出独立结果，Farfold 显示真实标记。\n2026-11-18 只读冷开 B，原工具成功及 stdout 保持。文件与输出报告 0 个文件位置。通过打开文件手动选取原目录 result.txt，正式预览内容及原 31 字节摘要核合。",
-          "remaining": "按原工具步骤直接定位冷开成品、其他工具、提问、审批拒绝、技能及更多任务类型待验。",
+          "observed": "旧多片段实测未取得，不当做已支持的使用结果。\n2026-11-18 已有 MiMo 设置，两条真实 Bash 单次审批，B 原工具成功，实际写出独立结果，Farfold 显示真实标记。\n2026-11-18 只读冷开 B，原工具成功及 stdout 保持。文件与输出报告 0 个文件位置。通过打开文件手动选取原目录 result.txt，正式预览内容及原 31 字节摘要核合。\n2026-11-18 同 B 同 MiMo 一次官方 Read 读取原 result.txt。正常退出重开后，从 Read 历史工具的原路径按钮直接预览原 31 字节成品，脚本、启动记录和成品摘要及修改时间一致。原 Bash 回放只报告命令输出，所核版本没有成品位置。",
+          "remaining": "原 Bash 步骤直接关联须官方报告该工具的精确成品位置。结构化写入后的直接交付、提问、审批拒绝、技能及更多任务类型待验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
             "docs/evidence/2026-11-10-notification-and-selected-search/README.md",
             "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md",
-            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-冷开取回结果"
+            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-冷开取回结果",
+            "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-通过官方-read-冷开直达同一成品"
           ],
           "status": "实测分项通过"
         },
@@ -755,14 +756,15 @@
           "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n本轮实测：一次取消后 Farfold 显示已停止和步骤已结束，同一 shell 与 sleep 仍继续，约一分钟后自然写下完成标记。\n2026.11.13 Auto 前台复验，正式按钮后 380 毫秒已观察到原 Shell 与 sleep 同时退出，55 秒后没有完成标记。界面步骤结果未知。 正常退出后冷开同一对话，原服务与 Auto 保持，明确短消息正确报回首条独有记号。原请求未自动重发。\n2026-11-18 只读核对原双任务，B 厂商终端原件对应原命令与目录，退出码为 0；确认 A 实际进程退出，A 实时与原记录仍缺同一工具终态。",
-          "remaining": "原前台 Shell/子进程已停止并同原对象续答；持久后台 Shell 的官方精确停止和工具终态未证。",
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n本轮实测：一次取消后 Farfold 显示已停止和步骤已结束，同一 shell 与 sleep 仍继续，约一分钟后自然写下完成标记。\n2026.11.13 Auto 前台复验，正式按钮后 380 毫秒已观察到原 Shell 与 sleep 同时退出，55 秒后没有完成标记。界面步骤结果未知。 正常退出后冷开同一对话，原服务与 Auto 保持，明确短消息正确报回首条独有记号。原请求未自动重发。\n2026-11-18 只读核对原双任务，B 厂商终端原件对应原命令与目录，退出码为 0；确认 A 实际进程退出，A 实时与原记录仍缺同一工具终态。\n2026-11-18 核对现用 Cursor 2026.11.13 实现：加载恢复会重写会话元数据，工具回放重新编号并标 completed，无法认定 A 原工具真实终态。",
+          "remaining": "等原工具 ID 的明确终态，或能保留会话、请求、工具归属的官方只读查询；持久后台 Shell 仍需官方精确停止入口。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-15-cycle12-followup/README.md",
             "docs/evidence/2026-11-15-cycle12-followup/cursor-foreground-pair-2026-11-16.json",
-            "docs/evidence/2026-11-18-cycle12-cursor-stop-receipt/README.md"
+            "docs/evidence/2026-11-18-cycle12-cursor-stop-receipt/README.md",
+            "docs/evidence/2026-11-18-cycle12-cursor-stop-receipt/README.md#a-原工具终态的官方入口核对"
           ],
           "status": "前台停止分项通过"
         },

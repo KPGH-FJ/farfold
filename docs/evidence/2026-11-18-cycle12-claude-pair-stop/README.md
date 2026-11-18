@@ -38,3 +38,15 @@ A 对应协议 `protocol-v1-1795002170981-0.jsonl` 记录一次 `session/load`�
 同次重启后，从侧栏只读打开原 B，读取成功工具步骤、命令 `/bin/sh ./task.sh` 与原完成标记。冷开的「文件与输出」报告 0 个文件位置。通过「打开文件」从原目录手动选取 `result.txt`，Farfold 预览显示同一完成标记，磁盘 31 字节及 SHA-256 与上一批一致。B 的协议 `protocol-v1-1795002259433-1.jsonl` 为一次加载、零新建、零发送。
 
 运行结束时看到了「本轮产物 1」。该计数也包含命令输出，当时未展开列表核文件位置。这次恢复了 Bash 的文本输出，原工具详情未给出文件直达入口。Claude 官方的文件变更报告范围不含 Bash，自动关联仍需原回放中的结构化文件位置或原对话报告的文件链接。[产物计数](../../../src/runtime/reported_artifacts.ts) · [Claude 官方报告范围](https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.107.0/docs/air-extensions.md#agent-file-change-report)
+
+## B 通过官方 Read 冷开直达同一成品
+
+原 Bash 工具 `call_d8ebfd3ab6bd4912a82ceaaa` 保存了 `command`、`timeout` 和对应成功结果，stdout 只有完成标记，结果没有 `result.txt` 的精确位置。所用 0.107.0 的 Bash 回放由官方报告器提供命令、输出和结果。对照 0.108.0，新版补了前台 Bash 输出流，仍无成品位置。官方 Read 则报告工具的原路径和行号，Farfold 已支持通过该位置按钮预览文件。[Bash 实现](https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.107.0/src/tool-calls/reporters/bash.ts#L16-L84) · [0.108.0 发布说明](https://github.com/agentclientprotocol/claude-agent-acp/releases/tag/v0.108.0) · [Read 实现](https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.107.0/src/tool-calls/reporters/read.ts#L16-L35) · [Farfold 工具位置](../../../src/components/thread-items.tsx)
+
+19:55:11 从正式 Farfold 的同一 B（原 ID `7040ca23-7982-4a71-ad08-079c8f4fa53c`，已有小米设置）发送一条只读指令。19:55:17 Claude Code 的官方 Read `call_3e87eee110be4a6794d7e2f2` 只读取原 B 目录的 `result.txt`。工具结果及 19:55:19 助手回复均为预期完成标记，服务响应为 `mimo-v2.6-flash`。协议 `protocol-v1-1795002259433-1.jsonl` 在本批窗口内为一次手动发送，零新建、零权限请求。原 Bash 调用仍只有一次。
+
+19:56 正常退出并确认原进程停止，重启同一正式版。侧栏打开同一 B，从新的 Read 历史工具步骤点绝对路径按钮，直接预览同一 `result.txt`。界面读到准确标记和另存入口。原 Bash 历史步骤仍只呈现命令结果。冷开协议 `protocol-v1-1795002984619-0.jsonl` 为一次加载、零新建、零发送。原对话 ID、创建时间、脚本、启动记录和 31 字节成品的修改时间、SHA-256 均与本批开始一致。本批沿用现有实现，无应用代码改动。
+
+小米同一脱敏 Key 的 `mimo-v2.6-flash` 日用量由 19:54:40 的 12 次、115,352 Token、¥0.038739 变为 19:57:27 的 15 次、153,421 Token、¥0.040746，其他脱敏 Key 的同模型次数保持 46。此次仅有一条用户消息，日用量聚合了该工具交互窗口的 3 次推理。[小米日用量口径](https://mimo.mi.com/docs/zh-CN/api/asset/consumption-get)
+
+现有工具文件位置、成果来源和产物计数的三个定向测试文件共 37 项通过。该工程检查与实际冷开记录分别核对。

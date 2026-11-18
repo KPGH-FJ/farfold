@@ -212,6 +212,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 
 ### ARCH-44
 
+2026-11-18 Cursor A 官方入口续核。现用 2026.11.13 加载会写会话元数据，回放重新生成工具 ID 并统报 completed。A 进程退出仍有正式证据，原工具终态需官方确切回执或可核归属的只读入口。[官方入口核对](evidence/2026-11-18-cycle12-cursor-stop-receipt/README.md#a-原工具终态的官方入口核对)
+
 2026-11-18 复验已停止的 Claude A 正常退出后重开，原工具步骤保留，原 ID 按保存的 MiMo 续答；无自动重跑或重发。同批只读补核 Cursor 的 B 退出码 0，A 工具终态仍未知。 [Claude 冷开](evidence/2026-11-18-cycle12-claude-pair-stop/README.md#被停止的-a-冷开续答) · [Cursor 回执](evidence/2026-11-18-cycle12-cursor-stop-receipt/README.md)
 
 2026-11-18 正式 Claude 同一 MiMo 配置、两个独立目录均单次批准原 Bash。只在 A 点停止，A Shell 与子进程退出，B 按原标记交付。Autohand 旧样本只读核得 B 的原工具成功及 A 终态仍缺，原实际子进程停止失败保持。 [Claude 实停](evidence/2026-11-18-cycle12-claude-pair-stop/README.md) · [Autohand 回执](evidence/2026-11-18-cycle12-autohand-stop-receipt/README.md)
@@ -667,6 +669,8 @@ e32正式所选历史读取可Tab聚焦执行并Enter启动；匹配文字弹窗
 
 ### P18
 
+2026-11-18 Claude B 的原 Bash 记录只有命令和输出，无成品精确位置。沿原 MiMo 只用一次官方 Read 读取同一文件，冷开从 Read 历史步骤直接打开原 31 字节成品，摘要和修改时间保持。Bash 原步骤的直接入口仍需官方成品位置。[正式复验](evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-通过官方-read-冷开直达同一成品)
+
 2026-11-18 Claude B 冷开恢复 Bash 步骤与 stdout 标记。「文件与输出」报告 0 个位置，手动在原目录选择成品后已从 Farfold 预览，原 31 字节摘要一致。直接关联原工具仍待适用的结构化文件位置。[冷开回执](evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-冷开取回结果)
 
 2026-11-18 Grok Build 沿已选 Grok 4.7／Low 一次手动新建任务，一次写入批准。本轮产物可打开 106 字节成品。正常保存退出，再从搜索冷开同一原对话，从原工具步骤打开同一个文件，原件和成品摘要核合，冷开无新建或发送。冷开未见「本轮产物」入口，其他工作、权限和恢复条件继续验。 [正式证据及剩余条件](evidence/2026-11-18-cycle12-copilot-grok/README.md#grok-build-成品冷开)
@@ -944,7 +948,7 @@ Goose实验SQLite打开失败、Kilo实验临时子进程判定属于夹具调�
 
 ## 第 12 周期待配合
 
-Copilot 工具终态、Dirac 正文和撤回、Cline 精确目录列表、Pi 网页工具和回执、Qoder 默认历史位置与实时工具终态、MiniMax 后台新版，以及 Amp 显式模型及未映射线程均列有[官方复验条件](evidence/2026-11-18-cycle12-copilot-grok/README.md#等待官方的条件)。两家按用户要求暂缓见下。
+Copilot 与 Cursor 工具终态、Claude 原 Bash 成品位置、Dirac 正文和撤回、Cline 精确目录列表、Pi 网页工具和回执、Qoder 默认历史位置与实时工具终态、MiniMax 后台新版，以及 Amp 显式模型及未映射线程均列有[官方复验条件](evidence/2026-11-18-cycle12-copilot-grok/README.md#等待官方的条件)。两家按用户要求暂缓见下。
 
 2026-11-17 用户允许 CodeBuddy 单独采用 Hy4 / On、MiniMax 用小米 MiMo 首答及原配置续答，并授权继续 Mistral Vibe 实测。这些路径已有实答。旧 MiniMax M2.7 无额度，保留该旧会话的原配置，恢复额度后再验。siGit 已按用户决定移出首发。
 

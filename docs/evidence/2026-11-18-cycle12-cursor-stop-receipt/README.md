@@ -19,3 +19,11 @@ B 的厂商终端原件补证了另一条任务的实际成功。A 的前台进�
 | `~/.cursor/projects/private-tmp-farfold-c12-cursor-pair-e-uc93b4-bravo/terminals/837209.txt` | B 终端回执，第 2–7、12–14 行          | `a05d3713035eff0269903dbaad9a44ddccac60e3e4af8fe29f0a0e74a6661741` |
 | `~/Library/Logs/Farfold/protocol-v1-1794801847981-1.jsonl`                                   | A 原请求、审批及停止，第 11、41–46 行 | `3e3e08fa1188bc57afe9e09acee08772570fdcbfc5209c62a94737ac2f9b8176` |
 | `~/Library/Logs/Farfold/protocol-v1-1794801818662-0.jsonl`                                   | B 原请求及完成，第 11、37–41、120 行  | `95c054d006e790500fb3ecc588c8b1e133822f92b5bf633cb53025de0c68f0c8` |
+
+## A 原工具终态的官方入口核对
+
+仅针对原会话 `54d3940b-2b4b-4ceb-9e99-15c14ad38907`。核对目录登记的 Cursor 2026.11.13，macOS arm64 厂商归档为 `2026.11.13-eacade1`。本机打开归档解包后的 `~/Library/Application Support/ai.farfold.desktop/agent-installations/agent-registry%3Acursor/install-1iFE3v/dist-package/8104.index.js`，该文件 SHA-256 为 `6605d145643e8190df2b5250bbef41a54d96473baab88c49e3dc9c0915a85e0f`。 [原登记](https://raw.githubusercontent.com/agentclientprotocol/registry/5f9c6347acda6c4a9ff91eadb0452b56ccf883d5/cursor/agent.json) · [厂商归档](https://downloads.cursor.com/lab/2026.11.13-eacade1/darwin/arm64/agent-cli-package.tar.gz)
+
+- **加载会写入。** `loadSession` 认证后打开原会话存储、读取原模型，并在恢复分支调用 `writeFile` 重写原 `meta.json`。后续初始化还可能迁移已保存的 ACP 模型选项。A 的原工作目录现已不存在。此次未执行加载、未替换目录。
+- **回放重新编号。** `replayAgentTurn` 用轮次和步骤索引生成 `replay-${turnIndex}-${stepIndex}`。回放工具更新统一写入 `status: completed`，单看这个状态无法把回执归到原工具 ID，也无法区分命令成功与被中止。Cursor CLI 的正常回放入口为 `session/load`。SDK 的会话检查文档覆盖 SDK 服务及其保存的跟踪文件，当前未找到可按该本机 ACP 原会话和工具 ID 查终态的公开接口。 [Cursor ACP](https://cursor.com/docs/cli/acp) · [Cursor CLI 命令](https://cursor.com/docs/cli/reference/parameters) · [SDK 会话检查](https://cursor.com/docs/agent-sdk/reference/cli#inspect-a-session)
+- **复验条件。** A 的 OS 前台进程退出证据保持，原工具结果仍未知。需 Cursor 为原 `toolCallId` 发出可核归属的明确终态，或开放按同一原会话、请求和工具查询的只读接口。此次只读核对同一 A 的证据与安装代码，零启动、零打开或恢复会话、零模型请求，未写入 Agent 历史或配置。 [ACP 工具状态](https://agentclientprotocol.com/protocol/v1/tool-calls)
