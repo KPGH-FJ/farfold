@@ -40,7 +40,7 @@
 [当前状态](../docs/status.md)维护分项证据与外部依赖。第8、10、11周期按阶段范围收口，第9周期 Windows 后置。
 
 1. **先完成 macOS。** 按[21家](../docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)续验。Kilo、CodeBuddy、Devin 双前台停止及冷续答有证。Dirac 0.6.0 短前台已停子进程，原正文回放待官方。其余按[待配合事项](../docs/status.md#第-12-周期待配合)和实际缺口续验。Gemini CLI 与 Antigravity 暂缓。
-2. **官方替代与复验。** OpenCode、Goose 已补双前台停止及冷恢复。Mistral 已验单次拒绝。MiniMax 0.7.7 已验启动，原目录仍 0.2.7。Amp 双前台实停及冷开已验。Pi 网页及正式审批待续。Qoder 默认历史提示已修，原位置待官方；Cline 列表仍待。Copilot 新版首答已验，停止后的官方关闭已补受控证；旧错误反馈与 Amp 显式 MiMo 续答[等待官方](../docs/evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件)。
+2. **官方替代与复验。** OpenCode、Goose 已补双前台停止及冷恢复。Mistral 已验单次拒绝。MiniMax 0.7.7 已验启动，原目录仍 0.2.7。Amp 双前台实停及冷开已验。Pi 网页及正式审批待续。Qoder 默认历史提示已修，原位置待官方；Cline 列表仍待。Copilot 新版续答、读写和单连接关闭已验，子进程退出原件待补。旧错误反馈与 Amp 显式 MiMo 续答[等待官方](../docs/evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件)。
 3. **再回到 Windows。** macOS 能力验收完成后，续第9周期及受影响的平台回归。第13–14周期仍以用户认可能力为前提。
 
 ## 首发逐家验收

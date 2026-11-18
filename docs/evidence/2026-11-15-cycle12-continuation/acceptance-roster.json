@@ -6,19 +6,19 @@
     "准备未齐": 11,
     "入口有证": 16,
     "受阻": 5,
-    "分项通过": 18,
+    "分项通过": 19,
     "未测": 8,
     "原账号实答": 6,
     "查找冷开续答通过": 7,
     "已选模型有实答": 14,
     "可建对话": 1,
-    "实测分项通过": 19,
+    "实测分项通过": 20,
     "前台停止分项通过": 3,
     "已有设置实答": 5,
     "双前台分项通过": 15,
     "停止及冷续答通过": 11,
     "实测失败": 5,
-    "已选服务有实答": 2,
+    "已选服务有实答": 3,
     "冷开续答分项通过": 7
   },
   "rows": [
@@ -224,11 +224,12 @@
           "status": "原账号实答"
         },
         "S3": {
-          "observed": "默认范围返回空列表\n最新复验：已从正常入口冷开同一原对话，原 fantail 按旧自建标记准确续答。 从正常对话库按原工作目录查找，厂商列表标出同一原对象已加入。",
+          "observed": "默认范围返回空列表\n最新复验：已从正常入口冷开同一原对话，原 fantail 按旧自建标记准确续答。 从正常对话库按原工作目录查找，厂商列表标出同一原对象已加入。\n2026-11-18 补录 11-17：另一条被停的自有原对话冷开读到历史。一次手动续问无可见答复，原生仅新增一条用户消息。此前另一原对话的成功仍有效。",
           "remaining": "分页、其他真实历史样本及未加入时的带入流程按原条件复验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-pre-send/README.md"
+            "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "查找冷开续答通过"
         },
@@ -260,11 +261,12 @@
           "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n2026-11-16 续查：A 的回复停止且原 Shell 退出；约 9.5 秒后其 sleep 子进程仍活跃。工具结果未知正确保留。B 独立完成。",
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n2026-11-16 续查：A 的回复停止且原 Shell 退出；约 9.5 秒后其 sleep 子进程仍活跃。工具结果未知正确保留。B 独立完成。\n2026-11-18 补录 11-17：同原样本冷开后一次手动续问，等待 167.454 秒无回复，一次取消后无该请求终态。随后独立的连接清理不计此次停止。",
           "remaining": "官方前台停止覆盖实际子进程；之后验原对象冷续答、草稿附件和无重发。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "实测失败"
         },
@@ -906,7 +908,7 @@
           "status": "实测分项通过"
         },
         "S5": {
-          "observed": "既有免费模型实答和文件写入样本，回复有杂字/重试，另一旧例多一个可见步骤。\n本轮实测：单次短消息有正文，回合完成，实际多回一段，精确短消息验收失败。\n2026-11-17 原对话仅发一条无工具续问，准确返回原首条验收标记。此前短答额外文字保留为旧负例。\n2026-11-17 两次写入审批都指向测试 result.txt，但拟写内容均缺所需末尾 LF。单次拒绝后无成品，保留原件。\n2026-11-17 官方命令一次批准后实际得到 74 字节精确成品，有末尾 LF，原件保持；从 Farfold 手动打开。",
+          "observed": "既有免费模型实答和文件写入样本，回复有杂字/重试，另一旧例多一个可见步骤。\n本轮实测：单次短消息有正文，回合完成，实际多回一段，精确短消息验收失败。\n2026-11-17 原对话仅发一条无工具续问，准确返回原首条验收标记。此前短答额外文字保留为旧负例。\n2026-11-17 两次写入审批都指向测试 result.txt，但拟写内容均缺所需末尾 LF。单次拒绝后无成品，保留原件。\n2026-11-17 官方命令一次批准后实际得到 74 字节精确成品，有末尾 LF，原件保持；从 Farfold 手动打开。\n2026-11-18 补录 11-17：0.6.0 官方隔离探针验证可通过会话定位所属目录，列出和撤回单条规则。同目录的其他规则及其他目录规则保持。SDK 和正式界面尚未验。",
           "remaining": "原完整写入失败保持，准确的成品直达入口及更多文件、技能和审批条件续验。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
@@ -915,7 +917,8 @@
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md",
             "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md",
-            "docs/evidence/2026-11-17-cycle12-approval-and-lf/README.md"
+            "docs/evidence/2026-11-17-cycle12-approval-and-lf/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -942,7 +945,7 @@
           "status": "前台停止分项通过"
         },
         "S8": {
-          "observed": "旧回复重试与冷开失败均有证据。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 正常文件写入审批可查看完整输入，逐次拒绝反馈且写入未发生。\n2026-11-17 官方命令审批卡能看到实际命令，单次批准后完成。手动打开精确文件可核，命令结果未提供成品直达。\n2026-11-17 新版官方停止与原子进程退出在本样本互核；已停止对话缺可读正文，保留恢复错误。",
+          "observed": "旧回复重试与冷开失败均有证据。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 正常文件写入审批可查看完整输入，逐次拒绝反馈且写入未发生。\n2026-11-17 官方命令审批卡能看到实际命令，单次批准后完成。手动打开精确文件可核，命令结果未提供成品直达。\n2026-11-17 新版官方停止与原子进程退出在本样本互核；已停止对话缺可读正文，保留恢复错误。\n2026-11-18 补录 11-17：Dirac 通过原会话定位目录规则，仅有官方原始协议的受控样本，正式 Farfold 未接入。",
           "remaining": "当前准确回读、失败原因和下一步。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
@@ -951,7 +954,8 @@
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
             "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md",
             "docs/evidence/2026-11-17-cycle12-approval-and-lf/README.md",
-            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md"
+            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "入口有证"
         }
@@ -1134,7 +1138,7 @@
     {
       "agentId": "github-copilot-cli",
       "runtime": "2026-11-15 盘点：登记及 npm-loader 包 1.0.89，保存握手 1.0.107，全局保存 Auto / Agent。2026-11-16 正式版原样本带入时，Farfold 索引由 0 条增至 1 条；同一原对话续答后索引仍唯一。 2026-11-17 macOS 正常更新并选用官方 1.0.112，旧 1.0.89 仍可选。",
-      "liveAction": "用户确认原账号。从原目录带入同一 ID 及恢复已有服务/Auto 成功。首次续问报 Auto 路由网络错误，误显示完成；随后原账号、原 ID、原 Auto 实答通过。旧失败的准确反馈仍缺官方信号。 新版同 ID 冷开、认得原 Auto，单次续答超过五分钟未回，停止未确认。登录入口补强已在正式版复验。 现选 1.0.112 新建沿用已有设置及 Auto 实答，冷开原样本提示原配置未确认。官方关闭入口实线受控通过，真实新对话自然完成未进入停止。",
+      "liveAction": "1.0.112 新版自有 Auto 对话冷开续答、批准后文件读写、两条任务重叠且只取消 A 有分项证据。较早未确认请求已走官方单连接关闭，原结果未知。新版子进程退出原件和旧 Auto 错误反馈继续验。",
       "standards": {
         "S1": {
           "observed": "旧 1.0.89 真实打开官方登录、暂离和取消；1.0.106 另有实际登录终端和空凭据拒绝受控检查。\n2026-11-15 盘点：程序可执行，登记版本 1.0.89。登记所存握手版本 1.0.107。\n2026-11-17 续验：同一登记更新为官方 1.0.112。先复现官方终端入口灰置，再于 86bb5f853 确认可选且出现启动终端按钮，取消临时选择。\n2026-11-17 续验：新版正式普通新建取得 Auto 可用设置，手动首答成功。",
@@ -1163,8 +1167,8 @@
           "status": "原账号实答"
         },
         "S3": {
-          "observed": "旧正式从目录精确发现原 ID、读回正文并按 Auto 依赖原前文续答。\n本轮实测：正常入口找到自建原条目，核到原问题和原回复。当前返回 Auto，原选择无法确认，预览只读，零发送。\n2026-11-16 续验：正式版从原目录找到、预览并带入同一原 ID，单条索引和原正文均核同。一次依赖上下文的续问因 Auto 路由失败未通过。\n2026-11-16 续验：从正式版侧栏冷开同一个原 ID，只发一次依赖原上下文的续问，准确返回原标记，零新建，原索引唯一。\n2026-11-17 续验：1.0.112 从普通搜索冷开同一原 ID 并恢复原正文及 Auto。单次手动续问超窗，退出后冷开无自动重发。\n2026-11-17 续验：本批旧原样本仍可读正文，配置确认失败，未发送。",
-          "remaining": "确认新版原配置并手动续答；其他原目录和跨范围发现仍待。",
+          "observed": "旧正式从目录精确发现原 ID、读回正文并按 Auto 依赖原前文续答。\n本轮实测：正常入口找到自建原条目，核到原问题和原回复。当前返回 Auto，原选择无法确认，预览只读，零发送。\n2026-11-16 续验：正式版从原目录找到、预览并带入同一原 ID，单条索引和原正文均核同。一次依赖上下文的续问因 Auto 路由失败未通过。\n2026-11-16 续验：从正式版侧栏冷开同一个原 ID，只发一次依赖原上下文的续问，准确返回原标记，零新建，原索引唯一。\n2026-11-17 续验：1.0.112 从普通搜索冷开同一原 ID 并恢复原正文及 Auto。单次手动续问超窗，退出后冷开无自动重发。\n2026-11-17 续验：本批旧原样本仍可读正文，配置确认失败，未发送。\n2026-11-18 补录 11-17：自有新版样本冷开同一原 ID，一次手动续问准确答出原文件上下文。较早十月原样本重查出 Auto，但单次续问超窗、结果未知。",
+          "remaining": "十月原样本的新版有效续答、跨目录和其他原目录发现仍待。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-copilot-list/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/copilot-formal-e954-history-continuation-summary.json",
@@ -1172,52 +1176,59 @@
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
             "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
-            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "实测分项通过"
         },
         "S4": {
-          "observed": "正式旧 Auto 原选择及实际回复均已有证据，原生模型曾为 gpt-6-luna；历史菜单只提供 Auto。\n2026-11-16 续验：从正式版核原已有服务和 Auto，保存原设置后读取确认一致。实际续问发生 Auto 路由失败。\n2026-11-16 续验：同一原对话沿用已有服务和保存的 Auto 完成一次续答。\n2026-11-17 续验：官方 1.0.112 从现有服务读到并显示原 Auto，但该次没有实答。\n2026-11-17 续验：1.0.112 普通新建选原 Auto，一条自有短问成功；原助手回合的实际模型为 gpt-6-luna。",
-          "remaining": "旧对话配置恢复、模型切换及推理设置实际采用待验。",
+          "observed": "正式旧 Auto 原选择及实际回复均已有证据，原生模型曾为 gpt-6-luna；历史菜单只提供 Auto。\n2026-11-16 续验：从正式版核原已有服务和 Auto，保存原设置后读取确认一致。实际续问发生 Auto 路由失败。\n2026-11-16 续验：同一原对话沿用已有服务和保存的 Auto 完成一次续答。\n2026-11-17 续验：官方 1.0.112 从现有服务读到并显示原 Auto，但该次没有实答。\n2026-11-17 续验：1.0.112 普通新建选原 Auto，一条自有短问成功；原助手回合的实际模型为 gpt-6-luna。\n2026-11-18 补录 11-17：新版自有样本冷开续答沿用 Auto，同一官方会话报告实际模型为 gpt-6-luna。",
+          "remaining": "其他原历史的配置恢复、模型切换及推理设置实际采用待验。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
             "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
-            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧正式同自测一次审批拒绝，一次批准且固定命令有专用标记与退出码。",
-          "remaining": "当前文件、技能和权限的完整真实链路未实测。",
-          "sources": ["docs/evidence/2026-11-06-phase1-approval/README.md"],
-          "status": null
+          "observed": "旧正式同自测一次审批拒绝，一次批准且固定命令有专用标记与退出码。\n2026-11-18 补录 11-17：自有样本原生记录 view 和 apply_patch 成功，Farfold 一次批准后收到完成。昨晚现场见从本轮打开 45 字节成品并独立核原件，临时原件已失。",
+          "remaining": "补可复核文件原件，继续验技能、其他权限和完整交付组合。",
+          "sources": [
+            "docs/evidence/2026-11-06-phase1-approval/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
+          ],
+          "status": "实测分项通过"
         },
         "S6": {
-          "observed": "旧 1.0.107 正式同目录 A 明确停止并单独关闭，B 的命令及管道保持并完成。",
-          "remaining": "当前注册运行身份还需核准；其他并行配置和权限组合分别验。",
+          "observed": "旧 1.0.107 正式同目录 A 明确停止并单独关闭，B 的命令及管道保持并完成。\n2026-11-18 补录 11-17：两条正式请求重叠，只取消 A，原生记录 A 为 user_abort，B 的 Bash 和助手结论自然结束。两条真实命令均有官方记录，现场子进程退出快照暂不可重读。",
+          "remaining": "复核 A 原工作及子进程退出原件，补其他配置、权限与后台隔离组合。",
           "sources": [
             "docs/evidence/2026-11-07-stage1-formal-acceptance/copilot-close-installed.json",
-            "docs/evidence/2026-11-06-phase1-isolation/README.md"
+            "docs/evidence/2026-11-06-phase1-isolation/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
-          "status": null
+          "status": "分项通过"
         },
         "S7": {
-          "observed": "旧有界 shell 与 sleep 实际提前结束，正式未知标记和草稿冷开保持，旧同 ID 工具无终态。\n2026-11-17 续验：1.0.112 原 Auto 续问等待超过五分钟后只点一次停止，未收到结束回执。退出冷开准确提示原请求尚未确认，零重发。\n2026-11-17 续验：1.0.112 原请求卡在厂商启动阶段，旧历史未追加；随后退出应用回收了 Farfold 自有进程组。实际停止按钮仍未获得终态；官方声明的活动对话关闭另待实测。\n2026-11-17 续验：原未确认停止的官方关闭入口实现并实线受控验证。新版普通请求自然完成，实际未知后关闭未触发。",
-          "remaining": "新版真实停止及关闭、后台原工具、断线和待发保护继续。",
+          "observed": "旧有界 shell 与 sleep 实际提前结束，正式未知标记和草稿冷开保持，旧同 ID 工具无终态。\n2026-11-17 续验：1.0.112 原 Auto 续问等待超过五分钟后只点一次停止，未收到结束回执。退出冷开准确提示原请求尚未确认，零重发。\n2026-11-17 续验：1.0.112 原请求卡在厂商启动阶段，旧历史未追加；随后退出应用回收了 Farfold 自有进程组。实际停止按钮仍未获得终态；官方声明的活动对话关闭另待实测。\n2026-11-17 续验：原未确认停止的官方关闭入口实现并实线受控验证。新版普通请求自然完成，实际未知后关闭未触发。\n2026-11-18 补录 11-17：较早停止未确认后，官方同一原对象关闭记录匹配，原结果仍未知。另一新版原对话收到 user_abort，冷开后手动续答成功。原生工具无结束报告，现场子进程退出原件暂不可重读。",
+          "remaining": "旧样本停止未知，补新版原工作及子进程退出原件、工具终态及后台停止。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-isolation/README.md",
             "docs/evidence/2026-11-07-stage1-formal-acceptance/copilot-close-installed.json",
             "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
             "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md",
-            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "实测失败"
         },
         "S8": {
-          "observed": "旧正式显示回复已停和工具待确认；当时实际导出把工具写成等待中。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续验：官方会话记录出现 session.error，ACP 同时刻只显示错误正文，未发协议错误。Farfold 标题下此次显示已完成，实际未获得预期回复。\n2026-11-16 续验：Auto 再次使用时实际实答，第一次失败仍存在错误文字映射，官方 SDK 的整段读取不能确认原失败归属。\n2026-11-17 官方目录已有 1.0.112，本机现选 1.0.89。新版发布说明未确认旧失败反馈已修。\n2026-11-17 续验：新版此次无答复，停止界面与冷开均保留结果未知，本次没有取得旧版那类官方失败终态。\n2026-11-17 续验：新版正常首答显示完成；原对话仍明确提示结果未知及不能确认原设置。",
+          "observed": "旧正式显示回复已停和工具待确认；当时实际导出把工具写成等待中。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 续验：官方会话记录出现 session.error，ACP 同时刻只显示错误正文，未发协议错误。Farfold 标题下此次显示已完成，实际未获得预期回复。\n2026-11-16 续验：Auto 再次使用时实际实答，第一次失败仍存在错误文字映射，官方 SDK 的整段读取不能确认原失败归属。\n2026-11-17 官方目录已有 1.0.112，本机现选 1.0.89。新版发布说明未确认旧失败反馈已修。\n2026-11-17 续验：新版此次无答复，停止界面与冷开均保留结果未知，本次没有取得旧版那类官方失败终态。\n2026-11-17 续验：新版正常首答显示完成；原对话仍明确提示结果未知及不能确认原设置。\n2026-11-18 补录 11-17：停止未确认的真实样本可单独检查并关闭，仍保留原结果未知且不重发。旧 Auto 错误被显示为完成的失败保持。",
           "remaining": "同类真实失败、正式关闭反馈仍待。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json",
@@ -1228,7 +1239,8 @@
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#等待官方的复验条件",
             "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md",
             "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
-            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "实测失败"
         }
@@ -1251,13 +1263,14 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "旧 OpenRouter 免费样本按原请求核到已有默认工作区及账单 $0.00。C8 Super VL 为既有实际选择。",
-          "remaining": "当前新连接的身份、计费来源、真实退出换号及共享范围未全验。",
+          "observed": "旧 OpenRouter 免费样本按原请求核到已有默认工作区及账单 $0.00。C8 Super VL 为既有实际选择。\n2026-11-18 补录 11-17：自有对话冷开后沿用户已选的 OpenRouter 免费 Ultra 手动实答，官方账单该条记录 0 成本，随后恢复原 Super VL / Off。",
+          "remaining": "只核到本次服务和账单，换号、服务失效和其他收费情况仍待。",
           "sources": [
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
-            "docs/evidence/2026-11-15-cycle8-observation/README.md"
+            "docs/evidence/2026-11-15-cycle8-observation/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
-          "status": null
+          "status": "已选服务有实答"
         },
         "S3": {
           "observed": "前批原对象从正式版找到、正文读回并在原对话续接。旧 1.52.0 官方隔离分页有 50+1 的分项。\n2026-11-16 续验：官方列表按原目录定位已加入的 FF_C8_B_20261115，从正式搜索冷开读回原文，准确复述原答。\n2026-11-17 停止后从侧栏冷开同一个原对话，原文字、目录及所选 OpenRouter 免费 Super VL / Off 保持，原上下文续答成功。\n2026-11-17 续验：查询 Qoder 独立目录为空，回 Goose 原目录命中，切换 Qoder 再返回恢复 Goose 自己的结果、目录与原选中项。",
@@ -1273,13 +1286,14 @@
           "status": "查找冷开续答通过"
         },
         "S4": {
-          "observed": "前批同既有服务正式保存 Super VL→Ultra，另有 Super VL 实际调用、冷开原历史保持证据。C8 B 仍保存 Super VL/off。\n2026-11-16 续验：原 OpenRouter 免费模型及 thinking off 冷开读回，实际续答。",
+          "observed": "前批同既有服务正式保存 Super VL→Ultra，另有 Super VL 实际调用、冷开原历史保持证据。C8 B 仍保存 Super VL/off。\n2026-11-16 续验：原 OpenRouter 免费模型及 thinking off 冷开读回，实际续答。\n2026-11-18 补录 11-17：自有对话临时选 Ultra 后冷开保留配置，沿该配置手动实答，完成后恢复原模型和 Off。",
           "remaining": "其他切换、动态选择及失败情形依原条件。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-next/installed-goose-model-candidate.json",
             "docs/evidence/2026-11-07-stage1-formal-acceptance/goose-second-model-installed.json",
             "docs/evidence/2026-11-15-cycle8-observation/README.md",
-            "docs/evidence/2026-11-15-cycle12-pre-send/history-continuations-2026-11-16.json"
+            "docs/evidence/2026-11-15-cycle12-pre-send/history-continuations-2026-11-16.json",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "已选模型有实答"
         },
@@ -1355,29 +1369,32 @@
           "status": "原账号实答"
         },
         "S3": {
-          "observed": "默认范围一条记录，归属未确认\n最新复验：已从正常入口冷开同一原对话，并在原 grok-4.7 / low 精确续答旧回复的前八字。 从正常对话库按原工作目录查找，厂商列表标出同一原对象已加入。",
+          "observed": "默认范围一条记录，归属未确认\n最新复验：已从正常入口冷开同一原对话，并在原 grok-4.7 / low 精确续答旧回复的前八字。 从正常对话库按原工作目录查找，厂商列表标出同一原对象已加入。\n2026-11-18 补录 11-17：另一次自有文件原对话首次配置不符而停发。正常重新检查后同原标识手动续答一次，原生回复准确。",
           "remaining": "分页、其他真实历史样本及未加入时的带入流程按原条件复验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-pre-send/README.md"
+            "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "查找冷开续答通过"
         },
         "S4": {
-          "observed": "无本项实际验收样本\n2026-11-16 续查：正式原 grok-4.7/low 同原对象冷开及续答有回执。",
+          "observed": "无本项实际验收样本\n2026-11-16 续查：正式原 grok-4.7/low 同原对象冷开及续答有回执。\n2026-11-18 补录 11-17：同一文件原对话重新检查后采用 grok-4.7 / low。原生续答确认模型及推理档。",
           "remaining": "同对话更换模型和推理、故障回退及其他允许设置。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-continuation/account-api-results.json"
+            "docs/evidence/2026-11-15-cycle12-continuation/account-api-results.json",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "无本项实际验收样本\n2026-11-17 正式版沿已有服务、grok-4.7 / low 发一次合成文件分类任务。Farfold 显示本次 result.txt 写入范围，单次批准后实际另存。从本轮产物打开，成品 54 字节逐字节匹配，原件散列不变。",
+          "observed": "无本项实际验收样本\n2026-11-17 正式版沿已有服务、grok-4.7 / low 发一次合成文件分类任务。Farfold 显示本次 result.txt 写入范围，单次批准后实际另存。从本轮产物打开，成品 54 字节逐字节匹配，原件散列不变。\n2026-11-18 补录 11-17：昨晚现场再次冷开并读取上一批的同一成品，原生留准确的文件上下文续答。临时工作目录已失，文件字节沿用上一批已归档的正式回执。",
           "remaining": "核更多工作、权限及工具方式，双任务隔离和停止另验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-17-cycle12-file-validation/README.md"
+            "docs/evidence/2026-11-17-cycle12-file-validation/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -1400,11 +1417,12 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "未归属列表与用户需登录分开显示\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
+          "observed": "未归属列表与用户需登录分开显示\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-18 补录 11-17：冷开时的模型不匹配停止发送，正常重新检查取得原模型后手动恢复。首次加载零发送。",
           "remaining": "在当前发行真实工作和权限链路复验反馈",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "入口有证"
         }
@@ -1572,11 +1590,12 @@
           "status": "实测分项通过"
         },
         "S6": {
-          "observed": "未运行双对话变更、审批或停止\n2026-11-17 两条 MiMo 测试各自启动了独立目录的本机 Shell 样本。只对 A 发停止，B 未收到取消并按原任务完成。",
+          "observed": "未运行双对话变更、审批或停止\n2026-11-17 两条 MiMo 测试各自启动了独立目录的本机 Shell 样本。只对 A 发停止，B 未收到取消并按原任务完成。\n2026-11-18 补录 11-17：另一次同 MiMo 批次 B 有官方后台完成和 32 字节官方输出，A 只有思考，未见工具。该次未形成两条实际工具同时运行的可验证样本。",
           "remaining": "更广模型和权限范围的隔离、实际停止条件分别验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "分项通过"
         },
@@ -1593,12 +1612,13 @@
           "status": "实测失败"
         },
         "S8": {
-          "observed": "原选择不一致时提示并阻止保存，列表零导入\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 复验：首条消息短暂不可发送时错误显示待发，零出站及草稿保持有证；随后同设置手动已实答。已有定向回归核真实状态提示。",
+          "observed": "原选择不一致时提示并阻止保存，列表零导入\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-16 复验：首条消息短暂不可发送时错误显示待发，零出站及草稿保持有证；随后同设置手动已实答。已有定向回归核真实状态提示。\n2026-11-18 补录 11-17：同次 A 的官方记录无助手正文，Farfold 正确提示已结束但未收到可展示结果。",
           "remaining": "其他恢复、取消、窗口与许可路径按原条件继续。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-16-cycle12-account-retest/README.md"
+            "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "入口有证"
         }
@@ -1653,7 +1673,7 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "正式两片段真实编辑、43 字节返工另存、公开页 PNG 同次返回并 ZIP 核对。\n2026-11-16 续查：原选定版本两处文件编辑及保留内容有分项证据。\n2026-11-17 B 单次审批后原前台脚本准确写出本机结果并在对话返回标记。\n2026-11-17 正式卡在处理过程折叠时直接展示此 Bash 命令。仅按 Allow once，执行并准确返回原产物。\n2026-11-17 续验：实际 Bash 只请求一次；单次拒绝后 Agent 确认结束，原脚本无成品，无替代请求。",
+          "observed": "正式两片段真实编辑、43 字节返工另存、公开页 PNG 同次返回并 ZIP 核对。\n2026-11-16 续查：原选定版本两处文件编辑及保留内容有分项证据。\n2026-11-17 B 单次审批后原前台脚本准确写出本机结果并在对话返回标记。\n2026-11-17 正式卡在处理过程折叠时直接展示此 Bash 命令。仅按 Allow once，执行并准确返回原产物。\n2026-11-17 续验：实际 Bash 只请求一次；单次拒绝后 Agent 确认结束，原脚本无成品，无替代请求。\n2026-11-18 补录 11-17：正式版另在 Farfold 网页许可卡取消已启动的单次观察。原工具收到明确失败及取消文本，无页面内容或图片，无第二次工具请求。",
           "remaining": "更多工具、文件、技能、记住后撤回和其他权限方式继续。",
           "sources": [
             "docs/evidence/2026-11-10-stage2-live-mistral/summary.json",
@@ -1662,7 +1682,8 @@
             "docs/evidence/2026-11-11-mcp-lifecycle/README.md",
             "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
             "docs/evidence/2026-11-17-cycle12-approval-and-lf/README.md",
-            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -1687,7 +1708,7 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "正式冷开图片可显示并逐字节导出；来源未确认的旧对象仍保护发送。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 审批卡显示缺输入详情，可在同一对话处理过程找到准确 Bash 命令。\n2026-11-17 共用补显示的受控用例通过，正式卡仍无输入详情。处理过程能看到本条 Shell 命令，核对后单次批准成功。\n2026-11-17 查到审批请求无 rawInput，前一条精确同 ID 的工具报告 in_progress 且有命令。按当前证据补显示后，正式卡有完整命令和来源，单次批准后成功。\n2026-11-17 续验：正式卡片显示准确命令和输入来源，按一次 Deny 后显示已拒绝、已通知 Agent。",
+          "observed": "正式冷开图片可显示并逐字节导出；来源未确认的旧对象仍保护发送。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 审批卡显示缺输入详情，可在同一对话处理过程找到准确 Bash 命令。\n2026-11-17 共用补显示的受控用例通过，正式卡仍无输入详情。处理过程能看到本条 Shell 命令，核对后单次批准成功。\n2026-11-17 查到审批请求无 rawInput，前一条精确同 ID 的工具报告 in_progress 且有命令。按当前证据补显示后，正式卡有完整命令和来源，单次批准后成功。\n2026-11-17 续验：正式卡片显示准确命令和输入来源，按一次 Deny 后显示已拒绝、已通知 Agent。\n2026-11-18 补录 11-17：本次两层网页审批在 Farfold 层取消，原调用只收到取消文本，并按原对话结束。",
           "remaining": "其他审批、记住后撤回、通知、错误与恢复仍待。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
@@ -1696,7 +1717,8 @@
             "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
             "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md",
             "docs/evidence/2026-11-17-cycle12-approval-and-lf/README.md",
-            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md"
+            "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
           ],
           "status": "分项通过"
         }
