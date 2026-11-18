@@ -1,0 +1,248 @@
+{
+  "source": "2a4ee8627",
+  "cdHash": "686eabd65f4337ea25a92ee5fc75e90b5292f843",
+  "binarySha256": "4ef9c388174adebca9604efe525b31b7d08527e80cff68838d46b74215716df0",
+  "formalInstallInventoryEqual": true,
+  "inventory": {
+    "criticalFileHashes": {
+      "ai.farfold.desktop.plist": "25bde2bf81eb6d1f65c580ca7926af6f0981d827294f936ad79bd2592689a712",
+      "farfold.sqlite3": "ae091502b6ad566cce160258c578e3166eb5a7d4d7222c69dd36a01659ea0285",
+      "farfold.sqlite3-wal": "f8227b6ff6f34942bc20a7ccf282dabdb301b1256d2385760b9ebbd53b15c01b"
+    },
+    "roots": [
+      {
+        "entries": 262410,
+        "metadataSha256": "d75e9e9d53143a13d7914d7116958b2a590dba1510962ec6c3a848b63ab82fdd",
+        "path": "Application Support/ai.farfold.desktop"
+      },
+      {
+        "entries": 585,
+        "metadataSha256": "5e1e655cfc1b9693669ad779445cd3b4492edbe45c7965a42a5f7e0e2afd2fc5",
+        "path": "WebKit/ai.farfold.desktop"
+      },
+      {
+        "entries": 1,
+        "metadataSha256": "182b26769dbf5ccdae5cae0bef09fa2a74dd662fad09ba183008042df45de3d7",
+        "path": "Preferences/ai.farfold.desktop.plist"
+      }
+    ]
+  },
+  "fixture": "/private/tmp/ff-c12-fast-exit-formal.JpK9ieWk",
+  "processEvents": [
+    {
+      "at": "2026-11-18T16:33:42.837+00:00",
+      "tasks": {
+        "a": {
+          "pids": {},
+          "processes": {},
+          "result": null,
+          "cwd": {}
+        },
+        "b": {
+          "pids": {},
+          "processes": {},
+          "result": null,
+          "cwd": {}
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T16:33:50.544+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 45175,
+            "child": 45177
+          },
+          "processes": {
+            "shell": "45175 24716 45175 S    Thu Nov 19 00:33:50 2026     /bin/sh ./task.sh",
+            "child": "45177 45175 45175 S    Thu Nov 19 00:33:50 2026     /bin/sleep 145"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-fast-exit-formal.JpK9ieWk/a",
+            "child": "/private/tmp/ff-c12-fast-exit-formal.JpK9ieWk/a"
+          }
+        },
+        "b": {
+          "pids": {},
+          "processes": {},
+          "result": null,
+          "cwd": {}
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T16:33:51.971+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 45175,
+            "child": 45177
+          },
+          "processes": {
+            "shell": "45175 24716 45175 S    Thu Nov 19 00:33:50 2026     /bin/sh ./task.sh",
+            "child": "45177 45175 45175 S    Thu Nov 19 00:33:50 2026     /bin/sleep 145"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-fast-exit-formal.JpK9ieWk/a",
+            "child": "/private/tmp/ff-c12-fast-exit-formal.JpK9ieWk/a"
+          }
+        },
+        "b": {
+          "pids": {
+            "shell": 45190,
+            "child": 45192
+          },
+          "processes": {
+            "shell": "45190 24716 45190 S    Thu Nov 19 00:33:51 2026     /bin/sh ./task.sh",
+            "child": "45192 45190 45190 S    Thu Nov 19 00:33:51 2026     /bin/sleep 68"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-fast-exit-formal.JpK9ieWk/b",
+            "child": "/private/tmp/ff-c12-fast-exit-formal.JpK9ieWk/b"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T16:34:05.572+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 45175,
+            "child": 45177
+          },
+          "processes": {
+            "shell": null,
+            "child": null
+          },
+          "result": null,
+          "cwd": {}
+        },
+        "b": {
+          "pids": {
+            "shell": 45190,
+            "child": 45192
+          },
+          "processes": {
+            "shell": "45190 24716 45190 S    Thu Nov 19 00:33:51 2026     /bin/sh ./task.sh",
+            "child": "45192 45190 45190 S    Thu Nov 19 00:33:51 2026     /bin/sleep 68"
+          },
+          "result": null,
+          "cwd": {
+            "shell": "/private/tmp/ff-c12-fast-exit-formal.JpK9ieWk/b",
+            "child": "/private/tmp/ff-c12-fast-exit-formal.JpK9ieWk/b"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-11-18T16:34:59.920+00:00",
+      "tasks": {
+        "a": {
+          "pids": {
+            "shell": 45175,
+            "child": 45177
+          },
+          "processes": {
+            "shell": null,
+            "child": null
+          },
+          "result": null,
+          "cwd": {}
+        },
+        "b": {
+          "pids": {
+            "shell": 45190,
+            "child": 45192
+          },
+          "processes": {
+            "shell": null,
+            "child": null
+          },
+          "result": {
+            "sha256": "9e914c28cf6a220ac9a6312f0cde7b0cb9b551cced7ca4354ce97023293500c5",
+            "text": "FF_C12_N19_FAST_B_DONE\n"
+          },
+          "cwd": {}
+        }
+      }
+    }
+  ],
+  "protocol": {
+    "a": {
+      "file": "protocol-v1-1795019547751-1.jsonl",
+      "lines": 27,
+      "sha256": "1081afc4508d586c689038b6dca03e77dd100bdbbb69ec61b31b5b15cde8ae73",
+      "events": [
+        {
+          "line": 8,
+          "event": "session/new",
+          "ts": 1795019549555
+        },
+        {
+          "line": 11,
+          "event": "session/prompt",
+          "ts": 1795019564658
+        },
+        {
+          "line": 17,
+          "event": "session/request_permission",
+          "ts": 1795019571070
+        },
+        {
+          "line": 24,
+          "event": "session/cancel",
+          "ts": 1795019645265
+        }
+      ]
+    },
+    "b": {
+      "file": "protocol-v1-1795019577090-2.jsonl",
+      "lines": 40,
+      "sha256": "09fe192713ae4f036551bfa3f0c286780692d5e9c039ab47415572a90cd7b15e",
+      "events": [
+        {
+          "line": 8,
+          "event": "session/new",
+          "ts": 1795019578415
+        },
+        {
+          "line": 11,
+          "event": "session/prompt",
+          "ts": 1795019579342
+        },
+        {
+          "line": 17,
+          "event": "session/request_permission",
+          "ts": 1795019584437
+        }
+      ]
+    }
+  },
+  "ui": {
+    "stoppedA": "Farfold 执行的 1 条命令已退出",
+    "agentStepA": "步骤结果未知",
+    "bDuringAndAfterHasNoExitReceipt": true,
+    "bFinal": "FF_C12_N19_FAST_B_DONE",
+    "bFinished": true
+  },
+  "checks": {
+    "frontendPassed": 10999,
+    "rustUnitPassed": 2822,
+    "rustIntegrationPassed": 10,
+    "rustIgnored": 11,
+    "typecheck": true,
+    "format": true,
+    "clippy": true,
+    "releaseBuild": true
+  },
+  "afterNaturalDeadline": {
+    "time": "2026-11-18T16:37:29.598+00:00",
+    "originalPidsStillAbsent": [45175, 45177, 45190, 45192],
+    "aResultAbsent": true
+  }
+}

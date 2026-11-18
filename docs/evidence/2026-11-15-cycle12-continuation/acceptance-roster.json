@@ -1024,7 +1024,7 @@
     {
       "agentId": "fast-agent",
       "runtime": "登记及握手 0.10.1。既有 FF_FAST_WEB_20… 原目录仍在，保存选项模型为空；前次自有回执精确报告 codexplan / codexresponses / gpt-5.6-sol。",
-      "liveAction": "从正常入口复用已验证的同一原 ID 冷开、网页与正式单次命令。双任务及冷续答已实证，实时工具终态和各 Agent 自管工具仍须验证。",
+      "liveAction": "正式双前台只停 A，实际子进程退出，新回执单独显示 Farfold 执行的命令已退出。B 原任务继续，冷开及同 ID 续答有证。Agent 原工具步骤终态与自管工作继续逐项核。",
       "standards": {
         "S1": {
           "observed": "所选正式程序已有准备、连接和真实窄首发。\n2026-11-15 盘点：程序可执行，登记版本 0.10.1。登记所存握手版本 0.10.1。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
@@ -1083,23 +1083,25 @@
           "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "旧正式点停后自有进程约 8.47 秒仍活着。当前可用官方委托路径受控有窄证。\n本轮实测：0.10.1 走本机正式 Farfold 的官方逐次审批，实际启动归属应用的 Shell 和 sleep。点停后 273 毫秒内观察两者均退出，60 秒后无完成标记。界面步骤终态仍未知。\n续验：正式双任务实际停止 A 自有 Shell 及子进程，冷开同一原对话同配置明确续答，无自动重发。",
+          "observed": "旧正式点停后自有进程约 8.47 秒仍活着。当前可用官方委托路径受控有窄证。\n本轮实测：0.10.1 走本机正式 Farfold 的官方逐次审批，实际启动归属应用的 Shell 和 sleep。点停后 273 毫秒内观察两者均退出，60 秒后无完成标记。界面步骤终态仍未知。\n续验：正式双任务实际停止 A 自有 Shell 及子进程，冷开同一原对话同配置明确续答，无自动重发。\n2026-11-19 正式 2a4ee8627。只停 A 后两个原 PID 确实退出，B 自然交付。界面另有 Farfold 执行的命令退出回执，Agent 原步骤保持结果未知。",
           "remaining": "正式终端对应的工具步骤终态仍未知，Agent 自管工作另需官方控制。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/installed-843-results.json",
             "docs/evidence/2026-11-15-official-alternatives/fast-agent.md",
             "docs/evidence/2026-11-15-cycle12-fast-approved/README.md",
-            "docs/evidence/2026-11-15-cycle12-continuation/README.md"
+            "docs/evidence/2026-11-15-cycle12-continuation/README.md",
+            "docs/evidence/2026-11-19-cycle12-fast-terminal-exit/README.md"
           ],
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "正式冷开能显示旧工具截图，从普通入口无需识别导出命令。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。",
-          "remaining": "新旧失败及未知停止真实提示与更多准备反馈待验。",
+          "observed": "正式冷开能显示旧工具截图，从普通入口无需识别导出命令。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-19 正式 2a4ee8627。点停 A 显示回复已停止、Farfold 执行的 1 条命令已退出及原工具步骤未知。B 执行和完成均无 A 的回执。",
+          "remaining": "自管工作、Agent 原工具终态、其他真实失败及准备反馈继续按原条件。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/history-supplement-summary.json",
             "docs/evidence/2026-11-15-official-alternatives/fast-agent.md",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-19-cycle12-fast-terminal-exit/README.md"
           ],
           "status": "入口有证"
         }
