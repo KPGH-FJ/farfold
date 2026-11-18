@@ -414,6 +414,20 @@ it("keeps ordinary directory management inside the directory", () => {
   closeSetup();
   expect(props.onReturn).not.toHaveBeenCalled();
 });
+
+it("returns only the targeted draft preparation to its origin, even without a work folder", () => {
+  props.initialAgentId = "A";
+  props.returnToDraftOnClose = true;
+  expect(setup().props).toMatchObject({ intent: "use", cwd: undefined });
+  closeSetup();
+  expect(props.onReturn).toHaveBeenCalledOnce();
+  expect(props.onStart).not.toHaveBeenCalled();
+
+  clickEntry("B");
+  closeSetup();
+  expect(props.onReturn).toHaveBeenCalledOnce();
+  expect(render().some((node) => node.type === Setup)).toBe(false);
+});
 function setProgress(value = progress) {
   (setup().props.onProgress as (value: AgentSetupProgress) => void)(value);
 }

@@ -119,6 +119,7 @@ export interface AgentHubProps {
   /** Conversation history membership, part of the shared "我的 Agent" rule. */
   historyAgentIds?: ReadonlySet<string>;
   onReturn: () => void;
+  returnToDraftOnClose?: boolean;
   onResumeDraft?: () => void;
   onStart: (
     agentId: string,
@@ -153,6 +154,7 @@ export function AgentHub({
   agents,
   historyAgentIds = NO_HISTORY,
   onReturn,
+  returnToDraftOnClose = false,
   onResumeDraft,
   onStart,
   onOpenApi,
@@ -414,7 +416,9 @@ export function AgentHub({
     setSelected(null);
     if (
       initialAgentId === agentId &&
-      (initialIntent === "manage" || draftReviewFor(agentId))
+      (initialIntent === "manage" ||
+        returnToDraftOnClose ||
+        draftReviewFor(agentId))
     )
       onReturn();
   };

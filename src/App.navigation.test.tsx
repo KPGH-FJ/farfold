@@ -648,6 +648,28 @@ it("does not open a draft repair for content replaced while the browser hides", 
   }
 });
 
+it("routes direct Agent preparation back to its draft and leaves directory browsing untargeted", () => {
+  const originalDraft = h.draft;
+  const originalChoice = structuredClone(h.choice);
+  call("EmptyState", "onGoSettings", "A");
+  expect(component("AgentHub")).toMatchObject({
+    initialAgentId: "A",
+    initialIntent: "use",
+    returnToDraftOnClose: true,
+  });
+  call("AgentHub", "onReturn");
+  expect(component("EmptyState").active).toBe(true);
+  expect(h.draft).toBe(originalDraft);
+  expect(h.choice).toEqual(originalChoice);
+  expect(h.open).not.toHaveBeenCalled();
+
+  call("Sidebar", "onExplore");
+  expect(component("AgentHub")).toMatchObject({
+    initialAgentId: null,
+    returnToDraftOnClose: false,
+  });
+});
+
 it("restores A's preparation and draft origin after API settings temporarily manages B", () => {
   const originalDraft = h.draft;
   call("EmptyState", "onGoSettings", "A");
@@ -666,6 +688,7 @@ it("restores A's preparation and draft origin after API settings temporarily man
   call("SettingsPage", "onManageAgent", "B");
   expect(component("AgentHub").initialAgentId).toBe("B");
   expect(component("AgentHub").initialIntent).toBe("manage");
+  expect(component("AgentHub").returnToDraftOnClose).toBe(false);
   call("AgentHub", "onReturn");
   expect(component("SettingsPage").active).toBe(true);
   expect(component("SettingsPage").tab).toBe("keys");
@@ -674,6 +697,7 @@ it("restores A's preparation and draft origin after API settings temporarily man
   expect(restored.active).toBe(true);
   expect(restored.initialAgentId).toBe("A");
   expect(restored.initialIntent).toBe("use");
+  expect(restored.returnToDraftOnClose).toBe(true);
   expect(restored.preparationContext).toEqual(originalContext);
   expect(restored.restoredState).toEqual(surface);
   const selected = {

@@ -1238,6 +1238,11 @@ export default function App() {
               }
               preparationContext={hubContext}
               onReturn={returnToOrigin}
+              returnToDraftOnClose={
+                hubTarget !== null &&
+                hubIntent === "use" &&
+                routeHistory.current.at(-1)?.kind === "start"
+              }
               onStart={useAgent}
               onOpenConversation={(key) => {
                 rememberOrigin();
