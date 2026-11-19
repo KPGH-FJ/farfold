@@ -80,6 +80,8 @@
 
 **Grok 官方 1.0.90 原历史单次通过。** 从 Farfold 更新官方登记，原 1.0.46 安装保留。正常搜索打开同一原对话，122 毫秒握手、269 毫秒读回，原正文、回复和两个工具步骤可见；更新检查与本次读取均零模型发送。成品、输入和用量原件保持，厂商历史文件则在读取前后由 22,261 变为 23,994 字节，差异原因待确认。此次未超时，旧版的间歇故障仍保留。 [版本对照回执](evidence/2026-11-19-cycle12-grok-startup-control/README.md#官方-1090-同一原历史对照)
 
+**Grok 历史改写只读核查。** 升级前的厂商事件与新版历史逐项核合，原用户正文、三段回复和三段推理摘要一致，两次工具的 ID、参数和结果也一致。已确认厂商系统提示从 5,437 变为 7,150 字节，新文本对应历史首条。厂商公开恢复路径会保存并重写历史。缺少改写前完整原件和该次进程的精确分支记录，其余内部字段差异仍未确认。本轮未重开或发送 Grok。 [对照依据](evidence/2026-11-19-cycle12-grok-startup-control/README.md#历史改写的只读对照)
+
 **三家正式断线与两条待发。** OpenCode、Goose、Claude 各自的原连接骤断后，热重连保留原对话和两条待发。正常保存退出再冷开，三家零自动发送。OpenCode、Claude 各点一次继续后，同原 ID 的 B、C 按序各实答一次。Goose 只发送 B，厂商报连不上 OpenRouter，原 C 暂停；后用正常入口只关闭这条自有连接，原内容保留。 [本批正式回执](evidence/2026-11-19-cycle12-disconnect-pair-queue/README.md)
 
 **待发图片、Cline 断线和 OpenCode 同目录双前台。** OpenCode 与 Claude 各在两条待发里的第一条附 PNG，实际断线、热重连和正常退出再开后按原顺序保留。各点一次继续，两条都在原对话按序各发送一次，厂商记录的 PNG 和原件逐字节一致。Cline 实际断线后同原对话热重连及冷开，唯一待发和带 PNG 的独立草稿均保留，零重发。厂商共享进程继续到自然完成；Farfold 保留结果未知。OpenCode 在同一目录同时运行两条前台任务，只点停 A，A 的工具与子进程退出，B 继续并写出字节准确的独立成品，共享原件保持。 [待发图片](evidence/2026-11-19-cycle12-queued-image-recovery/README.md) · [Cline 断线](evidence/2026-11-19-cycle12-cline-disconnect/README.md) · [同目录双前台](evidence/2026-11-19-cycle12-same-folder-stop/README.md)
@@ -274,6 +276,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 
 2026-11-19 fast-agent 从正式入口先批准 Agent 的第一层请求，再拒绝 Farfold 的原命令执行。原工具收到拒绝，未执行或生成结果，界面不给本机退出回执，原轮正常答复。 [正式回执](evidence/2026-11-19-cycle12-fast-delegated-denial/README.md)
 
+2026-11-19 fast-agent 从搜索重开同一原拒绝记录，原正文、失败步骤、终端请求取消文字及精准回复仍可见。厂商四条原记录与脚本未变，零新发、权限和终端请求，未显示本机退出回执。 [冷开回执](evidence/2026-11-19-cycle12-fast-delegated-denial/README.md#同一拒绝记录从搜索重开)
+
 2026-11-19 正式 `2a4ee8627` 只停止 fast-agent 的 A 后，独立回执显示 Farfold 执行的 1 条命令已退出，原 Shell 和子进程确实退出。B 原进程继续并成功交付，A 原 Agent 工具终态保持未知。 [正式回执](evidence/2026-11-19-cycle12-fast-terminal-exit/README.md)
 
 2026-11-19 正式 CodeBuddy、Qoder 与 Claude 各在自建目录拒绝一个准确的 Bash 命令，均未执行。Qoder 和 Claude 同工具拒绝后原轮正常答复。CodeBuddy 拒绝已送达，原轮结束，缺该原工具的协议终态，界面保留未知。 [正式回执](evidence/2026-11-19-cycle12-approval-denial/README.md)
@@ -353,6 +357,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: P33 -->
 
 ### P33
+
+2026-11-19 只读比对 Grok 1.0.90 重开前的原事件与当前历史，原正文、回复、推理摘要及两次工具参数和结果逐项相同。厂商系统提示已变，全文件差异无法在缺旧原件时确认。本轮零 Grok 重开及发送。 [只读对照](evidence/2026-11-19-cycle12-grok-startup-control/README.md#历史改写的只读对照)
 
 2026-11-19 官方 Grok 1.0.90 同原 ID、同原目录单次打开。122 毫秒握手，269 毫秒读回原正文、回复及工具步骤，零新建、发送和取消。本次未复现握手超时；厂商历史文件字节在读取前后发生变化。 [版本对照回执](evidence/2026-11-19-cycle12-grok-startup-control/README.md#官方-1090-同一原历史对照)
 
