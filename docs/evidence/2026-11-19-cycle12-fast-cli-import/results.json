@@ -1,0 +1,292 @@
+{
+  "schemaVersion": 1,
+  "cli": {
+    "version": "0.10.1",
+    "startedAt": "2026-11-19T17:28:36.641+08:00",
+    "exitedAt": "2026-11-19T17:28:44.725+08:00",
+    "exitCode": 0,
+    "providerAlias": "codexplan",
+    "provider": "codexresponses",
+    "model": "gpt-5.6-sol",
+    "reportedReasoning": "High",
+    "userMessages": 1,
+    "agentInferenceStepsInTurn": 2,
+    "toolCalls": 1,
+    "toolId": "call_7ed1f442c9f84ada9356231b807696a7",
+    "toolCommand": "/bin/cat ./marker.txt",
+    "toolExitCode": 0,
+    "nativeSessionId": "2611191728-pBt6YU",
+    "cwd": "/private/tmp/ff-c12-fast-cli-import.uTRbGA3n/work",
+    "nativeHistory": {
+      "session.json": {
+        "sha256": "dc4221901f40b2f899dd67850f0dcd630d5a199a18c86b7e671c322c4d3082c6",
+        "bytes": 2851,
+        "mtimeNs": 1795080524127135904
+      },
+      "history_agent.json": {
+        "sha256": "540ae262e273b7a826646f973ed83a4dbc5463ee46f9a198c86035c164264e3d",
+        "bytes": 12050,
+        "mtimeNs": 1795080524125371059
+      },
+      "history_agent_previous.json": {
+        "sha256": "40f90dc4b5bf67e1cca50dae8e272cf414118469156272063df9f7d2de465cc3",
+        "bytes": 4538,
+        "mtimeNs": 1795080522256988234
+      }
+    },
+    "trajectory": {
+      "sha256": "3c63e5d306fb23e8fef8f0ed2c19865259ed270b7246716bccd6374d8a47d0a8",
+      "bytes": 17636,
+      "mtimeNs": 1795080524131231099
+    },
+    "marker": "FF_C12_FAST_CLI_TOOL_E4BED4BEB367"
+  },
+  "firstFarfoldImport": {
+    "appSource": "d0b4628eb",
+    "sameOriginalId": "2611191728-pBt6YU",
+    "sameOriginalDirectory": "/private/tmp/ff-c12-fast-cli-import.uTRbGA3n/work",
+    "before": 0,
+    "afterPreview": 0,
+    "afterJoin": 1,
+    "afterRediscovery": 1,
+    "duplicateJoinDisabled": true,
+    "initialToolReplay": "missing",
+    "initialNativeLastActivity": {
+      "old": "2026-11-19T17:28:44.124490",
+      "firstInstalled": "2026-11-19T17:31:17.985715",
+      "oldFileDigestReconstructed": true
+    },
+    "wire": [
+      {
+        "name": "protocol-v1-1795080604575-4.jsonl",
+        "lines": 11,
+        "sha256": "9003679753296872ac23333b17fade49fd8d60fc7b0931287fd936d61d12ee82",
+        "wire": [
+          {
+            "line": 3,
+            "event": "initialize",
+            "dir": "out",
+            "error": "none",
+            "ts": 1795080604577
+          },
+          {
+            "line": 5,
+            "event": "response",
+            "dir": "in",
+            "error": "none",
+            "ts": 1795080605893
+          },
+          {
+            "line": 8,
+            "event": "session/list",
+            "dir": "out",
+            "error": "none",
+            "ts": 1795080605894
+          },
+          {
+            "line": 9,
+            "event": "response",
+            "dir": "in",
+            "error": "none",
+            "ts": 1795080605894
+          },
+          {
+            "line": 10,
+            "event": "session/list",
+            "dir": "out",
+            "error": "none",
+            "ts": 1795080669232
+          },
+          {
+            "line": 11,
+            "event": "response",
+            "dir": "in",
+            "error": "none",
+            "ts": 1795080669234
+          }
+        ]
+      },
+      {
+        "name": "protocol-v1-1795080611011-5.jsonl",
+        "lines": 14,
+        "sha256": "d4446f716ef7d54cad9240f5b314b205eb3d9a77b4c3bce79d824f1ef38dde78",
+        "wire": [
+          {
+            "line": 3,
+            "event": "initialize",
+            "dir": "out",
+            "error": "none",
+            "ts": 1795080611012
+          },
+          {
+            "line": 5,
+            "event": "response",
+            "dir": "in",
+            "error": "none",
+            "ts": 1795080612161
+          },
+          {
+            "line": 8,
+            "event": "session/load",
+            "dir": "out",
+            "error": "none",
+            "ts": 1795080612164
+          },
+          {
+            "line": 14,
+            "event": "response",
+            "dir": "in",
+            "error": "none",
+            "ts": 1795080612181
+          }
+        ]
+      },
+      {
+        "name": "protocol-v1-1795080633916-6.jsonl",
+        "lines": 14,
+        "sha256": "407f716ca455b4a70130cee5c39a5a3c0e92f7fcdeb8ea462761985e9f384660",
+        "wire": [
+          {
+            "line": 3,
+            "event": "initialize",
+            "dir": "out",
+            "error": "none",
+            "ts": 1795080633918
+          },
+          {
+            "line": 5,
+            "event": "response",
+            "dir": "in",
+            "error": "none",
+            "ts": 1795080635074
+          },
+          {
+            "line": 8,
+            "event": "session/load",
+            "dir": "out",
+            "error": "none",
+            "ts": 1795080635074
+          },
+          {
+            "line": 14,
+            "event": "response",
+            "dir": "in",
+            "error": "none",
+            "ts": 1795080635092
+          }
+        ]
+      },
+      {
+        "name": "protocol-v1-1795080676778-7.jsonl",
+        "lines": 15,
+        "sha256": "7101482b44f8c7ec7ff0fae7b61e3ece04e71107cee1820e9949334fd4d05d44",
+        "wire": [
+          {
+            "line": 3,
+            "event": "initialize",
+            "dir": "out",
+            "error": "none",
+            "ts": 1795080676779
+          },
+          {
+            "line": 5,
+            "event": "response",
+            "dir": "in",
+            "error": "none",
+            "ts": 1795080677984
+          },
+          {
+            "line": 8,
+            "event": "session/load",
+            "dir": "out",
+            "error": "none",
+            "ts": 1795080677985
+          },
+          {
+            "line": 14,
+            "event": "response",
+            "dir": "in",
+            "error": "none",
+            "ts": 1795080678112
+          }
+        ]
+      }
+    ]
+  },
+  "officialExport": {
+    "sha256": "3ba75bb24c4d8592e4a4551ffa8a57bc93cf335e6c25fb85f25effbb8061e461",
+    "bytes": 5128,
+    "lines": 13,
+    "shape": [
+      [1, "session_meta", null, null, null, null],
+      [2, "response_item", "message", "developer", null, null],
+      [3, "event_msg", "task_started", null, null, null],
+      [4, "event_msg", "user_message", null, null, null],
+      [5, "turn_context", null, null, null, null],
+      [6, "response_item", "message", "user", null, null],
+      [7, "response_item", "message", "assistant", null, null],
+      [
+        8,
+        "response_item",
+        "function_call",
+        null,
+        "call_7ed1f442c9f84ada9356231b807696a7",
+        null
+      ],
+      [9, "event_msg", "token_count", null, null, null],
+      [
+        10,
+        "response_item",
+        "function_call_output",
+        null,
+        "call_7ed1f442c9f84ada9356231b807696a7",
+        "success"
+      ],
+      [11, "response_item", "message", "assistant", null, null],
+      [12, "event_msg", "token_count", null, null, null],
+      [13, "event_msg", "task_complete", null, null, null]
+    ]
+  },
+  "repairInstallation": {
+    "source": "06d85a899f4b38cfe90947a7626e16efaa782493",
+    "appCdhash": "e24d362ec38f519e44abdd072ddf0163f67e7fa5",
+    "executableSha256": "aab894386fb6d927ac4692911135bbfad958b97db41d3659f1062c1cc15e6920",
+    "matchedDataPaths": 264505,
+    "matchedCriticalHashes": 6,
+    "dataMetadataSha256": "26fb6f0cc9cf33ecc6bf934f66639317b51be3fc6284ca544655c48795e792b6",
+    "normalQuit": true,
+    "duplicateCandidateRemoved": true,
+    "affectedFrontendTestsPassed": 85,
+    "allFrontendTestsPassed": 11025
+  },
+  "sameOriginalAfterUpdate": {
+    "at": "2026-11-19T17:38:43.341+08:00",
+    "protocol": {
+      "name": "protocol-v1-1795081084669-0.jsonl",
+      "lines": 15,
+      "sha256": "521896d7c33a7754aa964d114c9f563cb2332bc30f780e808029e2e7eadc047c",
+      "outgoing": ["initialize", "session/load"],
+      "requestLine": 8,
+      "responseLine": 14,
+      "loadMs": 133
+    },
+    "sameIndexCount": 1,
+    "sameOriginalId": "2611191728-pBt6YU",
+    "lastActivity": "2026-11-19T17:38:06.457404",
+    "onlyLastActivityChanged": true,
+    "nativeHistorySha256": "540ae262e273b7a826646f973ed83a4dbc5463ee46f9a198c86035c164264e3d",
+    "historyUnchanged": true,
+    "fixtureUnchanged": true,
+    "grokProtectedFiles": 12,
+    "visibleTool": {
+      "originalId": "call_7ed1f442c9f84ada9356231b807696a7",
+      "command": "/bin/cat ./marker.txt",
+      "marker": "FF_C12_FAST_CLI_TOOL_E4BED4BEB367",
+      "exitCode": 0,
+      "outcome": "success",
+      "betweenOriginalAssistantTexts": true,
+      "partialWarningPresent": false
+    },
+    "sendBlockedBecauseOriginalModelUnconfirmed": true
+  }
+}
