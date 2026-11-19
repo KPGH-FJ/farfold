@@ -84,7 +84,7 @@
 
 **fast-agent 停止后重开的工具修复已正式复验。** 原 Grok 确认空闲后保存退出并更新。正式 `d0b4628eb` 从搜索重开同一停止 A，独立步骤显示「有步骤未成功」，技术详情有原命令、工具 ID 和厂商中断文字。原请求未确认提示保持，零模型发送及任务重跑。原两份历史及脚本保持，fast-agent 只更新最后访问时间。原 Grok 未重开，12 份原历史保持。 [正式复验](evidence/2026-11-19-cycle12-fast-terminal-exit/README.md#更新后重开同一停止样本)
 
-**fast-agent 已验首次带入 CLI 原对话及原工具回读。** 官方 CLI 沿用原配置在独立目录发一条用户消息。Farfold 从原目录找到、预览、首次带入，原索引 0→0→1，复查无法重复加入。初次打开合并工具前后的两段回复并漏显步骤。正式 `06d85a899` 重开同一条，原说明、同工具及结果、最终回复按序呈现。Farfold 全程零模型发送，原 Grok 未开。正式 `87ac54ec2` 从官方导出显示原服务及模型。厂商原记录的 High 已核，原 ID 的官方禁网状态诊断也报告 High。Farfold 这条连接的当前模型及账号未能核对，保持发送暂停，零续答。 [首次带入与正式修复](evidence/2026-11-19-cycle12-fast-cli-import/README.md) · [先前查找对照](evidence/2026-11-19-cycle12-fast-history-discovery/README.md)
+**fast-agent 已验首次带入 CLI 原对话及原工具回读。** 官方 CLI 沿用原配置在独立目录发一条用户消息。Farfold 从原目录找到、预览、首次带入，原索引 0→0→1，复查无法重复加入。初次打开合并工具前后的两段回复并漏显步骤。正式 `06d85a899` 重开同一条，原说明、同工具及结果、最终回复按序呈现。Farfold 全程零模型发送，原 Grok 未开。正式 `87ac54ec2` 从官方导出显示原服务及模型。厂商原记录的 High 已核，原 ID 的官方禁网状态诊断也报告 High。原连接确实声明 `/model`，选择后只填输入框，发送仍暂停。官方账号状态能读当前 Codex CLI 登录，原记录没有可比账号，实际使用的账号来源未确认，零续答。 [首次带入与正式修复](evidence/2026-11-19-cycle12-fast-cli-import/README.md) · [先前查找对照](evidence/2026-11-19-cycle12-fast-history-discovery/README.md)
 
 **三家正式断线与两条待发。** OpenCode、Goose、Claude 各自的原连接骤断后，热重连保留原对话和两条待发。正常保存退出再冷开，三家零自动发送。OpenCode、Claude 各点一次继续后，同原 ID 的 B、C 按序各实答一次。Goose 只发送 B，厂商报连不上 OpenRouter，原 C 暂停；后用正常入口只关闭这条自有连接，原内容保留。 [本批正式回执](evidence/2026-11-19-cycle12-disconnect-pair-queue/README.md)
 
@@ -363,6 +363,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: P33 -->
 
 ### P33
+
+2026-11-19 fast-agent 首次带入样本续查。同一当前连接发布 `/model`，菜单只填输入框，原模型未确认时无法执行。独立官方账号状态显示可读到 Codex CLI 登录，历史和轨迹无可比对的账号标识，当前连接的有效模型设置与账号仍未确认。零诊断派发、零续答，原工具未重跑。 [现场与账号回执](evidence/2026-11-19-cycle12-fast-cli-import/README.md#同连接模型命令和原账号核对)
 
 2026-11-19 fast-agent 原 CLI 样本的厂商记录确认 `codexresponses / gpt-5.6-sol / High`。载入回执只报告角色，即使原模型恢复有警告也可成功。正式 `87ac54ec2` 新增只读显示历史服务和模型，从搜索重开再点一次「重新检查」，均未确认当前设置，保持暂停，零模型发送。原 ID、工具步骤和原历史核合。 [原设置正式续查](evidence/2026-11-19-cycle12-fast-cli-import/README.md#原模型无法确认的原因及正式续查)
 

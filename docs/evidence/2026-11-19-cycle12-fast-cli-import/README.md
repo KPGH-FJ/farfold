@@ -33,3 +33,13 @@ CLI 的原配置由厂商证据核实。Farfold 对这条首次带入样本仍�
 补充已有授权的同安装只读 Codex 导出。它可以从原 ID、目录与角色一致的官方导出读回历史服务和模型。各上下文模型一致且正文逐条匹配时，才显示确认过的两项历史字段。导出缺少明确的实际思考档和账号字段，界面提示当前账号和设置仍需核对。此读取与发送保护独立。 [历史读取实现](../../../src-tauri/src/acp_client/history_supplement/parser.rs) · [界面提示](../../../src/runtime/history_tool_supplement.ts)
 
 正式 `87ac54ec2` 正常保存退出后安装，停机期间 264,505 个数据路径元信息及六份关键文件摘要核合。前端全量 11,032 项和后端相关 34 项通过，类型及正式包通过。重开同一已带入样本，显示历史 `codexresponses` 与 `gpt-5.6-sol`，原工具步骤可见。点一次「重新检查」后仍未确认本连接的已保存选择，发送保持暂停。两次均只有握手和按原 ID 读取，零发送，没有原工具重跑。索引未变且原配置仍为空，两份原历史与标记文件未变，厂商会话文件只更新 `last_activity`。原 Grok 未打开，12 份原文件保持。 [正式核对回执](original-config.json)
+
+## 同连接模型命令和原账号核对
+
+18:21–18:23，北京时间。保持正式 `87ac54ec2` 同一 Farfold 进程 37070 和同一原对话的 fast-agent 进程 37305。原 ID `2611191728-pBt6YU`，目录、索引及现有工具记录核合。原模型未确认，界面保持发送暂停。打开「命令与模板」，在当前连接发布的 Agent 命令里可见 `/model`。点击只将 `/model` 填到输入框，「加入待发」仍禁用。已清掉本次临时文字，原空草稿恢复。全程未按发送或加入待发。
+
+官方内置裸 `/model` 可以显示同一 Agent 实际选择的服务、模型和推理档。本机版本通过普通 `session/prompt` 送达该命令，结果是聊天文字。Farfold 所有普通消息都会先经过原设置校验。厂商命令列表提供名称和说明，无法区分内置处理器与同名自定义处理器，不能当作诊断必然只读或不触发模型的凭据。缺的是可在这条 Farfold 连接明确安全调用、并回报当前有效设置的官方读取入口。 [厂商模型命令](https://fast-agent.ai/models/#interactive-model-commands) · [命令扩展](https://fast-agent.ai/acp/customizing_agents/) · [Farfold 发送校验](../../../src-tauri/src/acp_client/pump/prompt.rs)
+
+在原测试目录，以独立官方 CLI 调用 `auth provider show codex --json`。禁止网络和写文件，返回 Codex 登录状态 `ready`，来源是 Codex CLI 的 `auth.json`，回包只有 `id`、`name`、`state`、`source`、`expires_at`。这说明诊断进程能读到可用登录。它不报告账号身份，也不报告 Farfold 这条连接最终会使用哪份凭据。官方服务可优先选择配置中的密钥或 `CODEX_API_KEY`。与原会话元数据、原历史和官方轨迹交叉检查，这三份记录中均未找到可比对的账号或计费身份字段。原账号及当前实际服务绑定仍无法核合。 [厂商认证命令](https://fast-agent.ai/guides/migrating-to-0-10/) · [厂商凭据说明](https://fast-agent.ai/models/llm_providers/)
+
+本批没有续问，也没有向 Farfold 当前连接派发诊断命令。986 个已存在的协议日志前后逐字节及修改时间一致。Farfold 仍绑定同一原索引，原设置记录仍空，原历史、标记文件和原工具记录保持。原 Grok 未打开，12 份原文件保持。后续需要能核对原账号及当前连接的服务、模型和思考档后，才验同原 ID 的一条续答。 [现场与账号回执](live-model-account.json)

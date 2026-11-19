@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "installedSource": "87ac54ec2",
+  "agentVersion": "0.10.1",
+  "liveFarfold": {
+    "from": "2026-11-19T18:21:36.050+08:00",
+    "to": "2026-11-19T18:23:38.009+08:00",
+    "sameFarfoldPid": 37070,
+    "sameActiveAgentPid": 37305,
+    "originalNativeId": "2611191728-pBt6YU",
+    "sameOriginalIndex": true,
+    "configurationStillUnconfirmed": true,
+    "modelCommandAdvertisedInLiveFarfold": true,
+    "modelCommandInsertedButDispatchDisabled": true,
+    "draft": {
+      "observedEmptyBefore": true,
+      "observedEmptyAfter": true,
+      "testTextCleared": "/model"
+    },
+    "protocolLogsUnchanged": 986,
+    "modelOrDiagnosticPromptSent": 0,
+    "oldToolReexecuted": false,
+    "nativeHistoryAndFixtureUnchanged": true,
+    "protectedOriginalGrokFiles": 12
+  },
+  "officialCodexCredentialStatus": {
+    "at": "2026-11-19T18:23:09.961+08:00",
+    "networkDenied": true,
+    "fileWritesDenied": true,
+    "scope": "independent official CLI status under original test directory",
+    "provider": "codex",
+    "officialState": "ready",
+    "sourceClass": "Codex CLI auth.json",
+    "expiryProvided": false,
+    "returnedFields": ["expires_at", "id", "name", "source", "state"],
+    "returnedStableAccountIdentity": false
+  },
+  "originalAccountEvidence": {
+    "nativeSnapshotIdentityFieldMatches": 0,
+    "nativeHistoryIdentityFieldMatches": 0,
+    "officialTrajectoryIdentityFieldMatches": 0,
+    "searchLimitedToStructuredFields": true
+  },
+  "waitingFor": {
+    "sameConnectionReadOnlyModelSettings": true,
+    "originalAccountAndEffectiveBillingSource": true,
+    "oneSameOriginalContinuation": true
+  }
+}
