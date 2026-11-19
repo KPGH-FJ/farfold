@@ -1013,7 +1013,7 @@ Autohand 前台子进程及工具终态、Copilot、Cursor 与 Kilo 工具终态
 - **Claude Code**。Farfold 独立小米 Messages 测试已有实答，官方适配器的私密凭据交接仍待支持。若要测独立官方账号来源，可在用户方便时从 Farfold 官方账号入口使用所选 Claude 订阅或 Anthropic Console 登录。
 - **Gemini CLI 与 Antigravity**。保持暂缓，后续恢复该验收时由用户本人完成官方登录。
 
-[C12 逐家验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json) · [最新正式回执](evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md)
+[C12 逐家验收表](evidence/2026-11-15-cycle12-continuation/acceptance-roster.json) · [本批断线与待发](evidence/2026-11-19-cycle12-disconnect-pair-queue/README.md) · [后台停止和冷回读](evidence/2026-11-19-cycle12-official-background-stop/README.md)
 
 ## 历史、原件与维护
 
