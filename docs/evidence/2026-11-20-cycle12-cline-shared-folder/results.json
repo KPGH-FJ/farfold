@@ -1,0 +1,84 @@
+{
+  "appSource": "87ac54ec25e1e8d2085c7aef2bfa8f83b744cccb",
+  "appCdHash": "9547fa1f88f9ca651e857a64c14b61748e20e7c4",
+  "cwd": "/private/tmp/ff-c12-n20-ryup8cla/cline",
+  "processes": {
+    "sharedParentPid": 31026,
+    "a": [24181, 24183],
+    "b": [24173, 24175],
+    "bothObservedBeforeStop": true,
+    "stopUnixMs": 1795115185951,
+    "postStopSampleNs": 1795115192089343000,
+    "postStopPresent": [24173, 24175],
+    "resultANeverCreated": true,
+    "resultBUnixNs": 1795115195640127862
+  },
+  "files": {
+    "source.txt": {
+      "path": "fixture/source.txt",
+      "bytes": 31,
+      "sha256": "bdd39cbea3cc58cc072fb21f4579fafcf5295d77592cae690ea4fabb260f7c25"
+    },
+    "a.sh": {
+      "path": "fixture/a.sh",
+      "bytes": 162,
+      "sha256": "fcab0febf35c73d0d3d730b6b6abe13b0561d5605e38b0942dc377346957f37e"
+    },
+    "b.sh": {
+      "path": "fixture/b.sh",
+      "bytes": 162,
+      "sha256": "9b8ab58f567f266e98fb63237035bfbacf6209232aa1e6051e6013a3584e38e4"
+    },
+    "b-result.txt": {
+      "path": "fixture/b-result.txt",
+      "bytes": 26,
+      "sha256": "0e1a29dc8e81bcb1ca7148b9f5d9d4eab2b90c15717f78c47ef12dc0fb635023"
+    },
+    "startMarkerSha256": {
+      "a-started.txt": "9a3e11e0a841b6b8783717dc7d719738077fe582d01debed47793db2e82ccb10",
+      "b-started.txt": "3a595c612868899f4b124f63abb77cbec55ab6c2562e0257f418f2c617cf72f3"
+    }
+  },
+  "agents": {
+    "a": {
+      "nativeId": "1795115120856_yBgnl_cli",
+      "model": "nvidia/nemotron-3.5-super-vl:free",
+      "metaSha256": "bee7d152fa7a6961578a71027bffdd4cb9c3b84b8552f5629625fb6d1b28c080",
+      "messagesSha256": "5789d3dbb0f730e52fea404f035a81856c09cd1c4703901b2de746ab61f91de0",
+      "toolCallId": "call-6ad82634-3d31-4c56-aa8e-3609708027d8",
+      "nativeToolCancellation": true,
+      "observedUI": "回复已停止",
+      "protocol": {
+        "file": "protocol-v1-1795115120543-4.jsonl",
+        "prefixLines": 23,
+        "prefixSha256": "3214db76d68dbd568665ed825f58cbbe6a40a75751c90c379c626debd4043ee0",
+        "eventLines": {
+          "session/new": [9],
+          "session/prompt": [14],
+          "session/request_permission": [17],
+          "session/cancel": [20]
+        }
+      }
+    },
+    "b": {
+      "nativeId": "1795115139718_vG_MX_cli",
+      "model": "nvidia/nemotron-3.5-super-vl:free",
+      "metaSha256": "517e801f672db34e050396f050c2acc1caa79460f6ed0b1495501bdb8b31a217",
+      "messagesSha256": "7cdc23c50e06e6a675b72a553e6730b4826b91b754bb6f1d183e33540129106e",
+      "toolCallId": "call-2a07a78e-cdff-4cf2-b127-ed3b6e732e75",
+      "nativeToolCancellation": false,
+      "observedUI": "已完成",
+      "protocol": {
+        "file": "protocol-v1-1795115139416-5.jsonl",
+        "prefixLines": 26,
+        "prefixSha256": "f46f5645490c9df691d288f98e00f5ff3bd74ddce0372468d80b5e807c060dfc",
+        "eventLines": {
+          "session/new": [9],
+          "session/prompt": [14],
+          "session/request_permission": [17],
+          "session/cancel": []
+        }
+      }
+    }
+  }
+}
