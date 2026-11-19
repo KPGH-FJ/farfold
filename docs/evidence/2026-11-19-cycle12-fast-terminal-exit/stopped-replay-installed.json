@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "d0b4628ebf3ecd60b28aa00c692d8f49017eb694",
+  "preflight": {
+    "at": "2026-11-19T16:52:11.289+08:00",
+    "oldFarfoldPid": 3221,
+    "oldGrokPid": 9133,
+    "oldGrokLoadSucceeded": true,
+    "oldGrokPromptCount": 0,
+    "oldGrokPermissionCount": 0,
+    "oldGrokCommandDescendantCount": 0,
+    "oldGrokUnsentDraftOrQueue": false,
+    "oldApplicationCdhash": "4e5bba7028bdabce14eb3dd531844654e8b611ce"
+  },
+  "installation": {
+    "at": "2026-11-19T16:52:56.084+08:00",
+    "normalSaveAndExit": true,
+    "oldConnectionProcessesExited": true,
+    "formalApp": "/Applications/Farfold.app",
+    "duplicateCandidateRemoved": true,
+    "arch": "arm64",
+    "cdhash": "8293d637522820f8961731718c0f3e0e2c2b3d1d",
+    "executable": {
+      "bytes": 41430640,
+      "sha256": "3edc1db2aeadc4292d34743a552c23327ba5abe725ef11d3d8098b1274d59af1",
+      "mode": 493
+    },
+    "dataPathsCompared": 264493,
+    "dataManifestSha256": "ad394515bff2112cfdffd49ba7189f523589e6a719e5a37122e75bac90cfead7",
+    "criticalFilesCompared": 6,
+    "dataSameWhileApplicationClosed": true
+  },
+  "replay": {
+    "at": "2026-11-19T16:55:20.129+08:00",
+    "fastId": "2611190032-HHTgjC",
+    "fastCwd": "/private/tmp/ff-c12-fast-exit-formal.JpK9ieWk/a",
+    "installedPid": 22819,
+    "fastPid": 23060,
+    "noGrokStartup": true,
+    "protectedGrokNativeFiles": 12,
+    "unchangedFastNativeHistoryFiles": [
+      "history_agent.json",
+      "history_agent_previous.json"
+    ],
+    "unchangedFastFixtures": {
+      "task.sh": {
+        "bytes": 339,
+        "sha256": "3c162241d5e83ec44adaac0637333ff74643c9bcb119b510e3f2dec5bb8724b7",
+        "mtimeNs": 1795018992301702387
+      },
+      "shell.pid": {
+        "bytes": 6,
+        "sha256": "d1732ae17ea6865c742f458cf679b6e850e7da6c6c937779348828f77ccefdad",
+        "mtimeNs": 1795019630273854963
+      },
+      "child.pid": {
+        "bytes": 6,
+        "sha256": "87a9f337e217eef1325497b73a4a81bca7dc786eb7e41f7a1e4333af5e92a2e9",
+        "mtimeNs": 1795019630274450300
+      }
+    },
+    "taskResultAbsent": true,
+    "sessionMetadata": {
+      "exactChangedField": "last_activity",
+      "from": "2026-11-19T16:22:29.672000",
+      "to": "2026-11-19T16:53:23.119860",
+      "before": {
+        "bytes": 2702,
+        "sha256": "d22fac3d8ca53c36ae8c081f821494a055b49857ba17f84c4b4d32facc012f0e",
+        "mtimeNs": 1795076549672393622
+      },
+      "after": {
+        "bytes": 2702,
+        "sha256": "5f8c5a1dd8c3513efd8ecd8a15f300c7857d2ecad04526fdfe626d18db01f305",
+        "mtimeNs": 1795078403120187497
+      },
+      "oldFullDigestReconstructed": true
+    },
+    "protocol": {
+      "file": "protocol-v1-1795078401308-0.jsonl",
+      "sha256": "54a0cda6985f2f9069238070cf6500cf5fa2c9d3d5701b2b2a2d3e38cf97823a",
+      "lines": 14,
+      "outgoing": ["initialize", "session/load"],
+      "loadLine": 8,
+      "responseLine": 13,
+      "loadMillis": 131
+    }
+  },
+  "observedInterface": {
+    "entry": "搜索对话",
+    "resultOpenedCount": 1,
+    "toolStepCount": 1,
+    "toolStepStatus": "有步骤未成功",
+    "toolErrorStatus": "error",
+    "toolId": "call_309a8c530b2e41b5a852290d8de84a3e",
+    "interruption": "**The user interrupted this tool call**",
+    "requestOutcome": "此前请求结果未确认，未自动重发",
+    "partialHistoryWarningPresent": false,
+    "newLocalTerminalExitReceiptPresent": false
+  }
+}
