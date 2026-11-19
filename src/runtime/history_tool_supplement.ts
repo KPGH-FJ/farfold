@@ -15,6 +15,26 @@ const MAX_BYTES = 8 * 1024 * 1024;
 const string = (v: unknown): v is string =>
   typeof v === "string" && v.length > 0 && !v.includes("\0");
 
+type HistoryAnchor = { role: "user" | "assistant"; text: string };
+type PreparedTool = {
+  gap: number;
+  resultGap: number;
+  item: Extract<ThreadItem, { kind: "tool" }>;
+};
+type PreparedSupplement = {
+  tools: PreparedTool[];
+  splits: Map<ThreadItem, [string, string]>;
+};
+
+function isHistoryAnchor(value: unknown): value is HistoryAnchor {
+  return (
+    record(value) &&
+    exact(value, ["role", "text"]) &&
+    (value.role === "user" || value.role === "assistant") &&
+    string(value.text)
+  );
+}
+
 export function isOwnedHistoryToolSupplement(
   state: ThreadState,
   event: unknown,
@@ -105,17 +125,18 @@ export function applyHistoryToolSupplement(
   }
   // Future official replay stays authoritative, including partial tool replay.
   if (state.items.some((item) => item.kind === "tool")) return true;
-  let tools: { gap: number; item: ThreadItem }[] | undefined;
+  let prepared: PreparedSupplement | undefined;
   try {
     if (new TextEncoder().encode(JSON.stringify(event)).length <= MAX_BYTES)
-      tools = prepare(state, event.anchors, event.tools);
+      prepared = prepare(state, event.anchors, event.tools);
   } catch {
     // A malformed local payload cannot damage the readable ACP prefix.
   }
-  if (!tools) {
+  if (!prepared) {
     notice(state, STRINGS.historySupplement.partial);
     return true;
   }
+  const { tools, splits } = prepared;
   if (!tools.length) return true;
   const original = state.items;
   const merged: ThreadItem[] = [];
@@ -127,7 +148,22 @@ export function applyHistoryToolSupplement(
   };
   insert();
   for (const item of original) {
-    merged.push(item);
+    const split = splits.get(item);
+    if (split && item.kind === "user") {
+      merged.push({ ...item, text: split[0] });
+      anchors++;
+      insert();
+      merged.push({
+        kind: "user",
+        id: crypto.randomUUID(),
+        text: split[1],
+        attachments: [],
+        streaming: false,
+        time: item.time,
+      });
+    } else {
+      merged.push(item);
+    }
     if ((item.kind === "user" || item.kind === "agent") && item.text.length) {
       anchors++;
       insert();
@@ -138,35 +174,23 @@ export function applyHistoryToolSupplement(
   return true;
 }
 
-function prepare(state: ThreadState, anchors: unknown, rawTools: unknown) {
+function prepare(
+  state: ThreadState,
+  anchors: unknown,
+  rawTools: unknown,
+): PreparedSupplement | undefined {
   if (
     !Array.isArray(anchors) ||
     !Array.isArray(rawTools) ||
+    !anchors.length ||
     anchors.length > 20_000 ||
-    rawTools.length > 2_000
+    rawTools.length > 2_000 ||
+    !anchors.every(isHistoryAnchor)
   )
     return;
-  const visible = state.items.filter(
-    (item) =>
-      (item.kind === "user" || item.kind === "agent") && item.text.length,
-  );
-  if (visible.length !== anchors.length || !anchors.length) return;
-  for (let i = 0; i < anchors.length; i++) {
-    const a = anchors[i];
-    const item = visible[i];
-    if (
-      !record(a) ||
-      !exact(a, ["role", "text"]) ||
-      !string(a.text) ||
-      (item.kind !== "user" && item.kind !== "agent") ||
-      a.role !== (item.kind === "user" ? "user" : "assistant") ||
-      a.text !== item.text
-    )
-      return;
-  }
   const ids = new Set<string>();
   let lastGap = 0;
-  const result: { gap: number; item: ThreadItem }[] = [];
+  const tools: PreparedTool[] = [];
   for (const tool of rawTools) {
     if (
       !record(tool) ||
@@ -225,8 +249,9 @@ function prepare(state: ThreadState, anchors: unknown, rawTools: unknown) {
         content.push({ type: "attachment", attachment });
       } else return;
     }
-    result.push({
+    tools.push({
       gap: tool.callAfterAnchor,
+      resultGap: tool.resultAfterAnchor,
       item: {
         kind: "tool",
         id: crypto.randomUUID(),
@@ -249,5 +274,58 @@ function prepare(state: ThreadState, anchors: unknown, rawTools: unknown) {
       },
     });
   }
-  return result;
+  const splits = alignHistoryAnchors(state.items, anchors, tools);
+  if (splits) return { tools, splits };
+}
+
+function alignHistoryAnchors(
+  items: ThreadItem[],
+  anchors: HistoryAnchor[],
+  tools: PreparedTool[],
+) {
+  const splits = new Map<ThreadItem, [string, string]>();
+  let index = 0;
+  for (const item of items) {
+    if ((item.kind !== "user" && item.kind !== "agent") || !item.text) continue;
+    const first = anchors[index];
+    if (first?.role !== (item.kind === "user" ? "user" : "assistant")) return;
+    if (first.text === item.text) {
+      index++;
+      continue;
+    }
+    const second = anchors[index + 1];
+    if (
+      item.kind !== "user" ||
+      item.messageId !== undefined ||
+      item.historyForkPoint ||
+      item.attachments.length ||
+      second?.role !== "user" ||
+      first.text + second.text !== item.text
+    )
+      return;
+
+    // Split only when the export independently places a single failed call
+    // across this boundary and its text result is the second exact anchor.
+    const afterFirst = index + 1;
+    const afterSecond = index + 2;
+    const crossing = tools.filter(
+      (tool) => tool.gap === afterFirst || tool.resultGap === afterSecond,
+    );
+    const tool = crossing[0];
+    const content = tool?.item.call.content;
+    if (
+      crossing.length !== 1 ||
+      tool.gap !== afterFirst ||
+      tool.resultGap !== afterSecond ||
+      tool.item.call.status !== "failed" ||
+      content?.length !== 1 ||
+      content[0].type !== "text" ||
+      content[0].text !== second.text
+    )
+      return;
+
+    splits.set(item, [first.text, second.text]);
+    index += 2;
+  }
+  if (index === anchors.length) return splits;
 }

@@ -34,17 +34,21 @@ function payload(): any {
     ],
   };
 }
-function message(role: "user" | "agent", text: string, id = role as string) {
+function message(
+  role: "user" | "agent",
+  text: string,
+  id: string | null = role,
+) {
   return {
     sessionId: "sid",
     update: {
       sessionUpdate: `${role}_message_chunk`,
-      messageId: id,
+      ...(id === null ? {} : { messageId: id }),
       content: { type: "text", text },
     },
   };
 }
-function open(current = () => true) {
+function begin(current = () => true) {
   const replay = new SessionOpenReplay(
     { agentId: "fixture", cwd: "/owned", nativeSessionId: "sid" },
     undefined,
@@ -59,6 +63,10 @@ function open(current = () => true) {
     sessionId: "sid",
     connectionId: "connection",
   });
+  return replay;
+}
+function open(current = () => true) {
+  const replay = begin(current);
   replay.push(message("user", "请查看🙂"));
   replay.push(message("agent", "完成"));
   return replay;
@@ -81,6 +89,157 @@ function accept(replay: SessionOpenReplay): ThreadState {
   );
 }
 const tools = (s: ThreadState) => s.items.filter((i) => i.kind === "tool");
+
+const stoppedInput = "请运行一次命令🙂";
+const stoppedResult = "Tool execution interrupted by user.";
+
+function stoppedPayload() {
+  const source = payload();
+  const args = { command: "/bin/sh ./task.sh" };
+  source.anchors = [
+    { role: "user", text: stoppedInput },
+    { role: "user", text: stoppedResult },
+  ];
+  Object.assign(source.tools[0], {
+    name: "execute",
+    arguments: args,
+    resultAfterAnchor: 2,
+    outcome: "error",
+    content: [{ type: "text", text: stoppedResult }],
+    rawCall: {
+      type: "function_call",
+      call_id: "call",
+      name: "execute",
+      arguments: JSON.stringify(args),
+    },
+    rawResult: {
+      type: "function_call_output",
+      call_id: "call",
+      status: "error",
+      output: stoppedResult,
+    },
+  });
+  return source;
+}
+
+function stoppedReplay() {
+  const replay = begin();
+  replay.push({
+    ...message("user", stoppedInput, null),
+    futureEnvelope: { owner: "first" },
+  });
+  replay.push(message("user", stoppedResult, null));
+  return replay;
+}
+
+it("restores an interrupted historical tool between two coalesced user anchors", () => {
+  const replay = stoppedReplay();
+  const source = stoppedPayload();
+  replay.push(source);
+  const state = accept(replay);
+  expect(state.items.map((item) => item.kind)).toEqual([
+    "user",
+    "tool",
+    "user",
+    "notice",
+  ]);
+  expect(state.items[0]).toMatchObject({
+    text: stoppedInput,
+    reportedDetails: { "/futureEnvelope": { owner: "first" } },
+  });
+  expect(state.items[2]).toMatchObject({ text: stoppedResult });
+  expect(state.items[2].reportedDetails).toBeUndefined();
+  expect(state.items[0].id).not.toBe(state.items[2].id);
+  expect(tools(state)[0].call).toMatchObject({
+    toolCallId: "call",
+    status: "failed",
+    startedAt: 0,
+    content: [{ type: "text", text: stoppedResult }],
+    rawOutput: { result: source.tools[0].rawResult },
+  });
+  expect(state.activeToolCallIds).toEqual([]);
+  expect(state.pendingPermissions).toEqual([]);
+});
+
+it.each([
+  [
+    "different result",
+    (p: any) => {
+      p.tools[0].content[0].text += "!";
+    },
+  ],
+  [
+    "changed anchor",
+    (p: any) => {
+      p.anchors[1].text += "!";
+    },
+  ],
+  [
+    "successful outcome",
+    (p: any) => {
+      p.tools[0].outcome = "success";
+    },
+  ],
+  [
+    "result at the first anchor",
+    (p: any) => {
+      p.tools[0].resultAfterAnchor = 1;
+    },
+  ],
+  [
+    "two candidate tools",
+    (p: any) => {
+      const second = structuredClone(p.tools[0]);
+      second.toolCallId = "other";
+      second.rawCall.call_id = "other";
+      second.rawResult.call_id = "other";
+      p.tools.push(second);
+    },
+  ],
+] as const)(
+  "preserves an unproven coalesced user item on %s",
+  (_name, mutate) => {
+    const replay = stoppedReplay();
+    const source = stoppedPayload();
+    mutate(source);
+    replay.push(source);
+    const state = accept(replay);
+    expect(tools(state)).toHaveLength(0);
+    expect(state.items[0]).toMatchObject({
+      kind: "user",
+      text: stoppedInput + stoppedResult,
+    });
+    expect(state.items.at(-1)).toMatchObject({
+      message: STRINGS.historySupplement.partial,
+    });
+  },
+);
+
+it("leaves a coalesced user item with an attachment intact", () => {
+  const replay = stoppedReplay();
+  replay.push({
+    sessionId: "sid",
+    update: {
+      sessionUpdate: "user_message_chunk",
+      content: {
+        type: "image",
+        mimeType: "image/png",
+        data: PNG_IMAGE_TEST_DATA,
+      },
+    },
+  });
+  replay.push(stoppedPayload());
+  const state = accept(replay);
+  expect(tools(state)).toHaveLength(0);
+  expect(state.items[0]).toMatchObject({
+    kind: "user",
+    text: stoppedInput + stoppedResult,
+    attachments: [{ data: PNG_IMAGE_TEST_DATA }],
+  });
+  expect(state.items.at(-1)).toMatchObject({
+    message: STRINGS.historySupplement.partial,
+  });
+});
 
 it("merges an official export in its original gap without execution, activity, or fabricated timing", () => {
   const replay = open();
