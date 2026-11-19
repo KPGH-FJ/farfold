@@ -11,3 +11,11 @@
 | Claude    | 已拒绝且已告知 Agent。同工具 `is_error=true` 且为用户拒绝，随后同轮准确答 `FF_C12_N19_CLAUDE_DENIED`，显示已完成。                                                                                        | 会话 `8ea5c7dc-adde-49d6-9b5c-c1ec17c2bf93`，Bash `call_3b542cd64ddc47e5a62e4bb1`。Farfold `protocol-v1-1795018641676-7.jsonl` 第 29、52、55、56、67–73 行。Claude 该会话 JSONL 第 3、21、24、31 行为消息、原 MiMo 工具、该工具拒绝、原 MiMo 回答。                                                                                                                                                                                                                          |
 
 本批证明三个真实单次拒绝均没有执行自建命令，Qoder 和 Claude 同轮收到确切工具拒绝及回复。CodeBuddy 的厂商诊断用于核对，Farfold 展示仍以实际收到的事件为准。持久授权撤回、其他工具类型、拒绝后的冷开均按原条件继续。
+
+## Qoder 单次拒绝冷回读
+
+2026-11-19，正式 Farfold 0.1.7 `5e12e06d9`（CDHash `4e5bba7028bdabce14eb3dd531844654e8b611ce`）。应用正常退出并重启后，从搜索打开同一自有 Qoder 1.1.89 对话 `6ba24991-5c1b-438b-a475-e8cfc833d5bf`，目录为 `/private/tmp/ff-c12-approval-denial.j0gXgKIQ/qoder`。读回原用户正文及 `FF_C12_N19_QODER_DENIED`。处理过程显示「有步骤未成功」，原步骤为「执行」，详情显示 `/bin/sh ./task.sh` 和「工具错误」。冷开界面未显示步骤是用户拒绝。原输入和脚本的摘要与首次相同，`ran.txt` 仍不存在。
+
+Farfold `protocol-v1-1795067036270-5.jsonl` 第 8 行 13:44:03.787 唯一 `session/load`，第 11 行同次读取的唯一工具事件，第 14 行 13:44:20.661 成功回执。前 15 行零新建、发送、取消及审批请求，SHA-256 `aa193d2e44aa2b5ba0db076067ac433e74606babf633d78ff31460f1f0ebc623`。厂商原历史第 10、12 行对应同一 `call_0fd2d30a8b0045d9abbdfb4d`。第 12 行的 `tool_result` 含 `is_error: true` 及 `Permission denied by the ACP client.`，同期 `toolUseResult` 字段只有 `{ "isHardFailure": false }`。冷开追加第 21 行 `runtime-config` 元数据，未新增用户、助手或工具消息。
+
+核对原登记 1.1.89 安装包 `bundle/qodercli.js` 第 386 行（SHA-256 `b7a2d6d54bf868f7226abc759c10c6361ea4ab04ddd4c0615eb90ccef3524377`）。`H0s` 通过 `$Xu` 按工具 ID 归并，再经 `E7e` 生成 `tool_call`。对该原对象，`is_error` 映射为 `failed`，展示值及 `rawOutput` 来自 `toolUseResult`。该路径不取原 `tool_result.content` 拒绝文字，也没有独立的拒绝原因字段。正式日志只留事件类别，无法从诊断反推出完整回放帧。冷开已证原回复与工具失败状态，精确拒绝原因仍需官方回放保留原拒绝信息后再验。[厂商 1.1.89 发布包](https://registry.npmjs.org/@qoder-ai/qodercli/-/qodercli-1.1.89.tgz)

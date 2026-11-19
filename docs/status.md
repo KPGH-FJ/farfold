@@ -72,7 +72,11 @@
 
 **Grok Build 的双对话审批隔离已验。** 1.0.46 沿用原 Grok 4.7 / Low，两张卡同时等待。仅拒绝 A，B 的原审批仍在；只批准 B 后准确写出 28 字节并从本轮产物打开，A 无成品、原件保持。此前切换新目录时，已被换掉的旧准备仍启动并拖延。本次正式复验两次切换，原历史初始化按时退出，随后只启动最终目录，零模型发送。原历史初始化本次超时原因仍未知。 [正式回执](evidence/2026-11-19-cycle12-grok-approval-isolation/README.md)
 
+**Grok 原历史启动超时有同版对照。** 正常冷开原产物对话，约 60 秒仍未完成握手，界面准确显示原因未知，未发历史读取。随后独立目录的原 B 握手约 5.2 秒并读回同一会话与原回复，两条均零模型发送。官方日志把超时范围缩到读取启动设置之后、首个握手之前。同一个原目录此前也曾成功，根因仍未知。 [启动与历史对照](evidence/2026-11-19-cycle12-grok-startup-control/README.md)
+
 **三家正式断线与两条待发。** OpenCode、Goose、Claude 各自的原连接骤断后，热重连保留原对话和两条待发。正常保存退出再冷开，三家零自动发送。OpenCode、Claude 各点一次继续后，同原 ID 的 B、C 按序各实答一次。Goose 只发送 B，厂商报连不上 OpenRouter，原 C 暂停；后用正常入口只关闭这条自有连接，原内容保留。 [本批正式回执](evidence/2026-11-19-cycle12-disconnect-pair-queue/README.md)
+
+**待发图片、Cline 断线和 OpenCode 同目录双前台。** OpenCode 与 Claude 各在两条待发里的第一条附 PNG，实际断线、热重连和正常退出再开后按原顺序保留。各点一次继续，两条都在原对话按序各发送一次，厂商记录的 PNG 和原件逐字节一致。Cline 实际断线后同原对话热重连及冷开，唯一待发和带 PNG 的独立草稿均保留，零重发。厂商共享进程继续到自然完成；Farfold 保留结果未知。OpenCode 在同一目录同时运行两条前台任务，只点停 A，A 的工具与子进程退出，B 继续并写出字节准确的独立成品，共享原件保持。 [待发图片](evidence/2026-11-19-cycle12-queued-image-recovery/README.md) · [Cline 断线](evidence/2026-11-19-cycle12-cline-disconnect/README.md) · [同目录双前台](evidence/2026-11-19-cycle12-same-folder-stop/README.md)
 
 **Claude 后台实际停止已验，OpenCode 原生后台失败留证。** 主回复结束后，从 Claude 独立任务点停止，同一 Bash 的 Shell 与子进程退出，超过原结束时间无成品。 同一任务的官方止态写入原历史后，冷开准确显示已停止；较早读取只返回启动步骤。OpenCode 普通停止只结束原回复，原生后台 Shell 同 ID 继续并自然写出成品。等官方能按该 Shell ID 精确停止。Goose 当前普通登记未启用可独立停止的计划任务，保持后台缺项。 [本批正式回执](evidence/2026-11-19-cycle12-official-background-stop/README.md)
 
@@ -264,6 +268,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 
 2026-11-19 正式 CodeBuddy、Qoder 与 Claude 各在自建目录拒绝一个准确的 Bash 命令，均未执行。Qoder 和 Claude 同工具拒绝后原轮正常答复。CodeBuddy 拒绝已送达，原轮结束，缺该原工具的协议终态，界面保留未知。 [正式回执](evidence/2026-11-19-cycle12-approval-denial/README.md)
 
+2026-11-19 冷开 Qoder 同一条拒绝样本，原命令、步骤未成功及原回复可见，脚本未运行，零新建、发送和取消。官方历史保存明确拒绝原因，本机登记 1.1.89 的回放映射仅保留失败，Farfold 详情显示「工具错误」。明确区分拒绝与其他工具失败待官方回放提供原因。 [正式回执](evidence/2026-11-19-cycle12-approval-denial/README.md)
+
 2026-11-18 OpenCode 2.2.7 的正式 Xiaomi MiMo / Build 在前台命令执行期间入队 B。只点停止后 A 原 Shell 和子进程退出，B 保持暂停。冷开同一原对话约 24.5 秒零自动发送；点击一次继续后 B 实答，队列清空。 [正式回执](evidence/2026-11-18-cycle12-opencode-paused-queue/README.md)
 
 2026-11-18 CodeBuddy 正式 `6ca11aa5a` 从原目录以实际 Hy4 / On 在独立工作目录并行，各批准一次原命令。只停 A 后 A 原 Shell 和子进程退出、原工具中止，B 原进程独立交付。 [正式回执](evidence/2026-11-18-cycle12-codebuddy-registry-stop/README.md)
@@ -333,6 +339,10 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: P33 -->
 
 ### P33
+
+2026-11-19 Cline 从正常入口在途断线、热重连及冷开同一原对话，原待发和带图片草稿保持，零自动重发。厂商共享进程在断线后自然完成，界面保留结果未知。 [正式回执](evidence/2026-11-19-cycle12-cline-disconnect/README.md)
+
+2026-11-19 Grok 的原产物对话本次在握手前超时，无历史请求。独立目录的原 B 实际读回正文，零模型发送；两条各自保留原证据。 [正式对照](evidence/2026-11-19-cycle12-grok-startup-control/README.md)
 
 2026-11-19 正式 OpenCode、Goose、Claude 意外断线后各自热重连和冷开同一原 ID，原设置和两条待发保留，零自动发送。明确续发时 OpenCode 与 Claude 两条都实答；Goose B 遇服务连接错误，原 C 保留。 [正式回执](evidence/2026-11-19-cycle12-disconnect-pair-queue/README.md)
 
