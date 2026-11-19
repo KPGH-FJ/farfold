@@ -1394,12 +1394,13 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "旧 OpenRouter 免费样本按原请求核到已有默认工作区及账单 $0.00。C8 Super VL 为既有实际选择。\n2026-11-18 补录 11-17：自有对话冷开后沿用户已选的 OpenRouter 免费 Ultra 手动实答，官方账单该条记录 0 成本，随后恢复原 Super VL / Off。",
-          "remaining": "只核到本次服务和账单，换号、服务失效和其他收费情况仍待。",
+          "observed": "旧 OpenRouter 免费样本按原请求核到已有默认工作区及账单 $0.00。C8 Super VL 为既有实际选择。\n2026-11-18 补录 11-17：自有对话冷开后沿用户已选的 OpenRouter 免费 Ultra 手动实答，官方账单该条记录 0 成本，随后恢复原 Super VL / Off。\n2026-11-20 正式 87ac54ec2，两组独立样本沿用已保存的 OpenRouter 免费 Super VL / Off 再次实答。",
+          "remaining": "新样本核实已选服务能实答。旧账单仅覆盖原样本，换号、服务失效的处理和其他收费情况仍待。",
           "sources": [
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
             "docs/evidence/2026-11-15-cycle8-observation/README.md",
-            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md"
+            "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md",
+            "docs/evidence/2026-11-20-cycle12-goose-queue-recheck/README.md"
           ],
           "status": "已选服务有实答"
         },
@@ -1452,21 +1453,22 @@
           "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "1.59.1 停止时 shell 和 sleep 都消失，冷开保留未知，零重发。旧 1.52.0 有子进程继续的反例。\n2026-11-16 续查：正式 1.59.1 实际前台 Shell 和子进程均退出，Agent 取消后仍无原实时终态。\n2026-11-17 从正常界面仅停 A，Shell 与子进程实际退出且无完成标记。新版冷开读回原标识、草稿、附件与配置，零自动重发，手动续问成功。\n2026-11-19 正式 2a4ee8627，Goose 1.59.1 沿原 OpenRouter 免费模型。前台原 Shell 和子进程均停，待发原文冷开暂停仍在。约 22 秒零自动发送，点一次继续后同原 ID 实答并清空待发，A 原工具仍未知。\n2026-11-19 正式前台工具在途意外断线，原进程退出。热重连和冷开同原 ID、原配置及两条有序待发原文，零自动发送。明确继续后 B 只发一次遇 OpenRouter 连接错误，C 暂停，原记录保持。此登记无官方独立后台停止入口。",
-          "remaining": "原 OpenRouter 恢复后核适用的有序两条成功续发。当前登记的后台操作待官方适用入口；其他附件、队列与工具终态按原项。",
+          "observed": "1.59.1 停止时 shell 和 sleep 都消失，冷开保留未知，零重发。旧 1.52.0 有子进程继续的反例。\n2026-11-16 续查：正式 1.59.1 实际前台 Shell 和子进程均退出，Agent 取消后仍无原实时终态。\n2026-11-17 从正常界面仅停 A，Shell 与子进程实际退出且无完成标记。新版冷开读回原标识、草稿、附件与配置，零自动重发，手动续问成功。\n2026-11-19 正式 2a4ee8627，Goose 1.59.1 沿原 OpenRouter 免费模型。前台原 Shell 和子进程均停，待发原文冷开暂停仍在。约 22 秒零自动发送，点一次继续后同原 ID 实答并清空待发，A 原工具仍未知。\n2026-11-19 正式前台工具在途意外断线，原进程退出。热重连和冷开同原 ID、原配置及两条有序待发原文，零自动发送。明确继续后 B 只发一次遇 OpenRouter 连接错误，C 暂停，原记录保持。此登记无官方独立后台停止入口。\n2026-11-20 正式 87ac54ec2。第一组连接始终保持，原 Shell 超时结束后待发 B、C 按序各实答。第二组在原工具运行时仅结束自有连接，模拟意外断开。独立进程组内原 Shell 和 sleep 继续至脚本自然完成。同原 ID 热重连和冷开原配置、两条待发准确保留，零自动发送。仅点一次继续，两条按序各实答一次。较早失败的原 C 保持。",
+          "remaining": "意外断线后的独立进程组仍需按原任务精确回收，以及可核对的原工具终态回执。当前登记的后台操作仍待官方精确停止入口；其他附件、队列与工具终态按原项。",
           "sources": [
             "docs/evidence/2026-11-15-cycle7-goose-retest/README.md",
             "docs/evidence/2026-11-15-cycle7-acceptance/README.md",
             "docs/evidence/2026-11-17-cycle12-stop-delivery-approval/README.md",
             "docs/evidence/2026-11-19-cycle12-goose-paused-queue/README.md",
             "docs/evidence/2026-11-19-cycle12-disconnect-pair-queue/README.md",
-            "docs/evidence/2026-11-19-cycle12-official-background-stop/README.md"
+            "docs/evidence/2026-11-19-cycle12-official-background-stop/README.md",
+            "docs/evidence/2026-11-20-cycle12-goose-queue-recheck/README.md#冷开同一原会话并明确续发"
           ],
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "正式版明确显示回复已停止而工具待确认、旧模式等原信息保留。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 实际前台脚本结束时未宣称所有工具步骤已结束，冷开保留原请求未知提示。\n2026-11-17 续验：实际查找的目录与已加入反馈准确，无跨 Agent 串项或重复加入。\n2026-11-19 正式 2a4ee8627，Goose 1.59.1 沿原 OpenRouter 免费模型。正常入口看到「已排队 1 条」「回复已停止」「待发消息已暂停」。冷开仍提示此前结果未确认，明确继续 B 后显示已完成，A 原警示保持。\n2026-11-19 正式 42ffe103e 从探索页筛选 goose 后打开管理，关闭准备回原搜索结果和原管理按钮焦点。\n2026-11-19 正式断线显示结果未知并保留两条。冷开明确继续后 B 显示请求未完成，C 保持暂停。正常检查后仅关闭本条失败连接，队列 C、原历史保持。",
-          "remaining": "OpenRouter 恢复后验成功续发与清楚反馈，其他准备失败和恢复仍开放。",
+          "observed": "正式版明确显示回复已停止而工具待确认、旧模式等原信息保留。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 实际前台脚本结束时未宣称所有工具步骤已结束，冷开保留原请求未知提示。\n2026-11-17 续验：实际查找的目录与已加入反馈准确，无跨 Agent 串项或重复加入。\n2026-11-19 正式 2a4ee8627，Goose 1.59.1 沿原 OpenRouter 免费模型。正常入口看到「已排队 1 条」「回复已停止」「待发消息已暂停」。冷开仍提示此前结果未确认，明确继续 B 后显示已完成，A 原警示保持。\n2026-11-19 正式 42ffe103e 从探索页筛选 goose 后打开管理，关闭准备回原搜索结果和原管理按钮焦点。\n2026-11-19 正式断线显示结果未知并保留两条。冷开明确继续后 B 显示请求未完成，C 保持暂停。正常检查后仅关闭本条失败连接，队列 C、原历史保持。\n2026-11-20 正式 87ac54ec2，同一断线样本热重连、冷开保留两条待发。只点一次继续，B、C 按序各实答一次。续发后界面保留原 A 结果未确认，真实子进程自然完成未产生原终态回执。较早失败的原 C 保持暂停。",
+          "remaining": "断线后界面已如实保留原请求结果未知。精确回收独立进程组及核对原工具终态后，再验对应反馈；其他准备失败和恢复仍开放。",
           "sources": [
             "docs/evidence/2026-11-15-cycle7-goose-retest/README.md",
             "docs/evidence/2026-11-12-cycle6/README.md",
@@ -1475,7 +1477,8 @@
             "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md",
             "docs/evidence/2026-11-19-cycle12-goose-paused-queue/README.md",
             "docs/evidence/2026-11-19-cycle12-draft-auth-return/README.md#goose-目录筛选与焦点",
-            "docs/evidence/2026-11-19-cycle12-disconnect-pair-queue/README.md"
+            "docs/evidence/2026-11-19-cycle12-disconnect-pair-queue/README.md",
+            "docs/evidence/2026-11-20-cycle12-goose-queue-recheck/README.md#冷开同一原会话并明确续发"
           ],
           "status": "入口有证"
         }
