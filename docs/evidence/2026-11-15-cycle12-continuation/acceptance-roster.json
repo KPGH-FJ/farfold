@@ -814,12 +814,13 @@
           "status": "前台停止分项通过"
         },
         "S8": {
-          "observed": "正常入口显示正确原历史及实际回复\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-20 正式 87ac54ec2：单次拒绝显示已告知 Agent，脚本未运行。冷开同一原对话正文及拒绝回复仍可读，工具显示通用「已结束」。",
-          "remaining": "原拒绝原因和同一工具终态待官方冷回放明确提供。其他等待、执行中停止及错误返回依原条件。",
+          "observed": "正常入口显示正确原历史及实际回复\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-20 正式 87ac54ec2：单次拒绝显示已告知 Agent，脚本未运行。冷开同一原对话正文及拒绝回复仍可读，工具显示通用「已结束」。\n2026-11-20 只读复核同一自有样本。厂商原记录保留同一工具 ID 和明确拒绝原因。登记版本 2026.11.13 的安装包在回放时重新分配工具 ID，并报为 completed。所核官方 CLI、SDK 和 Hooks 缺少对此原工具的事后只读查询。",
+          "remaining": "等官方冷回放保留同一原工具 ID、拒绝原因和终态，或提供按原会话、原工作目录和原工具 ID 核对的只读接口。到位后从正常入口冷开同一拒绝样本复验。其他等待、执行中停止及错误返回依原条件。",
           "sources": [
             "docs/evidence/2026-11-15-cycle11-macos/installed-five-agents.json",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-20-cycle12-native-entry/README.md#cursor-拒绝与冷开"
+            "docs/evidence/2026-11-20-cycle12-native-entry/README.md#cursor-拒绝与冷开",
+            "docs/evidence/2026-11-20-cycle12-cursor-denial-replay/README.md#同一工具的原记录与回放"
           ],
           "status": "入口有证"
         }
