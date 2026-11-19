@@ -74,9 +74,9 @@
 
 **三家正式断线与两条待发。** OpenCode、Goose、Claude 各自的原连接骤断后，热重连保留原对话和两条待发。正常保存退出再冷开，三家零自动发送。OpenCode、Claude 各点一次继续后，同原 ID 的 B、C 按序各实答一次。Goose 只发送 B，厂商报连不上 OpenRouter，原 C 暂停；后用正常入口只关闭这条自有连接，原内容保留。 [本批正式回执](evidence/2026-11-19-cycle12-disconnect-pair-queue/README.md)
 
-**Claude 后台实际停止已验，OpenCode 原生后台失败留证。** 主回复结束后，从 Claude 独立任务点停止，同一 Bash 的 Shell 与子进程退出，超过原结束时间无成品。OpenCode 普通停止只结束原回复，原生后台 Shell 同 ID 继续并自然写出成品。等官方能按该 Shell ID 精确停止。Goose 当前普通登记未启用可独立停止的计划任务，保持后台缺项。 [本批正式回执](evidence/2026-11-19-cycle12-official-background-stop/README.md)
+**Claude 后台实际停止已验，OpenCode 原生后台失败留证。** 主回复结束后，从 Claude 独立任务点停止，同一 Bash 的 Shell 与子进程退出，超过原结束时间无成品。 同一任务的官方止态写入原历史后，冷开准确显示已停止；较早读取只返回启动步骤。OpenCode 普通停止只结束原回复，原生后台 Shell 同 ID 继续并自然写出成品。等官方能按该 Shell ID 精确停止。Goose 当前普通登记未启用可独立停止的计划任务，保持后台缺项。 [本批正式回执](evidence/2026-11-19-cycle12-official-background-stop/README.md)
 
-**Cline 正式成品直达、拒绝和提交前撤销已验。** 3.0.74 沿原免费模型和 Act，助手正文的相对文件链接一键打开实际同一成品。单次写入拒绝，以及点延迟批准后五秒内撤销再拒绝，均准确显示且未写入目标。自动成品位置与持久规则撤回仍待官方；原写入参数和磁盘都少最后一个换行。 [本批回执](evidence/2026-11-19-cycle12-cline-delivery-permission/README.md)
+**Cline 正式成品直达、拒绝和提交前撤销已验。** 3.0.74 沿原免费模型和 Act，助手正文的相对文件链接一键打开实际同一成品，冷开再次打开，字节保持。单次写入拒绝，以及点延迟批准后五秒内撤销再拒绝，均准确显示且未写入目标。自动成品位置与持久规则撤回仍待官方；原写入参数和磁盘都少最后一个换行。 [本批回执](evidence/2026-11-19-cycle12-cline-delivery-permission/README.md)
 
 **第 12 周期前一批文件交付复验。** CodeBuddy 成品 78 字节准确并从「本轮产物」打开。Kilo 已写出并打开，但原写入参数与成品均缺末尾 LF。Dirac 两次待批准内容也缺末尾 LF，拒绝后原件保持且无成品。Mistral 共用审批输入补显示通过受控工程，正式卡仍缺命令详情。[本批证据](evidence/2026-11-17-cycle12-stop-delivery-approval/README.md)
 
