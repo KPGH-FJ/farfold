@@ -149,18 +149,26 @@ export function applyHistoryToolSupplement(
   insert();
   for (const item of original) {
     const split = splits.get(item);
-    if (split && item.kind === "user") {
-      merged.push({ ...item, text: split[0] });
+    if (split && (item.kind === "user" || item.kind === "agent")) {
+      const [first, second] = split;
+      merged.push({
+        ...item,
+        text: first,
+        ...(item.kind === "agent" ? { contentOrder: textOrder(first) } : {}),
+      });
       anchors++;
       insert();
-      merged.push({
-        kind: "user",
+      const message = {
         id: crypto.randomUUID(),
-        text: split[1],
-        attachments: [],
+        text: second,
         streaming: false,
         time: item.time,
-      });
+      };
+      merged.push(
+        item.kind === "agent"
+          ? { ...message, kind: "agent", contentOrder: textOrder(second) }
+          : { ...message, kind: "user", attachments: [] },
+      );
     } else {
       merged.push(item);
     }
@@ -172,6 +180,10 @@ export function applyHistoryToolSupplement(
   state.items = merged;
   notice(state, STRINGS.historySupplement.snapshot);
   return true;
+}
+
+function textOrder(text: string) {
+  return [{ kind: "text" as const, start: 0, end: text.length }];
 }
 
 function prepare(
@@ -295,37 +307,87 @@ function alignHistoryAnchors(
     }
     const second = anchors[index + 1];
     if (
-      item.kind !== "user" ||
       item.messageId !== undefined ||
       item.historyForkPoint ||
-      item.attachments.length ||
-      second?.role !== "user" ||
+      item.attachments?.length ||
+      second?.role !== first.role ||
       first.text + second.text !== item.text
     )
       return;
 
-    // Split only when the export independently places a single failed call
-    // across this boundary and its text result is the second exact anchor.
     const afterFirst = index + 1;
     const afterSecond = index + 2;
-    const crossing = tools.filter(
-      (tool) => tool.gap === afterFirst || tool.resultGap === afterSecond,
-    );
-    const tool = crossing[0];
-    const content = tool?.item.call.content;
-    if (
-      crossing.length !== 1 ||
-      tool.gap !== afterFirst ||
-      tool.resultGap !== afterSecond ||
-      tool.item.call.status !== "failed" ||
-      content?.length !== 1 ||
-      content[0].type !== "text" ||
-      content[0].text !== second.text
-    )
-      return;
+    if (item.kind === "user") {
+      // The single failed tool spans this boundary and has the same text as
+      // the second user anchor replayed by the Agent.
+      const crossing = tools.filter(
+        (tool) => tool.gap === afterFirst || tool.resultGap === afterSecond,
+      );
+      const tool = crossing[0];
+      const content = tool?.item.call.content;
+      if (
+        crossing.length !== 1 ||
+        tool.gap !== afterFirst ||
+        tool.resultGap !== afterSecond ||
+        tool.item.call.status !== "failed" ||
+        content?.length !== 1 ||
+        content[0].type !== "text" ||
+        content[0].text !== second.text
+      )
+        return;
+    } else {
+      const order = item.contentOrder;
+      if (
+        order?.length !== 1 ||
+        order[0].kind !== "text" ||
+        order[0].start !== 0 ||
+        order[0].end !== item.text.length ||
+        Object.keys(item.reportedDetails ?? {}).some((path) =>
+          path.startsWith("/update/"),
+        ) ||
+        !singleSuccessfulToolAtBoundary(tools, afterFirst)
+      )
+        return;
+    }
 
     splits.set(item, [first.text, second.text]);
     index += 2;
   }
   if (index === anchors.length) return splits;
+}
+
+function singleSuccessfulToolAtBoundary(tools: PreparedTool[], gap: number) {
+  // The successful exchange is between the two assistant texts. Any other
+  // tool touching this boundary makes the original ordering ambiguous.
+  const crossing = tools.filter(
+    (tool) => tool.gap <= gap && tool.resultGap >= gap,
+  );
+  if (crossing.length !== 1) return false;
+  const [tool] = crossing;
+  const { call } = tool.item;
+  const { content, rawOutput } = call;
+  if (
+    tool.gap !== gap ||
+    tool.resultGap !== gap ||
+    call.status !== "completed" ||
+    content.length !== 1 ||
+    content[0].type !== "text" ||
+    !record(rawOutput) ||
+    !record(rawOutput.call) ||
+    !record(rawOutput.result)
+  )
+    return false;
+  const { call: originalCall, result } = rawOutput;
+  return (
+    exact(originalCall, ["type", "call_id", "name", "arguments"]) &&
+    originalCall.type === "function_call" &&
+    originalCall.call_id === call.toolCallId &&
+    originalCall.name === call.name &&
+    string(originalCall.arguments) &&
+    exact(result, ["type", "call_id", "status", "output"]) &&
+    result.type === "function_call_output" &&
+    result.call_id === call.toolCallId &&
+    result.status === "success" &&
+    result.output === content[0].text
+  );
 }

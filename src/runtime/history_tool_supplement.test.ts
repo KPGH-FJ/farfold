@@ -241,6 +241,172 @@ it("leaves a coalesced user item with an attachment intact", () => {
   });
 });
 
+const successPreamble = "我会先核对文件。🙂";
+const successFinal = "核对完成。";
+const successResult =
+  "OWNED_MARKER\nprocess_id: process-1\nprocess exit code was 0";
+
+function successfulPayload() {
+  const source = payload();
+  const args = { command: "/bin/cat ./marker.txt" };
+  source.anchors = [
+    { role: "user", text: "请查看🙂" },
+    { role: "assistant", text: successPreamble },
+    { role: "assistant", text: successFinal },
+  ];
+  Object.assign(source.tools[0], {
+    name: "bash",
+    arguments: args,
+    callAfterAnchor: 2,
+    resultAfterAnchor: 2,
+    content: [{ type: "text", text: successResult }],
+    rawCall: {
+      type: "function_call",
+      call_id: "call",
+      name: "bash",
+      arguments: JSON.stringify(args),
+    },
+    rawResult: {
+      type: "function_call_output",
+      call_id: "call",
+      status: "success",
+      output: successResult,
+    },
+  });
+  return source;
+}
+
+function successfulReplay(messageId: string | null = null) {
+  const replay = begin();
+  replay.push(message("user", "请查看🙂"));
+  replay.push({
+    ...message("agent", successPreamble, messageId),
+    futureEnvelope: { owner: "first" },
+  });
+  replay.push(message("agent", successFinal, messageId));
+  return replay;
+}
+
+it("restores a successful historical tool between the coalesced preamble and final response", () => {
+  const replay = successfulReplay();
+  const source = successfulPayload();
+  replay.push(source);
+  const state = accept(replay);
+  expect(state.items.map((item) => item.kind)).toEqual([
+    "user",
+    "agent",
+    "tool",
+    "agent",
+    "notice",
+  ]);
+  expect(state.items[1]).toMatchObject({
+    text: successPreamble,
+    contentOrder: [{ kind: "text", start: 0, end: successPreamble.length }],
+    reportedDetails: { "/futureEnvelope": { owner: "first" } },
+  });
+  expect(state.items[3]).toMatchObject({
+    text: successFinal,
+    contentOrder: [{ kind: "text", start: 0, end: successFinal.length }],
+    streaming: false,
+  });
+  expect(state.items[3].reportedDetails).toBeUndefined();
+  expect(state.items[1].id).not.toBe(state.items[3].id);
+  expect(tools(state)[0].call).toMatchObject({
+    toolCallId: "call",
+    status: "completed",
+    startedAt: 0,
+    content: [{ type: "text", text: successResult }],
+    rawOutput: { result: source.tools[0].rawResult },
+  });
+  expect(state.activeToolCallIds).toEqual([]);
+  expect(state.pendingPermissions).toEqual([]);
+});
+
+it.each([
+  [
+    "different anchor",
+    (p: any) => {
+      p.anchors[2].text += "!";
+    },
+  ],
+  [
+    "result beyond the boundary",
+    (p: any) => {
+      p.tools[0].resultAfterAnchor = 3;
+    },
+  ],
+  [
+    "different raw result",
+    (p: any) => {
+      p.tools[0].rawResult.output += "!";
+    },
+  ],
+  [
+    "second tool at the boundary",
+    (p: any) => {
+      const duplicate = structuredClone(p.tools[0]);
+      duplicate.toolCallId = "other";
+      duplicate.rawCall.call_id = "other";
+      duplicate.rawResult.call_id = "other";
+      p.tools.push(duplicate);
+    },
+  ],
+] as const)("preserves a coalesced assistant item on %s", (_name, mutate) => {
+  const replay = successfulReplay();
+  const source = successfulPayload();
+  mutate(source);
+  replay.push(source);
+  const state = accept(replay);
+  expect(tools(state)).toHaveLength(0);
+  expect(state.items[1]).toMatchObject({
+    kind: "agent",
+    text: successPreamble + successFinal,
+  });
+  expect(state.items.at(-1)).toMatchObject({
+    message: STRINGS.historySupplement.partial,
+  });
+});
+
+it("preserves an assistant item with a claimed message ID", () => {
+  const replay = successfulReplay("claimed");
+  replay.push(successfulPayload());
+  const state = accept(replay);
+  expect(tools(state)).toHaveLength(0);
+  expect(state.items[1]).toMatchObject({
+    kind: "agent",
+    messageId: "claimed",
+    text: successPreamble + successFinal,
+  });
+  expect(state.items.at(-1)).toMatchObject({
+    message: STRINGS.historySupplement.partial,
+  });
+});
+
+it("preserves an annotated assistant item whose content cannot be split safely", () => {
+  const replay = begin();
+  replay.push(message("user", "请查看🙂"));
+  replay.push({
+    sessionId: "sid",
+    update: {
+      sessionUpdate: "agent_message_chunk",
+      content: {
+        type: "text",
+        text: successPreamble,
+        annotations: { audience: ["user"] },
+      },
+    },
+  });
+  replay.push(message("agent", successFinal, null));
+  replay.push(successfulPayload());
+  const state = accept(replay);
+  expect(tools(state)).toHaveLength(0);
+  expect(state.items[1]).toMatchObject({
+    kind: "agent",
+    text: successPreamble + successFinal,
+    reportedDetails: { "/update/content/annotations": { audience: ["user"] } },
+  });
+});
+
 it("merges an official export in its original gap without execution, activity, or fabricated timing", () => {
   const replay = open();
   const source = payload();
