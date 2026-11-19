@@ -78,6 +78,8 @@
 
 同版随后从搜索以新进程打开同一原对话，2.696 秒完成握手，原正文和两个工具步骤读回，零发送。本次未达到 18 秒采样门槛，未取得超时现场。原日志中阻塞 HTTP 客户端事件早于设置读取完成，确认阶段日志可交错。 [条件复验](evidence/2026-11-19-cycle12-grok-startup-control/README.md#等待时采样的条件复验)
 
+**Grok 官方 1.0.90 原历史单次通过。** 从 Farfold 更新官方登记，原 1.0.46 安装保留。正常搜索打开同一原对话，122 毫秒握手、269 毫秒读回，原正文、回复和两个工具步骤可见；更新检查与本次读取均零模型发送。成品、输入和用量原件保持，厂商历史文件则在读取前后由 22,261 变为 23,994 字节，差异原因待确认。此次未超时，旧版的间歇故障仍保留。 [版本对照回执](evidence/2026-11-19-cycle12-grok-startup-control/README.md#官方-1090-同一原历史对照)
+
 **三家正式断线与两条待发。** OpenCode、Goose、Claude 各自的原连接骤断后，热重连保留原对话和两条待发。正常保存退出再冷开，三家零自动发送。OpenCode、Claude 各点一次继续后，同原 ID 的 B、C 按序各实答一次。Goose 只发送 B，厂商报连不上 OpenRouter，原 C 暂停；后用正常入口只关闭这条自有连接，原内容保留。 [本批正式回执](evidence/2026-11-19-cycle12-disconnect-pair-queue/README.md)
 
 **待发图片、Cline 断线和 OpenCode 同目录双前台。** OpenCode 与 Claude 各在两条待发里的第一条附 PNG，实际断线、热重连和正常退出再开后按原顺序保留。各点一次继续，两条都在原对话按序各发送一次，厂商记录的 PNG 和原件逐字节一致。Cline 实际断线后同原对话热重连及冷开，唯一待发和带 PNG 的独立草稿均保留，零重发。厂商共享进程继续到自然完成；Farfold 保留结果未知。OpenCode 在同一目录同时运行两条前台任务，只点停 A，A 的工具与子进程退出，B 继续并写出字节准确的独立成品，共享原件保持。 [待发图片](evidence/2026-11-19-cycle12-queued-image-recovery/README.md) · [Cline 断线](evidence/2026-11-19-cycle12-cline-disconnect/README.md) · [同目录双前台](evidence/2026-11-19-cycle12-same-folder-stop/README.md)
@@ -276,6 +278,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 
 2026-11-19 正式 CodeBuddy、Qoder 与 Claude 各在自建目录拒绝一个准确的 Bash 命令，均未执行。Qoder 和 Claude 同工具拒绝后原轮正常答复。CodeBuddy 拒绝已送达，原轮结束，缺该原工具的协议终态，界面保留未知。 [正式回执](evidence/2026-11-19-cycle12-approval-denial/README.md)
 
+2026-11-19 Claude 从正常搜索冷开同一条已拒绝的 Bash 对话，原步骤在摘要显示「有步骤未成功」，详情保留厂商明确的用户拒绝原因。原用户正文和回复读回，零新建、发送或审批，脚本未执行。 [正式回执](evidence/2026-11-19-cycle12-approval-denial/README.md#claude-单次拒绝冷回读)
+
 2026-11-19 冷开 Qoder 同一条拒绝样本，原命令、步骤未成功及原回复可见，脚本未运行，零新建、发送和取消。官方历史保存明确拒绝原因，本机登记 1.1.89 的回放映射仅保留失败，Farfold 详情显示「工具错误」。明确区分拒绝与其他工具失败待官方回放提供原因。 [正式回执](evidence/2026-11-19-cycle12-approval-denial/README.md)
 
 2026-11-19 CodeBuddy 正常冷开同一原已拒绝对话，原用户正文和一步历史保留，仍显示「步骤结果未知」，零新建、发送及审批，原脚本未执行。厂商原诊断为用户拒绝，冷回放将同一工具标为通用中断，原拒绝原因仍待官方准确报告。 [正式回执](evidence/2026-11-19-cycle12-approval-denial/README.md#codebuddy-单次拒绝冷回读)
@@ -349,6 +353,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: P33 -->
 
 ### P33
+
+2026-11-19 官方 Grok 1.0.90 同原 ID、同原目录单次打开。122 毫秒握手，269 毫秒读回原正文、回复及工具步骤，零新建、发送和取消。本次未复现握手超时；厂商历史文件字节在读取前后发生变化。 [版本对照回执](evidence/2026-11-19-cycle12-grok-startup-control/README.md#官方-1090-同一原历史对照)
 
 2026-11-19 Cline 两条待发在真实断线、热重连及冷开同一原对象后仍保留原顺序和首条 PNG。一次继续后各发一次，原任务未重跑。Cline 3.0.74 官方入口只交付首条文字，图片交付等待官方。 [正式回执](evidence/2026-11-19-cycle12-cline-queued-image-recovery/README.md)
 
