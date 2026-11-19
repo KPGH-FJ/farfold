@@ -8,6 +8,8 @@ export const STRINGS = {
     partial: "部分工具记录未能补齐，已保留可读取的对话内容。",
     snapshot:
       "工具记录来自这段历史的单独读取；如果同时在其他窗口修改，内容可能不同步。",
+    historicalConfiguration: (provider: string, model: string) =>
+      `这段对话记录的服务是 ${provider}，模型是 ${model}。当前账号和设置需要另行核对。`,
   },
   storageRecovery: {
     title: "本机资料暂时无法使用",

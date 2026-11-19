@@ -14,6 +14,8 @@ const ownerKeys = ["kind", "openToken", "connectionId", "sessionId", "cwd"];
 const MAX_BYTES = 8 * 1024 * 1024;
 const string = (v: unknown): v is string =>
   typeof v === "string" && v.length > 0 && !v.includes("\0");
+const identifier = (v: unknown): v is string =>
+  typeof v === "string" && /^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$/u.test(v);
 
 type HistoryAnchor = { role: "user" | "assistant"; text: string };
 type PreparedTool = {
@@ -33,6 +35,19 @@ function isHistoryAnchor(value: unknown): value is HistoryAnchor {
     (value.role === "user" || value.role === "assistant") &&
     string(value.text)
   );
+}
+
+function historicalConfigurationNotice(value: unknown): string | undefined {
+  if (
+    record(value) &&
+    exact(value, ["provider", "model"]) &&
+    identifier(value.provider) &&
+    identifier(value.model)
+  )
+    return STRINGS.historySupplement.historicalConfiguration(
+      value.provider,
+      value.model,
+    );
 }
 
 export function isOwnedHistoryToolSupplement(
@@ -58,7 +73,15 @@ export function isOwnedHistoryToolSupplement(
   return (
     exact(event, [
       ...ownerKeys,
-      ...(status ? ["reason"] : ["anchors", "tools"]),
+      ...(status
+        ? ["reason"]
+        : [
+            "anchors",
+            "tools",
+            ...(Object.hasOwn(event, "historicalConfiguration")
+              ? ["historicalConfiguration"]
+              : []),
+          ]),
     ]) &&
     (!status ||
       ["unavailable", "changed", "invalid", "limit", "cancelled"].includes(
@@ -105,26 +128,16 @@ export function applyHistoryToolSupplement(
 ): boolean {
   if (!record(event) || !isOwnedHistoryToolSupplement(state, event, token))
     return false;
-  const status = event.kind === "historyToolSupplementStatus";
-  if (
-    !exact(event, [
-      ...ownerKeys,
-      ...(status ? ["reason"] : ["anchors", "tools"]),
-    ])
-  )
-    return false;
-  if (status) {
-    if (
-      !["unavailable", "changed", "invalid", "limit", "cancelled"].includes(
-        String(event.reason),
-      )
-    )
-      return false;
+  if (event.kind === "historyToolSupplementStatus") {
     notice(state, STRINGS.historySupplement.partial);
     return true;
   }
   // Future official replay stays authoritative, including partial tool replay.
-  if (state.items.some((item) => item.kind === "tool")) return true;
+  const hasOfficialTools = state.items.some((item) => item.kind === "tool");
+  const configuration = historicalConfigurationNotice(
+    event.historicalConfiguration,
+  );
+  if (hasOfficialTools && !configuration) return true;
   let prepared: PreparedSupplement | undefined;
   try {
     if (new TextEncoder().encode(JSON.stringify(event)).length <= MAX_BYTES)
@@ -133,11 +146,14 @@ export function applyHistoryToolSupplement(
     // A malformed local payload cannot damage the readable ACP prefix.
   }
   if (!prepared) {
-    notice(state, STRINGS.historySupplement.partial);
+    if (!hasOfficialTools) notice(state, STRINGS.historySupplement.partial);
     return true;
   }
   const { tools, splits } = prepared;
-  if (!tools.length) return true;
+  if (hasOfficialTools || !tools.length) {
+    if (configuration) notice(state, configuration);
+    return true;
+  }
   const original = state.items;
   const merged: ThreadItem[] = [];
   let anchors = 0;
@@ -179,6 +195,7 @@ export function applyHistoryToolSupplement(
   }
   state.items = merged;
   notice(state, STRINGS.historySupplement.snapshot);
+  if (configuration) notice(state, configuration);
   return true;
 }
 

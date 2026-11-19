@@ -19,6 +19,10 @@ pub(in crate::acp_client) fn event(
             value["kind"] = "historyToolSupplement".into();
             value["anchors"] = serde_json::to_value(history.anchors).expect("serializable anchors");
             value["tools"] = serde_json::to_value(history.tools).expect("serializable tools");
+            if let Some(configuration) = history.historical_configuration {
+                value["historicalConfiguration"] = serde_json::to_value(configuration)
+                    .expect("serializable historical configuration");
+            }
         }
         Err(reason) => value["reason"] = serde_json::to_value(reason).expect("static reason"),
     }

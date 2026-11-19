@@ -444,16 +444,65 @@ it("merges an official export in its original gap without execution, activity, o
   expect(JSON.stringify(source)).toBe(original);
 });
 
+const historicalConfiguration = {
+  provider: "codexresponses",
+  model: "gpt-5.6-sol",
+};
+const historicalNotice = STRINGS.historySupplement.historicalConfiguration(
+  historicalConfiguration.provider,
+  historicalConfiguration.model,
+);
+
+it.each([false, true])(
+  "adds the recorded service and model after matching history, with tool supplement %s",
+  (withTools) => {
+    const replay = open();
+    const source = payload();
+    if (!withTools) source.tools = [];
+    replay.push({ ...source, historicalConfiguration });
+    const state = accept(replay);
+    expect(tools(state)).toHaveLength(withTools ? 1 : 0);
+    expect(state.configCheck).toEqual(accept(open()).configCheck);
+    expect(state.items.at(-1)).toMatchObject({
+      kind: "notice",
+      message: historicalNotice,
+    });
+  },
+);
+
+it.each([
+  { model: "gpt-5.6-sol?param=value" },
+  { provider: "codexresponses\n" },
+  { provider: "a".repeat(129) },
+  { extra: "private" },
+])(
+  "ignores malformed service or model data without dropping valid tools",
+  (bad) => {
+    const replay = open();
+    replay.push({
+      ...payload(),
+      historicalConfiguration: { ...historicalConfiguration, ...bad },
+    });
+    const state = accept(replay);
+    expect(tools(state)).toHaveLength(1);
+    expect(state.items.filter((item) => item.kind === "notice")).toMatchObject([
+      { message: STRINGS.historySupplement.snapshot },
+    ]);
+  },
+);
+
 it.each(["openToken", "connectionId", "sessionId", "cwd"])(
   "preserves foreign %s as raw without accepting its tools",
   (field) => {
     const replay = open();
     const p = payload();
+    p.historicalConfiguration = historicalConfiguration;
     p[field] = "foreign";
     replay.push(p);
     const s = accept(replay);
     expect(tools(s)).toHaveLength(0);
     expect(s.items.some((i) => i.kind === "raw" && i.update === p)).toBe(true);
+    expect(s.items.some((i) => i.kind === "notice")).toBe(false);
   },
 );
 
@@ -571,23 +620,31 @@ it("validates the final prefix and refuses intervening changed text", () => {
   replay.push(message("agent", "后来变化", "extra"));
   expect(tools(accept(replay))).toHaveLength(0);
 });
-it("lets any official tool replay win even when it arrives after the supplement", () => {
-  const replay = open();
-  replay.push(payload());
-  replay.push({
-    sessionId: "sid",
-    update: {
-      sessionUpdate: "tool_call",
-      toolCallId: "official",
-      title: "Actual",
-      status: "completed",
-      content: [],
-    },
-  });
-  expect(tools(accept(replay)).map((i) => i.call.toolCallId)).toEqual([
-    "official",
-  ]);
-});
+it.each([false, true])(
+  "keeps official tools and only shows recorded settings when history matches %s",
+  (matches) => {
+    const replay = open();
+    const source = payload();
+    if (!matches) source.anchors[1].text = "来自另一条对话";
+    replay.push({ ...source, historicalConfiguration });
+    replay.push({
+      sessionId: "sid",
+      update: {
+        sessionUpdate: "tool_call",
+        toolCallId: "official",
+        title: "Actual",
+        status: "completed",
+        content: [],
+      },
+    });
+    const state = accept(replay);
+    expect(tools(state).map((i) => i.call.toolCallId)).toEqual(["official"]);
+    const notices = state.items.filter((item) => item.kind === "notice");
+    expect(notices.map((item) => item.message)).toEqual(
+      matches ? [historicalNotice] : [],
+    );
+  },
+);
 it("admits one supplement and does not apply duplicate or following controls", () => {
   const replay = open();
   replay.push(payload());

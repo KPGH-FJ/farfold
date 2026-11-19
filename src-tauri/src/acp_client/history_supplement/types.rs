@@ -50,8 +50,15 @@ pub(crate) struct Tool {
     pub raw_result: Value,
 }
 #[derive(Debug, Serialize)]
+pub(crate) struct HistoricalConfiguration {
+    pub provider: String,
+    pub model: String,
+}
+#[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct ParsedHistory {
     pub anchors: Vec<Anchor>,
     pub tools: Vec<Tool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub historical_configuration: Option<HistoricalConfiguration>,
 }

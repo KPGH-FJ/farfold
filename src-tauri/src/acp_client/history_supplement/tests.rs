@@ -45,6 +45,70 @@ fn actual_export_shape_keeps_pair_media_gaps_and_excludes_private_instructions()
         "image/png"
     );
 }
+fn records_with_configuration() -> Vec<Value> {
+    let mut r = records();
+    r[0]["payload"]["model_provider"] = "codexresponses".into();
+    r[0]["payload"]["model_spec"] = "SECRET_PROVIDER_ALIAS".into();
+    r[3]["payload"]["model"] = "gpt-5.6-sol".into();
+    r[3]["payload"]["model_spec"] = "SECRET_EXPANDED_MODEL_SPEC".into();
+    r
+}
+
+#[test]
+fn historical_configuration_emits_only_provider_and_agreeing_model() {
+    let mut r = records_with_configuration();
+    r.insert(4, r[3].clone());
+    let value = event(read(&r), "open", "connection", "owned-session", "/owned");
+    assert_eq!(
+        value["historicalConfiguration"],
+        json!({"provider":"codexresponses","model":"gpt-5.6-sol"})
+    );
+    assert_eq!(value["tools"].as_array().unwrap().len(), 1);
+    assert!(!value.to_string().contains("SECRET_"));
+}
+
+#[test]
+fn incomplete_unsafe_or_conflicting_history_configuration_keeps_tools() {
+    let r = records_with_configuration();
+    for model in [
+        Value::Null,
+        json!("different-model"),
+        json!("gpt-5.6-sol?reasoning=high"),
+        json!("/private/model"),
+        json!("x".repeat(129)),
+    ] {
+        let mut records = r.clone();
+        let mut context = records[3].clone();
+        if model.is_null() {
+            context["payload"].as_object_mut().unwrap().remove("model");
+        } else {
+            context["payload"]["model"] = model;
+        }
+        records.insert(4, context);
+        let result = read(&records).unwrap();
+        assert!(result.historical_configuration.is_none());
+        assert_eq!(result.tools.len(), 1);
+    }
+    let mut r = r;
+    r[0]["payload"]["model_provider"] = "https://provider.example".into();
+    let result = read(&r).unwrap();
+    assert!(result.historical_configuration.is_none());
+    assert_eq!(result.tools.len(), 1);
+}
+
+#[test]
+fn configuration_can_accompany_a_complete_plain_history_without_tools() {
+    let mut r = records_with_configuration();
+    r.remove(8);
+    r.remove(6);
+    let h = read(&r).unwrap();
+    assert!(h.tools.is_empty());
+    assert_eq!(h.historical_configuration.unwrap().model, "gpt-5.6-sol");
+
+    r.remove(7);
+    assert!(read(&r).unwrap().historical_configuration.is_none());
+}
+
 #[test]
 fn call_and_result_gaps_remain_distinct_and_parallel_pairs_preserve_call_order() {
     let mut r = records();

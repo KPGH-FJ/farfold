@@ -1,5 +1,5 @@
 //! Reviewed fast-agent Codex export: response_item carries canonical visible/tool data.
-//! event_msg is redundant status and turn_context/base_instructions is never presentation.
+//! Only the owned header and turn contexts can identify the historical provider and model.
 use super::{strict_json, types::*};
 use base64::{Engine, engine::general_purpose::STANDARD};
 use serde_json::Value;
@@ -15,6 +15,16 @@ fn identifier(v: &Value, key: &str) -> Result<String> {
     }
     Ok(s.into())
 }
+
+fn configuration_label<'a>(v: &'a Value, key: &str) -> Option<&'a str> {
+    let label = v.get(key)?.as_str()?;
+    let mut bytes = label.bytes();
+    (label.len() <= 128
+        && bytes.next().is_some_and(|b| b.is_ascii_alphanumeric())
+        && bytes.all(|b| b.is_ascii_alphanumeric() || matches!(b, b'.' | b'_' | b'-')))
+    .then_some(label)
+}
+
 fn keys(v: &Value, allowed: &[&str]) -> Result<()> {
     if v.as_object()
         .is_none_or(|o| o.keys().any(|k| !allowed.contains(&k.as_str())))
@@ -146,7 +156,11 @@ pub(in crate::acp_client) fn parse(bytes: &[u8], sid: &str, cwd: &str) -> Result
     let mut parsed = ParsedHistory {
         anchors: vec![],
         tools: vec![],
+        historical_configuration: None,
     };
+    let mut provider = None;
+    let mut model = None;
+    let mut model_consistent = true;
     let mut calls: Vec<Option<Pending>> = Vec::new();
     let mut lookup = HashMap::new();
     let mut ids = HashSet::new();
@@ -180,12 +194,19 @@ pub(in crate::acp_client) fn parse(bytes: &[u8], sid: &str, cwd: &str) -> Result
             {
                 return Err(Reason::Changed);
             }
+            provider = configuration_label(payload, "model_provider").map(str::to_owned);
             continue;
         }
         match kind {
             "turn_context" => {
                 if text(payload, "cwd")? != cwd {
                     return Err(Reason::Changed);
+                }
+                if let Some(observed) = configuration_label(payload, "model") {
+                    let expected = model.get_or_insert_with(|| observed.to_owned());
+                    model_consistent &= expected.as_str() == observed;
+                } else {
+                    model_consistent = false;
                 }
             }
             "event_msg" => {
@@ -284,6 +305,12 @@ pub(in crate::acp_client) fn parse(bytes: &[u8], sid: &str, cwd: &str) -> Result
         parsed
             .tools
             .push(completed.remove(&index).ok_or(Reason::Invalid)?);
+    }
+    if let (true, Some(provider), Some(model)) = (model_consistent, provider, model)
+        && parsed.anchors.iter().any(|a| a.role == "user")
+        && parsed.anchors.iter().any(|a| a.role == "assistant")
+    {
+        parsed.historical_configuration = Some(HistoricalConfiguration { provider, model });
     }
     if serde_json::to_vec(&parsed)
         .map_err(|_| Reason::Invalid)?
