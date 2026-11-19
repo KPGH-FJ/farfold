@@ -1,0 +1,269 @@
+{
+  "timestampZone": "Asia/Shanghai",
+  "app": {
+    "version": "0.1.7",
+    "path": "/Applications/Farfold.app",
+    "source": "87ac54ec25e1e8d2085c7aef2bfa8f83b744cccb",
+    "cdhash": "9547fa1f88f9ca651e857a64c14b61748e20e7c4",
+    "closedMainPid": 37070
+  },
+  "testRoot": "/private/tmp/ff-c12-n20-ryup8cla",
+  "cursor": {
+    "nativeId": "390aaa3a-d8e2-4895-91fb-4c5c8f7e44d6",
+    "savedModel": "default[]",
+    "modelLabel": "Auto",
+    "service": "existing",
+    "once": {
+      "relativePath": "cursor/once.sh",
+      "archivedAs": "fixture/cursor-once.sh",
+      "bytes": 73,
+      "sha256": "57fefe0d907c03be65e096e364cc1e305305ed1a7377952ac24e2e0bf61846b6",
+      "mtimeNs": 1795114197828751454
+    },
+    "resultAbsent": true,
+    "decision": "拒绝 Reject",
+    "liveReceipt": "已拒绝 · 已告知 Agent",
+    "reply": "FF_C12_N20_CURSOR_DENIED",
+    "coldStep": "执行 · 步骤已结束",
+    "coldDenialBadge": false,
+    "liveWire": {
+      "file": "protocol-v1-1795114276759-5.jsonl",
+      "prefixLines": 67,
+      "prefixSha256": "644f72e1e59c94046c0a0b46eb747902b9b020dd8b7b0bb469a4d6f8b02e987c",
+      "eventLines": {
+        "session/prompt": [11],
+        "session/new": [8],
+        "session/load": [],
+        "session/list": [],
+        "session/request_permission": [48],
+        "session/cancel": []
+      }
+    },
+    "coldWire": {
+      "file": "protocol-v1-1795114776426-2.jsonl",
+      "prefixLines": 16,
+      "prefixSha256": "ac4f0c94465dc347f07013290470ab3c8d53b116426921b37f2ec8b5b7eb35ef",
+      "eventLines": {
+        "session/prompt": [],
+        "session/new": [],
+        "session/load": [8],
+        "session/list": [],
+        "session/request_permission": [],
+        "session/cancel": []
+      }
+    }
+  },
+  "devin": {
+    "nativeId": "languid-foxglove",
+    "service": "existing",
+    "savedModel": "swe-2-flash-medium",
+    "setupPriorModel": "swe-2-high",
+    "script": {
+      "relativePath": "devin/disconnect.sh",
+      "archivedAs": "fixture/devin-disconnect.sh",
+      "bytes": 159,
+      "sha256": "5d75ea9a0ef16f846674ea0d1b641f5679d63af47d2670fe0b0a69d9f8b07166",
+      "mtimeNs": 1795114197828835871
+    },
+    "started": {
+      "relativePath": "devin/started.txt",
+      "archivedAs": "fixture/devin-started.txt",
+      "bytes": 12,
+      "sha256": "f35a02ef536a4599a2681b49fb7159afefbb04c17314a91336cd863ea0dff19e",
+      "mtimeNs": 1795114424153359946
+    },
+    "natural": {
+      "relativePath": "devin/natural.txt",
+      "archivedAs": "fixture/devin-natural.txt",
+      "bytes": 25,
+      "sha256": "e0431b55d1f28bca814a172138bdb47518779643cfc7723b8dad4a2dca27180f",
+      "mtimeNs": 1795114604164933281
+    },
+    "disconnect": {
+      "atUnixMs": 1795114446586,
+      "targetAgentPid": 18399,
+      "targetAgentPgid": 18399,
+      "signal": 9,
+      "originalShellPid": 18857,
+      "originalChildPid": 18858,
+      "originalToolPgid": 18857,
+      "toolParentAfterAgentExit": 1,
+      "observedOriginalToolContinued": true,
+      "originalToolNaturallyFinishedMsAfterAgentExit": 157579,
+      "finalOriginalPidsPresent": false,
+      "appOriginalOutcome": "unknown"
+    },
+    "fixtureRunCount": 1,
+    "queueOrder": ["FF_C12_N20_DEVIN_B", "FF_C12_N20_DEVIN_C"],
+    "draft": "FF_C12_N20_DEVIN_DRAFT_DO_NOT_SEND",
+    "draftSent": false,
+    "hotContinueDisabled": true,
+    "exitAndColdQueueSha256": "e8f30d26146e543f254dfc667ef0ee5a0d586169b402d85723eb1f5a4d6b79be",
+    "continueClicks": 1,
+    "coldRemainingQueueCount": 0,
+    "coldOriginalOutcomeUnknown": true,
+    "replyMarkers": ["FF_C12_N20_DEVIN_B_OK", "FF_C12_N20_DEVIN_C_OK"],
+    "nativeCheckpoint": {
+      "relativePath": "~/.local/share/devin/cli/sessions.db",
+      "mainModel": "swe-2-flash-medium",
+      "mainChainUserNodes": {
+        "A": 24,
+        "B": 32,
+        "C": 35
+      },
+      "mainChainReplyNodes": {
+        "B": 34,
+        "C": 37
+      },
+      "toolCallId": "call_96c40d38e499eee6",
+      "toolCallCount": 1,
+      "laterToolStatus": "completed"
+    },
+    "liveWire": {
+      "file": "protocol-v1-1795114393866-9.jsonl",
+      "prefixLines": 201,
+      "prefixSha256": "b750acda3153aea31958c044aa8d598487af4b12336b1928f3b14ec959a9c975",
+      "eventLines": {
+        "session/prompt": [132],
+        "session/new": [22],
+        "session/load": [],
+        "session/list": [],
+        "session/request_permission": [165],
+        "session/cancel": []
+      }
+    },
+    "hotWire": {
+      "file": "protocol-v1-1795114454917-10.jsonl",
+      "prefixLines": 226,
+      "prefixSha256": "38e4319e2ffe2023c03b86d51ddf27b258a1087eb94e4697cdd6b6e850a11ddb",
+      "eventLines": {
+        "session/prompt": [],
+        "session/new": [],
+        "session/load": [22],
+        "session/list": [],
+        "session/request_permission": [],
+        "session/cancel": []
+      }
+    },
+    "coldBeforeContinueWire": {
+      "file": "protocol-v1-1795114718529-0.jsonl",
+      "prefixLines": 199,
+      "prefixSha256": "9f377c6b055f2a44b6016973fba7c84527299e717be549b747501e47288d6b52",
+      "eventLines": {
+        "session/prompt": [],
+        "session/new": [],
+        "session/load": [21],
+        "session/list": [],
+        "session/request_permission": [],
+        "session/cancel": []
+      }
+    },
+    "coldAfterContinueWire": {
+      "file": "protocol-v1-1795114718529-0.jsonl",
+      "prefixLines": 255,
+      "prefixSha256": "0cb7cfa05c0c3d1b4d2611c49755ad77ee5d141fcaed25d7996a3ed2a60038f4",
+      "eventLines": {
+        "session/prompt": [201, 227],
+        "session/new": [],
+        "session/load": [21],
+        "session/list": [],
+        "session/request_permission": [],
+        "session/cancel": []
+      }
+    }
+  },
+  "copilot": {
+    "nativeId": "129d85c1-6bd6-408f-a6b4-2b776ccc7704",
+    "savedModel": "auto",
+    "model": "gpt-6-luna",
+    "provider": "copilot",
+    "service": "existing",
+    "input": {
+      "relativePath": "copilot/input.txt",
+      "archivedAs": "fixture/copilot-input.txt",
+      "bytes": 46,
+      "sha256": "5de3f96d1c88b70bc1ec925f8db07ae04c124b021c86815bc0ec5fcdbaca86e1",
+      "mtimeNs": 1795114197828900496
+    },
+    "result": {
+      "relativePath": "copilot/result.txt",
+      "archivedAs": "fixture/copilot-result.txt",
+      "bytes": 45,
+      "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd",
+      "mtimeNs": 1795114566242014959
+    },
+    "nativeEntry": {
+      "file": "events.jsonl",
+      "prefixLines": 34,
+      "sha256": "e2c8ef72d8322c12c7b5a77f34b70dd64d732aa6468cf55e038f5119c7f1bfc7",
+      "scopeLines": [18, 19, 20, 21],
+      "toolCallId": "custom_call_6cnNBmY888etMhyzJ3ZU80zA",
+      "action": "create",
+      "decision": "approved",
+      "decisionSource": "human_response"
+    },
+    "liveOpen": "本轮产物 → 查看文件",
+    "coldOpen": "原回复 → 打开 result.txt",
+    "liveWire": {
+      "file": "protocol-v1-1795114497793-12.jsonl",
+      "prefixLines": 56,
+      "prefixSha256": "a4c8c964294e52fa0ef25a9eab18e2fb725b3d67f9fb66d0bcd41125779f47c0",
+      "eventLines": {
+        "session/prompt": [13],
+        "session/new": [8],
+        "session/load": [],
+        "session/list": [],
+        "session/request_permission": [23],
+        "session/cancel": []
+      }
+    },
+    "coldWire": {
+      "file": "protocol-v1-1795114744693-1.jsonl",
+      "prefixLines": 20,
+      "prefixSha256": "c7c7e4d436e252ef28b99681f13028c78c17be1551cb1e27415d39e805e1abf5",
+      "eventLines": {
+        "session/prompt": [],
+        "session/new": [],
+        "session/load": [8],
+        "session/list": [],
+        "session/request_permission": [],
+        "session/cancel": []
+      }
+    }
+  },
+  "claude": {
+    "nativeId": "8ea5c7dc-adde-49d6-9b5c-c1ec17c2bf93",
+    "cwd": "/private/tmp/ff-c12-approval-denial.j0gXgKIQ/claude",
+    "title": "task.sh 执行请求",
+    "targetAlreadyAddedInBothScopes": true,
+    "exactDirectoryResultCount": 1,
+    "exactDirectorySelectableCount": 0,
+    "addedCount": 0,
+    "defaultListWire": {
+      "file": "protocol-v1-1795114624783-13.jsonl",
+      "prefixLines": 15,
+      "prefixSha256": "905ccbcd945b9795e35689c04ac635fe1b9caca585b19b6f5a9a416372d3f393",
+      "eventLines": {
+        "session/prompt": [],
+        "session/new": [],
+        "session/load": [],
+        "session/list": [8],
+        "session/request_permission": [],
+        "session/cancel": []
+      }
+    },
+    "scopedListWire": {
+      "file": "protocol-v1-1795114652628-14.jsonl",
+      "prefixLines": 15,
+      "prefixSha256": "a4d9aeb07fc98ea377498486ab0e8b6abd7b6e233a22b97c5a56874914057880",
+      "eventLines": {
+        "session/prompt": [],
+        "session/new": [],
+        "session/load": [],
+        "session/list": [8],
+        "session/request_permission": [],
+        "session/cancel": []
+      }
+    }
+  }
+}

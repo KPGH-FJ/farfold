@@ -1,0 +1,2 @@
+Farfold Copilot delivery sample
+alpha: ready
