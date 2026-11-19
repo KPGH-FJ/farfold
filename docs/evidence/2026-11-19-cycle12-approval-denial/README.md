@@ -19,3 +19,11 @@
 Farfold `protocol-v1-1795067036270-5.jsonl` 第 8 行 13:44:03.787 唯一 `session/load`，第 11 行同次读取的唯一工具事件，第 14 行 13:44:20.661 成功回执。前 15 行零新建、发送、取消及审批请求，SHA-256 `aa193d2e44aa2b5ba0db076067ac433e74606babf633d78ff31460f1f0ebc623`。厂商原历史第 10、12 行对应同一 `call_0fd2d30a8b0045d9abbdfb4d`。第 12 行的 `tool_result` 含 `is_error: true` 及 `Permission denied by the ACP client.`，同期 `toolUseResult` 字段只有 `{ "isHardFailure": false }`。冷开追加第 21 行 `runtime-config` 元数据，未新增用户、助手或工具消息。
 
 核对原登记 1.1.89 安装包 `bundle/qodercli.js` 第 386 行（SHA-256 `b7a2d6d54bf868f7226abc759c10c6361ea4ab04ddd4c0615eb90ccef3524377`）。`H0s` 通过 `$Xu` 按工具 ID 归并，再经 `E7e` 生成 `tool_call`。对该原对象，`is_error` 映射为 `failed`，展示值及 `rawOutput` 来自 `toolUseResult`。该路径不取原 `tool_result.content` 拒绝文字，也没有独立的拒绝原因字段。正式日志只留事件类别，无法从诊断反推出完整回放帧。冷开已证原回复与工具失败状态，精确拒绝原因仍需官方回放保留原拒绝信息后再验。[厂商 1.1.89 发布包](https://registry.npmjs.org/@qoder-ai/qodercli/-/qodercli-1.1.89.tgz)
+
+## CodeBuddy 单次拒绝冷回读
+
+2026-11-19，正式 Farfold 0.1.7 `5e12e06d9`（CDHash `4e5bba7028bdabce14eb3dd531844654e8b611ce`）。从正常搜索打开原自有 CodeBuddy 2.184.0 对话 `01a1ef6e-235e-75f5-8918-618bd713997c`，原目录为 `/private/tmp/ff-c12-approval-denial.j0gXgKIQ/codebuddy`。原题和原用户正文在历史中可见。展开「查看处理过程 1 步」，摘要和原步骤均显示「步骤结果未知」，未显示明确拒绝原因。测试期间未点击「查看内容」，未手动修改设置，也未发送消息。
+
+Farfold `protocol-v1-1795068956234-8.jsonl` 第 10 行 14:15:56.952 唯一 `session/load`，第 18、19 行收到工具类回放，第 24 行 14:15:56.998 成功回执。前 30 行零新建、发送、取消及审批请求，SHA-256 `092da79e30f6c756bec314cd02c5c854593afe9d6dea9c8c53f30cc35f3bf263`。厂商原会话项目历史前九条原记录逐字节未变，SHA-256 `bfa2e751bf04382e19f38c7f5a8914da3f86cea7666160908ed05560bb89157f`，冷开只追加两条 `session-meta`。原用户输入与 `chatcmpl-tool-918c930317e4204e` 工具调用各一次。原脚本及输入的修改时间、字节摘要均保持，目录仍只有原 `task.sh` 和 `input.txt`，无 `ran.txt`。[原样本文件核对](files.json)
+
+厂商当天同名日志 `~/.codebuddy/logs/2026-11-19/codebuddy__6f0aae1cf2827cffc85da472438b2ae4.log` 第 342 行在 14:15:56.992 将同一工具标记为无对应结果的中断取消。前 342 行 SHA-256 `a5fb2785a188becbd1d38068721bb6d69168a757e47538d604441eadd8930001`。本机登记的 2.184.0 `dist/codebuddy-headless.js` 第 52 行显示该分支产生 `tool_call_update`，`status` 为 `cancelled`，`_meta["codebuddy.ai/toolCancelReason"]` 为 `session_interrupted`，文件 SHA-256 `c6857206c76cdabd9186f9374620b69339a5e912d9a0dd9539c182ddc32c3287`。正式 Farfold 诊断只保存工具事件类别。原厂商跟踪仍可核对原工具的 `user_rejected`，这次历史回放使用的是通用中断标记。原请求与工具未重跑已确认，准确复现「用户拒绝」仍需厂商官方回放提供同一原工具的明确拒绝原因。

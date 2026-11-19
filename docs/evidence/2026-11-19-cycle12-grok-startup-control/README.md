@@ -41,3 +41,26 @@ Farfold 原日志位于 `~/Library/Logs/Farfold/`，厂商原日志位于 `~/.gr
 | B，原目录 `/private/tmp/ff-c12-grok-approval.TxOeP6Vw/b` | `protocol-v1-1795066931124-4.jsonl` 第 3 行 13:42:11.125 发 `initialize`，5154 ms 后成功，第 8 行 13:42:16.279 发唯一 `session/load`。第 10–19 行有多条历史更新，第 22 行 13:42:17.180 成功响应。32 行前缀 SHA-256 `07ba1cbfc5fc881afa34bd630f0a5bb06d693029aade6cd8b3433133a526b07d`。                                          | PID 76093 完成同样的前序阶段，随后有 `bootstrap`、`startup.fetch_models_blocking`（5005 ms）及 `model_catalog`。厂商日志报告版本 1.0.46。           |
 
 B 的界面读回原标题、原用户请求的 `result.txt`、历史答复「正在把 result.txt 写入当前工作文件夹。」「完成。」及「查看处理过程」1 步。本次未点击打开产物。B 的 9 行厂商历史 SHA-256 `f42a42ca9e521c0e2045eeebabdfbcaca89d6e5923c0cb314ee02043da3e29b2` 与原审批证据一致。磁盘原交付文件仍为 106 字节，B 交付文件仍为 28 字节且与原正式证据摘要一致。两次同窗口的真实搜索对照重现启动分歧。同一原交付目录曾成功，仍需厂商前置启动阶段的细化事件或相关版本变更，才能区分路径相关因素、模型目录及其他启动条件。
+
+## 原交付对话单次重连
+
+2026-11-19 14:14，北京时间。同一正式版 Farfold、Grok 1.0.46、原目录及原对话。正常搜索先显示 13:41 的旧错误，这次只点一次「重连」。核对启动进程 PID `81982` 是正式 Farfold PID `75134` 的直接子进程，工作目录为登记原目录，使用当前登记的官方 `grok-native agent stdio`，登记无追加环境变量。
+
+| 时间         | 同一原连接的动作或结果                                                    |
+| ------------ | ------------------------------------------------------------------------- |
+| 14:14:21.640 | Farfold 发出唯一 `initialize`。                                           |
+| 14:14:21.752 | 官方 `startup.settings_get` 完成。                                        |
+| 14:14:30.444 | 官方报告 `startup.http_blocking_client_build`，距上一个已知阶段约 8.7 s。 |
+| 14:14:33.420 | 官方 `startup.fetch_models_blocking` 完成，记录耗时 2976 ms。             |
+| 14:14:33.424 | 官方完成本次 `bootstrap` 与 `startup.model_catalog.models_manager`。      |
+| 14:14:33.427 | Farfold 收到握手结果，耗时 11.787 s。                                     |
+| 14:14:33.429 | Farfold 发出唯一 `session/load`。                                         |
+| 14:14:33.685 | 原历史读取成功，界面读回原标题、原指令、历史答复和两个原工具步骤。        |
+
+Farfold `protocol-v1-1795068861639-7.jsonl` 前 28 行 SHA-256 `59f12c172649e46319866402b4482e81d37da067bd766d56fac21bd1b33051dc`。第 3、5、8、25 行依次对应握手请求、握手响应、原历史请求和响应。零新建、零模型发送、零取消。本次未点击打开成品。复核子进程时模型目录已经就绪，因此没有采集进程堆栈。
+
+本机登记包 `@xai-official/grok` 1.0.46 的原可执行文件含上述厂商启动阶段标记。现有四次同类超时均完成设置读取，前三次没有记录阻塞 HTTP 客户端建立，第四次记录了该步骤，均没有模型目录完成或握手响应。此次成功记录还显示排到阻塞客户端创建之前约有 8.7 s 的未观察区间，单凭最后一条设置日志无法把等待归因于模型请求。同一正式程序和原目录现有成功与失败，继续保留间歇性超时。若再次复现，优先在原进程仍等待时采集同 PID 的短堆栈，用原时间线区分等待位置。
+
+厂商公开源码的 `SOURCE_REV` 为 `559751fdcec02d413e4c57c8832ab275e4f44980`。公开 stdio 入口在开始处理协议之前等待设置和初始模型目录准备，两个等待可以并行。因此一条设置读取完成记录只能定位其中一侧。该公开版本提供了现象的候选解释，本机 1.0.46 的等待位置仍需同一故障进程的观测。 [公开启动调用](https://github.com/xai-org/grok-build/blob/main/crates/codegen/xai-grok-shell/src/agent/app.rs#L270-L302) · [公开初始设置与模型准备](https://github.com/xai-org/grok-build/blob/main/crates/codegen/xai-grok-shell/src/agent/init.rs#L210-L264)
+
+1.0.47 官方更新明确提到带 `.envrc` 的仓库启动加速，已核这两条样本路径及祖先均无该文件。本次查询时厂商公开更新说明列到 1.0.89，ACP 目录官方清单提供 1.0.90，精确版本的 npm 元数据可读取，入口仍为 `agent stdio`。既有登记仍为 1.0.46，1.0.90 对当前现象的影响待相同入口复验。 [Grok Build 发布说明](https://x.ai/changelog/build) · [ACP 目录清单](https://raw.githubusercontent.com/agentclientprotocol/registry/main/grok-build/agent.json) · [官方 npm 1.0.90](https://registry.npmjs.org/@xai-official%2Fgrok/1.0.90)
