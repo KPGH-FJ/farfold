@@ -84,6 +84,8 @@
 
 **fast-agent 停止后重开的工具修复已正式复验。** 原 Grok 确认空闲后保存退出并更新。正式 `d0b4628eb` 从搜索重开同一停止 A，独立步骤显示「有步骤未成功」，技术详情有原命令、工具 ID 和厂商中断文字。原请求未确认提示保持，零模型发送及任务重跑。原两份历史及脚本保持，fast-agent 只更新最后访问时间。原 Grok 未重开，12 份原历史保持。 [正式复验](evidence/2026-11-19-cycle12-fast-terminal-exit/README.md#更新后重开同一停止样本)
 
+**fast-agent 已验历史查找及打开已有 B，首次带入待样本。** 从「带入已有对话」默认只查得一条有移除记录的旧纯文字测试。选择原文件夹后查得已有 B，禁用重复加入。打开原对话后可见同一工具 ID、命令、结果和退出码。带工具的自建历史均已加入或有移除记录，未改原索引，零模型发送，原 Grok 未开。 [正式回执](evidence/2026-11-19-cycle12-fast-history-discovery/README.md)
+
 **三家正式断线与两条待发。** OpenCode、Goose、Claude 各自的原连接骤断后，热重连保留原对话和两条待发。正常保存退出再冷开，三家零自动发送。OpenCode、Claude 各点一次继续后，同原 ID 的 B、C 按序各实答一次。Goose 只发送 B，厂商报连不上 OpenRouter，原 C 暂停；后用正常入口只关闭这条自有连接，原内容保留。 [本批正式回执](evidence/2026-11-19-cycle12-disconnect-pair-queue/README.md)
 
 **待发图片、Cline 断线和 OpenCode 同目录双前台。** OpenCode 与 Claude 各在两条待发里的第一条附 PNG，实际断线、热重连和正常退出再开后按原顺序保留。各点一次继续，两条都在原对话按序各发送一次，厂商记录的 PNG 和原件逐字节一致。Cline 实际断线后同原对话热重连及冷开，唯一待发和带 PNG 的独立草稿均保留，零重发。厂商共享进程继续到自然完成；Farfold 保留结果未知。OpenCode 在同一目录同时运行两条前台任务，只点停 A，A 的工具与子进程退出，B 继续并写出字节准确的独立成品，共享原件保持。 [待发图片](evidence/2026-11-19-cycle12-queued-image-recovery/README.md) · [Cline 断线](evidence/2026-11-19-cycle12-cline-disconnect/README.md) · [同目录双前台](evidence/2026-11-19-cycle12-same-folder-stop/README.md)
@@ -361,6 +363,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: P33 -->
 
 ### P33
+
+2026-11-19 fast-agent 0.10.1 正式从「带入已有对话」进行默认范围及原目录查找。默认只查得已移出的旧纯文字样本。指定原 B 的文件夹后，准确显示已加入，打开已有对话读回同原成功工具与退出码。缺符合条件的未加入工具样本，首次带入与首次带入后原工具回读待验。两次列表、一次历史读取，零模型发送。 [正式回执](evidence/2026-11-19-cycle12-fast-history-discovery/README.md)
 
 2026-11-19 Grok 1.0.90 只重开独立 B，完整前后快照核合九条历史逐字节一致。借 B 的旧系统行在内存恢复原交付对话升级前的完整字节，与旧摘要完全一致。原交付对话那次历史文件仅首条系统提示 `content` 变化，后 11 条原正文与工具记录保持。原交付对话此次未开、原文件未改，B 零模型发送。 [完整对照](evidence/2026-11-19-cycle12-grok-startup-control/README.md#b-前后完整快照与原历史重建)
 

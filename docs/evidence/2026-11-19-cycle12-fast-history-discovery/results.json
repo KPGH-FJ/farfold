@@ -1,0 +1,118 @@
+{
+  "at": "2026-11-19T17:22:07.777+08:00",
+  "installedSource": "d0b4628eb",
+  "agentVersion": "0.10.1",
+  "defaultScope": {
+    "count": 1,
+    "sampleId": "2610010054-BZNiH6",
+    "noOriginalTool": true
+  },
+  "exactScope": {
+    "sampleId": "2611190032-hkK2TH",
+    "cwd": "/private/tmp/ff-c12-fast-exit-formal.JpK9ieWk/b",
+    "count": 1,
+    "alreadyAdded": true,
+    "duplicateDisabled": true,
+    "openedExisting": true,
+    "toolId": "call_dd2093db48524525821e97c13f9eb19e",
+    "toolCommand": "/bin/sh ./task.sh",
+    "exitCode": 0,
+    "oldOutput": "FF_C12_N19_FAST_B_DONE"
+  },
+  "firstImport": {
+    "status": "not_tested",
+    "reason": "no untouched self-owned native history with tools located",
+    "dismissedOwnedSamples": {
+      "2610010054-BZNiH6": {
+        "dismissed": true,
+        "currentlyAdded": false
+      },
+      "2610061747-yRnx8q": {
+        "dismissed": true,
+        "currentlyAdded": false,
+        "nativeHistory": "output/2026-10-06-real-use/.fast-agent/sessions/2610061747-yRnx8q/history_agent.json",
+        "historyBytes": 158255,
+        "historySha256": "b7c9ed286cedad554f094c87d0dcf595a990c05a446550728869004bfd2b8cf2",
+        "matchedToolCallResultPairs": 8
+      }
+    }
+  },
+  "protocol": [
+    {
+      "file": "protocol-v1-1795079832586-1.jsonl",
+      "sha256": "a71c3ae0ab1ef17c922aed29b480098fc6f8a49ced4102e1721a23a481782190",
+      "lines": 9,
+      "outgoing": ["initialize", "session/list"],
+      "requestLine": 8,
+      "responseLine": 9,
+      "milliseconds": 2
+    },
+    {
+      "file": "protocol-v1-1795080031725-2.jsonl",
+      "sha256": "e43bf4d5d0291c7c92e3e39456140b302c728edea82a25e829e3cc29c9516ec8",
+      "lines": 9,
+      "outgoing": ["initialize", "session/list"],
+      "requestLine": 8,
+      "responseLine": 9,
+      "milliseconds": 2
+    },
+    {
+      "file": "protocol-v1-1795080049218-3.jsonl",
+      "sha256": "799cf28ace50706663ca019418cc561eba8e857e7245e16fc1f7fe0c5e4eaccc",
+      "lines": 14,
+      "outgoing": ["initialize", "session/load"],
+      "requestLine": 8,
+      "responseLine": 13,
+      "milliseconds": 133
+    }
+  ],
+  "farfoldAgentIndexesBefore": 8,
+  "farfoldAgentIndexesAfter": 8,
+  "protectedGrokFiles": 12,
+  "nativeHistory": {
+    "session.json": {
+      "bytes": 2702,
+      "sha256": "8e001fb584495c51770778998140cd3f14fca1a41123177051c6c390bbbb85bf",
+      "mtimeNs": 1795080050358888355
+    },
+    "history_agent.json": {
+      "bytes": 11577,
+      "sha256": "7fea9e29c569bf2952ecdbed83f6202e6deb83251ba5ad5e4930c029348cfff4",
+      "mtimeNs": 1795019703461587502
+    },
+    "history_agent_previous.json": {
+      "bytes": 5833,
+      "sha256": "1553637753a61a7ca3dad4b43509035c1d2bc888cd8111254de9081ef07a314f",
+      "mtimeNs": 1795019584422357913
+    }
+  },
+  "fixtureFiles": {
+    "task.sh": {
+      "bytes": 338,
+      "sha256": "d43f5d67fb3b51f65e7aa98074afdd879d8c155d182a1c3fa719b0630d56b08e",
+      "mtimeNs": 1795018992301809763
+    },
+    "child.pid": {
+      "bytes": 6,
+      "sha256": "4e537832f17a7b1d844c87408540433e64689eaf74be27171b26f47a12bbc226",
+      "mtimeNs": 1795019631716454549
+    },
+    "shell.pid": {
+      "bytes": 6,
+      "sha256": "5886322c9ae3b436733d874dcfc23eb3ddfc89b017e5de05ca7797c429598f45",
+      "mtimeNs": 1795019631715802295
+    },
+    "result.txt": {
+      "bytes": 23,
+      "sha256": "9e914c28cf6a220ac9a6312f0cde7b0cb9b551cced7ca4354ce97023293500c5",
+      "mtimeNs": 1795019699723812820
+    }
+  },
+  "nativeMetadataChange": {
+    "field": "last_activity",
+    "before": "2026-11-19T00:35:03.460420",
+    "after": "2026-11-19T17:20:50.358520",
+    "oldBytesRecoveredInMemory": true,
+    "beforeSha256": "d570f221e08ca7a65ff36b5ccbf49e803c252ad3a2dc9b112611cf0b745b41e5"
+  }
+}
