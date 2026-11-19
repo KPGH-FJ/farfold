@@ -476,15 +476,16 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧首轮 internal_error；无真实成功短答或完整工具链。\n2026-11-16 正式版新短测仍无正文，未触发工具。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。\n2026-11-16 正式设置收到原服务实际短答，本样本未调用工具。\n2026-11-16 续查：原免费 Nemotron 普通对话完成两个一次性权限回执，读取样本并另存 result.md。原稿不变，可从 Farfold 手动打开成品。\n2026-11-16 续查：Cline 3.0.74 的 ACP 更新未给本次编辑提供结构化写入位置或差异，手动打开已验，自动本轮产物仍待官方回执。",
-          "remaining": "本轮产物直达入口、其他工具与技能、拒绝和撤回仍待。",
+          "observed": "旧首轮 internal_error；无真实成功短答或完整工具链。\n2026-11-16 正式版新短测仍无正文，未触发工具。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。\n2026-11-16 正式设置收到原服务实际短答，本样本未调用工具。\n2026-11-16 续查：原免费 Nemotron 普通对话完成两个一次性权限回执，读取样本并另存 result.md。原稿不变，可从 Farfold 手动打开成品。\n2026-11-16 续查：Cline 3.0.74 的 ACP 更新未给本次编辑提供结构化写入位置或差异，手动打开已验，自动本轮产物仍待官方回执。\n2026-11-19 正式 5e12e06d9 原免费模型生成 result.txt，从助手正文相对链接一键打开同一文件。实测写入拒绝和延迟批准提交前撤销后再拒绝，无目标文件。自动本轮产物仍零文件位置。原写入参数和磁盘均少末尾 LF。",
+          "remaining": "自动成品需官方可归属的结构化位置、差异或资源。持久许可需官方可查可撤的逐条规则。完整换行失败保留，其他工具与技能续验。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json",
             "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json",
             "docs/evidence/2026-11-16-cycle12-cline-auth/results.json",
-            "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+            "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+            "docs/evidence/2026-11-19-cycle12-cline-delivery-permission/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -509,13 +510,14 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "旧失败后空队列恢复入口曾不可达。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 续验：列表缺失与已加入时的安全提示均在正常入口复核。",
-          "remaining": "正规入口当前复核，失败/超时类型分别留存。",
+          "observed": "旧失败后空队列恢复入口曾不可达。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 续验：列表缺失与已加入时的安全提示均在正常入口复核。\n2026-11-19 正式 5e12e06d9 第一次批准只一次，后续读写拒绝各自反馈；5 秒内撤销延迟批准恢复原审批，线上只发最终拒绝。正文链接打开原文件，结果一致。",
+          "remaining": "持久许可实际生效及可撤回、官方自动产物位置、各类失败及恢复依原条件。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md"
+            "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md",
+            "docs/evidence/2026-11-19-cycle12-cline-delivery-permission/README.md"
           ],
           "status": "入口有证"
         }
