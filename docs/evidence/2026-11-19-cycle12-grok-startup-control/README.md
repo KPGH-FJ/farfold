@@ -64,3 +64,11 @@ Farfold `protocol-v1-1795068861639-7.jsonl` 前 28 行 SHA-256 `59f12c172649e463
 厂商公开源码的 `SOURCE_REV` 为 `559751fdcec02d413e4c57c8832ab275e4f44980`。公开 stdio 入口在开始处理协议之前等待设置和初始模型目录准备，两个等待可以并行。因此一条设置读取完成记录只能定位其中一侧。该公开版本提供了现象的候选解释，本机 1.0.46 的等待位置仍需同一故障进程的观测。 [公开启动调用](https://github.com/xai-org/grok-build/blob/main/crates/codegen/xai-grok-shell/src/agent/app.rs#L270-L302) · [公开初始设置与模型准备](https://github.com/xai-org/grok-build/blob/main/crates/codegen/xai-grok-shell/src/agent/init.rs#L210-L264)
 
 1.0.47 官方更新明确提到带 `.envrc` 的仓库启动加速，已核这两条样本路径及祖先均无该文件。本次查询时厂商公开更新说明列到 1.0.89，ACP 目录官方清单提供 1.0.90，精确版本的 npm 元数据可读取，入口仍为 `agent stdio`。既有登记仍为 1.0.46，1.0.90 对当前现象的影响待相同入口复验。 [Grok Build 发布说明](https://x.ai/changelog/build) · [ACP 目录清单](https://raw.githubusercontent.com/agentclientprotocol/registry/main/grok-build/agent.json) · [官方 npm 1.0.90](https://registry.npmjs.org/@xai-official%2Fgrok/1.0.90)
+
+## 等待时采样的条件复验
+
+2026-11-19 14:57，北京时间。正式 Farfold 0.1.7 `5e12e06d9`，CDHash `4e5bba7028bdabce14eb3dd531844654e8b611ce`，官方登记仍为 Grok 1.0.46。应用已重开，原目录没有已连接的 Grok 进程。从正常搜索只打开一次同一原交付对话。以官方程序、`agent stdio` 参数、原工作目录、进程启动时间与父进程核对，新 Grok PID `2758` 直属 Farfold PID `1677`。
+
+Farfold `protocol-v1-1795071422737-4.jsonl` 第 3 行 14:57:02.746 发 `initialize`，第 5 行 14:57:05.442 收到握手，耗时 2.696 秒。第 8 行 14:57:05.444 发唯一 `session/load`，第 26 行 14:57:05.689 成功。前 38 行 SHA-256 `43623e15f823f04739d2b09b70cf886556e7f3d34d698b730ad682f2a7f5e163`，零新建、零模型发送、零取消。界面保留原标题、原工作位置、原正文和两处单步骤摘要，本次未打开文件。
+
+同一进程的官方日志中，`startup.http_blocking_client_build` 在 14:57:02.879，`startup.settings_get` 在 14:57:04.905，`startup.fetch_models_blocking` 在 14:57:05.424，耗时 494 ms。阻塞客户端的记录早于设置完成，与 14:14 样本的先后顺序不同。采样观察器仅在同一进程的握手仍等待且满 18 秒时执行一次三秒堆栈采集，本次在 2.696 秒收到握手后正常退出，未采集堆栈。两次同目录成功保留为对照，既有间歇性超时的具体等待仍缺故障现场堆栈。

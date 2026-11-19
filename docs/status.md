@@ -76,11 +76,15 @@
 
 同一正式版的 Grok 原交付对话随后只点一次重连，11.787 秒握手成功并读回原正文及历史步骤，零模型发送。成功日志记录设置完成到阻塞 HTTP 客户端事件之间约 8.7 秒，之后模型目录请求耗时 2.976 秒。此前超时均未完成模型目录，无法把未记录区间归因于模型请求。仍是间歇故障，复现时按同一原进程采样追查。 [单次重连回执](evidence/2026-11-19-cycle12-grok-startup-control/README.md#原交付对话单次重连)
 
+同版随后从搜索以新进程打开同一原对话，2.696 秒完成握手，原正文和两个工具步骤读回，零发送。本次未达到 18 秒采样门槛，未取得超时现场。原日志中阻塞 HTTP 客户端事件早于设置读取完成，确认阶段日志可交错。 [条件复验](evidence/2026-11-19-cycle12-grok-startup-control/README.md#等待时采样的条件复验)
+
 **三家正式断线与两条待发。** OpenCode、Goose、Claude 各自的原连接骤断后，热重连保留原对话和两条待发。正常保存退出再冷开，三家零自动发送。OpenCode、Claude 各点一次继续后，同原 ID 的 B、C 按序各实答一次。Goose 只发送 B，厂商报连不上 OpenRouter，原 C 暂停；后用正常入口只关闭这条自有连接，原内容保留。 [本批正式回执](evidence/2026-11-19-cycle12-disconnect-pair-queue/README.md)
 
 **待发图片、Cline 断线和 OpenCode 同目录双前台。** OpenCode 与 Claude 各在两条待发里的第一条附 PNG，实际断线、热重连和正常退出再开后按原顺序保留。各点一次继续，两条都在原对话按序各发送一次，厂商记录的 PNG 和原件逐字节一致。Cline 实际断线后同原对话热重连及冷开，唯一待发和带 PNG 的独立草稿均保留，零重发。厂商共享进程继续到自然完成；Farfold 保留结果未知。OpenCode 在同一目录同时运行两条前台任务，只点停 A，A 的工具与子进程退出，B 继续并写出字节准确的独立成品，共享原件保持。 [待发图片](evidence/2026-11-19-cycle12-queued-image-recovery/README.md) · [Cline 断线](evidence/2026-11-19-cycle12-cline-disconnect/README.md) · [同目录双前台](evidence/2026-11-19-cycle12-same-folder-stop/README.md)
 
-**Cline 单条待发明确继续已验。** 打开上述原对话，只点一次「继续发送」。同原 ID 只发一条 B 并实答，待发清空，原命令未重跑。独立草稿原文字、附件记录和 167 字节 PNG 均保持，原结果未知提示保持。后续多条及待发自身附图片依原条件复验。 [正式回执](evidence/2026-11-19-cycle12-cline-queued-continue/README.md)
+**Cline 单条待发明确继续已验。** 打开上述原对话，只点一次「继续发送」。同原 ID 只发一条 B 并实答，待发清空，原命令未重跑。独立草稿原文字、附件记录和 167 字节 PNG 均保持，原结果未知提示保持。 [正式回执](evidence/2026-11-19-cycle12-cline-queued-continue/README.md)
+
+**Cline 两条待发恢复通过，图片实际交付失败。** 新自建对话真实断线，热重连、保存退出再打开同一原 ID，首条附的 137 字节 PNG 和第二条纯文本按原序保存。只点一次「继续发送」，B、C 各发一次并实答，原命令未重跑。Farfold 首条传出帧大小与原图片块吻合；Cline 3.0.74 声明支持图片，却在调用工作进程前只提取文本，原历史的 B 只有文字。等官方入口实际传递该图片块后，用同一验收方式复验模型输入。 [正式回执与厂商源码](evidence/2026-11-19-cycle12-cline-queued-image-recovery/README.md)
 
 **Claude 后台实际停止已验，OpenCode 原生后台失败留证。** 主回复结束后，从 Claude 独立任务点停止，同一 Bash 的 Shell 与子进程退出，超过原结束时间无成品。 同一任务的官方止态写入原历史后，冷开准确显示已停止；较早读取只返回启动步骤。OpenCode 普通停止只结束原回复，原生后台 Shell 同 ID 继续并自然写出成品。等官方能按该 Shell ID 精确停止。Goose 当前普通登记未启用可独立停止的计划任务，保持后台缺项。 [本批正式回执](evidence/2026-11-19-cycle12-official-background-stop/README.md)
 
@@ -345,6 +349,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: P33 -->
 
 ### P33
+
+2026-11-19 Cline 两条待发在真实断线、热重连及冷开同一原对象后仍保留原顺序和首条 PNG。一次继续后各发一次，原任务未重跑。Cline 3.0.74 官方入口只交付首条文字，图片交付等待官方。 [正式回执](evidence/2026-11-19-cycle12-cline-queued-image-recovery/README.md)
 
 2026-11-19 同一 Cline 原样本在冷开后只点一次继续，唯一待发原文只发一次并实答，原工作未重跑；原带图草稿保留，原结果未知提示保持。 [正式回执](evidence/2026-11-19-cycle12-cline-queued-continue/README.md)
 
