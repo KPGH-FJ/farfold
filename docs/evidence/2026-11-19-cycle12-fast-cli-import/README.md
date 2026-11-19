@@ -23,3 +23,13 @@ Farfold 仅在两段原回复与回放合并文字逐字一致，并且同一份
 正式复验 `protocol-v1-1795081084669-0.jsonl` 第 8 行读取历史、第 14 行成功，133 毫秒。唯一发出的行为是握手和同原历史读取。整批 Farfold 查找、预览、首次带入、防重复加入与更新后重开均零模型发送。索引在预览前后为 0，加入后及复查为 1。原两份历史与输入文件保持，厂商会话文件仅更新 `last_activity`。原 Grok 未打开，12 份原文件的字节和修改时间保持。
 
 CLI 的原配置由厂商证据核实。Farfold 对这条首次带入样本仍显示原模型未确认并暂停发送，后续原配置确认与续答未验。 [正式安装与原件摘要](results.json)
+
+## 原模型无法确认的原因及正式续查
+
+18:12，北京时间。原 ID、原目录、角色和既有历史均核合。原执行记录两次推理实际为 `codexresponses / gpt-5.6-sol / High`，保存选择名 `codexplan`，官方轨迹摘要 `3c63e5d306fb23e8fef8f0ed2c19865259ed270b7246716bccd6374d8a47d0a8`。带入的 Farfold 记录没有原设置。fast-agent 0.10.1 的 `session/load` 会尝试应用保存的模型和请求设置，恢复模型失败可只写警告，协议成功回执只返回角色 `modes`。`session/resume` 走同一读取方法。同时核对厂商已发布的 0.10.60 标签源码，加载回执仍只填角色，本次未安装该版本。 [厂商加载实现](https://github.com/evalstate/fast-agent/blob/v0.10.60/src/fast_agent/acp/server/session_store.py#L431-L477) · [Farfold 当前设置门槛](../../../src-tauri/src/acp_client/original_config.rs)
+
+先在自有空测试目录禁止网络，核到厂商声明的 `/model` 是本地状态输出。正式 Farfold 正常退出后，用同一官方程序在禁网环境按原 ID 和原目录单独加载一次。仍只收到 `modes`，随后调用该程序为本次连接声明的 `/model`，输出确认 `codexresponses`、`codexplan`、显示模型与请求使用的模型名 `gpt-5.6-sol`、`effort=high`。这是指定原对话在独立进程中恢复后的状态文字。该文字不给 Farfold 正在使用的连接提供模型确认回执，也没有原账号及当前计费来源的对应凭据。没有应用或更换模型，未执行续答。 [厂商模型状态命令](https://fast-agent.ai/models/#interactive-model-commands)
+
+补充已有授权的同安装只读 Codex 导出。它可以从原 ID、目录与角色一致的官方导出读回历史服务和模型。各上下文模型一致且正文逐条匹配时，才显示确认过的两项历史字段。导出缺少明确的实际思考档和账号字段，界面提示当前账号和设置仍需核对。此读取与发送保护独立。 [历史读取实现](../../../src-tauri/src/acp_client/history_supplement/parser.rs) · [界面提示](../../../src/runtime/history_tool_supplement.ts)
+
+正式 `87ac54ec2` 正常保存退出后安装，停机期间 264,505 个数据路径元信息及六份关键文件摘要核合。前端全量 11,032 项和后端相关 34 项通过，类型及正式包通过。重开同一已带入样本，显示历史 `codexresponses` 与 `gpt-5.6-sol`，原工具步骤可见。点一次「重新检查」后仍未确认本连接的已保存选择，发送保持暂停。两次均只有握手和按原 ID 读取，零发送，没有原工具重跑。索引未变且原配置仍为空，两份原历史与标记文件未变，厂商会话文件只更新 `last_activity`。原 Grok 未打开，12 份原文件保持。 [正式核对回执](original-config.json)

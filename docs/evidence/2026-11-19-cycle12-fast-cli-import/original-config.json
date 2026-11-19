@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "nativeSessionId": "2611191728-pBt6YU",
+  "cwd": "/private/tmp/ff-c12-fast-cli-import.uTRbGA3n/work",
+  "fastAgentVersion": "0.10.1",
+  "originalRecorded": {
+    "provider": "codexresponses",
+    "model": "gpt-5.6-sol",
+    "modelAlias": "codexplan",
+    "trajectoryModelSteps": [
+      {
+        "step": 3,
+        "model": "gpt-5.6-sol",
+        "effort": "high"
+      },
+      {
+        "step": 4,
+        "model": "gpt-5.6-sol",
+        "effort": "high"
+      }
+    ],
+    "nativeHistorySha256": "540ae262e273b7a826646f973ed83a4dbc5463ee46f9a198c86035c164264e3d",
+    "trajectorySha256": "3c63e5d306fb23e8fef8f0ed2c19865259ed270b7246716bccd6374d8a47d0a8"
+  },
+  "officialDiagnostic": {
+    "blankDirectoryNetworkDenied": {
+      "isolatedDirectory": "/private/tmp/ff-c12-fast-config-proof.dFQo0SNZ/work",
+      "networkDenied": true,
+      "declaredModelCommand": true,
+      "newReplyKeys": ["modes", "sessionId"],
+      "statusStopReason": "end_turn",
+      "modelTextMentionsExactModel": true,
+      "modelTextMentionsHigh": true,
+      "modelTextMentionsCodexService": true,
+      "sanitizedEvidence": [
+        "# model",
+        "Provider: codexresponses.",
+        "Selected model: codexplan.",
+        "Display model: gpt-5.6-sol.",
+        "Wire model: gpt-5.6-sol.",
+        "Model transports: sse, websocket.",
+        "Reasoning: effort=high. Allowed values: none, low, medium, high, xhigh, max, off."
+      ]
+    },
+    "exactHistoryNetworkDenied": {
+      "exactOriginal": "2611191728-pBt6YU",
+      "networkDenied": true,
+      "restoredReplyKeys": ["modes"],
+      "advertisedModelCommandAfterLoad": true,
+      "statusStopReason": "end_turn",
+      "modelTextMentionsExactModel": true,
+      "modelTextMentionsHigh": true,
+      "modelTextMentionsCodexService": true,
+      "sanitizedEvidence": [
+        "# model",
+        "Provider: codexresponses.",
+        "Selected model: codexplan.",
+        "Display model: gpt-5.6-sol.",
+        "Wire model: gpt-5.6-sol.",
+        "Model transports: sse, websocket.",
+        "Reasoning: effort=high. Allowed values: none, low, medium, high, xhigh, max, off."
+      ]
+    },
+    "historicalOrCurrentAccountIdentityProven": false,
+    "providesFarfoldConnectionConfigOptions": false
+  },
+  "installation": {
+    "source": "87ac54ec25e1e8d2085c7aef2bfa8f83b744cccb",
+    "appCdhash": "9547fa1f88f9ca651e857a64c14b61748e20e7c4",
+    "executableSha256": "32f16fe9f5d66761842147b20bf423f72d91dd642c1fdf0b1c040042c8a863ae",
+    "dataPathsCompared": 264505,
+    "criticalFileDigestsCompared": 6,
+    "dataManifestSha256": "e317fefb6a6f10b5b57c1ae071db49ff0c470fda278cf9a4c961ed3682c97b24",
+    "frontendTests": 11032,
+    "affectedRustTests": 34
+  },
+  "sameOriginalFromFarfold": {
+    "at": "2026-11-19T18:12:04.277+08:00",
+    "protocol": [
+      {
+        "file": "protocol-v1-1795083068648-0.jsonl",
+        "sha256": "0e9ae96915d93062a9882088b089bb517e546122203f2b48174c8d87a0cbe269",
+        "lines": 15,
+        "outgoing": ["initialize", "session/load"],
+        "loadLines": [8],
+        "responseLines": [5, 14]
+      },
+      {
+        "file": "protocol-v1-1795083085297-1.jsonl",
+        "sha256": "37b424840b7fd23deb585873fca16b24f5aaf492882e3cb63963ee8e6e4f51fd",
+        "lines": 15,
+        "outgoing": ["initialize", "session/load"],
+        "loadLines": [8],
+        "responseLines": [5, 14]
+      }
+    ],
+    "sameImportedIndex": true,
+    "savedCurrentConfig": false,
+    "modelSent": 0,
+    "toolReexecuted": false,
+    "allHistoryAndMarkerUnchanged": true,
+    "onlyNativeLastActivityChanged": true,
+    "currentLastActivity": "2026-11-19T18:11:26.493292",
+    "grokProtectedFiles": 12,
+    "view": {
+      "historicalProvider": "codexresponses",
+      "historicalModel": "gpt-5.6-sol",
+      "originalModelUnconfirmed": true,
+      "sendPaused": true,
+      "recheckFailedToConfirm": true
+    }
+  }
+}
