@@ -1,0 +1,22 @@
+{
+  "claude": {
+    "allocated": 268435456,
+    "bytes": 268435456,
+    "dest": "/private/tmp/ff-c12-n20-large-copy-cancel-rtcf02k0/claude/out/claude-cancelled.txt",
+    "inode": 16455283,
+    "mode": "0644",
+    "mtimeNs": 1795139504487670707,
+    "sha256": "570506fe42d4c6101b83de5c4a6523f6065921718504305b7737b755f381e2a1",
+    "source": "/private/tmp/ff-c12-n20-large-copy-cancel-rtcf02k0/claude/claude-large.txt"
+  },
+  "copilot": {
+    "allocated": 268435456,
+    "bytes": 268435456,
+    "dest": "/private/tmp/ff-c12-n20-large-copy-cancel-rtcf02k0/copilot/out/copilot-cancelled.txt",
+    "inode": 16455286,
+    "mode": "0644",
+    "mtimeNs": 1795139504873824375,
+    "sha256": "1a92853594c260d87f9827ce68350e6b013e4ae9a6a1bed27d4708d18e4ea468",
+    "source": "/private/tmp/ff-c12-n20-large-copy-cancel-rtcf02k0/copilot/copilot-large.txt"
+  }
+}
