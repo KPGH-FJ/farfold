@@ -24,3 +24,5 @@ Farfold 直接回到原未发草稿，无需再点对话或侧栏。原文字和
 原登记 `registry:cline`，版本 `3.0.74`。从「新对话」切换到 Cline 和自建 `cline` 目录，再进入「模型与来源 → 准备与连接 → 账号与服务」。13:31:40.668 选中 `Sign in with Cline`，确认相应「登录 Sign in with Cline」按钮出现。13:31:54.531 点「暂时返回」，放弃本次选择，未经侧栏直接回原未发文本、原路径和「模型与来源」焦点，发送可用。未点击登录、打开外部页面或完成实际认证。回到选择器后，读取完成的已有设置显示 `Nemotron 3.5 Super VL (free)` 已选。没有在选择器手动切换模型，本次无推理，模型实际采用另验。[从目录启动并取消模型服务终端的原证据](../2026-11-19-cycle12-draft-auth-return/README.md#cline-与-amp-从目录取消设置)
 
 切换 Agent 时，本机「新对话」复用了原来未发送的编辑区。Cline 测试是在前一条 Copilot 测试标记后附加 `FF_C12_N20_CLINE_AUTH_DRAFT_1327 草稿保留`，本次确认的是完整组合文本返回，未建立两条独立持久草稿。此前 Copilot 换 Agent 前的返回观察单独成立。两个新目录在 Farfold 中都没有已保存对话索引。13:28:20–13:32:20 协议诊断包含读取准备模型所需的临时新建和配置检查、两次 Cursor 列表查询，零 `session/prompt`、`session/load`、协议 `authenticate`、审批和任务取消。Copilot 终端的实际打开与取消由界面见证。
+
+随后只读确认已安装 3.0.74 的 `Sign in with Cline` 入口没有终端声明。安装包说明将对应的 `cline auth cline` 列为 OAuth 登录，Farfold 按 Agent 声明进入授权。实际启动后取消、回到原草稿和账号保持须在可控授权场景中验；此前启动并取消的目录入口是模型服务终端。 [认证方式解析](../../../src-tauri/src/acp_client/auth_route.rs) · [所选认证的用户操作](../../../src/runtime/auth_actions.ts)
