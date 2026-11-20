@@ -1,0 +1,149 @@
+{
+  "fixtureSha256": "e099c94f3092e7c46e3f243a3b2fd73714a1a0c416967974e65911fac7117ab5",
+  "cases": {
+    "copilot": {
+      "originalMoveRecordSha256": "8a754a2f28e57cd551b3fb94df7c91aa13bb4febd52c0937ba31f3ab596a61a6",
+      "moveRecord": {
+        "case": "copilot",
+        "copy": {
+          "device": 16777229,
+          "inode": 16562066,
+          "mode": 384,
+          "mtimeNs": 1795145612547439520,
+          "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd",
+          "size": 45
+        },
+        "emptySavedPath": true,
+        "former": "/private/tmp/ff-c12-n20-saved-copy-missing-m3tm2pd4/copilot/recorded/result.txt",
+        "moved": "/private/tmp/ff-c12-n20-saved-copy-missing-m3tm2pd4/copilot/moved/result.txt",
+        "source": {
+          "device": 16777229,
+          "inode": 16416358,
+          "mode": 420,
+          "mtimeNs": 1795114566242014959,
+          "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd",
+          "size": 45
+        },
+        "whenNs": 1795145622602239000
+      },
+      "sourceAfter": {
+        "device": 16777229,
+        "inode": 16416358,
+        "size": 45,
+        "mtimeNs": 1795114566242014959,
+        "permissions": 420,
+        "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd"
+      },
+      "movedAfter": {
+        "device": 16777229,
+        "inode": 16562066,
+        "size": 45,
+        "mtimeNs": 1795145612547439520,
+        "permissions": 384,
+        "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd"
+      },
+      "recordedPathAbsent": true,
+      "neighborsAfter": {
+        "decoy": {
+          "path": "/private/tmp/ff-c12-n20-saved-copy-missing-m3tm2pd4/copilot/decoy/result.txt",
+          "device": 16777229,
+          "inode": 16561167,
+          "size": 32,
+          "mtimeNs": 1795145381191435014,
+          "permissions": 384,
+          "sha256": "e8fd4af96f33ae2339848486e3465c808bdcf1376fc952b717b64deeed246c5d"
+        },
+        "neighbor": {
+          "path": "/private/tmp/ff-c12-n20-saved-copy-missing-m3tm2pd4/copilot/recorded/other-file.txt",
+          "device": 16777229,
+          "inode": 16561168,
+          "size": 35,
+          "mtimeNs": 1795145381191501098,
+          "permissions": 384,
+          "sha256": "c4cdfba4f00c96a8a64fd303a62faae41213e88627763de884de694400a1b2e6"
+        },
+        "finderControl": {
+          "path": "/private/tmp/ff-c12-n20-saved-copy-missing-m3tm2pd4/copilot/control/control.txt",
+          "device": 16777229,
+          "inode": 16561169,
+          "size": 40,
+          "mtimeNs": 1795145381191565390,
+          "permissions": 384,
+          "sha256": "9a68b235f6a642e07fcbb34d9436248ea40909cf2989e6056c847f5805898946"
+        }
+      }
+    },
+    "claude": {
+      "originalMoveRecordSha256": "380220d806bed99ba25d479fd671a8cccf4cc94f2d57c4ee0a412f7785c4a9f1",
+      "moveRecord": {
+        "case": "claude",
+        "copy": {
+          "device": 16777229,
+          "inode": 16562854,
+          "mode": 384,
+          "mtimeNs": 1795145722489925545,
+          "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61",
+          "size": 71
+        },
+        "emptySavedPath": true,
+        "former": "/private/tmp/ff-c12-n20-saved-copy-missing-m3tm2pd4/claude/recorded/result.txt",
+        "moved": "/private/tmp/ff-c12-n20-saved-copy-missing-m3tm2pd4/claude/moved/result.txt",
+        "source": {
+          "device": 16777229,
+          "inode": 15717936,
+          "mode": 420,
+          "mtimeNs": 1795003522186078532,
+          "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61",
+          "size": 71
+        },
+        "whenNs": 1795145733071421000
+      },
+      "sourceAfter": {
+        "device": 16777229,
+        "inode": 15717936,
+        "size": 71,
+        "mtimeNs": 1795003522186078532,
+        "permissions": 420,
+        "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61"
+      },
+      "movedAfter": {
+        "device": 16777229,
+        "inode": 16562854,
+        "size": 71,
+        "mtimeNs": 1795145722489925545,
+        "permissions": 384,
+        "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61"
+      },
+      "recordedPathAbsent": true,
+      "neighborsAfter": {
+        "decoy": {
+          "path": "/private/tmp/ff-c12-n20-saved-copy-missing-m3tm2pd4/claude/decoy/result.txt",
+          "device": 16777229,
+          "inode": 16561159,
+          "size": 31,
+          "mtimeNs": 1795145381190891929,
+          "permissions": 384,
+          "sha256": "32640c3fb6a727cab15d40f0e31dd45c172bec28e52c0aa01bb622491733a962"
+        },
+        "neighbor": {
+          "path": "/private/tmp/ff-c12-n20-saved-copy-missing-m3tm2pd4/claude/recorded/other-file.txt",
+          "device": 16777229,
+          "inode": 16561160,
+          "size": 34,
+          "mtimeNs": 1795145381190968304,
+          "permissions": 384,
+          "sha256": "0061a346546ca9d3a27d867b3a4bdede10d122394d225226f30d931dbf3d6ea0"
+        },
+        "finderControl": {
+          "path": "/private/tmp/ff-c12-n20-saved-copy-missing-m3tm2pd4/claude/control/control.txt",
+          "device": 16777229,
+          "inode": 16561161,
+          "size": 39,
+          "mtimeNs": 1795145381191066680,
+          "permissions": 384,
+          "sha256": "9234d810e3e6b71b53e8826ee88ef2db41eb47532e9bc60bdb2d469a039e48a6"
+        }
+      }
+    }
+  }
+}
