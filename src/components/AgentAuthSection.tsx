@@ -304,7 +304,6 @@ export function AgentAuthSection({
     logout = false,
     switchAccount = false,
     credential?: { id: string; revision: string },
-    /** The caller re-validated this method id against a fresh declaration. */
     verified = false,
   ) => {
     if (
@@ -339,6 +338,7 @@ export function AgentAuthSection({
           : {}),
         onChanged,
       });
+      if (connection && !logout && !manual) setStage("account");
       setAccountExit(null);
     } catch (reason) {
       setError(uiError(reason, A.failed));

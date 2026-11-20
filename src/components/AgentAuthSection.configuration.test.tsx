@@ -133,13 +133,14 @@ it.each(["agent", "terminal", "api-key"] as const)(
       );
       expect(beginAuthentication).not.toHaveBeenCalled();
     } else {
-      // Agent and terminal methods run in place without a detail page.
-      expect(advance).not.toHaveBeenCalled();
+      // Direct methods start immediately and keep their receipt at the account step.
       expect(beginAuthentication).toHaveBeenCalledExactlyOnceWith(
         expect.objectContaining({
           method: expect.objectContaining({ id: "default", kind }),
         }),
       );
+      expect(advance).toHaveBeenCalledExactlyOnceWith("account");
+      expect(beginAuthentication).toHaveBeenCalledBefore(advance);
     }
   },
 );
@@ -395,6 +396,29 @@ it.each([undefined, "login"] as const)(
     );
   },
 );
+
+it("shows a completed protocol login at the controlled account step", async () => {
+  const job = authenticationActivity(agentId);
+  job.begin({ agentId, cwd: "/original" }, login, "direct-login");
+  await job.protocol({
+    run: async () => {},
+    cancel: async () => {},
+    reconnect: async () => {},
+  });
+  const nodes = await settled(undefined, {
+    methodId: login.methodId,
+    connection: {
+      choice: "login",
+      stage: "account",
+      apiAvailable: false,
+      apiContent: null,
+      onChoice: vi.fn(),
+      onStageChange: vi.fn(),
+    },
+  });
+  expect(nodes.some((node) => node.props.children === R.confirmed)).toBe(true);
+  expect(nodes.some((node) => node.type === AgentConnectionPicker)).toBe(false);
+});
 
 it("retains a confirmed login when the connection check fails and replaces only the check result on retry", async () => {
   const job = authenticationActivity(agentId);

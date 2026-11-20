@@ -463,7 +463,7 @@
           "status": "可建对话"
         },
         "S2": {
-          "observed": "旧真实请求返回 internal_error，认证/服务原因未定。\n2026-11-16 沿用已有设置，以临时 Claude Sonnet 5.5 发一条，返回内部错误，无文本，原因未定。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。\n2026-11-16 两条官方诊断的本机回执均要求重新认证。定位到原 OAuth 刷新无可用凭据。正式版已核到官方终端登录入口。\n2026-11-16 用户从正式入口对原账号重新登录后，沿 Cline 原服务临时选择 Sonnet 5.5 发一条，界面完成且回复精确命中。\n2026-11-20 正式版从正常新建沿用已有服务和免费 Nemotron 3.5 Super VL，只发送一次并收到真实首答。实际 OAuth 启动后取消仍待。",
+          "observed": "旧真实请求返回 internal_error，认证/服务原因未定。\n2026-11-16 沿用已有设置，以临时 Claude Sonnet 5.5 发一条，返回内部错误，无文本，原因未定。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。\n2026-11-16 两条官方诊断的本机回执均要求重新认证。定位到原 OAuth 刷新无可用凭据。正式版已核到官方终端登录入口。\n2026-11-16 用户从正式入口对原账号重新登录后，沿 Cline 原服务临时选择 Sonnet 5.5 发一条，界面完成且回复精确命中。\n2026-11-20 正式版从正常新建沿用已有服务和免费 Nemotron 3.5 Super VL，只发送一次并收到真实首答。实际 OAuth 启动后取消仍待。\n2026-11-21 正式版复验原 Cline 已有授权，接受后可继续模型页，明确选回原免费模型，回原草稿手动一发实答。首次外部授权和取消、换号仍待。",
           "remaining": "实际账号切换、服务权益与旧对话身份仍须分别核。",
           "sources": [
             "docs/agent-first-release.md",
@@ -471,7 +471,8 @@
             "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json",
             "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json",
             "docs/evidence/2026-11-16-cycle12-cline-auth/results.json",
-            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md"
+            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md",
+            "docs/evidence/2026-11-21-cycle12-s1-s2-restore/README.md"
           ],
           "status": "原账号实答"
         },
@@ -1309,7 +1310,7 @@
           "status": "分项通过"
         },
         "S2": {
-          "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。\n2026-11-16 续验：用户确认当前使用原 GitHub 账号，沿用原已有服务。原 Auto 的续问在路由阶段报网络错误。\n2026-11-16 续验：同一用户确认原账号，同一已有服务复验实答。\n2026-11-17 续验：新版正式正常新建沿已有账号实答，厂商记录为 Copilot 来源。\n2026-11-20 正式版从正常新建先复验已有原账号 Auto，只发送一次并收到真实首答。新版另选 Farfold 已存 Xiaomi Chat Completions 的 MiMo，独立草稿只发送一次并收到真实首答。厂商回执报告 isByok:true、remote_user、mimo-v2.6-flash、finish:stop；与本批 OpenCode 同一已存服务标识及指纹。\n同日另验已存小米 Messages 闭环，正式原厂商记录为 remote_user BYOK、Messages、MiMo 与 stop。Responses 已提供选用入口，有受控证据，仍缺真实已存服务。",
+          "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。\n2026-11-16 续验：用户确认当前使用原 GitHub 账号，沿用原已有服务。原 Auto 的续问在路由阶段报网络错误。\n2026-11-16 续验：同一用户确认原账号，同一已有服务复验实答。\n2026-11-17 续验：新版正式正常新建沿已有账号实答，厂商记录为 Copilot 来源。\n2026-11-20 正式版从正常新建先复验已有原账号 Auto，只发送一次并收到真实首答。新版另选 Farfold 已存 Xiaomi Chat Completions 的 MiMo，独立草稿只发送一次并收到真实首答。厂商回执报告 isByok:true、remote_user、mimo-v2.6-flash、finish:stop；与本批 OpenCode 同一已存服务标识及指纹。\n同日另验已存小米 Messages 闭环，正式原厂商记录为 remote_user BYOK、Messages、MiMo 与 stop。Responses 已提供选用入口，有受控证据，仍缺真实已存服务。\n2026-11-21 冷开已存小米的 Chat Completions 和 Messages 两条原对话，原服务与 MiMo 保留，目录及身份吻合，零自动发送。",
           "remaining": "实际计费、换号及不同服务失效的范围保护仍待核。 已存 Xiaomi 的跨 Agent 复用已有实答，原账号重新登录、服务切换失败和新 API 账单仍待。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-followup/README.md",
@@ -1317,7 +1318,8 @@
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
             "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md",
-            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md"
+            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md",
+            "docs/evidence/2026-11-21-cycle12-s1-s2-restore/README.md"
           ],
           "status": "已选服务有实答"
         },
@@ -1437,7 +1439,7 @@
       "liveAction": "同家双任务沿已有 OpenRouter 免费 Super VL / Off，A 实际停止且 B 交付。重开原 A 恢复草稿和附件并续答。其他后台、断线和工具终态依适用范围续验。 新正式版原目录单条待发冷开并明确续发通过。 同一自建工作目录双前台实停已验：A 原 Shell 与子进程确实退出，原步骤仍未知；B 继续并实际交付。",
       "standards": {
         "S1": {
-          "observed": "正式更新到 1.59.1，旧 67 会话与 312 消息 ID 保持。旧配置终端有暂离、取消和重查样本。\n2026-11-15 盘点：程序可执行，登记版本 1.59.1。登记所存握手版本 1.59.1。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-20 正式版从原未发草稿打开 Goose 1.59.1 的官方内嵌配置终端。取消后返回原草稿并重新检查。读到官方当前默认 Claude Sonnet 4 与原免费模型不一致，保留草稿并提示前往模型选择，零模型请求。",
+          "observed": "正式更新到 1.59.1，旧 67 会话与 312 消息 ID 保持。旧配置终端有暂离、取消和重查样本。\n2026-11-15 盘点：程序可执行，登记版本 1.59.1。登记所存握手版本 1.59.1。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-20 正式版从原未发草稿打开 Goose 1.59.1 的官方内嵌配置终端。取消后返回原草稿并重新检查。读到官方当前默认 Claude Sonnet 4 与原免费模型不一致，保留草稿并提示前往模型选择，零模型请求。\n2026-11-21 原稿取消配置、发现默认不同后选回原免费模型，正常退出冷开保留原文字、目录、模型及 Off。只手动发一次，准确回复并完成，厂商原 ID 确认 OpenRouter 免费 Nemotron。",
           "remaining": "当前安装的其他准备回路及各认证入口未覆盖。 官方终端取消后已回原草稿并发现默认模型与原免费模型不符。按已选来源重新选定并验证实际生效、改变配置与其他认证入口仍待。",
           "sources": [
             "docs/evidence/2026-11-15-cycle7-goose-retest/README.md",
@@ -1445,7 +1447,8 @@
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
             "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json",
-            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md"
+            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md",
+            "docs/evidence/2026-11-21-cycle12-s1-s2-restore/README.md"
           ],
           "status": "分项通过"
         },
@@ -1999,7 +2002,7 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "旧 Big Pickle 原生报免费额度已用尽。后来既有 Xiaomi MiMo 实际请求成功并有原回执。\n续验：已保存 Chat Completions 在新版确认并实际出站一次；本次所选模型的独立检查返回 404，另一配置模型超时。\n最新复验：新保存的 Xiaomi Chat Completions 已通过正式选源并返回指定文本，SQLite 仅核选源元数据。\n2026-11-20 新版正式版从正常新建选择 Farfold 已存 Xiaomi Chat Completions 的 MiMo，独立草稿只发送一次并收到真实首答。协议验证本次出站及完成，与本批 Copilot 同一已存服务标识及指纹；厂商路径另循此前覆盖源原证据。",
+          "observed": "旧 Big Pickle 原生报免费额度已用尽。后来既有 Xiaomi MiMo 实际请求成功并有原回执。\n续验：已保存 Chat Completions 在新版确认并实际出站一次；本次所选模型的独立检查返回 404，另一配置模型超时。\n最新复验：新保存的 Xiaomi Chat Completions 已通过正式选源并返回指定文本，SQLite 仅核选源元数据。\n2026-11-20 新版正式版从正常新建选择 Farfold 已存 Xiaomi Chat Completions 的 MiMo，独立草稿只发送一次并收到真实首答。协议验证本次出站及完成，与本批 Copilot 同一已存服务标识及指纹；厂商路径另循此前覆盖源原证据。\n2026-11-21 又以与 Copilot 完全相同的已存 Xiaomi anthropic / Messages 实答，冷开同原 ID 保留服务与 MiMo，零自动发送；独立账单未核。",
           "remaining": "更换服务的失败、费用与跨对话隔离按原条件补验。",
           "sources": [
             "docs/status.md",
@@ -2007,7 +2010,8 @@
             "docs/evidence/2026-11-15-cycle8-observation/README.md",
             "docs/evidence/2026-11-15-cycle12-continuation/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
-            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md"
+            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md",
+            "docs/evidence/2026-11-21-cycle12-s1-s2-restore/README.md"
           ],
           "status": "已选服务有实答"
         },
