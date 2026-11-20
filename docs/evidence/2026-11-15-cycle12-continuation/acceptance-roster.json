@@ -28,8 +28,8 @@
       "liveAction": "用已登录官方账号，从小米 MiMo 新对话实答并核同线程真实路由。原测试对话冷开及正文读回，临时沿用原线程模型后收到同一T-ID的小米续答，随后恢复显式MiMo。显式参数被拒的缺口保留。 正式双前台任务只点 A 停止，原 Shell 和 sleep 退出，B 独立交付；A 冷开保留原显式 MiMo、草稿与未知结果。 显式模型与未映射旧线程接入等官方。",
       "standards": {
         "S1": {
-          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n2026-11-15 盘点：程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。\n2026-11-16 续查：新版正式 Amp 账号页显示独立厂商账户登录。查看详情核原已装厂商程序和固定 login，仍需手动启动。\n2026-11-16 续查：修复前次误拦截并安装；从原入口确实启动官方 CLI 登录终端，原适配器密钥文件保留。\n2026-11-16 复验：用户完成官方 CLI 登录，厂商程序能列出保存的账号。\n2026-11-16 复验：正式版选中官方 0.13.0 组件及新版官方 CLI，备份旧独立密钥后正常入口读出并选中 MiMo。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-19 正式 42ffe103e 穿过原目录管理，实际启动 Amp 0.13.0 的 API Key Setup，在未输入密钥时取消并放弃，回原管理按钮，零发送。",
-          "remaining": "厂商网页登录取消、原账号变化及其他准备入口按原条件核。适配器密钥终端的目录取消有证。",
+          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n2026-11-15 盘点：程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。\n2026-11-16 续查：新版正式 Amp 账号页显示独立厂商账户登录。查看详情核原已装厂商程序和固定 login，仍需手动启动。\n2026-11-16 续查：修复前次误拦截并安装；从原入口确实启动官方 CLI 登录终端，原适配器密钥文件保留。\n2026-11-16 复验：用户完成官方 CLI 登录，厂商程序能列出保存的账号。\n2026-11-16 复验：正式版选中官方 0.13.0 组件及新版官方 CLI，备份旧独立密钥后正常入口读出并选中 MiMo。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-19 正式 42ffe103e 穿过原目录管理，实际启动 Amp 0.13.0 的 API Key Setup，在未输入密钥时取消并放弃，回原管理按钮，零发送。\n2026-11-20 正式 72e971df5。从独立未发草稿启动 Amp 的 API Key Setup。未输入即取消并放弃，回原文字、目录、已选 MiMo 和发送入口。",
+          "remaining": "厂商网页登录的实际取消、原账号变化及其他准备入口按原条件核。适配器密钥终端的目录和草稿取消均有证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
@@ -41,7 +41,8 @@
             "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
             "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
             "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json",
-            "docs/evidence/2026-11-19-cycle12-draft-auth-return/README.md#cline-与-amp-从目录取消设置"
+            "docs/evidence/2026-11-19-cycle12-draft-auth-return/README.md#cline-与-amp-从目录取消设置",
+            "docs/evidence/2026-11-20-cycle12-amp-kilo-entry-followup/README.md#amp-从草稿取消实际设置终端"
           ],
           "status": "分项通过"
         },
@@ -114,7 +115,7 @@
           "status": "前台停止分项通过"
         },
         "S8": {
-          "observed": "已有设置完成与请求认证提示是两个真实阶段。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 续验：停止只报告已停止回复，未确认工具保留未知；冷开明确未自动重发。",
+          "observed": "已有设置完成与请求认证提示是两个真实阶段。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 续验：停止只报告已停止回复，未确认工具保留未知；冷开明确未自动重发。\n2026-11-20 正式 72e971df5。实际设置终端取消后回同一草稿及「模型与来源」焦点，原目录和 MiMo 保持，仍可直接发送。",
           "remaining": "继续复验原工具反馈、失败及不同权限。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
@@ -122,7 +123,8 @@
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json",
             "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
-            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md",
+            "docs/evidence/2026-11-20-cycle12-amp-kilo-entry-followup/README.md#amp-从草稿取消实际设置终端"
           ],
           "status": "分项通过"
         }
@@ -1646,7 +1648,7 @@
     },
     {
       "agentId": "kilo",
-      "runtime": "当前登记、握手均 7.8.1，已保存已有 Kilo Gateway 免费 Ultra / none / code；当前无 Farfold 索引。",
+      "runtime": "登记、握手为 7.8.1，已有 Kilo Gateway 免费 Ultra / none / code。本次原样本有一条匹配的 Farfold 索引。",
       "liveAction": "原直接完整写入缺 LF。采用复制副本并只编辑状态行的真实路径，字节正确且可打开。正式冷开同一原 ID 读回文件和原模型并准确续答。 Kilo 同家两条前台命令及实际停止、冷开原配置、保留草稿和续答已有正式证据。",
       "standards": {
         "S1": {
@@ -1673,14 +1675,15 @@
           "status": "已有设置实答"
         },
         "S3": {
-          "observed": "旧正式原桌面对象发现、正文及依赖前文续答通过；另一旧临时对象明确因目录缺失拒绝。\n2026-11-17 冷开同一新测试原 ID，读回原正文、所选服务和模型，未自动发送。\n2026-11-17 新版冷开原文件对话，原目录、正文、文件链接和已有免费 Ultra / None 保持。原上下文追问准确回答，零新建。\n2026-11-17 实际停止后从搜索冷开原 A，原正文、工作位置、保存选择保持，实际续答正确，零新建。",
-          "remaining": "旧对话的首次带入、其他目录和更多历史形态继续验。",
+          "observed": "旧正式原桌面对象发现、正文及依赖前文续答通过；另一旧临时对象明确因目录缺失拒绝。\n2026-11-17 冷开同一新测试原 ID，读回原正文、所选服务和模型，未自动发送。\n2026-11-17 新版冷开原文件对话，原目录、正文、文件链接和已有免费 Ultra / None 保持。原上下文追问准确回答，零新建。\n2026-11-17 实际停止后从搜索冷开原 A，原正文、工作位置、保存选择保持，实际续答正确，零新建。\n2026-11-20 正式 72e971df5。正式按原目录查找，同原 ID 唯一且已加入，官方与本机位置一致并禁止重加。空目录无记录。零历史加载或发送。",
+          "remaining": "首带旧对话、更多目录及历史形态继续。已加入原样本能按实际目录准确查找。",
           "sources": [
             "docs/evidence/2026-10-24-agent-acceptance/kilo-formal-e954-history-continuation-summary.json",
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
             "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md",
             "docs/evidence/2026-11-17-cycle12-approval-and-lf/README.md",
-            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md"
+            "docs/evidence/2026-11-17-cycle12-four-agent-control/README.md",
+            "docs/evidence/2026-11-20-cycle12-amp-kilo-entry-followup/README.md#kilo-按工作目录找到已加入的原会话"
           ],
           "status": "冷开续答分项通过"
         },
