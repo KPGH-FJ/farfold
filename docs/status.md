@@ -96,6 +96,8 @@
 
 **第 12 周期的 21 家缺口已按八项逐家盘点。** 接续时的 168 个状态与余项已单独保留，后续实测和当前结果更新逐家验收表。Gemini CLI、Antigravity、指定原会话及各项官方依赖依现行安排续接。 [接续前盘点](evidence/2026-11-20-cycle12-gap-review/README.md)
 
+**Mistral Vibe 的在途断线恢复实测失败。** 正式 `72e971df5` 保住两条待发、原设置和独立草稿，原 Shell 与子进程在连接丢失后继续并自然结束。热重连及冷开各只发一次原对话读取，均触发官方 2.25.8 在原轮重新推理并提议新工具，原脚本只执行一次，待发未发送。两次读取均未完成，继续发送仍待验。 [正式回执及官方复验条件](evidence/2026-11-20-cycle12-mistral-queue-recovery/README.md)
+
 **Cursor 冷开显示原拒绝需官方回放补足。** 同一自有样本的厂商原记录有原工具 ID 和明确拒绝原因。登记版本 2026.11.13 的回放另分配工具 ID，并报为 `completed`。待官方保留原工具及拒绝终态，或支持按原会话、目录和工具精确只读回查。 [只读复核](evidence/2026-11-20-cycle12-cursor-denial-replay/README.md#同一工具的原记录与回放)
 
 **Mistral Vibe 同页撤回后重新授权与取消已验。** 09:14 在独立同配置短测收到原服务回复。重开原对话后允许读取，再停止共享，只发一条。Vibe 查找并调用原网页工具，单次批准后 Farfold 再次询问同页读取许可。点取消，原工具只收到取消文字，没有交付新网页正文。此前的 503 和未知提示保留。 [正式回执](evidence/2026-11-20-cycle12-mistral-regrant-cancel/README.md)
@@ -286,6 +288,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 
 ### ARCH-44
 
+2026-11-20 Mistral Vibe 正式在途断线后，Agent 自开的原 Shell 和 sleep 脱离连接并自然结束。两次读取同一未结束原轮分别触发厂商推理及新工具提议，未批准，本机原脚本未重跑。等原工作可精确回收、原工具终态可查，或有不恢复旧轮的原历史入口。已验证的主动停止正例适用原有样本。 [官方边界及正式回执](evidence/2026-11-20-cycle12-mistral-queue-recovery/README.md#官方入口与复验条件)
+
 2026-11-20 Goose 普通 Shell 由 Agent 自行启动，当前登记 1.59.1 与官方目录 1.60.1 的独立工具组管理代码相同。原 Goose 进程意外退出后，重连取消只能作用于新进程的活动工作，历史读取只能交付已保存记录。普通 Shell 未交由客户端终端启动，现有回收范围和计划任务独立接口均不能认领该原工具。等官方精确回收并提供原终态，或提供按原会话及原工具查找、停止和核对终态的入口。到位后只断 A，核原 Shell 和子进程实际退出、B 继续以及同一原步骤反馈。 [原进程范围和官方入口](evidence/2026-11-20-cycle12-goose-orphan-recovery/README.md)
 
 2026-11-20 Cursor 同一真实拒绝样本只读复核。厂商原件保留同一工具标识和明确拒绝原因，当前登记 2026.11.13 回放会重新分配标识、报告 `completed`，Shell 回放输出省略拒绝原因。所核官方 CLI、SDK 和 Hooks 缺该原工具的事后只读查询。等官方完整保留原工具 ID、拒绝原因及终态，或提供按原会话、原工作目录和原工具 ID 核对的只读接口，再冷开同一拒绝样本验准确显示。 [原记录与回放](evidence/2026-11-20-cycle12-cursor-denial-replay/README.md#同一工具的原记录与回放) · [所核官方入口](evidence/2026-11-20-cycle12-cursor-denial-replay/README.md#已核官方入口)
@@ -411,6 +415,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: P33 -->
 
 ### P33
+
+2026-11-20 Mistral Vibe 正式从原对话热重连及正常退出冷开，原设置、两条待发次序和独立草稿均保持。两次 `session/load` 未读完且触发厂商续跑原轮，Farfold 未派发续问，用户继续待发尚未验。该中断样本等待官方安全读取及恢复。 [正式回执](evidence/2026-11-20-cycle12-mistral-queue-recovery/README.md)
 
 2026-11-20 正式 `72e971df5` 从「带入已有对话」按 Cursor 自有样本原文件夹查到准确的已加入对话，官方与本地原目录相符，不能重复加入。另一个自有空目录未找到对话。本次未加载历史正文、未加入、零模型发送。 [正式目录对照](evidence/2026-11-20-cycle12-draft-discovery-followup/README.md)
 
@@ -1133,6 +1139,7 @@ Autohand 前台子进程及工具终态、Copilot、Cursor 与 Kilo 工具终态
 - **CodeBuddy**。正式 `6ca11aa5a` 修复原目录同值选模漏发设置。本机 2.184.0 原目录实答 Hy4 / On，同原对话切到免费 Flash，再切回后冷开续答实际仍走 Hy4 / On。冷开续问的正文先返回，厂商周期总结使整轮又等约 130 秒才结束。原目录两条标准 Hy4 / On 前台同时运行时只停 A，A Shell 及子进程退出，B 按原请求完成。冷开 A 保留原步骤中止状态，零自动执行；手动续答仍走 Hy4 / On。旧 `hy4-preview-f / High`、后台及其他原条件继续。 [双任务与冷续答](evidence/2026-11-18-cycle12-codebuddy-registry-stop/README.md) · [原目录正式实测](evidence/2026-11-18-cycle12-codebuddy-registry-model/README.md) · [独立入口对照](evidence/2026-11-18-cycle12-codebuddy-hy4-official-launch/README.md)
 - **Kilo**。当前正式 7.8.1 实时与冷开都未在原步骤摘要显示中止。现行目录 7.8.27 的工具映射仍把同类完成记录映射为 `completed`。等同一工具的可归属失败或中止信号，再复验两种界面呈现。 [正式实测](evidence/2026-11-18-cycle12-kilo-stop-display/README.md)
 
+- **Mistral Vibe**。原运行命令在连接丢失后继续，重开未结束对话会触发厂商再次推理。受影响样本保留草稿、待发和未知结果。等官方无副作用的原历史读取、或可先结束原工作再安全重连的入口，以及可核对的原工具终态。 [正式证据及复验条件](evidence/2026-11-20-cycle12-mistral-queue-recovery/README.md#官方入口与复验条件)
 - **Codex**。本机所选 ACP 1.13.1 的适配器与原权限案归档字节一致。NEW-24 仍等原连接可核实完整实际文件范围、网络和审批及冷开恢复回执。 [官方接口复核](evidence/2026-11-19-cycle12-official-route-recheck/README.md#codex-的-new-24-发送保护)
 - **Claude Code**。Farfold 独立小米 Messages 测试已有实答，官方适配器的私密凭据交接仍待支持。若要测独立官方账号来源，可在用户方便时从 Farfold 官方账号入口使用所选 Claude 订阅或 Anthropic Console 登录。
 - **Gemini CLI 与 Antigravity**。保持暂缓，后续恢复该验收时由用户本人完成官方登录。
