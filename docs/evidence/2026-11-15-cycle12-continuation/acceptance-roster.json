@@ -355,8 +355,8 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧多片段实测未取得，不当做已支持的使用结果。\n2026-11-18 已有 MiMo 设置，两条真实 Bash 单次审批，B 原工具成功，实际写出独立结果，Farfold 显示真实标记。\n2026-11-18 只读冷开 B，原工具成功及 stdout 保持。文件与输出报告 0 个文件位置。通过打开文件手动选取原目录 result.txt，正式预览内容及原 31 字节摘要核合。\n2026-11-18 同 B 同 MiMo 一次官方 Read 读取原 result.txt。正常退出重开后，从 Read 历史工具的原路径按钮直接预览原 31 字节成品，脚本、启动记录和成品摘要及修改时间一致。原 Bash 回放只报告命令输出，所核版本没有成品位置。\n2026-11-18 原 MiMo 正常新建，官方 Write 单次批准写入独立目录的 71 字节 result.txt。正常退出后零发送重开同原对话，从原 Write 工具路径直接预览，原文件字节、摘要、inode 和修改时间保持。\n2026-11-19 正式 6ca11aa5a 沿 已有小米 MiMo 的普通对话仅拒绝一次原 Bash 审批。同工具明确拒绝及原轮准确答复，脚本未执行，磁盘输入字节保持。\n2026-11-19 正式冷开自身已拒绝的原 Bash，仍可查原命令、旧失败和原回复，工具详情保留厂商明确的用户拒绝原因，脚本未执行。",
-          "remaining": "原 Bash 成品位置等官方。已有文件覆盖、取消失败、提问、其他审批、技能及更多任务按原项续验。",
+          "observed": "旧多片段实测未取得，不当做已支持的使用结果。\n2026-11-18 已有 MiMo 设置，两条真实 Bash 单次审批，B 原工具成功，实际写出独立结果，Farfold 显示真实标记。\n2026-11-18 只读冷开 B，原工具成功及 stdout 保持。文件与输出报告 0 个文件位置。通过打开文件手动选取原目录 result.txt，正式预览内容及原 31 字节摘要核合。\n2026-11-18 同 B 同 MiMo 一次官方 Read 读取原 result.txt。正常退出重开后，从 Read 历史工具的原路径按钮直接预览原 31 字节成品，脚本、启动记录和成品摘要及修改时间一致。原 Bash 回放只报告命令输出，所核版本没有成品位置。\n2026-11-18 原 MiMo 正常新建，官方 Write 单次批准写入独立目录的 71 字节 result.txt。正常退出后零发送重开同原对话，从原 Write 工具路径直接预览，原文件字节、摘要、inode 和修改时间保持。\n2026-11-19 正式 6ca11aa5a 沿 已有小米 MiMo 的普通对话仅拒绝一次原 Bash 审批。同工具明确拒绝及原轮准确答复，脚本未执行，磁盘输入字节保持。\n2026-11-19 正式冷开自身已拒绝的原 Bash，仍可查原命令、旧失败和原回复，工具详情保留厂商明确的用户拒绝原因，脚本未执行。\n2026-11-20 正式 87ac54ec2。从原 Write 工具打开自有 71 字节 result.txt，首次取消另存回到同一预览，目标目录为空且未新增记录。再将完整原文件另存为独立 claude-result.txt，逐字节相同，原件摘要、修改时间及 inode 保持。与 Copilot 同名原文件各自交付，零发送。",
+          "remaining": "原 Bash 成品位置等官方。目标已存在时的处理、复制开始后的取消及其他失败、提问、审批、技能和更多任务按原项续验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
             "docs/agent-first-release.md",
@@ -367,7 +367,8 @@
             "docs/evidence/2026-11-18-cycle12-claude-pair-stop/README.md#b-通过官方-read-冷开直达同一成品",
             "docs/evidence/2026-11-18-cycle12-claude-write/README.md",
             "docs/evidence/2026-11-19-cycle12-approval-denial/README.md",
-            "docs/evidence/2026-11-19-cycle12-approval-denial/README.md#claude-单次拒绝冷回读"
+            "docs/evidence/2026-11-19-cycle12-approval-denial/README.md#claude-单次拒绝冷回读",
+            "docs/evidence/2026-11-20-cycle12-same-name-delivery-copy/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -1320,12 +1321,13 @@
           "status": "已选模型有实答"
         },
         "S5": {
-          "observed": "旧正式同自测一次审批拒绝，一次批准且固定命令有专用标记与退出码。\n2026-11-18 补录 11-17：自有样本原生记录 view 和 apply_patch 成功，Farfold 一次批准后收到完成。昨晚现场见从本轮打开 45 字节成品并独立核原件，临时原件已失。\n2026-11-20 正式 87ac54ec2：原 Auto 实际 gpt-6-luna，明确批准单次写入。正常从本轮产物打开 45 字节成品，冷开同一原对话从原回复再打开，零发送。原件、成品、末尾换行及厂商同工具回执均已留存。",
-          "remaining": "技能、其他权限和完整交付组合按原条件。较早无法取回的原样本作为历史保留。",
+          "observed": "旧正式同自测一次审批拒绝，一次批准且固定命令有专用标记与退出码。\n2026-11-18 补录 11-17：自有样本原生记录 view 和 apply_patch 成功，Farfold 一次批准后收到完成。昨晚现场见从本轮打开 45 字节成品并独立核原件，临时原件已失。\n2026-11-20 正式 87ac54ec2：原 Auto 实际 gpt-6-luna，明确批准单次写入。正常从本轮产物打开 45 字节成品，冷开同一原对话从原回复再打开，零发送。原件、成品、末尾换行及厂商同工具回执均已留存。\n2026-11-20 正式 87ac54ec2。原自有对话从回复链接打开同名 45 字节 result.txt，另存为独立 copilot-result.txt。副本逐字节相同，原件及输入文件保持，界面显示对应副本和成功提示。与 Claude 的副本各自归原对话，零发送。",
+          "remaining": "目标已存在时的处理、复制开始后的取消、技能、其他权限和完整交付组合按原条件。较早无法取回的原样本作为历史保留。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-approval/README.md",
             "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md",
-            "docs/evidence/2026-11-20-cycle12-native-entry/README.md#copilot-成品与冷开"
+            "docs/evidence/2026-11-20-cycle12-native-entry/README.md#copilot-成品与冷开",
+            "docs/evidence/2026-11-20-cycle12-same-name-delivery-copy/README.md"
           ],
           "status": "实测分项通过"
         },
