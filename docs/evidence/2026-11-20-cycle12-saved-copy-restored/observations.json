@@ -1,0 +1,187 @@
+{
+  "fixtureSha256": "bb5b22d51cf014853af0c265f1d38707f2ed18aeafc0feb0d9b94d52b4ccca89",
+  "cases": {
+    "claude": {
+      "plantRecordSha256": "4c9f24e0d6da42687d7b83f97ba4c4727cbee0bef2eb129d194abbf684246a18",
+      "restoreRecordSha256": "f1b9fe409d46141b8cdefb311356121c225016ecaa25e98b6fe95315142420b9",
+      "restoreRecord": {
+        "case": "claude",
+        "phase": "restore",
+        "whenNs": 1795146658237296000,
+        "path": "/private/tmp/ff-c12-n20-saved-copy-restore-kwva_p64/claude/recorded/result.txt",
+        "heldPath": "/private/tmp/ff-c12-n20-saved-copy-restore-kwva_p64/claude/held/result.txt",
+        "recordedBefore": {
+          "device": 16777229,
+          "inode": 16565969,
+          "mode": 33152,
+          "uid": 501,
+          "size": 71,
+          "mtimeNs": 1795146555665927858,
+          "ctimeNs": 1795146566600918630,
+          "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61"
+        },
+        "heldBefore": {
+          "device": 16777229,
+          "inode": 16565891,
+          "mode": 33152,
+          "uid": 501,
+          "size": 71,
+          "mtimeNs": 1795146555665927858,
+          "ctimeNs": 1795146566600918672,
+          "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61"
+        },
+        "recordedAfter": {
+          "device": 16777229,
+          "inode": 16565891,
+          "mode": 33152,
+          "uid": 501,
+          "size": 71,
+          "mtimeNs": 1795146555665927858,
+          "ctimeNs": 1795146658237283936,
+          "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61"
+        },
+        "heldAfter": {
+          "device": 16777229,
+          "inode": 16565969,
+          "mode": 33152,
+          "uid": 501,
+          "size": 71,
+          "mtimeNs": 1795146555665927858,
+          "ctimeNs": 1795146658237283977,
+          "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61"
+        },
+        "source": {
+          "device": 16777229,
+          "inode": 15717936,
+          "mode": 33188,
+          "uid": 501,
+          "size": 71,
+          "mtimeNs": 1795003522186078532,
+          "ctimeNs": 1795003522186255575,
+          "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61"
+        },
+        "control": {
+          "device": 16777229,
+          "inode": 16565227,
+          "mode": 33152,
+          "uid": 501,
+          "size": 33,
+          "mtimeNs": 1795146392164482390,
+          "ctimeNs": 1795146392164503432,
+          "sha256": "3bb3065a26d4103644aa651e5b54c0e241d4d912e52715d55d120013ce7b7e5a"
+        }
+      },
+      "originalVerifiedAfterActions": {
+        "device": 16777229,
+        "inode": 16565891,
+        "mode": 33152,
+        "uid": 501,
+        "size": 71,
+        "mtimeNs": 1795146555665927858,
+        "ctimeNs": 1795146767968302204,
+        "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61"
+      },
+      "replacementRetained": {
+        "device": 16777229,
+        "inode": 16565969,
+        "mode": 33152,
+        "uid": 501,
+        "size": 71,
+        "mtimeNs": 1795146555665927858,
+        "ctimeNs": 1795146658237283977,
+        "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61"
+      }
+    },
+    "copilot": {
+      "plantRecordSha256": "47bce9131318de233a5d2d8b257f74edc7a7da447aa93ba4819cfbe82c591374",
+      "restoreRecordSha256": "1d239eb947c9e406456f6f24f3bbc13db217384ca77f298b9e3cd3a8a35bfe7f",
+      "restoreRecord": {
+        "case": "copilot",
+        "phase": "restore",
+        "whenNs": 1795146658237314000,
+        "path": "/private/tmp/ff-c12-n20-saved-copy-restore-kwva_p64/copilot/recorded/result.txt",
+        "heldPath": "/private/tmp/ff-c12-n20-saved-copy-restore-kwva_p64/copilot/held/result.txt",
+        "recordedBefore": {
+          "device": 16777229,
+          "inode": 16566446,
+          "mode": 33152,
+          "uid": 501,
+          "size": 45,
+          "mtimeNs": 1795146619694433895,
+          "ctimeNs": 1795146628797967641,
+          "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd"
+        },
+        "heldBefore": {
+          "device": 16777229,
+          "inode": 16566405,
+          "mode": 33152,
+          "uid": 501,
+          "size": 45,
+          "mtimeNs": 1795146619694433895,
+          "ctimeNs": 1795146628797967683,
+          "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd"
+        },
+        "recordedAfter": {
+          "device": 16777229,
+          "inode": 16566405,
+          "mode": 33152,
+          "uid": 501,
+          "size": 45,
+          "mtimeNs": 1795146619694433895,
+          "ctimeNs": 1795146658237306019,
+          "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd"
+        },
+        "heldAfter": {
+          "device": 16777229,
+          "inode": 16566446,
+          "mode": 33152,
+          "uid": 501,
+          "size": 45,
+          "mtimeNs": 1795146619694433895,
+          "ctimeNs": 1795146658237306061,
+          "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd"
+        },
+        "source": {
+          "device": 16777229,
+          "inode": 16416358,
+          "mode": 33188,
+          "uid": 501,
+          "size": 45,
+          "mtimeNs": 1795114566242014959,
+          "ctimeNs": 1795114566242014959,
+          "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd"
+        },
+        "control": {
+          "device": 16777229,
+          "inode": 16565232,
+          "mode": 33152,
+          "uid": 501,
+          "size": 34,
+          "mtimeNs": 1795146392164852892,
+          "ctimeNs": 1795146392164867809,
+          "sha256": "8adb782a446a1579620e9484c669e660dd2871defde05f58d1c5b07a53a98da7"
+        }
+      },
+      "originalVerifiedAfterActions": {
+        "device": 16777229,
+        "inode": 16566405,
+        "mode": 33152,
+        "uid": 501,
+        "size": 45,
+        "mtimeNs": 1795146619694433895,
+        "ctimeNs": 1795146672875680949,
+        "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd"
+      },
+      "replacementRetained": {
+        "device": 16777229,
+        "inode": 16566446,
+        "mode": 33152,
+        "uid": 501,
+        "size": 45,
+        "mtimeNs": 1795146619694433895,
+        "ctimeNs": 1795146658237306061,
+        "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd"
+      }
+    }
+  }
+}
