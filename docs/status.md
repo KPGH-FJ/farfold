@@ -86,7 +86,7 @@
 
 **Claude 与 Copilot 从不可写位置恢复另存已验。** 系统选择器分别交回实际选址，Farfold 的保存记录均以 0 字节结束，显示「无法写入目标位置」。两份原件和两个不可写目录内的预置文件保持，未发布副本、无临时残留。各明确改到正常目录再保存一次，71 字节及 45 字节副本与原件逐字节一致，均从对应记录实际打开。 [正式回执](evidence/2026-11-20-cycle12-unwritable-save-recovery/README.md)
 
-**Claude 副本的等长内容变化已实测拒绝打开。** 新自有 71 字节副本在本机保存后只改首字节，文件路径、身份、大小和修改时间保持。从保存记录点「打开副本」，Farfold 提示副本或保存位置变化，文本编辑器未打开该副本。原件和两份恢复副本保持。 [正式回执](evidence/2026-11-20-cycle12-saved-copy-integrity/README.md)
+**Claude 与 Copilot 副本的等长内容变化均已实测拒绝打开。** 各自在独立目录保存的 71 字节及 45 字节副本，分别只改首字节，文件路径、身份、大小和修改时间保持。从各自原保存记录点「打开副本」，Farfold 提示副本或保存位置变化，文本编辑器均未打开被修改的副本。原件和恢复副本保持。 [Claude 正式回执](evidence/2026-11-20-cycle12-saved-copy-integrity/README.md) · [Copilot 正式回执](evidence/2026-11-20-cycle12-copilot-saved-copy-integrity/README.md)
 
 **Cursor 冷开显示原拒绝需官方回放补足。** 同一自有样本的厂商原记录有原工具 ID 和明确拒绝原因。登记版本 2026.11.13 的回放另分配工具 ID，并报为 `completed`。待官方保留原工具及拒绝终态，或支持按原会话、目录和工具精确只读回查。 [只读复核](evidence/2026-11-20-cycle12-cursor-denial-replay/README.md#同一工具的原记录与回放)
 
