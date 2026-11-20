@@ -1,0 +1,408 @@
+{
+  "baseline.json": {
+    "rawSha256": "e6c8e7c0d88a6c0f37bd12e211ae3775b695b5eccc0f82cb1cc968aff8b77a8b",
+    "data": {
+      "claude": {
+        "source": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/claude/claude-large.txt",
+          "device": 16777229,
+          "inode": 16463181,
+          "size": 268435456,
+          "mtimeNs": 1795139504487670707,
+          "mode": 33188,
+          "sha256": "570506fe42d4c6101b83de5c4a6523f6065921718504305b7737b755f381e2a1"
+        },
+        "selectedInode": 16463182,
+        "standbyInode": 16463183,
+        "selectedMarker": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/claude/selected/selected.keep",
+          "device": 16777229,
+          "inode": 16463184,
+          "size": 33,
+          "mtimeNs": 1795141568866277813,
+          "mode": 33188,
+          "sha256": "503167cba6849ab0ff1e8e50f0bd884cf57dbfdee9fa03fc4bc2620f86430c86"
+        },
+        "existingTarget": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/claude/standby/candidate.txt",
+          "device": 16777229,
+          "inode": 16463185,
+          "size": 50,
+          "mtimeNs": 1795141568866377022,
+          "mode": 33188,
+          "sha256": "14eb3ed91dd044fa1d19358c3b656686a1c4a991cccd09dcc28482ce2028cb9b"
+        },
+        "standbyMarker": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/claude/standby/incoming.keep",
+          "device": 16777229,
+          "inode": 16463186,
+          "size": 32,
+          "mtimeNs": 1795141568866439481,
+          "mode": 33188,
+          "sha256": "fdf19bb9c0b465659b9cb31a77661a72e97a347f2edd22f9269de913517573e2"
+        }
+      },
+      "copilot": {
+        "source": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/copilot/copilot-large.txt",
+          "device": 16777229,
+          "inode": 16463190,
+          "size": 268435456,
+          "mtimeNs": 1795139504873824375,
+          "mode": 33188,
+          "sha256": "1a92853594c260d87f9827ce68350e6b013e4ae9a6a1bed27d4708d18e4ea468"
+        },
+        "selectedInode": 16463191,
+        "standbyInode": 16463192,
+        "selectedMarker": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/copilot/selected/selected.keep",
+          "device": 16777229,
+          "inode": 16463193,
+          "size": 34,
+          "mtimeNs": 1795141568973135696,
+          "mode": 33188,
+          "sha256": "f02f926a673f766362cfdf042ab235c416b50138047aa03cf0f7ee4473b31a55"
+        },
+        "existingTarget": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/copilot/standby/candidate.txt",
+          "device": 16777229,
+          "inode": 16463194,
+          "size": 51,
+          "mtimeNs": 1795141568973186947,
+          "mode": 33188,
+          "sha256": "e72ddda703358132e2ce0880a48d83bd7cd14e42a0d08d7c0b7ccaeb96ae0231"
+        },
+        "standbyMarker": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/copilot/standby/incoming.keep",
+          "device": 16777229,
+          "inode": 16463195,
+          "size": 33,
+          "mtimeNs": 1795141568973237197,
+          "mode": 33188,
+          "sha256": "0379aec564451222b180bf68a8827ced20f5fea6e8a56e40c92e7ceba00fe48a"
+        }
+      }
+    }
+  },
+  "claude-swap.json": {
+    "rawSha256": "fb96ec60c3b8caf425816a6891991fe11f81c1c9ce59c8c3a0ece722d71af21f",
+    "data": {
+      "case": "claude",
+      "observedNs": 1795142521348845000,
+      "swapNs": 1795142521351312000,
+      "temporaryGoneNs": 1795142526502067000,
+      "firstPartial": [".farfold-export-61507-8.tmp", 16550070, 524288],
+      "oldIdentity": [16777229, 16463182],
+      "replacementIdentity": [16777229, 16463183],
+      "atSwap": [
+        [".farfold-export-61507-8.tmp", 16550070, 524288],
+        ["selected.keep", 16463184, 33]
+      ],
+      "finalOldDir": [["selected.keep", 16463184, 33]],
+      "finalReplacementDir": [
+        ["candidate.txt", 16463185, 50],
+        ["incoming.keep", 16463186, 32]
+      ],
+      "maxObservedPartialBytes": 268435456,
+      "metadataMatches": true,
+      "after": {
+        "source": {
+          "device": 16777229,
+          "inode": 16463181,
+          "size": 268435456,
+          "mtimeNs": 1795139504487670707,
+          "mode": 33188,
+          "sha256": "570506fe42d4c6101b83de5c4a6523f6065921718504305b7737b755f381e2a1"
+        },
+        "existingTarget": {
+          "device": 16777229,
+          "inode": 16463185,
+          "size": 50,
+          "mtimeNs": 1795141568866377022,
+          "mode": 33188,
+          "sha256": "14eb3ed91dd044fa1d19358c3b656686a1c4a991cccd09dcc28482ce2028cb9b"
+        },
+        "selectedMarker": {
+          "device": 16777229,
+          "inode": 16463184,
+          "size": 33,
+          "mtimeNs": 1795141568866277813,
+          "mode": 33188,
+          "sha256": "503167cba6849ab0ff1e8e50f0bd884cf57dbfdee9fa03fc4bc2620f86430c86"
+        },
+        "standbyMarker": {
+          "device": 16777229,
+          "inode": 16463186,
+          "size": 32,
+          "mtimeNs": 1795141568866439481,
+          "mode": 33188,
+          "sha256": "fdf19bb9c0b465659b9cb31a77661a72e97a347f2edd22f9269de913517573e2"
+        }
+      }
+    },
+    "pacedSourceStart": {
+      "event": "GET_START",
+      "file": "claude-large.txt",
+      "tsNs": 1795142521325859000,
+      "code": 200,
+      "conditional": true,
+      "rangeStart": 0
+    }
+  },
+  "fixed/baseline.json": {
+    "rawSha256": "a43b5097708cea9f43b68feb084ce5b37520d639fb69eea27ccc054b9177b18a",
+    "data": {
+      "claude": {
+        "source": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/claude/claude-large.txt",
+          "device": 16777229,
+          "inode": 16463181,
+          "size": 268435456,
+          "mtimeNs": 1795139504487670707,
+          "mode": 33188,
+          "sha256": "570506fe42d4c6101b83de5c4a6523f6065921718504305b7737b755f381e2a1"
+        },
+        "selectedInode": 16476752,
+        "standbyInode": 16476753,
+        "selectedMarker": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/fixed/claude/selected/selected.keep",
+          "device": 16777229,
+          "inode": 16476754,
+          "size": 43,
+          "mtimeNs": 1795141923428770260,
+          "mode": 33188,
+          "sha256": "eeb51aee9a19f1b2433e5bbbad9a75ab57577cfcd29575e2c293e0a537781a1c"
+        },
+        "existingTarget": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/fixed/claude/standby/candidate.txt",
+          "device": 16777229,
+          "inode": 16476755,
+          "size": 45,
+          "mtimeNs": 1795141923428849844,
+          "mode": 33188,
+          "sha256": "8da76210c20e06754f598900539edbc03d404b305826c0d974aafa12f70f40a8"
+        },
+        "standbyMarker": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/fixed/claude/standby/incoming.keep",
+          "device": 16777229,
+          "inode": 16476756,
+          "size": 42,
+          "mtimeNs": 1795141923428931011,
+          "mode": 33188,
+          "sha256": "4ee5ba756ceafb3419ce96c86ced7bda6c73fa02dba0ede20648bee91bdaa439"
+        }
+      },
+      "copilot": {
+        "source": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/copilot/copilot-large.txt",
+          "device": 16777229,
+          "inode": 16463190,
+          "size": 268435456,
+          "mtimeNs": 1795139504873824375,
+          "mode": 33188,
+          "sha256": "1a92853594c260d87f9827ce68350e6b013e4ae9a6a1bed27d4708d18e4ea468"
+        },
+        "selectedInode": 16476758,
+        "standbyInode": 16476759,
+        "selectedMarker": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/fixed/copilot/selected/selected.keep",
+          "device": 16777229,
+          "inode": 16476760,
+          "size": 44,
+          "mtimeNs": 1795141923429107803,
+          "mode": 33188,
+          "sha256": "d1e91fde92d092d33978923cfd294b2fe3d3fc710e00d7cd39c869f0d36c1aa4"
+        },
+        "existingTarget": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/fixed/copilot/standby/candidate.txt",
+          "device": 16777229,
+          "inode": 16476761,
+          "size": 46,
+          "mtimeNs": 1795141923429182804,
+          "mode": 33188,
+          "sha256": "c1b9b47853521b5b27f42bfd0b8967e5d6469dbab69d1d238ddcf3dc4b6fb678"
+        },
+        "standbyMarker": {
+          "path": "/private/tmp/ff-c12-n20-destination-shift-a6vv96me/fixed/copilot/standby/incoming.keep",
+          "device": 16777229,
+          "inode": 16476762,
+          "size": 43,
+          "mtimeNs": 1795141923429250137,
+          "mode": 33188,
+          "sha256": "8ce679970b753f1ee998bb26da302d4b29fd2bb184ae259abb261a586cde9999"
+        }
+      }
+    }
+  },
+  "fixed/claude-swap.json": {
+    "rawSha256": "f6e666b1c84368cbcfe91895dffbe44ef397a78fda6e31165e7c5cf2c9b75b33",
+    "data": {
+      "case": "claude",
+      "observedNs": 1795143126649402000,
+      "swapNs": 1795143126649648000,
+      "temporaryGoneNs": 1795143131891443000,
+      "firstPartial": [".farfold-export-19119-1.tmp", 16552284, 1048576],
+      "oldIdentity": [16777229, 16476752],
+      "replacementIdentity": [16777229, 16476753],
+      "atSwap": [
+        [".farfold-export-19119-1.tmp", 16552284, 1048576],
+        ["selected.keep", 16476754, 43]
+      ],
+      "finalOldDir": [["selected.keep", 16476754, 43]],
+      "finalReplacementDir": [
+        ["candidate.txt", 16476755, 45],
+        ["incoming.keep", 16476756, 42]
+      ],
+      "maxObservedPartialBytes": 268435456,
+      "metadataMatches": true,
+      "after": {
+        "source": {
+          "device": 16777229,
+          "inode": 16463181,
+          "size": 268435456,
+          "mtimeNs": 1795139504487670707,
+          "mode": 33188,
+          "sha256": "570506fe42d4c6101b83de5c4a6523f6065921718504305b7737b755f381e2a1"
+        },
+        "existingTarget": {
+          "device": 16777229,
+          "inode": 16476755,
+          "size": 45,
+          "mtimeNs": 1795141923428849844,
+          "mode": 33188,
+          "sha256": "8da76210c20e06754f598900539edbc03d404b305826c0d974aafa12f70f40a8"
+        },
+        "selectedMarker": {
+          "device": 16777229,
+          "inode": 16476754,
+          "size": 43,
+          "mtimeNs": 1795141923428770260,
+          "mode": 33188,
+          "sha256": "eeb51aee9a19f1b2433e5bbbad9a75ab57577cfcd29575e2c293e0a537781a1c"
+        },
+        "standbyMarker": {
+          "device": 16777229,
+          "inode": 16476756,
+          "size": 42,
+          "mtimeNs": 1795141923428931011,
+          "mode": 33188,
+          "sha256": "4ee5ba756ceafb3419ce96c86ced7bda6c73fa02dba0ede20648bee91bdaa439"
+        }
+      }
+    },
+    "pacedSourceStart": {
+      "event": "GET_START",
+      "file": "claude-large.txt",
+      "tsNs": 1795143126622230000,
+      "code": 200,
+      "conditional": true,
+      "rangeStart": 0
+    }
+  },
+  "fixed/copilot-swap.json": {
+    "rawSha256": "70dc7c699df936b4efdd668b415f502ada4794c06240bb5ae2a0b57b031a280d",
+    "data": {
+      "case": "copilot",
+      "observedNs": 1795143252957379000,
+      "swapNs": 1795143252957664000,
+      "temporaryGoneNs": 1795143258191503000,
+      "firstPartial": [".farfold-export-19119-2.tmp", 16552733, 1048576],
+      "oldIdentity": [16777229, 16476758],
+      "replacementIdentity": [16777229, 16476759],
+      "atSwap": [
+        [".farfold-export-19119-2.tmp", 16552733, 1048576],
+        ["selected.keep", 16476760, 44]
+      ],
+      "finalOldDir": [["selected.keep", 16476760, 44]],
+      "finalReplacementDir": [
+        ["candidate.txt", 16476761, 46],
+        ["incoming.keep", 16476762, 43]
+      ],
+      "maxObservedPartialBytes": 268435456,
+      "metadataMatches": true,
+      "after": {
+        "source": {
+          "device": 16777229,
+          "inode": 16463190,
+          "size": 268435456,
+          "mtimeNs": 1795139504873824375,
+          "mode": 33188,
+          "sha256": "1a92853594c260d87f9827ce68350e6b013e4ae9a6a1bed27d4708d18e4ea468"
+        },
+        "existingTarget": {
+          "device": 16777229,
+          "inode": 16476761,
+          "size": 46,
+          "mtimeNs": 1795141923429182804,
+          "mode": 33188,
+          "sha256": "c1b9b47853521b5b27f42bfd0b8967e5d6469dbab69d1d238ddcf3dc4b6fb678"
+        },
+        "selectedMarker": {
+          "device": 16777229,
+          "inode": 16476760,
+          "size": 44,
+          "mtimeNs": 1795141923429107803,
+          "mode": 33188,
+          "sha256": "d1e91fde92d092d33978923cfd294b2fe3d3fc710e00d7cd39c869f0d36c1aa4"
+        },
+        "standbyMarker": {
+          "device": 16777229,
+          "inode": 16476762,
+          "size": 43,
+          "mtimeNs": 1795141923429250137,
+          "mode": 33188,
+          "sha256": "8ce679970b753f1ee998bb26da302d4b29fd2bb184ae259abb261a586cde9999"
+        }
+      }
+    },
+    "pacedSourceStart": {
+      "event": "GET_START",
+      "file": "copilot-large.txt",
+      "tsNs": 1795143252924066000,
+      "code": 200,
+      "conditional": true,
+      "rangeStart": 0
+    }
+  },
+  "install-before.json": {
+    "rawSha256": "2ecf989738d286e96c2f79506ea46b03a65c4097d56862a4b9b4fb883b2c30e5",
+    "data": {
+      "entries": 263909,
+      "metadataSha256": "cb68682d48c0b7178916c82419486a4176596b46f1c0e27fcd80ea8d32805707",
+      "criticalSha256": {
+        "farfold.sqlite3": "a6203c4a7eb8b80f60f0ffbb21d2e1872a0e99423a4356fa6d6a7be1fa9a3b3c",
+        "farfold.sqlite3-wal": "f41f6d62179673bf1dd916cd12c8122634f56aa916f388cf7d08b909fa11b27f",
+        "farfold.sqlite3-shm": "ca8e857d32001b2168c258a4aee3baff04150118f3d70208039e34dfaa369974",
+        "registry-cache.json": "89299b92abe1f9810aa9841a8fc27a4b859481a2909331c41fdd22386f3e4594",
+        "pids.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "vtcode.toml": "98de291ae5a06a1f83e8bdcbf2f1fb102785362c326d078c498b52fffd23c877"
+      }
+    }
+  },
+  "install-after.json": {
+    "rawSha256": "2ecf989738d286e96c2f79506ea46b03a65c4097d56862a4b9b4fb883b2c30e5",
+    "data": {
+      "entries": 263909,
+      "metadataSha256": "cb68682d48c0b7178916c82419486a4176596b46f1c0e27fcd80ea8d32805707",
+      "criticalSha256": {
+        "farfold.sqlite3": "a6203c4a7eb8b80f60f0ffbb21d2e1872a0e99423a4356fa6d6a7be1fa9a3b3c",
+        "farfold.sqlite3-wal": "f41f6d62179673bf1dd916cd12c8122634f56aa916f388cf7d08b909fa11b27f",
+        "farfold.sqlite3-shm": "ca8e857d32001b2168c258a4aee3baff04150118f3d70208039e34dfaa369974",
+        "registry-cache.json": "89299b92abe1f9810aa9841a8fc27a4b859481a2909331c41fdd22386f3e4594",
+        "pids.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "vtcode.toml": "98de291ae5a06a1f83e8bdcbf2f1fb102785362c326d078c498b52fffd23c877"
+      }
+    }
+  },
+  "teardown.json": {
+    "rawSha256": "eb59fd573b9c96f0b883a7c289e96e8447584dcf086cd268cf1402606accecbe",
+    "data": {
+      "mountRemoved": true,
+      "readOnlySource": true,
+      "pid": 92364,
+      "port": 52981,
+      "address": "127.0.0.1",
+      "portClosed": true
+    }
+  }
+}
