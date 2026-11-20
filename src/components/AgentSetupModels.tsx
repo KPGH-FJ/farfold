@@ -9,7 +9,7 @@ import type { ConversationRepairContext } from "../runtime/agent_repair";
 import { ModelPicker } from "./ModelPicker";
 import { additionalModelRows } from "./ModelConfigRows";
 import { isReasoningOption } from "./ReasoningControl";
-import type { ConfigOptionView } from "../runtime/session_types";
+import type { ConfigOptionView, ThreadState } from "../runtime/session_types";
 
 export function agentSetupModelHeading(
   draftReview: boolean,
@@ -258,20 +258,34 @@ export function agentSetupTestNote({
 export function agentSetupModelOptions({
   apiChoice,
   model,
-  options,
-  fieldsetDisabled,
-  fieldsDisabled,
+  thread,
+  testing,
+  modelChanging,
+  readBlocked,
   onPick,
 }: {
   apiChoice: boolean;
   model: ConfigOptionView | null;
-  options: ConfigOptionView[];
-  fieldsetDisabled: boolean;
-  fieldsDisabled: boolean;
+  thread: ThreadState;
+  testing: boolean;
+  modelChanging: boolean;
+  readBlocked: boolean;
   onPick: (id: string, value: string) => void;
 }) {
+  const options = thread.configOptions;
+  if (
+    apiChoice &&
+    !options.some(
+      (option) =>
+        (option.category === "model" && option.id !== model?.id) ||
+        isReasoningOption(option),
+    )
+  )
+    return null;
+  const locked = thread.identity !== "draft" || testing;
+  const fieldsDisabled = locked || modelChanging || thread.configuring;
   return (
-    <fieldset className="agent-setup-options" disabled={fieldsetDisabled}>
+    <fieldset className="agent-setup-options" disabled={locked || readBlocked}>
       {!apiChoice &&
         (model ? (
           <div className="so-row">

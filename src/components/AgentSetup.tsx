@@ -47,10 +47,9 @@ import { AgentServiceSection } from "./AgentServiceSection";
 import { ServiceModelPicker } from "./ServiceModelPicker";
 import * as serviceCapability from "../runtime/service_capability";
 import { AgentPrerequisites } from "./AgentPrerequisites";
-import { AgentModelReadNotice } from "./AgentModelReadNotice";
+import { agentSetupModelReadNotice } from "./AgentModelReadNotice";
 import { modelConfigOption, threads, useThread } from "../runtime/sessions";
 import type { ConversationRepairContext } from "../runtime/agent_repair";
-import { isReasoningOption } from "./ReasoningControl";
 import {
   preparationProgram,
   preparationMatches,
@@ -706,14 +705,22 @@ export function AgentSetup({
     },
     [],
   );
-  const pickOption = async (optionId: string, value: string) => {
+  const pickOption = async (
+    optionId: string,
+    value: string,
+    restore = false,
+  ) => {
     if (
       draftReview ||
       conversation ||
       !testThread ||
       modelChanging ||
       explicitReadRequired ||
-      modelReadFailed
+      modelReadFailed ||
+      (restore &&
+        (!canConfirmRead() ||
+          controller.getSnapshot() !== test ||
+          threads.thread(testThread.key) !== testThread))
     )
       return;
     const ticket = ++modelChange.current;
@@ -722,6 +729,9 @@ export function AgentSetup({
     setModelChanging(true);
     try {
       await threads.setConfig(key, optionId, value);
+      // The saved choices already contain the original model. The observed
+      // preparation must match them before the user can continue.
+      if (restore) return;
       const current = threads.thread(key);
       if (
         ticket === modelChange.current &&
@@ -761,10 +771,12 @@ export function AgentSetup({
     !!targetCwd &&
     work.enabled(card.id);
   modelReadConfirmation.current = active && step === 2 && canReadModels;
-  const confirmDisplayedRead = () =>
+  const canConfirmRead = () =>
     modelReadConfirmation.current &&
     latestProgress.current === setupProgress &&
-    latestEntry.current === entryKey &&
+    latestEntry.current === entryKey;
+  const confirmDisplayedRead = () =>
+    canConfirmRead() &&
     (!draftReview || controller.getSnapshot() === test) &&
     currentInput
       ? controller.confirmRead(currentInput)
@@ -1203,26 +1215,13 @@ export function AgentSetup({
             {!draftReview &&
               testThread &&
               sameSource &&
-              (choice !== "api" ||
-                testThread.configOptions.some(
-                  (option) =>
-                    (option.category === "model" && option.id !== model?.id) ||
-                    isReasoningOption(option),
-                )) &&
               agentSetupModelOptions({
                 apiChoice: choice === "api",
                 model,
-                options: testThread.configOptions,
-                fieldsetDisabled:
-                  testThread.identity !== "draft" ||
-                  testing ||
-                  modelReadFailed ||
-                  explicitReadRequired,
-                fieldsDisabled:
-                  testing ||
-                  modelChanging ||
-                  testThread.identity !== "draft" ||
-                  testThread.configuring,
+                thread: testThread,
+                testing,
+                modelChanging,
+                readBlocked: modelReadFailed || explicitReadRequired,
                 onPick: (id, value) => void pickOption(id, value),
               })}
             <div className="agent-model-reading">
@@ -1239,27 +1238,24 @@ export function AgentSetup({
               {explicitReadRequired && (
                 <p className="auth-note">{C.readRequired}</p>
               )}
-              <AgentModelReadNotice
-                mismatch={selectionMismatch}
-                disabled={!canReadModels}
-                onConfirm={() => {
+              {agentSetupModelReadNotice({
+                mismatch: selectionMismatch,
+                disabled: !canReadModels,
+                test,
+                thread: testThread,
+                selection,
+                services,
+                draftReview,
+                onConfirm: () => {
                   const config = confirmDisplayedRead();
                   if (config)
-                    updateAccess({
-                      selection: { service: selection.service, config },
-                    });
-                }}
-              >
-                {selectionMismatch && testThread && (
-                  <AgentSelectionReview
-                    before={selection}
-                    after={{ service: selection.service, config: test.config }}
-                    services={services}
-                    options={testThread.configOptions}
-                    draftOnly={draftReview}
-                  />
-                )}
-              </AgentModelReadNotice>
+                    updateAccess({ selection: { ...selection, config } });
+                },
+                onRestore:
+                  choice !== "api" && !explicitReadRequired
+                    ? (id, value) => void pickOption(id, value, true)
+                    : undefined,
+              })}
               {modelReadFailed && test.error && (
                 <p role="alert" className="ac-error">
                   {test.error}

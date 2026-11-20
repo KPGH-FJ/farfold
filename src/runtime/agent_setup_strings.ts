@@ -13,6 +13,7 @@ export const AGENT_SETUP_STRINGS = {
   modelMismatch:
     "当前设置与原选择不一致。原选择已保留，请重新选择后再保存或测试。",
   modelAcceptCurrent: "沿用当前设置",
+  modelRestoreOriginal: "恢复原模型",
   draftModelScope: "仅用于这份草稿。请核对当前报告的模型和思考设置。",
   draftModelUse: "用这些设置返回草稿",
   draftModelReturn: "返回草稿",

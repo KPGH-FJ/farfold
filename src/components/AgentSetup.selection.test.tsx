@@ -367,6 +367,57 @@ it.each(["confirmed", "failed"])(
   },
 );
 
+it.each(["restored", "stale read", "unavailable", "reasoning changed"])(
+  "offers an exact original model restore only for the current read (%s)",
+  async (outcome) => {
+    returnedModel("B");
+    const saved = progress.selection!.config;
+    if (outcome === "reasoning changed") saved.thought_level = "high";
+    const snapshot = h.snapshot as PreparationSnapshot;
+    h.snapshot = {
+      ...snapshot,
+      input: { ...snapshot.input!, config: saved, readOptionsOnly: true },
+      config:
+        outcome === "reasoning changed"
+          ? { model: "B", thought_level: "low" }
+          : snapshot.config,
+    };
+    if (outcome === "unavailable") {
+      const thread = h.thread as { configOptions: ReturnType<typeof options> };
+      thread.configOptions[0].options = thread.configOptions[0].options.filter(
+        ({ value }) => value !== "A",
+      );
+    }
+    const notice = render().find((node) => node.type === AgentModelReadNotice)!;
+    const restore = notice.props.onRestore as (() => void) | undefined;
+    if (outcome === "unavailable" || outcome === "reasoning changed") {
+      expect(restore).toBeUndefined();
+      return;
+    }
+    expect(restore).toBeTypeOf("function");
+    if (outcome === "stale read")
+      h.snapshot = { ...(h.snapshot as PreparationSnapshot) };
+    h.setConfig.mockImplementation(async () => returnedModel("A"));
+    restore!();
+    await Promise.resolve();
+    const restored = outcome === "restored";
+    if (restored)
+      expect(h.setConfig).toHaveBeenCalledExactlyOnceWith(
+        "owned-preparation",
+        "model",
+        "A",
+      );
+    else expect(h.setConfig).not.toHaveBeenCalled();
+    const next = render();
+    expect(
+      next.find((node) => node.type === AgentModelReadNotice)?.props.mismatch,
+    ).toBe(!restored);
+    expect(progress.selection?.config).toBe(saved);
+    expect(h.confirmRead).not.toHaveBeenCalled();
+    expect(h.start).not.toHaveBeenCalled();
+  },
+);
+
 it("requires explicit review of both unavailable settings before returning to the draft", async () => {
   const original = { model: "A", thought_level: "high" };
   const current = { model: "B", thought_level: "medium" };

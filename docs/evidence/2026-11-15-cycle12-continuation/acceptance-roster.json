@@ -28,7 +28,7 @@
       "liveAction": "用已登录官方账号，从小米 MiMo 新对话实答并核同线程真实路由。原测试对话冷开及正文读回，临时沿用原线程模型后收到同一T-ID的小米续答，随后恢复显式MiMo。显式参数被拒的缺口保留。 正式双前台任务只点 A 停止，原 Shell 和 sleep 退出，B 独立交付；A 冷开保留原显式 MiMo、草稿与未知结果。 显式模型与未映射旧线程接入等官方。",
       "standards": {
         "S1": {
-          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n2026-11-15 盘点：程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。\n2026-11-16 续查：新版正式 Amp 账号页显示独立厂商账户登录。查看详情核原已装厂商程序和固定 login，仍需手动启动。\n2026-11-16 续查：修复前次误拦截并安装；从原入口确实启动官方 CLI 登录终端，原适配器密钥文件保留。\n2026-11-16 复验：用户完成官方 CLI 登录，厂商程序能列出保存的账号。\n2026-11-16 复验：正式版选中官方 0.13.0 组件及新版官方 CLI，备份旧独立密钥后正常入口读出并选中 MiMo。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-19 正式 42ffe103e 穿过原目录管理，实际启动 Amp 0.13.0 的 API Key Setup，在未输入密钥时取消并放弃，回原管理按钮，零发送。\n2026-11-20 正式 72e971df5。从独立未发草稿启动 Amp 的 API Key Setup。未输入即取消并放弃，回原文字、目录、已选 MiMo 和发送入口。",
+          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n2026-11-15 盘点：程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。\n2026-11-16 续查：新版正式 Amp 账号页显示独立厂商账户登录。查看详情核原已装厂商程序和固定 login，仍需手动启动。\n2026-11-16 续查：修复前次误拦截并安装；从原入口确实启动官方 CLI 登录终端，原适配器密钥文件保留。\n2026-11-16 复验：用户完成官方 CLI 登录，厂商程序能列出保存的账号。\n2026-11-16 复验：正式版选中官方 0.13.0 组件及新版官方 CLI，备份旧独立密钥后正常入口读出并选中 MiMo。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-19 正式 42ffe103e 穿过原目录管理，实际启动 Amp 0.13.0 的 API Key Setup，在未输入密钥时取消并放弃，回原管理按钮，零发送。\n2026-11-20 正式 72e971df5。从独立未发草稿启动 Amp 的 API Key Setup。未输入即取消并放弃，回原文字、目录、已选 MiMo 和发送入口。\n2026-11-21 Amp 0.13.0 已选外部官方 CLI，正式路径可打开独立账号说明，手动复查返回，识别默认不同，选回原 MiMo 后保留同草稿、目录及可用发送，零发送。真实新网页登录、取消和换号仍待。\n2026-11-21 最新正式版「准备与连接」检测到 Default，单次恢复原 MiMo，确实读回并返回原草稿、目录和可用发送按钮，零模型请求。",
           "remaining": "厂商网页登录的实际取消、原账号变化及其他准备入口按原条件核。适配器密钥终端的目录和草稿取消均有证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
@@ -42,7 +42,8 @@
             "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
             "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json",
             "docs/evidence/2026-11-19-cycle12-draft-auth-return/README.md#cline-与-amp-从目录取消设置",
-            "docs/evidence/2026-11-20-cycle12-amp-kilo-entry-followup/README.md#amp-从草稿取消实际设置终端"
+            "docs/evidence/2026-11-20-cycle12-amp-kilo-entry-followup/README.md#amp-从草稿取消实际设置终端",
+            "docs/evidence/2026-11-21-cycle12-s1-s2-restore/README.md"
           ],
           "status": "分项通过"
         },
@@ -880,12 +881,13 @@
           "status": "分项通过"
         },
         "S2": {
-          "observed": "历史沿 SWE-2/High 实答。\n2026-11-16 设置短测：沿用 Agent 已有服务，SWE-2 Flash Medium 准确实答。",
-          "remaining": "账号身份、付费来源与隔离按原条件验证。",
+          "observed": "历史沿 SWE-2/High 实答。\n2026-11-16 设置短测：沿用 Agent 已有服务，SWE-2 Flash Medium 准确实答。\n2026-11-21 用户确认原 Pro 到期且有免费额度。正式版普通新草稿明确临时采用 SWE-2 Flash Medium，沿现有账号一次实答，厂商同 ID 记录核合实际模型，原保存选择不变。",
+          "remaining": "独立扣费明细、其他账号身份和隔离按原条件验证。原 SWE-2 High 和思考档仍不可用。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/agent-first-release.md",
-            "docs/evidence/2026-11-15-cycle12-pre-send/approved-setup-smokes-2026-11-16.json"
+            "docs/evidence/2026-11-15-cycle12-pre-send/approved-setup-smokes-2026-11-16.json",
+            "docs/evidence/2026-11-21-cycle12-s1-s2-restore/README.md#devin-免费账号可用模型首答"
           ],
           "status": "已有设置实答"
         },
@@ -1310,7 +1312,7 @@
           "status": "分项通过"
         },
         "S2": {
-          "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。\n2026-11-16 续验：用户确认当前使用原 GitHub 账号，沿用原已有服务。原 Auto 的续问在路由阶段报网络错误。\n2026-11-16 续验：同一用户确认原账号，同一已有服务复验实答。\n2026-11-17 续验：新版正式正常新建沿已有账号实答，厂商记录为 Copilot 来源。\n2026-11-20 正式版从正常新建先复验已有原账号 Auto，只发送一次并收到真实首答。新版另选 Farfold 已存 Xiaomi Chat Completions 的 MiMo，独立草稿只发送一次并收到真实首答。厂商回执报告 isByok:true、remote_user、mimo-v2.6-flash、finish:stop；与本批 OpenCode 同一已存服务标识及指纹。\n同日另验已存小米 Messages 闭环，正式原厂商记录为 remote_user BYOK、Messages、MiMo 与 stop。Responses 已提供选用入口，有受控证据，仍缺真实已存服务。\n2026-11-21 冷开已存小米的 Chat Completions 和 Messages 两条原对话，原服务与 MiMo 保留，目录及身份吻合，零自动发送。",
+          "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。\n2026-11-16 续验：用户确认当前使用原 GitHub 账号，沿用原已有服务。原 Auto 的续问在路由阶段报网络错误。\n2026-11-16 续验：同一用户确认原账号，同一已有服务复验实答。\n2026-11-17 续验：新版正式正常新建沿已有账号实答，厂商记录为 Copilot 来源。\n2026-11-20 正式版从正常新建先复验已有原账号 Auto，只发送一次并收到真实首答。新版另选 Farfold 已存 Xiaomi Chat Completions 的 MiMo，独立草稿只发送一次并收到真实首答。厂商回执报告 isByok:true、remote_user、mimo-v2.6-flash、finish:stop；与本批 OpenCode 同一已存服务标识及指纹。\n同日另验已存小米 Messages 闭环，正式原厂商记录为 remote_user BYOK、Messages、MiMo 与 stop。Responses 已提供选用入口，有受控证据，仍缺真实已存服务。\n2026-11-21 冷开已存小米的 Chat Completions 和 Messages 两条原对话，原服务与 MiMo 保留，目录及身份吻合，零自动发送。\n2026-11-21 续验用户已存 Atria / Responses，普通新建一次实答，与 OpenCode 同服务身份。厂商确认 /responses、remote_user BYOK、Atria-Dawn 与 stop。",
           "remaining": "实际计费、换号及不同服务失效的范围保护仍待核。 已存 Xiaomi 的跨 Agent 复用已有实答，原账号重新登录、服务切换失败和新 API 账单仍待。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-followup/README.md",
@@ -2002,7 +2004,7 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "旧 Big Pickle 原生报免费额度已用尽。后来既有 Xiaomi MiMo 实际请求成功并有原回执。\n续验：已保存 Chat Completions 在新版确认并实际出站一次；本次所选模型的独立检查返回 404，另一配置模型超时。\n最新复验：新保存的 Xiaomi Chat Completions 已通过正式选源并返回指定文本，SQLite 仅核选源元数据。\n2026-11-20 新版正式版从正常新建选择 Farfold 已存 Xiaomi Chat Completions 的 MiMo，独立草稿只发送一次并收到真实首答。协议验证本次出站及完成，与本批 Copilot 同一已存服务标识及指纹；厂商路径另循此前覆盖源原证据。\n2026-11-21 又以与 Copilot 完全相同的已存 Xiaomi anthropic / Messages 实答，冷开同原 ID 保留服务与 MiMo，零自动发送；独立账单未核。",
+          "observed": "旧 Big Pickle 原生报免费额度已用尽。后来既有 Xiaomi MiMo 实际请求成功并有原回执。\n续验：已保存 Chat Completions 在新版确认并实际出站一次；本次所选模型的独立检查返回 404，另一配置模型超时。\n最新复验：新保存的 Xiaomi Chat Completions 已通过正式选源并返回指定文本，SQLite 仅核选源元数据。\n2026-11-20 新版正式版从正常新建选择 Farfold 已存 Xiaomi Chat Completions 的 MiMo，独立草稿只发送一次并收到真实首答。协议验证本次出站及完成，与本批 Copilot 同一已存服务标识及指纹；厂商路径另循此前覆盖源原证据。\n2026-11-21 又以与 Copilot 完全相同的已存 Xiaomi anthropic / Messages 实答，冷开同原 ID 保留服务与 MiMo，零自动发送；独立账单未核。\n2026-11-21 续验用户已存 Atria / Responses，普通新建只发送一次，准确首答。Farfold 服务身份与 Copilot 相同，OpenCode 厂商记录确认该服务派生的提供方及 Atria-Dawn、正常结束。",
           "remaining": "更换服务的失败、费用与跨对话隔离按原条件补验。",
           "sources": [
             "docs/status.md",
