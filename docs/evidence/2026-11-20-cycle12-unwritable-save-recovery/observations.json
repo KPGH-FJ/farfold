@@ -1,0 +1,124 @@
+{
+  "claude": {
+    "fixtureBefore": {
+      "deniedPath": "/private/tmp/ff-c12-n20-unwritable-save-xl42g1by/claude/readonly/result.txt",
+      "recoveryPath": "/private/tmp/ff-c12-n20-unwritable-save-xl42g1by/claude/recovered/result.txt",
+      "preexisting": {
+        "path": "/private/tmp/ff-c12-n20-unwritable-save-xl42g1by/claude/readonly/existing-saved.txt",
+        "device": 16777229,
+        "inode": 16555005,
+        "uid": 501,
+        "mode": 33152,
+        "mtimeNs": 1795144013963707881,
+        "size": 37,
+        "sha256": "d1e8a75e4ce77c54ab962b9fedda980dd470747e61ef3a3412b66d0ad136101c"
+      },
+      "directoryMode": "0555",
+      "writeProbeError": "EACCES"
+    },
+    "originalBefore": {
+      "device": 16777229,
+      "inode": 15717936,
+      "mode": "0644",
+      "mtimeNs": 1795003522186078532,
+      "path": "/private/tmp/ff-c12-claude-write-n18.3qlz13my/result.txt",
+      "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61",
+      "size": 71,
+      "uid": 501
+    },
+    "originalAfter": {
+      "path": "/private/tmp/ff-c12-claude-write-n18.3qlz13my/result.txt",
+      "device": 16777229,
+      "inode": 15717936,
+      "uid": 501,
+      "mode": 33188,
+      "mtimeNs": 1795003522186078532,
+      "size": 71,
+      "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61"
+    },
+    "existingAfter": {
+      "path": "/private/tmp/ff-c12-n20-unwritable-save-xl42g1by/claude/readonly/existing-saved.txt",
+      "device": 16777229,
+      "inode": 16555005,
+      "uid": 501,
+      "mode": 33152,
+      "mtimeNs": 1795144013963707881,
+      "size": 37,
+      "sha256": "d1e8a75e4ce77c54ab962b9fedda980dd470747e61ef3a3412b66d0ad136101c"
+    },
+    "deniedContents": ["existing-saved.txt"],
+    "deniedTargetAbsent": true,
+    "recoveredCopy": {
+      "path": "/private/tmp/ff-c12-n20-unwritable-save-xl42g1by/claude/recovered/result.txt",
+      "device": 16777229,
+      "inode": 16555463,
+      "uid": 501,
+      "mode": 33152,
+      "mtimeNs": 1795144098404044749,
+      "size": 71,
+      "sha256": "fa66f4cebb90e9d5bbab7f56c8c5348c2faea019df1e9638105a94f32949ff61"
+    },
+    "byteMatch": true
+  },
+  "copilot": {
+    "fixtureBefore": {
+      "deniedPath": "/private/tmp/ff-c12-n20-unwritable-save-xl42g1by/copilot/readonly/result.txt",
+      "recoveryPath": "/private/tmp/ff-c12-n20-unwritable-save-xl42g1by/copilot/recovered/result.txt",
+      "preexisting": {
+        "path": "/private/tmp/ff-c12-n20-unwritable-save-xl42g1by/copilot/readonly/existing-saved.txt",
+        "device": 16777229,
+        "inode": 16555009,
+        "uid": 501,
+        "mode": 33152,
+        "mtimeNs": 1795144013963966924,
+        "size": 38,
+        "sha256": "1a6bae9d131a04383cce81f273f312e829c463f9ffbaa934fd54bdf30bdfcc58"
+      },
+      "directoryMode": "0555",
+      "writeProbeError": "EACCES"
+    },
+    "originalBefore": {
+      "device": 16777229,
+      "inode": 16416358,
+      "mode": "0644",
+      "mtimeNs": 1795114566242014959,
+      "path": "/private/tmp/ff-c12-n20-ryup8cla/copilot/result.txt",
+      "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd",
+      "size": 45,
+      "uid": 501
+    },
+    "originalAfter": {
+      "path": "/private/tmp/ff-c12-n20-ryup8cla/copilot/result.txt",
+      "device": 16777229,
+      "inode": 16416358,
+      "uid": 501,
+      "mode": 33188,
+      "mtimeNs": 1795114566242014959,
+      "size": 45,
+      "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd"
+    },
+    "existingAfter": {
+      "path": "/private/tmp/ff-c12-n20-unwritable-save-xl42g1by/copilot/readonly/existing-saved.txt",
+      "device": 16777229,
+      "inode": 16555009,
+      "uid": 501,
+      "mode": 33152,
+      "mtimeNs": 1795144013963966924,
+      "size": 38,
+      "sha256": "1a6bae9d131a04383cce81f273f312e829c463f9ffbaa934fd54bdf30bdfcc58"
+    },
+    "deniedContents": ["existing-saved.txt"],
+    "deniedTargetAbsent": true,
+    "recoveredCopy": {
+      "path": "/private/tmp/ff-c12-n20-unwritable-save-xl42g1by/copilot/recovered/result.txt",
+      "device": 16777229,
+      "inode": 16556199,
+      "uid": 501,
+      "mode": 33152,
+      "mtimeNs": 1795144173263305741,
+      "size": 45,
+      "sha256": "ff9ec757a550a684b40a55662307ec2de17146b27d81a070ce40d2e074190cdd"
+    },
+    "byteMatch": true
+  }
+}
