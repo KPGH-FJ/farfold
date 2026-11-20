@@ -23,7 +23,10 @@ import {
 } from "../runtime/configuration_restore_feedback";
 import { NEW_CONVERSATION_PICKER_STRINGS as S } from "../runtime/new_conversation_picker_strings";
 import { STRINGS } from "../runtime/strings";
+import { canUseService } from "../runtime/service_capability";
 import { agentStatus } from "../runtime/agent_status";
+import { hasSavedAgentPreparation } from "../runtime/agent_readiness";
+import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { ErrorNotice } from "./ErrorNotice";
 import { useModalDialog } from "./useModalDialog";
 import { AgentLogo } from "./AgentLogo";
@@ -31,6 +34,46 @@ import { usableAgents } from "./AgentPick";
 import type { ServiceChoice } from "./ServicePicker";
 import { modelChoiceView } from "../runtime/model_choice_view";
 import "../new-conversation-pickers.css";
+
+export function NewConversationAgentSuggestions({
+  cards,
+  onPrepare,
+}: {
+  cards: AgentCardModel[];
+  onPrepare: (id?: string) => void;
+}) {
+  return (
+    <div className="workspace-welcome">
+      <h2>{W.welcomeTitle}</h2>
+      <p>{W.welcomeHint}</p>
+      {cards.map((card) => (
+        <button
+          key={card.id}
+          type="button"
+          className="workspace-welcome-card"
+          onClick={() => onPrepare(card.id)}
+        >
+          <AgentLogo card={card} />
+          <span>{card.name}</span>
+          <small>
+            {
+              agentStatus({ card, prepared: hasSavedAgentPreparation(card.id) })
+                .label
+            }
+          </small>
+          <strong>{W.welcomeConnect}</strong>
+        </button>
+      ))}
+      <button
+        type="button"
+        className="btn btn-text workspace-welcome-browse"
+        onClick={() => onPrepare()}
+      >
+        {W.browseAgents}
+      </button>
+    </div>
+  );
+}
 
 function PickerDialog({
   title,
@@ -300,7 +343,7 @@ export function NewConversationModelDialog({
       !item.deleting &&
       item.complete &&
       item.models.length > 0 &&
-      capability?.apiTypes.includes(item.apiType),
+      canUseService(capability, item),
   );
   const options = modelChoiceView(
     ["option", existingOption?.id ?? ""],

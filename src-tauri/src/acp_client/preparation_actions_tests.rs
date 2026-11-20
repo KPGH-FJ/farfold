@@ -25,6 +25,13 @@ fn fixture() -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {
     fixture_with_layout(false)
 }
 fn fixture_with_layout(encoded: bool) -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {
+    goose_fixture(encoded, "1.52.0")
+}
+
+fn goose_fixture(
+    encoded: bool,
+    version: &str,
+) -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {
     let data = tempfile::tempdir().unwrap();
     let root = data
         .path()
@@ -46,7 +53,7 @@ fn fixture_with_layout(encoded: bool) -> (tempfile::TempDir, MetaStore, AgentRow
         command: program.display().to_string(),
         args: vec!["acp".into()],
         env: vec![],
-        version: Some("1.52.0".into()),
+        version: Some(version.into()),
         handshake: Some(
             serde_json::json!({"authMethods":[{"id":"goose-provider","name":"Provider"}],"kept":"unknown envelope"}),
         ),
@@ -383,14 +390,18 @@ async fn service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap
 
 #[test]
 fn encoded_goose_root_keeps_the_existing_configuration_action_proof() {
-    let (data, store, row, _) = fixture_with_layout(true);
-    let action = actions_for(&store, &row, data.path()).unwrap().remove(0);
-    assert_eq!(action.command, row.command);
-    assert_eq!(action.args, ["configure"]);
-    let mut receipt = store.get_setting("installations.v1").unwrap().unwrap();
-    receipt[0]["programOnly"] = serde_json::json!(true);
-    store.set_setting("installations.v1", &receipt).unwrap();
-    assert!(actions_for(&store, &row, data.path()).unwrap().is_empty());
+    for version in ["1.52.0", "1.59.1"] {
+        let (data, store, row, _) = goose_fixture(true, version);
+        let action = actions_for(&store, &row, data.path()).unwrap().remove(0);
+        assert_eq!(action.command, row.command);
+        assert_eq!(action.args, ["configure"]);
+        assert_eq!(action.purpose, "service_configuration");
+        assert!(action.source_url.contains(&format!("/v{version}/")));
+        let mut receipt = store.get_setting("installations.v1").unwrap().unwrap();
+        receipt[0]["programOnly"] = serde_json::json!(true);
+        store.set_setting("installations.v1", &receipt).unwrap();
+        assert!(actions_for(&store, &row, data.path()).unwrap().is_empty());
+    }
 }
 
 fn npm_fixture(encoded: bool, version: &str) -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {

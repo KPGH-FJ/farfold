@@ -49,6 +49,7 @@ export const CONNECTION_STRINGS = {
   officialGuidance: "官方账号与服务指引",
   officialSetupHint: "按官方指引完成后，回到此处选择「已有设置」。",
   officialSignInHint: "在 Agent 的官方入口登录后，回到此处选择「已有设置」。",
+  checkOfficialSettings: "检查已有设置",
   reopen: "重新打开设置",
   keyManage: "更换密钥",
   keyVerify: "重新验证",

@@ -51,11 +51,17 @@ export function preservesLegacyService(
 export interface ServiceIdentity extends ServiceSelection {
   fingerprint: string;
 }
+interface ServiceEndpointRule {
+  apiType: string;
+  requiredPathSuffix: string;
+  allowedExactEndpoints: string[];
+}
 export interface ServiceCapability {
   apiTypes: string[];
   validatedApiTypes: string[];
   selectionScope: string;
   unavailableReason: string | null;
+  endpointRules?: ServiceEndpointRule[];
 }
 export const getServiceCapabilities = (agentId: string) =>
   invoke<ServiceCapability>("service_capabilities", { agentId });

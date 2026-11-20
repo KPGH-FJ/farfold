@@ -36,5 +36,8 @@ export const PREPARATION_ACTION_STRINGS = {
   cancelled: "此次配置操作已取消，已保存的设置或密钥可能保留。",
   exitFailed: (code: number) => `配置程序未正常结束（退出码 ${code}）`,
   readRequired: "请到模型选择重新读取；读取成功后可继续。",
+  recheckSettings: "检查已有设置",
+  recheckingSettings: "正在检查已有设置…",
+  recheckNeedsReview: "原设置尚未确认，请到模型选择核对原来的选择。",
   models: "前往模型选择",
 } as const;

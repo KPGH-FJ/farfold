@@ -9,7 +9,10 @@ import {
 } from "../runtime/credentials";
 import { STRINGS } from "../runtime/strings";
 import { AGENT_SETUP_STRINGS as S } from "../runtime/agent_setup_strings";
-import { apiConfigurationState } from "../runtime/service_capability";
+import {
+  apiConfigurationState,
+  canUseService,
+} from "../runtime/service_capability";
 import { R5_SERVICE_STRINGS as R } from "../runtime/r5_service_strings";
 
 export type ServiceChoice = ServiceSelection & { revision: string };
@@ -29,7 +32,7 @@ export function availableServices(
       !item.deleting &&
       item.complete &&
       !!item.revision &&
-      (capability?.apiTypes ?? []).includes(item.apiType) &&
+      canUseService(capability, item) &&
       item.models.length > 0,
   );
 }

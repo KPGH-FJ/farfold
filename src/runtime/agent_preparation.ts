@@ -14,6 +14,7 @@ import { subscribeAuthenticationChanges } from "./authentication";
 import type { AuthTarget } from "./auth_activity";
 import { AUTH_ACTIVITY_STRINGS as A } from "./auth_strings";
 import { modelConfigOption } from "./session_projection";
+import { sameConfigurationSnapshot } from "./config_check";
 
 export interface PreparationInput {
   agentId: string;
@@ -310,7 +311,37 @@ export class AgentPreparation {
     );
   }
 
-  prepare(input: PreparationInput, fresh = false): Promise<void> {
+  async recheckExistingDraft(
+    input: PreparationInput,
+    ownsDraft: () => boolean,
+  ) {
+    if (
+      input.service ||
+      !Object.keys(input.config ?? {}).length ||
+      !ownsDraft() ||
+      !this.canPrepare() ||
+      !preparationNeedsExplicitRead(this.snapshot, input)
+    )
+      return false;
+    const read = this.prepare(
+      { ...input, readOptionsOnly: true },
+      true,
+      ownsDraft,
+    );
+    const ticket = this.revision;
+    await read;
+    return (
+      ticket === this.revision &&
+      ownsDraft() &&
+      !preparationNeedsExplicitRead(this.snapshot, input)
+    );
+  }
+
+  prepare(
+    input: PreparationInput,
+    fresh = false,
+    ownsDraft?: () => boolean,
+  ): Promise<void> {
     if (!fresh && preparationNeedsExplicitRead(this.snapshot, input))
       return Promise.resolve();
     const same =
@@ -375,7 +406,9 @@ export class AgentPreparation {
         const thread = await this.port.open({
           inquirySignal: inquiryAbort.signal,
           inquiryCurrent: () =>
-            ticket === this.revision && this.snapshot.phase === "opening",
+            ticket === this.revision &&
+            this.snapshot.phase === "opening" &&
+            (!ownsDraft || ownsDraft()),
           agentId: input.agentId,
           cwd: input.cwd,
           service: input.service,
@@ -384,18 +417,29 @@ export class AgentPreparation {
           fresh: true,
           draftScope: `preparation:${input.agentId}:${ticket}:${this.id()}`,
         });
-        if (ticket !== this.revision) {
+        if (
+          ticket !== this.revision ||
+          (ownsDraft && (!ownsDraft() || this.snapshot.phase !== "opening"))
+        ) {
           await this.port.discardDraft(thread.key);
+          if (ticket === this.revision) this.publish({ phase: "stale" });
           return;
         }
         const config = selectedConfig(thread);
         const applied = Object.entries(input.config ?? {}).every(
           ([id, value]) => JSON.stringify(config[id]) === JSON.stringify(value),
         );
+        const compatible = ownsDraft
+          ? thread.identity === "draft" &&
+            thread.agentId === input.agentId &&
+            thread.cwd === input.cwd &&
+            !thread.service &&
+            sameConfigurationSnapshot(input.config, config)
+          : input.readOptionsOnly || applied;
         // An open can resolve after buffered failure events were applied.
         // Empty requested choices must not make that failed read successful.
         const confirmed =
-          (input.readOptionsOnly || applied) &&
+          compatible &&
           !thread.openError &&
           !thread.modelDrift &&
           !thread.configError &&
@@ -404,7 +448,7 @@ export class AgentPreparation {
           !thread.configuring;
         const readError = confirmed
           ? null
-          : applied || input.readOptionsOnly
+          : compatible
             ? S.testPrepareFailed
             : S.testSelectionNotApplied;
         this.publish({

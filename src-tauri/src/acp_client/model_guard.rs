@@ -529,6 +529,9 @@ impl ConfigStore {
         if model.trim().is_empty() {
             return Err(error.into());
         }
+        if self.agent_id == super::service_config::copilot::AGENT_ID {
+            super::service_config::copilot::require_explicit_model(model)?;
+        }
         identity.model = model.to_owned();
         candidate.expected_model = Some(choice.value.clone());
         candidate.validate_service().await?;

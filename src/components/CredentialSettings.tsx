@@ -24,6 +24,7 @@ import {
   type ServiceCapability,
 } from "../runtime/credentials";
 import { uiError } from "../runtime/ui_error";
+import { canUseService } from "../runtime/service_capability";
 import { STRINGS } from "../runtime/strings";
 import { ApiTestPanel } from "./ApiTestPanel";
 import { AgentLogo } from "./AgentLogo";
@@ -972,9 +973,7 @@ export function CredentialSettings({
           const authenticationKey = item.purpose === "authentication";
           const complete = item.complete;
           const compatible = capabilities
-            ?.filter(({ capability }) =>
-              capability.apiTypes.includes(item.apiType),
-            )
+            ?.filter(({ capability }) => canUseService(capability, item))
             .map(({ card }) => card);
           return (
             <article className="api-record" key={item.id}>

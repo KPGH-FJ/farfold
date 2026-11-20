@@ -41,23 +41,21 @@ import {
 } from "../runtime/credentials";
 import {
   NewConversationAgentDialog,
+  NewConversationAgentSuggestions,
   NewConversationModelDialog,
   newConversationPreparationError,
   type NewConversationModelChoice,
 } from "./NewConversationPickers";
 import { Composer } from "./Composer";
+import { ExistingSettingsRecheck } from "./ExistingSettingsRecheck";
 import type { AgentCardModel } from "../runtime/agents";
 import { promptCapabilities } from "../runtime/agents";
 import {
   isAgentPresentable,
   isAgentReadyForConversation,
 } from "../runtime/agent_directory";
-import {
-  hasSavedAgentPreparation,
-  useConversationAgentReadiness,
-} from "../runtime/agent_readiness";
+import { useConversationAgentReadiness } from "../runtime/agent_readiness";
 import { isMyAgent } from "../runtime/my_agents";
-import { agentStatus } from "../runtime/agent_status";
 import {
   allowAutomaticConnection,
   isAutomaticConnectionAllowed,
@@ -960,7 +958,7 @@ export function EmptyState({
     (needsAuthentication
       ? A[service ? "apiAuthRequired" : "authRequired"]
       : null) ??
-    (explicitReadRequired ? C.readRequired : null) ??
+    (explicitReadRequired ? C.readPending : null) ??
     (!connectionAllowed ? A.disconnectedHint : null) ??
     confirmationFeedback(draftError, draft?.configError) ??
     (draft?.connectionLost ? STRINGS.thread.connectionIdle : null) ??
@@ -1257,37 +1255,10 @@ export function EmptyState({
         <p>{R.startSubtitle}</p>
       </div>
       {!hasMyAgent && (
-        <div className="workspace-welcome">
-          <h2>{W.welcomeTitle}</h2>
-          <p>{W.welcomeHint}</p>
-          {welcomeSuggestions.map((card) => (
-            <button
-              key={card.id}
-              type="button"
-              className="workspace-welcome-card"
-              onClick={() => onGoSettings(card.id)}
-            >
-              <AgentLogo card={card} />
-              <span>{card.name}</span>
-              <small>
-                {
-                  agentStatus({
-                    card,
-                    prepared: hasSavedAgentPreparation(card.id),
-                  }).label
-                }
-              </small>
-              <strong>{W.welcomeConnect}</strong>
-            </button>
-          ))}
-          <button
-            type="button"
-            className="btn btn-text workspace-welcome-browse"
-            onClick={() => onGoSettings()}
-          >
-            {W.browseAgents}
-          </button>
-        </div>
+        <NewConversationAgentSuggestions
+          cards={welcomeSuggestions}
+          onPrepare={onGoSettings}
+        />
       )}
       {archiveGuard.notice}
       <Composer
@@ -1351,6 +1322,26 @@ export function EmptyState({
         autofocus={active}
         fit
       />
+      {active &&
+        requestCwd &&
+        currentAgent &&
+        candidateSelected &&
+        explicitReadRequired &&
+        !needsAuthentication &&
+        !service &&
+        !archiveBlocked &&
+        !selectionNeedsReview &&
+        connectionAllowed &&
+        work.enabled(currentAgent.id) && (
+          <ExistingSettingsRecheck
+            key={pair}
+            card={currentAgent}
+            cwd={requestCwd}
+            begin={beginPreparation}
+            onChecked={requestPreparation}
+            onReview={openRepair}
+          />
+        )}
       <NewConversationLocationBar
         folder={folder}
         active={active}

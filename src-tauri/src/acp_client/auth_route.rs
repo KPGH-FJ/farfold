@@ -14,6 +14,10 @@ mod copilot;
 
 pub(crate) use super::api_key_auth::ProtocolApiKey;
 
+pub(super) fn verified_copilot_package(row: &AgentRow, store: &MetaStore, data: &Path) -> bool {
+    copilot::verify(row, store, data).is_some()
+}
+
 #[cfg(test)]
 mod legacy_env_tests;
 

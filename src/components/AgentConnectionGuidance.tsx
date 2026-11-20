@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { ArrowSquareOut } from "@phosphor-icons/react";
 import { officialLink, type ConnectionGuidance } from "../runtime/preparation";
@@ -9,11 +9,78 @@ import { uiError } from "../runtime/ui_error";
 export function AgentConnectionGuidance({
   items,
   disabled,
+  owner,
+  onReturn,
 }: {
   items: readonly ConnectionGuidance[];
   disabled: boolean;
+  owner?: string;
+  onReturn?: () => void;
 }) {
-  const [error, setError] = useState<string | null>(null);
+  const current = useRef({ owner, disabled, onReturn });
+  current.current = { owner, disabled, onReturn };
+  const attempt = useRef<{
+    owner: string | undefined;
+    awaiting: boolean;
+  } | null>(null);
+  const [result, setResult] = useState<{
+    owner: string | undefined;
+    phase: "opening" | "opened" | "failed";
+    error?: string;
+  } | null>(null);
+  const status = result?.owner === owner ? result : null;
+  const canCheck = !!onReturn;
+  useEffect(() => {
+    const returned = () => {
+      if (attempt.current?.owner !== owner || !attempt.current?.awaiting)
+        return;
+      attempt.current = null;
+      const view = current.current;
+      if (view.owner === owner && !view.disabled) view.onReturn?.();
+    };
+    const view = typeof window === "undefined" ? null : window;
+    const doc = typeof document === "undefined" ? null : document;
+    const visible = () => {
+      if (doc?.visibilityState === "visible") returned();
+    };
+    view?.addEventListener("focus", returned);
+    doc?.addEventListener("visibilitychange", visible);
+    return () => {
+      attempt.current = null;
+      view?.removeEventListener("focus", returned);
+      doc?.removeEventListener("visibilitychange", visible);
+    };
+  }, [owner]);
+
+  const open = async (url: string) => {
+    if (
+      current.current.owner !== owner ||
+      current.current.disabled ||
+      (attempt.current && !attempt.current.awaiting)
+    )
+      return;
+    const opening = { owner, awaiting: false };
+    attempt.current = opening;
+    setResult({ owner, phase: "opening" });
+    try {
+      await openUrl(url);
+      if (attempt.current !== opening || current.current.owner !== owner)
+        return;
+      if (current.current.onReturn) opening.awaiting = true;
+      else attempt.current = null;
+      setResult({ owner, phase: "opened" });
+    } catch (reason) {
+      if (attempt.current !== opening || current.current.owner !== owner)
+        return;
+      attempt.current = null;
+      setResult({
+        owner,
+        phase: "failed",
+        error: uiError(reason, PREPARATION_STRINGS.openFailed),
+      });
+    }
+  };
+
   const guides = items.filter((item) => officialLink(item.url));
   if (!guides.length) return null;
 
@@ -30,13 +97,8 @@ export function AgentConnectionGuidance({
             <button
               className="btn btn-text"
               type="button"
-              disabled={disabled}
-              onClick={() => {
-                setError(null);
-                void openUrl(item.url).catch((reason) =>
-                  setError(uiError(reason, PREPARATION_STRINGS.openFailed)),
-                );
-              }}
+              disabled={disabled || status?.phase === "opening"}
+              onClick={() => void open(item.url)}
             >
               {item.label}
               <ArrowSquareOut size={13} aria-hidden="true" />
@@ -55,9 +117,24 @@ export function AgentConnectionGuidance({
           </li>
         ))}
       </ul>
-      {error && (
+      {canCheck && status?.phase === "opened" && (
+        <button
+          className="btn btn-text"
+          type="button"
+          disabled={disabled}
+          onClick={() => {
+            if (current.current.owner !== owner || current.current.disabled)
+              return;
+            attempt.current = null;
+            current.current.onReturn?.();
+          }}
+        >
+          {R.checkOfficialSettings}
+        </button>
+      )}
+      {status?.phase === "failed" && (
         <p className="auth-note" role="alert">
-          {error}
+          {status.error}
         </p>
       )}
     </div>

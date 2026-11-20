@@ -3,12 +3,12 @@
   "agentCount": 21,
   "cellCount": 168,
   "explicitStatuses": {
-    "准备未齐": 10,
+    "准备未齐": 9,
     "入口有证": 20,
     "受阻": 4,
-    "分项通过": 20,
+    "分项通过": 21,
     "未测": 9,
-    "原账号实答": 6,
+    "原账号实答": 5,
     "查找冷开续答通过": 8,
     "已选模型有实答": 15,
     "可建对话": 1,
@@ -18,7 +18,7 @@
     "双前台分项通过": 17,
     "停止及冷续答通过": 10,
     "实测失败": 8,
-    "已选服务有实答": 3,
+    "已选服务有实答": 4,
     "冷开续答分项通过": 7
   },
   "rows": [
@@ -223,11 +223,12 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "已有设置返回官方 auth_required，未登录或换号\n续验：切到厂商原生 0.9.11，重开 Farfold 后沿用户原账号读取 fantail，真实短测成功。",
+          "observed": "已有设置返回官方 auth_required，未登录或换号\n续验：切到厂商原生 0.9.11，重开 Farfold 后沿用户原账号读取 fantail，真实短测成功。\n2026-11-20 正式版从正常新建沿用原设置与 Fantail，只发送一次并收到真实首答。原账号及服务之外的接入和用量未核。",
           "remaining": "登录／退换账号、其他服务和权益适用条件独立验。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
-            "docs/evidence/2026-11-15-cycle12-continuation/README.md"
+            "docs/evidence/2026-11-15-cycle12-continuation/README.md",
+            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md"
           ],
           "status": "原账号实答"
         },
@@ -462,14 +463,15 @@
           "status": "可建对话"
         },
         "S2": {
-          "observed": "旧真实请求返回 internal_error，认证/服务原因未定。\n2026-11-16 沿用已有设置，以临时 Claude Sonnet 5.5 发一条，返回内部错误，无文本，原因未定。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。\n2026-11-16 两条官方诊断的本机回执均要求重新认证。定位到原 OAuth 刷新无可用凭据。正式版已核到官方终端登录入口。\n2026-11-16 用户从正式入口对原账号重新登录后，沿 Cline 原服务临时选择 Sonnet 5.5 发一条，界面完成且回复精确命中。",
+          "observed": "旧真实请求返回 internal_error，认证/服务原因未定。\n2026-11-16 沿用已有设置，以临时 Claude Sonnet 5.5 发一条，返回内部错误，无文本，原因未定。\n2026-11-16 独立从同版官方程序沿原 cline 服务和 Sonnet 5.5 只发一次，仍报 internal_error，无正文、工具或明确服务状态。\n2026-11-16 两条官方诊断的本机回执均要求重新认证。定位到原 OAuth 刷新无可用凭据。正式版已核到官方终端登录入口。\n2026-11-16 用户从正式入口对原账号重新登录后，沿 Cline 原服务临时选择 Sonnet 5.5 发一条，界面完成且回复精确命中。\n2026-11-20 正式版从正常新建沿用已有服务和免费 Nemotron 3.5 Super VL，只发送一次并收到真实首答。实际 OAuth 启动后取消仍待。",
           "remaining": "实际账号切换、服务权益与旧对话身份仍须分别核。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-11-15-cycle12-pre-send/qoder-history-cline-smoke-2026-11-16.json",
             "docs/evidence/2026-11-16-cycle12-failed-connection/diagnostics.json",
-            "docs/evidence/2026-11-16-cycle12-cline-auth/results.json"
+            "docs/evidence/2026-11-16-cycle12-cline-auth/results.json",
+            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md"
           ],
           "status": "原账号实答"
         },
@@ -986,13 +988,14 @@
           "status": "分项通过"
         },
         "S2": {
-          "observed": "旧来源报告 OpenRouter，明确免费 Nemotron；身份未核。\n本轮实测：沿所选已有服务用免费 Nemotron / Medium 发一次，有真实回复。",
+          "observed": "旧来源报告 OpenRouter，明确免费 Nemotron；身份未核。\n本轮实测：沿所选已有服务用免费 Nemotron / Medium 发一次，有真实回复。\n2026-11-20 正式版从正常新建沿用 OpenRouter 免费 Nemotron Ultra，只发送一次并收到真实首答。新自定义服务与账号权益仍待。",
           "remaining": "账号身份、权益和换号防串扰待实际核对。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-10-24-agent-acceptance/dirac-formal-c876-ack-summary.json",
-            "docs/evidence/2026-11-15-cycle12-macos/live-results.json"
+            "docs/evidence/2026-11-15-cycle12-macos/live-results.json",
+            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md"
           ],
           "status": "实测分项通过"
         },
@@ -1306,16 +1309,17 @@
           "status": "分项通过"
         },
         "S2": {
-          "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。\n2026-11-16 续验：用户确认当前使用原 GitHub 账号，沿用原已有服务。原 Auto 的续问在路由阶段报网络错误。\n2026-11-16 续验：同一用户确认原账号，同一已有服务复验实答。\n2026-11-17 续验：新版正式正常新建沿已有账号实答，厂商记录为 Copilot 来源。",
-          "remaining": "实际计费、换号及不同服务失效的范围保护仍待核。",
+          "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。\n2026-11-16 续验：用户确认当前使用原 GitHub 账号，沿用原已有服务。原 Auto 的续问在路由阶段报网络错误。\n2026-11-16 续验：同一用户确认原账号，同一已有服务复验实答。\n2026-11-17 续验：新版正式正常新建沿已有账号实答，厂商记录为 Copilot 来源。\n2026-11-20 正式版从正常新建先复验已有原账号 Auto，只发送一次并收到真实首答。新版另选 Farfold 已存 Xiaomi Chat Completions 的 MiMo，独立草稿只发送一次并收到真实首答。厂商回执报告 isByok:true、remote_user、mimo-v2.6-flash、finish:stop；与本批 OpenCode 同一已存服务标识及指纹。\n同日另验已存小米 Messages 闭环，正式原厂商记录为 remote_user BYOK、Messages、MiMo 与 stop。Responses 已提供选用入口，有受控证据，仍缺真实已存服务。",
+          "remaining": "实际计费、换号及不同服务失效的范围保护仍待核。 已存 Xiaomi 的跨 Agent 复用已有实答，原账号重新登录、服务切换失败和新 API 账单仍待。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-followup/README.md",
             "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-原账号原对话和-auto-路由",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md#copilot-auto-同条件复验",
-            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md"
+            "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md",
+            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md"
           ],
-          "status": "原账号实答"
+          "status": "已选服务有实答"
         },
         "S3": {
           "observed": "旧正式从目录精确发现原 ID、读回正文并按 Auto 依赖原前文续答。\n本轮实测：正常入口找到自建原条目，核到原问题和原回复。当前返回 Auto，原选择无法确认，预览只读，零发送。\n2026-11-16 续验：正式版从原目录找到、预览并带入同一原 ID，单条索引和原正文均核同。一次依赖上下文的续问因 Auto 路由失败未通过。\n2026-11-16 续验：从正式版侧栏冷开同一个原 ID，只发一次依赖原上下文的续问，准确返回原标记，零新建，原索引唯一。\n2026-11-17 续验：1.0.112 从普通搜索冷开同一原 ID 并恢复原正文及 Auto。单次手动续问超窗，退出后冷开无自动重发。\n2026-11-17 续验：本批旧原样本仍可读正文，配置确认失败，未发送。\n2026-11-18 补录 11-17：自有新版样本冷开同一原 ID，一次手动续问准确答出原文件上下文。较早十月原样本重查出 Auto，但单次续问超窗、结果未知。\n2026-11-20 正式 87ac54ec2。另一个自建目录查询无结果，原目录准确找到同一已加入 Copilot 对话，Agent 返回与本地索引的位置一致。两次各一条列表，加入禁用，零历史加载或发送；唯一原索引和 34 行厂商历史逐字节保持。\n2026-11-20 正式 87ac54ec2。另一已完成 B 的原目录准确找到已加入的原 B，位置一致。默认首页 19 条，两条自有样本各一次，无「加载更多」。两次均只查列表，零打开正文、加入或发送。原 B 索引及 22 行官方记录保持，未打开或处理原停止 A。",
@@ -1433,16 +1437,17 @@
       "liveAction": "同家双任务沿已有 OpenRouter 免费 Super VL / Off，A 实际停止且 B 交付。重开原 A 恢复草稿和附件并续答。其他后台、断线和工具终态依适用范围续验。 新正式版原目录单条待发冷开并明确续发通过。 同一自建工作目录双前台实停已验：A 原 Shell 与子进程确实退出，原步骤仍未知；B 继续并实际交付。",
       "standards": {
         "S1": {
-          "observed": "正式更新到 1.59.1，旧 67 会话与 312 消息 ID 保持。旧配置终端有暂离、取消和重查样本。\n2026-11-15 盘点：程序可执行，登记版本 1.59.1。登记所存握手版本 1.59.1。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。",
-          "remaining": "当前安装的其他准备回路及各认证入口未覆盖。",
+          "observed": "正式更新到 1.59.1，旧 67 会话与 312 消息 ID 保持。旧配置终端有暂离、取消和重查样本。\n2026-11-15 盘点：程序可执行，登记版本 1.59.1。登记所存握手版本 1.59.1。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-20 正式版从原未发草稿打开 Goose 1.59.1 的官方内嵌配置终端。取消后返回原草稿并重新检查。读到官方当前默认 Claude Sonnet 4 与原免费模型不一致，保留草稿并提示前往模型选择，零模型请求。",
+          "remaining": "当前安装的其他准备回路及各认证入口未覆盖。 官方终端取消后已回原草稿并发现默认模型与原免费模型不符。按已选来源重新选定并验证实际生效、改变配置与其他认证入口仍待。",
           "sources": [
             "docs/evidence/2026-11-15-cycle7-goose-retest/README.md",
             "docs/agent-first-release.md",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
-            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json"
+            "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json",
+            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md"
           ],
-          "status": "准备未齐"
+          "status": "分项通过"
         },
         "S2": {
           "observed": "旧 OpenRouter 免费样本按原请求核到已有默认工作区及账单 $0.00。C8 Super VL 为既有实际选择。\n2026-11-18 补录 11-17：自有对话冷开后沿用户已选的 OpenRouter 免费 Ultra 手动实答，官方账单该条记录 0 成本，随后恢复原 Super VL / Off。\n2026-11-20 正式 87ac54ec2，两组独立样本沿用已保存的 OpenRouter 免费 Super VL / Off 再次实答。",
@@ -1671,12 +1676,13 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "正式旧已有 Gateway 实际短答，官方本机记录给出提供方及模型；受控匿名冷开 Dots3 报费用 0。\n2026-11-17 已有 Kilo Gateway 的所选免费 Ultra 实答。",
+          "observed": "正式旧已有 Gateway 实际短答，官方本机记录给出提供方及模型；受控匿名冷开 Dots3 报费用 0。\n2026-11-17 已有 Kilo Gateway 的所选免费 Ultra 实答。\n2026-11-20 正式版从正常新建沿用 Kilo Gateway 免费 Nemotron 3 Ultra，只发送一次并收到真实首答。账号和计费范围继续按原条件核验。",
           "remaining": "对应实际账号、计费字段、退出及换号仍待核。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-next/README.md",
             "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json",
-            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
+            "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md",
+            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md"
           ],
           "status": "已有设置实答"
         },
@@ -1993,14 +1999,15 @@
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "旧 Big Pickle 原生报免费额度已用尽。后来既有 Xiaomi MiMo 实际请求成功并有原回执。\n续验：已保存 Chat Completions 在新版确认并实际出站一次；本次所选模型的独立检查返回 404，另一配置模型超时。\n最新复验：新保存的 Xiaomi Chat Completions 已通过正式选源并返回指定文本，SQLite 仅核选源元数据。",
+          "observed": "旧 Big Pickle 原生报免费额度已用尽。后来既有 Xiaomi MiMo 实际请求成功并有原回执。\n续验：已保存 Chat Completions 在新版确认并实际出站一次；本次所选模型的独立检查返回 404，另一配置模型超时。\n最新复验：新保存的 Xiaomi Chat Completions 已通过正式选源并返回指定文本，SQLite 仅核选源元数据。\n2026-11-20 新版正式版从正常新建选择 Farfold 已存 Xiaomi Chat Completions 的 MiMo，独立草稿只发送一次并收到真实首答。协议验证本次出站及完成，与本批 Copilot 同一已存服务标识及指纹；厂商路径另循此前覆盖源原证据。",
           "remaining": "更换服务的失败、费用与跨对话隔离按原条件补验。",
           "sources": [
             "docs/status.md",
             "docs/evidence/2026-11-13-cycle7/history-supplement-summary.json",
             "docs/evidence/2026-11-15-cycle8-observation/README.md",
             "docs/evidence/2026-11-15-cycle12-continuation/README.md",
-            "docs/evidence/2026-11-15-cycle12-pre-send/README.md"
+            "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
+            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md"
           ],
           "status": "已选服务有实答"
         },

@@ -22,6 +22,7 @@ const h = vi.hoisted(() => ({
   changed: vi.fn(async () => {}),
   reconnect: vi.fn(async () => {}),
   invoke: vi.fn(async () => "/confirmed"),
+  openUrl: vi.fn(async (_url: string) => {}),
   status: new Set<(event: { payload: { agentId: string } }) => void>(),
   threads: new Map<string, ThreadState>(),
 }));
@@ -62,6 +63,7 @@ vi.mock("react", async (original) => ({
   },
 }));
 vi.mock("@tauri-apps/api/core", () => ({ invoke: h.invoke }));
+vi.mock("@tauri-apps/plugin-opener", () => ({ openUrl: h.openUrl }));
 vi.mock("@tauri-apps/api/event", () => ({
   listen: vi.fn(
     async (
@@ -113,6 +115,7 @@ import {
 import { DangerConfirm } from "./DangerConfirm";
 import { CONNECTION_STRINGS as R } from "../runtime/r5_auth_strings";
 import { AgentConnectionPicker } from "./AgentConnectionPicker";
+import { AgentConnectionGuidance } from "./AgentConnectionGuidance";
 import { AgentAccountLinks } from "./AgentAccountLinks";
 import { ManualAuthSection } from "./ManualAuthSection";
 import { MethodApiKeySection } from "./MethodApiKeySection";
@@ -142,6 +145,12 @@ function render(flushEffects = true) {
         visit(
           AgentConnectionPicker(
             child.props as Parameters<typeof AgentConnectionPicker>[0],
+          ),
+        );
+      if (child.type === AgentConnectionGuidance)
+        visit(
+          AgentConnectionGuidance(
+            child.props as Parameters<typeof AgentConnectionGuidance>[0],
           ),
         );
       if (child.type === AgentAuthManage)
@@ -204,6 +213,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   h.status.clear();
   h.threads.clear();
+  h.openUrl.mockReset().mockResolvedValue(undefined);
   h.methods.mockReset().mockResolvedValue(response());
   h.preparation.mockReset().mockResolvedValue({ actions: [] });
   props = {
@@ -216,6 +226,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   for (const effect of h.effects) effect?.cleanup?.();
+  vi.unstubAllGlobals();
 });
 
 it("explains official external setup without choosing or executing its no-op method", async () => {
@@ -244,6 +255,81 @@ it("explains official external setup without choosing or executing its no-op met
   ).toBeUndefined();
   expect(h.begin).not.toHaveBeenCalled();
 });
+
+it.each([
+  "returned",
+  "changed",
+  "late",
+  "inactive",
+  "failed",
+  "busy",
+  "manual",
+])(
+  "checks official setup only when returning to its active connection (%s)",
+  async (scenario) => {
+    const foreground = new EventTarget();
+    vi.stubGlobal("window", foreground);
+    h.methods.mockResolvedValue({
+      methods: [],
+      canLogout: false,
+      executionReady: true,
+    });
+    h.preparation.mockResolvedValue({
+      connectionGuidance: [
+        {
+          kind: "official_setup",
+          label: "Model service setup",
+          url: "https://example.com/model",
+        },
+      ],
+    });
+    const nodes = await settled();
+    const guide = nodes.find(
+      (node) =>
+        node.type === "button" &&
+        Children.toArray(node.props.children as ReactNode).includes(
+          "Model service setup",
+        ),
+    )!;
+    foreground.dispatchEvent(new Event("focus"));
+    expect(h.recheck).not.toHaveBeenCalled();
+    if (scenario === "failed")
+      h.openUrl.mockRejectedValueOnce(
+        new Error("Could not open the setup page"),
+      );
+    const opening = deferred<void>();
+    if (scenario === "late") h.openUrl.mockReturnValueOnce(opening.promise);
+    (guide.props.onClick as () => void)();
+    await settled();
+    expect(h.openUrl).toHaveBeenCalledExactlyOnceWith(
+      "https://example.com/model",
+    );
+    if (scenario === "changed" || scenario === "late") props.cwd = "/other";
+    if (scenario === "inactive") props.active = false;
+    if (scenario === "busy") props.busy = true;
+    const afterOpen = await settled();
+    if (scenario === "late") {
+      opening.resolve();
+      await settled();
+    }
+    if (scenario === "manual")
+      (
+        button(afterOpen, R.checkOfficialSettings)!.props.onClick as () => void
+      )();
+    foreground.dispatchEvent(new Event("focus"));
+    foreground.dispatchEvent(new Event("focus"));
+    if (scenario === "returned" || scenario === "manual") {
+      expect(h.recheck).toHaveBeenCalledExactlyOnceWith(
+        { agentId: "declaration-view", cwd: "/original" },
+        h.changed,
+      );
+    } else {
+      expect(h.recheck).not.toHaveBeenCalled();
+    }
+    expect(h.begin).not.toHaveBeenCalled();
+    expect(h.reconnect).not.toHaveBeenCalled();
+  },
+);
 
 it("labels a verified cached credential as reuse and executes its declared method", async () => {
   h.preparation.mockResolvedValue({

@@ -13,6 +13,7 @@ use crate::{credentials::ServiceSnapshot, meta_store::AgentRow};
 #[cfg(test)]
 #[path = "service_config_claude_tests.rs"]
 mod claude_tests;
+pub(super) mod copilot;
 
 #[derive(Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -23,6 +24,17 @@ pub(crate) struct ServiceCapability {
     pub validated_api_types: Vec<&'static str>,
     pub selection_scope: &'static str,
     pub unavailable_reason: Option<&'static str>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    endpoint_rules: Vec<ServiceEndpointRule>,
+}
+
+/// A format may be implemented for only a subset of saved HTTPS base addresses.
+#[derive(Clone, Copy, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct ServiceEndpointRule {
+    api_type: &'static str,
+    required_path_suffix: &'static str,
+    allowed_exact_endpoints: &'static [&'static str],
 }
 
 fn catalog_id(agent: &AgentRow) -> Option<&str> {
@@ -40,6 +52,9 @@ pub(crate) fn verified_permission_option(agent: &AgentRow) -> bool {
 }
 
 pub(crate) fn capability(agent: &AgentRow) -> ServiceCapability {
+    if copilot::registered(agent) {
+        return copilot::capability(agent);
+    }
     let (api_types, validated_api_types, unavailable_reason) = match catalog_id(agent) {
         Some("opencode") => (
             vec!["chat-completions", "responses", "messages"],
@@ -71,6 +86,7 @@ pub(crate) fn capability(agent: &AgentRow) -> ServiceCapability {
         validated_api_types,
         selection_scope: "connection",
         unavailable_reason,
+        endpoint_rules: vec![],
     }
 }
 
@@ -136,6 +152,9 @@ fn compile_with_names(
         || service.secret.is_empty()
     {
         return Err("API 配置已改变，请重新选择服务和模型".into());
+    }
+    if copilot::registered(agent) {
+        return copilot::compile(service, inherited);
     }
     if catalog_id(agent) == Some("claude-acp") {
         return Ok(LaunchConfig {

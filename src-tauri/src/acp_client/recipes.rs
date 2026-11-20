@@ -213,18 +213,25 @@ const CLINE_AUTH_ACTION: TerminalActionDeclaration = TerminalActionDeclaration {
     source_url: "https://github.com/cline/cline/tree/main/apps/cli",
 };
 
+const GOOSE_CONFIGURE_ACTION: TerminalActionDeclaration = TerminalActionDeclaration {
+    id: "configure-model-service",
+    purpose: "service_configuration",
+    agent_id: "registry:goose",
+    version: "1.52.0",
+    launch: TerminalActionLaunch::Native { binary: "goose" },
+    launch_args: &["acp"],
+    action_args: &["configure"],
+    // Reviewed versions scope this supplement only. Ordinary connections and
+    // installation still depend on the Agent's actual handshake.
+    source_url: "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose-cli/src/commands/configure.rs",
+};
+
 const TERMINAL_ACTIONS: &[TerminalActionDeclaration] = &[
+    GOOSE_CONFIGURE_ACTION,
     TerminalActionDeclaration {
-        id: "configure-model-service",
-        purpose: "service_configuration",
-        agent_id: "registry:goose",
-        version: "1.52.0",
-        launch: TerminalActionLaunch::Native { binary: "goose" },
-        launch_args: &["acp"],
-        action_args: &["configure"],
-        // Fixed official configure source checked 2026-09-30. This version scopes
-        // only this supplement; it is never a connection or installation gate.
-        source_url: "https://github.com/block/goose/blob/v1.52.0/crates/goose-cli/src/commands/configure.rs",
+        version: "1.59.1",
+        source_url: "https://github.com/aaif-goose/goose/blob/v1.59.1/crates/goose-cli/src/commands/configure.rs",
+        ..GOOSE_CONFIGURE_ACTION
     },
     CLINE_AUTH_ACTION,
     TerminalActionDeclaration {

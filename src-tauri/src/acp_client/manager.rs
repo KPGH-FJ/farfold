@@ -218,6 +218,10 @@ impl Drop for StartingConnection {
 }
 
 impl AcpManager {
+    pub(super) fn data_directory(&self) -> &Path {
+        &self.data_dir
+    }
+
     pub fn new(log_dir: PathBuf, data_dir: PathBuf) -> Self {
         let manager = Self {
             shutting_down: Arc::new(AtomicBool::new(false)),
@@ -883,6 +887,9 @@ impl AcpManager {
             }
         };
 
+        if service.is_some() && super::service_config::copilot::registered(agent) {
+            super::service_config::copilot::verify_runtime(&init_response)?;
+        }
         let handshake_json = init_response.public_json();
         if !candidate && service.is_none() {
             let handshake_agent = agent.clone();

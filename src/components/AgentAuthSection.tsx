@@ -64,7 +64,6 @@ import {
   AgentExistingVerify,
 } from "./AgentAuthManage";
 import "../r5-agent-access.css";
-
 import type {
   AgentConnectionPresentation,
   AgentAuthSectionProps,
@@ -496,6 +495,7 @@ export function AgentAuthSection({
       target.current !== targetKey ||
       currentView.current !== viewKey ||
       occupied ||
+      busy ||
       hasCheckWork()
     )
       return;
@@ -1321,6 +1321,10 @@ export function AgentAuthSection({
           }
           groupFooters={groupFooters}
           guidance={connectionGuidance}
+          guidanceOwner={JSON.stringify([viewKey, program])}
+          onGuidanceReturn={
+            active && directory && !source ? recheck : undefined
+          }
           apiUnavailableReason={
             apiState === "unsupported" ? apiUnavailableReason : undefined
           }

@@ -95,6 +95,7 @@ vi.mock("../runtime/sessions", async (original) => ({
     setConfig: h.setConfig,
     confirmRestoredConfig: vi.fn().mockResolvedValue(undefined),
     discardDraft: h.discardDraft,
+    subscribeThread: () => () => {},
     thread: (key: string) => (key === h.live?.key ? h.live : null),
   },
 }));
@@ -103,9 +104,11 @@ vi.mock(
   () => import("../runtime/worktree_catalogue.test-fixture"),
 );
 import { EmptyState } from "./EmptyState";
+import { ExistingSettingsRecheck } from "./ExistingSettingsRecheck";
 import { Composer } from "./Composer";
 import {
   NewConversationAgentDialog,
+  NewConversationAgentSuggestions,
   NewConversationModelDialog,
 } from "./NewConversationPickers";
 import { composerDrafts, newConversationChoice } from "../runtime/drafts";
@@ -114,7 +117,10 @@ import { freshThreadState } from "../runtime/session_projection";
 import { STRINGS } from "../runtime/strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { preparationFor } from "../runtime/agent_preparation";
-import { observeAuthentication } from "../runtime/authentication";
+import {
+  authenticationActivity,
+  observeAuthentication,
+} from "../runtime/authentication";
 import {
   allowAutomaticConnection,
   isAutomaticConnectionAllowed,
@@ -133,6 +139,24 @@ function nodes(tree: ReactNode): Element[] {
           ...nodes(
             NewConversationLocationBar(
               child.props as ComponentProps<typeof NewConversationLocationBar>,
+            ),
+          ),
+        );
+      if (child.type === NewConversationAgentSuggestions)
+        result.push(
+          ...nodes(
+            NewConversationAgentSuggestions(
+              child.props as ComponentProps<
+                typeof NewConversationAgentSuggestions
+              >,
+            ),
+          ),
+        );
+      if (child.type === ExistingSettingsRecheck)
+        result.push(
+          ...nodes(
+            ExistingSettingsRecheck(
+              child.props as ComponentProps<typeof ExistingSettingsRecheck>,
             ),
           ),
         );
@@ -1109,7 +1133,7 @@ it("does not reopen a completed Agent's new draft after a configuration operatio
   await vi.advanceTimersByTimeAsync(251);
   expect(h.open).not.toHaveBeenCalled();
   expect(view.props.disabled).toBe(true);
-  expect(view.props.note).toBe(C.readRequired);
+  expect(view.props.note).toBe(C.readPending);
   (view.props.prepareAction as () => void)();
   expect(props.onGoSettings).toHaveBeenCalledWith(
     "A",
@@ -1142,6 +1166,76 @@ it("blocks stale send and model handlers as soon as configuration invalidates th
   expect(composerDrafts.read("new").text).toBe("Keep my draft");
   expect(props.onStarted).not.toHaveBeenCalled();
 });
+
+it.each(["matching", "changed"])(
+  "checks the preserved draft in place after the scoped setup terminal ends (%s)",
+  async (outcome) => {
+    vi.useFakeTimers();
+    const cwd = `/setup-return-${outcome}`;
+    const target = { agentId: "A", cwd };
+    h.enabled = true;
+    newConversationChoice.cwd = cwd;
+    preparationFor("A").requireExplicitRead(target);
+    const activity = authenticationActivity("A");
+    activity.begin(
+      target,
+      {
+        kind: "preparation",
+        actionId: "official-configuration",
+        purpose: "service_configuration",
+        title: "Setup",
+        completion: "exit_code",
+      },
+      cwd,
+    );
+    activity.terminal({
+      start: async () => "configuration-terminal",
+      wait: () => new Promise(() => {}),
+      close: async () => 130,
+      reconnect: async () => {},
+    });
+    await activity.cancel();
+    expect(activity.getSnapshot()?.terminalOutcome).toMatchObject({
+      kind: "ended",
+      cancelled: true,
+    });
+    const original = structuredClone(newConversationChoice.config);
+    const read = freshThreadState("read-only-check", "A", cwd, "native");
+    read.configOptions = Object.entries(original).map(([id, value]) => ({
+      id,
+      name: id,
+      type: "select",
+      currentValue:
+        outcome === "changed" && id === "model" ? "new-default" : value,
+      options: [],
+    }));
+    h.open.mockImplementation(async () => (h.live = read));
+    const button = (label: string) =>
+      render().find(
+        (node) => node.type === "button" && node.props.children === label,
+      );
+    (button(C.recheckSettings)!.props.onClick as () => void)();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(h.open).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ agentId: "A", cwd, configOptions: null }),
+    );
+    expect(newConversationChoice.config).toEqual(original);
+    expect(composerDrafts.read("new").text).toBe("Keep my draft");
+    expect(h.setConfig).not.toHaveBeenCalled();
+    expect(props.onGoSettings).not.toHaveBeenCalled();
+    expect(props.onStarted).not.toHaveBeenCalled();
+    if (outcome === "changed") {
+      expect(composer().props.disabled).toBe(true);
+      (button(C.models)!.props.onClick as () => void)();
+      expect(props.onGoSettings).toHaveBeenCalledWith(
+        "A",
+        expect.objectContaining({ panel: "model" }),
+      );
+    } else {
+      expect(button(C.recheckSettings)).toBeUndefined();
+    }
+  },
+);
 
 it.each(["other-directory", "api-source"])(
   "does not block a different preparation target (%s)",

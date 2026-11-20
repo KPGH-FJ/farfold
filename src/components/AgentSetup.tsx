@@ -45,7 +45,7 @@ import { AgentLogo } from "./AgentLogo";
 import type { ServiceChoice } from "./ServicePicker";
 import { AgentServiceSection } from "./AgentServiceSection";
 import { ServiceModelPicker } from "./ServiceModelPicker";
-import { apiConfigurationState } from "../runtime/service_capability";
+import * as serviceCapability from "../runtime/service_capability";
 import { AgentPrerequisites } from "./AgentPrerequisites";
 import { AgentModelReadNotice } from "./AgentModelReadNotice";
 import { modelConfigOption, threads, useThread } from "../runtime/sessions";
@@ -293,7 +293,7 @@ export function AgentSetup({
       selectedService?.complete &&
       !selectedService.deleting &&
       selectedService.revision === selection.service.revision &&
-      capability?.apiTypes.includes(selectedService.apiType) &&
+      serviceCapability.canUseService(capability, selectedService) &&
       selectedService.models.length
     );
   const modelValid =
@@ -398,7 +398,7 @@ export function AgentSetup({
     progress: setupProgress,
     onProgress,
   });
-  const apiState = apiConfigurationState(capability);
+  const apiState = serviceCapability.apiConfigurationState(capability);
   const apiAvailable = apiState === "supported";
   const accountStage =
     setupProgress.accessStage ??

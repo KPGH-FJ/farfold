@@ -20,6 +20,8 @@ export function AgentConnectionPicker({
   disabled,
   groupFooters,
   guidance,
+  guidanceOwner,
+  onGuidanceReturn,
   apiUnavailableReason,
   onChange,
 }: {
@@ -30,6 +32,8 @@ export function AgentConnectionPicker({
   /** Content rendered after the last option of a group (e.g. registration). */
   groupFooters?: Partial<Record<string, ReactNode>>;
   guidance?: readonly ConnectionGuidance[];
+  guidanceOwner?: string;
+  onGuidanceReturn?: () => void;
   apiUnavailableReason?: string | null;
   onChange: (value: string) => void;
 }) {
@@ -73,7 +77,13 @@ export function AgentConnectionPicker({
         <p className="auth-note">{apiUnavailableReason}</p>
       )}
       {guidance?.length ? (
-        <AgentConnectionGuidance items={guidance} disabled={disabled} />
+        <AgentConnectionGuidance
+          key={guidanceOwner}
+          items={guidance}
+          disabled={disabled}
+          owner={guidanceOwner}
+          onReturn={onGuidanceReturn}
+        />
       ) : null}
     </fieldset>
   );

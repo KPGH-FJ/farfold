@@ -109,6 +109,54 @@ function fixture() {
 }
 
 describe("preparation result context", () => {
+  it.each(["matching", "drift", "retired", "newer gate"])(
+    "releases an original draft only when a current read confirms its full configuration (%s)",
+    async (outcome) => {
+      const f = fixture();
+      const reply = deferred<ThreadState>();
+      const input = { ...f.input, config: { model: "chosen", mode: "off" } };
+      let current = true;
+      f.controller.requireExplicitRead(input);
+      f.port.open.mockReturnValueOnce(reply.promise);
+      const read = f.controller.recheckExistingDraft(input, () => current);
+      expect(f.port.open).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ configOptions: null, fresh: true }),
+      );
+      expect(
+        preparationNeedsExplicitRead(f.controller.getSnapshot(), input),
+      ).toBe(true);
+      if (outcome === "retired") current = false;
+      if (outcome === "newer gate")
+        f.controller.requireExplicitRead(input, false);
+      const thread = freshThreadState("read-result", "agent", "/work", "read");
+      thread.configOptions = [
+        {
+          id: "model",
+          name: "Model",
+          type: "select",
+          currentValue: outcome === "drift" ? "new-default" : "chosen",
+          options: [],
+        },
+        {
+          id: "mode",
+          name: "Mode",
+          type: "select",
+          currentValue: "off",
+          options: [],
+        },
+      ];
+      f.states.set(thread.key, thread);
+      reply.resolve(thread);
+      const confirmed = outcome === "matching";
+      expect(await read).toBe(confirmed);
+      expect(
+        preparationNeedsExplicitRead(f.controller.getSnapshot(), input),
+      ).toBe(!confirmed);
+      expect(f.port.setConfig).not.toHaveBeenCalled();
+      expect(f.port.send).not.toHaveBeenCalled();
+    },
+  );
+
   it.each([
     { label: "open error", change: { openError: "read failed" } },
     { label: "model drift", change: { modelDrift: true } },

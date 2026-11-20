@@ -5,6 +5,7 @@ use std::{collections::HashMap, path::Path, sync::atomic::Ordering};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use sha2::{Digest, Sha256};
+use tauri::Manager as _;
 
 use super::manager::{
     AcpManager, AgentConnectionStatus, ConnectionKey, ManagedConnection, STATE_READY,
@@ -141,9 +142,15 @@ impl AcpManager {
         }
         let prepared = if let Some(selection) = selection {
             let row = current.clone();
+            let data_dir = self.data_directory().to_owned();
             Some(
                 store
                     .run(move |store| {
+                        if super::service_config::copilot::registered(&row)
+                            && !super::service_config::copilot::verified(&row, store, &data_dir)
+                        {
+                            return Err(super::service_config::copilot::UNAVAILABLE.into());
+                        }
                         let snapshot = crate::credentials::service_snapshot(
                             store,
                             &selection,
@@ -260,6 +267,21 @@ pub async fn service_capabilities(
     agent_id: String,
 ) -> Result<super::service_config::ServiceCapability, String> {
     let agent = super::manager::require_agent_row(&app, &agent_id).await?;
+    if super::service_config::copilot::registered(&agent) {
+        let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
+        return app
+            .state::<MetaStore>()
+            .run(move |store| {
+                Ok(
+                    if super::service_config::copilot::verified(&agent, store, &data) {
+                        super::service_config::capability(&agent)
+                    } else {
+                        super::service_config::copilot::unavailable()
+                    },
+                )
+            })
+            .await;
+    }
     Ok(super::service_config::capability(&agent))
 }
 
