@@ -404,6 +404,107 @@ fn encoded_goose_root_keeps_the_existing_configuration_action_proof() {
     }
 }
 
+#[test]
+fn fast_agent_login_uses_the_exact_managed_codex_launch_and_fixed_action() {
+    let data = tempfile::tempdir().unwrap();
+    let root = data
+        .path()
+        .canonicalize()
+        .unwrap()
+        .join("agent-installations/agent-registry%3Afast-agent/install-fixture");
+    let program = root.join(if cfg!(windows) {
+        "venv/Scripts/fast-agent-acp.exe"
+    } else {
+        "venv/bin/fast-agent-acp"
+    });
+    std::fs::create_dir_all(program.parent().unwrap()).unwrap();
+    std::fs::write(&program, "#!/bin/sh\nexit 0\n").unwrap();
+    crate::process_platform::set_executable(&program).unwrap();
+    let row = AgentRow {
+        id: "registry:fast-agent".into(),
+        name: "fast-agent".into(),
+        source: "registry".into(),
+        command: program.display().to_string(),
+        args: vec!["-x".into()],
+        env: vec![("FAST_AGENT_MODEL".into(), "codexplan".into())],
+        version: Some("0.10.1".into()),
+        handshake: Some(
+            serde_json::json!({"authMethods":[{"id":"fast-agent-ai-secrets","name":"Configure fast-agent"}]}),
+        ),
+        created_at: 1,
+        updated_at: 1,
+    };
+    let store = MetaStore::open(&data.path().join("meta.db")).unwrap();
+    store.insert_agent(&row).unwrap();
+    assert!(actions_for(&store, &row, data.path()).unwrap().is_empty());
+    crate::installations::record(&store, &row, &root).unwrap();
+
+    let actions = actions_for(&store, &row, data.path()).unwrap();
+    let [action] = actions.as_slice() else {
+        panic!("expected exactly one account action");
+    };
+    assert_eq!(action.id, "login-fast-agent-codex");
+    assert_eq!(action.purpose, "account_login");
+    assert_eq!(action.transport, "terminal");
+    assert_eq!(action.command, row.command);
+    assert_eq!(action.args, ["auth", "provider", "login", "codex"]);
+    assert!(serde_json::to_value(action).unwrap().get("env").is_none());
+    let (guides, roles) = guidance_for(&store, &row, data.path(), &[]);
+    assert_eq!(guides.len(), 1);
+    assert_eq!(roles.len(), 1);
+    assert_eq!(
+        serde_json::to_value(&guides).unwrap()[0]["url"],
+        "https://fast-agent.ai/ref/config_file/"
+    );
+    assert_eq!(
+        reviewed_action(
+            &store,
+            &row,
+            data.path(),
+            &action.id,
+            &action.command,
+            &action.args,
+        )
+        .unwrap(),
+        *action
+    );
+    let mut unapproved_args = action.args.clone();
+    unapproved_args[2] = "token".into();
+    assert!(
+        reviewed_action(
+            &store,
+            &row,
+            data.path(),
+            &action.id,
+            &action.command,
+            &unapproved_args,
+        )
+        .is_err()
+    );
+    for env in [
+        vec![],
+        vec![("FAST_AGENT_MODEL".into(), "sonnet".into())],
+        vec![
+            ("FAST_AGENT_MODEL".into(), "codexplan".into()),
+            ("CODEX_API_KEY".into(), "fixture-key".into()),
+        ],
+    ] {
+        let mut changed = row.clone();
+        changed.env = env;
+        assert!(
+            actions_for(&store, &changed, data.path())
+                .unwrap()
+                .is_empty()
+        );
+    }
+    let mut records = store.get_setting("installations.v1").unwrap().unwrap();
+    let duplicate = records[0].clone();
+    records.as_array_mut().unwrap().push(duplicate);
+    store.set_setting("installations.v1", &records).unwrap();
+    assert!(actions_for(&store, &row, data.path()).unwrap().is_empty());
+    assert_eq!(store.get_agent(&row.id).unwrap().unwrap(), row);
+}
+
 fn npm_fixture(encoded: bool, version: &str) -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {
     let data = tempfile::tempdir().unwrap();
     let base = data.path().canonicalize().unwrap();

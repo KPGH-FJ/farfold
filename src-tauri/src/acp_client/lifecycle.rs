@@ -397,11 +397,17 @@ impl ConnectionLife {
             }
             return Err("连接正在关闭，请稍后重试".into());
         }
-        if (key == "account_change"
-            && (self.work.load(Ordering::SeqCst) != 0
-                || !state.operations.is_empty()
-                || !state.closing_opens.is_empty()
-                || self.routes.has_unclaimed()))
+        let changing_account = key == "account_change";
+        let active_account_blocker = changing_account
+            && (self.work.load(Ordering::SeqCst) != 0 || !state.operations.is_empty());
+        if changing_account && !active_account_blocker && !state.closing_opens.is_empty() {
+            return Err(
+                "上次打开对话的结果尚未确认。请先保存工作，再正常退出并重新打开 Farfold，然后继续账号设置。"
+                    .into(),
+            );
+        }
+        if active_account_blocker
+            || (changing_account && self.routes.has_unclaimed())
             || (key != "authentication" && state.operations.contains("account_change"))
         {
             return Err("请先完成此 Agent 的任务、待处理事项及账号操作".into());
@@ -743,6 +749,37 @@ mod tests {
         drop(account);
         assert!(life.work().is_ok());
     }
+
+    #[test]
+    fn account_change_names_the_retained_open_when_no_active_operation_blocks_it() {
+        let life = ConnectionLife::new();
+        life.ready().unwrap();
+        let opens = OpenReservations::default();
+        let path = Path::new("/project");
+        let reservation = opens.reserve("agent", path, "session").unwrap();
+        drop(OpenIdentity::new(life.clone(), Some(reservation)));
+
+        let assert_active_blocker = || {
+            assert_eq!(
+                life.operation("account_change".into()).err().unwrap(),
+                "请先完成此 Agent 的任务、待处理事项及账号操作"
+            );
+        };
+        let work = life.work().unwrap();
+        assert_active_blocker();
+        drop(work);
+        let list = life.operation("list".into()).unwrap();
+        assert_active_blocker();
+        drop(list);
+        assert_eq!(
+            life.operation("account_change".into()).err().unwrap(),
+            "上次打开对话的结果尚未确认。请先保存工作，再正常退出并重新打开 Farfold，然后继续账号设置。"
+        );
+        assert!(opens.reserve("agent", path, "session").is_err());
+        life.finish(Ok(()));
+        assert!(opens.reserve("agent", path, "session").is_ok());
+    }
+
     #[test]
     fn closing_restore_keeps_cross_source_reservation_until_process_completion() {
         let opens = OpenReservations::default();

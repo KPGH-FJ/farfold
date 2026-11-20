@@ -199,18 +199,15 @@ pub(crate) fn actions_for(
     let Some(declaration) = super::recipes::terminal_action_declaration(row) else {
         return Ok(vec![]);
     };
-    let items = recorded_installations(store)?;
     let mut args = match declaration.launch {
         TerminalActionLaunch::Native { .. } => {
-            if !items
-                .iter()
-                .any(|item| matching_registry_installation(row, item, data))
-            {
+            if !has_registry_installation(store, row, data)? {
                 return Ok(vec![]);
             }
             vec![]
         }
         TerminalActionLaunch::Npm { .. } => {
+            let items = recorded_installations(store)?;
             let mut selected = items.iter().filter(|item| {
                 item.agent_id == row.id && item.command == row.command && item.args == row.args
             });

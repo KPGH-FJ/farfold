@@ -191,6 +191,8 @@ pub(crate) struct TerminalActionDeclaration {
     pub version: &'static str,
     pub launch: TerminalActionLaunch,
     pub launch_args: &'static [&'static str],
+    // Match the reviewed registration without forwarding its environment.
+    pub launch_env: &'static [(&'static str, &'static str)],
     pub action_args: &'static [&'static str],
     pub source_url: &'static str,
 }
@@ -207,6 +209,7 @@ const CLINE_AUTH_ACTION: TerminalActionDeclaration = TerminalActionDeclaration {
         loader: "bin/cline",
     },
     launch_args: &["--acp"],
+    launch_env: &[],
     action_args: &["auth"],
     // The 3.0.65 published README documents the interactive setup. The URL
     // points to that documentation's source directory without widening the match.
@@ -220,6 +223,7 @@ const GOOSE_CONFIGURE_ACTION: TerminalActionDeclaration = TerminalActionDeclarat
     version: "1.52.0",
     launch: TerminalActionLaunch::Native { binary: "goose" },
     launch_args: &["acp"],
+    launch_env: &[],
     action_args: &["configure"],
     // Reviewed versions scope this supplement only. Ordinary connections and
     // installation still depend on the Agent's actual handshake.
@@ -239,6 +243,21 @@ const TERMINAL_ACTIONS: &[TerminalActionDeclaration] = &[
         source_url: "https://github.com/cline/cline/blob/cli-v3.0.74/docs/cli/cli-reference.mdx",
         ..CLINE_AUTH_ACTION
     },
+    TerminalActionDeclaration {
+        id: "login-fast-agent-codex",
+        purpose: "account_login",
+        agent_id: "registry:fast-agent",
+        // This version scope belongs only to the reviewed login supplement.
+        // The registered console script forwards "auth" to its official CLI.
+        version: "0.10.1",
+        launch: TerminalActionLaunch::Native {
+            binary: "fast-agent-acp",
+        },
+        launch_args: &["-x"],
+        launch_env: &[("FAST_AGENT_MODEL", "codexplan")],
+        action_args: &["auth", "provider", "login", "codex"],
+        source_url: "https://fast-agent.ai/models/providers/openai/#codex-oauth-responses",
+    },
 ];
 
 pub(crate) fn terminal_action_declaration(
@@ -249,7 +268,11 @@ pub(crate) fn terminal_action_declaration(
             && row.source == "registry"
             && row.version.as_deref() == Some(declaration.version)
             && Path::new(&row.command).is_absolute()
-            && row.env.is_empty()
+            && row
+                .env
+                .iter()
+                .map(|(name, value)| (name.as_str(), value.as_str()))
+                .eq(declaration.launch_env.iter().copied())
             && match declaration.launch {
                 TerminalActionLaunch::Native { binary } => {
                     crate::process_platform::program_name(Path::new(&row.command)).as_deref()
