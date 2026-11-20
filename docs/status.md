@@ -100,6 +100,8 @@
 
 **Amp 的实际设置终端取消与 Kilo 的原目录查找已验。** Amp 从未发草稿真实启动设置终端并在未输入时取消，回到同一文字、目录、模型和焦点。Kilo 正常入口在原目录找到准确的已加入记录，独立空目录无记录，未加载原正文或再次加入。 [正式回执](evidence/2026-11-20-cycle12-amp-kilo-entry-followup/README.md)
 
+**Goose 同一工作目录双任务实停通过。** 正式 `72e971df5` 两条正常对话均使用已保存的免费 Super VL / Off，四个原工具进程确实重叠。只点停 A，A 的 Shell 和子进程实际结束、未出成品；B 原进程继续，交付准确的 29 字节成品并显示已完成。厂商本机记录有 A 原工具明确中断，Farfold 原步骤仍显示未知。同一目标文件的并发修改仍未验。 [正式回执](evidence/2026-11-20-cycle12-goose-same-folder-stop/README.md)
+
 **Cursor 冷开显示原拒绝需官方回放补足。** 同一自有样本的厂商原记录有原工具 ID 和明确拒绝原因。登记版本 2026.11.13 的回放另分配工具 ID，并报为 `completed`。待官方保留原工具及拒绝终态，或支持按原会话、目录和工具精确只读回查。 [只读复核](evidence/2026-11-20-cycle12-cursor-denial-replay/README.md#同一工具的原记录与回放)
 
 **Mistral Vibe 同页撤回后重新授权与取消已验。** 09:14 在独立同配置短测收到原服务回复。重开原对话后允许读取，再停止共享，只发一条。Vibe 查找并调用原网页工具，单次批准后 Farfold 再次询问同页读取许可。点取消，原工具只收到取消文字，没有交付新网页正文。此前的 503 和未知提示保留。 [正式回执](evidence/2026-11-20-cycle12-mistral-regrant-cancel/README.md)
@@ -291,6 +293,8 @@ Gemini CLI 与 Antigravity 按用户要求暂缓。Nova 已移出首发，当时
 <!-- task-current: ARCH-44 -->
 
 ### ARCH-44
+
+2026-11-20 正式 Goose 1.59.1 同目录 A、B 实际并行。只点停 A，A 原 Shell 和 sleep 都退出，B 原工具继续并准确交付。厂商本机同一工具有中断回执，Farfold 原步骤仍未知，等待可归属的官方接口回传。该结果覆盖用户主动停止，意外断线后的回收条件另见下。 [主动停止实测](evidence/2026-11-20-cycle12-goose-same-folder-stop/README.md)
 
 2026-11-20 Mistral Vibe 正式在途断线后，Agent 自开的原 Shell 和 sleep 脱离连接并自然结束。两次读取同一未结束原轮分别触发厂商推理及新工具提议，未批准，本机原脚本未重跑。等原工作可精确回收、原工具终态可查，或有不恢复旧轮的原历史入口。已验证的主动停止正例适用原有样本。 [官方边界及正式回执](evidence/2026-11-20-cycle12-mistral-queue-recovery/README.md#官方入口与复验条件)
 
