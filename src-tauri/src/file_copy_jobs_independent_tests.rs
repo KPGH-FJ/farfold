@@ -164,6 +164,64 @@ fn independent_destination_created_at_publication_is_preserved_exactly() {
     assert_eq!(names(directory.path()), vec!["result.txt", "source.txt"]);
 }
 
+#[cfg(target_os = "macos")]
+#[test]
+fn independent_destination_parent_shift_after_partial_copy_preserves_files() {
+    let (directory, file, _) = fixture();
+    let selected = directory.path().join("selected");
+    let replacement = directory.path().join("replacement");
+    let moved = directory.path().join("moved");
+    std::fs::create_dir(&selected).unwrap();
+    std::fs::create_dir(&replacement).unwrap();
+    std::fs::write(selected.join("marker.txt"), b"selected").unwrap();
+    std::fs::write(replacement.join("marker.txt"), b"replacement").unwrap();
+    let destination = selected.join("result.txt");
+    let shifted = AtomicBool::new(false);
+
+    let outcome = file_delivery::stream_copy(
+        &file,
+        &destination,
+        || false,
+        || panic!("a shifted destination must not claim publication"),
+        |written| {
+            if !shifted.swap(true, Ordering::SeqCst) {
+                assert!(written > 0 && written < file.size);
+                let entries = names(&selected);
+                let temporary = entries
+                    .iter()
+                    .find(|name| name.starts_with(".farfold-export-"))
+                    .expect("the first progress update must follow a real write");
+                assert_eq!(
+                    std::fs::metadata(selected.join(temporary)).unwrap().len(),
+                    written
+                );
+                std::fs::rename(&selected, &moved).unwrap();
+                std::fs::rename(&replacement, &selected).unwrap();
+            }
+        },
+    );
+
+    assert!(shifted.load(Ordering::SeqCst));
+    assert_eq!(
+        file_delivery::inspect(directory.path(), Path::new(&file.path)).unwrap(),
+        file
+    );
+    assert_eq!(names(&selected), vec!["marker.txt"]);
+    assert_eq!(names(&moved), vec!["marker.txt"]);
+    assert_eq!(
+        std::fs::read(selected.join("marker.txt")).unwrap(),
+        b"replacement"
+    );
+    assert_eq!(
+        std::fs::read(moved.join("marker.txt")).unwrap(),
+        b"selected"
+    );
+    let CopyOutcome::Failed(error) = outcome else {
+        panic!("a shifted destination must report a known failure before publication");
+    };
+    assert_eq!(error, DeliveryError::DestinationChanged);
+}
+
 #[test]
 fn independent_same_length_source_change_never_publishes_partial_bytes() {
     let (directory, file, destination) = fixture();

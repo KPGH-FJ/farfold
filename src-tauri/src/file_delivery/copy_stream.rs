@@ -69,6 +69,7 @@ pub(crate) fn stream_copy(
             &temporary.directory,
             false,
         )
+        .map_err(|_| DeliveryError::DestinationChanged)
     })();
     if let Err(error) = checked {
         if temporary.discard().is_err() {
