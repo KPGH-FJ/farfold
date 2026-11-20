@@ -1,6 +1,6 @@
 # Farfold 当前工作计划
 
-更新：2026-11-19。五阶段十四周期保持。第1阶段及第4–8周期按各自阶段范围收口。首发21家按[产品契约](../PRODUCT.md)八项验收；[要求参考](../docs/agent-access-requirements.md)保留151条原条件，[当前状态](../docs/status.md)记录证据与缺项。
+更新：2026-11-20。五阶段十四周期保持。第1阶段及第4–8周期按各自阶段范围收口。首发21家按[产品契约](../PRODUCT.md)八项验收；[要求参考](../docs/agent-access-requirements.md)保留151条原条件，[当前状态](../docs/status.md)记录证据与缺项。
 
 ## 五阶段十四周期
 
@@ -39,7 +39,7 @@
 
 [当前状态](../docs/status.md)维护分项证据与外部依赖。第8、10、11周期按阶段范围收口，第9周期 Windows 后置。
 
-1. **先完成 macOS。** 按[21家](../docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json)续验。Cline 两条待发恢复有证，图片交付等官方；OpenCode 同目录双前台有证。Claude 后台已验；OpenCode 后台、Dirac 原正文等官方。其余按[待配合事项](../docs/status.md#第-12-周期待配合)续验。Gemini CLI 与 Antigravity 暂缓。
+1. **先验 S1–S2 完整流程。** 21 家统一从正式 Farfold 核官方接法和界面、程序、选定账号服务、回草稿、首答来源及适用恢复。每家遇首个失败或缺条件便留证并换下一家，整批盘完再修、从原入口复验。Gemini CLI 与 Antigravity 核入口，实际授权继续暂缓。详见[当前状态](../docs/status.md)。
 2. **官方替代与复验。** OpenCode、Goose 同目录双前台实停及冷恢复已有分项。Mistral 已验单次拒绝、撤回后同页再询，在途断线恢复等官方。MiniMax 后台已验，续答慢等官方。Amp 双前台和冷开已验。Pi 网页及正式审批待续。Qoder、Cline 精确列表、Copilot 工具终态与 Amp 显式 MiMo 续答按[官方依赖](../docs/status.md#第-12-周期待配合)续核。
 3. **再回到 Windows。** macOS 能力验收完成后，续第9周期及受影响的平台回归。第13–14周期仍以用户认可能力为前提。
 

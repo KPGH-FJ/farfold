@@ -1,0 +1,653 @@
+{
+  "schemaVersion": 1,
+  "scope": "macOS 第 12 周期首发 Agent",
+  "reviewedDate": "2026-11-20",
+  "sourceRoster": "docs/evidence/2026-11-15-cycle12-continuation/acceptance-roster.json",
+  "applicationCapabilitySource": "src-tauri/src/acp_client/service_config.rs#L42",
+  "agentCount": 21,
+  "evidenceBoundary": "官方账号与 Agent 自有 API 记录来自官方文档和已保存握手声明。Farfold 已存 API 来自当前实现。已测复用仅引用此前正式实测，本附表未纳入本轮首轮界面或授权结果。",
+  "agents": [
+    {
+      "versionAndDeclaration": "0.13.0 现有握手仅 Amp API Key Setup，实际启动与取消已验",
+      "officialAccount": "Amp 官方 CLI `amp login` 浏览器登录，能保存账户；`AMP_API_KEY` 属另一项 Amp CLI 认证且可优先。0.13.0 当前正式登记未提供独立浏览器/厂商登录按钮，仓库的附加 `amp login` 入口仅核准 0.9.0",
+      "agentOwnApi": "Amp 平台 Model Routing 可接自管模型密钥、Custom URL 与映射，支持 OpenAI Chat Completions、Responses、Anthropic Messages、Google Generative AI 等所选格式；这里的模型提供方密钥和适配器 Amp API Key 不同。正式已实测小米 Custom URL/MiMo",
+      "farfoldSavedApiEvidence": "否，当前登记无安全直接交付实现",
+      "existingEvidence": "可复用原厂商账户及原厂商 MiMo 设置，Farfold 新对话/原线程 Default 续答实测，官方 T-ID 用量确认小米。旧显式 MiMo 续答限制继续保留",
+      "remainingAndUi": "展示已有设置和实际声明的适配器密钥终端，准确标为 Amp API Key。厂商账号可提示走官方 CLI，避免称为 Farfold API 配置。若要恢复独立登录按钮，需当前 0.13.0 证实的官方伴随程序、入口与取消证据",
+      "officialSources": [
+        "https://ampcode.com/docs/cli",
+        "https://ampcode.com/docs/customize/model-routing"
+      ],
+      "repoSources": [
+        "src-tauri/src/acp_client/preparation_actions/amp_login.rs#L25",
+        "docs/evidence/2026-11-16-cycle12-account-retest/README.md",
+        "docs/evidence/2026-11-20-cycle12-amp-kilo-entry-followup/README.md"
+      ],
+      "agentId": "amp-acp",
+      "name": "Amp",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "官方终端可浏览器登录。当前 0.13.0 声明 Amp API Key Setup。",
+        "agentOwnApi": "在 Amp 平台用 Model Routing 配第三方密钥和地址。Amp 自己的 API Key 另作认证。",
+        "existingEvidence": "MiMo 新建和原线程 Default 续答已验。独立账号入口的旧实现只核准 0.9.0，显式选 MiMo 的原线程限制仍在。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "1.2.1 已有握手保留 oauth-personal、oauth-business、gemini-api-key、agent-platform，仍需登录且用户暂缓",
+      "officialAccount": "Google 个人和 Gemini Enterprise 浏览器认证。Google 官方终端粘码登录取决于客户端声明，现有登记未报告 terminal-login",
+      "agentOwnApi": "官方 Gemini Developer API key 从 Agent 环境 `GEMINI_API_KEY` 读取。企业 Agent Platform 是 Cloud ADC/项目位置，官方 CLI 亦列该后端的 API Key 路线。任意第三方 OpenAI 或 Anthropic 兼容地址没有已核官方说明",
+      "farfoldSavedApiEvidence": "否；协议中的 Gemini API key 入口不等于 Farfold 已保存服务",
+      "existingEvidence": "官方 agy acp 复用终端已保存授权；本机未证可用账号与实答、默认历史曾空，继续暂缓",
+      "remainingAndUi": "将 Google、Enterprise、Gemini 官方 key 与 Agent Platform 分清。Gemini key 若缺环境应说明怎么准备或不可用，不能承诺按钮能接收/保存任意 API。未获准前不开始登录或短测",
+      "officialSources": [
+        "https://antigravity.google/docs/ide/extensions/acp#authentication",
+        "https://antigravity.google/docs/install?tab=cli",
+        "https://antigravity.google/docs/cli-getting-started"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
+        "src-tauri/src/acp_client/service_config.rs#L43"
+      ],
+      "agentId": "antigravity-acp",
+      "name": "Antigravity",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": true,
+      "appendixSummary": {
+        "officialAccount": "登记 1.2.1 声明 Google 个人和企业登录。当前按用户决定暂缓。",
+        "agentOwnApi": "Gemini 官方 Key 或 Agent Platform 云端授权。当前登记未核通用第三方接口，也未声明终端授权。",
+        "existingEvidence": "本机仍需认证，未证明可复用账号或实答。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "0.9.11 当前内置 --acp，握手 autohand-setup 终端，说明在互动终端设认证和模型。旧 0.2.1 挂接不代表当前入口",
+      "officialAccount": "Autohand 自有登录/Fantail；厂商原 CLI 的 Autohand AI 可用账号模式，另支持厂商 API Key。账户身份和第三方供应商登录各自独立",
+      "agentOwnApi": "官方 CLI 有内置供应商密钥及自定义 `customProviders` OpenAI-compatible `baseUrl`/model，支持本地/官方 provider。Autohand AI 本身还提供其官方 OpenAI-compatible API。这些是厂商侧配置，未把当期 0.9.11 第三方配置实答视为现场已测",
+      "farfoldSavedApiEvidence": "否，当前登记没有 Farfold 保存服务交付",
+      "existingEvidence": "0.9.11 从 Farfold 沿用户原登录、原 Fantail 实答，并从原历史冷续答",
+      "remainingAndUi": "实际支持的「设置 Autohand」终端及已有设置应看得见。缺认证时应明确由官方终端完成后重查，待验实际取消回原稿和 BYOK 原服务实答，不触碰已知停止失败条件",
+      "officialSources": [
+        "https://docs.autohand.ai/working-with-autohand-code/configuration#custom-openai-compatible-providers",
+        "https://docs.autohand.ai/getting-started/plans-and-pricing/provider-api",
+        "https://autohand.ai/cli/"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-15-cycle12-continuation/README.md",
+        "docs/evidence/2026-11-18-cycle12-autohand-stop-receipt/README.md"
+      ],
+      "agentId": "autohand",
+      "name": "Autohand",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "0.9.11 由 Autohand 设置终端准备账号和模型。",
+        "agentOwnApi": "可在官方配置里设提供方密钥或 OpenAI 兼容模型。Autohand AI 自有 API 另列。",
+        "existingEvidence": "0.9.11 原账号和 Fantail 已实答、已冷续答。新第三方服务和真实授权取消待验。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "0.107.0 当前握手 Claude Subscription、Anthropic Console 都是官方设置终端。以前旧环境不能代表当前实际来源",
+      "officialAccount": "Claude Code 支持订阅/Claude.ai 账号与 Console 按 API 用量计费，也支持官方云服务。Farfold 当前两个账号选项分开；实际新登录和取消待验",
+      "agentOwnApi": "官方原 Claude Code 可用 `ANTHROPIC_BASE_URL` 与 Bearer `ANTHROPIC_AUTH_TOKEN`（或服务要求的 Anthropic API key），须符合 Anthropic Messages 等官方网关契约。已用用户在 Claude Code 独立配置的小米 Messages、Haiku 别名→MiMo 无需 Claude 登录实答",
+      "farfoldSavedApiEvidence": "当前明确暂停，Messages 可保存在设置但不可直接选给 Claude。当前适配器把 SDK 设置序列化到进程参数，需安全的官方传递和实际路由证据；设置 API 短测不代表 Claude 对话可用",
+      "existingEvidence": "允许「沿用已有设置」并已证小米同 Key 用量、原对话冷续答。旧托管配置不能混称可用",
+      "remainingAndUi": "展示适用的订阅与 Console 官方入口、明确已有设置可选，专用提示说明托管 API 暂不可用。无需用户重复配置小米或登录，只有另授权时才验订阅/Console 真正返回",
+      "officialSources": [
+        "https://code.claude.com/docs/en/authentication",
+        "https://code.claude.com/docs/en/llm-gateway"
+      ],
+      "repoSources": [
+        "src-tauri/src/acp_client/service_config.rs#L50",
+        "docs/evidence/2026-11-15-cycle12-pre-send/README.md#claude-和小米-messages",
+        "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md"
+      ],
+      "agentId": "claude-acp",
+      "name": "Claude",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "0.107.0 声明 Claude Subscription 和 Anthropic Console，分别授权。",
+        "agentOwnApi": "Claude Code 可接兼容 Messages 的第三方网关。小米已沿用 Claude Code 原设置实答。",
+        "existingEvidence": "小米原对话续答及同 Key 用量核合。Farfold 托管 Messages 的安全交付关闭。",
+        "farfoldSavedApi": "当前不可选，托管交付暂停。"
+      }
+    },
+    {
+      "versionAndDeclaration": "3.0.74 官方握手 Cline、ClinePass、ChatGPT Subscription 三种协议账号认证。已验证额外官方「模型服务」终端 `cline auth`",
+      "officialAccount": "Cline 账号、ClinePass、ChatGPT Subscription OAuth 独立。当前 `Sign in with Cline` 是协议认证并可打开浏览器，不是内嵌终端。原 Cline 账号重登后 Sonnet 5.5 实答有证",
+      "agentOwnApi": "官方 `cline auth`/配置允许 Anthropic、OpenAI、Gemini、OpenRouter 等和 OpenAI 兼容端点，可选 Base URL/模型；实际请求协议依所选官方供应商，不能把 OAuth 和 BYOK 混称。厂商中转/自定义地址未在当前本机另试",
+      "farfoldSavedApiEvidence": "否；现有「模型服务」进入 Cline 自己的设置流程，可在其中由用户输入 API，不会从 Farfold Keychain 自动供给",
+      "existingEvidence": "已沿用原已有 Cline 服务免费 Nemotron 工作；原账户重登另有短测。实际账号 OAuth 后取消未测，授权前草稿返回、另一个模型服务终端启动取消已有证",
+      "remainingAndUi": "分开展示账号 OAuth、厂商模型服务终端及已有设置；不要让用户先创建 Cline 账号才给适用 BYOK。真实共享账号变更/认证取消留授权，入口无启动复查可做",
+      "officialSources": [
+        "https://github.com/cline/cline/blob/cli-v3.0.74/apps/cli/src/acp/auth.ts",
+        "https://github.com/cline/cline/blob/cli-v3.0.74/apps/cli/README.md"
+      ],
+      "repoSources": [
+        "src-tauri/src/acp_client/recipes.rs#L198",
+        "docs/evidence/2026-11-16-cycle12-cline-auth/results.json",
+        "docs/evidence/2026-11-19-cycle12-draft-auth-return/README.md",
+        "docs/evidence/2026-11-20-cycle12-draft-discovery-followup/README.md"
+      ],
+      "agentId": "cline",
+      "name": "Cline",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "3.0.74 声明 Cline、ClinePass、ChatGPT Subscription 三种官方账户方式。",
+        "agentOwnApi": "官方「模型服务」终端可配提供方或兼容地址。",
+        "existingEvidence": "已有服务和官方重登实答有证。授权前可返回原稿，真实 OAuth 启动后取消待验。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "2.184.0 官方 ACP 声明 iOA、Google/Github、WeChat、Enterprise Domain，当前没有厂商专用 BYOK 的 ACP 认证声明",
+      "officialAccount": "按版本、组织和组织入口区分官方账号选项。当前原服务 Hy4/On 确实可用，新登录、退换号和身份费用证据未齐",
+      "agentOwnApi": "CodeBuddy CLI 官方 `~/.codebuddy/models.json` 可设自定义模型、构造 OpenAI Chat Completions HTTP URL 与认证。另有厂商环境支持 Anthropic-compatible Base URL/Auth/model。已核公开产品契约，未证明当前 2.184.0 这条 ACP 路径能采用用户新 BYOK 或可免账号",
+      "farfoldSavedApiEvidence": "否，当前登记没有 Farfold 保存服务交付",
+      "existingEvidence": "持有的原设置可直接新建/冷开。正式原登记 Hy4/On 和免费 Flash 切换有证，厂商请求/返回核准确模型，原全局配置没改",
+      "remainingAndUi": "展示当前声明账号和已有设置。可在说明中指向外部官方自定义配置但未核当前 ACP 实答前不宣称一键可选或无账号，且不能实际更改现有配置",
+      "officialSources": [
+        "https://www.codebuddy.ai/docs/cli/models",
+        "https://www.codebuddy.ai/docs/cli/env-vars",
+        "https://www.codebuddy.ai/docs/cli/settings"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-18-cycle12-codebuddy-registry-model/README.md",
+        "docs/evidence/2026-11-20-cycle12-codebuddy-disconnect-queue/README.md"
+      ],
+      "agentId": "codebuddy-code",
+      "name": "CodeBuddy",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "2.184.0 声明 iOA、Google/Github、WeChat、Enterprise Domain。",
+        "agentOwnApi": "CLI 官方支持自定义模型和兼容地址，现登记未验证新的第三方服务。",
+        "existingEvidence": "原登记 Hy4／On 实答及模型切换有厂商原记录，回原对话配置可复用。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "实际登记 ID codex，所选 ACP 1.13.1，CLI 0.156.1。握手显示 API Key、ChatGPT、ChatGPT(device code)；具体 Key 字段/验证码是否可执行仍依当前能力和真实入口核查",
+      "officialAccount": "官方 ChatGPT 浏览器登录、设备码条件及 OpenAI 平台 API Key 是不同路径。Farfold 较早普通 ChatGPT 登录已有回执，本轮当前真实身份/费用仍未核",
+      "agentOwnApi": "官方 Codex CLI 可 `codex login` 或官方 OpenAI API Key 登录；原 CLI `config.toml` 模型服务可配置 `model_providers.*`、base_url/env_key，官方协议为 Responses。登录方法密钥与模型服务 API 不通用",
+      "farfoldSavedApiEvidence": "是，仅 Responses。当前系统选择能力和历史原机受控服务有证，缺本轮可用真实外部 Responses 的实答；NEW-24 影响的正式发送仍hold，不重试、不补 Key",
+      "existingEvidence": "已有账号配置、原选 gpt-6-astra/Ultra/Agent 和旧首发有证。当前有效权限无法从 ACP 读回，不把原选择或 ACK 记作现版本身份/使用已通过",
+      "remainingAndUi": "区分已存在登录、官方账号、方法级 API Key 和 Farfold 已保存 Responses。过滤 Chat Completions/Messages，缺已存 Responses 应直接解释。设备码和方法级 Key 若只声明，不能当作实测完成。NEW-24 未解除前不触发受影响发送",
+      "officialSources": [
+        "https://learn.chatgpt.com/docs/auth",
+        "https://learn.chatgpt.com/docs/config-file/config-reference"
+      ],
+      "repoSources": [
+        "src-tauri/src/acp_client/service_config.rs#L43",
+        "docs/evidence/2026-09-23-service-validation/codex/README.md",
+        "docs/evidence/2026-10-02-shared-access-facilities/README.md",
+        "docs/evidence/2026-11-19-cycle12-official-route-recheck/README.md"
+      ],
+      "agentId": "codex-acp",
+      "name": "Codex",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": true,
+        "formats": ["responses"]
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "ChatGPT 浏览器登录、设备码与 OpenAI API Key 各有官方入口。",
+        "agentOwnApi": "原 Codex CLI 可配置 Responses 模型提供方。API Key 登录和模型接口各自选择。",
+        "existingEvidence": "登记组件 1.13.1，另核 CLI 0.156.1。已有设置有旧证据，NEW-24 影响的真实发送继续暂缓。",
+        "farfoldSavedApi": "可选 Responses。真实外部服务实答待验。"
+      }
+    },
+    {
+      "versionAndDeclaration": "2026.11.13",
+      "officialAccount": "官方 Cursor 账号浏览器登录。CLI 也接受 CURSOR_API_KEY 或 Cursor 授权令牌；当前 Cursor Login 声明复用已有凭据。",
+      "agentOwnApi": "Cursor 密钥授权 Cursor 服务。编辑器有自带模型密钥设置，未核到 CLI/ACP 相同入口。",
+      "farfoldSavedApiEvidence": "不可直接选择，当前应用登记未开放任何 Farfold 保存的协议。",
+      "existingEvidence": "原账号 Auto / Agent 已在 Farfold 实答和同原 ID 续答；现版本也用 Auto 完成真实任务。",
+      "remainingAndUi": "缺凭据时适用外部 agent login。现注册没有已验证的第三方模型商密钥入口；新登录返回、权益和计费待验。 显示沿用 Cursor 已有登录，缺凭据引向官方登录，区分其登录密钥与模型服务密钥。",
+      "officialSources": [
+        "https://cursor.com/docs/cli/acp#authentication",
+        "https://cursor.com/docs/cli/reference/authentication",
+        "https://cursor.com/help/models-and-usage/api-keys"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-15-cycle11-macos/README.md",
+        "docs/evidence/2026-11-20-cycle12-native-entry/README.md",
+        "src-tauri/src/acp_client/service_config.rs#L35-L62"
+      ],
+      "agentId": "cursor",
+      "name": "Cursor",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "当前声明复用 Cursor 已有凭据，缺凭据时用官方浏览器登录。",
+        "agentOwnApi": "CLI 接 Cursor 自己的授权密钥。编辑器自带模型密钥未核可用于 CLI 或当前接入。",
+        "existingEvidence": "登记 2026.11.13，原 Auto／Agent 已实答及冷续答。新的登录返回与费用仍未验。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "登记 3000.12.57；握手报告 0.0.0-dev，不能用握手值替代安装包版本",
+      "officialAccount": "已声明浏览器和终端。官方接法是 Devin Cloud 账号浏览器登录，企业账户另有组织权限与计费。",
+      "agentOwnApi": "按 Devin CLI 厂商模型目录选择。未核到该接法支持自带第三方模型商密钥或端点；企业令牌授权 Devin。",
+      "farfoldSavedApiEvidence": "不可直接选择，当前应用登记未开放任何 Farfold 保存的协议。",
+      "existingEvidence": "沿已有服务的 SWE-2 Flash Medium 已在正式版设置短测、新建、冷开并续答。旧选项停用不再覆盖原设置。",
+      "remainingAndUi": "新登录返回、取消、账号和组织权益需独立验证。 区分登录 Devin 与沿用已有设置，原模型失效时给明确仅限当前草稿的选择。",
+      "officialSources": [
+        "https://docs.devin.ai/cli/acp/zed#setup",
+        "https://docs.devin.ai/cli/models",
+        "https://docs.devin.ai/cli/enterprise/devin-auth"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
+        "docs/evidence/2026-11-20-cycle12-native-entry/README.md",
+        "src-tauri/src/acp_client/service_config.rs#L35-L62"
+      ],
+      "agentId": "devin",
+      "name": "Devin",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "官方 Devin Cloud 浏览器登录，当前也声明终端。组织权限单独确认。",
+        "agentOwnApi": "按 Devin 官方目录选模型，未核到第三方模型商密钥入口。",
+        "existingEvidence": "登记 3000.12.57，握手标 0.0.0-dev。已有 SWE-2 Flash Medium 已实答、已冷续答。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "0.6.0",
+      "officialAccount": "当前保存握手没有登录方法。官方 dirac auth 按所选模型提供方配置凭据。",
+      "agentOwnApi": "外部 CLI 支持 OpenRouter、OpenAI、Anthropic、Gemini 等密钥，且有自定义 OpenAI 兼容地址及模型。",
+      "farfoldSavedApiEvidence": "不可直接选择，当前应用登记未开放任何 Farfold 保存的协议。",
+      "existingEvidence": "原 OpenRouter 免费 Nemotron / Medium 正常使用有证。0.6.0 正式两目录沿既有免费路由实答并各自读取规则。",
+      "remainingAndUi": "官方外配可用；正式添加新服务、退出换号、实际账号费用以及当前自定义路由待验。 当前入口无登录动作时提供 Dirac 官方配置说明；回 Farfold 重查所选服务，无法核到实际来源如实提示。",
+      "officialSources": [
+        "https://dirac.run/docs/cli#authentication",
+        "https://dirac.run/docs/cli#custom-openai-compatible-providers"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-15-cycle12-macos/README.md",
+        "docs/evidence/2026-11-18-cycle12-dirac-copilot/README.md",
+        "src-tauri/src/acp_client/service_config.rs#L35-L62"
+      ],
+      "agentId": "dirac",
+      "name": "Dirac",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "0.6.0 握手无登录方法。官方 dirac auth 按提供方配置。",
+        "agentOwnApi": "CLI 支持多家 Key 或 OpenAI 兼容地址。",
+        "existingEvidence": "已有 OpenRouter 免费 Nemotron／Medium 正式实答。新自定义服务和费用待验。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "0.10.1",
+      "officialAccount": "随提供方。官方 OAuth 支持 auth provider 子命令；当前声明 Configure fast-agent，仅提示 secrets 文件或环境变量配置。",
+      "agentOwnApi": "fast-agent 自有配置/环境支持 OpenAI Chat Completions、Responses、Anthropic Messages、Gemini 等；要匹配所选提供方前缀和协议。",
+      "farfoldSavedApiEvidence": "不可直接选择，当前应用登记未开放任何 Farfold 保存的协议。",
+      "existingEvidence": "已存 codexplan 的正式实答核为 codexresponses / gpt-5.6-sol；官方独立检查提供方凭据为 ready。",
+      "remainingAndUi": "首带入原样本暂缓发送；独立 ready 和旧导出不足以证明同 Farfold 连接当前配置、原账号及服务。 给正确的 fast-agent 配置位置；分开显示历史曾用配置、当前配置待确认与可做的检查。",
+      "officialSources": [
+        "https://fast-agent.ai/models/llm_providers/",
+        "https://fast-agent.ai/ref/config_file/",
+        "https://fast-agent.ai/guides/migrating-to-0-10/"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-19-cycle12-fast-terminal-exit/README.md",
+        "docs/evidence/2026-11-19-cycle12-fast-cli-import/README.md",
+        "src-tauri/src/acp_client/service_config.rs#L35-L62"
+      ],
+      "agentId": "fast-agent",
+      "name": "fast-agent",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "0.10.1 声明 Configure fast-agent，实际授权取决于提供方。",
+        "agentOwnApi": "通过官方原配置、环境或提供方 OAuth。需选匹配的协议和模型。",
+        "existingEvidence": "已有配置正式实答核为 codexresponses／gpt-5.6-sol。原历史的当前连接身份未核，不发送。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "0.62.0",
+      "officialAccount": "声明 Google 登录、Gemini API key、Vertex AI、AI API Gateway；官方 Google 登录，Gemini Key，或按 Vertex 要求的 ADC、服务账号、适用的云密钥。",
+      "agentOwnApi": "Gemini / Vertex 可用各自协议的自定义网关。0.62.0 声明的 AI API Gateway 指定 google 协议。纯 Chat Completions / Messages 端点不能直接套入。",
+      "farfoldSavedApiEvidence": "不可直接选择，当前应用登记未开放任何 Farfold 保存的协议。",
+      "existingEvidence": "正式版已有设置提示认证，Gemini Key 声明当时没有可填写的 Farfold 输入。按用户决定暂停。",
+      "remainingAndUi": "本轮不实际登录。恢复后由用户选择官方方式并验证归属；旧史另须纳入官方安全修复版本。 显示所选路线凭据填在哪里，无法在应用完成时引官方配置；完成回应用重查，不误导用通用模型接口。",
+      "officialSources": [
+        "https://google-gemini.github.io/gemini-cli/docs/get-started/authentication.html",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/docs/reference/configuration.md#environment-variables",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L47-L80"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-15-cycle11-macos/README.md",
+        "docs/evidence/2026-11-15-cycle12-followup/accounts-and-api.md",
+        "src-tauri/src/acp_client/service_config.rs#L35-L62"
+      ],
+      "agentId": "gemini",
+      "name": "Gemini",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": true,
+      "appendixSummary": {
+        "officialAccount": "0.62.0 声明 Google 登录、Gemini Key、Vertex AI 与 AI API Gateway。按用户决定暂缓。",
+        "agentOwnApi": "Gemini 或 Vertex 的原协议网关。纯 Chat Completions 或 Messages 不能直接用。",
+        "existingEvidence": "本机仍需认证，Gemini Key 声明当时无 Farfold 输入，暂无新实答。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "登记 1.0.112；同一登记保存的握手报告 1.0.114",
+      "officialAccount": "GitHub 浏览器/设备 OAuth，指定令牌或 gh 兜底；个别组织另有 Entra。Farfold 已验官方登录终端启动和取消回草稿。",
+      "agentOwnApi": "官方 CLI 支持 OpenAI 兼容 Chat Completions、Responses、Azure、Anthropic。厂商把 ACP BYOK 问题记为 1.0.89 已解决；当前正式 Farfold 外配回执仍未验。",
+      "farfoldSavedApiEvidence": "不可直接选择，当前应用登记未开放任何 Farfold 保存的协议。",
+      "existingEvidence": "原 GitHub 账号已实答，新 Auto 原厂记录为 copilot / gpt-6-luna；十月旧 Auto 的失败另保留。",
+      "remainingAndUi": "BYOK 模型请求可独立于 GitHub 登录；GitHub 云端功能仍各要身份。带入已配外部服务、当前模型可见及实际路由待正式验。 区分 GitHub 登录与第三方模型配置位置。实际读回并验证后才显示可用；托管 GitHub 工作仍可明确要求登录。",
+      "officialSources": [
+        "https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli",
+        "https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-llm-models",
+        "https://github.blog/changelog/2026-04-07-copilot-cli-now-supports-byok-and-local-models/",
+        "https://github.com/github/copilot-cli/issues/4037"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-20-cycle12-draft-discovery-followup/README.md",
+        "docs/evidence/2026-11-20-cycle12-native-entry/README.md",
+        "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
+        "src-tauri/src/acp_client/service_config.rs#L35-L62"
+      ],
+      "agentId": "github-copilot-cli",
+      "name": "GitHub Copilot",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "GitHub 官方登录。Farfold 已验确切登录终端启动、取消及回草稿。",
+        "agentOwnApi": "官方 CLI 支持多种 BYOK。Farfold 沿用该外配新服务仍未实答。",
+        "existingEvidence": "登记 1.0.112，握手 1.0.114。原账号和新 Auto 已实答；十月原 Auto 的失败继续单列。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "1.59.1",
+      "officialAccount": "按模型提供方授权。声明 Configure Provider 提示 goose configure；各提供方可用自己的密钥或 OAuth，没有统一 Goose 账号。",
+      "agentOwnApi": "官方 goose configure 提供 OpenRouter 等模型服务。官方维护文档有 OpenAI 兼容、Anthropic 兼容、Ollama 自定义端点。",
+      "farfoldSavedApiEvidence": "不可直接选择，当前应用登记未开放任何 Farfold 保存的协议。",
+      "existingEvidence": "已保存 OpenRouter 免费 Super VL / Off 正式实答；旧 Ultra 同服务实答且实际用量费用为 0。",
+      "remainingAndUi": "1.59.1 厂商原始握手源码仅声明普通 Configure Provider 文案，没有终端参数。本地补充 configure 终端配方只匹配 1.52.0；现版本内嵌体验及各新端点仍需实际核验。 有现成服务先显示沿用设置；缺服务时提供 Goose 确切官方配置入口与返回后重查，区分现在能在应用内做的动作。",
+      "officialSources": [
+        "https://goose-docs.ai/docs/getting-started/providers/",
+        "https://goose-docs.ai/docs/getting-started/providers/#configure-custom-provider",
+        "https://github.com/aaif-goose/goose/releases/tag/v1.59.1",
+        "https://github.com/aaif-goose/goose/blob/v1.59.1/crates/goose/src/acp/server.rs#L1798-L1805"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-20-cycle12-goose-queue-recheck/README.md",
+        "src-tauri/src/acp_client/recipes.rs#L218-L229",
+        "src-tauri/src/acp_client/service_config.rs#L35-L62"
+      ],
+      "agentId": "goose",
+      "name": "Goose",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "没有统一 Goose 账号。按提供方授权，当前声明 Configure Provider。",
+        "agentOwnApi": "用 Goose 自己的 goose configure 配提供方。当前 1.59.1 的内嵌终端入口待核。",
+        "existingEvidence": "已有 OpenRouter 免费 Super VL／Off 正式实答。1.52.0 的内嵌配置配方不外推。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "登记 1.0.90；握手没有版本字段；旧实答 1.0.46",
+      "officialAccount": "桌面官方浏览器 OIDC，远端可用 grok login --device-auth；原账号有效可用已有设置。",
+      "agentOwnApi": "xAI Key 用 Agent 自己的 XAI_API_KEY；较新官方文档也有 ~/.grok/config.toml 自定义模型。此安装是否支持对应自定义兼容服务未实测。",
+      "farfoldSavedApiEvidence": "不适用 Farfold 保存的 API，用户在 Grok 配置后沿已有设置。",
+      "existingEvidence": "1.0.46 原服务 Grok 4.7／Low 实际续答；1.0.90 原两样本实际握手、读取，无新实答。新授权及取消仍待。",
+      "remainingAndUi": "已有设置；Agent 报 cached_token、Grok（账号方法）。",
+      "officialSources": [
+        "https://docs.x.ai/build/overview#run-grok",
+        "https://docs.x.ai/build/enterprise#authentication",
+        "https://docs.x.ai/build/settings/reference"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-19-cycle12-grok-startup-control/README.md",
+        "docs/evidence/2026-11-15-cycle12-continuation/README.md"
+      ],
+      "agentId": "grok-build",
+      "name": "Grok Build",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "官方浏览器 OIDC 或设备码。当前声明 cached_token 和 Grok。",
+        "agentOwnApi": "由 Grok 使用自己的 XAI_API_KEY 或按现行文档配置自定义模型。",
+        "existingEvidence": "1.0.46 原 Grok 4.7／Low 实答。当前登记 1.0.90 两次握手和历史读取已验，无新实答。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "登记及握手 7.8.1",
+      "officialAccount": "官方 kilo auth login，按提供方选择浏览器/设备登录或密钥；Gateway 免费模型也有官方匿名路径。",
+      "agentOwnApi": "另走 Kilo 的 provider 配置，或在 Kilo 控制台为 Gateway 添加其支持的 BYOK。两者和 Kilo 账户登录分别核。",
+      "farfoldSavedApiEvidence": "不适用 Farfold 保存的 API，沿用 Kilo 中已配置的服务。",
+      "existingEvidence": "现有 Kilo Gateway 免费 Ultra／None 实答；先前官方设备挑战与受控关闭各有证。当前真实账号、所用权益、新登录及取消仍待。",
+      "remainingAndUi": "已有设置；Login with Kilo。核验过的同一登记 ZIP 走同一 Kilo 的认证终端。",
+      "officialSources": [
+        "https://kilo.ai/docs/getting-started/setup-authentication",
+        "https://kilo.ai/docs/code-with-ai/platforms/cli-reference#kilo-auth-login",
+        "https://kilo.ai/docs/gateway/authentication",
+        "https://kilo.ai/docs/contributing/architecture/cli-runtime"
+      ],
+      "repoSources": [
+        "src-tauri/src/acp_client/recipes.rs#L65",
+        "docs/evidence/2026-11-06-phase1-next/README.md",
+        "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md"
+      ],
+      "agentId": "kilo",
+      "name": "Kilo",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "官方 kilo auth login。核验过的 7.8.1 登记可到 Kilo 终端。",
+        "agentOwnApi": "Kilo 自有提供方设置或 Gateway BYOK。Gateway 部分免费模型允许匿名。",
+        "existingEvidence": "7.8.1 原 Gateway 免费 Ultra／None 实答。真实账号权益、首次新登录与取消待验。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "登记及握手 0.7.7；0.2.7 旧版可选",
+      "officialAccount": "MiniMax Token Plan 走官方区域账号，在浏览器完成登录；中国区 mcode login，全球区 mcode login --region global。",
+      "agentOwnApi": "官方 mcode provider add，或受实测旧版覆盖的 /model → Add 3rd-party provider；三种格式 Chat Completions、Responses、Messages。当前官方 BYOK 文档明确无需 MiniMax 登录。",
+      "farfoldSavedApiEvidence": "不适用 Farfold 保存的 API，配置在 MiniMax 自己的官方入口，再选已有设置。",
+      "existingEvidence": "已有 Xiaomi MiMo 已正式实答并原配置冷续答。旧 M2.7、中国区账号和 50110 额度另列，不能从 MiMo 成功推断。",
+      "remainingAndUi": "已有设置；Sign in to MiniMax Code（终端）。",
+      "officialSources": [
+        "https://github.com/MiniMax-AI/minimax-code#2-sign-in-or-bring-your-own-api-key",
+        "https://github.com/MiniMax-AI/minimax-code/blob/main/docs/examples.md"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-16-cycle12-service-diagnosis/README.md",
+        "docs/evidence/2026-11-16-cycle12-account-retest/README.md#minimax-小米新对话",
+        "docs/evidence/2026-11-19-cycle12-minimax-077/README.md"
+      ],
+      "agentId": "minimax-code",
+      "name": "MiniMax",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "官方 Token Plan 按区域浏览器登录。",
+        "agentOwnApi": "mcode 的第三方提供方可用三类接口。官方 BYOK 不要求 MiniMax 账号。",
+        "existingEvidence": "现选 0.7.7，MiMo 已实答并冷续答。旧中国区 M2.7 的额度和身份另列。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "登记及握手 2.25.8",
+      "officialAccount": "Vibe 自家浏览器账号或 Vibe CLI setup 的服务密钥；接口声明区分账号和密钥。",
+      "agentOwnApi": "vibe --setup 或已有 provider/model 的 config.toml 及相应环境密钥。官方参考列多种兼容格式，其他提供方需按现用版本验证。",
+      "farfoldSavedApiEvidence": "不适用 Farfold 保存的 API。此处的「Register your API Key」由 Vibe 自己接收和保存。",
+      "existingEvidence": "已有 Mistral Medium 3.5／High 正式实答、原配置冷续答；新授权或指定 API 来源、账号及计费归属未现场验。",
+      "remainingAndUi": "已有设置；Sign in through Mistral AI Studio（账号）；Register your API Key（终端）。",
+      "officialSources": [
+        "https://docs.mistral.ai/vibe/code/cli/install-setup#choose-your-access-path",
+        "https://docs.mistral.ai/vibe/code/cli/api-keys-profiles",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/auth.py"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
+        "docs/evidence/2026-11-20-cycle12-mistral-regrant-cancel/README.md"
+      ],
+      "agentId": "mistral-vibe",
+      "name": "Mistral Vibe",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "2.25.8 分别声明 Mistral AI Studio 登录和 API Key 终端。",
+        "agentOwnApi": "密钥交给 Vibe 自己的设置流程。可在其原配置选其他兼容模型服务。",
+        "existingEvidence": "已有原服务 Medium 3.5／High 实答和冷续答。新账号、另一路 API 计费和实答待验。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "登记 1.18.31；已选实际握手 2.2.7",
+      "officialAccount": "OpenCode 官方 /connect 按提供方登录或输入其 Key，随后 /models；OpenCode 自家 Console 或 Go 只是可选来源。",
+      "agentOwnApi": "Agent 自身可用 /connect 或为兼容端点在 opencode.jsonc 配 provider。已有设置复用和 Farfold 新保存服务各自明确选择。",
+      "farfoldSavedApiEvidence": "可以。Chat Completions、Responses、Messages。选「模型 API 服务」及兼容已保存配置和模型；只测试 API 无法替代在真对话实答。",
+      "existingEvidence": "正式选新保存 Xiaomi Chat Completions / mimo-v2.6-flash 已准确实答并冷开；另外两种格式有受控路由证据，本份材料未把它们算作真实模型实答。",
+      "remainingAndUi": "已有设置；Login with opencode（终端）；模型 API 服务。",
+      "officialSources": [
+        "https://opencode.ai/docs/providers",
+        "https://opencode.ai/docs/console/models/"
+      ],
+      "repoSources": [
+        "src-tauri/src/acp_client/service_config.rs#L42",
+        "docs/evidence/2026-11-15-cycle12-pre-send/README.md",
+        "docs/evidence/2026-11-19-cycle12-draft-auth-return/README.md"
+      ],
+      "agentId": "opencode",
+      "name": "OpenCode",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": true,
+        "formats": ["chat-completions", "responses", "messages"]
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "2.2.7 握手声明 Login with opencode 终端。官方 /connect 按提供方授权。",
+        "agentOwnApi": "可用 /connect 和原配置接第三方服务，也可直接用 Farfold 集中配置。",
+        "existingEvidence": "登记 1.18.31，握手 2.2.7。Farfold 保存的小米 Chat Completions 已实答、已冷开。",
+        "farfoldSavedApi": "可选 Chat Completions、Responses、Messages。"
+      }
+    },
+    {
+      "versionAndDeclaration": "接入组件及握手 0.0.34；实际选中 Pi 0.87.1",
+      "officialAccount": "Pi 本身按提供方选择 /login，支持订阅登录或提供方 API Key；OpenRouter 可用原服务凭据。",
+      "agentOwnApi": "Pi /login 或指定环境密钥。兼容模型服务由 Pi 的 models.json 定义；额外协议或认证走 Pi 官方扩展。",
+      "farfoldSavedApiEvidence": "不适用 Farfold 保存的 API。先在独立 Pi CLI 配好，再用已有设置。",
+      "existingEvidence": "原 OpenRouter 免费 Ultra／Medium 正式带入并实际续答；程序页选中 0.87.1；旧 PATH 0.80.5 启动文案另列。真实新认证与其他服务未验。",
+      "remainingAndUi": "已有设置；Launch pi in the terminal（终端）。",
+      "officialSources": [
+        "https://docs.pi.dev/latest/models",
+        "https://docs.pi.dev/latest/providers#openrouter",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/README.md#prerequisites"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-17-cycle12-pi-history-scope/README.md",
+        "docs/evidence/2026-11-19-cycle12-pi-preparation/README.md"
+      ],
+      "agentId": "pi-acp",
+      "name": "Pi",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "当前声明打开 Pi 终端。Pi 按提供方用 /login 或已配置账号。",
+        "agentOwnApi": "提供方 Key 或环境变量，兼容地址从 Pi 的 models.json 设置。",
+        "existingEvidence": "组件 0.0.34，所选 Pi 0.87.1。已有 OpenRouter 免费 Ultra／Medium 已带入并续答。",
+        "farfoldSavedApi": "不可选。"
+      }
+    },
+    {
+      "versionAndDeclaration": "登记及握手 1.1.89",
+      "officialAccount": "Qoder 本身要求认证，/login 选浏览器账号或 Qoder PAT；QODER_PERSONAL_ACCESS_TOKEN 优先于保存登录。",
+      "agentOwnApi": "Qoder CLI /model → Custom 的官方 BYOK。现行官方文档列个人版及账号动态目录；服务商 API Key 和 Qoder PAT 分别授权。",
+      "farfoldSavedApiEvidence": "不适用 Farfold 保存的 API。先在 Qoder 的原向导配置，回 Farfold 沿用已有设置。",
+      "existingEvidence": "用户已配 Xiaomi MiMo，正式短测、普通新建和同原 ID 冷续答均成功；旧 Auto 仍分别记录为不可用。其他账号权限、费用和登录取消未验。",
+      "remainingAndUi": "已有设置；Login with qodercli（终端）。",
+      "officialSources": [
+        "https://docs.qoder.com/cli/authentication",
+        "https://docs.qoder.com/cli/custom-models"
+      ],
+      "repoSources": [
+        "docs/evidence/2026-11-15-cycle12-pre-send/qoder-xiaomi-formal-2026-11-16.json",
+        "docs/evidence/2026-11-16-cycle12-eight-check/README.md"
+      ],
+      "agentId": "qoder",
+      "name": "Qoder",
+      "farfoldSavedApi": {
+        "selectableOnCompatibleRegistration": false,
+        "formats": []
+      },
+      "userDeferred": false,
+      "appendixSummary": {
+        "officialAccount": "1.1.89 声明官方登录终端。Qoder 官方账号或 PAT 先认证。",
+        "agentOwnApi": "Qoder CLI 的 /model → Custom 配官方目录支持的 BYOK，取决于账号与套餐。",
+        "existingEvidence": "用户已配 MiMo，正式短测、新建和冷续答均成功。旧 Auto 单列为不可用。",
+        "farfoldSavedApi": "不可选。"
+      }
+    }
+  ]
+}

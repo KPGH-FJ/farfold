@@ -203,6 +203,10 @@ pub async fn session_open(
     let identity_read = super::identity_read::capability(&connection);
     let session_tool_inventory =
         super::session_tools::opened_capability(&connection, &opened.session_id, &opened.response);
+    let legacy_thought_mode_mirror = opened.declared_thought_mode_mirror.filter(|_| {
+        opened.connection_id == connection.connection_id
+            && super::session_config::pi::reviewed_component(&row, connection.handshake.get())
+    });
     let source = connection.service;
     let cwd_string = cwd.to_string_lossy().into_owned();
     if resumed {
@@ -227,6 +231,7 @@ pub async fn session_open(
         cwd: cwd_string,
         config_options: opened.config_options.unwrap_or(Value::Null),
         config_options_modern: opened.config_options_modern,
+        legacy_thought_mode_mirror,
         config_check: opened.config_check,
         permission_config_id: opened.permission_config_id,
         permission_state: opened.permission_state,

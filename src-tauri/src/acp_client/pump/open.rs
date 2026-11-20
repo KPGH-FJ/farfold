@@ -538,6 +538,9 @@ pub(crate) async fn open_session_on_connection(
         .await
         .map_err(|_| "会话未能打开，请重试".to_string())??;
     opening_route.delivered = true;
+    let declared_thought_mode_mirror = (!resumed)
+        .then(|| super::super::session_config::pi::declared_thought_mode_mirror(&response))
+        .flatten();
     if !dialect.is_vibe_family()
         && let Some(options) = &ready.options
     {
@@ -555,6 +558,7 @@ pub(crate) async fn open_session_on_connection(
         response,
         config_options: ready.options,
         config_options_modern: ready.config_options_modern,
+        declared_thought_mode_mirror,
         config_check: ready.check,
         permission_config_id: ready.permission_config_id,
         permission_state: ready.permission_state,

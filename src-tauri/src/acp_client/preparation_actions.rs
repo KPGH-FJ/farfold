@@ -19,6 +19,9 @@ use crate::{
 };
 
 mod amp_login;
+mod connection_guidance;
+
+pub(super) use connection_guidance::{ConnectionGuidance, OfficialMethodRole, guidance_for};
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]

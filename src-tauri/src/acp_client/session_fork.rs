@@ -184,6 +184,7 @@ fn opened_result(
         cwd: cwd.to_string_lossy().into_owned(),
         config_options: opened.config_options.unwrap_or(Value::Null),
         config_options_modern: opened.config_options_modern,
+        legacy_thought_mode_mirror: None,
         config_check: opened.config_check,
         permission_config_id: opened.permission_config_id,
         permission_state: opened.permission_state,

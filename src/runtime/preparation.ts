@@ -39,7 +39,23 @@ export interface PreparationInfo {
   dependencies: AgentDependency[];
   links: PreparationLink[];
   actions?: PreparationAction[];
+  connectionGuidance?: ConnectionGuidance[];
+  officialMethodRoles?: OfficialMethodRole[];
   installationOptions?: InstallationOptions;
+}
+
+export interface ConnectionGuidance {
+  kind: "official_setup" | "official_sign_in";
+  label: string;
+  url: string;
+  command?: string;
+  methodId?: string;
+}
+
+export interface OfficialMethodRole {
+  methodId: string;
+  kind: "agent" | "terminal";
+  role: "reuse" | "credential" | "configuration" | "external";
 }
 
 export interface PreparationAction {

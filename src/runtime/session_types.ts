@@ -335,6 +335,8 @@ export interface ThreadState extends ReportedDetailsOwner {
   /** Agent exposes `modes` outside `configOptions` — the synthetic `mode`
    *  option routes to `session/set_mode` instead of `set_config_option`. */
   modesSeparate: boolean;
+  /** Current value of equivalent thinking declarations on this fresh connection. */
+  legacyThoughtModeMirror?: string;
   /** Restored choices differ from the latest confirmed configuration. */
   /** Derived from the backend config check, including reasoning and unknown values. */
   modelDrift: boolean;

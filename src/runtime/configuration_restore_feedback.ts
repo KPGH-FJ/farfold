@@ -91,6 +91,11 @@ class SavedConfigurationRestoreError extends Error {
   }
 }
 
+export function requireConfigurationReadback(confirmed: boolean): void {
+  if (!confirmed)
+    throw new SavedConfigurationRestoreError("readback-unconfirmed");
+}
+
 export function requireSavedConfigurationOption(
   options: readonly ConfigOptionView[] | undefined,
   id: string,
@@ -114,13 +119,12 @@ export function requireRestoredConfigurationValues(
 ): void {
   if (!choices.length) return;
   if (!options) throw new Error(STRINGS.repair.configFailed);
-  if (
-    choices.some(
+  requireConfigurationReadback(
+    choices.every(
       ([id, value]) =>
-        options.find((item) => item.id === id)?.currentValue !== value,
-    )
-  )
-    throw new SavedConfigurationRestoreError("readback-unconfirmed");
+        options.find((item) => item.id === id)?.currentValue === value,
+    ),
+  );
 }
 
 interface RestoreNotice extends UiNotice {

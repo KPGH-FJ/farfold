@@ -830,6 +830,86 @@ it("explains a missing saved mode after restoring modern model and thinking with
   ]);
 });
 
+it("restores the exact saved model and thinking from a verified duplicate legacy mode", async () => {
+  const choice = {
+    model: "kept-choice",
+    thought_level: "medium",
+    mode: "medium",
+  };
+  const before = composerDrafts.read("new");
+  startRestore(choice);
+  h.live!.legacyThoughtModeMirror = "low";
+  await vi.advanceTimersByTimeAsync(300);
+  const ready = await settle();
+  expect(h.setConfig.mock.calls).toEqual([
+    ["prepared-a", "model", "kept-choice"],
+    ["prepared-a", "thought_level", "medium"],
+  ]);
+  expect(h.confirmRestored).toHaveBeenCalledExactlyOnceWith("prepared-a", {
+    model: "kept-choice",
+    thought_level: "medium",
+  });
+  expect(ready.composer.props.disabled).toBe(false);
+  expect(ready.composer.props.sendRequest).toBe(0);
+  expect(composerDrafts.read("new")).toBe(before);
+  expect(choice).toEqual({
+    model: "kept-choice",
+    thought_level: "medium",
+    mode: "medium",
+  });
+});
+
+it("does not substitute the currently reported model when the original model is no longer selectable", async () => {
+  const choice = {
+    model: "old-model",
+    thought_level: "medium",
+    mode: "medium",
+  };
+  const before = composerDrafts.read("new");
+  startRestore(choice);
+  h.live!.legacyThoughtModeMirror = "low";
+  await expectRestoreFailure(restoreCopy.unavailable, before, choice);
+  expect(h.setConfig).not.toHaveBeenCalled();
+  expect(h.confirmRestored).not.toHaveBeenCalled();
+});
+
+it.each([
+  ["different saved values", "high", "low"],
+  ["changed initial readback", "medium", "off"],
+])(
+  "does not collapse an apparent legacy mode with %s",
+  async (_case, mode, proof) => {
+    const choice = { model: "kept-choice", thought_level: "medium", mode };
+    const before = composerDrafts.read("new");
+    startRestore(choice);
+    h.live!.legacyThoughtModeMirror = proof;
+    await expectRestoreFailure(restoreCopy.missing, before, choice);
+    expect(h.confirmRestored).not.toHaveBeenCalled();
+  },
+);
+
+it("requires review if a real mode appears during restore", async () => {
+  const choice = {
+    model: "kept-choice",
+    thought_level: "medium",
+    mode: "medium",
+  };
+  const before = composerDrafts.read("new");
+  startRestore(choice);
+  h.live!.legacyThoughtModeMirror = "low";
+  const restore = h.setConfig.getMockImplementation()!;
+  h.setConfig.mockImplementation(async (...args) => {
+    await restore(...args);
+    if (args[1] === "thought_level")
+      h.live!.configOptions.push({
+        ...configOption("mode", "medium", ["medium"]),
+        category: "mode",
+      });
+  });
+  await expectRestoreFailure(restoreCopy.readback, before, choice);
+  expect(h.confirmRestored).not.toHaveBeenCalled();
+});
+
 it("opens model settings from a blocked picker without applying an obsolete saved model", async () => {
   const choice = { __farfold_legacy_model: "qfmodel", mode: "default" };
   const before = composerDrafts.read("new");

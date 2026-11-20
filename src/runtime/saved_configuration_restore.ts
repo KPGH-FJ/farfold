@@ -6,10 +6,11 @@ import {
 } from "./config_check";
 import { configChangeBusyReason, protectedConfigIds } from "./protected_config";
 import { isDraftAnnouncement, modelConfigOption } from "./session_projection";
-import type { ThreadState } from "./session_types";
+import type { ConfigOptionView, ThreadState } from "./session_types";
 import { STRINGS } from "./strings";
 import {
   requireSavedConfigurationOption,
+  requireConfigurationReadback,
   requireRestoredConfigurationValues,
   ConfigurationConfirmationError,
   configurationConfirmationRejection,
@@ -73,6 +74,22 @@ export function configurationRestoreIntent(
   return saved;
 }
 
+function unambiguousThoughtOption(options: readonly ConfigOptionView[]) {
+  if (options.some(({ id, category }) => id === "mode" || category === "mode"))
+    return undefined;
+  const candidates = options.filter(
+    ({ id, category }) =>
+      id === "thought_level" || category === "thought_level",
+  );
+  const [thought] = candidates;
+  return candidates.length === 1 &&
+    thought?.id === "thought_level" &&
+    thought.category === "thought_level" &&
+    thought.type === "select"
+    ? thought
+    : undefined;
+}
+
 /** Restore the original complete map before protecting its declared choices. */
 export async function restoreSavedConfiguration(
   state: ThreadState,
@@ -80,10 +97,26 @@ export async function restoreSavedConfiguration(
   hooks: RestoreHooks,
 ): Promise<boolean> {
   const saved = structuredClone(selection);
+  const redundantLegacyMode =
+    state.identity === "draft" &&
+    typeof state.legacyThoughtModeMirror === "string" &&
+    unambiguousThoughtOption(state.configOptions)?.currentValue ===
+      state.legacyThoughtModeMirror &&
+    typeof saved.mode === "string" &&
+    saved.mode === saved.thought_level;
+  if (redundantLegacyMode) delete saved.mode;
   const modelId = modelConfigOption(state.configOptions)?.id;
   const choices = Object.entries(saved).sort(
     ([a], [b]) => Number(b === modelId) - Number(a === modelId),
   );
+  const requireReadback = () => {
+    requireRestoredConfigurationValues(state.configOptions, choices);
+    // A later real mode or competing thought option invalidates the mirror.
+    if (redundantLegacyMode)
+      requireConfigurationReadback(
+        unambiguousThoughtOption(state.configOptions) !== undefined,
+      );
+  };
   for (const [id, value] of choices) {
     if (!hooks.current()) return false;
     const option = requireSavedConfigurationOption(
@@ -100,16 +133,16 @@ export async function restoreSavedConfiguration(
     requireRestoredConfigurationValues(state.configOptions, [[id, value]]);
   }
   if (!hooks.current()) return false;
-  requireRestoredConfigurationValues(state.configOptions, choices);
+  requireReadback();
   const protectedIds = protectedConfigIds(state.configOptions);
   const mustConfirm = choices.some(([id]) => protectedIds.has(id));
   if (mustConfirm) {
     await hooks.validateService();
     if (!hooks.current()) return false;
-    requireRestoredConfigurationValues(state.configOptions, choices);
+    requireReadback();
     await hooks.confirm(saved);
     if (!hooks.current()) return false;
-    requireRestoredConfigurationValues(state.configOptions, choices);
+    requireReadback();
   }
   return true;
 }

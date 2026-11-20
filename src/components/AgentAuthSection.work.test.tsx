@@ -50,8 +50,8 @@ vi.mock("../runtime/sessions", () => ({
   useThreadsSnapshot: () => ({ threads: h.threads }),
   threads: { getSnapshot: () => ({ threads: h.threads }) },
 }));
-vi.mock("../runtime/preparation", () => ({
-  getAgentPreparation: vi.fn(async () => ({ actions: [] })),
+vi.mock("./useConnectionPreparation", () => ({
+  useConnectionPreparation: () => ({ loading: false, retry: vi.fn() }),
 }));
 vi.mock("./ManualAuthSection", () => ({ ManualAuthSection: () => null }));
 vi.mock("./InlineTerminal", () => ({ InlineTerminal: () => null }));

@@ -154,6 +154,47 @@ async fn auth_declaration_unknown_types_never_dispatch_after_live_sdk_decode() {
 }
 
 #[tokio::test]
+async fn auth_declaration_gateway_never_dispatches_plain_or_key_authentication() {
+    let directory = tempfile::tempdir().unwrap();
+    let manager = AcpManager::new(directory.path().into(), directory.path().into());
+    let (_, mut commands) = register_method(
+        &manager,
+        "/a",
+        None,
+        false,
+        serde_json::json!({"id":"gateway","name":"Gateway","_meta":{
+            "gateway":{"protocol":"google","baseUrl":"https://example.invalid"},
+            "api-key":{"provider":"openai"}
+        }}),
+    );
+    for key in [
+        None,
+        Some(
+            super::super::auth_route::ProtocolApiKey::new(
+                "openai".into(),
+                "gateway-fixture-key".into(),
+            )
+            .unwrap(),
+        ),
+    ] {
+        let outcome = tokio::time::timeout(
+            Duration::from_millis(40),
+            manager.authenticate_with_key(
+                "example",
+                Path::new("/a"),
+                "gateway",
+                key,
+                AuthenticationOperation::new(),
+                Arc::new(|| {}),
+            ),
+        )
+        .await;
+        assert!(matches!(outcome, Ok(Err(_))));
+        assert!(commands.try_recv().is_err());
+    }
+}
+
+#[tokio::test]
 async fn authentication_keeps_the_requested_directory_and_shared_scope() {
     let directory = tempfile::tempdir().unwrap();
     let manager = AcpManager::new(directory.path().into(), directory.path().into());

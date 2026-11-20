@@ -237,6 +237,7 @@ pub(crate) struct OpenedSession {
     /// Latest `configOptions` array after applying requested overrides.
     pub config_options: Option<Value>,
     pub config_options_modern: bool,
+    pub declared_thought_mode_mirror: Option<String>,
     pub config_check: super::model_guard::ConfigCheck,
     pub permission_config_id: Option<String>,
     pub permission_state: &'static str,

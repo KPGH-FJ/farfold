@@ -56,6 +56,42 @@ fn auth_declaration_only_public_names_cross_the_connection_boundary() {
 }
 
 #[test]
+fn auth_declaration_gateway_goes_to_public_cache_and_live_dispatch_only_as_presence() {
+    const SECRET: &str = "gateway-configuration-sensitive-test-canary";
+    let h = read(json!([
+        {"id":"gateway","name":"Gateway","_meta":{"gateway":{
+            "protocol":"google","baseUrl":format!("https://example.invalid/{SECRET}"),
+            "headers":{"x-api-key":SECRET}
+        }}},
+        {"id":"gateway-terminal","name":"Terminal","type":"terminal","args":[SECRET],
+         "env":{"FIXTURE_KEY":SECRET},"_meta":{"gateway":null}},
+        {"id":"gateway-key","name":"Key","_meta":{
+            "gateway":false,"api-key":{"provider":"openai"}
+        }},
+        {"id":"login","name":"Login"},
+        {"id":"ordinary-key","name":"Key","_meta":{"api-key":{"provider":"openai"}}}
+    ]));
+    for view in [
+        h.execution_json(),
+        h.public_json(),
+        cached_json(Some(&h.public_json())),
+    ] {
+        assert!(!view.to_string().contains(SECRET));
+        for method in view["authMethods"].as_array().unwrap().iter().take(3) {
+            assert_eq!(method["_meta"], json!({"gateway":true}));
+            assert!(method.get("args").is_none());
+            assert!(method.get("env").is_none());
+        }
+    }
+    for id in ["gateway", "gateway-terminal", "gateway-key"] {
+        assert!(!h.protocol_method(id));
+        assert!(h.protocol_api_key_provider(id).is_none());
+    }
+    assert!(h.protocol_method("login"));
+    assert_eq!(h.protocol_api_key_provider("ordinary-key"), Some("openai"));
+}
+
+#[test]
 fn auth_declaration_malformed_terminal_containers_never_become_default_invocations() {
     for extra in [
         json!({"args":["login",false]}),

@@ -90,6 +90,15 @@ export function applyOpeningResult(
   state.configOptions = normalizeConfigOptions(result.configOptions);
   state.currentModeId = null;
   state.modesSeparate = false;
+  state.legacyThoughtModeMirror =
+    !result.resumed &&
+    result.configOptionsModern === true &&
+    typeof result.connectionId === "string" &&
+    result.connectionId.length > 0 &&
+    typeof result.legacyThoughtModeMirror === "string" &&
+    /^[a-z]{1,32}$/.test(result.legacyThoughtModeMirror)
+      ? result.legacyThoughtModeMirror
+      : undefined;
   state.configCheck = null;
   state.modelDrift = false;
   state.configError = null;

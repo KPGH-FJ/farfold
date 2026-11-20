@@ -49,6 +49,7 @@ pub(crate) enum UnavailableReason {
     ProgramMismatch,
     ScriptMismatch,
     ApiKeyProviderUnsupported,
+    GatewayConfigurationUnsupported,
     Unverified,
 }
 
@@ -68,6 +69,9 @@ impl UnavailableReason {
             Self::ScriptMismatch => "此登录方式的脚本与当前程序不一致，请在更多登录方式中明确配置",
             Self::ApiKeyProviderUnsupported => {
                 "此登录方式的服务尚不能直接使用密钥，请使用其他登录方式"
+            }
+            Self::GatewayConfigurationUnsupported => {
+                "此处不能填写此方式所需的网关设置，请先按官方说明配置，再沿用已有设置"
             }
             Self::Unverified => UNAVAILABLE,
         }
@@ -92,10 +96,15 @@ pub(crate) enum Route {
     Unavailable(UnavailableReason),
 }
 
+pub(super) fn declares_gateway(method: &Value) -> bool {
+    method.pointer("/_meta/gateway").is_some()
+}
+
 /// The same declaration-only guard is used by the live protocol dispatcher.
 /// A terminal extension that needs target verification can never fall through.
 pub(crate) fn protocol_method(method: &Value) -> bool {
     method.get("_farfoldInvalid") != Some(&Value::Bool(true))
+        && !declares_gateway(method)
         && matches!(method.get("type"), None | Some(Value::String(_)))
         && method
             .get("type")
@@ -112,6 +121,7 @@ pub(crate) fn protocol_method(method: &Value) -> bool {
 /// Unknown providers remain declarations, but do not gain execution authority.
 pub(crate) fn protocol_api_key_provider(method: &Value) -> Option<&str> {
     if method.get("_farfoldInvalid") == Some(&Value::Bool(true))
+        || declares_gateway(method)
         || !matches!(method.get("type"), None | Some(Value::String(_)))
         || method
             .get("type")
@@ -364,6 +374,9 @@ pub(crate) fn route(row: &AgentRow, method: &Value, proof: &ManagedTerminalProof
     use UnavailableReason::{InvalidDeclaration, Unverified};
     if method.get("_farfoldInvalid") == Some(&Value::Bool(true)) {
         return Route::Unavailable(InvalidDeclaration);
+    }
+    if declares_gateway(method) {
+        return Route::Unavailable(UnavailableReason::GatewayConfigurationUnsupported);
     }
     if method.get("type").and_then(Value::as_str) == Some("env_var") {
         let Some(vars) = method.get("vars").and_then(Value::as_array) else {

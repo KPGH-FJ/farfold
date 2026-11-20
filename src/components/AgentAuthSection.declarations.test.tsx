@@ -7,6 +7,7 @@ import {
 } from "react";
 import type { AgentAuthSectionProps } from "./AgentAuthSection";
 import type { ThreadState } from "../runtime/session_types";
+import type { PreparationInfo } from "../runtime/preparation";
 
 const h = vi.hoisted(() => ({
   cursor: 0,
@@ -14,7 +15,7 @@ const h = vi.hoisted(() => ({
   effects: [] as { deps?: unknown[]; cleanup?: () => void }[],
   pending: [] as (() => void)[],
   methods: vi.fn(),
-  preparation: vi.fn(async () => ({ actions: [] as unknown[] })),
+  preparation: vi.fn<() => Promise<Partial<PreparationInfo>>>(async () => ({})),
   begin: vi.fn(),
   recheck: vi.fn(async () => {}),
   configure: vi.fn(),
@@ -90,7 +91,8 @@ vi.mock("../runtime/sessions", () => ({
   useThreadsSnapshot: () => ({ threads: h.threads }),
   threads: { getSnapshot: () => ({ threads: h.threads }) },
 }));
-vi.mock("../runtime/preparation", () => ({
+vi.mock("../runtime/preparation", async (original) => ({
+  ...(await original<typeof import("../runtime/preparation")>()),
   getAgentPreparation: h.preparation,
 }));
 vi.mock("./ManualAuthSection", () => ({ ManualAuthSection: () => null }));
@@ -214,6 +216,76 @@ beforeEach(() => {
 });
 afterEach(() => {
   for (const effect of h.effects) effect?.cleanup?.();
+});
+
+it("explains official external setup without choosing or executing its no-op method", async () => {
+  const guidance = [
+    {
+      kind: "official_setup" as const,
+      label: "Set up a provider",
+      url: "https://example.com/official-setup",
+      command: "setup configure",
+      methodId: "method",
+    },
+  ];
+  h.methods.mockResolvedValue(response("agent", "Configure Provider"));
+  h.preparation.mockResolvedValue({
+    connectionGuidance: guidance,
+    officialMethodRoles: [
+      { methodId: "method", kind: "agent", role: "external" },
+    ],
+  });
+  const nodes = await settled();
+  const picker = nodes.find((node) => node.type === AgentConnectionPicker)!;
+  expect(picker.props.guidance).toEqual(guidance);
+  expect(picker.props.options).toEqual([]);
+  expect(
+    button(nodes, R.accountContinue("Configure Provider")),
+  ).toBeUndefined();
+  expect(h.begin).not.toHaveBeenCalled();
+});
+
+it("labels a verified cached credential as reuse and executes its declared method", async () => {
+  h.preparation.mockResolvedValue({
+    officialMethodRoles: [{ methodId: "method", kind: "agent", role: "reuse" }],
+  });
+  const nodes = await settled();
+  const picker = nodes.find((node) => node.type === AgentConnectionPicker)!;
+  expect(picker.props.options).toEqual([
+    expect.objectContaining({ group: R.groupReuse, description: R.reuseHint }),
+  ]);
+  (button(nodes, R.reuseContinue)!.props.onClick as () => void)();
+  expect(h.begin).toHaveBeenCalledExactlyOnceWith(
+    expect.objectContaining({
+      method: expect.objectContaining({ id: "method", kind: "agent" }),
+    }),
+  );
+});
+
+it("preserves a current executable declaration with a different transport", async () => {
+  h.methods.mockResolvedValue(response("terminal", "Current terminal setup"));
+  h.preparation.mockResolvedValue({
+    connectionGuidance: [
+      {
+        kind: "official_setup",
+        label: "Set up a provider",
+        url: "https://example.com/official-setup",
+        methodId: "method",
+      },
+    ],
+    officialMethodRoles: [
+      { methodId: "method", kind: "agent", role: "external" },
+    ],
+  });
+  const nodes = await settled();
+  const picker = nodes.find((node) => node.type === AgentConnectionPicker)!;
+  expect(picker.props.options).toEqual([
+    expect.objectContaining({
+      title: "Current terminal setup",
+      group: R.groupTerminal,
+    }),
+  ]);
+  expect(button(nodes, R.terminalStart)?.props.disabled).toBe(false);
 });
 
 it("rejects a login callback from a previous method-table request and executes only the refreshed declaration", async () => {

@@ -12,6 +12,7 @@ use super::{
 
 pub(crate) const LEGACY_MODEL_ID: &str = "__farfold_legacy_model";
 mod deferred;
+pub(super) mod pi;
 mod vibe;
 pub(crate) use deferred::Deferred;
 pub(super) use vibe::THINKING_ID;

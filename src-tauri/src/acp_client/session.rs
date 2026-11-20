@@ -1357,6 +1357,8 @@ pub struct SessionOpenResult {
     pub cwd: String,
     pub config_options: Value,
     pub config_options_modern: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub legacy_thought_mode_mirror: Option<String>,
     pub config_check: super::model_guard::ConfigCheck,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub permission_config_id: Option<String>,

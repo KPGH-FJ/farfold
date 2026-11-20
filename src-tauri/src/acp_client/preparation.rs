@@ -87,6 +87,10 @@ pub struct PreparationInfo {
     pub actions: Vec<super::preparation_actions::PreparationAction>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub installation_options: Option<super::installation_parameters::InstallationOptions>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub connection_guidance: Vec<super::preparation_actions::ConnectionGuidance>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub official_method_roles: Vec<super::preparation_actions::OfficialMethodRole>,
 }
 
 // Public account guidance, verified 2026-09-28. These links never authenticate
@@ -519,6 +523,8 @@ fn preparation_info_refresh(
         links: links(agent_id),
         actions: vec![],
         installation_options: None,
+        connection_guidance: vec![],
+        official_method_roles: vec![],
     })
 }
 
@@ -559,17 +565,25 @@ pub async fn agent_preparation(
 ) -> Result<PreparationInfo, String> {
     tauri::async_runtime::spawn_blocking(move || {
         let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
-        let row = app.state::<MetaStore>().get_agent(&agent_id)?;
+        let store = app.state::<MetaStore>();
+        let catalog = app.state::<crate::agent_catalog::AgentCatalog>();
+        let row = store.get_agent(&agent_id)?;
         let mut info = preparation_with_catalog_refresh(
             &agent_id,
             row.as_ref(),
             &data,
-            &app.state::<crate::agent_catalog::AgentCatalog>(),
+            &catalog,
             refresh.unwrap_or(false),
         )?;
         if let Some(row) = &row {
-            info.actions =
-                super::preparation_actions::actions_for(&app.state::<MetaStore>(), row, &data)?;
+            info.actions = super::preparation_actions::actions_for(&store, row, &data)?;
+            let discovered = if row.source == "discovered" {
+                catalog.discovered_cached().unwrap_or_default()
+            } else {
+                vec![]
+            };
+            (info.connection_guidance, info.official_method_roles) =
+                super::preparation_actions::guidance_for(&store, row, &data, &discovered);
         }
         Ok(info)
     })

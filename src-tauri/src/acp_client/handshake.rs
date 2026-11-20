@@ -147,6 +147,12 @@ fn declaration(raw: &Value) -> Option<Value> {
     if let Some(kind) = kind {
         method["type"] = text(Some(kind), 64).unwrap_or("unsupported").into();
     }
+    if super::auth_route::declares_gateway(raw) {
+        // A declaration can require gateway settings this client cannot supply.
+        // Retain only its presence, even on an otherwise valid terminal method.
+        method["_meta"] = json!({"gateway":true});
+        return Some(method);
+    }
     let kind = kind.and_then(Value::as_str);
     if kind == Some("env_var") {
         if let Some(vars) = vars(raw.get("vars")) {
@@ -194,6 +200,9 @@ fn public_method(method: &Value) -> Value {
         if let Some(value) = method.get(key) {
             public[key] = value.clone();
         }
+    }
+    if super::auth_route::declares_gateway(method) {
+        public["_meta"] = json!({"gateway":true});
     }
     public
 }

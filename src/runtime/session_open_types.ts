@@ -15,6 +15,7 @@ export interface OpenResult {
   cwd: string;
   configOptions: unknown;
   configOptionsModern?: boolean;
+  legacyThoughtModeMirror?: string;
   modes?: unknown;
   models?: unknown;
   meta?: unknown;

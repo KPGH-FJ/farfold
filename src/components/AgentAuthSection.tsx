@@ -32,10 +32,8 @@ import { AgentAccountLinks } from "./AgentAccountLinks";
 import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
 import { AgentPreparationActions } from "./AgentPreparationActions";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
-import {
-  getAgentPreparation,
-  type PreparationAction,
-} from "../runtime/preparation";
+import { officialLink, type PreparationAction } from "../runtime/preparation";
+import { useConnectionPreparation } from "./useConnectionPreparation";
 import {
   authMethodReadOnly,
   authMethodUnavailable,
@@ -54,7 +52,9 @@ import {
 } from "../runtime/access_primary";
 import {
   authConnectionOptions,
-  groupedAuthMethods,
+  authMethodContinue,
+  authMethodGroup,
+  currentMethodRoles,
   methodTitle,
 } from "./agent_auth_options";
 import {
@@ -87,12 +87,12 @@ const methodSignature = (
     method.unavailableReason ?? null,
   ]);
 
-/** Shared account operation state survives navigation; only this view is local. */
 export function AgentAuthSection({
   agentId,
   cwd,
   source,
   apiState = "unknown",
+  apiUnavailableReason,
   methodId,
   onMethodChange,
   onConfigureKey,
@@ -116,8 +116,7 @@ export function AgentAuthSection({
   const targetKey = JSON.stringify([agentId, directory, source ?? null]);
   const target = useRef(targetKey);
   const currentView = useRef("");
-  // Committing a method choice advances the view key; the destination key
-  // stays acceptable so a still-running execution is not treated as stale.
+  // Accept the committed destination key while the operation is still running.
   const acceptedView = useRef<string | null>(null);
   target.current = targetKey;
   const modelNavigation = useRef(canOpenModels);
@@ -131,11 +130,26 @@ export function AgentAuthSection({
     count: 0,
   });
   const info = methodsOwner.current === targetKey ? loadedInfo : null;
+  const preparation = useConnectionPreparation(agentId, program, !!info);
+  const { info: preparationInfo, error: actionsError } = preparation;
+  const { actions = [], connectionGuidance = [] } = preparationInfo ?? {};
+  const officialMethodRoles = currentMethodRoles(
+    info?.methods ?? [],
+    preparationInfo?.officialMethodRoles ?? [],
+  );
   const methods = (info?.methods ?? []).filter(
     (method) =>
-      method.kind !== "api-key" ||
-      !!method.apiKeyProvider ||
-      apiState !== "unsupported",
+      (method.kind !== "api-key" ||
+        !!method.apiKeyProvider ||
+        apiState !== "unsupported") &&
+      !officialMethodRoles.some(
+        (item) =>
+          item.methodId === method.id &&
+          item.role === "external" &&
+          connectionGuidance.some(
+            (guide) => guide.methodId === method.id && officialLink(guide.url),
+          ),
+      ),
   );
   const [error, setError] = useState<string | null>(null);
   const [methodsError, setMethodsError] = useState<string | null>(null);
@@ -143,9 +157,6 @@ export function AgentAuthSection({
   const [reload, setReload] = useState(0);
   const [hidden, setHidden] = useState(false);
   const [manualBusy, setManualBusy] = useState(false);
-  const [actions, setActions] = useState<PreparationAction[]>([]);
-  const [actionsError, setActionsError] = useState<string | null>(null);
-  const [actionRevision, retryActions] = useState(0);
   const [localActionId, setLocalActionId] = useState<string | null>(null);
   const [changingConnection, setChangingConnection] = useState(false);
   const [localStage, setLocalStage] = useState<"method" | "account">("method");
@@ -205,21 +216,6 @@ export function AgentAuthSection({
     setRegistrationNotice(false);
     setPreparing(false);
   }, [agentId, directory, source]);
-  useEffect(() => {
-    let current = true;
-    setActions([]);
-    setActionsError(null);
-    void getAgentPreparation(agentId)
-      .then((value) => {
-        if (current) setActions(value.actions ?? []);
-      })
-      .catch((reason) => {
-        if (current) setActionsError(uiError(reason, C.loadFailed));
-      });
-    return () => {
-      current = false;
-    };
-  }, [agentId, program, actionRevision]);
   useEffect(() => {
     onBusyChange?.(occupied);
     return () => onBusyChange?.(false);
@@ -758,14 +754,17 @@ export function AgentAuthSection({
                     : protocolLogin
                       ? S.loginWaiting
                       : S.waiting;
-  const groupedMethods = groupedAuthMethods(methods);
   const connectionOptions = authConnectionOptions({
     connection,
     existingAccount,
     methods,
     actions,
     apiState,
+    roles: officialMethodRoles,
   });
+  const hasConnectionChoices = !!(
+    connectionOptions.length || connectionGuidance.length
+  );
   const existingSelected =
     !!connection &&
     connection.choice === "existing" &&
@@ -819,7 +818,6 @@ export function AgentAuthSection({
       setSelectedMethodId(id);
       if (connection) connection.onChoice("login", id);
       else onMethodChange?.(id);
-      // The API-key form is the account stage; other kinds run in place.
       const picked = methods.find((method) => method.id === id);
       if (picked?.apiKeyProvider) setStage("account");
     }
@@ -889,11 +887,10 @@ export function AgentAuthSection({
     !apiSelected &&
     !selectedAction &&
     stage === "account";
-  /** The method-stage primary executes directly: agent login runs the declared
-   *  method, terminal starts the inline terminal, and API keys open the form. */
   const executeSelected = () => {
     if (
       !selectedMethod ||
+      preparation.loading ||
       occupied ||
       busy ||
       workBlocked ||
@@ -911,8 +908,6 @@ export function AgentAuthSection({
     setSelectedMethodId(selectedMethod.id);
     if (connection) connection.onChoice("login", selectedMethod.id);
     else onMethodChange?.(selectedMethod.id);
-    // Committing the selection advances the view key; record it so the
-    // (possibly asynchronous) execution still belongs to the visible view.
     acceptedView.current = JSON.stringify([
       targetKey,
       stage,
@@ -944,20 +939,19 @@ export function AgentAuthSection({
             methodSignature(selectedMethod),
             stage,
           ]),
-          label:
-            selectedMethod.kind === "terminal"
-              ? R.terminalStart
-              : selectedMethod.kind === "api-key"
-                ? R.keyContinue(methodTitle(selectedMethod))
-                : loginAgain(selectedMethod)
-                  ? S.loginAgain
-                  : R.accountContinue(methodTitle(selectedMethod)),
+          label: authMethodContinue(
+            selectedMethod,
+            officialMethodRoles,
+            loginAgain(selectedMethod),
+            S.loginAgain,
+          ),
           disabled:
             occupied ||
             busy ||
             workBlocked ||
             !directory ||
             !!source ||
+            preparation.loading ||
             preparing,
           run: executeSelected,
         }
@@ -1045,10 +1039,16 @@ export function AgentAuthSection({
   );
   const groupFooters = {
     [R.groupAgent]: registrationRow(
-      groupedMethods.filter((method) => method.kind === "agent"),
+      methods.filter(
+        (method) =>
+          authMethodGroup(method, officialMethodRoles) === R.groupAgent,
+      ),
     ),
     [R.groupTerminal]: registrationRow(
-      groupedMethods.filter((method) => method.kind === "terminal"),
+      methods.filter(
+        (method) =>
+          authMethodGroup(method, officialMethodRoles) === R.groupTerminal,
+      ),
     ),
   };
   const accountOptions =
@@ -1275,8 +1275,8 @@ export function AgentAuthSection({
           onRun={startPreparation}
           data={{
             actions,
-            error: actionsError,
-            onRetry: () => retryActions((value) => value + 1),
+            error: actionsError ?? null,
+            onRetry: preparation.retry,
           }}
           hideChoices
           selectedId={selectedAction?.id}
@@ -1300,7 +1300,7 @@ export function AgentAuthSection({
         methods.length === 0 &&
         !completedSummary &&
         !apiSelected &&
-        !connectionOptions.length && <div className="auth-note">{A.none}</div>}
+        !hasConnectionChoices && <div className="auth-note">{A.none}</div>}
       {preparing && (
         <p className="auth-note" role="status">
           {R.preparingLogin}
@@ -1311,7 +1311,7 @@ export function AgentAuthSection({
           {G.returnedPickMethod}
         </p>
       )}
-      {showPicker && info && !!connectionOptions.length && (
+      {showPicker && info && hasConnectionChoices && (
         <AgentConnectionPicker
           name={`connection-${agentId}`}
           options={connectionOptions}
@@ -1320,6 +1320,10 @@ export function AgentAuthSection({
             occupied || busy || workBlocked || (!connection && !!source)
           }
           groupFooters={groupFooters}
+          guidance={connectionGuidance}
+          apiUnavailableReason={
+            apiState === "unsupported" ? apiUnavailableReason : undefined
+          }
           onChange={chooseConnection}
         />
       )}

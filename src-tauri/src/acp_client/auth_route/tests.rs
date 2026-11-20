@@ -75,6 +75,24 @@ fn plain_agent_and_default_methods_keep_protocol_authentication() {
         assert!(protocol_method(&method));
     }
 }
+
+#[test]
+fn gateway_declarations_cannot_use_an_alternative_authentication_route() {
+    let row = row(Path::new("/fixture"));
+    for method in [
+        serde_json::json!({"id":"gateway","name":"Gateway","_meta":{"gateway":{"protocol":"google"}}}),
+        serde_json::json!({"id":"gateway","name":"Gateway","type":"terminal","args":["login"],"_meta":{"gateway":true}}),
+        serde_json::json!({"id":"gateway","name":"Gateway","_meta":{"gateway":null,"api-key":{"provider":"openai"}}}),
+        serde_json::json!({"id":"gateway","name":"Gateway","type":"env_var","vars":[{"name":"GATEWAY_KEY"}],"_meta":{"gateway":false}}),
+    ] {
+        assert!(matches!(
+            route(&row, &method, false),
+            Route::Unavailable(UnavailableReason::GatewayConfigurationUnsupported)
+        ));
+        assert!(!protocol_method(&method));
+        assert!(protocol_api_key_provider(&method).is_none());
+    }
+}
 #[test]
 fn malformed_terminal_declarations_never_fall_through_to_protocol_or_pty() {
     let dir = tempfile::tempdir().unwrap();

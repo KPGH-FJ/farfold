@@ -1,5 +1,7 @@
 import { Fragment, type ReactNode } from "react";
 import { CONNECTION_STRINGS as S } from "../runtime/r5_auth_strings";
+import type { ConnectionGuidance } from "../runtime/preparation";
+import { AgentConnectionGuidance } from "./AgentConnectionGuidance";
 
 export interface ConnectionOption {
   id: string;
@@ -17,6 +19,8 @@ export function AgentConnectionPicker({
   value,
   disabled,
   groupFooters,
+  guidance,
+  apiUnavailableReason,
   onChange,
 }: {
   name: string;
@@ -25,6 +29,8 @@ export function AgentConnectionPicker({
   disabled: boolean;
   /** Content rendered after the last option of a group (e.g. registration). */
   groupFooters?: Partial<Record<string, ReactNode>>;
+  guidance?: readonly ConnectionGuidance[];
+  apiUnavailableReason?: string | null;
   onChange: (value: string) => void;
 }) {
   return (
@@ -63,6 +69,12 @@ export function AgentConnectionPicker({
           </Fragment>
         );
       })}
+      {apiUnavailableReason && (
+        <p className="auth-note">{apiUnavailableReason}</p>
+      )}
+      {guidance?.length ? (
+        <AgentConnectionGuidance items={guidance} disabled={disabled} />
+      ) : null}
     </fieldset>
   );
 }

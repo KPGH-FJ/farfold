@@ -43,6 +43,40 @@ function state() {
   ]);
   return value;
 }
+
+it("uses a checked fresh-connection mirror only from the application-owned opening result", () => {
+  const input = { agentId: "chosen", cwd: "/controlled" };
+  const result = {
+    cwd: input.cwd,
+    nativeSessionId: "native",
+    connectionId: "owned",
+    resumed: false,
+    warnings: [],
+    configOptions: [],
+    configOptionsModern: true,
+    modes: { currentModeId: "off" },
+    meta: { legacyThoughtModeMirror: "off" },
+  };
+  expect(
+    openedThreadState(input, result, null).legacyThoughtModeMirror,
+  ).toBeUndefined();
+  const proven = { ...result, legacyThoughtModeMirror: "off" };
+  expect(openedThreadState(input, proven, null).legacyThoughtModeMirror).toBe(
+    "off",
+  );
+  for (const patch of [
+    { resumed: true },
+    { connectionId: "" },
+    { configOptionsModern: false },
+    { legacyThoughtModeMirror: "bad value" },
+  ]) {
+    expect(
+      openedThreadState(input, { ...proven, ...patch }, null)
+        .legacyThoughtModeMirror,
+    ).toBeUndefined();
+  }
+});
+
 it("preserves only original protected intent plus the complete current nonprotected projection", () => {
   const value = state();
   value.configCheck = {

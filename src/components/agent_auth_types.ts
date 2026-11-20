@@ -34,6 +34,7 @@ export interface AgentAuthSectionProps {
   cwd?: string | null;
   source?: string;
   apiState?: ApiConfigurationState;
+  apiUnavailableReason?: string | null;
   methodId?: string | null;
   onMethodChange?: (methodId: string) => void;
   onConfigureKey: () => void;

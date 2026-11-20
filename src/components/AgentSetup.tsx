@@ -1088,6 +1088,7 @@ export function AgentSetup({
                 cwd={cwd}
                 source={source}
                 apiState={apiState}
+                apiUnavailableReason={capability?.unavailableReason}
                 onChanged={async () => {
                   await agents.refresh();
                 }}

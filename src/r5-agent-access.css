@@ -26,6 +26,29 @@
 .journey-method-group:first-of-type {
   margin-top: 0;
 }
+.agent-connection-guidance {
+  margin-top: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.agent-connection-guidance ul {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+}
+.agent-connection-guidance li + li {
+  margin-top: 8px;
+}
+.agent-connection-guidance .btn {
+  padding-inline: 0;
+  text-align: left;
+}
+.agent-connection-guidance small {
+  display: block;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
 .journey-method-card {
   display: flex;
   align-items: center;
