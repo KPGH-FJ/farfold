@@ -72,7 +72,9 @@
 
 **Claude 与 Copilot 的同名成品各自另存已验。** 从两个原对话分别进入同名 `result.txt` 的交付入口。Claude 首次取消选择器时未写盘，随后两份成品各自另存，副本逐字节相等、原件和修改时间保持。两条原对话只读取历史。其他取消时机和失败组合按 P14。 [正式回执](evidence/2026-11-20-cycle12-same-name-delivery-copy/README.md)
 
-**Claude 与 Copilot 的同名目标覆盖取消已验。** 两条原对话各自打开 `result.txt`，向各自预置的同名目标另存，在系统替换确认中取消后返回原预览。两份原成品及两份目标的字节、身份和修改时间保持，未新增保存记录。确认替换后的冲突反馈、目标变化或复制开始后取消按 P14 的原条件续验。 [正式回执](evidence/2026-11-20-cycle12-same-name-overwrite-cancel/README.md)
+**Claude 与 Copilot 的同名目标覆盖取消已验。** 两条原对话各自打开 `result.txt`，向各自预置的同名目标另存，在系统替换确认中取消后返回原预览。两份原成品及两份目标的字节、身份和修改时间保持，未新增保存记录。 [正式回执](evidence/2026-11-20-cycle12-same-name-overwrite-cancel/README.md)
+
+**Claude 与 Copilot 的同名目标确认替换已验。** 正式 `87ac54ec2` 分别对自建同名目标点一次系统「替换」。Farfold 两次均显示「此次保存未完成。目标文件已存在，未覆盖它。」原件及既有目标的字节、身份和修改时间保持，未留临时文件，未显示保存成功。 [正式回执](evidence/2026-11-20-cycle12-replace-conflict/README.md)
 
 **Claude 与 Copilot 的已保存副本均可从保存记录定位。** 从「文件保存」分别点击对应记录的「显示副本位置」，访达依次只选中各自的 71 字节及 45 字节副本。两份原件及副本的字节、文件身份与修改时间保持，零模型发送。 [正式回执](evidence/2026-11-20-cycle12-saved-copy-finder-reveal/README.md)
 
