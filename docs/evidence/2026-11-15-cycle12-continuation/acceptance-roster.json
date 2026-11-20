@@ -1895,8 +1895,8 @@
           "status": "停止及冷续答通过"
         },
         "S8": {
-          "observed": "正式冷开图片可显示并逐字节导出；来源未确认的旧对象仍保护发送。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 审批卡显示缺输入详情，可在同一对话处理过程找到准确 Bash 命令。\n2026-11-17 共用补显示的受控用例通过，正式卡仍无输入详情。处理过程能看到本条 Shell 命令，核对后单次批准成功。\n2026-11-17 查到审批请求无 rawInput，前一条精确同 ID 的工具报告 in_progress 且有命令。按当前证据补显示后，正式卡有完整命令和来源，单次批准后成功。\n2026-11-17 续验：正式卡片显示准确命令和输入来源，按一次 Deny 后显示已拒绝、已通知 Agent。\n2026-11-18 补录 11-17：本次两层网页审批在 Farfold 层取消，原调用只收到取消文本，并按原对话结束。\n2026-11-19 正式 2a4ee8627。公开页读取许可状态由未允许、已允许回到未允许；真实 503 显示失败和结果未知，可只关闭该测试连接。撤回后的原工具再次提示仍待验。\n2026-11-20 正式 87ac54ec2 同一原对话、Mistral Medium 3.5 / High。停止共享后保持未允许读取，只发一次并收到文字回复，本次无 503。Vibe 发现的四项网页工具与上次一致，但本轮发给模型的工具目录缺 read_page_snapshot。没有网页工具调用或许可卡。",
-          "remaining": "定位 Vibe 已发现网页工具却未将 read_page_snapshot 放入本轮模型请求的原因。确认同一连接及原配置的实际模型工具目录包含该工具，再从正常入口撤回同页后观察真实再次索取许可，并取消一次核对结果。其他审批、提示、恢复按原条件。",
+          "observed": "正式冷开图片可显示并逐字节导出；来源未确认的旧对象仍保护发送。\n本轮实测：新版正式版的「带入已有对话」可单独选中这家并进入查找。零索引退役登记没有日常选项。\n2026-11-17 审批卡显示缺输入详情，可在同一对话处理过程找到准确 Bash 命令。\n2026-11-17 共用补显示的受控用例通过，正式卡仍无输入详情。处理过程能看到本条 Shell 命令，核对后单次批准成功。\n2026-11-17 查到审批请求无 rawInput，前一条精确同 ID 的工具报告 in_progress 且有命令。按当前证据补显示后，正式卡有完整命令和来源，单次批准后成功。\n2026-11-17 续验：正式卡片显示准确命令和输入来源，按一次 Deny 后显示已拒绝、已通知 Agent。\n2026-11-18 补录 11-17：本次两层网页审批在 Farfold 层取消，原调用只收到取消文本，并按原对话结束。\n2026-11-19 正式 2a4ee8627。公开页读取许可状态由未允许、已允许回到未允许；真实 503 显示失败和结果未知，可只关闭该测试连接。撤回后的原工具再次提示仍待验。\n2026-11-20 正式 87ac54ec2 同一原对话、Mistral Medium 3.5 / High。停止共享后保持未允许读取，只发一次并收到文字回复，本次无 503。Vibe 发现的四项网页工具与上次一致，首轮列表未直接列出 read_page_snapshot。该轮指令禁止其他工具，没有网页调用或许可卡。\n2026-11-20 只读核对原成功样本，网页工具经 search_tool_functions 查找，再由 run_typescript 调用。08:58 同一原对话沿已保存配置只发一条允许查找和调用的请求。首个厂商模型调用实际路由 mistral / mistral-vibe-cli-latest 并返回 503，零工具及许可。09:01 从 Farfold 只关闭这条自有连接，原消息和结果未知提示保留。",
+          "remaining": "待原服务可用，从同一配置和已撤回的同页调用 search_tool_functions 查找并用 run_typescript 只调用一次 read_page_snapshot。批准一次 Agent 工具请求，等实际出现 Farfold 网页许可后点取消，核对原工具收到取消且未交付页面正文。其他审批、提示、恢复按原条件。",
           "sources": [
             "docs/evidence/2026-11-13-cycle7/mistral-media-summary.json",
             "docs/status.md",
@@ -1907,7 +1907,8 @@
             "docs/evidence/2026-11-17-cycle12-copilot-pi-vibe/README.md",
             "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md",
             "docs/evidence/2026-11-19-cycle12-mistral-page-revoke/README.md",
-            "docs/evidence/2026-11-20-cycle12-mistral-revoke-recheck/README.md"
+            "docs/evidence/2026-11-20-cycle12-mistral-revoke-recheck/README.md",
+            "docs/evidence/2026-11-20-cycle12-mistral-programmatic-page/README.md"
           ],
           "status": "分项通过"
         }
