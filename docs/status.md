@@ -68,7 +68,7 @@
 
 **2026-11-20 第 12 周期正常入口补验。** Devin 连接意外退出后原独立 Shell 继续约 158 秒并自然结束，Farfold 保留原结果未知；同原 ID 热重连和冷开保留草稿、两条待发，一次明确继续后按序各答一次。原任务自动收回或精确查询、结束等待官方。Cursor 单次拒绝有正式回执，冷开仅保留通用工具结束。Copilot 原件、成品与两次打开有可复核证据。Claude 默认范围和原目录均命中同一已加入对话，零发送。 [正式回执](evidence/2026-11-20-cycle12-native-entry/README.md)
 
-**Copilot 按工作文件夹查找已补一组正式证据。** 另一个自建目录无记录，原目录准确找到同一已加入对话，官方和本地显示的目录一致，重复加入禁用。只执行两次列表查询，原索引和历史保持。更多目录及翻页仍待验。 [正式回执](evidence/2026-11-20-cycle12-copilot-directory-discovery/README.md)
+**Copilot 按工作文件夹查找已验两处原目录。** 两处各找到对应的已加入自建对话，另一自建目录查无记录。默认首页显示 19 条，两条自有样本各出现一次，没有「加载更多」。未打开原停止样本 A。实际翻页等官方列表返回有效下一页游标后复验。 [首组目录](evidence/2026-11-20-cycle12-copilot-directory-discovery/README.md) · [另一原目录和首页](evidence/2026-11-20-cycle12-copilot-additional-directory-pagination/README.md)
 
 **Claude 与 Copilot 的同名成品各自另存已验。** 从两个原对话分别进入同名 `result.txt` 的交付入口。Claude 首次取消选择器时未写盘，随后两份成品各自另存，副本逐字节相等、原件和修改时间保持。两条原对话只读取历史。其他取消时机和失败组合按 P14。 [正式回执](evidence/2026-11-20-cycle12-same-name-delivery-copy/README.md)
 
@@ -387,6 +387,8 @@ Cursor 2026.11.13 的工具由其官方程序自行管理。新版正式版中�
 <!-- task-current: P33 -->
 
 ### P33
+
+2026-11-20 正式 `87ac54ec2` 另验 GitHub Copilot 已完成的 B 原目录。原 B 准确显示已加入，官方和本地位置一致。默认首页显示 19 条，B 和原成品测试各出现一次，无「加载更多」。两次各一条官方列表请求，零加载正文、加入或发送，原 B 索引及 22 行官方历史保持。原停止 A 未打开、未操作。共用列表的受控翻页检查另有证据，Copilot 实际翻页仍待有效下一页游标。 [官方列表与翻页条件](evidence/2026-11-20-cycle12-copilot-additional-directory-pagination/README.md)
 
 2026-11-20 正式 `87ac54ec2` 从「带入已有对话」选 GitHub Copilot，在另一个自建目录查不到会话，在原目录准确找到同一已加入对话。Agent 返回位置与本地索引一致，复选框与加入禁用。两次各一条官方列表查询，零历史加载、新建或发送，原索引及 34 行原记录摘要保持。更多目录、分页和十月原样本新版续答仍待。 [目录对照回执](evidence/2026-11-20-cycle12-copilot-directory-discovery/README.md)
 
