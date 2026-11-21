@@ -70,7 +70,7 @@ Amp 0.13.0 当前登记使用用户选定的本机 Amp CLI。正式版账号与�
 | Grok Build 1.0.90 | `01a1fa2a-5488-7330-b83c-84f1fa8814c7` | 独立目录 `/private/tmp/ff-s12-grok-first.iR0LfRyj`，现有设置下的 Grok 4.7 / Low。原厂商助手第 6 行精确回复 `FF_S12_GROK_FIRST_20261121_A`，实际 `model_id:grok-4.7`、`reasoning_effort:low`，该行原字段 SHA-256 `281abe1c8f58182c04756708e4fe270fd3a6be4dd088659d21b093ebfad64332`。协议 `protocol-v1-1795198437970-10.jsonl` L35/L94，前 94 行 SHA-256 `09c609280f6c468269b7e780832f0b045abbb0da6bda056349da9e09cc14b482`。 |
 | fast-agent 0.10.1 | `2611210216-7vTKXu`                    | 独立目录 `/private/tmp/ff-s12-fast-first.cSJ3Rv5N`，沿原 `codexplan`。厂商 `session.json` 显示 `codexresponses / gpt-5.6-sol`，`history_agent.json` 记录一问一答，最终为 `endTurn`，SHA-256 `afc50a3b568a15511cffccb9c679fcd4a511eeea82ebe350021459e2e78dcbb0`。协议 `protocol-v1-1795198601898-12.jsonl` L12/L25，前 25 行 SHA-256 `4711bc41449d2725392f9fd33066a7b0d6eeb475160b86d4a24b1bfc09c443ad`。                     |
 
-Codex 当前 1.13.1 可从正式版新建并读到模型和权限选项。旧权限记录明确暂停新的真实请求，当前已准备独立目录，待用户明确决定是否只做一条经最收紧模式的短测。旧对话与依赖完整实际权限的命令照原阻塞，不以准备过程计首答。[原暂停说明](../2026-10-09-capability-hardening/README.md) · [官方模式与回执复核](../2026-11-19-cycle12-official-route-recheck/README.md#codex-的-new-24-发送保护)
+同批 Codex 先完成独立草稿准备，后经用户明确批准只发一次，见下方[单次短测](#codex-单次首答与实际权限)。旧对话与依赖完整实际权限的命令照原条件。[原暂停说明](../2026-10-09-capability-hardening/README.md) · [官方模式与回执复核](../2026-11-19-cycle12-official-route-recheck/README.md#codex-的-new-24-发送保护)
 
 ## 官方终端返回及恢复
 
@@ -104,3 +104,13 @@ OpenCode、GitHub Copilot 从同一自建目录各用未发草稿选择已存 `A
 Farfold 已细分这类错误。没有活动任务或其他操作，但保留了未确认打开时，提示先保存并正常重开，再继续账号设置。原账号保护持续有效。受控回归覆盖真实活动保留原提示、晚打开持续阻止变更、原进程结束后释放。新版正式 CDHash `266728f08c6bc865ee5b95d7d3181e3a303ff731`，可执行文件 SHA-256 `4688f1a3cdd41733d77f4ac2ce177042472ed3bacc5143ef9b3331837babf98a`，停机核合 264,507 项元信息及 6 份关键摘要。
 
 新版回归中 Rust 2,849 项单元与 10 项集成通过，11 项忽略，Clippy、格式和正式打包通过。正式从独立草稿再次新建 Cursor，本次成功且发送可用，未重现迟到。协议 `protocol-v1-1795202456450-0.jsonl` L8/L9，前 10 行 SHA-256 `254ff2dd08c63294d771513ff09c25b7428d79e609092c6337cd8111467e02b9`，零模型发送。新提示的精确分支已由受控回归直接核验。
+
+## Codex 单次首答与实际权限
+
+用户批准从独立草稿选择当前界面最收紧的「Ask for approval」，沿原模型来源和设置发送一条不带附件、不调用工具的纯文字。正式 Farfold CDHash `266728f08c6bc865ee5b95d7d3181e3a303ff731`，登记 Codex ACP 1.13.1，在 `/private/tmp/ff-s12-codex-first.9pfc4wui` 新开 `01a1fa6a-7990-72a2-81a1-c4a64b9e79e6`。Farfold 只对这份草稿明确确认下次消息权限，未切换到已存 Atria 或改变其他对话。确切回复 `FF_S12_CODEX_FIRST_20261121_A` 并正常结束。协议 `protocol-v1-1795202641198-2.jsonl` L16/L17 设置回执，L18 唯一出站，L35 正常结果，前 35 行 SHA-256 `14f9e1d86cd2527f9cacc8c7e24b4fa6a74a1cbbcfcae27a4ac3464d969d95ab`。
+
+厂商原卷首 15 行 SHA-256 `bf926cf55fa9cd68e40828cf8749ce0907fa527e2d5c28ffa2bb89a372045adc`。L1 实际 CLI 0.155.1，模型商字段 `openai`。原请求 `01a1fe63-c6f8-76f1-809e-6b2e851f323f` 的 L8 显示 `gpt-6-astra / ultra`、`on-request / user`、`workspace-write` 和 `network_access:false`。L9 原提问，L12 为准确回复，L15 正常结束。全程零工具调用、零审批。实际计费账号或凭据来源未回报。
+
+首答有证。实际文件权限仍允许写入测试目录，未达到严格只读。实装和官方 1.13.1 源码均将标识 `read-only` 映射到 `workspaceWrite`，确认回执本身不能证明实际文件范围。官方 2.0.0 恢复单独只读预设，2.7.0 另有分组模式选项。已使用本次单次发送授权，后续真实发送需新授权。原作品、旧对话恢复、实际完整权限及受 NEW-24 影响的命令按原条件继续。[旧版预设](https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/AgentMode.ts#L38-L53) · [厂商修复](https://github.com/agentclientprotocol/codex-acp/commit/7fee150a55098f7140a03907fec5f11) · [2.7.0 预设](https://github.com/agentclientprotocol/codex-acp/blob/v2.7.0/src/AgentMode.ts#L49-L65)
+
+Farfold 补上官方新版分组权限选项的兼容。原扁平选项保持。重复、混合、缺失的分组和值仍拒绝，旧对话仍需重新确认；当前实际权限继续由证据判定。两组定向测试均通过，覆盖官方分组、回执不符和原命令保护。Rust 全量初次一项未通过，复跑 2,851 项单元和 10 项集成通过，11 项忽略。Clippy、格式和打包通过。新版正式 CDHash `14c2fc84eabf003471fba7c5f84e48d1b7b0e06f`、可执行文件 SHA-256 `ca6bbd998e8eaaedf06567ebf2b5d3007ba3445b4b531f217cefbfbeef5b2d8a`，停机核合 264,507 项元信息与 6 份关键摘要。应用重开，单次实答记录保留。新版 Codex Agent 的实际只读和权限恢复仍待单独复验。
