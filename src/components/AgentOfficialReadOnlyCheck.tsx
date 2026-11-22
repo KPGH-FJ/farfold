@@ -35,10 +35,12 @@ function requestCancellation(agentId: string, attempt: Attempt): Promise<void> {
   return attempt.cancellation;
 }
 
-function OfficialReadOnlyAttempt({
+export function OfficialReadOnlyAttempt({
   target,
+  open,
 }: {
   target: OfficialReadOnlyTarget;
+  open?: boolean;
 }) {
   const active = useRef<Attempt | null>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
@@ -93,7 +95,7 @@ function OfficialReadOnlyAttempt({
     status.kind === "cancelling" ||
     status.kind === "cancelFailed";
   return (
-    <details className="agent-setup-test-note">
+    <details className="agent-setup-test-note" open={open}>
       <summary>{S.title}</summary>
       <p>{S.hint}</p>
       {status.kind === "checked" ? (

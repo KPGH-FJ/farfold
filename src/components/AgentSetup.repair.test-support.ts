@@ -16,6 +16,7 @@ import type { AgentCardModel, AgentsState } from "../runtime/agents";
 import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
 import { preparationProgram } from "../runtime/agent_preparation";
 import { freshThreadState } from "../runtime/session_projection";
+import type { PreparationInfo } from "../runtime/preparation";
 
 const h = vi.hoisted(() => ({
   cursor: 0,
@@ -30,12 +31,16 @@ const h = vi.hoisted(() => ({
   defaultCwd: "/app-conversations",
   canonical: null as string | null,
   preparation: null as unknown,
+  preparationInfo: null as PreparationInfo | null,
   thread: null as unknown,
 }));
 
 vi.mock("@tauri-apps/api/core", () => ({
-  invoke: async (command: string) =>
-    command === "app_default_working_directory" ? h.defaultCwd : null,
+  invoke: async (command: string) => {
+    if (command === "app_default_working_directory") return h.defaultCwd;
+    if (command === "agent_preparation") return h.preparationInfo;
+    return null;
+  },
   Channel: class {
     onmessage = (_: unknown) => {};
   },
@@ -228,6 +233,7 @@ beforeEach(() => {
   h.defaultCwd = "/app-conversations";
   h.canonical = null;
   h.preparation = null;
+  h.preparationInfo = null;
   h.thread = null;
   h.prepare.mockReset();
   h.invalidate.mockReset();

@@ -1,5 +1,9 @@
 export const OFFICIAL_READONLY_CHECK_STRINGS = {
   title: "检查实际权限",
+  savedTitle: "检查已保存的模型",
+  savedModel: "已保存的模型",
+  savedReasoning: "已保存的思考强度",
+  back: "返回准备流程",
   start: "检查所选设置",
   cancel: "取消检查",
   checking: "正在检查所选模型与实际权限…",

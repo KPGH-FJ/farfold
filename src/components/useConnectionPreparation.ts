@@ -10,6 +10,7 @@ export function useConnectionPreparation(
   agentId: string,
   program: string | undefined,
   declarationsReady: boolean,
+  enabled = true,
 ) {
   const [revision, setRevision] = useState(0);
   const [result, setResult] = useState<{
@@ -24,6 +25,7 @@ export function useConnectionPreparation(
     revision,
   ]);
   useEffect(() => {
+    if (!enabled) return;
     let current = true;
     void getAgentPreparation(agentId)
       .then((info) => {
@@ -39,13 +41,13 @@ export function useConnectionPreparation(
     return () => {
       current = false;
     };
-  }, [agentId, target]);
+  }, [agentId, target, enabled]);
 
-  const ready = result?.target === target;
+  const ready = enabled && result?.target === target;
   return {
     info: ready ? result.info : undefined,
     error: ready ? result.error : undefined,
-    loading: !ready,
+    loading: enabled && !ready,
     retry: () => setRevision((current) => current + 1),
   };
 }

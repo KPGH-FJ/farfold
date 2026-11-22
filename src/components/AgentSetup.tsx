@@ -70,6 +70,11 @@ import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
 import { R5_SETUP_STRINGS as R } from "../runtime/r5_setup_strings";
 import type { AgentAccessPrimary } from "../runtime/access_primary";
 import { AgentSetupNavigation } from "./AgentSetupNavigation";
+import {
+  agentSetupErrorNotice,
+  agentSetupPendingNotices,
+} from "./AgentSetupNotices";
+import { useAgentSetupSavedCheck } from "./AgentSetupSavedCheck";
 import { AgentOfficialReadOnlyCheck } from "./AgentOfficialReadOnlyCheck";
 import { WORKSPACE_STRINGS } from "../runtime/workspace_strings";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
@@ -375,6 +380,23 @@ export function AgentSetup({
     test.phase === "unknown" ||
     !controller.canPrepare();
   const waitingForOtherSource = !sameSource && operationPending;
+  const savedCheck = useAgentSetupSavedCheck({
+    agentId: card.id,
+    program,
+    cwd: targetCwd,
+    step,
+    eligible:
+      active &&
+      step < 2 &&
+      !conversation &&
+      !draftReview &&
+      registered &&
+      !busy &&
+      !authBusy &&
+      !operationPending &&
+      choice === "existing" &&
+      !selection.service,
+  });
   const passed =
     sameSource && prerequisitesReady && controller.verified(program);
   const source =
@@ -390,7 +412,7 @@ export function AgentSetup({
       targetCwd !== cwd &&
       authenticationRequired(authentication, card.id, targetCwd, source));
   useSetupAuthFocus({
-    active,
+    active: active && !savedCheck.open,
     connected,
     required: needsAuth,
     agentId: card.id,
@@ -470,10 +492,11 @@ export function AgentSetup({
     (step === 1 && (!sourceValid || needsAuth));
   const canOpenModels =
     canContinueModel && !nextBlocked && !!cwd && sourceValid && !needsAuth;
-  modelNavigation.current = canOpenModels;
+  modelNavigation.current = canOpenModels && !savedCheck.open;
   /** Saved-settings reuse is verified in place, before the user reaches models. */
   const existingVerifyActive =
     !conversation &&
+    !savedCheck.open &&
     step === 1 &&
     prepConnected &&
     choice === "existing" &&
@@ -506,6 +529,7 @@ export function AgentSetup({
   useEffect(() => {
     if (
       !draftReview &&
+      !savedCheck.open &&
       sameSource &&
       !selectionMismatch &&
       !modelReadFailed &&
@@ -523,6 +547,7 @@ export function AgentSetup({
     sameSource,
     selectionMismatch,
     modelReadFailed,
+    savedCheck.open,
     modelChanging,
     authBusy,
     test.readError,
@@ -533,6 +558,7 @@ export function AgentSetup({
   useEffect(() => {
     if (
       !active ||
+      savedCheck.open ||
       conversation ||
       modelChanging ||
       authBusy ||
@@ -551,6 +577,7 @@ export function AgentSetup({
     if (input) void controller.prepare(input);
   }, [
     active,
+    savedCheck.open,
     conversation,
     modelChanging,
     authBusy,
@@ -576,6 +603,10 @@ export function AgentSetup({
   }, [sameSource, choice, capability, modelValid, controller]);
 
   const close = () => {
+    if (savedCheck.open) {
+      savedCheck.back();
+      return;
+    }
     const changed =
       JSON.stringify(entrySelection.current) !== JSON.stringify(selection) ||
       entryProgress.current.choice !== choice;
@@ -668,6 +699,7 @@ export function AgentSetup({
   useEffect(() => {
     if (
       !active ||
+      savedCheck.open ||
       conversation ||
       step !== 1 ||
       prepConnected ||
@@ -692,6 +724,7 @@ export function AgentSetup({
     void connect().catch(() => undefined);
   }, [
     active,
+    savedCheck.open,
     conversation,
     step,
     prepConnected,
@@ -836,78 +869,48 @@ export function AgentSetup({
           {headerStatus.label}
         </span>
       </div>
-      <AgentSetupNavigation
-        modelOnly={draftReview}
-        step={step}
-        connected={connected}
-        accountActive={!!authJob || authBusy}
-        modelsAvailable={!!conversation || step === 2 || canContinueModel}
-        onStep={setStep}
-      />
+      {!savedCheck.open && (
+        <AgentSetupNavigation
+          modelOnly={draftReview}
+          step={step}
+          connected={connected}
+          accountActive={!!authJob || authBusy}
+          modelsAvailable={!!conversation || step === 2 || canContinueModel}
+          onStep={setStep}
+        />
+      )}
+      {savedCheck.panel}
       <div
         className="agent-setup-body"
+        hidden={savedCheck.open}
         id="agent-setup-panel"
         role="tabpanel"
         aria-labelledby={`agent-setup-tab-${step}`}
       >
-        {(error || agents.errors[card.id]) && (
-          <div role="alert" className="ac-error">
-            {error ?? agents.errors[card.id]}
-            {!cwd ? (
-              <button
-                className="btn btn-text"
-                onClick={() => retryDirectory((v) => v + 1)}
-              >
-                {S.retry}
-              </button>
-            ) : (
-              step === 1 &&
-              !prepConnected &&
-              !connecting && (
-                <button
-                  className="btn btn-text"
-                  onClick={() => void connect().catch(() => undefined)}
-                >
-                  {S.retry}
-                </button>
-              )
-            )}
-          </div>
+        {agentSetupErrorNotice(
+          error ?? agents.errors[card.id],
+          !cwd
+            ? () => retryDirectory((v) => v + 1)
+            : step === 1 && !prepConnected && !connecting
+              ? () => void connect().catch(() => undefined)
+              : undefined,
         )}
-        {waitingForOtherSource && (
-          <div className="agent-setup-notice" role="status">
-            <p>{S.otherTestPending}</p>
-            {test.threadKey && onOpenConversation && (
-              <button
-                className="btn btn-ghost"
-                onClick={() => {
+        {agentSetupPendingNotices({
+          waiting: waitingForOtherSource,
+          authenticating: authBusy && step !== 1,
+          configuring: authJob?.operation?.kind === "preparation",
+          openConversation:
+            test.threadKey && onOpenConversation
+              ? () => {
                   dialog.current?.close();
                   onOpenConversation(test.threadKey!);
-                }}
-              >
-                {S.testOpen}
-              </button>
-            )}
-          </div>
-        )}
-        {authBusy && step !== 1 && (
-          <div className="agent-setup-notice" role="status">
-            <p>
-              {authJob?.operation?.kind === "preparation"
-                ? C.busy
-                : S.loginBusy}
-            </p>
-            <button
-              className="btn btn-ghost"
-              onClick={() => onProgress({ ...setupProgress, step: 1 })}
-            >
-              {authJob?.operation?.kind === "preparation"
-                ? C.resume
-                : S.resumeLogin}
-            </button>
-          </div>
-        )}
+                }
+              : undefined,
+          resume: () => onProgress({ ...setupProgress, step: 1 }),
+        })}
+        {savedCheck.entry}
         {step === 0 &&
+          !savedCheck.open &&
           agentSetupProgram({
             active,
             card,
@@ -951,7 +954,7 @@ export function AgentSetup({
             }}
           />
         </fieldset>
-        {step === 1 && (
+        {step === 1 && !savedCheck.open && (
           <>
             {needsAuth && (
               <p className="agent-setup-notice">
@@ -1344,7 +1347,7 @@ export function AgentSetup({
           </section>
         )}
       </div>
-      <footer className="agent-setup-footer">
+      <footer className="agent-setup-footer" hidden={savedCheck.open}>
         <div>
           {!draftReview && step > 0 && (
             <button

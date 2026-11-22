@@ -131,6 +131,10 @@
   font-size: 18px;
   margin: 0 0 8px;
 }
+.agent-setup-dialog .agent-setup-body[hidden],
+.agent-setup-dialog .agent-setup-footer[hidden] {
+  display: none;
+}
 .agent-preparation-dependencies .agent-setup-program {
   flex-wrap: wrap;
   justify-content: flex-start;

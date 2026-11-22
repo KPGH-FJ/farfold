@@ -19,11 +19,35 @@ export interface OfficialReadOnlyReport {
 }
 
 function currentChoice(options: readonly ConfigOptionView[], id: string) {
-  if (!id.trim()) return undefined;
   const matching = options.filter((option) => option.id === id);
-  if (matching.length !== 1) return undefined;
-  const value = matching[0].currentValue;
-  return typeof value === "string" && value.trim() ? value : undefined;
+  return matching.length === 1 ? matching[0].currentValue : undefined;
+}
+
+function selectedTarget(
+  agentId: string,
+  cwd: string,
+  check: OfficialReadOnlyCheck | undefined,
+  read: (id: string) => unknown,
+): OfficialReadOnlyTarget | null {
+  if (
+    typeof check?.id !== "string" ||
+    !check.id.trim() ||
+    typeof check.modelOptionId !== "string" ||
+    !check.modelOptionId.trim() ||
+    typeof check.reasoningOptionId !== "string" ||
+    !check.reasoningOptionId.trim() ||
+    check.modelOptionId === check.reasoningOptionId ||
+    !cwd
+  )
+    return null;
+  const model = read(check.modelOptionId);
+  const reasoningEffort = read(check.reasoningOptionId);
+  return typeof model === "string" &&
+    model.trim() &&
+    typeof reasoningEffort === "string" &&
+    reasoningEffort.trim()
+    ? { agentId, checkId: check.id, cwd, model, reasoningEffort }
+    : null;
 }
 
 export function officialReadOnlyTarget(
@@ -31,21 +55,21 @@ export function officialReadOnlyTarget(
   cwd: string,
   check: OfficialReadOnlyCheck | undefined,
   options: readonly ConfigOptionView[],
-): OfficialReadOnlyTarget | null {
-  if (
-    typeof check?.id !== "string" ||
-    !check.id.trim() ||
-    typeof check.modelOptionId !== "string" ||
-    typeof check.reasoningOptionId !== "string" ||
-    check.modelOptionId === check.reasoningOptionId ||
-    !cwd
-  )
-    return null;
-  const model = currentChoice(options, check.modelOptionId);
-  const reasoningEffort = currentChoice(options, check.reasoningOptionId);
-  return model && reasoningEffort
-    ? { agentId, checkId: check.id, cwd, model, reasoningEffort }
-    : null;
+) {
+  return selectedTarget(agentId, cwd, check, (id) =>
+    currentChoice(options, id),
+  );
+}
+
+export function savedOfficialReadOnlyTarget(
+  agentId: string,
+  cwd: string,
+  check: OfficialReadOnlyCheck | undefined,
+  config: Readonly<Record<string, unknown>>,
+) {
+  return selectedTarget(agentId, cwd, check, (id) =>
+    Object.hasOwn(config, id) ? config[id] : undefined,
+  );
 }
 
 export async function runOfficialReadOnlyCheck(

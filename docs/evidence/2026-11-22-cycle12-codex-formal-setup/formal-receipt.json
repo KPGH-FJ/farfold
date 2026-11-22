@@ -1,0 +1,36 @@
+{
+  "installed": {
+    "source": {
+      "base": "b1169a420b1f942ffa7e8d62e9c4116194e0fcce",
+      "sourceDeltaSha256": "f224c5ad1934f29c6add0f62c2c42764c24f1efcd67bd8a1ff1b81f18c2ab22a"
+    },
+    "cdhash": "58b037b9dd293562f677b07ac7d964b765648c4d",
+    "arch": "arm64",
+    "changedBundleFiles": ["Contents/MacOS/farfold"],
+    "normalExitsAndProcessesReaped": true,
+    "dataProtectedEntries": 264507,
+    "criticalFilesMatched": 6,
+    "dataMetadataSha256": "63dd05a7a2365cab5ba14049c2ef63d9561aca346506388a8ab24e14638cdf31"
+  },
+  "formalModelPreparation": {
+    "officialCodexCli": "0.171.0",
+    "savedModel": "gpt-6-astra",
+    "savedReasoningEffort": "ultra",
+    "displayedResult": "临时对话的文件权限为只读，工具网络已关闭。 已读取本机登录。已读取账号工作区。 模型服务 openai",
+    "ordinaryConnectionStillUnopened": true,
+    "ordinaryDraftPreserved": true,
+    "modelMessages": 0,
+    "onlinePrewarms": 0,
+    "ordinaryPermissionReceiptObserved": false
+  },
+  "after": {
+    "selectedCliCandidate": false,
+    "originalExecutableRestored": true,
+    "originalSelectedPathSpellingMatched": false,
+    "savedOriginalAstraUltra": true,
+    "otherRegistrationFieldsMatched": true,
+    "codexFarfoldIndexMatched": true,
+    "copilotFarfoldIndexMatched": true,
+    "originalCodexCredentialAndConfigDigestMatched": true
+  }
+}
