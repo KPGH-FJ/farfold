@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-22 Asia/Shanghai",
+  "installedCDHash": "8b990faeef206603cc5fbd1f822266d99a2f7a29",
+  "registryAgent": "codex",
+  "adapterVersion": "1.13.1",
+  "route": "我的 Agent → 管理设置 → Codex → 检查程序",
+  "result": "initializeTimeout",
+  "accountTabAvailable": false,
+  "protocolLog": "protocol-v1-1795326170448-1.jsonl",
+  "logSHA256": "38b2339eba75cda8cfbaaa5f4b69e3f187ca64c7d58306d86a66812a77cd84fc",
+  "outbound": ["initialize"],
+  "childReaped": true,
+  "modelRequests": 0,
+  "accountSettingsChanged": false,
+  "existingConversationOpened": false
+}

@@ -1,0 +1,74 @@
+{
+  "scope": "two synthetic no-account and no-provider-credential lanes; changed endpoint blocked before send, exact selection allows one canned prompt to owned loopback",
+  "lanes": [
+    {
+      "managedFixture": false,
+      "calls": [
+        "initialize",
+        "session/new",
+        "session/prompt"
+      ],
+      "syntheticPromptSent": true,
+      "identity": {
+        "name": "Kilo",
+        "version": "7.8.1"
+      },
+      "opened": true,
+      "modelsReturned": [
+        "fixture-local/one-model"
+      ],
+      "includesEitherEndpoint": false,
+      "modelOptionFields": [
+        "category",
+        "currentValue",
+        "id",
+        "name",
+        "options",
+        "type"
+      ],
+      "sessionResponseFields": [
+        "configOptions",
+        "sessionId"
+      ],
+      "metadataStatus": 200,
+      "selectedProvider": "fixture-local",
+      "selectedModel": "one-model",
+      "wireModelId": "one-model",
+      "sdkPackage": "@ai-sdk/openai-compatible",
+      "literalProviderBaseUrl": "A",
+      "literalModelDefaultURL": null,
+      "matchesChosenA": true,
+      "providerTrafficBeforePrompt": [
+        0,
+        0
+      ],
+      "releaseInputSummary": {
+        "model": [
+          "fixture-local/one-model"
+        ],
+        "verifiedFields": [
+          "provider.id",
+          "provider.options.baseURL",
+          "provider.models[selected].id",
+          "model.api.id",
+          "model.api.url",
+          "model.api.npm"
+        ]
+      },
+      "stopReason": "end_turn",
+      "returnedExpectedAssistantMarker": true,
+      "disposition": "sent one synthetic prompt",
+      "exitCode": 0,
+      "diagnosticBytes": 0
+    }
+  ],
+  "syntheticProviderAHttpMethods": [
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "model": "one-model",
+      "rootPromptSeen": false
+    }
+  ],
+  "syntheticProviderBHttpMethods": []
+}

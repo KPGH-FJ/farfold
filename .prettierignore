@@ -366,3 +366,10 @@ docs/maintenance/2026-11-04-migration-cleanup/pre-deletion-review.json
 
 # Preserve the already hashed fifteenth-batch receipt; its captured formatting is evidence.
 docs/evidence/2026-11-11-stage2-fifteenth-batch/summary.json
+
+# Kilo's qualification receipt binds these exact captured bytes.
+docs/evidence/2026-11-22-cycle12-codex-kilo-service-route/fallback-wire.json
+docs/evidence/2026-11-22-cycle12-codex-kilo-service-route/guard.json
+docs/evidence/2026-11-22-cycle12-codex-kilo-service-route/positive-wire.json
+docs/evidence/2026-11-22-cycle12-codex-kilo-service-route/v2-control.json
+docs/evidence/2026-11-22-cycle12-codex-kilo-service-route/v2.json

@@ -1,0 +1,61 @@
+{
+  "candidate": "native-codex-0.171.0",
+  "branch": "existing-system-upstream",
+  "appendScopeAfterAccountTunnelClosed": false,
+  "rpc": ["initialize", "account/read", "thread/start"],
+  "targetsOriginalConfiguration": true,
+  "negativeControls": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "pid": 78867,
+  "nativeHandshake": true,
+  "accountReceipt": {
+    "chatgpt": true,
+    "namedAccountPresent": true,
+    "planPresent": true,
+    "userIdPresent": true,
+    "requiresOpenaiAuth": true,
+    "workspaceRoutePresent": true,
+    "backendOriginMatchesOfficial": true
+  },
+  "accountTunnelClosed": true,
+  "threadReceipt": {
+    "modelMatches": true,
+    "providerMatches": true,
+    "effortMatches": true,
+    "readOnly": true,
+    "networkEnabled": false,
+    "approvalsOnRequest": true,
+    "approvalsUser": true,
+    "cwdMatches": true,
+    "ephemeral": true,
+    "noStoredPath": true,
+    "emptyTurns": true
+  },
+  "originalIdentityUnchangedAtVerification": true,
+  "nativeProcessHeldNetworkClosed": true,
+  "releaseMarker": "/private/tmp/ff-c12-codex290-ready.thahnik7/native-existing-system-upstream-qualified/release-owned-process",
+  "officialHostTlsTunnels": 4,
+  "rejectedProxyConnections": 0,
+  "officialHostTcpConnected": 4,
+  "encryptedClientBytesForwarded": 13050,
+  "encryptedServerBytesForwarded": 31577,
+  "acceptedLocalSockets": 4,
+  "relaySocketFailureKinds": {},
+  "usesExistingLoopbackSystemProxy": true,
+  "existingLoopbackSystemProxyConnectStatus": 200,
+  "exitCode": 0,
+  "originalIdentityUnchangedAfter": true,
+  "notifications": [
+    "configWarning",
+    "remoteControl/status/changed",
+    "account/updated"
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "date": "2026-11-22 Asia/Shanghai",
+  "sourceReceiptSHA256": "c37b7c9021b44794328a081e19d91c387f7c038470f7adc94967b7931e2d0195",
+  "driverSHA256": "99c2273e4ebbf610cdc148b8e225fb3a4ca589709b7286b1b70e3f8c334f1569",
+  "native": {
+    "nativeVersion": "0.171.0",
+    "route": "officialNativeAppServer",
+    "dispatchAttempts": 1,
+    "userConfirmedOriginalAccount": true,
+    "replyPassed": false,
+    "driverWillNotRetransmit": true,
+    "providerRetriesInsideTlsAreNotIndependentlyObservable": true,
+    "isolationControls": {
+      "allowedLoopback": 1,
+      "ipv4Egress": 1,
+      "ipv6Egress": 1,
+      "homeRead": 1,
+      "outsideFixtureRead": 1,
+      "outsideFixtureWrite": 1,
+      "securitydLookup": 1100,
+      "securityServerLookup": 1100
+    },
+    "pid": 83107,
+    "account": {
+      "visibleChatgptAccount": true,
+      "hasUserId": true,
+      "hasAccountPlan": true,
+      "hasWorkspace": true,
+      "officialBackend": true,
+      "requiresOpenaiAuth": true
+    },
+    "accountTransportClosedBeforeThread": true,
+    "accountOfficialTlsTunnels": 2,
+    "thread": {
+      "modelMatches": true,
+      "reasoningMatches": true,
+      "providerMatches": true,
+      "actualReadOnly": true,
+      "toolNetworkDisabled": true,
+      "userApprovalOnRequest": true,
+      "expectedWorkingDirectory": true,
+      "ephemeralAndNeverSent": true
+    },
+    "qualified": true,
+    "authorizationConsumed": true,
+    "closedAt": "nativeReportedAnErrorOrRetry",
+    "networkGateClosedAndDrained": true,
+    "officialTunnelsTotal": 2,
+    "acceptedLocalSockets": 2,
+    "viaConfiguredSystemProxyStatus": 200,
+    "newOfficialTlsConnectionsForTurn": 0,
+    "nativeExit": 0,
+    "installationIdentityUnchanged": true
+  },
+  "userTextMarker": "FF_S12_CODEX_RO_20261122_A",
+  "requestModel": "gpt-6-astra",
+  "requestReasoning": "ultra",
+  "existingFarfoldRegistryChanged": false,
+  "rawFailureFramePersisted": false,
+  "authorizedTestTerminal": "noReplyOrCompletion",
+  "providerReceiptAndBilling": "unverified",
+  "sanitizedLocalDiagnosticClasses": [
+    {
+      "row": 57,
+      "classification": "catalogNetworkError",
+      "officialModule": "codex_models_manager::manager"
+    },
+    {
+      "row": 61,
+      "classification": "isolatedToolOrDiscoveryDenied",
+      "officialModule": "codex_skills_extension::loader::host"
+    },
+    {
+      "row": 62,
+      "classification": "isolatedToolOrDiscoveryDenied",
+      "officialModule": "codex_skills_extension::loader::host"
+    },
+    {
+      "row": 63,
+      "classification": "isolatedToolOrDiscoveryDenied",
+      "officialModule": "codex_skills_extension::loader::host"
+    },
+    {
+      "row": 66,
+      "classification": "isolatedToolOrDiscoveryDenied",
+      "officialModule": "codex_mcp::rmcp_client"
+    },
+    {
+      "row": 80,
+      "classification": "nativeModelConnectionPrewarmLogged",
+      "officialModule": "codex_api::endpoint::responses_websocket"
+    }
+  ]
+}

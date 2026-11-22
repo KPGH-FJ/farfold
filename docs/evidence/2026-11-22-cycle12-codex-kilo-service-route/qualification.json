@@ -1,0 +1,117 @@
+{
+  "officialRelease": "https://github.com/Kilo-Org/kilocode/releases/tag/v7.8.32",
+  "versions": {
+    "runtimeTested": "7.8.1",
+    "successorSourceOnly": "7.8.32",
+    "commits": [
+      "4089197545a01bbc9fa8041c1305b3fb0b0f8e66",
+      "2aa002cc0ab69d89f591f8174631152efa720877"
+    ]
+  },
+  "safetyScope": "Isolated test process, blank directories, original Home and Keychain denied, no external network or real model/credentials. Emitted receipts contain only fixture labels and approved metadata; broad runtime wire inventories not saved; no production use.",
+  "targetedEndpoint": {
+    "providerExistsInACP": true,
+    "withAdministrativeOverride": 404,
+    "withoutOverride": 404,
+    "structuredMissingProviderAtExactLocation": true,
+    "sameImplementationAcrossVersions": true,
+    "successorRuntimeVerified": false
+  },
+  "bulkEndpoint": {
+    "fixedProviderLiteral": {
+      "declared": "A",
+      "managedFinal": "B",
+      "comparisonBlockedBeforeSending": true,
+      "requestsBeforeReject": [0, 0]
+    },
+    "positiveProviderLiteral": {
+      "selected": "A",
+      "wireAtA": 1,
+      "wireAtB": 0,
+      "sameThreadExpectedAssistantMarker": true
+    },
+    "positiveModelFallback": {
+      "providerOptionsUrl": null,
+      "selectedModelUrl": "A",
+      "callerMarkerInWire": true,
+      "exactAssistantMarker": true,
+      "requestCountAtA": 1,
+      "requestCountAtB": 0
+    }
+  },
+  "scopeRemaining": [
+    "Literal custom OpenAI-compatible provider in the controlled process only. The catalog snapshot is not an immutable target for the next model request; subsequent plugin/config/source changes or external redirects were not exercised.",
+    "There is no scoped /config/providers parameter for one provider in the reviewed versions. A Farfold filter after decoding cannot change the breadth of information Kilo already sent.",
+    "No process-level endpoint lock verified in reviewed official features. The known disable-project-config switch does not remove higher-priority organization/managed layers.",
+    "The current 7.8.32 CLI was reviewed by pinned source. It was not installed or executed."
+  ],
+  "files": {
+    "guard.json": "6ad7acd4dcdfe5086dc29cea9459ef927d411cbc868f6cee033a522bf6729b0e",
+    "positive-wire.json": "4864e74fe790f301fc4bc6a214b63ae01fb13284fdcb7f51561984cb0a941912",
+    "fallback-wire.json": "142da87c31b58b5bd460265175ddbcbe86627219c54837cede64e7fa95588584",
+    "v2.json": "a68430f8acbade35bcf7152a5fea8f9b2fcfb1198c48d3461b665e93ba856e1f",
+    "v2-control.json": "1f295208a1974093ef190ba8d9b2ebc3f3026156ea17e1ce4cce85ba97890d06"
+  },
+  "sources": [
+    {
+      "what": "official targeted route 7.8.1",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/sdk/openapi.json#L24022",
+      "blob": "4fb9613e22e318e15386f093e05f894985a91d6f"
+    },
+    {
+      "what": "dedicated endpoint reads the v2 catalog rather than the ACP provider implementation",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/server/src/handlers/provider.ts#L18-L30",
+      "blob": "c3f25ab0dfc395295f46637debe31960bec2cd29"
+    },
+    {
+      "what": "v2 catalog lookup",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/core/src/catalog.ts#L175-L181",
+      "blob": "1945024b54e8c755a4f110d4bf4444ae10a10844"
+    },
+    {
+      "what": "returns active ACP runtime provider list",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/server/routes/instance/httpapi/handlers/config.ts#L37-L69",
+      "blob": "0fd41d897eb7ecb34f3be0e757091faff54c5a2d"
+    },
+    {
+      "what": "literal options.baseURL first, model.api.url fallback; late variable substitution",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/provider/provider.ts#L1852-L1875",
+      "blob": "2fa5d8610de80620d53229b7a2a1113f0c62bc78"
+    },
+    {
+      "what": "bulk provider public projection has a different scope for Kilo and other providers",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/kilocode/provider/provider.ts#L186-L189",
+      "blob": "e0ae755451edc14344a06e17d966157ad3898654"
+    },
+    {
+      "what": "supported live config change can trigger instance replacement",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/server/routes/instance/httpapi/handlers/config.ts#L25-L32",
+      "blob": "0fd41d897eb7ecb34f3be0e757091faff54c5a2d"
+    },
+    {
+      "what": "targeted route still offered in 7.8.32",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/2aa002cc0ab69d89f591f8174631152efa720877/packages/sdk/openapi.json#L27515",
+      "blob": "cd44ce8079f863b1f7e1f1d791f72f5526301384"
+    },
+    {
+      "what": "successor still selects base URL dynamically",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/2aa002cc0ab69d89f591f8174631152efa720877/packages/opencode/src/provider/provider.ts#L1864-L1885",
+      "blob": "73e63769e56b240c7f8ae622891c886ad982ad22"
+    },
+    {
+      "what": "available project config switch is distinct from higher layers",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/2aa002cc0ab69d89f591f8174631152efa720877/packages/core/src/flag/flag.ts#L131-L142",
+      "blob": "c22a64d54eba5543946b8bbef8afd499637cfc9c"
+    },
+    {
+      "what": "managed sources still applied after inline settings",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/2aa002cc0ab69d89f591f8174631152efa720877/packages/opencode/src/config/config.ts#L974-L1002",
+      "blob": "0b898b0c79a01c0070e75c66463628a601ff6331"
+    },
+    {
+      "what": "new 409 concerns editing a shadowed config file, not a launch-level lock",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/2aa002cc0ab69d89f591f8174631152efa720877/packages/opencode/src/kilocode/server/httpapi/groups/config-console.ts#L75-L93",
+      "blob": "aa49a100c3bf1b5d4b32ed572162ca7392fb8a39"
+    }
+  ]
+}

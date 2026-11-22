@@ -1,0 +1,66 @@
+{
+  "scope": "two synthetic credential-free lanes, same ACP source and tagged single-provider metadata route; only a positive preflight may send",
+  "lanes": [
+    {
+      "managedFixture": false,
+      "calls": [
+        "initialize",
+        "session/new"
+      ],
+      "syntheticPromptSent": false,
+      "identity": {
+        "name": "Kilo",
+        "version": "7.8.1"
+      },
+      "opened": true,
+      "modelsReturned": [
+        "fixture-local/one-model"
+      ],
+      "includesEitherEndpoint": false,
+      "modelOptionFields": [
+        "category",
+        "currentValue",
+        "id",
+        "name",
+        "options",
+        "type"
+      ],
+      "sessionResponseFields": [
+        "configOptions",
+        "sessionId"
+      ],
+      "perProviderResults": [
+        {
+          "subject": "synthetic selected",
+          "status": 404,
+          "errorKind": "ProviderNotFoundError",
+          "errorKeys": [
+            "_tag",
+            "message",
+            "providerID"
+          ],
+          "explicitProviderMissing": true
+        },
+        {
+          "subject": "official catalog control",
+          "status": 404,
+          "errorKind": "ProviderNotFoundError",
+          "errorKeys": [
+            "_tag",
+            "message",
+            "providerID"
+          ],
+          "explicitProviderMissing": true
+        }
+      ],
+      "providerTraffic": [
+        0,
+        0
+      ],
+      "exitCode": 0,
+      "diagnosticBytes": 0
+    }
+  ],
+  "syntheticProviderAHttpMethods": [],
+  "syntheticProviderBHttpMethods": []
+}

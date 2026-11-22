@@ -1,0 +1,73 @@
+{
+  "scope": "two synthetic credential-free lanes, same ACP source and tagged single-provider metadata route; only a positive preflight may send",
+  "lanes": [
+    {
+      "managedFixture": true,
+      "calls": [
+        "initialize",
+        "session/new"
+      ],
+      "syntheticPromptSent": false,
+      "identity": {
+        "name": "Kilo",
+        "version": "7.8.1"
+      },
+      "opened": true,
+      "modelsReturned": [
+        "fixture-local/one-model"
+      ],
+      "includesEitherEndpoint": false,
+      "modelOptionFields": [
+        "category",
+        "currentValue",
+        "id",
+        "name",
+        "options",
+        "type"
+      ],
+      "sessionResponseFields": [
+        "configOptions",
+        "sessionId"
+      ],
+      "metadataStatus": 404,
+      "disposition": "blocked: selected provider has no exact metadata",
+      "exitCode": 0,
+      "diagnosticBytes": 0
+    },
+    {
+      "managedFixture": false,
+      "calls": [
+        "initialize",
+        "session/new"
+      ],
+      "syntheticPromptSent": false,
+      "identity": {
+        "name": "Kilo",
+        "version": "7.8.1"
+      },
+      "opened": true,
+      "modelsReturned": [
+        "fixture-local/one-model"
+      ],
+      "includesEitherEndpoint": false,
+      "modelOptionFields": [
+        "category",
+        "currentValue",
+        "id",
+        "name",
+        "options",
+        "type"
+      ],
+      "sessionResponseFields": [
+        "configOptions",
+        "sessionId"
+      ],
+      "metadataStatus": 404,
+      "disposition": "blocked: selected provider has no exact metadata",
+      "exitCode": 0,
+      "diagnosticBytes": 0
+    }
+  ],
+  "syntheticProviderAHttpMethods": [],
+  "syntheticProviderBHttpMethods": []
+}

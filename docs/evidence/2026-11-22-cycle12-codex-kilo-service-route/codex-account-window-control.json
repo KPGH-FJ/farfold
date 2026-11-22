@@ -1,0 +1,41 @@
+{
+  "candidate": "native-codex-0.171.0",
+  "branch": "explicit-env-proxy",
+  "appendScopeAfterAccountTunnelClosed": false,
+  "rpc": ["initialize", "account/read"],
+  "targetsOriginalConfiguration": true,
+  "negativeControls": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "exactLoopbackProbe": {
+    "connected": true,
+    "refused": false,
+    "permissionDenied": false
+  },
+  "pid": 78342,
+  "nativeHandshake": true,
+  "accountError": {
+    "code": -32603,
+    "causes": ["workspaceRoutingDiscovery"],
+    "structuredReason": null
+  },
+  "accountTunnelClosed": true,
+  "fixtureFailure": "AssertionError",
+  "officialHostTlsTunnels": 0,
+  "rejectedProxyConnections": 0,
+  "officialHostTcpConnected": 0,
+  "encryptedClientBytesForwarded": 0,
+  "encryptedServerBytesForwarded": 0,
+  "acceptedLocalSockets": 1,
+  "relaySocketFailureKinds": {},
+  "exitCode": 0,
+  "originalIdentityUnchangedAfter": true,
+  "notifications": ["configWarning", "remoteControl/status/changed"]
+}
