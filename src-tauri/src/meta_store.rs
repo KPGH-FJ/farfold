@@ -13,6 +13,7 @@ use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 mod archive;
+pub(crate) mod codex_app_server;
 mod custom_agent;
 mod fork;
 mod initial_config;

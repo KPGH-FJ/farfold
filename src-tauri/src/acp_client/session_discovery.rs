@@ -230,6 +230,7 @@ pub(super) async fn open_preview(
         preview_token: token.clone(),
         purpose: opened.purpose.preview_name().ok_or("无法确认读取状态")?,
         session: super::session::SessionOpenResult {
+            conversation_access: None,
             history_empty_confirmed: false,
             identity_read: None,
             session_tool_inventory: None,

@@ -41,6 +41,7 @@ pub async fn session_open(
     native_session_id: Option<String>,
     config_options: Option<Value>,
     service: Option<crate::credentials::ServiceSelection>,
+    open_purpose: Option<String>,
     open_token: String,
     channel: Channel<Wake>,
     process_ended_channel: Channel<ProcessEndedReceipt>,
@@ -52,6 +53,51 @@ pub async fn session_open(
     let resumed = native_session_id.is_some();
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
+    let row = require_agent_row(&app, &agent_id).await?;
+    let cwd = validate_cwd_async(&cwd).await?;
+    let config = parse_config_map(config_options)?;
+    let explicit_check = open_purpose.as_deref() == Some(super::codex_daily::PURPOSE);
+    let previous = native_session_id
+        .as_ref()
+        .map(|id| store.codex_app_server_owner_for(&agent_id, id, &cwd.to_string_lossy()))
+        .transpose()?
+        .flatten();
+    if explicit_check || previous.is_some() {
+        if !crate::browser_workspace::caller_allowed(&webview)
+            || service.is_some()
+            || (explicit_check && resumed)
+        {
+            return Err("无法确认这段对话的账号来源".into());
+        }
+        #[cfg(not(target_os = "macos"))]
+        return Err("当前系统暂不支持打开这段对话".into());
+        #[cfg(target_os = "macos")]
+        {
+            let delivery =
+                DeliveryChannel::new(&manager, &window, &agent_id, &open_token, channel)?;
+            let opened = super::codex_daily::open(
+                &app,
+                &store,
+                super::codex_daily::OpenRequest {
+                    row,
+                    cwd,
+                    native_id: native_session_id,
+                    options: config,
+                    previous,
+                },
+            )
+            .await?;
+            delivery.send(serde_json::json!({
+                "kind":"sessionOpening", "openToken":open_token, "connectionId":opened.connection_id,
+                "sessionId":opened.native_session_id, "cwd":opened.cwd,
+            })).map_err(|_| "未能显示这段已保存的对话，请从列表打开")?;
+            if resumed {
+                delivery.send(serde_json::json!({"kind":"session_history_complete", "openToken":open_token}))
+                    .map_err(|_| "未能完整读取对话内容，请重试")?;
+            }
+            return Ok(opened);
+        }
+    }
     let draft_wait = if let Some(channel) = draft_wait_channel {
         if resumed || !crate::browser_workspace::caller_allowed(&webview) {
             return Err("无法确认草稿连接，本次未开始".into());
@@ -88,9 +134,6 @@ pub async fn session_open(
     let mut preparation = request.as_ref().map(|request| {
         super::history_admission_commands::HistoryPreparation::new(request.progress.clone())
     });
-    let row = require_agent_row(&app, &agent_id).await?;
-    let cwd = validate_cwd_async(&cwd).await?;
-    let config = parse_config_map(config_options)?;
     let channel = DeliveryChannel::new(&manager, &window, &agent_id, &open_token, channel)?;
     let delivery_failed = Arc::new(AtomicBool::new(false));
     let delivery_state = delivery_failed.clone();
@@ -218,6 +261,7 @@ pub async fn session_open(
             .map_err(|_| "未能完整读取对话内容，请重试")?;
     }
     Ok(SessionOpenResult {
+        conversation_access: None,
         history_empty_confirmed: opened.history_empty_confirmed,
         identity_read,
         session_tool_inventory,
@@ -362,6 +406,13 @@ pub async fn session_prompt(
 ) -> Result<PromptAdmission, String> {
     let deadline = tokio::time::Instant::now() + std::time::Duration::from_secs(60);
     let cwd = validate_cwd_async(&cwd).await?;
+    let store = app.state::<MetaStore>();
+    if store
+        .codex_app_server_owner_for(&agent_id, &session_id, &cwd.to_string_lossy())?
+        .is_some()
+    {
+        return Err("这段对话目前只可核对连接，发送尚未开放".into());
+    }
     let blocks: Vec<ContentBlock> = serde_json::from_value(content)
         .map_err(|error| format!("invalid prompt content: {error}"))?;
     if blocks.is_empty() {
@@ -369,7 +420,6 @@ pub async fn session_prompt(
     }
     // LifeModel seam (D8): approved canonical context prepends the
     // prompt. Empty while injection is unimplemented → no-op.
-    let store = app.state::<MetaStore>();
     let context_agent = agent_id.clone();
     let mut prompt = store
         .run(move |s| Ok(lifemodel::context_blocks_for_prompt(s, &context_agent)))
@@ -712,6 +762,17 @@ pub async fn session_close(
     allow_already_closed: Option<bool>,
 ) -> Result<(), String> {
     let cwd = validate_cwd_async(&cwd).await?;
+    if app
+        .state::<MetaStore>()
+        .codex_app_server_owner(&super::session_index::session_row_id(
+            &agent_id,
+            &cwd.to_string_lossy(),
+            &session_id,
+        ))?
+        .is_some()
+    {
+        return Ok(());
+    }
     let manager = app.state::<AcpManager>();
     if allow_already_closed.unwrap_or(false) {
         manager
@@ -855,6 +916,12 @@ pub fn session_touch(
 ) -> Result<SessionRow, String> {
     let cwd = validate_cwd(&cwd)?;
     let store = app.state::<MetaStore>();
+    let id = super::session_index::session_row_id(&agent_id, &cwd.to_string_lossy(), &session_id);
+    if store.codex_app_server_owner(&id)?.is_some() {
+        return store
+            .get_session(&id)?
+            .ok_or_else(|| "无法读取对话信息".into());
+    }
     touch_session_row(
         &store,
         &agent_id,
@@ -895,6 +962,13 @@ pub async fn session_meta_archive(
     archived: bool,
     expected_cwd: Option<String>,
 ) -> Result<SessionRow, String> {
+    if app
+        .state::<MetaStore>()
+        .codex_app_server_owner(&session_id)?
+        .is_some()
+    {
+        return Err("这段对话暂时无法归档".into());
+    }
     app.state::<AcpManager>()
         .archive_session_checked(
             &app.state::<MetaStore>(),
@@ -1027,7 +1101,12 @@ pub(super) async fn delete_session_in_scope(
     let row_id = MetaStore::dismissed_id(agent_id, &cwd_string, native_session_id);
     let guarded_id = row_id.clone();
     if store
-        .run(move |store| store.require_delete_ready(&guarded_id))
+        .run(move |store| {
+            if store.codex_app_server_owner(&guarded_id)?.is_some() {
+                return Err("这段对话暂时无法删除".into());
+            }
+            store.require_delete_ready(&guarded_id)
+        })
         .await
         .is_err()
     {

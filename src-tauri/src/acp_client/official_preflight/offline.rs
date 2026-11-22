@@ -1,5 +1,5 @@
 use std::collections::{BTreeMap, HashMap};
-use std::ffi::OsStr;
+use std::ffi::{OsStr, OsString};
 use std::fs::{self, DirBuilder, File, Metadata};
 use std::io::Read;
 use std::os::unix::fs::{DirBuilderExt, FileExt, MetadataExt, OpenOptionsExt, PermissionsExt};
@@ -11,7 +11,7 @@ use crate::acp_client::extension_inventory::{self, Code, Result};
 use crate::meta_store::AgentRow;
 use sha2::{Digest, Sha256};
 
-const SANDBOX_EXEC: &str = "/usr/bin/sandbox-exec";
+pub(in crate::acp_client) const SANDBOX_EXEC: &str = "/usr/bin/sandbox-exec";
 const ADAPTER_NPM: &str = "node_modules/@agentclientprotocol/codex-acp";
 const CLI_NPM: &str = "@openai/codex";
 const MAX_ARG0_ENTRIES: usize = 128;
@@ -100,34 +100,28 @@ fn identity_hash(file: &File) -> Option<[u8; 32]> {
     Some(Sha256::digest(contents).into())
 }
 
-pub(super) struct Launch {
-    pub(super) command: Option<Command>,
-    pub(super) cwd: PathBuf,
+pub(in crate::acp_client) struct Launch {
+    pub(in crate::acp_client) command: Option<Command>,
+    pub(in crate::acp_client) cwd: PathBuf,
     _scratch: tempfile::TempDir,
     identity: Identity,
     arg0: PathBuf,
     arg0_stamp: Stamp,
     arg0_entries: BTreeMap<PathBuf, Stamp>,
     uid: u32,
-    native: PathBuf,
-    native_stamp: Stamp,
+    native: ReviewedProgram,
 }
 
 impl Launch {
-    pub(super) fn unchanged(&self) -> bool {
+    pub(in crate::acp_client) fn unchanged(&self) -> bool {
         self.identity.unchanged()
             && directory(&self.arg0, self.uid).ok().as_ref() == Some(&self.arg0_stamp)
             && arg0_entries(&self.arg0, self.uid).ok().as_ref() == Some(&self.arg0_entries)
-            && regular(&self.native)
-                .and_then(|file| file.metadata().ok())
-                .as_ref()
-                .map(Stamp::from)
-                .as_ref()
-                == Some(&self.native_stamp)
+            && self.native.current()
     }
 }
 
-pub(super) fn available() -> bool {
+pub(in crate::acp_client) fn available() -> bool {
     regular(Path::new(SANDBOX_EXEC))
         .and_then(|file| file.metadata().ok())
         .is_some_and(|metadata| {
@@ -137,10 +131,9 @@ pub(super) fn available() -> bool {
         })
 }
 
-pub(super) fn launch(row: &AgentRow) -> Result<Launch> {
-    if !available() {
-        return Err(Code::PlatformUnsupported.into());
-    }
+pub(in crate::acp_client) fn reviewed_environment(
+    row: &AgentRow,
+) -> Result<HashMap<OsString, OsString>> {
     extension_inventory::launch::admission(row)?;
     let environment = crate::shell_env::cached_command_env().ok_or(Code::EnvironmentUnavailable)?;
     let mut effective: HashMap<_, _> = std::env::vars_os().collect();
@@ -161,16 +154,39 @@ pub(super) fn launch(row: &AgentRow) -> Result<Launch> {
     }) {
         return Err(Code::EnvironmentUnavailable.into());
     }
-    let uid = unsafe { libc::geteuid() };
-    let original = original_home(&effective, uid)?;
-    let identity = Identity::capture(original.join("installation_id"), uid)
-        .ok_or(Code::ConfigurationReadOnly)?;
+    Ok(effective)
+}
 
-    // Keep the executable selected by the reviewed registration. The direct
-    // native entry avoids executing Node or an environment wrapper inside the
-    // isolated process. Neither package nor executable is version- or SHA-pinned.
+pub(in crate::acp_client) struct ReviewedProgram {
+    path: PathBuf,
+    stamp: Stamp,
+}
+
+impl ReviewedProgram {
+    pub(in crate::acp_client) fn path(&self) -> &Path {
+        &self.path
+    }
+
+    pub(in crate::acp_client) fn current(&self) -> bool {
+        regular(&self.path)
+            .and_then(|file| file.metadata().ok())
+            .as_ref()
+            .map(Stamp::from)
+            .as_ref()
+            == Some(&self.stamp)
+    }
+}
+
+pub(in crate::acp_client) fn reviewed_program(
+    row: &AgentRow,
+    effective: &HashMap<OsString, OsString>,
+    original: &Path,
+) -> Result<ReviewedProgram> {
+    let uid = unsafe { libc::geteuid() };
+    // Use the native entry corresponding to the reviewed registration. No
+    // environment wrapper runs in the restricted worker.
     let native = native_program(row, effective.get(OsStr::new("CODEX_PATH")).map(Path::new))
-        .filter(|path| !path.starts_with(&original))
+        .filter(|path| !path.starts_with(original))
         .ok_or(Code::EntryUnverified)?;
     let native_stamp = regular(&native)
         .and_then(|file| file.metadata().ok())
@@ -182,6 +198,28 @@ pub(super) fn launch(row: &AgentRow) -> Result<Launch> {
         .as_ref()
         .map(Stamp::from)
         .ok_or(Code::EntryUnverified)?;
+    Ok(ReviewedProgram {
+        path: native,
+        stamp: native_stamp,
+    })
+}
+
+pub(in crate::acp_client) fn reviewed_original_home(
+    effective: &HashMap<OsString, OsString>,
+) -> Result<PathBuf> {
+    original_home(effective, unsafe { libc::geteuid() })
+}
+
+pub(in crate::acp_client) fn launch(row: &AgentRow) -> Result<Launch> {
+    if !available() {
+        return Err(Code::PlatformUnsupported.into());
+    }
+    let effective = reviewed_environment(row)?;
+    let uid = unsafe { libc::geteuid() };
+    let original = original_home(&effective, uid)?;
+    let identity = Identity::capture(original.join("installation_id"), uid)
+        .ok_or(Code::ConfigurationReadOnly)?;
+    let native = reviewed_program(row, &effective, &original)?;
 
     directory(&original.join("tmp"), uid)?;
     let arg0 = original.join("tmp/arg0-macos");
@@ -211,14 +249,14 @@ pub(super) fn launch(row: &AgentRow) -> Result<Launch> {
     let sqlite = scratch_child(root, "sqlite")?;
     let runtime_tmp = scratch_child(root, "tmp")?;
     let profile = root.join("offline.sb");
-    let policy = policy(&original, &native, root, &arg0, &arg0_entries, uid)?;
+    let policy = policy(&original, native.path(), root, &arg0, &arg0_entries, uid)?;
     fs::write(&profile, policy).map_err(|_| Code::CwdUnavailable)?;
 
     let mut command = Command::new(SANDBOX_EXEC);
     command
         .arg("-f")
         .arg(profile)
-        .arg(&native)
+        .arg(native.path())
         .current_dir(&cwd)
         .envs(effective);
     command
@@ -266,7 +304,6 @@ pub(super) fn launch(row: &AgentRow) -> Result<Launch> {
         arg0_entries,
         uid,
         native,
-        native_stamp,
     };
     if !launch.unchanged() {
         return Err(Code::ConfigurationChanged.into());
@@ -274,7 +311,7 @@ pub(super) fn launch(row: &AgentRow) -> Result<Launch> {
     Ok(launch)
 }
 
-fn prevent_inherited_connections(command: &mut Command) -> Result<()> {
+pub(in crate::acp_client) fn prevent_inherited_connections(command: &mut Command) -> Result<()> {
     const SCAN_MAX: libc::c_int = 1_048_576;
     let mut limits = libc::rlimit {
         rlim_cur: 0,
@@ -455,15 +492,8 @@ fn scratch_child(root: &Path, name: &str) -> Result<PathBuf> {
     Ok(result)
 }
 
-fn policy(
-    original: &Path,
-    native: &Path,
-    scratch: &Path,
-    arg0: &Path,
-    preexisting: &BTreeMap<PathBuf, Stamp>,
-    uid: u32,
-) -> Result<String> {
-    let mut lines = vec![
+pub(in crate::acp_client) fn blocked_runtime_policy() -> Vec<String> {
+    vec![
         "(version 1)".into(), "(allow default)".into(), "(deny network*)".into(),
         "(deny file-read*)".into(), "(deny file-write*)".into(), "(deny process-exec)".into(),
         "(deny process-fork)".into(),
@@ -473,8 +503,28 @@ fn policy(
         "(allow mach-lookup (global-name \"com.apple.cfprefsd.agent\") (global-name \"com.apple.cfprefsd.daemon\"))".into(),
         "(allow sysctl-read)".into(), "(allow system-info (info-type \"vfs.disk-space\"))".into(),
         "(allow file-read* (require-all (subpath \"/System\") (require-not (subpath \"/System/Volumes\"))) (subpath \"/usr/lib\") (subpath \"/usr/share\") (subpath \"/private/etc\") (subpath \"/private/var/db/timezone\") (literal \"/\") (literal \"/dev/null\") (literal \"/dev/random\") (literal \"/dev/urandom\"))".into(),
-        format!("(allow process-exec file-read* (literal {}))", quote(native)?),
-        format!("(allow file-read* (subpath {}) (subpath {}))", quote(scratch)?, quote(arg0)?),
+    ]
+}
+
+fn policy(
+    original: &Path,
+    native: &Path,
+    scratch: &Path,
+    arg0: &Path,
+    preexisting: &BTreeMap<PathBuf, Stamp>,
+    uid: u32,
+) -> Result<String> {
+    let mut lines = blocked_runtime_policy();
+    lines.extend([
+        format!(
+            "(allow process-exec file-read* (literal {}))",
+            quote(native)?
+        ),
+        format!(
+            "(allow file-read* (subpath {}) (subpath {}))",
+            quote(scratch)?,
+            quote(arg0)?
+        ),
         format!("(allow file-write* (subpath {}))", quote(scratch)?),
         // The vendor reasserts the already verified 0700 mode and uses a new
         // randomly named helper directory. No preexisting child is writable.
@@ -482,8 +532,11 @@ fn policy(
         // Seatbelt cannot distinguish an O_RDWR open from a later data write at
         // this exact pathname. The vendor's valid UUID branch only reads and
         // locks. We verify the same file, mode and bytes again after exit.
-        format!("(allow file-write-data (literal {}))", quote(&original.join("installation_id"))?),
-    ];
+        format!(
+            "(allow file-write-data (literal {}))",
+            quote(&original.join("installation_id"))?
+        ),
+    ]);
     let root = arg0
         .to_str()
         .filter(|text| {
@@ -566,7 +619,7 @@ fn policy(
     Ok(lines.join("\n"))
 }
 
-fn quote(path: &Path) -> Result<String> {
+pub(in crate::acp_client) fn quote(path: &Path) -> Result<String> {
     let text = path
         .to_str()
         .filter(|text| !text.chars().any(char::is_control))

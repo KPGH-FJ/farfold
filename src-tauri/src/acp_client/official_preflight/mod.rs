@@ -8,7 +8,7 @@ use serde::Serialize;
 use tauri::{AppHandle, Webview};
 
 #[cfg(target_os = "macos")]
-mod offline;
+pub(in crate::acp_client) mod offline;
 #[cfg(any(target_os = "macos", test))]
 mod wire;
 

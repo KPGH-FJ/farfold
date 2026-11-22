@@ -371,6 +371,7 @@ export const STRINGS = {
       authentication: "登录或准备操作未结束",
       activeWork: "工具或其他工作未结束",
       pendingRequests: "仍有待审批或待回答事项",
+      conversationAccess: "当前对话暂不支持修改设置",
     },
     recheckConfig: "重新检查",
     recheckingConfig: "正在检查…",

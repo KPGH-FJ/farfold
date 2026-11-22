@@ -72,6 +72,11 @@ enum LogFields<'a> {
     },
     #[cfg(target_os = "macos")]
     BrowserScreenshotFailure(BrowserScreenshotFailure),
+    #[cfg(target_os = "macos")]
+    CodexConversationCheck {
+        stage: &'static str,
+        code: crate::acp_client::extension_inventory::Code,
+    },
 }
 
 fn now_millis() -> i64 {
@@ -234,6 +239,12 @@ impl AppLog {
                     "[{timestamp}] [{level}] [browser_screenshot] stage={stage} category={category}\n"
                 )
             }
+            #[cfg(target_os = "macos")]
+            LogFields::CodexConversationCheck { stage, code } => {
+                format!(
+                    "[{timestamp}] [{level}] [codex_conversation_check] stage={stage} code={code:?}\n"
+                )
+            }
         };
         // Flush every line: the logger lives in a `static` that never
         // drops at process exit, so buffered bytes would be lost.
@@ -290,6 +301,21 @@ pub(crate) fn record_browser_screenshot_failure(failure: BrowserScreenshotFailur
         && let Some(log) = guard.as_mut()
     {
         log.write_fields(Level::Warn, LogFields::BrowserScreenshotFailure(failure));
+    }
+}
+
+#[cfg(target_os = "macos")]
+pub(crate) fn record_codex_conversation_failure(
+    stage: &'static str,
+    code: crate::acp_client::extension_inventory::Code,
+) {
+    if let Ok(mut guard) = slot().lock()
+        && let Some(log) = guard.as_mut()
+    {
+        log.write_fields(
+            Level::Warn,
+            LogFields::CodexConversationCheck { stage, code },
+        );
     }
 }
 

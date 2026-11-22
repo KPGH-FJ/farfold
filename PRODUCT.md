@@ -161,6 +161,7 @@ adapter、JSON、握手、 envelope。内部标识符可用工程词，注释与
   不 pin 版本（registry 条目自带的归档 sha256 校验除外）。
 - Agent 拥有自己的 HOME、凭据、配置、模型目录、会话历史。Farfold 不 env_clear、不私有 HOME、
   不替 Agent 写配置文件。
+- 2026-11-22 用户批准 Codex 的新对话通过官方 App Server 使用单独的 Codex 目录。用户在该目录用同一个 ChatGPT 账号和工作区完成官方登录。原账号配置和历史保留在原处。独立目录的凭据与历史仍由 Codex 自己管理，系统 HOME 不变。先验零发送新建与按原 ID 冷开，发送另行确认。
 - Farfold 存储仅限：会话索引与用户元数据、Settings、LifeModel 数据、安装缓存。
   不建 Turn/事件账本。
 - 使用官方 SDK（Rust `agent-client-protocol`）与官方/上游适配器；不 fork Agent。

@@ -1,0 +1,104 @@
+{
+  "officialProgram": {
+    "version": "0.171.0",
+    "stableMirroredPackageFilesMatched": 43,
+    "officialLoginExit": 0,
+    "independentOfficialCredentialPresent": true
+  },
+  "firstInstall": {
+    "source": {
+      "base": "56ef38ed303df854e8f4a0fb4d0454d459a0471e",
+      "sourceDeltaSha256": "272338ad72d683805a494c788d9202ba6ca2e32b2250b2e44a093127b97af64d"
+    },
+    "cdhash": "e80149e3933553c99d67c3fafda05038785200a2",
+    "arch": "arm64",
+    "changedBundleFiles": ["Contents/MacOS/farfold"],
+    "normalExitsAndProcessesReaped": true,
+    "dataProtectedEntries": 264519,
+    "criticalFilesMatched": 6,
+    "dataMetadataSha256": "1e85294edfad9a3fe7022acbf68dcef49b1cc6f23f85883336acbf01af48b2b8"
+  },
+  "firstColdOpen": {
+    "result": "uiReconnectFailed",
+    "ownedHistoryAddedSettingsEvent": true,
+    "exactTrigger": "unknown",
+    "modelMessages": 0
+  },
+  "finalNewAndCold": {
+    "normalAppFullyExitedBetween": true,
+    "sameOfficialAccountAndWorkspace": true,
+    "sameVendorId": true,
+    "provider": "openai",
+    "model": "gpt-6-astra",
+    "effort": "ultra",
+    "effectiveFileAccess": "read-only",
+    "toolNetwork": false,
+    "approval": "on-request",
+    "reviewer": "user",
+    "sendDisabled": true,
+    "modelMessages": 0,
+    "onlinePrewarm": 0,
+    "wasColdOpenedAfterNamedSampleCreated": true,
+    "normalDraftVisibleAfterRestart": true
+  },
+  "preservationAndNativeIds": {
+    "tests": [
+      {
+        "scope": "work",
+        "idSha256": "ac72d4d85f7f9176bf17b068fae4ba2894846db9953948fa28694897a59a1f71",
+        "rolloutRecords": 3,
+        "messageOrTurnRecords": 0
+      },
+      {
+        "scope": "work-final",
+        "idSha256": "360fe73183a805cee3bf6686ee46b2f1091a95c7c5d061280f2ad1ec03a10498",
+        "rolloutRecords": 2,
+        "messageOrTurnRecords": 0
+      }
+    ],
+    "existingCodexAndCopilotIndexRowsVerified": {
+      "codex": 2,
+      "%copilot%": 10
+    },
+    "associatedOriginalVendorRolloutsUnchanged": 2,
+    "originalLoginAndConfigFilesMatched": true,
+    "stableOfficialProgramSelected": true,
+    "sameFinalColdIdAsCreated": true
+  },
+  "newAndColdInstall": {
+    "source": {
+      "base": "56ef38ed303df854e8f4a0fb4d0454d459a0471e",
+      "sourceDeltaSha256": "6c368b1ccd8e1205217e4981a802cc094076965e96847f3c4b60ef2eea93ed97"
+    },
+    "cdhash": "e30fb68f7648b2187dbc2c42bccfefaf86a761ee",
+    "arch": "arm64",
+    "changedBundleFiles": ["Contents/MacOS/farfold"],
+    "normalExitsAndProcessesReaped": true,
+    "dataProtectedEntries": 264676,
+    "criticalFilesMatched": 6,
+    "dataMetadataSha256": "2352a549490c77e5adb986c113db76560740810a427438143a7f034c88974ba7"
+  },
+  "newAndColdExecutableSha256": "112300461d6646f95d53e0996fe5695a69375f05855bf6fc9255b5b209702fe7",
+  "finalInstall": {
+    "source": {
+      "base": "56ef38ed303df854e8f4a0fb4d0454d459a0471e",
+      "sourceDeltaSha256": "7f5b49d8f657dc658491c8da4e7fc7b41ec4c4be034f75ef59fd50742188741d"
+    },
+    "cdhash": "d8394351fa4d844f7d977428d7ea41222a2cb357",
+    "arch": "arm64",
+    "changedBundleFiles": ["Contents/MacOS/farfold"],
+    "normalExitsAndProcessesReaped": true,
+    "dataProtectedEntries": 264678,
+    "criticalFilesMatched": 6,
+    "dataMetadataSha256": "471a5abd304a409ad67a571c6a85ece94dd5015cd837456375dbe73db6693703"
+  },
+  "finalExecutableSha256": "934758e1b7ec280ba85bc729053d417ec2f28cafdca1158e98ce62a640d3a4d8",
+  "finalGuardRegression": {
+    "firstCompleteFrontendRunFailed": 1,
+    "reason": "busy check read zero-send status before the existing running short-circuit",
+    "correctedCompleteFrontendTestsPassed": 11121,
+    "rustUnitTestsPassed": 2878,
+    "rustUnitTestsIgnored": 10,
+    "formalSameIdReopenReverifiedAfterGuardFix": true
+  }
+}

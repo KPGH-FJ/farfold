@@ -42,6 +42,8 @@ import {
 import type { AgentCardModel } from "../runtime/agents";
 import { promptCapabilities } from "../runtime/agents";
 import { useConnectionHold } from "../runtime/connection_hold";
+import { ZERO_SEND_STRINGS } from "../runtime/conversation_access";
+import { ConversationAccessNotice } from "./ConversationAccessNotice";
 import { AgentLogo } from "./AgentLogo";
 import {
   threads,
@@ -224,7 +226,7 @@ export function ThreadView({
   };
   const localArtifactReturnFocus = useRef<HTMLElement | null>(null);
   useConnectionHold(
-    active && !thread.connectionLost
+    active && !thread.connectionLost && !thread.conversationAccess
       ? {
           agentId: thread.agentId,
           cwd: thread.cwd,
@@ -825,7 +827,7 @@ export function ThreadView({
                 if (ownsContent()) showToolLocation(scrollRef.current, tool.id);
               }}
             />
-            {empty && !thread.openError && (
+            {empty && !thread.openError && !thread.conversationAccess && (
               <div className="who">{STRINGS.thread.draftHint}</div>
             )}
             {blocks.map((block) => {
@@ -1200,6 +1202,9 @@ export function ThreadView({
           </div>
         )}
         <div className="composer-wrap">
+          {thread.conversationAccess && (
+            <ConversationAccessNotice access={thread.conversationAccess} />
+          )}
           {active && showLatest && (
             <button
               type="button"
@@ -1294,8 +1299,14 @@ export function ThreadView({
               suppressThreadOpenError={
                 recoveryNotice || Boolean(thread.openError)
               }
-              disabled={draftReadRequired}
-              note={draftReadRequired ? C.readRequired : undefined}
+              disabled={draftReadRequired || !!thread.conversationAccess}
+              note={
+                thread.conversationAccess
+                  ? ZERO_SEND_STRINGS.sendingUnavailable
+                  : draftReadRequired
+                    ? C.readRequired
+                    : undefined
+              }
               prepareAction={draftReadRequired ? onGoSettings : undefined}
               onSend={
                 thread.identity === "draft"
@@ -1345,7 +1356,7 @@ export function ThreadView({
                       </dt>
                       <dd>{modelLabel}</dd>
                     </dl>
-                    {thread.connectionId && (
+                    {thread.connectionId && !thread.conversationAccess && (
                       <ConnectionAccount
                         thread={thread}
                         agentId={thread.agentId}

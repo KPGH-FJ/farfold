@@ -40,6 +40,7 @@ export interface PreparationInfo {
   links: PreparationLink[];
   actions?: PreparationAction[];
   officialReadOnlyCheck?: OfficialReadOnlyCheck;
+  officialConversationCheck?: OfficialReadOnlyCheck;
   connectionGuidance?: ConnectionGuidance[];
   officialMethodRoles?: OfficialMethodRole[];
   installationOptions?: InstallationOptions;

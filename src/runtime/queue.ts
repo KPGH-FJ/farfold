@@ -60,6 +60,7 @@ function canAdmit(s: ThreadState): boolean {
     !hasPendingRequests(s) &&
     (!s.permissionConfigId || s.permissionState === "ready") &&
     !s.stopUnconfirmed &&
+    !s.conversationAccess &&
     !s.modelDrift &&
     !s.connectionLost &&
     !s.openError &&

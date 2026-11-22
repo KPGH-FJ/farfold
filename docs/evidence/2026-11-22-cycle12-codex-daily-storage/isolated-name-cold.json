@@ -1,0 +1,245 @@
+{
+  "vendorNativeVersion": "0.171.0",
+  "realAccountOrInstalledFarfoldUsed": false,
+  "modelRequests": 0,
+  "policyScope": "Dedicated synthetic profile, separate work and temporary directories, all network denied, unrelated symlink read/write denied. Extra fixed test executables are allowed only for the negative controls.",
+  "titlePersistence": [
+    {
+      "variant": "thread_name_save",
+      "codexSessionsDenied": false,
+      "negativeControls": {
+        "allowedLoopback": 1,
+        "otherLoopbacks": [1],
+        "ipv4Egress": 1,
+        "ipv6Egress": 1,
+        "homeRead": 1,
+        "outsideFixtureRead": 1,
+        "outsideFixtureWrite": 1,
+        "securitydLookup": 1100,
+        "securityServerLookup": 1100,
+        "systemPolicyExistence": {
+          "synced": 1,
+          "configForced": 0,
+          "requirementsForced": 0
+        },
+        "fixtureHomeReadable": false
+      },
+      "create": {
+        "outgoing": [
+          "initialize",
+          "initialized",
+          "accountSession/list",
+          "thread/start",
+          "thread/name/set"
+        ],
+        "notifications": ["remoteControl/status/changed", "thread/started"],
+        "emptyAccountStore": true,
+        "receipt": {
+          "idDigest": "85d5f01cb905fc5a6fe122cca26141f2e06e23cb322a5f21195c3be4d66f3e52",
+          "rootIdMatches": true,
+          "cwdMatches": true,
+          "provider": "fixture_offline",
+          "model": "gpt-6-astra",
+          "effort": "ultra",
+          "approval": "on-request",
+          "reviewer": "user",
+          "sandbox": {
+            "type": "readOnly",
+            "networkAccess": false
+          },
+          "emptyResultTurns": true,
+          "ephemeral": false
+        },
+        "nameSaveAcknowledged": true,
+        "sqliteMoved": false,
+        "officialPathUsesCodexSessions": true,
+        "exit": 0,
+        "stderrCategory": "none"
+      },
+      "fixtureHistoryFiles": 1,
+      "relocatedSqliteHistoryFiles": 0,
+      "relocatedSqliteDbCreated": false,
+      "coldResume": {
+        "outgoing": ["initialize", "initialized", "thread/resume"],
+        "notifications": [
+          "remoteControl/status/changed",
+          "thread/status/changed"
+        ],
+        "receipt": {
+          "idDigest": "85d5f01cb905fc5a6fe122cca26141f2e06e23cb322a5f21195c3be4d66f3e52",
+          "rootIdMatches": true,
+          "cwdMatches": true,
+          "provider": "fixture_offline",
+          "model": "gpt-6-astra",
+          "effort": null,
+          "approval": "on-request",
+          "reviewer": "user",
+          "sandbox": {
+            "type": "readOnly",
+            "networkAccess": false
+          },
+          "emptyResultTurns": true,
+          "ephemeral": false
+        },
+        "sameThread": true,
+        "namePreserved": true,
+        "exit": 0,
+        "stderrCategory": "none"
+      }
+    },
+    {
+      "variant": "new_no_name_control",
+      "codexSessionsDenied": false,
+      "negativeControls": {
+        "allowedLoopback": 1,
+        "otherLoopbacks": [1],
+        "ipv4Egress": 1,
+        "ipv6Egress": 1,
+        "homeRead": 1,
+        "outsideFixtureRead": 1,
+        "outsideFixtureWrite": 1,
+        "securitydLookup": 1100,
+        "securityServerLookup": 1100,
+        "systemPolicyExistence": {
+          "synced": 1,
+          "configForced": 0,
+          "requirementsForced": 0
+        },
+        "fixtureHomeReadable": false
+      },
+      "create": {
+        "outgoing": [
+          "initialize",
+          "initialized",
+          "accountSession/list",
+          "thread/start"
+        ],
+        "notifications": ["remoteControl/status/changed"],
+        "emptyAccountStore": true,
+        "receipt": {
+          "idDigest": "31d8fe70c126069f39dd4d8b80752a16e48b72e15023a3c53b13a4cf4a1b2517",
+          "rootIdMatches": true,
+          "cwdMatches": true,
+          "provider": "fixture_offline",
+          "model": "gpt-6-astra",
+          "effort": "ultra",
+          "approval": "on-request",
+          "reviewer": "user",
+          "sandbox": {
+            "type": "readOnly",
+            "networkAccess": false
+          },
+          "emptyResultTurns": true,
+          "ephemeral": false
+        },
+        "sqliteMoved": false,
+        "officialPathUsesCodexSessions": true,
+        "exit": 0,
+        "stderrCategory": "none"
+      },
+      "fixtureHistoryFiles": 0,
+      "relocatedSqliteHistoryFiles": 0,
+      "relocatedSqliteDbCreated": false,
+      "coldResume": {
+        "outgoing": ["initialize", "initialized", "thread/resume"],
+        "notifications": ["remoteControl/status/changed"],
+        "rpcError": {
+          "method": "thread/resume",
+          "code": -32600,
+          "category": "rolloutNotFound"
+        },
+        "stopReason": "rpcError",
+        "exit": 0,
+        "stderrCategory": "none"
+      }
+    }
+  ],
+  "sameIdUltraVerificationAfterTitleSave": {
+    "validation": "self-owned synthetic saved thread, full network denial and no normal Farfold",
+    "modelRequests": 0,
+    "idDigest": "85d5f01cb905fc5a6fe122cca26141f2e06e23cb322a5f21195c3be4d66f3e52",
+    "settingsUpdateCount": 1,
+    "previousControlReceipt": "receipt.json",
+    "phases": [
+      {
+        "name": "firstColdResumeAndOneUpdate",
+        "sent": [
+          "initialize",
+          "initialized",
+          "accountSession/list",
+          "thread/resume",
+          "thread/settings/update"
+        ],
+        "notifications": [
+          "remoteControl/status/changed",
+          "thread/status/changed",
+          "thread/goal/cleared",
+          "thread/settings/updated"
+        ],
+        "requiredSystemPreferences": {
+          "synced": 1,
+          "configForced": 0,
+          "requirementsForced": 0
+        },
+        "accountEmpty": true,
+        "resumeEffective": {
+          "sameThread": true,
+          "cwdMatches": true,
+          "model": "gpt-6-astra",
+          "provider": "fixture_offline",
+          "effort": null,
+          "fileScope": "readOnly",
+          "toolNetwork": false,
+          "approval": "on-request",
+          "reviewer": "user"
+        },
+        "beforeUpdateNotificationCount": 0,
+        "updateAckEmpty": true,
+        "afterUpdateEffective": {
+          "sameThread": true,
+          "cwdMatches": true,
+          "model": "gpt-6-astra",
+          "provider": "fixture_offline",
+          "effort": "ultra",
+          "fileScope": "readOnly",
+          "toolNetwork": false,
+          "approval": "on-request",
+          "reviewer": "user"
+        },
+        "exit": 0
+      },
+      {
+        "name": "secondColdResumeOnly",
+        "sent": [
+          "initialize",
+          "initialized",
+          "accountSession/list",
+          "thread/resume"
+        ],
+        "notifications": [
+          "remoteControl/status/changed",
+          "thread/status/changed"
+        ],
+        "requiredSystemPreferences": {
+          "synced": 1,
+          "configForced": 0,
+          "requirementsForced": 0
+        },
+        "accountEmpty": true,
+        "resumeEffective": {
+          "sameThread": true,
+          "cwdMatches": true,
+          "model": "gpt-6-astra",
+          "provider": "fixture_offline",
+          "effort": "ultra",
+          "fileScope": "readOnly",
+          "toolNetwork": false,
+          "approval": "on-request",
+          "reviewer": "user"
+        },
+        "exit": 0
+      }
+    ],
+    "syntheticConfigUnchanged": true
+  }
+}

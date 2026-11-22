@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   getAgentPreparation,
   type PreparationInfo,
@@ -18,6 +18,9 @@ export function useConnectionPreparation(
     info?: PreparationInfo;
     error?: string;
   }>();
+  const pending = useRef<
+    { target: string; info: Promise<PreparationInfo | undefined> } | undefined
+  >(undefined);
   const target = JSON.stringify([
     agentId,
     program,
@@ -27,9 +30,10 @@ export function useConnectionPreparation(
   useEffect(() => {
     if (!enabled) return;
     let current = true;
-    void getAgentPreparation(agentId)
+    const read = getAgentPreparation(agentId)
       .then((info) => {
         if (current) setResult({ target, info });
+        return info;
       })
       .catch((reason) => {
         if (current)
@@ -37,9 +41,13 @@ export function useConnectionPreparation(
             target,
             error: uiError(reason, PREPARATION_ACTION_STRINGS.loadFailed),
           });
+        return undefined;
       });
+    const owner = { target, info: read };
+    pending.current = owner;
     return () => {
       current = false;
+      if (pending.current === owner) pending.current = undefined;
     };
   }, [agentId, target, enabled]);
 
@@ -48,6 +56,12 @@ export function useConnectionPreparation(
     info: ready ? result.info : undefined,
     error: ready ? result.error : undefined,
     loading: enabled && !ready,
+    async resolveInfo() {
+      const owner = pending.current;
+      if (!enabled || owner?.target !== target) return undefined;
+      const value = await owner.info;
+      return pending.current === owner ? value : undefined;
+    },
     retry: () => setRevision((current) => current + 1),
   };
 }

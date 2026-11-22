@@ -128,6 +128,10 @@ export interface IndexRow {
 }
 
 import type { OpenResult } from "./session_open_types";
+import {
+  readConversationAccess,
+  ZERO_SEND_STRINGS,
+} from "./conversation_access";
 export type { OpenResult } from "./session_open_types";
 
 /** External conversation shape accepted by the sidebar grouping helper. */
@@ -669,6 +673,9 @@ class ThreadsStore {
         cwd: input.cwd,
         nativeSessionId: input.nativeSessionId ?? null,
         configOptions: input.configOptions ?? null,
+        ...(input.openPurpose || input.draftScope
+          ? { openPurpose: input.openPurpose ?? "preparation" }
+          : {}),
         service: input.service
           ? {
               ...input.service,
@@ -683,6 +690,12 @@ class ThreadsStore {
         channel,
       });
       opened = result;
+      const access = readConversationAccess(result.conversationAccess);
+      if (
+        (input.openPurpose === "codex-official-check" && !access?.receipt) ||
+        (retryState?.conversationAccess && !access)
+      )
+        throw new Error(ZERO_SEND_STRINGS.openFailed);
       recheck?.validateResult(result);
       // The hidden state receives the prefix once; its marker is acknowledged
       // before pull pauses. The command can return without any further body.
@@ -724,14 +737,15 @@ class ThreadsStore {
         throw error;
       }
       Auth.bindProgramAuthentication(state, authentication);
-      authentication.observe(input.cwd, undefined, state.serviceContext);
+      if (!access)
+        authentication.observe(input.cwd, undefined, state.serviceContext);
       const previous = this.threads.get(key);
       if (previous) this.forks.retire(previous);
       this.stopConfirmation.clear(key);
       this.threads.set(key, state);
       this.channels.set(key, channel);
       this.recordPermissionChanges(key, replay.acceptedPermissionChanges);
-      if (!result.resumed) {
+      if (state.identity === "draft") {
         this.drafts.set(draftGroup(input), key);
       }
       boundKey = key;
@@ -770,7 +784,11 @@ class ThreadsStore {
           ? (this.threads.get(target.key) ??
             this.threads.get(target.originalKey))
           : undefined;
-        if (!input.nativeSessionId || previous)
+        if (
+          (!input.nativeSessionId || previous) &&
+          input.openPurpose !== "codex-official-check" &&
+          !previous?.conversationAccess
+        )
           authentication?.observe(
             target.cwd,
             error,
@@ -883,6 +901,10 @@ class ThreadsStore {
     sourceDraft?: { key: string; value: ComposerDraft },
   ): Promise<SendAdmission> {
     const s = this.thread(key);
+    if (s?.conversationAccess) {
+      if (sourceDraft) throw new Error(ZERO_SEND_STRINGS.sendingUnavailable);
+      return { status: "rejected", reason: "unavailable" };
+    }
     if (!s || !blocks.length || this.deletions.has(key)) {
       if (sourceDraft) throw new Error(STRINGS.repair.sendFailed);
       return { status: "rejected", reason: "unavailable" };
@@ -984,6 +1006,7 @@ class ThreadsStore {
     const s = this.thread(key);
     if (
       !s ||
+      s.conversationAccess ||
       this.deletions.has(key) ||
       s.uncertainPrompt ||
       s.connectionOutcomeUnknown ||

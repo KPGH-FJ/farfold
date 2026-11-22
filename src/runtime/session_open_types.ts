@@ -22,6 +22,7 @@ export interface OpenResult {
   resumed: boolean;
   /** Current official empty-history fact verified by the owning backend open. */
   historyEmptyConfirmed?: boolean;
+  conversationAccess?: import("./conversation_access").ZeroSendAccess;
   warnings: string[];
   configCheck?: ConfigCheck;
   permissionConfigId?: string;

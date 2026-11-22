@@ -35,6 +35,7 @@ export function protectedConfigIds(
 }
 
 export type ConfigBusyReason =
+  | "conversationAccess"
   | "running"
   | "submitting"
   | "configuring"
@@ -57,6 +58,7 @@ export function configChangeBusyReason(
   thread: ThreadState,
 ): ConfigBusyReason | null {
   if (thread.running) return "running";
+  if (thread.conversationAccess) return "conversationAccess";
   if (thread.submitting) return "submitting";
   if (thread.configuring) return "configuring";
   if (thread.reconnecting) return "reconnecting";

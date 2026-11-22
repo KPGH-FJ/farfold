@@ -1,0 +1,307 @@
+{
+  "officialVersion": "0.171.0",
+  "latestVerifiedBy": ["npm tag latest", "GitHub latest release"],
+  "productionFilesAccessed": false,
+  "authenticatedAccountUsed": false,
+  "modelRequests": 0,
+  "outsideAndNetworkDenied": true,
+  "runs": {
+    "sqliteRelocation": [
+      {
+        "variant": "sqlite_relocated",
+        "codexSessionsDenied": false,
+        "negativeControls": {
+          "allowedLoopback": 1,
+          "otherLoopbacks": [1],
+          "ipv4Egress": 1,
+          "ipv6Egress": 1,
+          "homeRead": 0,
+          "outsideFixtureRead": 1,
+          "outsideFixtureWrite": 1,
+          "securitydLookup": 1100,
+          "securityServerLookup": 1100,
+          "systemPolicyExistence": {
+            "synced": 1,
+            "configForced": 0,
+            "requirementsForced": 0
+          },
+          "fixtureHomeReadable": true
+        },
+        "create": {
+          "outgoing": [
+            "initialize",
+            "initialized",
+            "accountSession/list",
+            "thread/start",
+            "thread/section/move"
+          ],
+          "notifications": ["remoteControl/status/changed", "thread/started"],
+          "emptyAccountStore": true,
+          "receipt": {
+            "idDigest": "3888fabb6612b4fb9e0f1565b17984cc6d91cc8f896889466a7cf5adec83e593",
+            "rootIdMatches": true,
+            "cwdMatches": true,
+            "provider": "fixture_offline",
+            "model": "gpt-6-astra",
+            "effort": "ultra",
+            "approval": "on-request",
+            "reviewer": "user",
+            "sandbox": {
+              "type": "readOnly",
+              "networkAccess": false
+            },
+            "emptyResultTurns": true,
+            "ephemeral": false
+          },
+          "placementAcknowledged": true,
+          "sqliteMoved": true,
+          "officialPathUsesCodexSessions": true,
+          "exit": 0,
+          "stderrCategory": "none"
+        },
+        "fixtureHistoryFiles": 1,
+        "relocatedSqliteHistoryFiles": 0,
+        "relocatedSqliteDbCreated": true,
+        "coldResume": {
+          "outgoing": ["initialize", "initialized", "thread/resume"],
+          "notifications": [
+            "remoteControl/status/changed",
+            "thread/status/changed"
+          ],
+          "receipt": {
+            "idDigest": "3888fabb6612b4fb9e0f1565b17984cc6d91cc8f896889466a7cf5adec83e593",
+            "rootIdMatches": true,
+            "cwdMatches": true,
+            "provider": "fixture_offline",
+            "model": "gpt-6-astra",
+            "effort": null,
+            "approval": "on-request",
+            "reviewer": "user",
+            "sandbox": {
+              "type": "readOnly",
+              "networkAccess": false
+            },
+            "emptyResultTurns": true,
+            "ephemeral": false
+          },
+          "sameThread": true,
+          "exit": 0,
+          "stderrCategory": "none"
+        }
+      },
+      {
+        "variant": "sqlite_relocated_deny_codex_sessions",
+        "codexSessionsDenied": true,
+        "negativeControls": {
+          "allowedLoopback": 1,
+          "otherLoopbacks": [1],
+          "ipv4Egress": 1,
+          "ipv6Egress": 1,
+          "homeRead": 0,
+          "outsideFixtureRead": 1,
+          "outsideFixtureWrite": 1,
+          "securitydLookup": 1100,
+          "securityServerLookup": 1100,
+          "systemPolicyExistence": {
+            "synced": 1,
+            "configForced": 0,
+            "requirementsForced": 0
+          },
+          "fixtureHomeReadable": true
+        },
+        "create": {
+          "outgoing": [
+            "initialize",
+            "initialized",
+            "accountSession/list",
+            "thread/start",
+            "thread/section/move"
+          ],
+          "notifications": ["remoteControl/status/changed", "thread/started"],
+          "emptyAccountStore": true,
+          "receipt": {
+            "idDigest": "9d92c09919e0d88644d85474cf98ea0c84946cc9e9c66c6ad3f57fd80e72d3c4",
+            "rootIdMatches": true,
+            "cwdMatches": true,
+            "provider": "fixture_offline",
+            "model": "gpt-6-astra",
+            "effort": "ultra",
+            "approval": "on-request",
+            "reviewer": "user",
+            "sandbox": {
+              "type": "readOnly",
+              "networkAccess": false
+            },
+            "emptyResultTurns": true,
+            "ephemeral": false
+          },
+          "rpcError": {
+            "method": "thread/section/move",
+            "code": -32600,
+            "category": "notFound"
+          },
+          "stopReason": "rpcError",
+          "exit": 0,
+          "stderrCategory": "none"
+        },
+        "fixtureHistoryFiles": 0,
+        "relocatedSqliteHistoryFiles": 0,
+        "relocatedSqliteDbCreated": true
+      }
+    ],
+    "sqliteRelocationSourceSha256": "de01786c4c03ca47abbd00516c9e6cd7dea14937ae61312cc09e6675cdb89ed2",
+    "explicitIdAndMemoryStore": [
+      {
+        "variant": "local_explicit_fresh_id",
+        "codexSessionsDenied": false,
+        "negativeControls": {
+          "allowedLoopback": 1,
+          "otherLoopbacks": [1],
+          "ipv4Egress": 1,
+          "ipv6Egress": 1,
+          "homeRead": 0,
+          "outsideFixtureRead": 1,
+          "outsideFixtureWrite": 1,
+          "securitydLookup": 1100,
+          "securityServerLookup": 1100,
+          "systemPolicyExistence": {
+            "synced": 1,
+            "configForced": 0,
+            "requirementsForced": 0
+          },
+          "fixtureHomeReadable": true
+        },
+        "create": {
+          "outgoing": [
+            "initialize",
+            "initialized",
+            "accountSession/list",
+            "thread/start",
+            "thread/section/move"
+          ],
+          "notifications": ["remoteControl/status/changed", "thread/started"],
+          "emptyAccountStore": true,
+          "receipt": {
+            "idDigest": "5aee09935089cdd5a05933b297929bd8a3c7e1ea6caa7864d7a0495d3d693395",
+            "rootIdMatches": true,
+            "cwdMatches": true,
+            "provider": "fixture_offline",
+            "model": "gpt-6-astra",
+            "effort": "ultra",
+            "approval": "on-request",
+            "reviewer": "user",
+            "sandbox": {
+              "type": "readOnly",
+              "networkAccess": false
+            },
+            "emptyResultTurns": true,
+            "ephemeral": false
+          },
+          "requestedFreshIdMatched": false,
+          "placementAcknowledged": true,
+          "sqliteMoved": true,
+          "officialPathUsesCodexSessions": true,
+          "exit": 0,
+          "stderrCategory": "none"
+        },
+        "fixtureHistoryFiles": 1,
+        "relocatedSqliteHistoryFiles": 0,
+        "relocatedSqliteDbCreated": true,
+        "coldResume": {
+          "outgoing": ["initialize", "initialized", "thread/resume"],
+          "notifications": [
+            "remoteControl/status/changed",
+            "thread/status/changed"
+          ],
+          "receipt": {
+            "idDigest": "5aee09935089cdd5a05933b297929bd8a3c7e1ea6caa7864d7a0495d3d693395",
+            "rootIdMatches": true,
+            "cwdMatches": true,
+            "provider": "fixture_offline",
+            "model": "gpt-6-astra",
+            "effort": null,
+            "approval": "on-request",
+            "reviewer": "user",
+            "sandbox": {
+              "type": "readOnly",
+              "networkAccess": false
+            },
+            "emptyResultTurns": true,
+            "ephemeral": false
+          },
+          "sameThread": true,
+          "exit": 0,
+          "stderrCategory": "none"
+        }
+      },
+      {
+        "variant": "in_memory_explicit_fresh_id",
+        "codexSessionsDenied": true,
+        "negativeControls": {
+          "allowedLoopback": 1,
+          "otherLoopbacks": [1],
+          "ipv4Egress": 1,
+          "ipv6Egress": 1,
+          "homeRead": 0,
+          "outsideFixtureRead": 1,
+          "outsideFixtureWrite": 1,
+          "securitydLookup": 1100,
+          "securityServerLookup": 1100,
+          "systemPolicyExistence": {
+            "synced": 1,
+            "configForced": 0,
+            "requirementsForced": 0
+          },
+          "fixtureHomeReadable": true
+        },
+        "create": {
+          "outgoing": [
+            "initialize",
+            "initialized",
+            "accountSession/list",
+            "thread/start"
+          ],
+          "notifications": ["remoteControl/status/changed"],
+          "emptyAccountStore": true,
+          "receipt": {
+            "idDigest": "5e3fcdaaffab476e1f707af55c344eed21bafd1fbb54a0feeeb1722d9a00a4d3",
+            "rootIdMatches": true,
+            "cwdMatches": true,
+            "provider": "fixture_offline",
+            "model": "gpt-6-astra",
+            "effort": "ultra",
+            "approval": "on-request",
+            "reviewer": "user",
+            "sandbox": {
+              "type": "readOnly",
+              "networkAccess": false
+            },
+            "emptyResultTurns": true,
+            "ephemeral": false
+          },
+          "requestedFreshIdMatched": false,
+          "sqliteMoved": true,
+          "officialPathUsesCodexSessions": false,
+          "exit": 0,
+          "stderrCategory": "none"
+        },
+        "fixtureHistoryFiles": 0,
+        "relocatedSqliteHistoryFiles": 0,
+        "relocatedSqliteDbCreated": true,
+        "coldResume": {
+          "outgoing": ["initialize", "initialized", "thread/resume"],
+          "notifications": ["remoteControl/status/changed"],
+          "rpcError": {
+            "method": "thread/resume",
+            "code": -32600,
+            "category": "rolloutNotFound"
+          },
+          "stopReason": "rpcError",
+          "exit": 0,
+          "stderrCategory": "none"
+        }
+      }
+    ],
+    "explicitIdAndMemoryStoreSourceSha256": "55917d5b3d21d1cae39ba8569d0ba43def86380d134b9359eab62b587b610d8b"
+  }
+}

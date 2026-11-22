@@ -1,5 +1,6 @@
 import { applyConfigCheck } from "./config_check";
 import { replacePermissionEffect } from "./permission_effect";
+import { readConversationAccess } from "./conversation_access";
 import { pauseQueue } from "./queue";
 import { sessionOperations } from "./session_fork_types";
 import { workspaceAccessCapability } from "./workspace_access_types";
@@ -85,7 +86,9 @@ export function applyOpeningResult(
   );
   state.draftGroup = draftGroup(input);
   state.resumed = result.resumed;
-  state.identity = result.resumed ? "established" : "draft";
+  state.conversationAccess = readConversationAccess(result.conversationAccess);
+  state.identity =
+    result.resumed || state.conversationAccess ? "established" : "draft";
   state.title = savedTitle?.trim() ? savedTitle : (previousTitle ?? null);
   state.configOptions = normalizeConfigOptions(result.configOptions);
   state.currentModeId = null;

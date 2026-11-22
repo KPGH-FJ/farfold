@@ -1344,6 +1344,8 @@ impl InteractionReply {
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SessionOpenResult {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub conversation_access: Option<super::codex_daily::ConversationAccess>,
     #[serde(skip_serializing_if = "std::ops::Not::not")]
     pub history_empty_confirmed: bool,
     pub identity_read: Option<super::identity_read::Capability>,

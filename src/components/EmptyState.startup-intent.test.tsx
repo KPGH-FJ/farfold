@@ -124,6 +124,8 @@ vi.mock("../runtime/sessions", async (original) => ({
   },
 }));
 import { EmptyState } from "./EmptyState";
+import { invoke } from "@tauri-apps/api/core";
+import { ZERO_SEND_STRINGS } from "../runtime/conversation_access";
 import { Composer } from "./Composer";
 import { ComposerWorkNotice } from "./ComposerWorkNotice";
 import { PreservedDrafts } from "./PreservedDrafts";
@@ -267,6 +269,7 @@ async function beginSend() {
 }
 beforeEach(() => {
   vi.useFakeTimers();
+  vi.mocked(invoke).mockResolvedValue(null);
   h.slots = [];
   h.effects = [];
   h.workReady = true;
@@ -340,6 +343,60 @@ it("restores a complete ready choice and draft without opening a new conversatio
   expect(h.send).not.toHaveBeenCalled();
   expect(composerDrafts.read("new")).toBe(original);
   expect({ ...newConversationChoice }).toEqual(choice);
+});
+
+it("opens the declared checked conversation only on the ordinary open action and preserves unsent text", async () => {
+  vi.mocked(invoke).mockImplementation(async (name) =>
+    name === "agent_preparation"
+      ? {
+          officialConversationCheck: {
+            id: "official-check",
+            modelOptionId: "model",
+            reasoningOptionId: "reasoning",
+          },
+        }
+      : null,
+  );
+  const state = prepared();
+  state.identity = "established";
+  state.conversationAccess = {
+    kind: "zero-send",
+    receipt: {
+      accountVerified: true,
+      provider: "openai",
+      fileAccess: "read-only",
+      toolNetwork: false,
+      approval: "on-request",
+      model: "saved-model",
+      effort: "high",
+    },
+  };
+  h.open.mockResolvedValue(state);
+  const original = composerDrafts.read("new");
+  render();
+  await settle();
+  chooseSameAgent();
+  await vi.advanceTimersByTimeAsync(300);
+  expect(h.open).not.toHaveBeenCalled();
+  expect(composer().props.disabled).toBe(true);
+  const action = render().find(
+    (node) =>
+      node.type === "button" && node.props.children === ZERO_SEND_STRINGS.open,
+  )!;
+  expect(action.props.disabled).toBe(false);
+  (action.props.onClick as () => void)();
+  (action.props.onClick as () => void)();
+  await settle();
+  expect(h.open).toHaveBeenCalledExactlyOnceWith({
+    agentId: "ready-agent",
+    cwd: "/project",
+    configOptions: { model: "saved-model", reasoning: "high" },
+    fresh: true,
+    openPurpose: "codex-official-check",
+  });
+  expect(props.onStarted).toHaveBeenCalledExactlyOnceWith(state.key);
+  expect(h.send).not.toHaveBeenCalled();
+  expect(composerDrafts.read("new")).toBe(original);
 });
 
 it.each(["retry", "reselect"] as const)(

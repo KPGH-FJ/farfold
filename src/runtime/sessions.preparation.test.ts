@@ -10,6 +10,7 @@ import { threads } from "./sessions";
 import { AgentPreparation } from "./agent_preparation";
 import { draftPersistence } from "./drafts";
 import { emitOpeningHeader } from "./session_open_test_fixture";
+import { ZERO_SEND_STRINGS } from "./conversation_access";
 const settings = new Map<string, unknown>();
 function localCommand(command: string, args?: Record<string, unknown>) {
   if (command === "settings_get")
@@ -28,6 +29,92 @@ beforeEach(() => {
 });
 afterEach(async () => {
   await draftPersistence.flush();
+});
+
+it("keeps a checked ID as an established read-only conversation across open and reopen without prompt admission", async () => {
+  const receipt = {
+    accountVerified: true,
+    provider: "openai",
+    fileAccess: "read-only",
+    toolNetwork: false,
+    approval: "on-request",
+    model: "gpt-6-astra",
+    effort: "ultra",
+  };
+  const input = { agentId: "receipt-test", cwd: "/receipt" };
+  const opens: { purpose: unknown; nativeId: unknown }[] = [];
+  h.invoke.mockImplementation(async (command, io) => {
+    if (command !== "session_open") return localCommand(command, io);
+    opens.push({ purpose: io.openPurpose, nativeId: io.nativeSessionId });
+    const result = {
+      cwd: input.cwd,
+      nativeSessionId: "receipt-native-id",
+      connectionId: `receipt-connection-${opens.length}`,
+      resumed: Boolean(io.nativeSessionId),
+      historyEmptyConfirmed: true,
+      conversationAccess: { kind: "zero-send", receipt },
+    };
+    emitOpeningHeader(io, result);
+    if (result.resumed)
+      io.channel.onmessage({
+        kind: "session_history_complete",
+        openToken: io.openToken,
+      });
+    return result;
+  });
+  const state = await threads.open({
+    ...input,
+    fresh: true,
+    openPurpose: "codex-official-check",
+  });
+  expect(state.identity).toBe("established");
+  expect(state.conversationAccess?.receipt).toEqual(receipt);
+  const blocks = [{ type: "text", text: "Keep this message" }] as const;
+  await expect(threads.send(state.key, [...blocks])).resolves.toEqual({
+    status: "rejected",
+    reason: "unavailable",
+  });
+  expect(state.queued).toEqual([]);
+  state.connectionLost = true;
+  const reopened = await threads.open({
+    ...input,
+    nativeSessionId: state.nativeSessionId,
+  });
+  expect(reopened.key).toBe(state.key);
+  expect(reopened.conversationAccess?.receipt).toEqual(receipt);
+  expect(opens).toEqual([
+    { purpose: "codex-official-check", nativeId: null },
+    { purpose: undefined, nativeId: "receipt-native-id" },
+  ]);
+  await threads.continueQueue(reopened.key);
+  expect(
+    h.invoke.mock.calls.some(([command]) => command === "session_prompt"),
+  ).toBe(false);
+});
+
+it("rejects a legacy receipt returned for the checked-conversation action", async () => {
+  h.invoke.mockImplementation(async (command, io) => {
+    if (command !== "session_open") return localCommand(command, io);
+    const result = {
+      cwd: io.cwd,
+      nativeSessionId: "legacy-result",
+      connectionId: "legacy",
+      resumed: false,
+    };
+    emitOpeningHeader(io, result);
+    return result;
+  });
+  await expect(
+    threads.open({
+      agentId: "receipt-test",
+      cwd: "/invalid-receipt",
+      fresh: true,
+      openPurpose: "codex-official-check",
+    }),
+  ).rejects.toThrow(ZERO_SEND_STRINGS.openFailed);
+  expect(
+    h.invoke.mock.calls.filter(([command]) => command === "session_open"),
+  ).toHaveLength(1);
 });
 
 const waitTarget = { agentId: "draft-wait", cancelWaitingDraft: true } as const;

@@ -47,9 +47,9 @@ import {
   type NewConversationModelChoice,
 } from "./NewConversationPickers";
 import { Composer } from "./Composer";
+import { useNewConversationCheck } from "./useNewConversationCheck";
 import { ExistingSettingsRecheck } from "./ExistingSettingsRecheck";
-import type { AgentCardModel } from "../runtime/agents";
-import { promptCapabilities } from "../runtime/agents";
+import { promptCapabilities, type AgentCardModel } from "../runtime/agents";
 import {
   isAgentPresentable,
   isAgentReadyForConversation,
@@ -349,6 +349,20 @@ export function EmptyState({
     sendAfterFolder,
   );
   const archiveBlocked = archiveGuard.blocked;
+  const preparationBlocked = archiveBlocked || selectionNeedsReview;
+  const officialOpen = useNewConversationCheck({
+    agent: currentAgent,
+    cwd: requestCwd,
+    eligible: active && candidateSelected && !service && preparationComplete,
+    allowed:
+      !preparationBlocked &&
+      connectionAllowed &&
+      !needsAuthentication &&
+      !unsent.pendingConversation &&
+      !!agentId &&
+      work.enabled(agentId),
+    onOpened: onStarted,
+  });
   const currentPair = useRef(pair);
   currentPair.current = pair;
   const selectionEpoch = useRef(0);
@@ -475,7 +489,7 @@ export function EmptyState({
   ]);
   useEffect(() => {
     const intent = preparationIntent.current;
-    if (!intent) {
+    if (!intent || officialOpen.blocksOrdinary) {
       setOpening(false);
       return;
     }
@@ -483,12 +497,7 @@ export function EmptyState({
       setOpening(false);
       return;
     }
-    if (
-      !candidateSelected ||
-      !connectionAllowed ||
-      selectionNeedsReview ||
-      archiveBlocked
-    ) {
+    if (!candidateSelected || !connectionAllowed || preparationBlocked) {
       setOpening(false);
       return;
     }
@@ -550,6 +559,7 @@ export function EmptyState({
       setDraftError(null);
       (async () => {
         await requireCurrentService();
+        if (!(await officialOpen.allowsOrdinary())) return null;
         archiveGuard.requireAvailable();
         if (
           cancelled ||
@@ -577,6 +587,7 @@ export function EmptyState({
         });
       })()
         .then(async (state) => {
+          if (!state) return;
           openedKey = state.key;
           if (rejectOpened()) return;
           if (
@@ -657,6 +668,7 @@ export function EmptyState({
     work.ready,
     agentId ? work.enabled(agentId) : false,
     unsent.pendingConversation,
+    officialOpen.blocksOrdinary,
   ]);
   const modelOption = draft ? modelConfigOption(draft.configOptions) : null;
   const applyingModel = useRef<string | null>(null);
@@ -750,6 +762,7 @@ export function EmptyState({
       throw new Error(STRINGS.repair.sendFailed);
   };
   const send = async (blocks: PromptBlock[], submittedDraft: ComposerDraft) => {
+    if (officialOpen.blocksOrdinary) return false;
     const interrupted = draftPersistence.captureInteractionInterruption();
     if (interrupted()) throw new Error(STRINGS.repair.sendFailed);
     locationOwner.current.retire();
@@ -880,6 +893,7 @@ export function EmptyState({
     }
   };
   const agentSendable =
+    !officialOpen.blocksOrdinary &&
     !archiveBlocked &&
     candidateSelected &&
     connectionAllowed &&
@@ -961,6 +975,7 @@ export function EmptyState({
     (explicitReadRequired ? C.readPending : null) ??
     (!connectionAllowed ? A.disconnectedHint : null) ??
     confirmationFeedback(draftError, draft?.configError) ??
+    officialOpen.notice ??
     (draft?.connectionLost ? STRINGS.thread.connectionIdle : null) ??
     (draft?.sourceError ? STRINGS.service.reconnect : null) ??
     (!agentId
@@ -1351,9 +1366,7 @@ export function EmptyState({
           !!draft?.submitting ||
           !!draft?.running
         }
-        preparationDisabled={
-          archiveBlocked || selectionNeedsReview || !!draft?.configuring
-        }
+        preparationDisabled={preparationBlocked || !!draft?.configuring}
         onPick={() => void pickProject()}
         onClear={() => {
           locationOwner.current.retire();
@@ -1361,6 +1374,7 @@ export function EmptyState({
         }}
         beginWorkLocation={beginWorkLocation}
         beginPreparation={beginPreparation}
+        openAction={officialOpen.action}
       />
       {(draftError ||
         draft?.connectionLost ||

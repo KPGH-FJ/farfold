@@ -93,6 +93,8 @@ pub struct PreparationInfo {
     pub official_method_roles: Vec<super::preparation_actions::OfficialMethodRole>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub official_read_only_check: Option<super::official_preflight::Descriptor>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub official_conversation_check: Option<super::codex_daily::Descriptor>,
 }
 
 // Public account guidance, verified 2026-09-28. These links never authenticate
@@ -528,6 +530,7 @@ fn preparation_info_refresh(
         connection_guidance: vec![],
         official_method_roles: vec![],
         official_read_only_check: None,
+        official_conversation_check: None,
     })
 }
 
@@ -580,6 +583,7 @@ pub async fn agent_preparation(
         )?;
         if let Some(row) = &row {
             info.official_read_only_check = super::official_preflight::descriptor(row);
+            info.official_conversation_check = super::codex_daily::descriptor(row, &data);
             info.actions = super::preparation_actions::actions_for(&store, row, &data)?;
             let discovered = if row.source == "discovered" {
                 catalog.discovered_cached().unwrap_or_default()

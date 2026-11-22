@@ -6,6 +6,7 @@ import type { WorkLocationIntent } from "../runtime/worktree_management";
 import type { PreparationDraftTarget } from "../runtime/draft_preparation";
 import { WorkLocationPicker } from "./WorkLocationPicker";
 import { WorktreePreparationControl } from "./WorktreePreparationControl";
+import type { ReactNode } from "react";
 
 export function NewConversationLocationBar({
   folder,
@@ -16,6 +17,7 @@ export function NewConversationLocationBar({
   onClear,
   beginWorkLocation,
   beginPreparation,
+  openAction,
 }: {
   folder: string | null;
   active: boolean;
@@ -25,6 +27,7 @@ export function NewConversationLocationBar({
   onClear: () => void;
   beginWorkLocation: () => WorkLocationIntent | null;
   beginPreparation: () => PreparationDraftTarget | null;
+  openAction?: ReactNode;
 }) {
   return (
     <div className="workspace-folder-bar">
@@ -62,6 +65,7 @@ export function NewConversationLocationBar({
         begin={beginPreparation}
       />
       <span className="workspace-folder-hint">{R.folderHint}</span>
+      {openAction}
     </div>
   );
 }
