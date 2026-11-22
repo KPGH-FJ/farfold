@@ -1,6 +1,9 @@
 import { useRef } from "react";
 import type { Credential, ServiceCapability } from "../runtime/credentials";
-import { apiConfigurationState } from "../runtime/service_capability";
+import {
+  apiConfigurationState,
+  emptyServiceGuidance,
+} from "../runtime/service_capability";
 import { ACCESS_STRINGS as S } from "../runtime/access_strings";
 import { STRINGS } from "../runtime/strings";
 import {
@@ -51,7 +54,10 @@ export function AgentServiceSection({
     Object.entries(STRINGS.credentials.formats).find(
       ([type]) => type === selected?.apiType,
     )?.[1] ?? selected?.apiType;
-  const empty = state === "supported" && !error && choices.length === 0;
+  const empty =
+    capability && state === "supported" && !error && !choices.length
+      ? emptyServiceGuidance(capability, items)
+      : null;
   const blocked = disabled || error || state !== "supported";
   const context = JSON.stringify([
     agentId,
@@ -145,7 +151,7 @@ export function AgentServiceSection({
             : state === "unknown"
               ? STRINGS.common.loading
               : empty
-                ? R.noServices
+                ? empty.message
                 : !editing
                   ? R.unavailable
                   : null}
@@ -161,7 +167,7 @@ export function AgentServiceSection({
           disabled={blocked}
           onClick={() => manage(onOpenApi, false)}
         >
-          {empty ? R.addService : S.openApi}
+          {empty?.add ? R.addService : S.openApi}
         </button>
       ) : null}
     </div>

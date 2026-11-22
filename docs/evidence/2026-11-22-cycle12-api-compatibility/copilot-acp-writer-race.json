@@ -1,0 +1,213 @@
+{
+  "sessionId": "b6dacdac-18fa-4a9d-96af-29fbc96dda2c",
+  "syntheticSourceClone": true,
+  "inheritedHomeUnchanged": true,
+  "activePreflight": {
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "ownLoopbackAllowed": true,
+    "otherLoopbackDenied": true,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "readerPreflight": {
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "ownLoopbackAllowed": false,
+    "otherLoopbackDenied": true,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "sdkProtocolVersion": 4,
+  "ALoad": {
+    "hasResult": true,
+    "resultKeys": [
+      "configOptions",
+      "models",
+      "modes"
+    ]
+  },
+  "AInUse": {
+    "inUse": []
+  },
+  "BLoad": {
+    "hasResult": true,
+    "resultKeys": [
+      "configOptions",
+      "models",
+      "modes"
+    ]
+  },
+  "BInUse": {
+    "inUse": []
+  },
+  "baselineEventCount": 8,
+  "AReachedProviderBeforeBSend": true,
+  "BQWhileAWasRunning": true,
+  "BResult": {
+    "hasResult": true,
+    "resultKeys": [
+      "stopReason"
+    ],
+    "stopReason": "end_turn"
+  },
+  "AResult": {
+    "hasResult": true,
+    "resultKeys": [
+      "stopReason"
+    ],
+    "stopReason": "end_turn"
+  },
+  "completePage": true,
+  "newRootsAndErrors": [
+    {
+      "type": "user.message",
+      "id": "8f5e0d92-94ec-4062-8050-8bd564c8777e",
+      "parentId": "3f3191a2-caea-4aa6-98b3-f941fc8560a1",
+      "agentId": null,
+      "ephemeral": null,
+      "checkpoint": null,
+      "marker": false,
+      "errorMarker": false,
+      "keyFound": false,
+      "messageId": "b02ba178-d25b-4780-bc01-ce42ebb34f4e",
+      "interactionId": "c0379f77-6eab-417d-bd9d-44f635d3df92",
+      "turnId": "0",
+      "mappedTestMarker": "A"
+    },
+    {
+      "type": "user.message",
+      "id": "1cd46856-8c4c-4534-a9df-81006e5809bd",
+      "parentId": "2ee1701f-991c-464c-a12f-18b55806fc00",
+      "agentId": null,
+      "ephemeral": null,
+      "checkpoint": null,
+      "marker": false,
+      "errorMarker": false,
+      "keyFound": false,
+      "messageId": "7d0fd6eb-fcca-40eb-b5e2-75c173f56ef7",
+      "interactionId": "34d8cd19-280d-4d38-a0de-da3e5cf571df",
+      "turnId": "0",
+      "mappedTestMarker": "B"
+    },
+    {
+      "type": "session.error",
+      "id": "4a7c874e-8dd7-4faa-b22c-ac83fe018a62",
+      "parentId": "bbeabc53-6c4f-405d-aaed-5477a0bda9e9",
+      "agentId": null,
+      "ephemeral": null,
+      "checkpoint": null,
+      "marker": false,
+      "errorMarker": false,
+      "keyFound": false,
+      "errorType": "authentication",
+      "statusCode": 401,
+      "providerErrorType": "authentication_error",
+      "providerErrorCode": "invalid_api_key",
+      "originatingMessageId": "7d0fd6eb-fcca-40eb-b5e2-75c173f56ef7",
+      "mappedTestMarker": null
+    },
+    {
+      "type": "session.error",
+      "id": "a521ff5e-2261-448a-aa87-7bedc7aee445",
+      "parentId": "7b4230df-47c7-438e-b29b-28059bb2788b",
+      "agentId": null,
+      "ephemeral": null,
+      "checkpoint": null,
+      "marker": false,
+      "errorMarker": false,
+      "keyFound": false,
+      "errorType": "authentication",
+      "statusCode": 401,
+      "providerErrorType": "authentication_error",
+      "providerErrorCode": "invalid_api_key",
+      "originatingMessageId": "b02ba178-d25b-4780-bc01-ce42ebb34f4e",
+      "mappedTestMarker": null
+    }
+  ],
+  "AClose": {
+    "hasResult": true,
+    "resultKeys": []
+  },
+  "BClose": {
+    "hasResult": true,
+    "resultKeys": []
+  },
+  "AProcess": {
+    "exitCode": 0,
+    "methods": [
+      "initialize",
+      "session/load",
+      "session/prompt",
+      "session/close"
+    ],
+    "syntheticKeyInCapturedStderr": false,
+    "stderrFirstLine": null
+  },
+  "BProcess": {
+    "exitCode": 0,
+    "methods": [
+      "initialize",
+      "session/load",
+      "session/prompt",
+      "session/close"
+    ],
+    "syntheticKeyInCapturedStderr": false,
+    "stderrFirstLine": null
+  },
+  "reader": {
+    "exitCode": 0,
+    "methods": [
+      "ping",
+      "sessions.checkInUse",
+      "sessions.checkInUse",
+      "sessions.readPersistedEvents",
+      "sessions.readPersistedEvents"
+    ],
+    "stderrBytes": 0
+  },
+  "providerRequests": [
+    {
+      "marker": "A",
+      "path": "/v1/chat/completions",
+      "AAlreadyReturned": false,
+      "syntheticBearerMatches": true
+    },
+    {
+      "marker": "B",
+      "path": "/v1/chat/completions",
+      "AAlreadyReturned": false,
+      "syntheticBearerMatches": true
+    },
+    {
+      "marker": "B",
+      "path": "/v1/chat/completions",
+      "AAlreadyReturned": false,
+      "syntheticBearerMatches": true
+    },
+    {
+      "marker": "A",
+      "path": "/v1/chat/completions",
+      "AAlreadyReturned": false,
+      "syntheticBearerMatches": true
+    },
+    {
+      "marker": "B",
+      "path": "/v1/chat/completions",
+      "AAlreadyReturned": false,
+      "syntheticBearerMatches": true
+    },
+    {
+      "marker": "A",
+      "path": "/v1/chat/completions",
+      "AAlreadyReturned": false,
+      "syntheticBearerMatches": true
+    }
+  ]
+}

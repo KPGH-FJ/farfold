@@ -1,0 +1,491 @@
+{
+  "fixtureNetwork": "owned loopback only; no real account or provider",
+  "nativeHomeChanged": false,
+  "lanes": {
+    "standard": {
+      "agentInfo": {
+        "name": "goose",
+        "version": "1.59.1"
+      },
+      "sessionId": "20261122_1",
+      "firstPrompt": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "result": {
+          "stopReason": "end_turn"
+        }
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "model": null,
+          "prompt_present": false,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [],
+          "key_exact": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "authorization",
+            "host"
+          ],
+          "requestedTitle": false,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "model": null,
+          "prompt_present": false,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [],
+          "key_exact": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "authorization",
+            "host"
+          ],
+          "requestedTitle": false,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "model": "gpt-5",
+          "prompt_present": true,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [
+            "developer",
+            "user"
+          ],
+          "key_exact": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "agent-session-id",
+            "authorization",
+            "content-length",
+            "content-type",
+            "host"
+          ],
+          "requestedTitle": true,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "model": "gpt-5",
+          "prompt_present": true,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [
+            "developer",
+            "user"
+          ],
+          "key_exact": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "agent-session-id",
+            "authorization",
+            "content-length",
+            "content-type",
+            "host"
+          ],
+          "requestedTitle": false,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "model": null,
+          "prompt_present": false,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [],
+          "key_exact": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "authorization",
+            "host"
+          ],
+          "requestedTitle": false,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "model": "gpt-5",
+          "prompt_present": true,
+          "followup_present": true,
+          "prior_reply_present": false,
+          "roles": [
+            "developer",
+            "user"
+          ],
+          "key_exact": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "agent-session-id",
+            "authorization",
+            "content-length",
+            "content-type",
+            "host"
+          ],
+          "requestedTitle": true,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "model": "gpt-5",
+          "prompt_present": true,
+          "followup_present": true,
+          "prior_reply_present": true,
+          "roles": [
+            "developer",
+            "user",
+            "assistant",
+            "user"
+          ],
+          "key_exact": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "agent-session-id",
+            "authorization",
+            "content-length",
+            "content-type",
+            "host"
+          ],
+          "requestedTitle": false,
+          "hasOrganizationHeader": false
+        }
+      ],
+      "requestEvidenceSha256": "b18a54410e4149678d9a16d50cd02ba5c924188774310c4c52e6c23e4ee8f448",
+      "firstEvidenceSha256": "2f18e30fc2e522ee467b14abcc9ac83023a0d7c47fcb934c1e781a7067138ee2",
+      "reopenSessionId": "20261122_1",
+      "followUpPrompt": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "result": {
+          "stopReason": "end_turn"
+        }
+      },
+      "reopenEvidenceSha256": "8eb538a4929b84d4bc42dfc13bcbbfefea94dafa341c423cc9b3bf44fb6b8647"
+    },
+    "negative": {
+      "agentInfo": {
+        "name": "goose",
+        "version": "1.59.1"
+      },
+      "sessionId": "20261122_1",
+      "firstPrompt": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "error": {
+          "code": -32000,
+          "message": "Authentication required",
+          "data": {
+            "reason": "turn_failed"
+          }
+        }
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "model": null,
+          "prompt_present": false,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [],
+          "key_exact": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "authorization",
+            "host"
+          ],
+          "requestedTitle": false,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "model": null,
+          "prompt_present": false,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [],
+          "key_exact": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "authorization",
+            "host"
+          ],
+          "requestedTitle": false,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "model": "gpt-5",
+          "prompt_present": true,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [
+            "developer",
+            "user"
+          ],
+          "key_exact": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "agent-session-id",
+            "authorization",
+            "content-length",
+            "content-type",
+            "host"
+          ],
+          "requestedTitle": true,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "model": "gpt-5",
+          "prompt_present": true,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [
+            "developer",
+            "user"
+          ],
+          "key_exact": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "agent-session-id",
+            "authorization",
+            "content-length",
+            "content-type",
+            "host"
+          ],
+          "requestedTitle": false,
+          "hasOrganizationHeader": false
+        }
+      ],
+      "requestEvidenceSha256": "df68d72fde3f0a7bb50e9b08b5d0eaf9f745d990740e29823115544260066eb6",
+      "firstEvidenceSha256": "0b9a806a98c412e8c9117267bc7eab00ab5bf6945d2491a34cdb9a3bd5cf896b"
+    },
+    "conflict": {
+      "agentInfo": {
+        "name": "goose",
+        "version": "1.59.1"
+      },
+      "sessionId": "20261122_1",
+      "firstPrompt": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "result": {
+          "stopReason": "end_turn"
+        }
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "model": null,
+          "prompt_present": false,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [],
+          "key_exact": true,
+          "key_count": 1,
+          "unselected_test_header": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "authorization",
+            "host",
+            "x-fixture-override"
+          ],
+          "requestedTitle": false,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "model": null,
+          "prompt_present": false,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [],
+          "key_exact": true,
+          "key_count": 1,
+          "unselected_test_header": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "authorization",
+            "host",
+            "x-fixture-override"
+          ],
+          "requestedTitle": false,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "model": "gpt-5",
+          "prompt_present": true,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [
+            "developer",
+            "user"
+          ],
+          "key_exact": true,
+          "key_count": 1,
+          "unselected_test_header": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "agent-session-id",
+            "authorization",
+            "content-length",
+            "content-type",
+            "host",
+            "x-fixture-override"
+          ],
+          "requestedTitle": true,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "model": "gpt-5",
+          "prompt_present": true,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [
+            "developer",
+            "user"
+          ],
+          "key_exact": true,
+          "key_count": 1,
+          "unselected_test_header": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "agent-session-id",
+            "authorization",
+            "content-length",
+            "content-type",
+            "host",
+            "x-fixture-override"
+          ],
+          "requestedTitle": false,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "model": null,
+          "prompt_present": false,
+          "followup_present": false,
+          "prior_reply_present": false,
+          "roles": [],
+          "key_exact": true,
+          "key_count": 1,
+          "unselected_test_header": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "authorization",
+            "host",
+            "x-fixture-override"
+          ],
+          "requestedTitle": false,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "model": "gpt-5",
+          "prompt_present": true,
+          "followup_present": true,
+          "prior_reply_present": false,
+          "roles": [
+            "developer",
+            "user"
+          ],
+          "key_exact": true,
+          "key_count": 1,
+          "unselected_test_header": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "agent-session-id",
+            "authorization",
+            "content-length",
+            "content-type",
+            "host",
+            "x-fixture-override"
+          ],
+          "requestedTitle": true,
+          "hasOrganizationHeader": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "model": "gpt-5",
+          "prompt_present": true,
+          "followup_present": true,
+          "prior_reply_present": true,
+          "roles": [
+            "developer",
+            "user",
+            "assistant",
+            "user"
+          ],
+          "key_exact": true,
+          "key_count": 1,
+          "unselected_test_header": true,
+          "header_names": [
+            "accept",
+            "accept-encoding",
+            "agent-session-id",
+            "authorization",
+            "content-length",
+            "content-type",
+            "host",
+            "x-fixture-override"
+          ],
+          "requestedTitle": false,
+          "hasOrganizationHeader": false
+        }
+      ],
+      "requestEvidenceSha256": "998b8254c6b790ddf6a3708a92e510ce80f3a074d33341e9e8b229aab0b24fd5",
+      "firstEvidenceSha256": "6b1eac29404fd3b8e5fa1c29b4a39ae420423160b6150b5a33815e2ccdf96253",
+      "reopenSessionId": "20261122_1",
+      "followUpPrompt": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "result": {
+          "stopReason": "end_turn"
+        }
+      },
+      "reopenEvidenceSha256": "4ac49c905df34f53812e2deb5a96f02d20f2e1373436c471a0f2a5a98846e4a8"
+    }
+  }
+}

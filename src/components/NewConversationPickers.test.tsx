@@ -307,6 +307,32 @@ it("applies an existing model pick on click and closes, while an unpicked close 
   expect(props.onApply).not.toHaveBeenCalled();
 });
 
+it.each([
+  [[], "尚未保存模型 API 服务"],
+  [[{ ...service, apiType: "messages" }], "有接口格式不匹配的配置"],
+  [[{ ...service, revision: "" }], "有已存服务待完善"],
+] satisfies [Credential[], string][])(
+  "explains an empty saved-service group without applying settings (%#)",
+  async (records, reason) => {
+    h.list.mockResolvedValue(records);
+    const tree = await loaded();
+    expect(
+      tree.some(
+        (node) =>
+          node.type === "p" &&
+          text(node.props.children as ReactNode).includes(reason) &&
+          text(node.props.children as ReactNode).includes("Responses"),
+      ),
+    ).toBe(true);
+    expect(button("Current")).toBeDefined();
+    expect(button("api-one")).toBeUndefined();
+    click(S.manageServices);
+    expect(props.onManageServices).toHaveBeenCalledOnce();
+    expect(props.onApply).not.toHaveBeenCalled();
+    expect(props.onPrepare).not.toHaveBeenCalled();
+  },
+);
+
 it("groups compatible saved services and applies the clicked model", async () => {
   const tree = await loaded();
   expect(

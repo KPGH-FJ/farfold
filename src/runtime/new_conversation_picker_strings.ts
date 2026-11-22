@@ -21,7 +21,6 @@ export const NEW_CONVERSATION_PICKER_STRINGS = {
   readingModels: "正在读取当前模型选项…",
   savedServices: "你保存的 API 服务",
   loadingServices: "正在读取保存的服务…",
-  noServices: "还没有兼容的服务，可前往 API 管理添加。",
   servicesUnavailable:
     "这个 Agent 不支持使用这里保存的服务，可继续使用它已有的设置。",
   serviceChanged: "所选服务已改变或不可用，请重新选择。",

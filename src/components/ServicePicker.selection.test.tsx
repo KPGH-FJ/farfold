@@ -268,11 +268,15 @@ function renderApi(
   return { html, buttons, onOpenApi, onChange, onRetry };
 }
 
-it.each([{ items: [] }, { items: [{ ...record, complete: false }] }])(
-  "uses one add-service action when no usable service remains",
-  ({ items }) => {
+it.each<Credential[][]>([
+  [[]],
+  [[{ ...record, purpose: "authentication", complete: false, models: [] }]],
+])(
+  "only offers to add when there are no saved model services (%j)",
+  (items) => {
     const view = renderApi({ items });
-    expect(view.html).toContain("尚无可用服务");
+    expect(view.html).toContain("尚未保存模型 API 服务");
+    expect(view.html).toContain("此 Agent 可选的接口格式为 Responses");
     expect(view.html).not.toContain("<select");
     expect(view.buttons).toHaveLength(1);
     expect(view.buttons[0].props).toMatchObject({
@@ -286,10 +290,70 @@ it.each([{ items: [] }, { items: [{ ...record, complete: false }] }])(
   },
 );
 
+it.each([
+  [{ ...record, complete: false }, "有已存服务待完善"],
+  [{ ...record, deleting: true }, "已存模型服务正在移除"],
+  [
+    { ...record, apiType: "chat-completions" },
+    "此 Agent 可选的接口格式为 Responses",
+  ],
+] as const)(
+  "explains why a saved service is absent and opens the existing list",
+  (item, reason) => {
+    const view = renderApi({ items: [item] });
+    expect(view.html).toContain(reason);
+    expect(view.html).not.toContain("添加模型 API 服务");
+    expect(view.html).not.toContain("<select");
+    expect(view.buttons).toHaveLength(1);
+    expect(view.buttons[0].props.children).toBe("前往 API 配置");
+    view.buttons[0].props.onClick!({} as never);
+    expect(view.onOpenApi).toHaveBeenCalledOnce();
+    expect(view.onChange).not.toHaveBeenCalled();
+  },
+);
+
+it("reports only declared public address alternatives for the formats of mismatched saved services", () => {
+  const privateAddress = "https://user-host.test/teams/private-project";
+  const view = renderApi({
+    items: [{ ...record, apiType: "messages", endpoint: privateAddress }],
+    capability: {
+      apiTypes: ["responses", "messages"],
+      validatedApiTypes: [],
+      selectionScope: "connection",
+      unavailableReason: null,
+      endpointRules: [
+        {
+          apiType: "messages",
+          requiredPathSuffix: "/api/v2",
+          allowedExactEndpoints: [
+            "https://official.test",
+            "https://invalid.test?token=fake",
+          ],
+        },
+        {
+          apiType: "responses",
+          requiredPathSuffix: "/unused",
+          allowedExactEndpoints: [],
+        },
+      ],
+    },
+  });
+  expect(view.html).toContain("Messages 基础地址");
+  expect(view.html).toContain("以 /api/v2 结尾，或使用 https://official.test");
+  expect(view.html).not.toContain(privateAddress);
+  expect(view.html).not.toContain("/unused");
+  expect(view.html).not.toContain("token=fake");
+  expect(view.buttons[0].props.children).toBe("前往 API 配置");
+  expect(view.onChange).not.toHaveBeenCalled();
+});
+
 it("retains the service picker when a usable service exists", () => {
-  const view = renderApi({ items: [record] });
+  const view = renderApi({
+    items: [{ ...record, id: "incomplete", complete: false }, record],
+  });
   expect(view.html).toContain("<select");
-  expect(view.html).not.toContain("尚无可用服务");
+  expect(view.html).not.toContain("尚未保存模型 API 服务");
+  expect(view.html).not.toContain("有已存服务待完善");
   expect(view.html).not.toContain("添加模型 API 服务");
   expect(view.buttons[0].props.className).toBe("btn btn-ghost");
   expect(view.onOpenApi).not.toHaveBeenCalled();
@@ -302,7 +366,7 @@ it.each(["error", "unknown"])(
     const view = renderApi(
       state === "error" ? { error: true } : { capability: null },
     );
-    expect(view.html).not.toContain("尚无可用服务");
+    expect(view.html).not.toContain("尚未保存模型 API 服务");
     expect(view.html).not.toContain("添加模型 API 服务");
     expect(view.html).not.toContain("<select");
     if (state === "error") {

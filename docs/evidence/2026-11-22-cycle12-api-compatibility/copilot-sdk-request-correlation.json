@@ -1,0 +1,426 @@
+{
+  "inheritedHomeUnchanged": true,
+  "artifact": {
+    "registry": "https://registry.npmjs.org/@github%2Fcopilot-darwin-arm64/1.0.114",
+    "integrity": "sha512-Mw47DTwMNDG0bb4t1rVu7S+ekdThIGGitpG28/wGpACZ0lFhYnpNEoSJ7hHBM3oix4b/w6+ZcmxE9J9MngsR9Q==",
+    "installedRegistrationUsed": false,
+    "officialReleaseVersion": "1.0.114",
+    "archiveBytes": 140699142,
+    "executableBytes": 202294880
+  },
+  "sharedReleaseReadOnly": "/private/tmp/ff-c12-copilot-401-live.62dqc9rx/release/copilot",
+  "sharedPackageCacheReadOnly": "/private/tmp/ff-c12-copilot-401-live.62dqc9rx/tmp/cache",
+  "senderPreflight": {
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "ownLoopbackAllowed": true,
+    "otherLoopbackDenied": true,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "readerPreflight": {
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "ownLoopbackAllowed": false,
+    "otherLoopbackDenied": true,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "sdkProtocolVersions": {
+    "sender": 4,
+    "reader": 4
+  },
+  "sessionOpen": {
+    "hasResult": true,
+    "resultKeys": [
+      "capabilities",
+      "isRemote",
+      "mode",
+      "modelState",
+      "nativeSessionId",
+      "sessionId",
+      "startTime",
+      "workspacePath"
+    ]
+  },
+  "sessionId": "2bd45a2b-70ed-457d-9d2a-3f008b1f4441",
+  "sameActiveModel": {
+    "modelId": "fixture/gpt-4o-mini"
+  },
+  "activeIdentityVerifiedBeforeSend": true,
+  "sessionSend": {
+    "hasResult": true,
+    "resultKeys": [
+      "messageId"
+    ]
+  },
+  "admittedMessageId": "a97863a2-d937-4d5c-8e3f-7645ab80df82",
+  "readAttempts": [
+    {
+      "msAfterAdmission": 0.3,
+      "sdkError": -32603,
+      "complete": false,
+      "eventCount": 0
+    },
+    {
+      "msAfterAdmission": 109.1,
+      "sdkError": -32603,
+      "complete": false,
+      "eventCount": 0
+    },
+    {
+      "msAfterAdmission": 323.19,
+      "sdkError": null,
+      "complete": true,
+      "eventCount": 5
+    },
+    {
+      "msAfterAdmission": 734.13,
+      "sdkError": null,
+      "complete": true,
+      "eventCount": 5
+    },
+    {
+      "msAfterAdmission": 1544.25,
+      "sdkError": null,
+      "complete": true,
+      "eventCount": 5
+    },
+    {
+      "msAfterAdmission": 3148.44,
+      "sdkError": null,
+      "complete": true,
+      "eventCount": 7
+    }
+  ],
+  "rootEvent": {
+    "type": "user.message",
+    "id": "9465d8ec-5457-4cae-83e5-0295afd01497",
+    "parentId": "01645581-3b43-47d4-bfb7-451339ecddb3",
+    "agentId": null,
+    "ephemeral": null,
+    "checkpoint": null,
+    "marker": true,
+    "errorMarker": false,
+    "keyFound": false,
+    "messageId": "a97863a2-d937-4d5c-8e3f-7645ab80df82",
+    "interactionId": "05799596-bf31-41ac-891c-9fa16b50a494",
+    "turnId": "0",
+    "clientTurnIdMatches": true
+  },
+  "errorEvent": {
+    "type": "session.error",
+    "id": "b5161e1a-f142-4fc7-ad1a-f92e29244a84",
+    "parentId": "7612986f-a243-40b7-ba36-1aa04a034dcb",
+    "agentId": null,
+    "ephemeral": null,
+    "checkpoint": null,
+    "marker": false,
+    "errorMarker": false,
+    "keyFound": false,
+    "errorType": "authentication",
+    "statusCode": 401,
+    "providerErrorType": "authentication_error",
+    "providerErrorCode": "invalid_api_key",
+    "originatingMessageId": "a97863a2-d937-4d5c-8e3f-7645ab80df82"
+  },
+  "clientTurnIdPersistedExactly": true,
+  "threeWayExactCorrelation": true,
+  "journalSha256": "e2693304fe25c12dc0c79d81b91d9852ce83d8ccbf55b8df6cff654bddbd85f3",
+  "syntheticKeyPersisted": false,
+  "sameSessionClose": {
+    "hasResult": true,
+    "resultKeys": []
+  },
+  "senderNotificationKinds": [
+    {
+      "method": "session.event",
+      "eventType": "session.start"
+    },
+    {
+      "method": "session.lifecycle",
+      "eventType": null
+    },
+    {
+      "method": "session.event",
+      "eventType": "session.managed_settings_resolved"
+    },
+    {
+      "method": "session.lifecycle",
+      "eventType": null
+    },
+    {
+      "method": "session.event",
+      "eventType": "pending_messages.modified"
+    },
+    {
+      "method": "session.event",
+      "eventType": "pending_messages.modified"
+    },
+    {
+      "method": "session.event",
+      "eventType": "session.title_changed"
+    },
+    {
+      "method": "session.event",
+      "eventType": "commands.changed"
+    },
+    {
+      "method": "session.event",
+      "eventType": "session.skills_loaded"
+    },
+    {
+      "method": "session.event",
+      "eventType": "session.mcp_servers_loaded"
+    },
+    {
+      "method": "session.event",
+      "eventType": "session.info"
+    },
+    {
+      "method": "session.event",
+      "eventType": "session.tools_updated"
+    },
+    {
+      "method": "session.event",
+      "eventType": "instruction.update"
+    },
+    {
+      "method": "session.lifecycle",
+      "eventType": null
+    },
+    {
+      "method": "session.event",
+      "eventType": "user.message"
+    },
+    {
+      "method": "session.lifecycle",
+      "eventType": null
+    },
+    {
+      "method": "session.event",
+      "eventType": "system.message"
+    },
+    {
+      "method": "session.lifecycle",
+      "eventType": null
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.turn_started"
+    },
+    {
+      "method": "session.event",
+      "eventType": "assistant.turn_start"
+    },
+    {
+      "method": "session.lifecycle",
+      "eventType": null
+    },
+    {
+      "method": "session.event",
+      "eventType": "session.usage_info"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.call_start"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.model_call_started"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.call_failure"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.model_call_failure"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.call_finished"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.turn_retry"
+    },
+    {
+      "method": "session.event",
+      "eventType": "assistant.turn_retry"
+    },
+    {
+      "method": "session.event",
+      "eventType": "session.info"
+    },
+    {
+      "method": "session.event",
+      "eventType": "session.usage_info"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.call_start"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.model_call_started"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.call_failure"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.model_call_failure"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.call_finished"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.turn_retry"
+    },
+    {
+      "method": "session.event",
+      "eventType": "assistant.turn_retry"
+    },
+    {
+      "method": "session.event",
+      "eventType": "session.info"
+    },
+    {
+      "method": "session.event",
+      "eventType": "session.usage_info"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.call_start"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.model_call_started"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.call_failure"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.model_call_failure"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.call_finished"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.call_final_result"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.turn_failed"
+    },
+    {
+      "method": "session.event",
+      "eventType": "model.turn_ended"
+    },
+    {
+      "method": "session.event",
+      "eventType": "assistant.turn_end"
+    },
+    {
+      "method": "session.lifecycle",
+      "eventType": null
+    },
+    {
+      "method": "session.event",
+      "eventType": "session.error"
+    },
+    {
+      "method": "session.lifecycle",
+      "eventType": null
+    },
+    {
+      "method": "session.event",
+      "eventType": "assistant.idle"
+    },
+    {
+      "method": "session.event",
+      "eventType": "session.idle"
+    }
+  ],
+  "liveAuthFailure": {
+    "type": "session.error",
+    "id": "b5161e1a-f142-4fc7-ad1a-f92e29244a84",
+    "parentId": "7612986f-a243-40b7-ba36-1aa04a034dcb",
+    "agentId": null,
+    "ephemeral": null,
+    "checkpoint": null,
+    "marker": false,
+    "errorMarker": false,
+    "keyFound": false,
+    "errorType": "authentication",
+    "statusCode": 401,
+    "providerErrorType": "authentication_error",
+    "providerErrorCode": "invalid_api_key",
+    "originatingMessageId": "a97863a2-d937-4d5c-8e3f-7645ab80df82"
+  },
+  "sdkCallbacks": [],
+  "sender": {
+    "exitCode": 0,
+    "methods": [
+      "ping",
+      "session.create",
+      "session.model.getCurrent",
+      "session.send",
+      "sessions.close"
+    ],
+    "stderrBytes": 0
+  },
+  "reader": {
+    "exitCode": 0,
+    "methods": [
+      "ping",
+      "sessions.readPersistedEvents",
+      "sessions.readPersistedEvents",
+      "sessions.readPersistedEvents",
+      "sessions.readPersistedEvents",
+      "sessions.readPersistedEvents",
+      "sessions.readPersistedEvents"
+    ],
+    "stderrBytes": 0
+  },
+  "providerRequests": [
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "servedStatus": 401,
+      "selectedSyntheticBearer": true,
+      "model": "gpt-4o-mini",
+      "rootPromptMarker": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "servedStatus": 401,
+      "selectedSyntheticBearer": true,
+      "model": "gpt-4o-mini",
+      "rootPromptMarker": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "servedStatus": 401,
+      "selectedSyntheticBearer": true,
+      "model": "gpt-4o-mini",
+      "rootPromptMarker": true
+    }
+  ]
+}

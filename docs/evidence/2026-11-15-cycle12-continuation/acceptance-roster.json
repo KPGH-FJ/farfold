@@ -1326,7 +1326,7 @@
           "status": "分项通过"
         },
         "S2": {
-          "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。\n2026-11-16 续验：用户确认当前使用原 GitHub 账号，沿用原已有服务。原 Auto 的续问在路由阶段报网络错误。\n2026-11-16 续验：同一用户确认原账号，同一已有服务复验实答。\n2026-11-17 续验：新版正式正常新建沿已有账号实答，厂商记录为 Copilot 来源。\n2026-11-20 正式版从正常新建先复验已有原账号 Auto，只发送一次并收到真实首答。新版另选 Farfold 已存 Xiaomi Chat Completions 的 MiMo，独立草稿只发送一次并收到真实首答。厂商回执报告 isByok:true、remote_user、mimo-v2.6-flash、finish:stop；与本批 OpenCode 同一已存服务标识及指纹。\n同日另验已存小米 Messages 闭环，正式原厂商记录为 remote_user BYOK、Messages、MiMo 与 stop。Responses 已提供选用入口，有受控证据，仍缺真实已存服务。\n2026-11-21 冷开已存小米的 Chat Completions 和 Messages 两条原对话，原服务与 MiMo 保留，目录及身份吻合，零自动发送。\n2026-11-21 续验用户已存 Atria / Responses，普通新建一次实答，与 OpenCode 同服务身份。厂商确认 /responses、remote_user BYOK、Atria-Dawn 与 stop。\n2026-11-22 官方 1.0.114 单个合成 Chat Completions 提问遇 401，ACP 报结束。官方只读入口在原会话打开时仍读回指向对应原消息的 401。ACP 未给关联的原消息 ID，Farfold 仍缺准确归属并显示该失败的闭环。",
+          "observed": "旧 1.0.106 已有 Copilot Free 在网页、SDK、CLI 身份核同，Auto 短答通过；历史账单 UI 无明细。\n2026-11-16 续验：用户确认当前使用原 GitHub 账号，沿用原已有服务。原 Auto 的续问在路由阶段报网络错误。\n2026-11-16 续验：同一用户确认原账号，同一已有服务复验实答。\n2026-11-17 续验：新版正式正常新建沿已有账号实答，厂商记录为 Copilot 来源。\n2026-11-20 正式版从正常新建先复验已有原账号 Auto，只发送一次并收到真实首答。新版另选 Farfold 已存 Xiaomi Chat Completions 的 MiMo，独立草稿只发送一次并收到真实首答。厂商回执报告 isByok:true、remote_user、mimo-v2.6-flash、finish:stop；与本批 OpenCode 同一已存服务标识及指纹。\n同日另验已存小米 Messages 闭环，正式原厂商记录为 remote_user BYOK、Messages、MiMo 与 stop。Responses 已提供选用入口，有受控证据，仍缺真实已存服务。\n2026-11-21 冷开已存小米的 Chat Completions 和 Messages 两条原对话，原服务与 MiMo 保留，目录及身份吻合，零自动发送。\n2026-11-21 续验用户已存 Atria / Responses，普通新建一次实答，与 OpenCode 同服务身份。厂商确认 /responses、remote_user BYOK、Atria-Dawn 与 stop。\n2026-11-22 官方 1.0.114 单个合成 Chat Completions 提问遇 401，ACP 报结束。官方只读入口在原会话打开时仍读回指向对应原消息的 401。ACP 未给关联的原消息 ID，Farfold 仍缺准确归属并显示该失败的闭环。\n2026-11-22 合成并发 ACP 两进程同写一个会话，根消息 ID 未从 ACP 回传，不能按新增日志认领失败。独立官方 SDK 单次发送已受控证明三方同一消息标识，正常 Farfold 的 SDK 方案和 ACP 失败反馈均未通过。",
           "remaining": "实际计费、换号及不同服务失效的范围保护仍待核。 已存 Xiaomi 的跨 Agent 复用已有实答，原账号重新登录、服务切换失败和新 API 账单仍待。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-followup/README.md",
@@ -1336,7 +1336,8 @@
             "docs/evidence/2026-11-17-cycle12-amp-stop-official-routes/README.md",
             "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md",
             "docs/evidence/2026-11-21-cycle12-s1-s2-restore/README.md",
-            "docs/evidence/2026-11-22-cycle12-service-edit/README.md#copilot-厂商失败反馈"
+            "docs/evidence/2026-11-22-cycle12-service-edit/README.md#copilot-厂商失败反馈",
+            "docs/evidence/2026-11-22-cycle12-api-compatibility/README.md#copilot-请求归属"
           ],
           "status": "已选服务有实答"
         },
@@ -1470,13 +1471,14 @@
           "status": "分项通过"
         },
         "S2": {
-          "observed": "旧 OpenRouter 免费样本按原请求核到已有默认工作区及账单 $0.00。C8 Super VL 为既有实际选择。\n2026-11-18 补录 11-17：自有对话冷开后沿用户已选的 OpenRouter 免费 Ultra 手动实答，官方账单该条记录 0 成本，随后恢复原 Super VL / Off。\n2026-11-20 正式 87ac54ec2，两组独立样本沿用已保存的 OpenRouter 免费 Super VL / Off 再次实答。",
+          "observed": "旧 OpenRouter 免费样本按原请求核到已有默认工作区及账单 $0.00。C8 Super VL 为既有实际选择。\n2026-11-18 补录 11-17：自有对话冷开后沿用户已选的 OpenRouter 免费 Ultra 手动实答，官方账单该条记录 0 成本，随后恢复原 Super VL / Off。\n2026-11-20 正式 87ac54ec2，两组独立样本沿用已保存的 OpenRouter 免费 Super VL / Off 再次实答。\n2026-11-22 原登记 1.59.1 已在隔离环境走官方 Chat Completions，首答、同一 ID 冷开续答和结构化 401 有证。继承的旧自定义请求头会进所选服务，需先隔离及核提供方，Farfold 统一 API 未开放。",
           "remaining": "新样本核实已选服务能实答。旧账单仅覆盖原样本，换号、服务失效的处理和其他收费情况仍待。",
           "sources": [
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
             "docs/evidence/2026-11-15-cycle8-observation/README.md",
             "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md",
-            "docs/evidence/2026-11-20-cycle12-goose-queue-recheck/README.md"
+            "docs/evidence/2026-11-20-cycle12-goose-queue-recheck/README.md",
+            "docs/evidence/2026-11-22-cycle12-api-compatibility/README.md#goose-官方-chat-completions"
           ],
           "status": "已选服务有实答"
         },
@@ -2010,7 +2012,7 @@
       "liveAction": "同家双任务沿已有 Xiaomi MiMo / Build，A 实际停止且 B 交付。重开原 A 恢复草稿和附件并续答。其他后台、断线和工具终态依适用范围续验。 停止后单条待发冷恢复及明确续发通过。 正式原连接骤断后，首条待发含图，原对话冷开并明确续发两条，PNG 逐字节一致。 同目录双前台只点停 A，目标进程退出，B 正常交付。",
       "standards": {
         "S1": {
-          "observed": "旧正式自定义程序与原实际配置、新对话、明确保存原服务有窄证。\n2026-11-15 盘点：程序可执行，登记版本 1.18.31。登记所存握手版本 2.2.7。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-19 正式 42ffe103e 从已有草稿模型菜单实开 OpenCode 2.2.7 官方终端并取消，放弃后直接回同一草稿、相同目录与原模型，发送可用。零模型请求。\n2026-11-21 已存 Atria 草稿从准备页临时选 Xiaomi anthropic 后取消，回原 Atria、原文字和原目录，仍可手动发送。\n2026-11-22 正式从原 Atria 未发草稿点「编辑服务」直达该服务。临时改名后主动放弃，复开仍为原名，回原稿保留原目录、所选服务和发送入口。常规设置仍能看全部 API。零模型请求。",
+          "observed": "旧正式自定义程序与原实际配置、新对话、明确保存原服务有窄证。\n2026-11-15 盘点：程序可执行，登记版本 1.18.31。登记所存握手版本 2.2.7。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-19 正式 42ffe103e 从已有草稿模型菜单实开 OpenCode 2.2.7 官方终端并取消，放弃后直接回同一草稿、相同目录与原模型，发送可用。零模型请求。\n2026-11-21 已存 Atria 草稿从准备页临时选 Xiaomi anthropic 后取消，回原 Atria、原文字和原目录，仍可手动发送。\n2026-11-22 正式从原 Atria 未发草稿点「编辑服务」直达该服务。临时改名后主动放弃，复开仍为原名，回原稿保留原目录、所选服务和发送入口。常规设置仍能看全部 API。零模型请求。\n2026-11-22 正式兼容 Atria 由新对话与准备页均可读取，原草稿及目录保持。无搜索结果和待完善、不兼容样本分别由正式及受控测试覆盖，未修改实际 API。",
           "remaining": "其他程序和账号实际准备仍按原条件续验；本次从模型选择进入的官方终端取消已通过。",
           "sources": [
             "docs/agent-first-release.md",
@@ -2020,7 +2022,8 @@
             "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json",
             "docs/evidence/2026-11-19-cycle12-draft-auth-return/README.md",
             "docs/evidence/2026-11-21-cycle12-s1-s2-restore/README.md#换源取消与服务测试失败恢复",
-            "docs/evidence/2026-11-22-cycle12-service-edit/README.md#正式版复验与保存保护"
+            "docs/evidence/2026-11-22-cycle12-service-edit/README.md#正式版复验与保存保护",
+            "docs/evidence/2026-11-22-cycle12-api-compatibility/README.md#已存服务不可选时的提示"
           ],
           "status": "准备未齐"
         },

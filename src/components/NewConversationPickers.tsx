@@ -23,7 +23,7 @@ import {
 } from "../runtime/configuration_restore_feedback";
 import { NEW_CONVERSATION_PICKER_STRINGS as S } from "../runtime/new_conversation_picker_strings";
 import { STRINGS } from "../runtime/strings";
-import { canUseService } from "../runtime/service_capability";
+import { emptyServiceGuidance } from "../runtime/service_capability";
 import { agentStatus } from "../runtime/agent_status";
 import { hasSavedAgentPreparation } from "../runtime/agent_readiness";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
@@ -31,7 +31,7 @@ import { ErrorNotice } from "./ErrorNotice";
 import { useModalDialog } from "./useModalDialog";
 import { AgentLogo } from "./AgentLogo";
 import { usableAgents } from "./AgentPick";
-import type { ServiceChoice } from "./ServicePicker";
+import { availableServices, type ServiceChoice } from "./ServicePicker";
 import { modelChoiceView } from "../runtime/model_choice_view";
 import "../new-conversation-pickers.css";
 
@@ -338,13 +338,7 @@ export function NewConversationModelDialog({
       current = false;
     };
   }, [agent.id, revision]);
-  const services = records.filter(
-    (item) =>
-      !item.deleting &&
-      item.complete &&
-      item.models.length > 0 &&
-      canUseService(capability, item),
-  );
+  const services = availableServices(records, capability);
   const options = modelChoiceView(
     ["option", existingOption?.id ?? ""],
     existingOption?.type === "select" ? existingOption.options : [],
@@ -656,7 +650,7 @@ export function NewConversationModelDialog({
         ) : (
           <p>
             {capability?.apiTypes.length
-              ? S.noServices
+              ? emptyServiceGuidance(capability, records).message
               : capability?.unavailableReason || S.servicesUnavailable}
           </p>
         )}
