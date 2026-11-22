@@ -1,0 +1,33 @@
+{
+  "officialAdapter": "2.9.0",
+  "configuredNative": "0.171.0",
+  "usesOriginalCodexHome": true,
+  "realModelRequests": 0,
+  "fullSystemNetworkDeny": true,
+  "negativeControlsPassed": true,
+  "negativeControls": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "initialized": true,
+  "authPushDeclared": true,
+  "initializeWireFields": ["agentInfo", "authStatus"],
+  "sessionNewError": {
+    "code": -32603,
+    "causes": [],
+    "structuredReason": null
+  },
+  "officialProcessExit": 0,
+  "originalIdentityUnchanged": true,
+  "sentAcpMethods": ["initialize", "session/new"],
+  "observedAcpNotifications": [],
+  "safeStderrCategories": [],
+  "sourceReceiptSha256": "47d3c11e45c367bd2d09d38296be0db2233f473398ecae7afdf0befc38346f2c",
+  "scope": "isolated official ACP comparison, not installed Farfold"
+}

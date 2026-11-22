@@ -1,0 +1,71 @@
+{
+  "validationLayer": "officialCliIsolatedStdio",
+  "expectedVersion": "0.171.0",
+  "networkPolicy": "process egress and local sockets denied",
+  "outboundMethods": [
+    "initialize",
+    "initialized",
+    "accountSession/list",
+    "modelProvider/list",
+    "thread/start"
+  ],
+  "wireResponses": {
+    "initialize": true,
+    "accountSession/list": true,
+    "modelProvider/list": true,
+    "thread/start": true
+  },
+  "openExistingHistory": false,
+  "modelTurnsSent": 0,
+  "prepAndThreadUseSingleProcess": true,
+  "installedFarfoldInvoked": false,
+  "negativeControls": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "exactVersion": true,
+  "cachedAccount": {
+    "activeIdReported": true,
+    "singleMatchingActiveSession": true,
+    "emailReported": true,
+    "userIdReported": true,
+    "selectedWorkspaceReported": true,
+    "identityValuesCaptured": false
+  },
+  "providerCatalog": {
+    "defaultProviderIsOpenAI": true,
+    "openAIListed": true,
+    "routeStatus": "local catalog configuration"
+  },
+  "actualThread": {
+    "modelMatches": true,
+    "reasoningMatches": true,
+    "providerMatches": true,
+    "actualReadOnly": true,
+    "toolNetworkDisabled": true,
+    "userApprovalOnRequest": true,
+    "expectedWorkingDirectory": true,
+    "ephemeralAndNeverSent": true
+  },
+  "threadIdentifierDigest": "a5fc284f4a3e26381e323a967610c935a92371a652b017389bbe902e606b326c",
+  "model": "gpt-6-astra",
+  "reasoning": "ultra",
+  "provider": "openai",
+  "onlineProviderRoutingVerified": false,
+  "onlinePrewarmSent": false,
+  "officialCleanExit": true,
+  "originalInstallationIdentityUnchanged": true,
+  "date": "2026-11-22 Asia/Shanghai",
+  "sourceReceiptSha256": "b121bc09594dc8a4e56652a2422b9e61c2241918e5ffe87dc8af911cdfd0d94d",
+  "probeSha256": "db714224068e144428c22e110d7ac76bbadd4c9f85bebe201b6c1618224fea22",
+  "sameOriginalLoginLinkage": "same official Codex home and active cached login, confirmed by user in the prior accepted test",
+  "eligibilityForUnrestrictedConversationSend": false,
+  "existingCodexAndCopilotRegistrationsChanged": false,
+  "noRemoteNetworkWindowOpened": true
+}
