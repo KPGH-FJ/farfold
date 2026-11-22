@@ -1,0 +1,57 @@
+{
+  "syntheticDataOnly": true,
+  "credentialsAllowed": false,
+  "cloudNetworkAllowed": false,
+  "modelRequests": 0,
+  "outputs": [
+    {
+      "branch": "system-read",
+      "nativeVersion": "0.155.1",
+      "adapterVersion": null,
+      "protocolVersion": null,
+      "initializeResponse": true,
+      "elapsedSec": 0.108,
+      "receiptSHA256": "bdd44ffd35c35fb54d469577caeb900e2d4de52414a9c79f647f5f6378c17fa5"
+    },
+    {
+      "branch": "system-read",
+      "nativeVersion": "0.156.1",
+      "adapterVersion": null,
+      "protocolVersion": null,
+      "initializeResponse": true,
+      "elapsedSec": 0.053,
+      "receiptSHA256": "6fa05afec78c9ee75db8d109ee69645d4ef0cb40fa9de537e789b2ae07e70a09"
+    },
+    {
+      "branch": "full-acp-path",
+      "nativeVersion": "0.155.1",
+      "adapterVersion": "1.13.1",
+      "protocolVersion": 1,
+      "initializeResponse": true,
+      "elapsedSec": 0.119,
+      "receiptSHA256": "f26d36937f2af7071646f552888a8fa184f37fddd33f43e7d06f8a3c76bde5df",
+      "observedNativeVersion": "0.155.1",
+      "adapterToNativeMethods": ["initialize", "config/read"]
+    },
+    {
+      "branch": "full-acp-path",
+      "nativeVersion": "0.156.1",
+      "adapterVersion": "1.13.1",
+      "protocolVersion": 1,
+      "initializeResponse": true,
+      "elapsedSec": 0.117,
+      "receiptSHA256": "6c014d9935744b8742579141b9778b6bc12c2553f83a54418a8ab9cec60ac538",
+      "observedNativeVersion": "0.156.1",
+      "adapterToNativeMethods": ["initialize", "config/read"]
+    }
+  ],
+  "originalConfigOnlyControl": {
+    "directNativeVersion": "0.155.1",
+    "initResponse": true,
+    "versionMatches": true,
+    "originalConfigSameFileSizeMtime": true,
+    "originalAccountAccessible": false,
+    "syntheticHome": true,
+    "elapsedSec": 0.043
+  }
+}

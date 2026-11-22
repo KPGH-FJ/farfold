@@ -1,0 +1,31 @@
+{
+  "officialAdapter": "2.9.0",
+  "configuredNative": "0.171.0",
+  "usesOriginalCodexHome": true,
+  "realModelRequests": 0,
+  "sameConnectionAccount": true,
+  "negativeControls": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "initialized": true,
+  "authPushDeclared": true,
+  "planVisible": true,
+  "providerListReturned": true,
+  "officialProviderSlotPresent": true,
+  "closedOfficialRelay": true,
+  "officialTlsConnections": 3,
+  "acceptedLocalSockets": 4,
+  "usingExistingSystemProxyStatus": 200,
+  "officialProcessExit": 0,
+  "originalIdentityUnchanged": true,
+  "sentAcpMethods": ["initialize", "providers/list"],
+  "observedAcpNotifications": ["_auth/status_update", "auth/status_update"],
+  "safeStderrCategories": []
+}

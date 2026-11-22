@@ -1,0 +1,49 @@
+{
+  "version": "0.171.0",
+  "command": "doctor --network-only --json",
+  "authorizedNetworkActions": [
+    "provider HEAD/GET",
+    "Responses WebSocket GET Upgrade without any model input"
+  ],
+  "turnRpcs": 0,
+  "negativeControls": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "nativeExit": 1,
+  "pid": 89279,
+  "structuredOutput": true,
+  "checks": [
+    {
+      "id": "config.load",
+      "status": "warning",
+      "checks": [],
+      "statusCodes": []
+    },
+    {
+      "id": "network.provider_reachability",
+      "status": "fail",
+      "checks": ["officialOrigin", "unreachable"],
+      "statusCodes": []
+    },
+    {
+      "id": "network.websocket_reachability",
+      "status": "ok",
+      "checks": ["websocketHandshakeSucceeded", "officialOrigin", "dnsFailure"],
+      "statusCodes": [101]
+    }
+  ],
+  "checkCount": 4,
+  "relayClosed": true,
+  "officialTlsTunnels": 2,
+  "systemProxySuccessfulUpstream": 2,
+  "effectiveSystemProxyConnectStatus": 200,
+  "relaySocketWindowsFailed": {},
+  "originalInstallationIdentityUnchanged": true
+}

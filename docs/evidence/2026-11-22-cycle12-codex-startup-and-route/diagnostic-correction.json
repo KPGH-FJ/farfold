@@ -1,0 +1,14 @@
+{
+  "turnErrorStructure": "https://raw.githubusercontent.com/openai/codex/rust-v0.171.0/codex-rs/app-server-protocol/schema/json/v2/ErrorNotification.json",
+  "maintainsSameAttemptGuard": true,
+  "offlineCasesPassed": 3,
+  "storesOnlyAllowlistedErrorAndRetryFields": true,
+  "neverStoresRawErrorBody": true,
+  "requiresMatchingThreadAndTurnForAttribution": true,
+  "originalInstallationIdNoSharedLock": true,
+  "validatorSHA256": "9c7ae85fe8383fa250e446dc20efc8853e4179ecf3b73462da3dc811cbd70018",
+  "driverSHA256": "d800e78d165253bdd539900a7ab4c4bf7dfc03fdb18eb10bf1e3b36a283bbb1f",
+  "nativeLaunchInCorrection": false,
+  "realModelRequests": 0,
+  "separatesThreadOnlyEarlyErrorsFromVerifiedTurn": true
+}

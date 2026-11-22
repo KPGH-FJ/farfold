@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-22 Asia/Shanghai",
+  "appCDHash": "8b990faeef206603cc5fbd1f822266d99a2f7a29",
+  "officialAdapter": "1.13.1",
+  "selectedExternalNative": "0.155.1",
+  "route": "我的 Agent → 管理设置 → Codex → 检查程序 → 已有设置 → 模型",
+  "priorDiagnosticLockReleased": true,
+  "installedProgramChanged": false,
+  "accountEmailReported": true,
+  "accountValueCaptured": false,
+  "previousOriginalAccountConfirmedByUser": true,
+  "existingSettingsReady": true,
+  "defaultModelInThisCheck": "6.2 Sol",
+  "savedOriginalModel": "6 Astra",
+  "savedOriginalReasoning": "Ultra",
+  "temporarilySelectedOriginalModelAndReasoning": true,
+  "selectionDiscarded": true,
+  "settingsSaved": false,
+  "oldCodexConversationOpened": false,
+  "actualReadOnlyEstablishedByOldAdapter": false,
+  "modelRequests": 0,
+  "wire": [
+    {
+      "name": "protocol-v1-1795328509879-2.jsonl",
+      "sha256": "5a7672d69a16012f4b5b1a7727f764599c08965e9462899cf5e9acd70a3a2417",
+      "outgoing": ["initialize"],
+      "initializeToSuccessMs": 168,
+      "matchedInitialize": true
+    },
+    {
+      "name": "protocol-v1-1795328558791-3.jsonl",
+      "sha256": "e359ad5b9f5be05d073ca6c436ffd618039f99d4aedc9219169bc2fd766d764a",
+      "outgoing": [
+        "initialize",
+        "session/new",
+        "session/set_config_option",
+        "session/set_config_option",
+        "other"
+      ],
+      "initializeToSuccessMs": 127,
+      "matchedInitialize": true
+    }
+  ]
+}

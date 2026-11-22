@@ -1,0 +1,28 @@
+{
+  "candidate": "0.171.0",
+  "model": "gpt-6-astra",
+  "requestedReasoning": "ultra",
+  "rpc": ["initialize", "model/list"],
+  "catalogOnlineOnlyIfUncached": true,
+  "turnRpcs": 0,
+  "negativeControls": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "pickerComplete": true,
+  "pickerModelCount": 11,
+  "exactModelVisible": true,
+  "exactEffortAdvertised": true,
+  "metadataModelVisible": true,
+  "relayClosed": true,
+  "officialTlsTunnels": 2,
+  "upstreamHttpsConnectOK": 0,
+  "nativeExit": 0,
+  "originalInstallationIdentityUnchanged": true
+}

@@ -1,0 +1,97 @@
+{
+  "diagnostic": "Codex 0.171.0 previous one-shot / exact no-inference boundary",
+  "oneShotReceipt": "/private/tmp/ff-c12-codex290-ready.thahnik7/native-codex-one-shot.bkfn_m47/receipt.json",
+  "originalWalAndDbSha256": {
+    "logs_2.sqlite": "08170b55fe0f56219c837d066094c0f0ca2a47224f7d62d01ac5654b9972dce0",
+    "logs_2.sqlite-wal": "f3bb59cd9b8e0c3affa28d93c940f44c056ef96681e70b0f4d52eaf4e26e452b"
+  },
+  "oneShot": {
+    "armedAtNs": 1795327010642893546,
+    "driverBudgetCommittedAtNs": 1795327010652855086,
+    "terminalReceiptAtNs": 1795327010912424011,
+    "accountTlsConnections": 2,
+    "newOfficialTlsConnectionsAfterArm": 0,
+    "driverDispatchAttempts": 1,
+    "terminalFailureClassification": "nativeReportedAnErrorOrRetry",
+    "replyPassed": false,
+    "priorAuthorizedAttemptStillConsumed": true
+  },
+  "officialSqlite": {
+    "rows": 81,
+    "latestLogUnixSeconds": 1795326984,
+    "originalWalModifiedAtNs": 1795326992609107846,
+    "matchingActualTurnStartTraceRows": 0,
+    "selectedSanitizedRows": {
+      "56": {
+        "unixSeconds": 1795326967,
+        "observations": {
+          "threadStartSpan": false,
+          "prewarmSpan": false,
+          "catalogRefreshTimeout": true,
+          "connectingResponsesWebSocket": false,
+          "reportedSuccessfulWebSocketConnect": false
+        }
+      },
+      "57": {
+        "unixSeconds": 1795326969,
+        "observations": {
+          "threadStartSpan": true,
+          "prewarmSpan": false,
+          "catalogRefreshTimeout": true,
+          "connectingResponsesWebSocket": false,
+          "reportedSuccessfulWebSocketConnect": false
+        }
+      },
+      "79": {
+        "unixSeconds": 1795326969,
+        "observations": {
+          "threadStartSpan": true,
+          "prewarmSpan": true,
+          "catalogRefreshTimeout": false,
+          "connectingResponsesWebSocket": false,
+          "reportedSuccessfulWebSocketConnect": false
+        }
+      },
+      "80": {
+        "unixSeconds": 1795326969,
+        "observations": {
+          "threadStartSpan": true,
+          "prewarmSpan": true,
+          "catalogRefreshTimeout": false,
+          "connectingResponsesWebSocket": true,
+          "reportedSuccessfulWebSocketConnect": false
+        }
+      },
+      "81": {
+        "unixSeconds": 1795326984,
+        "observations": {
+          "threadStartSpan": true,
+          "prewarmSpan": true,
+          "catalogRefreshTimeout": false,
+          "connectingResponsesWebSocket": false,
+          "reportedSuccessfulWebSocketConnect": false,
+          "chatgptAuthMode": true,
+          "attachedAuthorizationHeader": true,
+          "noRecordedAuthRetryAfterUnauthorized": false
+        }
+      }
+    },
+    "lastLogsBeforeDriverArm": true
+  },
+  "independentZeroModelDoctorReceipt": "/private/tmp/ff-c12-codex290-ready.thahnik7/native-0171-doctor-network-only.dgm5hc3o/sanitized-receipt.json",
+  "confirmed": [
+    "The model picker refresh timed out while the account gate was closed for thread start.",
+    "The recorded WebSocket connection attempt was thread/start prewarm before arming, with no successful connection log in that window.",
+    "The driver recorded one armed dispatch and no additional connection through its only permitted host relay.",
+    "A separate official no-model test established the Responses WebSocket GET upgrade with HTTP 101, while its distinct provider HTTP reachability checks failed."
+  ],
+  "unresolved": [
+    "The exact error notification for the armed turn was reduced to a generic driver category; the original retained WAL predates that activity.",
+    "No account quota, model authorization refusal, successful inference, or definitely recorded provider receipt follows from these facts."
+  ],
+  "correctionIfSeparatelyAuthorized": [
+    "Preserve error code, exact root thread/turn matching, willRetry, and allowlisted categories prior to stopping, without storing payload values.",
+    "Use the matching official no-model transport check before any separate inference decision. Do not infer WebSocket success proves provider HTTP fallback or application completion."
+  ],
+  "thisTurnModelRequests": 0
+}
