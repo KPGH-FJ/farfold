@@ -39,9 +39,16 @@ export interface PreparationInfo {
   dependencies: AgentDependency[];
   links: PreparationLink[];
   actions?: PreparationAction[];
+  officialReadOnlyCheck?: OfficialReadOnlyCheck;
   connectionGuidance?: ConnectionGuidance[];
   officialMethodRoles?: OfficialMethodRole[];
   installationOptions?: InstallationOptions;
+}
+
+export interface OfficialReadOnlyCheck {
+  id: string;
+  modelOptionId: string;
+  reasoningOptionId: string;
 }
 
 export interface ConnectionGuidance {

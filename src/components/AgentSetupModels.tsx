@@ -3,6 +3,8 @@ import { ACCESS_STRINGS as S } from "../runtime/access_strings";
 import { AGENT_SETUP_STRINGS as M } from "../runtime/agent_setup_strings";
 import { STRINGS } from "../runtime/strings";
 import { R5_SETUP_STRINGS as R } from "../runtime/r5_setup_strings";
+import { SENDING_STRINGS } from "../runtime/sending_strings";
+import type { useWorkPolicy } from "../runtime/work_policy";
 import { protectedConfigOptions } from "../runtime/protected_config";
 import { configValueLabel } from "../runtime/sessions";
 import type { ConversationRepairContext } from "../runtime/agent_repair";
@@ -55,6 +57,47 @@ export function agentSetupModelSourceNotice(
         {action}
       </button>
     </div>
+  );
+}
+
+export function agentSetupModelWorkNotice({
+  work,
+  cwd,
+  agentId,
+}: {
+  work: ReturnType<typeof useWorkPolicy>;
+  cwd: string | null;
+  agentId: string;
+}) {
+  return (
+    <>
+      {work.error && (
+        <p role="alert" className="ac-error">
+          {work.error}{" "}
+          <button className="btn btn-text" onClick={work.retry}>
+            {S.retry}
+          </button>
+        </p>
+      )}
+      {cwd && work.ready && !work.enabled(agentId) && (
+        <div className="agent-setup-test-note">
+          <p>{S.testWorkDisabled}</p>
+          <button
+            className="btn btn-ghost"
+            disabled={work.saving}
+            onClick={() =>
+              void (work.locationEnabled === false
+                ? work.setLocation(true)
+                : work.set(agentId, true))
+            }
+          >
+            {work.locationEnabled === false
+              ? SENDING_STRINGS.resumeLocation
+              : S.testWorkEnable}
+          </button>
+        </div>
+      )}
+    </>
   );
 }
 

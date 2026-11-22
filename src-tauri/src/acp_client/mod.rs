@@ -52,6 +52,7 @@ pub(crate) mod live_status;
 pub mod manager;
 mod model_guard;
 mod mutation;
+pub(crate) mod official_preflight;
 mod open_purpose;
 mod operations;
 pub mod original_config;

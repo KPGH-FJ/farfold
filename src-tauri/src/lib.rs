@@ -250,6 +250,8 @@ pub fn run() {
                 agent_install::agent_install,
                 acp_client::preparation::agent_preparation,
                 acp_client::preparation_actions::agent_preparation_action_run,
+                acp_client::official_preflight::agent_official_readonly_check,
+                acp_client::official_preflight::agent_official_readonly_check_cancel,
                 dependency_install::agent_dependency_install,
                 dependency_install::agent_dependency_cancel,
                 install_job::agent_install_cancel,

@@ -1,0 +1,197 @@
+{
+  "negativeControls": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "negativeControlsPassed": true,
+  "sameProductPolicyWithExactControlExecutables": true,
+  "outboundMethods": [
+    "initialize",
+    "initialized",
+    "accountSession/list",
+    "thread/start"
+  ],
+  "acceptedFrameShapes": [
+    {
+      "id": 1,
+      "hasResult": true,
+      "resultObject": true,
+      "errorCode": null,
+      "flags": {
+        "userAgentPresent": true,
+        "exactVersion": true
+      }
+    },
+    {
+      "method": "configWarning",
+      "hasRequestId": false,
+      "hasResult": false,
+      "hasError": false,
+      "paramsObject": true,
+      "thread": null,
+      "directThreadIdPresent": false,
+      "matchesPriorThreadId": null,
+      "status": null,
+      "containsTypedConfig": false,
+      "toolStartupState": null
+    },
+    {
+      "method": "remoteControl/status/changed",
+      "hasRequestId": false,
+      "hasResult": false,
+      "hasError": false,
+      "paramsObject": true,
+      "thread": null,
+      "directThreadIdPresent": false,
+      "matchesPriorThreadId": null,
+      "status": null,
+      "containsTypedConfig": false,
+      "toolStartupState": null
+    },
+    {
+      "id": 2,
+      "hasResult": true,
+      "resultObject": true,
+      "errorCode": null,
+      "flags": {
+        "activeSessionPresent": true,
+        "sessionListArray": true,
+        "uniqueMatchingActive": true,
+        "rowIsActive": true,
+        "sameSession": true,
+        "emailPresent": true,
+        "userIdPresent": true,
+        "selectedWorkspacePresent": true,
+        "workspaceListMissingOrInvalid": false,
+        "workspaceListEmptyOrMatching": true
+      }
+    },
+    {
+      "id": 3,
+      "hasResult": true,
+      "resultObject": true,
+      "errorCode": null,
+      "flags": {
+        "sameModel": true,
+        "sameEffort": true,
+        "sameProvider": true,
+        "onRequestApproval": true,
+        "userApprover": true,
+        "cwdExact": true,
+        "rootsAbsentOrOnlyCwd": true,
+        "sandboxIsExactObject": true,
+        "readOnly": true,
+        "noToolNetwork": true,
+        "thread": {
+          "idPresent": true,
+          "matchesPriorThreadId": null,
+          "ephemeral": true,
+          "cwdExact": true,
+          "pathExplicitNull": true,
+          "turnsExplicitEmpty": true
+        }
+      }
+    },
+    {
+      "method": "thread/started",
+      "hasRequestId": false,
+      "hasResult": false,
+      "hasError": false,
+      "paramsObject": true,
+      "thread": {
+        "idPresent": true,
+        "matchesPriorThreadId": true,
+        "ephemeral": true,
+        "cwdExact": true,
+        "pathExplicitNull": true,
+        "turnsExplicitEmpty": true
+      },
+      "directThreadIdPresent": false,
+      "matchesPriorThreadId": null,
+      "status": null,
+      "containsTypedConfig": false,
+      "toolStartupState": null
+    },
+    {
+      "method": "warning",
+      "hasRequestId": false,
+      "hasResult": false,
+      "hasError": false,
+      "paramsObject": true,
+      "thread": null,
+      "directThreadIdPresent": true,
+      "matchesPriorThreadId": true,
+      "status": null,
+      "containsTypedConfig": false,
+      "toolStartupState": null
+    },
+    {
+      "method": "warning",
+      "hasRequestId": false,
+      "hasResult": false,
+      "hasError": false,
+      "paramsObject": true,
+      "thread": null,
+      "directThreadIdPresent": true,
+      "matchesPriorThreadId": true,
+      "status": null,
+      "containsTypedConfig": false,
+      "toolStartupState": null
+    },
+    {
+      "method": "mcpServer/startupStatus/updated",
+      "hasRequestId": false,
+      "hasResult": false,
+      "hasError": false,
+      "paramsObject": true,
+      "thread": null,
+      "directThreadIdPresent": true,
+      "matchesPriorThreadId": true,
+      "status": null,
+      "containsTypedConfig": false,
+      "toolStartupState": "starting"
+    },
+    {
+      "method": "mcpServer/startupStatus/updated",
+      "hasRequestId": false,
+      "hasResult": false,
+      "hasError": false,
+      "paramsObject": true,
+      "thread": null,
+      "directThreadIdPresent": true,
+      "matchesPriorThreadId": true,
+      "status": null,
+      "containsTypedConfig": false,
+      "toolStartupState": "failed"
+    }
+  ],
+  "modelTurnsSent": 0,
+  "onlinePrewarmSent": false,
+  "oldHistoryOpened": false,
+  "processSpawned": true,
+  "receipt": {
+    "accountPresent": true,
+    "workspaceReported": true,
+    "model": "gpt-6-astra",
+    "reasoningEffort": "ultra",
+    "provider": "openai"
+  },
+  "appInvoked": false,
+  "ownedChildPid": 24091,
+  "officialCleanExit": true,
+  "officialExitCode": 0,
+  "stderrCategories": [
+    "operation not permitted",
+    "failed to clean up stale arg0",
+    "error",
+    "warning"
+  ],
+  "originalUnchanged": true,
+  "verified": true
+}

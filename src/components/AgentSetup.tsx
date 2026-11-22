@@ -36,6 +36,7 @@ import { AgentRemoveDialog } from "./AgentRemoveDialog";
 import {
   agentSetupModelHeading,
   agentSetupModelSourceNotice,
+  agentSetupModelWorkNotice,
   modelReadStatus,
   agentSetupCurrentSelection,
   agentSetupModelOptions,
@@ -69,7 +70,7 @@ import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
 import { R5_SETUP_STRINGS as R } from "../runtime/r5_setup_strings";
 import type { AgentAccessPrimary } from "../runtime/access_primary";
 import { AgentSetupNavigation } from "./AgentSetupNavigation";
-import { SENDING_STRINGS } from "../runtime/sending_strings";
+import { AgentOfficialReadOnlyCheck } from "./AgentOfficialReadOnlyCheck";
 import { WORKSPACE_STRINGS } from "../runtime/workspace_strings";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import { agentStatus } from "../runtime/agent_status";
@@ -1190,32 +1191,7 @@ export function AgentSetup({
                 {S.prerequisitesRequired}
               </p>
             )}
-            {work.error && (
-              <p role="alert" className="ac-error">
-                {work.error}{" "}
-                <button className="btn btn-text" onClick={work.retry}>
-                  {S.retry}
-                </button>
-              </p>
-            )}
-            {cwd && work.ready && !work.enabled(card.id) && (
-              <div className="agent-setup-test-note">
-                <p>{S.testWorkDisabled}</p>
-                <button
-                  className="btn btn-ghost"
-                  disabled={work.saving}
-                  onClick={() =>
-                    void (work.locationEnabled === false
-                      ? work.setLocation(true)
-                      : work.set(card.id, true))
-                  }
-                >
-                  {work.locationEnabled === false
-                    ? SENDING_STRINGS.resumeLocation
-                    : S.testWorkEnable}
-                </button>
-              </div>
-            )}
+            {agentSetupModelWorkNotice({ work, cwd, agentId: card.id })}
             {!draftReview &&
               testThread &&
               sameSource &&
@@ -1228,6 +1204,24 @@ export function AgentSetup({
                 readBlocked: modelReadFailed || explicitReadRequired,
                 onPick: (id, value) => void pickOption(id, value),
               })}
+            {active &&
+              !draftReview &&
+              choice === "existing" &&
+              !source &&
+              sameSource &&
+              !modelReadFailed &&
+              !explicitReadRequired &&
+              !returnBlocked &&
+              canReadModels &&
+              testThread?.identity === "draft" &&
+              !testThread.service &&
+              testThread.agentId === card.id &&
+              testThread.cwd === targetCwd && (
+                <AgentOfficialReadOnlyCheck
+                  thread={testThread}
+                  program={program}
+                />
+              )}
             <div className="agent-model-reading">
               <p role="status">
                 {modelReadStatus(

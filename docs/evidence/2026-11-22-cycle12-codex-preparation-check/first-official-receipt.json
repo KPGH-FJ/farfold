@@ -1,0 +1,36 @@
+{
+  "negativeControls": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "negativeControlsPassed": true,
+  "sameProductPolicyWithExactControlExecutables": true,
+  "outboundMethods": ["initialize"],
+  "notifications": [],
+  "replyFields": [],
+  "modelTurnsSent": 0,
+  "onlinePrewarmSent": false,
+  "oldHistoryOpened": false,
+  "processSpawned": true,
+  "receipt": null,
+  "appInvoked": false,
+  "officialCleanExit": false,
+  "officialExitCode": 1,
+  "stderrCategories": [
+    "operation not permitted",
+    "failed to clean up stale arg0",
+    "error",
+    "warning"
+  ],
+  "originalUnchanged": true,
+  "verified": false,
+  "error": {
+    "phase": "stdoutEndedBeforeReceipt"
+  }
+}

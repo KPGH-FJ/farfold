@@ -118,6 +118,7 @@ import {
 import { AgentPrerequisites } from "./AgentPrerequisites";
 import { ModelPicker } from "./ModelPicker";
 import { AgentModelReadNotice } from "./AgentModelReadNotice";
+import { AgentOfficialReadOnlyCheck } from "./AgentOfficialReadOnlyCheck";
 import { AgentSelectionReview } from "./AgentSelectionReview";
 import { AgentAuthSection } from "./AgentAuthSection";
 import { AgentServiceSection } from "./AgentServiceSection";
@@ -202,6 +203,33 @@ function returnedModel(model: string) {
   };
   h.snapshot = { ...(h.snapshot as PreparationSnapshot), config: { model } };
 }
+
+it("offers the permission check only for the current existing-settings preparation", () => {
+  h.thread = { ...(h.thread as object), agentId: card.id, cwd: "/own" };
+  const offer = () =>
+    render().find((node) => node.type === AgentOfficialReadOnlyCheck);
+  const snapshot = h.snapshot as PreparationSnapshot;
+  expect(offer()?.props.thread).toBe(h.thread);
+  for (const [reason, stale] of Object.entries({
+    "previous program": { input: { ...snapshot.input!, program: "previous" } },
+    "read required": {
+      explicitReadTargets: [JSON.stringify([card.id, "/own", null])],
+    },
+    "failed read": { phase: "failed", readError: "read failed" },
+  })) {
+    h.snapshot = { ...snapshot, ...stale };
+    expect(offer(), reason).toBeUndefined();
+  }
+  h.snapshot = snapshot;
+  progress = {
+    ...progress,
+    selection: { service: null, config: { model: "B" } },
+  };
+  expect(offer(), "previous model").toBeUndefined();
+  expect(h.start).not.toHaveBeenCalled();
+  expect(h.setConfig).not.toHaveBeenCalled();
+});
+
 beforeEach(() => {
   h.cursor = 0;
   h.slots = [];
