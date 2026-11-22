@@ -516,15 +516,15 @@ impl AcpManager {
                     .cloned()
             })
             .collect();
-        let (mut environment, service_delivery) = match prepared {
-            Some(prepared) => (prepared.environment, prepared.delivery),
+        let (mut environment, service_delivery, service_relay) = match prepared {
+            Some(prepared) => (prepared.environment, prepared.delivery, prepared.relay),
             None => {
                 let environment = store
                     .run(move |store| {
                         crate::credentials::environment_for_launch(store, &environment_agent)
                     })
                     .await?;
-                (environment, None)
+                (environment, None, None)
             }
         };
         for (name, value) in dependency_environment {
@@ -804,6 +804,9 @@ impl AcpManager {
                     Ok(())
                 }))
                 .await;
+            // No model request from a closed ACP transport can keep its own
+            // upstream connection open while process/terminal cleanup waits.
+            drop(service_relay);
             let previous_state = life_for_task.state.load(Ordering::SeqCst);
             let requested = previous_state == CLOSING;
             let fallback_reason = if previous_state == super::lifecycle::CONNECTING {
@@ -889,6 +892,9 @@ impl AcpManager {
 
         if service.is_some() && super::service_config::copilot::registered(agent) {
             super::service_config::copilot::verify_runtime(&init_response)?;
+        }
+        if service.is_some() && super::service_config::goose::registered(agent) {
+            super::service_config::goose::verify_runtime(&init_response)?;
         }
         let handshake_json = init_response.public_json();
         if !candidate && service.is_none() {

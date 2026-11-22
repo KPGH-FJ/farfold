@@ -145,6 +145,7 @@ impl Fixture {
         PreparedService {
             environment,
             delivery: Some(delivery),
+            relay: None,
             context: ServiceContext {
                 model_id: service.identity.model.clone(),
                 identity: service.identity,

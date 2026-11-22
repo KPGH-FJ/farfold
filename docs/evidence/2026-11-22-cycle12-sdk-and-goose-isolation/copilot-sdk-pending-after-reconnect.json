@@ -1,0 +1,109 @@
+{
+  "artifact": {
+    "registry": "https://registry.npmjs.org/@github%2Fcopilot-darwin-arm64/1.0.114",
+    "integrity": "sha512-Mw47DTwMNDG0bb4t1rVu7S+ekdThIGGitpG28/wGpACZ0lFhYnpNEoSJ7hHBM3oix4b/w6+ZcmxE9J9MngsR9Q==",
+    "installedRegistrationUsed": false,
+    "officialReleaseVersion": "1.0.114",
+    "archiveBytes": 140699142,
+    "executableBytes": 202294880
+  },
+  "scope": "isolated fixture only",
+  "sid": "f13e6e35-ee1f-4eca-bbf0-258d70279c29",
+  "exits": [
+    {
+      "exitCode": 0,
+      "methods": [
+        "ping",
+        "session.resume",
+        "session.model.getCurrent",
+        "session.permissions.pendingRequests",
+        "session.permissions.handlePendingPermissionRequest"
+      ],
+      "stderrBytes": 0
+    },
+    {
+      "exitCode": 0,
+      "methods": [
+        "ping",
+        "sessions.readPersistedEvents",
+        "sessions.readPersistedEvents"
+      ],
+      "stderrBytes": 0
+    }
+  ],
+  "preflight": {
+    "writer": {
+      "ipv4Egress": 1,
+      "ipv6Egress": 1,
+      "homeRead": 1,
+      "outsideFixtureRead": 1,
+      "outsideFixtureWrite": 1,
+      "ownLoopbackAllowed": true,
+      "otherLoopbackDenied": true,
+      "securitydLookup": 1100,
+      "securityServerLookup": 1100
+    },
+    "reader": {
+      "ipv4Egress": 1,
+      "ipv6Egress": 1,
+      "homeRead": 1,
+      "outsideFixtureRead": 1,
+      "outsideFixtureWrite": 1,
+      "ownLoopbackAllowed": false,
+      "otherLoopbackDenied": true,
+      "securitydLookup": 1100,
+      "securityServerLookup": 1100
+    }
+  },
+  "permissionKind": "write",
+  "fileAbsentAtPrompt": true,
+  "pendingBeforeClose": {
+    "keys": ["items"],
+    "containsOriginalId": true
+  },
+  "originalProcessExited": 0,
+  "absentAfterClose": true,
+  "pendingAfterResume": {
+    "keys": ["items"],
+    "containsOriginalId": false
+  },
+  "historyBeforeDecision": [
+    {
+      "event": "tool.execution_start",
+      "decision": null
+    },
+    {
+      "event": "permission.requested",
+      "decision": null
+    }
+  ],
+  "handled": {
+    "success": false
+  },
+  "staleError": null,
+  "modelRequestsOnResumeOrStaleDecision": 0,
+  "fileAbsentAfterDecision": true,
+  "persistedToolReceipt": {
+    "decision": null,
+    "tool": null,
+    "success": null,
+    "sameRequestAndTool": false,
+    "requestId": "c54b24c8-bf96-4cd4-a560-892ce79f25c8",
+    "toolCallId": null
+  },
+  "wire": [
+    {
+      "at": 0.375,
+      "route": "/v1/chat/completions",
+      "hasChosenKey": true,
+      "model": "gpt-4o-mini",
+      "marker": "FF_SDK_E_REQUEST_TOOL",
+      "streamRequested": true,
+      "historyHasOldAnswer": false,
+      "historyHasOldQuestion": false,
+      "endsWithTool": false,
+      "declaredTools": ["create"],
+      "createSchemaKeys": ["path", "file_text"]
+    }
+  ]
+}

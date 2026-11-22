@@ -1,0 +1,90 @@
+{
+  "date": "2026-11-22 Asia/Shanghai",
+  "installed": {
+    "app": "/Applications/Farfold.app",
+    "cdhash": "8b990faeef206603cc5fbd1f822266d99a2f7a29",
+    "binarySha256": "81ef4f17f25502f155857957b85156f900ee1a5ab4dc4df6de45ddd7b673855f",
+    "preservedDataMetadataCount": 264507,
+    "preservedCriticalFileDigests": 6
+  },
+  "goose": {
+    "version": "1.59.1",
+    "agentId": "registry:goose",
+    "provider": "openai",
+    "configuredModel": "mimo-v2.6-flash",
+    "format": "Chat Completions"
+  },
+  "success": {
+    "serviceDisplayName": "Xiaomi",
+    "endpoint": "https://api.xiaomimimo.com/v1",
+    "nativeId": "20261122_5",
+    "cwd": "/private/tmp/ff-c12-goose-managed.U0QmWK2j",
+    "first": {
+      "wire": {
+        "relativeLog": "protocol-v1-1795321728714-10.jsonl",
+        "sha256": "1051968eaf2b6a86a428bd441608fb606ce5f1aeff802fcac37af2d9452118a8",
+        "outgoing": ["initialize", "session/new", "session/prompt"],
+        "errorCategories": []
+      },
+      "displayedAsCompleted": true,
+      "reply": "FF_C12_GOOSE_MANAGED_20261122_A",
+      "nativeReplyRow": 409
+    },
+    "cold": {
+      "wire": {
+        "relativeLog": "protocol-v1-1795321839854-0.jsonl",
+        "sha256": "f5531c5fb67689a001da3c7777f1f466326bd87ee370d4020d450b314ffb27c0",
+        "outgoing": ["initialize", "session/load", "session/prompt"],
+        "errorCategories": []
+      },
+      "wireBeforeManualSend": ["initialize", "session/load"],
+      "priorReplyVisible": true,
+      "displayedAsCompleted": true,
+      "reply": "FF_C12_GOOSE_MANAGED_20261122_A_B",
+      "nativeReplyRow": 412
+    },
+    "nativeUsage": [
+      {
+        "model": "mimo-v2.6-flash",
+        "tokens": 4585
+      },
+      {
+        "model": "mimo-v2.6-flash",
+        "tokens": 4723
+      }
+    ]
+  },
+  "authFailure": {
+    "serviceDisplayName": "FF_C12_GOOSE_401_TEST",
+    "credential": "synthetic-invalid",
+    "nativeId": "20261122_7",
+    "cwd": "/private/tmp/ff-c12-goose-401.Ogl72Qfr",
+    "wire": {
+      "relativeLog": "protocol-v1-1795321998419-2.jsonl",
+      "sha256": "d8444d9b0b8b1549539c348ca803924545dc3547b8b96d623ceb8508a0a1f523",
+      "outgoing": [
+        "initialize",
+        "session/new",
+        "session/prompt",
+        "session/cancel"
+      ],
+      "errorCategories": ["protocol"]
+    },
+    "nativeErrorRow": 415,
+    "vendorStatus": 401,
+    "nativeUsageRows": 0,
+    "displayedError": "所选 API 的请求未通过认证，请在 API 配置中检查服务和密钥。",
+    "displayedAsCompleted": false,
+    "subsequentSendPaused": true,
+    "optionalStopConfirmed": false,
+    "closedWithNormalApplicationExit": true,
+    "sameFailedSessionRetryUntested": true
+  },
+  "scope": {
+    "managedServiceKeyVisible": false,
+    "billingDashboardChecked": false,
+    "existingGooseSettingsEdited": false,
+    "existingCopilotAcpThreadsOpened": false,
+    "initialDraftRestoredWithOriginalServiceAndWorkingFolder": true
+  }
+}

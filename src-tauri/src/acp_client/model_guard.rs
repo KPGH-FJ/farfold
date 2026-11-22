@@ -521,6 +521,9 @@ impl ConfigStore {
         };
         let error = "请选择此对话当前 API 服务中的模型";
         let expected = self.expected_model.as_deref().ok_or(error)?;
+        if self.is_goose_relay() && choice.value != expected {
+            return Err("要为此 API 选择其他模型，请另开对话".into());
+        }
         if identity.model.is_empty() || choice.kind != "select" {
             return Err(error.into());
         }
@@ -553,6 +556,20 @@ impl ConfigStore {
             super::service_config::validate_model(expected, options)?;
         }
         Ok(())
+    }
+    pub(crate) fn is_goose_relay(&self) -> bool {
+        self.agent_id == super::service_config::goose::AGENT_ID && self.expected_model.is_some()
+    }
+
+    pub(crate) fn validate_goose_provider(&self, options: Option<&Value>) -> Result<(), String> {
+        if self.is_goose_relay() {
+            super::service_config::goose::validate_provider(options)?;
+        }
+        Ok(())
+    }
+
+    pub(crate) fn protects_provider_option(&self, id: &str) -> bool {
+        self.is_goose_relay() && id == super::service_config::goose::PROVIDER_OPTION
     }
     pub(crate) fn record_with_source(&self, mut value: Value) -> Result<Value, String> {
         if let Some(service) = &self.service_record {

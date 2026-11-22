@@ -6,8 +6,21 @@ use agent_client_protocol::schema::v1::{ContentBlock, ErrorCode, PromptRequest};
 fn describe_prompt_error(
     agent_id: &str,
     matched_wire_error: bool,
+    goose_relay: bool,
     error: agent_client_protocol::Error,
 ) -> String {
+    if goose_relay
+        && matched_wire_error
+        && error.code == ErrorCode::AuthRequired
+        && error
+            .data
+            .as_ref()
+            .and_then(|value| value.get("reason"))
+            .and_then(Value::as_str)
+            == Some("turn_failed")
+    {
+        return "PROMPT_SERVICE_AUTH_FAILED".into();
+    }
     // Cline's runtime throws its fixed OAuth message before the adapter can
     // emit AuthRequired. The official SDK wraps that exception in details.
     if agent_id == "registry:cline"
@@ -119,6 +132,7 @@ pub(super) async fn send(
     if permission_guard.blocks_prompt(&blocks) {
         return Err("PROMPT_PERMISSION_SCOPE_UNVERIFIED".into());
     }
+    config_store.validate_goose_provider(configuration.modern_options())?;
     let source_model_ok = config_store
         .expected_model
         .as_ref()
@@ -169,6 +183,7 @@ pub(super) async fn send(
         (ctx.events)(serde_json::json!({"kind":"serviceUnavailable","message":error}));
         return Err("SERVICE_UNAVAILABLE".into());
     }
+    super::super::session_tool_recovery::require_ready(config_store, ctx.session_id).await?;
     restore_config::drain(
         inbox,
         ctx,
@@ -179,6 +194,7 @@ pub(super) async fn send(
         opening,
         mutation,
     );
+    config_store.validate_goose_provider(configuration.modern_options())?;
     if ctx.compactions.busy() {
         return Err("上下文整理尚未结束，请等待明确结果".into());
     }
@@ -199,7 +215,6 @@ pub(super) async fn send(
     if result.is_closed() {
         return Err("请求等待已结束，消息尚未发送".into());
     }
-    super::super::session_tool_recovery::require_ready(config_store, ctx.session_id).await?;
     let observation = ctx
         .ops
         .prompt_escrow
@@ -223,6 +238,7 @@ pub(super) async fn send(
         observation: observation.clone(),
     };
     let agent_id = config_store.agent_id.clone();
+    let goose_relay = config_store.is_goose_relay();
     let sent = cx
         .send_request_to(Agent, PromptRequest::new(ctx.session_id.to_owned(), blocks))
         .on_receiving_result({
@@ -237,7 +253,9 @@ pub(super) async fn send(
                         serde_json::to_value(&response)
                             .map_err(agent_client_protocol::Error::into_internal_error)
                     })
-                    .map_err(|error| describe_prompt_error(&agent_id, matched_wire_error, error));
+                    .map_err(|error| {
+                        describe_prompt_error(&agent_id, matched_wire_error, goose_relay, error)
+                    });
                 observation.observe(&outcome);
                 let _ = turn.send(Outcome {
                     receipt_id,
@@ -370,22 +388,22 @@ mod tests {
             "private": "synthetic diagnostic canary"
         }));
         assert_eq!(
-            describe_prompt_error("registry:cline", true, error.clone()),
+            describe_prompt_error("registry:cline", true, false, error.clone()),
             "AUTH_REQUIRED"
         );
         assert_ne!(
-            describe_prompt_error("custom:cline", true, error.clone()),
+            describe_prompt_error("custom:cline", true, false, error.clone()),
             "AUTH_REQUIRED"
         );
         assert_ne!(
-            describe_prompt_error("registry:cline", false, error),
+            describe_prompt_error("registry:cline", false, false, error),
             "AUTH_REQUIRED"
         );
         let generic = agent_client_protocol::Error::internal_error().data(
             serde_json::json!({"details":"Prompt quoted: Cline requires re-authentication."}),
         );
         assert_ne!(
-            describe_prompt_error("registry:cline", true, generic),
+            describe_prompt_error("registry:cline", true, false, generic),
             "AUTH_REQUIRED"
         );
     }
@@ -396,21 +414,22 @@ mod tests {
         let mut error = agent_client_protocol::Error::internal_error();
         error.message = "Internal error: the provider for model nemotron-3-ultra-fp4 has exhausted its credits and cannot process requests".into();
         assert_eq!(
-            describe_prompt_error("registry:kimchi", true, error.clone()),
+            describe_prompt_error("registry:kimchi", true, false, error.clone()),
             CODE
         );
         assert_ne!(
-            describe_prompt_error("registry:poolside", true, error.clone()),
+            describe_prompt_error("registry:poolside", true, false, error.clone()),
             CODE
         );
         assert_ne!(
-            describe_prompt_error("registry:kimchi", false, error.clone()),
+            describe_prompt_error("registry:kimchi", false, false, error.clone()),
             CODE
         );
         assert_ne!(
             describe_prompt_error(
                 "registry:kimchi",
                 true,
+                false,
                 error
                     .clone()
                     .data(serde_json::json!({"sensitive": "fixture"}))
@@ -418,6 +437,26 @@ mod tests {
             CODE
         );
         error.message.push_str(". Other diagnostic text.");
-        assert_ne!(describe_prompt_error("registry:kimchi", true, error), CODE);
+        assert_ne!(
+            describe_prompt_error("registry:kimchi", true, false, error),
+            CODE
+        );
     }
+}
+#[test]
+fn only_the_managed_goose_prompt_gets_the_service_authentication_error() {
+    let failure = agent_client_protocol::Error::auth_required()
+        .data(serde_json::json!({"reason":"turn_failed"}));
+    assert_eq!(
+        describe_prompt_error("registry:goose", true, true, failure.clone()),
+        "PROMPT_SERVICE_AUTH_FAILED"
+    );
+    assert_eq!(
+        describe_prompt_error("registry:goose", true, false, failure.clone()),
+        "AUTH_REQUIRED"
+    );
+    assert_ne!(
+        describe_prompt_error("registry:goose", false, true, failure),
+        "PROMPT_SERVICE_AUTH_FAILED"
+    );
 }

@@ -134,6 +134,7 @@ async fn review_regression_logout_reaps_idle_account_copies_and_preserves_api_an
             false,
             Some(PreparedService {
                 delivery: None,
+                relay: None,
                 environment: crate::shell_env::command_env(),
                 context,
             }),

@@ -135,6 +135,7 @@ except Exception as error:
         ]);
         let service = prepared.then_some(PreparedService {
             delivery: None,
+            relay: None,
             environment,
             context: ServiceContext {
                 identity: crate::credentials::ServiceIdentity {

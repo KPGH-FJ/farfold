@@ -1,0 +1,575 @@
+{
+  "scope": "synthetic loopback protocol 4, official release 1.0.114; no Farfold or user accounts",
+  "artifact": {
+    "registry": "https://registry.npmjs.org/@github%2Fcopilot-darwin-arm64/1.0.114",
+    "integrity": "sha512-Mw47DTwMNDG0bb4t1rVu7S+ekdThIGGitpG28/wGpACZ0lFhYnpNEoSJ7hHBM3oix4b/w6+ZcmxE9J9MngsR9Q==",
+    "installedRegistrationUsed": false,
+    "officialReleaseVersion": "1.0.114",
+    "archiveBytes": 140699142,
+    "executableBytes": 202294880
+  },
+  "probes": {
+    "initial": {
+      "reply": {
+        "type": "assistant.message",
+        "id": "3d72b66b-ba9a-43ed-b950-a2bc63872cb4",
+        "dataKeys": [
+          "messageId",
+          "originatingMessageId",
+          "model",
+          "content",
+          "toolRequests",
+          "interactionId",
+          "turnId",
+          "rte",
+          "apiCallId"
+        ],
+        "content": "FF_SDK_FIRST_ACK",
+        "reason": "",
+        "operational": ""
+      },
+      "uniqueSendId": "21989181-2d41-49c5-b221-581e4f66604f",
+      "wire": {
+        "FF_SDK_A_FIRST": 1,
+        "FF_SDK_B_CONTINUE": 0,
+        "FF_SDK_C_HOLD": 0,
+        "FF_SDK_D_AFTER_STOP": 0,
+        "FF_SDK_E_REQUEST_TOOL": 0,
+        "FF_SDK_F_OFFLINE": 0,
+        "FF_SDK_G_RECOVER": 0
+      },
+      "events": [
+        {
+          "type": "assistant.message",
+          "id": "3d72b66b-ba9a-43ed-b950-a2bc63872cb4",
+          "dataKeys": [
+            "messageId",
+            "originatingMessageId",
+            "model",
+            "content",
+            "toolRequests",
+            "interactionId",
+            "turnId",
+            "rte",
+            "apiCallId"
+          ],
+          "content": "FF_SDK_FIRST_ACK",
+          "reason": "",
+          "operational": ""
+        },
+        {
+          "type": "session.idle",
+          "id": "78553b26-5571-49c1-99fb-eec8b795b9bd",
+          "dataKeys": ["mode"],
+          "content": null,
+          "reason": "",
+          "operational": ""
+        }
+      ]
+    },
+    "coldResume": {
+      "sameId": true,
+      "sameModelBeforePrompt": true,
+      "oldMessageRead": true,
+      "oldAnswerRead": true,
+      "resumeInferenceBeforeFollowup": 0,
+      "answer": {
+        "type": "assistant.message",
+        "id": "339e7fb9-7ed4-4e9b-8be6-055e7d609e01",
+        "dataKeys": [
+          "messageId",
+          "originatingMessageId",
+          "model",
+          "content",
+          "toolRequests",
+          "interactionId",
+          "turnId",
+          "rte",
+          "apiCallId"
+        ],
+        "content": "FF_SDK_RESUMED_ACK",
+        "reason": "",
+        "operational": ""
+      },
+      "followupRetainsOldQuestionAndAnswer": true,
+      "counts": {
+        "FF_SDK_A_FIRST": 1,
+        "FF_SDK_B_CONTINUE": 1,
+        "FF_SDK_C_HOLD": 0,
+        "FF_SDK_D_AFTER_STOP": 0,
+        "FF_SDK_E_REQUEST_TOOL": 0,
+        "FF_SDK_F_OFFLINE": 0,
+        "FF_SDK_G_RECOVER": 0
+      }
+    },
+    "stop": {
+      "abortResultKeys": ["success"],
+      "heldSocketClosedBeforeAnyProviderReply": true,
+      "idle": {
+        "type": "session.idle",
+        "id": "e7e06a0b-7247-4388-b207-8673784625ea",
+        "dataKeys": ["aborted", "mode"],
+        "content": null,
+        "reason": "",
+        "operational": ""
+      },
+      "originalRootCount": 1,
+      "afterStopAnswer": {
+        "type": "assistant.message",
+        "id": "6a90f14f-a208-4b1d-b944-52c7a2a267c5",
+        "dataKeys": [
+          "messageId",
+          "originatingMessageId",
+          "model",
+          "content",
+          "toolRequests",
+          "interactionId",
+          "turnId",
+          "rte",
+          "apiCallId"
+        ],
+        "content": "FF_SDK_AFTER_STOP_ACK",
+        "reason": "",
+        "operational": ""
+      },
+      "events": [
+        {
+          "type": "abort",
+          "id": "add8ab2f-30fb-48f3-a816-4f4d34306ed9",
+          "dataKeys": ["reason"],
+          "content": null,
+          "reason": "user_initiated",
+          "operational": ""
+        },
+        {
+          "type": "session.idle",
+          "id": "e7e06a0b-7247-4388-b207-8673784625ea",
+          "dataKeys": ["aborted", "mode"],
+          "content": null,
+          "reason": "",
+          "operational": ""
+        },
+        {
+          "type": "assistant.message",
+          "id": "6a90f14f-a208-4b1d-b944-52c7a2a267c5",
+          "dataKeys": [
+            "messageId",
+            "originatingMessageId",
+            "model",
+            "content",
+            "toolRequests",
+            "interactionId",
+            "turnId",
+            "rte",
+            "apiCallId"
+          ],
+          "content": "FF_SDK_AFTER_STOP_ACK",
+          "reason": "",
+          "operational": ""
+        },
+        {
+          "type": "session.idle",
+          "id": "906bee86-76c7-433d-a8e1-5452d913485d",
+          "dataKeys": ["mode"],
+          "content": null,
+          "reason": "",
+          "operational": ""
+        }
+      ],
+      "counts": {
+        "FF_SDK_A_FIRST": 1,
+        "FF_SDK_B_CONTINUE": 1,
+        "FF_SDK_C_HOLD": 1,
+        "FF_SDK_D_AFTER_STOP": 1,
+        "FF_SDK_E_REQUEST_TOOL": 0,
+        "FF_SDK_F_OFFLINE": 0,
+        "FF_SDK_G_RECOVER": 0
+      }
+    },
+    "approvalReject": {
+      "sameSessionId": "2f317963-276c-4a6f-89d7-248acad60e82",
+      "permissionEvent": {
+        "type": "permission.requested",
+        "id": "13a93e92-24f5-4e63-b856-9d13bdd0feee",
+        "dataKeys": [
+          "requestId",
+          "permissionRequest",
+          "promptRequest",
+          "assistedApprovalAssessment",
+          "agentMode",
+          "permissionMode",
+          "ownerSessionId"
+        ],
+        "content": null,
+        "reason": "",
+        "operational": ""
+      },
+      "requestId": "7525403a-0aa8-4116-9f6b-e61b053fa3e0",
+      "kind": "write",
+      "ownedFileNamed": true,
+      "beforeExists": false,
+      "afterExists": false,
+      "handled": ["success"],
+      "final": {
+        "type": "assistant.message",
+        "id": "87a36b3e-dba8-41d7-8466-488c0feb12e5",
+        "dataKeys": [
+          "messageId",
+          "originatingMessageId",
+          "model",
+          "content",
+          "toolRequests",
+          "interactionId",
+          "turnId",
+          "rte",
+          "apiCallId"
+        ],
+        "content": "FF_SDK_REJECTED_TOOL_ACK",
+        "reason": "",
+        "operational": ""
+      },
+      "persistedTypes": [
+        "session.start",
+        "instruction.update",
+        "user.message",
+        "system.message",
+        "assistant.turn_start",
+        "session.usage_record",
+        "assistant.message",
+        "tool.execution_start",
+        "permission.requested",
+        "permission.completed"
+      ],
+      "events": [
+        {
+          "type": "assistant.message",
+          "id": "1985ce21-5e4d-4e4a-8da7-6de5cb903a8c",
+          "dataKeys": [
+            "messageId",
+            "originatingMessageId",
+            "model",
+            "content",
+            "toolRequests",
+            "interactionId",
+            "turnId",
+            "rte",
+            "apiCallId"
+          ],
+          "content": null,
+          "reason": "",
+          "operational": ""
+        },
+        {
+          "type": "tool.execution_start",
+          "id": "8a5de136-7e62-400e-b37d-e6e616dc0762",
+          "dataKeys": [
+            "toolCallId",
+            "toolName",
+            "arguments",
+            "turnId",
+            "model",
+            "toolTitle"
+          ],
+          "content": null,
+          "reason": "",
+          "operational": ""
+        },
+        {
+          "type": "permission.requested",
+          "id": "13a93e92-24f5-4e63-b856-9d13bdd0feee",
+          "dataKeys": [
+            "requestId",
+            "permissionRequest",
+            "promptRequest",
+            "assistedApprovalAssessment",
+            "agentMode",
+            "permissionMode",
+            "ownerSessionId"
+          ],
+          "content": null,
+          "reason": "",
+          "operational": ""
+        },
+        {
+          "type": "tool.execution_complete",
+          "id": "1c715e94-37d7-497f-b9be-40795dcab2dd",
+          "dataKeys": [
+            "toolCallId",
+            "model",
+            "interactionId",
+            "turnId",
+            "rte",
+            "success",
+            "error",
+            "toolTelemetry"
+          ],
+          "content": null,
+          "reason": "",
+          "operational": ""
+        },
+        {
+          "type": "assistant.message",
+          "id": "87a36b3e-dba8-41d7-8466-488c0feb12e5",
+          "dataKeys": [
+            "messageId",
+            "originatingMessageId",
+            "model",
+            "content",
+            "toolRequests",
+            "interactionId",
+            "turnId",
+            "rte",
+            "apiCallId"
+          ],
+          "content": "FF_SDK_REJECTED_TOOL_ACK",
+          "reason": "",
+          "operational": ""
+        }
+      ]
+    },
+    "connectionLoss": {
+      "lostTransportClosedSocket": true,
+      "sameId": true,
+      "sameModel": true,
+      "originalRootMatches": true,
+      "priorWritesOnReopen": 0,
+      "countsBeforeExplicitFollowUp": {
+        "FF_SDK_A_FIRST": 1,
+        "FF_SDK_B_CONTINUE": 1,
+        "FF_SDK_C_HOLD": 1,
+        "FF_SDK_D_AFTER_STOP": 1,
+        "FF_SDK_E_REQUEST_TOOL": 2,
+        "FF_SDK_F_OFFLINE": 1,
+        "FF_SDK_G_RECOVER": 0
+      },
+      "explicitFollowUpReply": {
+        "type": "assistant.message",
+        "id": "678bbd3d-5c58-4613-93cc-97a90ccb9b37",
+        "dataKeys": [
+          "messageId",
+          "originatingMessageId",
+          "model",
+          "content",
+          "toolRequests",
+          "interactionId",
+          "turnId",
+          "rte",
+          "apiCallId"
+        ],
+        "content": "FF_SDK_RECOVERED_ACK",
+        "reason": "",
+        "operational": ""
+      },
+      "counts": {
+        "FF_SDK_A_FIRST": 1,
+        "FF_SDK_B_CONTINUE": 1,
+        "FF_SDK_C_HOLD": 1,
+        "FF_SDK_D_AFTER_STOP": 1,
+        "FF_SDK_E_REQUEST_TOOL": 2,
+        "FF_SDK_F_OFFLINE": 1,
+        "FF_SDK_G_RECOVER": 1
+      },
+      "events": [
+        {
+          "type": "assistant.message",
+          "id": "678bbd3d-5c58-4613-93cc-97a90ccb9b37",
+          "dataKeys": [
+            "messageId",
+            "originatingMessageId",
+            "model",
+            "content",
+            "toolRequests",
+            "interactionId",
+            "turnId",
+            "rte",
+            "apiCallId"
+          ],
+          "content": "FF_SDK_RECOVERED_ACK",
+          "reason": "",
+          "operational": ""
+        }
+      ]
+    }
+  },
+  "processExits": [
+    {
+      "exitCode": 0,
+      "methods": [
+        "ping",
+        "session.create",
+        "session.model.getCurrent",
+        "session.send",
+        "session.detach"
+      ],
+      "stderrBytes": 0
+    },
+    {
+      "exitCode": 0,
+      "methods": [
+        "ping",
+        "session.resume",
+        "session.model.getCurrent",
+        "session.send",
+        "session.send",
+        "session.abort",
+        "session.send",
+        "session.send"
+      ],
+      "stderrBytes": 0
+    },
+    {
+      "exitCode": 0,
+      "methods": [
+        "ping",
+        "sessions.readPersistedEvents",
+        "sessions.readPersistedEvents",
+        "sessions.readPersistedEvents",
+        "sessions.readPersistedEvents"
+      ],
+      "stderrBytes": 0
+    },
+    {
+      "exitCode": 0,
+      "methods": [
+        "ping",
+        "session.create",
+        "session.model.getCurrent",
+        "session.send",
+        "session.permissions.handlePendingPermissionRequest"
+      ],
+      "stderrBytes": 0
+    },
+    {
+      "exitCode": 0,
+      "methods": [
+        "ping",
+        "session.resume",
+        "session.model.getCurrent",
+        "session.send"
+      ],
+      "stderrBytes": 0
+    }
+  ],
+  "sessionId": "26ba2e98-8fd1-48e7-a534-0f30f4cf2a9b",
+  "preflight": {
+    "sender": {
+      "ipv4Egress": 1,
+      "ipv6Egress": 1,
+      "homeRead": 1,
+      "outsideFixtureRead": 1,
+      "outsideFixtureWrite": 1,
+      "ownLoopbackAllowed": true,
+      "otherLoopbackDenied": true,
+      "securitydLookup": 1100,
+      "securityServerLookup": 1100
+    },
+    "reader": {
+      "ipv4Egress": 1,
+      "ipv6Egress": 1,
+      "homeRead": 1,
+      "outsideFixtureRead": 1,
+      "outsideFixtureWrite": 1,
+      "ownLoopbackAllowed": false,
+      "otherLoopbackDenied": true,
+      "securitydLookup": 1100,
+      "securityServerLookup": 1100
+    }
+  },
+  "simulatedKeyStoredInSession": false,
+  "wire": [
+    {
+      "at": 0.685,
+      "route": "/v1/chat/completions",
+      "hasChosenKey": true,
+      "model": "gpt-4o-mini",
+      "marker": "FF_SDK_A_FIRST",
+      "streamRequested": true,
+      "historyHasOldAnswer": false,
+      "historyHasOldQuestion": true,
+      "endsWithTool": false
+    },
+    {
+      "at": 0.941,
+      "route": "/v1/chat/completions",
+      "hasChosenKey": true,
+      "model": "gpt-4o-mini",
+      "marker": "FF_SDK_B_CONTINUE",
+      "streamRequested": true,
+      "historyHasOldAnswer": true,
+      "historyHasOldQuestion": true,
+      "endsWithTool": false
+    },
+    {
+      "at": 0.946,
+      "route": "/v1/chat/completions",
+      "hasChosenKey": true,
+      "model": "gpt-4o-mini",
+      "marker": "FF_SDK_C_HOLD",
+      "streamRequested": true,
+      "historyHasOldAnswer": true,
+      "historyHasOldQuestion": true,
+      "endsWithTool": false,
+      "remoteClosedBeforeProviderReply": true,
+      "closedAt": 0.947
+    },
+    {
+      "at": 0.95,
+      "route": "/v1/chat/completions",
+      "hasChosenKey": true,
+      "model": "gpt-4o-mini",
+      "marker": "FF_SDK_D_AFTER_STOP",
+      "streamRequested": true,
+      "historyHasOldAnswer": true,
+      "historyHasOldQuestion": true,
+      "endsWithTool": false
+    },
+    {
+      "at": 1.157,
+      "route": "/v1/chat/completions",
+      "hasChosenKey": true,
+      "model": "gpt-4o-mini",
+      "marker": "FF_SDK_E_REQUEST_TOOL",
+      "streamRequested": true,
+      "historyHasOldAnswer": false,
+      "historyHasOldQuestion": false,
+      "endsWithTool": false,
+      "declaredTools": ["create"],
+      "createSchemaKeys": ["path", "file_text"]
+    },
+    {
+      "at": 1.167,
+      "route": "/v1/chat/completions",
+      "hasChosenKey": true,
+      "model": "gpt-4o-mini",
+      "marker": "FF_SDK_E_REQUEST_TOOL",
+      "streamRequested": true,
+      "historyHasOldAnswer": false,
+      "historyHasOldQuestion": false,
+      "endsWithTool": true
+    },
+    {
+      "at": 1.173,
+      "route": "/v1/chat/completions",
+      "hasChosenKey": true,
+      "model": "gpt-4o-mini",
+      "marker": "FF_SDK_F_OFFLINE",
+      "streamRequested": true,
+      "historyHasOldAnswer": true,
+      "historyHasOldQuestion": true,
+      "endsWithTool": false,
+      "remoteClosedBeforeProviderReply": true,
+      "closedAt": 1.175
+    },
+    {
+      "at": 2.04,
+      "route": "/v1/chat/completions",
+      "hasChosenKey": true,
+      "model": "gpt-4o-mini",
+      "marker": "FF_SDK_G_RECOVER",
+      "streamRequested": true,
+      "historyHasOldAnswer": true,
+      "historyHasOldQuestion": true,
+      "endsWithTool": false
+    }
+  ]
+}

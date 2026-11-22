@@ -3,6 +3,8 @@
  * 「结论 + 下一步」，原始错误文本与代码收进可展开的技术详情。
  */
 export const ERROR_STRINGS = {
+  serviceAuthenticationFailed:
+    "所选 API 的请求未通过认证，请在 API 配置中检查服务和密钥。",
   /** Collapsed disclosure label for raw error text / codes. */
   technicalDetails: "技术详情",
   agentInitializeFailed: "连接检查未完成，请检查程序或启动设置后重试",

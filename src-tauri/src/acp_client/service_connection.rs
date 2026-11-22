@@ -26,6 +26,7 @@ pub(crate) struct PreparedService {
     pub environment: HashMap<String, String>,
     pub context: ServiceContext,
     pub delivery: Option<super::service_delivery::ServiceDelivery>,
+    pub relay: Option<super::service_config::goose_relay::Relay>,
 }
 
 /// Missing on old history means unknown, not proof of today's default service.
@@ -143,50 +144,75 @@ impl AcpManager {
         let prepared = if let Some(selection) = selection {
             let row = current.clone();
             let data_dir = self.data_directory().to_owned();
-            Some(
-                store
-                    .run(move |store| {
-                        if super::service_config::copilot::registered(&row)
-                            && !super::service_config::copilot::verified(&row, store, &data_dir)
-                        {
-                            return Err(super::service_config::copilot::UNAVAILABLE.into());
+            let (mut prepared, goose_upstream) = store
+                .run(move |store| {
+                    if super::service_config::copilot::registered(&row)
+                        && !super::service_config::copilot::verified(&row, store, &data_dir)
+                    {
+                        return Err(super::service_config::copilot::UNAVAILABLE.into());
+                    }
+                    let goose = super::service_config::goose::registered(&row);
+                    if goose && !super::service_config::goose::verified(&row, store, &data_dir) {
+                        return Err(super::service_config::goose::UNAVAILABLE.into());
+                    }
+                    let snapshot =
+                        crate::credentials::service_snapshot(store, &selection, expected.as_ref())?;
+                    // Explicit service selection does not inherit the legacy global
+                    // grants. User-configured Agent environment remains intact.
+                    let mut environment = crate::shell_env::command_env();
+                    crate::shell_env::EnvNames::current().extend(
+                        &mut environment,
+                        crate::auth::resolve_agent_env(&row.id, &row.env)?,
+                    );
+                    let key =
+                        serde_json::to_vec(&(&snapshot.identity, &snapshot.connection_revision))
+                            .map_err(|_| "无法准备 API 配置")?;
+                    let revision = Sha256::digest(key)
+                        .iter()
+                        .map(|byte| format!("{byte:02x}"))
+                        .collect::<String>();
+                    let (model_id, delivery, goose_upstream) = if goose {
+                        if snapshot.api_type != "chat-completions" {
+                            return Err("Goose 需要 Chat Completions 格式的 API 配置".into());
                         }
-                        let snapshot = crate::credentials::service_snapshot(
-                            store,
-                            &selection,
-                            expected.as_ref(),
-                        )?;
-                        // Explicit service selection does not inherit the legacy global
-                        // grants. User-configured Agent environment remains intact.
-                        let mut environment = crate::shell_env::command_env();
-                        crate::shell_env::EnvNames::current().extend(
-                            &mut environment,
-                            crate::auth::resolve_agent_env(&row.id, &row.env)?,
-                        );
+                        (
+                            snapshot.identity.model.clone(),
+                            None,
+                            Some((snapshot.endpoint, snapshot.secret)),
+                        )
+                    } else {
                         let config = super::service_config::compile(&row, &snapshot, &environment)?;
                         crate::shell_env::EnvNames::current()
                             .extend(&mut environment, config.env_overrides);
-                        let key = serde_json::to_vec(&(
-                            &snapshot.identity,
-                            &snapshot.connection_revision,
-                        ))
-                        .map_err(|_| "无法准备 API 配置")?;
-                        let revision = Sha256::digest(key)
-                            .iter()
-                            .map(|byte| format!("{byte:02x}"))
-                            .collect::<String>();
-                        Ok(PreparedService {
+                        (config.model_id, config.delivery, None)
+                    };
+                    Ok((
+                        PreparedService {
                             environment,
-                            delivery: config.delivery,
+                            delivery,
+                            relay: None,
                             context: ServiceContext {
                                 identity: snapshot.identity,
                                 revision,
-                                model_id: config.model_id,
+                                model_id,
                             },
-                        })
-                    })
-                    .await?,
-            )
+                        },
+                        goose_upstream,
+                    ))
+                })
+                .await?;
+            if let Some((endpoint, key)) = goose_upstream {
+                let model = &prepared.context.model_id;
+                let relay =
+                    super::service_config::goose_relay::start(endpoint, model.clone(), key).await?;
+                super::service_config::goose::prepare_environment(
+                    &mut prepared.environment,
+                    &relay,
+                    model,
+                );
+                prepared.relay = Some(relay);
+            }
+            Some(prepared)
         } else {
             None
         };
@@ -277,6 +303,21 @@ pub async fn service_capabilities(
                         super::service_config::capability(&agent)
                     } else {
                         super::service_config::copilot::unavailable()
+                    },
+                )
+            })
+            .await;
+    }
+    if super::service_config::goose::registered(&agent) {
+        let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
+        return app
+            .state::<MetaStore>()
+            .run(move |store| {
+                Ok(
+                    if super::service_config::goose::verified(&agent, store, &data) {
+                        super::service_config::capability(&agent)
+                    } else {
+                        super::service_config::goose::unavailable()
                     },
                 )
             })

@@ -14,6 +14,8 @@ use crate::{credentials::ServiceSnapshot, meta_store::AgentRow};
 #[path = "service_config_claude_tests.rs"]
 mod claude_tests;
 pub(super) mod copilot;
+pub(super) mod goose;
+pub(super) mod goose_relay;
 
 #[derive(Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -54,6 +56,9 @@ pub(crate) fn verified_permission_option(agent: &AgentRow) -> bool {
 pub(crate) fn capability(agent: &AgentRow) -> ServiceCapability {
     if copilot::registered(agent) {
         return copilot::capability(agent);
+    }
+    if goose::registered(agent) {
+        return goose::capability(agent);
     }
     let (api_types, validated_api_types, unavailable_reason) = match catalog_id(agent) {
         Some("opencode") => (

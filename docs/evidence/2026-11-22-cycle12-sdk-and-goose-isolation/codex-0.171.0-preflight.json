@@ -1,0 +1,53 @@
+{
+  "package": "@openai/codex@0.171.0-darwin-arm64",
+  "rpc": ["initialize", "account/read", "thread/start"],
+  "homeAndCodexHomePreserved": true,
+  "canonicalArg0ModeTarget": true,
+  "preexistingArg0DirectoriesWriteDenied": 4,
+  "preflight": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "validCanonicalIdentityBefore": true,
+  "launcherPid": 36866,
+  "appServerInit": {
+    "resultPresent": true,
+    "versionObserved": true,
+    "errorCode": null
+  },
+  "account": {
+    "kind": null,
+    "namedAccountPresent": false,
+    "planPresent": false,
+    "requiresOpenaiAuth": null,
+    "errorCode": -32603
+  },
+  "threadStartError": {
+    "code": -32600,
+    "usesPermissionText": false,
+    "usesAuthorizationText": false,
+    "usesPathText": false
+  },
+  "fixtureErrorType": "RuntimeError",
+  "fixtureErrorText": "native thread start rejected",
+  "exitCode": 0,
+  "stderrCategories": {
+    "permissionDenied": true,
+    "sqlite": false,
+    "terminal": false,
+    "sandboxLauncherExecFailed": false,
+    "authRelated": false,
+    "originalConfigPath": false,
+    "originalTempPath": false,
+    "originalStatePath": false,
+    "scratchPath": false
+  },
+  "appServerNotifications": ["configWarning", "remoteControl/status/changed"],
+  "originalIdentityUnchangedAfter": true
+}

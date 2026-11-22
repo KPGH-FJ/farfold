@@ -321,6 +321,13 @@ pub(crate) async fn open_session_on_connection(
     let mut configuration =
         super::super::session_config::SessionConfig::from_connection(&response, dialect);
     let mut config_state = configuration.options();
+    config_store.validate_goose_provider(configuration.modern_options())?;
+    if config_options
+        .iter()
+        .any(|(id, _)| config_store.protects_provider_option(id))
+    {
+        return Err("此对话已选择 API 服务，不能更换提供方".into());
+    }
     let mut permission_guard = super::super::permission_guard::PermissionGuard::new(
         config_store.verified_permission_option,
         config_state.as_ref().unwrap_or(&Value::Null),
@@ -406,7 +413,7 @@ pub(crate) async fn open_session_on_connection(
         }
     }
 
-    if !resumed {
+    if !resumed || config_store.is_goose_relay() {
         config_store.validate_model(config_state.as_ref().unwrap_or(&Value::Null))?;
     }
     config_store.validate_service().await?;
@@ -450,6 +457,7 @@ pub(crate) async fn open_session_on_connection(
             model_guard.change_unknown();
         }
     }
+    config_store.validate_goose_provider(configuration.modern_options())?;
     let prompt_snapshot = Arc::new(Mutex::new(model_guard.current_value()));
     let events = super::super::active_prompt::observed_sink(events, prompt_snapshot.clone());
     let (ready_tx, ready_rx) = oneshot::channel();

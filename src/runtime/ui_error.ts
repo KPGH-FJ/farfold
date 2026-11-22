@@ -50,6 +50,8 @@ export function agentOpenError(reason: unknown): string | undefined {
 
 export function confirmedPromptError(code: string): string | undefined {
   if (code === "AUTH_REQUIRED") return STRINGS.access.authRequired;
+  if (code === "PROMPT_SERVICE_AUTH_FAILED")
+    return ERROR_STRINGS.serviceAuthenticationFailed;
   if (code === "PROMPT_MODEL_PROVIDER_CREDITS_EXHAUSTED")
     return ERROR_STRINGS.modelProviderCreditsExhausted;
 }

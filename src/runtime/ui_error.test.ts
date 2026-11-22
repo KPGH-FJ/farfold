@@ -100,6 +100,17 @@ it("shows the confirmed model-provider credit failure without raw diagnostics", 
   });
 });
 
+it("reports a rejected selected model-service key as a failed request", () => {
+  const code = "PROMPT_SERVICE_AUTH_FAILED";
+  expect(uiError(code, "请求失败")).toBe(
+    ERROR_STRINGS.serviceAuthenticationFailed,
+  );
+  expect(completion({ error: code })).toEqual({
+    status: "failed",
+    error: ERROR_STRINGS.serviceAuthenticationFailed,
+  });
+});
+
 it("keeps startup explanations free of product-forbidden terminology", () => {
   const forbidden =
     /runtime|host|acp|原生|绑定|代次|投影|占用|working copy|session|turn|构建|引用|对账|沉降|上游|sidecar|adapter|json|握手|envelope/i;

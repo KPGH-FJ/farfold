@@ -1232,6 +1232,10 @@ async fn session_pump(
                     let _=result.send(sent);
                 }
                 SessionControl::SetConfig { config_id, value, result, deadline } => {
+                    if config_store.protects_provider_option(&config_id) {
+                        let _ = result.send(Err("此对话已选择 API 服务，不能更换提供方".into()));
+                        continue;
+                    }
                     let permission = permission_guard.is_permission(&config_id);
                     let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);

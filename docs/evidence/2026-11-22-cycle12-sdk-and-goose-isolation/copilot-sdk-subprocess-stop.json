@@ -1,0 +1,136 @@
+{
+  "artifact": {
+    "registry": "https://registry.npmjs.org/@github%2Fcopilot-darwin-arm64/1.0.114",
+    "integrity": "sha512-Mw47DTwMNDG0bb4t1rVu7S+ekdThIGGitpG28/wGpACZ0lFhYnpNEoSJ7hHBM3oix4b/w6+ZcmxE9J9MngsR9Q==",
+    "installedRegistrationUsed": false,
+    "officialReleaseVersion": "1.0.114",
+    "archiveBytes": 140699142,
+    "executableBytes": 202294880
+  },
+  "scope": "isolated fixture only",
+  "sid": "aa6fe767-c2af-4fc8-a664-479e22f873b0",
+  "exits": [
+    {
+      "exitCode": 0,
+      "methods": ["ping", "sessions.readPersistedEvents"],
+      "stderrBytes": 0
+    }
+  ],
+  "preflight": {
+    "writer": {
+      "ipv4Egress": 1,
+      "ipv6Egress": 1,
+      "homeRead": 1,
+      "outsideFixtureRead": 1,
+      "outsideFixtureWrite": 1,
+      "ownLoopbackAllowed": true,
+      "otherLoopbackDenied": true,
+      "securitydLookup": 1100,
+      "securityServerLookup": 1100
+    },
+    "reader": {
+      "ipv4Egress": 1,
+      "ipv6Egress": 1,
+      "homeRead": 1,
+      "outsideFixtureRead": 1,
+      "outsideFixtureWrite": 1,
+      "ownLoopbackAllowed": false,
+      "otherLoopbackDenied": true,
+      "securitydLookup": 1100,
+      "securityServerLookup": 1100
+    }
+  },
+  "permissionKind": "shell",
+  "controlsAliveBefore": [true, true],
+  "approvalIds": [
+    "da66d2e1-0223-40d1-a3b0-4f8c8909e57d",
+    "d5cdb31a-d475-423b-8bd9-eac26a948d52"
+  ],
+  "childToOwnedSDK": ["sleep", "copilot"],
+  "provedChildOfSession": true,
+  "preCancelChildExists": true,
+  "childPID": 32906,
+  "copilotPID": 32843,
+  "controls": [32902, 32903],
+  "exactChildCommand": "/bin/sleep 14",
+  "controlPIDsDistinctFromChild": true,
+  "elapsedFromApprovalToAbortSec": 0.117,
+  "abortResult": {
+    "success": true
+  },
+  "childExitedWithinThreeSeconds": true,
+  "controlsAliveAfterAbort": [true, true],
+  "elapsedFromApprovalToPostAbortSec": 0.122,
+  "liveIdleAborted": true,
+  "liveToolTerminalSeen": false,
+  "senderAfterAbort": {
+    "exitCode": 0,
+    "methods": [
+      "ping",
+      "session.create",
+      "session.model.getCurrent",
+      "session.send",
+      "session.permissions.handlePendingPermissionRequest",
+      "session.permissions.handlePendingPermissionRequest",
+      "session.abort"
+    ],
+    "stderrBytes": 0
+  },
+  "observationAfterSenderExitSec": 2.195,
+  "persistedReceipt": {
+    "decision": "approved",
+    "tool": "bash",
+    "success": null,
+    "sameRequestAndTool": false,
+    "requestId": "da66d2e1-0223-40d1-a3b0-4f8c8909e57d",
+    "toolCallId": "call_4ee42e599dee4a449b04d329988771db"
+  },
+  "coldReadEventsTotal": 15,
+  "coldReadToolStartCount": 1,
+  "coldReadToolTerminalCount": 0,
+  "coldReadReasons": ["user_initiated"],
+  "coldReadShutdown": true,
+  "events": [
+    {
+      "type": "permission.completed",
+      "aborted": null,
+      "success": null,
+      "error": "{}"
+    },
+    {
+      "type": "permission.completed",
+      "aborted": null,
+      "success": null,
+      "error": "{}"
+    },
+    {
+      "type": "abort",
+      "aborted": null,
+      "success": null,
+      "error": "{}"
+    }
+  ],
+  "wire": [
+    {
+      "at": 0.38,
+      "route": "/v1/chat/completions",
+      "hasChosenKey": true,
+      "model": "gpt-4o-mini",
+      "marker": "FF_SDK_E_REQUEST_TOOL",
+      "streamRequested": true,
+      "historyHasOldAnswer": false,
+      "historyHasOldQuestion": false,
+      "endsWithTool": false,
+      "declaredTools": ["bash"],
+      "bashKeys": [
+        "command",
+        "description",
+        "shellId",
+        "mode",
+        "detach",
+        "initial_wait"
+      ],
+      "bashRequired": ["command", "description"]
+    }
+  ]
+}

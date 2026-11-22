@@ -1,0 +1,47 @@
+{
+  "package": "@openai/codex@0.171.0-darwin-arm64",
+  "rpc": ["initialize", "thread/start"],
+  "homeAndCodexHomePreserved": true,
+  "canonicalArg0ModeTarget": true,
+  "preexistingArg0DirectoriesWriteDenied": 3,
+  "preflight": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "migrationMarkerMetadataOnly": true,
+  "validCanonicalIdentityBefore": true,
+  "launcherPid": 40110,
+  "appServerInit": {
+    "resultPresent": true,
+    "versionObserved": true,
+    "errorCode": null
+  },
+  "threadStartError": {
+    "code": -32603,
+    "causes": ["osPermissionDenied", "threadCreation"],
+    "structuredReason": null
+  },
+  "fixtureErrorType": "RuntimeError",
+  "fixtureErrorText": "native thread start rejected",
+  "exitCode": 0,
+  "stderrCategories": {
+    "permissionDenied": true,
+    "sqlite": false,
+    "terminal": false,
+    "sandboxLauncherExecFailed": false,
+    "authRelated": false,
+    "originalConfigPath": false,
+    "originalTempPath": false,
+    "originalStatePath": false,
+    "scratchPath": false
+  },
+  "appServerNotifications": ["configWarning", "remoteControl/status/changed"],
+  "configurationWarningReasons": [],
+  "originalIdentityUnchangedAfter": true
+}

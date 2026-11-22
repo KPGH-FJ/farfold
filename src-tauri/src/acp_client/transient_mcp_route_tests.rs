@@ -660,6 +660,7 @@ async fn transient_mcp_distinct_service_revisions_keep_separate_spawn_facts() {
     let f = Fixture::node_with_config("");
     let prepared = |revision: &str, logs: &str| PreparedService {
         delivery: None,
+        relay: None,
         environment: std::collections::HashMap::from([
             ("APP_SERVER_LOGS".into(), logs.into()),
             ("CODEX_CONFIG".into(), "".into()),
