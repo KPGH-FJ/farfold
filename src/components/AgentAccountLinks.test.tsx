@@ -15,10 +15,19 @@ const h = vi.hoisted(() => ({
   pending: [] as (() => void)[],
   links: [] as PreparationLink[],
   open: vi.fn(async (_url: string) => {}),
+  listenToWindowFocus:
+    vi.fn<
+      (listener: (event: { payload: boolean }) => void) => Promise<() => void>
+    >(),
+  windowFocus: new Set<(event: { payload: boolean }) => void>(),
   focus: [] as (() => void)[],
+  blur: [] as (() => void)[],
   visible: [] as (() => void)[],
 }));
 vi.mock("@tauri-apps/plugin-opener", () => ({ openUrl: h.open }));
+vi.mock("@tauri-apps/api/window", () => ({
+  getCurrentWindow: () => ({ onFocusChanged: h.listenToWindowFocus }),
+}));
 vi.mock("../runtime/preparation", async (original) => ({
   ...(await original<typeof import("../runtime/preparation")>()),
   getAgentPreparation: vi.fn(async () => ({ links: h.links })),
@@ -103,8 +112,16 @@ beforeEach(() => {
   h.effects = [];
   h.pending = [];
   h.focus = [];
+  h.blur = [];
   h.visible = [];
+  h.windowFocus.clear();
   h.open.mockReset().mockResolvedValue(undefined);
+  h.listenToWindowFocus.mockReset().mockImplementation(async (listener) => {
+    h.windowFocus.add(listener);
+    return () => {
+      h.windowFocus.delete(listener);
+    };
+  });
   h.links = [
     {
       label: "Official page",
@@ -115,6 +132,7 @@ beforeEach(() => {
   vi.stubGlobal("window", {
     addEventListener: (name: string, fn: () => void) => {
       if (name === "focus") h.focus.push(fn);
+      if (name === "blur") h.blur.push(fn);
     },
     removeEventListener: () => {},
   });
@@ -244,6 +262,98 @@ it("runs the return check exactly once after a registration page was opened", as
   expect(onReturn).toHaveBeenCalledTimes(1);
 });
 
+it.each(["dom", "native"])(
+  "remembers a legitimate registration return before the page acknowledgement (%s)",
+  async (events) => {
+    let acknowledge!: () => void;
+    h.open.mockReturnValueOnce(
+      new Promise((resolve) => (acknowledge = resolve)),
+    );
+    h.links = [
+      { label: "Sign up", url: "https://example.com/signup", kind: "account" },
+    ];
+    const onReturn = vi.fn();
+    const nodes = render("first", ["login"], { onReturn });
+    await opened();
+    (buttonWith(nodes, G.register)!.props.onClick as () => void)();
+    if (events === "native") {
+      expect(h.windowFocus.size).toBe(1);
+      for (const listener of h.windowFocus) {
+        listener({ payload: false });
+        listener({ payload: true });
+      }
+    } else {
+      for (const listener of h.blur) listener();
+      for (const listener of h.focus) listener();
+    }
+    expect(onReturn).not.toHaveBeenCalled();
+    acknowledge();
+    await opened();
+    expect(onReturn).toHaveBeenCalledTimes(1);
+    for (const listener of h.windowFocus) listener({ payload: true });
+    for (const listener of h.focus) listener();
+    expect(onReturn).toHaveBeenCalledTimes(1);
+  },
+);
+
+it.each(["method", "view"])(
+  "never hands off an acknowledged registration link to a changed %s",
+  async (change) => {
+    h.links = [
+      { label: "Sign up", url: "https://example.com/signup", kind: "account" },
+    ];
+    const onReturn = vi.fn();
+    const nodes = render("first", ["login"], { owner: "original", onReturn });
+    (buttonWith(nodes, G.register)!.props.onClick as () => void)();
+    await opened();
+    const changed = vi.fn();
+    render("first", change === "method" ? ["other"] : ["login"], {
+      owner: change === "view" ? "different" : "original",
+      onReturn: changed,
+    });
+    await opened();
+    for (const listener of h.focus) listener();
+    for (const listener of h.windowFocus) listener({ payload: true });
+    expect(onReturn).not.toHaveBeenCalled();
+    expect(changed).not.toHaveBeenCalled();
+  },
+);
+
+it("an explicitly opened documentation page supersedes the previous registration return", async () => {
+  h.links = [
+    { label: "Sign up", url: "https://example.com/signup", kind: "account" },
+    { label: "Docs", url: "https://example.com/docs", kind: "documentation" },
+  ];
+  const onReturn = vi.fn();
+  const nodes = render("first", ["login"], { onReturn });
+  (buttonWith(nodes, G.register)!.props.onClick as () => void)();
+  await opened();
+  const current = render("first", ["login"], { onReturn });
+  (buttonWith(current, G.docs)!.props.onClick as () => void)();
+  await opened();
+  expect(h.open).toHaveBeenCalledTimes(2);
+  for (const listener of h.focus) listener();
+  expect(onReturn).not.toHaveBeenCalled();
+});
+
+it("disposes a native focus listener acknowledged after the registration view closed", async () => {
+  let acknowledge!: (stop: () => void) => void;
+  const stop = vi.fn();
+  const onReturn = vi.fn();
+  h.listenToWindowFocus.mockReturnValueOnce(
+    new Promise((resolve) => (acknowledge = resolve)),
+  );
+  render("first", ["login"], { onReturn });
+  await opened();
+  const [listener] = h.listenToWindowFocus.mock.calls[0];
+  render("first", ["login"], { active: false, onReturn });
+  listener({ payload: true });
+  acknowledge(stop);
+  await opened();
+  expect(stop).toHaveBeenCalledOnce();
+  expect(onReturn).not.toHaveBeenCalled();
+});
+
 it("ignores an external-page failure after the target changes", async () => {
   let reject!: (reason: unknown) => void;
   h.open.mockImplementation(
@@ -257,11 +367,9 @@ it("ignores an external-page failure after the target changes", async () => {
   render("first", ["other-method"]);
   reject(new Error("Old page could not open"));
   await opened();
-  expect(
-    render("first", ["other-method"]).some(
-      (node) => node.props.role === "alert",
-    ),
-  ).toBe(false);
+  const current = render("first", ["other-method"]);
+  expect(current.some((node) => node.props.role === "alert")).toBe(false);
+  expect(buttonWith(current, G.docs)?.props.disabled).toBe(false);
   expect(h.open).toHaveBeenCalledExactlyOnceWith("https://example.com/docs");
 });
 

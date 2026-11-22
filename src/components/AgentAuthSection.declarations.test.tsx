@@ -260,9 +260,13 @@ it.each([
   "returned",
   "changed",
   "late",
+  "return-before-acknowledgement",
+  "focus-before-acknowledgement",
   "inactive",
   "failed",
   "busy",
+  "busy-then-enabled",
+  "busy-then-changed",
   "manual",
 ])(
   "checks official setup only when returning to its active connection (%s)",
@@ -298,7 +302,11 @@ it.each([
         new Error("Could not open the setup page"),
       );
     const opening = deferred<void>();
-    if (scenario === "late") h.openUrl.mockReturnValueOnce(opening.promise);
+    const delayed =
+      scenario === "late" ||
+      scenario === "return-before-acknowledgement" ||
+      scenario === "focus-before-acknowledgement";
+    if (delayed) h.openUrl.mockReturnValueOnce(opening.promise);
     (guide.props.onClick as () => void)();
     await settled();
     expect(h.openUrl).toHaveBeenCalledExactlyOnceWith(
@@ -306,19 +314,43 @@ it.each([
     );
     if (scenario === "changed" || scenario === "late") props.cwd = "/other";
     if (scenario === "inactive") props.active = false;
-    if (scenario === "busy") props.busy = true;
+    if (scenario.startsWith("busy")) props.busy = true;
     const afterOpen = await settled();
-    if (scenario === "late") {
+    if (scenario === "return-before-acknowledgement")
+      foreground.dispatchEvent(new Event("blur"));
+    if (
+      scenario === "return-before-acknowledgement" ||
+      scenario === "focus-before-acknowledgement"
+    ) {
+      foreground.dispatchEvent(new Event("focus"));
+      expect(h.recheck).not.toHaveBeenCalled();
+    }
+    if (delayed) {
       opening.resolve();
       await settled();
     }
+    expect(h.recheck).toHaveBeenCalledTimes(
+      scenario === "return-before-acknowledgement" ? 1 : 0,
+    );
     if (scenario === "manual")
       (
         button(afterOpen, R.checkOfficialSettings)!.props.onClick as () => void
       )();
     foreground.dispatchEvent(new Event("focus"));
     foreground.dispatchEvent(new Event("focus"));
-    if (scenario === "returned" || scenario === "manual") {
+    if (scenario === "busy-then-enabled" || scenario === "busy-then-changed") {
+      expect(h.recheck).not.toHaveBeenCalled();
+      if (scenario === "busy-then-changed") props.cwd = "/other";
+      props.busy = false;
+      await settled();
+    }
+    if (
+      scenario === "returned" ||
+      scenario === "manual" ||
+      scenario === "return-before-acknowledgement" ||
+      scenario === "focus-before-acknowledgement" ||
+      scenario === "busy-then-enabled"
+    ) {
       expect(h.recheck).toHaveBeenCalledExactlyOnceWith(
         { agentId: "declaration-view", cwd: "/original" },
         h.changed,

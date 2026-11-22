@@ -28,7 +28,7 @@
       "liveAction": "用已登录官方账号，从小米 MiMo 新对话实答并核同线程真实路由。原测试对话冷开及正文读回，临时沿用原线程模型后收到同一T-ID的小米续答，随后恢复显式MiMo。显式参数被拒的缺口保留。 正式双前台任务只点 A 停止，原 Shell 和 sleep 退出，B 独立交付；A 冷开保留原显式 MiMo、草稿与未知结果。 显式模型与未映射旧线程接入等官方。",
       "standards": {
         "S1": {
-          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n2026-11-15 盘点：程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。\n2026-11-16 续查：新版正式 Amp 账号页显示独立厂商账户登录。查看详情核原已装厂商程序和固定 login，仍需手动启动。\n2026-11-16 续查：修复前次误拦截并安装；从原入口确实启动官方 CLI 登录终端，原适配器密钥文件保留。\n2026-11-16 复验：用户完成官方 CLI 登录，厂商程序能列出保存的账号。\n2026-11-16 复验：正式版选中官方 0.13.0 组件及新版官方 CLI，备份旧独立密钥后正常入口读出并选中 MiMo。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-19 正式 42ffe103e 穿过原目录管理，实际启动 Amp 0.13.0 的 API Key Setup，在未输入密钥时取消并放弃，回原管理按钮，零发送。\n2026-11-20 正式 72e971df5。从独立未发草稿启动 Amp 的 API Key Setup。未输入即取消并放弃，回原文字、目录、已选 MiMo 和发送入口。\n2026-11-21 Amp 0.13.0 已选外部官方 CLI，正式路径可打开独立账号说明，手动复查返回，识别默认不同，选回原 MiMo 后保留同草稿、目录及可用发送，零发送。真实新网页登录、取消和换号仍待。\n2026-11-21 最新正式版「准备与连接」检测到 Default，单次恢复原 MiMo，确实读回并返回原草稿、目录和可用发送按钮，零模型请求。",
+          "observed": "登记适配器现可执行，旧设置终端返回、读取 Medium 标签。\n2026-11-15 盘点：程序可执行，登记版本 0.9.0。登记所存握手版本 0.9.0。\n2026-11-16 续查：已登记适配器 0.9.0 与原 Amp CLI 依赖均在；正式程序检查、已有设置、读取 Medium 依次完成。\n2026-11-16 续查：新版正式 Amp 账号页显示独立厂商账户登录。查看详情核原已装厂商程序和固定 login，仍需手动启动。\n2026-11-16 续查：修复前次误拦截并安装；从原入口确实启动官方 CLI 登录终端，原适配器密钥文件保留。\n2026-11-16 复验：用户完成官方 CLI 登录，厂商程序能列出保存的账号。\n2026-11-16 复验：正式版选中官方 0.13.0 组件及新版官方 CLI，备份旧独立密钥后正常入口读出并选中 MiMo。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-19 正式 42ffe103e 穿过原目录管理，实际启动 Amp 0.13.0 的 API Key Setup，在未输入密钥时取消并放弃，回原管理按钮，零发送。\n2026-11-20 正式 72e971df5。从独立未发草稿启动 Amp 的 API Key Setup。未输入即取消并放弃，回原文字、目录、已选 MiMo 和发送入口。\n2026-11-21 Amp 0.13.0 已选外部官方 CLI，正式路径可打开独立账号说明，手动复查返回，识别默认不同，选回原 MiMo 后保留同草稿、目录及可用发送，零发送。真实新网页登录、取消和换号仍待。\n2026-11-21 最新正式版「准备与连接」检测到 Default，单次恢复原 MiMo，确实读回并返回原草稿、目录和可用发送按钮，零模型请求。\n2026-11-22 正式 d1060343c：从官方 CLI 登录说明返回，最小化后恢复 Farfold 窗口即自动重新检查，无手动复查及模型请求，原未发草稿和目录保持。新版注册路径的晚到回执仅更新原接入方式，已有受控测试。",
           "remaining": "厂商网页登录的实际取消、原账号变化及其他准备入口按原条件核。适配器密钥终端的目录和草稿取消均有证。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
@@ -43,7 +43,8 @@
             "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json",
             "docs/evidence/2026-11-19-cycle12-draft-auth-return/README.md#cline-与-amp-从目录取消设置",
             "docs/evidence/2026-11-20-cycle12-amp-kilo-entry-followup/README.md#amp-从草稿取消实际设置终端",
-            "docs/evidence/2026-11-21-cycle12-s1-s2-restore/README.md"
+            "docs/evidence/2026-11-21-cycle12-s1-s2-restore/README.md",
+            "docs/evidence/2026-11-22-cycle12-official-return/README.md#官方说明返回"
           ],
           "status": "分项通过"
         },
@@ -272,13 +273,14 @@
           "status": "双前台分项通过"
         },
         "S7": {
-          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n2026-11-16 续查：A 的回复停止且原 Shell 退出；约 9.5 秒后其 sleep 子进程仍活跃。工具结果未知正确保留。B 独立完成。\n2026-11-18 补录 11-17：同原样本冷开后一次手动续问，等待 167.454 秒无回复，一次取消后无该请求终态。随后独立的连接清理不计此次停止。\n2026-11-18 只读核对厂商原记录：A 保存原 Bash 调用及次日续问，缺同一工具终态与续答；B 原工具回执成功并包含实际标记。A 后续独立关闭只证明清理连接。原子进程实停失败保持。\n2026-11-19 只读核对：当前原登记已是官方内置 0.9.11 --acp；GitHub Latest 与 npm latest 均仍为 0.9.11。旧 0.2.1 适配器已被厂商归档，不是这条实测路线。",
+          "observed": "本轮无在途工作可用于停止，未实测草稿或附件恢复\n2026-11-16 续查：A 的回复停止且原 Shell 退出；约 9.5 秒后其 sleep 子进程仍活跃。工具结果未知正确保留。B 独立完成。\n2026-11-18 补录 11-17：同原样本冷开后一次手动续问，等待 167.454 秒无回复，一次取消后无该请求终态。随后独立的连接清理不计此次停止。\n2026-11-18 只读核对厂商原记录：A 保存原 Bash 调用及次日续问，缺同一工具终态与续答；B 原工具回执成功并包含实际标记。A 后续独立关闭只证明清理连接。原子进程实停失败保持。\n2026-11-19 只读核对：当前原登记已是官方内置 0.9.11 --acp；GitHub Latest 与 npm latest 均仍为 0.9.11。旧 0.2.1 适配器已被厂商归档，不是这条实测路线。\n2026-11-22 官方 0.9.12 发布源码新增中断结束，ACP 的原工具状态仍映射为通用失败，子进程停止路径未变。原实际回收与工具终态缺口保持。",
           "remaining": "等官方原前台取消覆盖实际子进程，并为同一原工具提供终态；之后从原目录按 Fantail 验单停 A、B 保持、原 A 冷续答、草稿附件和无重发。",
           "sources": [
             "docs/evidence/2026-11-15-cycle10-macos/installed-five-agents.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
             "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md",
-            "docs/evidence/2026-11-18-cycle12-autohand-stop-receipt/README.md"
+            "docs/evidence/2026-11-18-cycle12-autohand-stop-receipt/README.md",
+            "docs/evidence/2026-11-22-cycle12-official-return/README.md#autohand-停止回执"
           ],
           "status": "实测失败"
         },
@@ -301,19 +303,20 @@
       "liveAction": "正式新对话沿用 Claude Code 自己配置的小米 MiMo 实答。正常退出后从搜索找到同一自有原对话，原问答读回，沿原 MiMo 仅续问一条正确引用旧上下文，同原 ID 及小米用量核合。托管 Messages 等官方安全交付。 正式双前台两条原 Bash 单次批准。在 A 点停，目标 Shell 和 sleep 退出且无产出，B 原进程继续并自然交付。 A 停止后正常退出并从搜索冷开同一原对话，沿用 MiMo 单次准确续答，原命令未重新运行。 正式原连接骤断后，首条待发含图，原对话冷开并明确续发两条，PNG 逐字节一致。 相同原 Bash 拒绝样本正常冷开，原正文和回复、详情的明确拒绝原文读回，无新发或执行。 正式官方默认及精确原目录查到同一已加入自有对话，零发送、零重复加入。",
       "standards": {
         "S1": {
-          "observed": "装机握手成功，旧状态明确提示未登录并呈现订阅与 Console。\n2026-11-15 盘点：程序可执行，登记版本 0.81.2。登记所存握手版本 0.81.2。\n2026-11-16 续查：已正式升级至 0.107.0，实发后的 auth_required 有证据。官方订阅及 Console 仍有入口。\n2026-11-18 新版正式零发送复验：关闭模型与来源、取消原生目录选择后，原文字、路径和测试附件保留。仍提示 Claude 的 API 配置暂时不可用。\n2026-11-18 正式新对话使用 Claude Code 已有设置，原生小米配置完成准备并收到真实首答。",
+          "observed": "装机握手成功，旧状态明确提示未登录并呈现订阅与 Console。\n2026-11-15 盘点：程序可执行，登记版本 0.81.2。登记所存握手版本 0.81.2。\n2026-11-16 续查：已正式升级至 0.107.0，实发后的 auth_required 有证据。官方订阅及 Console 仍有入口。\n2026-11-18 新版正式零发送复验：关闭模型与来源、取消原生目录选择后，原文字、路径和测试附件保留。仍提示 Claude 的 API 配置暂时不可用。\n2026-11-18 正式新对话使用 Claude Code 已有设置，原生小米配置完成准备并收到真实首答。\n2026-11-22 官方 Claude Subscription 与 Anthropic Console 先后启动后无输入取消，原文字、目录、焦点与发送入口保持。",
           "remaining": "原订阅或 Console 的官方登录、实答和认证取消待验。托管凭据安全交付等官方。",
           "sources": [
             "docs/evidence/2026-10-06-macos-batch1/README.md",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
             "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json",
-            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md"
+            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md",
+            "docs/evidence/2026-11-22-cycle12-official-return/README.md#claude-官方终端取消"
           ],
           "status": "分项通过"
         },
         "S2": {
-          "observed": "未确认可用原账号或所选模型；旧正式设置声明可读但保存选择未确认。\n最新复验：新保存的小米 Messages 设置独立 API 实答；普通对话见相应真实复验及官方适配程序认证头对照。\n2026-11-16 已暂停会将认证头交给进程参数的官方托管路径。正式设置保留原 Messages 服务，Claude 已退出其适用列表。\n2026-11-17 公开源码验证 0.107.3 与既测 0.107.0 的流式 Messages 认证配置相同。小米独立 Messages 实答和普通对话 auth_required 的分层证据保持。\n2026-11-18 用户在 Claude Code 自己的设置配小米 Messages，Farfold 沿用已有设置收到实答，同一把 Key 的小米官方在线用量出现新记录。",
+          "observed": "未确认可用原账号或所选模型；旧正式设置声明可读但保存选择未确认。\n最新复验：新保存的小米 Messages 设置独立 API 实答；普通对话见相应真实复验及官方适配程序认证头对照。\n2026-11-16 已暂停会将认证头交给进程参数的官方托管路径。正式设置保留原 Messages 服务，Claude 已退出其适用列表。\n2026-11-17 公开源码验证 0.107.3 与既测 0.107.0 的流式 Messages 认证配置相同。小米独立 Messages 实答和普通对话 auth_required 的分层证据保持。\n2026-11-18 用户在 Claude Code 自己的设置配小米 Messages，Farfold 沿用已有设置收到实答，同一把 Key 的小米官方在线用量出现新记录。\n2026-11-22 两个认证方式都从独立草稿启动并取消。返回后沿用同一小米 MiMo Haiku，零模型发送。首次授权和身份仍待。\n2026-11-22 0.109.1 官方发布包受控核过两条合成模型列表的各自凭据。隔离中新建失败，无 Messages、计数与模型发送。正式统一 API 仍关闭。",
           "remaining": "原订阅、Console 与换号等按原条件核。Farfold 托管 API 继续等待官方的安全凭据交付与实际路由证明。",
           "sources": [
             "docs/evidence/2026-11-15-cycle8-intake/README.md",
@@ -324,7 +327,9 @@
             "docs/evidence/2026-11-16-cycle12-original-config/results.json",
             "docs/evidence/2026-11-16-cycle12-eight-check/README.md",
             "docs/evidence/2026-11-17-cycle12-models-and-sigit/README.md",
-            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md"
+            "docs/evidence/2026-11-18-cycle12-claude-mimo/README.md",
+            "docs/evidence/2026-11-22-cycle12-official-return/README.md#claude-官方终端取消",
+            "docs/evidence/2026-11-22-cycle12-official-return/README.md#claude-官方-messages-凭据交接"
           ],
           "status": "已有设置实答"
         },

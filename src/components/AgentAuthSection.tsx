@@ -115,6 +115,7 @@ export function AgentAuthSection({
   const targetKey = JSON.stringify([agentId, directory, source ?? null]);
   const target = useRef(targetKey);
   const currentView = useRef("");
+  const currentRegistrationOwner = useRef<string | null>(null);
   // Accept the committed destination key while the operation is still running.
   const acceptedView = useRef<string | null>(null);
   target.current = targetKey;
@@ -579,6 +580,9 @@ export function AgentAuthSection({
     actionId,
   ]);
   currentView.current = viewKey;
+  const officialPageOwner = JSON.stringify([viewKey, program]);
+  currentRegistrationOwner.current =
+    active && directory && !source ? officialPageOwner : null;
   methodView.current = {
     request: declarationRequest,
     selected: selectedMethod ? methodSignature(selectedMethod) : null,
@@ -956,8 +960,9 @@ export function AgentAuthSection({
           run: executeSelected,
         }
       : null;
-  const chooseExisting = () => {
+  const chooseExisting = (ownsChoice?: () => boolean) => {
     const run = () => {
+      if (ownsChoice && !ownsChoice()) return;
       if (connection?.onUseExisting) connection.onUseExisting();
       else {
         connection?.onChoice("existing");
@@ -986,7 +991,7 @@ export function AgentAuthSection({
               !directory ||
               !!source ||
               preparing,
-            run: chooseExisting,
+            run: () => chooseExisting(),
           }
         : apiSelected && stage === "method"
           ? {
@@ -1020,8 +1025,14 @@ export function AgentAuthSection({
               : methodPrimary;
   useAccessPrimary(primary, connection?.onPrimaryChange);
   const registrationReturn = () => {
+    const ownsChoice = () =>
+      currentRegistrationOwner.current === officialPageOwner &&
+      !authActive(activity.getSnapshot()) &&
+      !manualOwned.current &&
+      !hasCurrentWork();
+    if (busy || !ownsChoice()) return;
     setRegistrationNotice(true);
-    if (connection) chooseExisting();
+    if (connection) chooseExisting(ownsChoice);
     else void recheck();
   };
   const registrationRow = (groupMethods: AuthMethodInfo[]) => (
@@ -1029,6 +1040,7 @@ export function AgentAuthSection({
       active={active}
       agentId={agentId}
       methodIds={groupMethods.map((method) => method.id)}
+      owner={officialPageOwner}
       agentName={card?.name ?? agentId}
       websiteUrl={
         card?.presentation?.sourceUrl ?? card?.sourceUrl ?? card?.installGuide
@@ -1321,7 +1333,7 @@ export function AgentAuthSection({
           }
           groupFooters={groupFooters}
           guidance={connectionGuidance}
-          guidanceOwner={JSON.stringify([viewKey, program])}
+          guidanceOwner={officialPageOwner}
           onGuidanceReturn={
             active && directory && !source ? recheck : undefined
           }
@@ -1425,6 +1437,7 @@ export function AgentAuthSection({
             <AgentAccountLinks
               active={active}
               agentId={agentId}
+              owner={officialPageOwner}
               agentName={card?.name ?? agentId}
               websiteUrl={
                 card?.presentation?.sourceUrl ??

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { openUrl } from "@tauri-apps/plugin-opener";
 import { ArrowSquareOut } from "@phosphor-icons/react";
 import {
   getAgentPreparation,
@@ -9,6 +8,7 @@ import {
 import { PREPARATION_STRINGS as S } from "../runtime/preparation_strings";
 import { uiError } from "../runtime/ui_error";
 import { ACCOUNT_GUIDE_STRINGS as G } from "../runtime/account_guide_strings";
+import { useOfficialPageReturn } from "./useOfficialPageReturn";
 
 /** Inline account access: registration entry plus small documentation links.
  *  Opening an external page arms a one-shot focus return check owned by the
@@ -18,6 +18,7 @@ export function AgentAccountLinks({
   methodIds,
   agentName,
   websiteUrl,
+  owner,
   onReturn,
   disabled = false,
   active = true,
@@ -26,30 +27,33 @@ export function AgentAccountLinks({
   methodIds?: string[];
   agentName: string;
   websiteUrl?: string | null;
+  owner?: string;
   /** Fired once when the window is focused again after opening a page. */
   onReturn?: () => void;
   disabled?: boolean;
   active?: boolean;
 }) {
   const [links, setLinks] = useState<PreparationLink[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [opening, setOpening] = useState(false);
+  const [preparationError, setPreparationError] = useState<string | null>(null);
   const [reload, setReload] = useState(0);
-  const target = useRef("");
   const targetKey = JSON.stringify([agentId, methodIds ?? null]);
   const linksOwner = useRef(targetKey);
   const currentLinks = linksOwner.current === targetKey ? links : [];
-  const awaiting = useRef(false);
-  const returnAction = useRef<(() => void) | undefined>(undefined);
-  returnAction.current = onReturn;
-  target.current = targetKey;
-  useEffect(() => {
-    awaiting.current = false;
-  }, [agentId]);
+  const page = useOfficialPageReturn(
+    JSON.stringify([owner, targetKey]),
+    active,
+    disabled,
+    onReturn,
+  );
+  const opening = page.status?.phase === "opening";
+  const error =
+    page.status?.phase === "failed"
+      ? uiError(page.status.reason, S.openFailed)
+      : preparationError;
   useEffect(() => {
     let active = true;
     setLinks([]);
-    setError(null);
+    setPreparationError(null);
     void getAgentPreparation(agentId)
       .then((info) => {
         if (active) {
@@ -64,48 +68,16 @@ export function AgentAccountLinks({
         }
       })
       .catch((reason) => {
-        if (active) setError(uiError(reason, S.accountFailed));
+        if (active) setPreparationError(uiError(reason, S.accountFailed));
       });
     return () => {
       active = false;
     };
   }, [agentId, targetKey, reload]);
-  useEffect(() => {
-    if (!active) return;
-    const returned = () => {
-      if (!awaiting.current) return;
-      awaiting.current = false;
-      returnAction.current?.();
-    };
-    const view = typeof window === "undefined" ? null : window;
-    const doc = typeof document === "undefined" ? null : document;
-    const onFocus = () => returned();
-    const onVisible = () => {
-      if (doc?.visibilityState === "visible") returned();
-    };
-    view?.addEventListener?.("focus", onFocus);
-    doc?.addEventListener?.("visibilitychange", onVisible);
-    return () => {
-      view?.removeEventListener?.("focus", onFocus);
-      doc?.removeEventListener?.("visibilitychange", onVisible);
-    };
-  }, [active]);
   const open = (url: string, registration: boolean) => {
-    if (opening || disabled) return;
-    setOpening(true);
-    setError(null);
-    void openUrl(url)
-      .then(() => {
-        if (target.current === targetKey && registration)
-          awaiting.current = true;
-      })
-      .catch((reason) => {
-        if (target.current === targetKey)
-          setError(uiError(reason, S.openFailed));
-      })
-      .finally(() => {
-        if (target.current === targetKey) setOpening(false);
-      });
+    if (!active || opening || disabled) return;
+    setPreparationError(null);
+    void page.open(url, registration);
   };
   const accounts = currentLinks.filter((link) => link.kind === "account");
   const docs = currentLinks.filter((link) => link.kind === "documentation");
@@ -122,7 +94,7 @@ export function AgentAccountLinks({
       {accounts.length === 1 ? (
         <button
           className="btn btn-text"
-          disabled={disabled || opening}
+          disabled={!active || disabled || opening}
           onClick={() => open(accounts[0].url, true)}
         >
           {G.register}
@@ -135,7 +107,7 @@ export function AgentAccountLinks({
             <button
               key={link.url}
               className="btn btn-text"
-              disabled={disabled || opening}
+              disabled={!active || disabled || opening}
               onClick={() => open(link.url, true)}
             >
               {hostname(link.url)}
@@ -146,7 +118,7 @@ export function AgentAccountLinks({
       ) : site ? (
         <button
           className="btn btn-text"
-          disabled={disabled || opening}
+          disabled={!active || disabled || opening}
           onClick={() => open(site, true)}
         >
           {G.registerSite(agentName)}
@@ -159,7 +131,7 @@ export function AgentAccountLinks({
         <button
           key={link.url}
           className="btn btn-text agent-account-docs"
-          disabled={disabled || opening}
+          disabled={!active || disabled || opening}
           onClick={() => open(link.url, false)}
         >
           {G.docs}
@@ -171,7 +143,10 @@ export function AgentAccountLinks({
           {error}{" "}
           <button
             className="btn btn-text"
-            onClick={() => setReload((value) => value + 1)}
+            onClick={() => {
+              page.clear();
+              setReload((value) => value + 1);
+            }}
           >
             {S.retry}
           </button>

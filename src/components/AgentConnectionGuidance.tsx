@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { openUrl } from "@tauri-apps/plugin-opener";
 import { ArrowSquareOut } from "@phosphor-icons/react";
 import { officialLink, type ConnectionGuidance } from "../runtime/preparation";
 import { PREPARATION_STRINGS } from "../runtime/preparation_strings";
 import { CONNECTION_STRINGS as R } from "../runtime/r5_auth_strings";
 import { uiError } from "../runtime/ui_error";
+import { useOfficialPageReturn } from "./useOfficialPageReturn";
 
 export function AgentConnectionGuidance({
   items,
@@ -17,69 +16,12 @@ export function AgentConnectionGuidance({
   owner?: string;
   onReturn?: () => void;
 }) {
-  const current = useRef({ owner, disabled, onReturn });
-  current.current = { owner, disabled, onReturn };
-  const attempt = useRef<{
-    owner: string | undefined;
-    awaiting: boolean;
-  } | null>(null);
-  const [result, setResult] = useState<{
-    owner: string | undefined;
-    phase: "opening" | "opened" | "failed";
-    error?: string;
-  } | null>(null);
-  const status = result?.owner === owner ? result : null;
-  const canCheck = !!onReturn;
-  useEffect(() => {
-    const returned = () => {
-      if (attempt.current?.owner !== owner || !attempt.current?.awaiting)
-        return;
-      attempt.current = null;
-      const view = current.current;
-      if (view.owner === owner && !view.disabled) view.onReturn?.();
-    };
-    const view = typeof window === "undefined" ? null : window;
-    const doc = typeof document === "undefined" ? null : document;
-    const visible = () => {
-      if (doc?.visibilityState === "visible") returned();
-    };
-    view?.addEventListener("focus", returned);
-    doc?.addEventListener("visibilitychange", visible);
-    return () => {
-      attempt.current = null;
-      view?.removeEventListener("focus", returned);
-      doc?.removeEventListener("visibilitychange", visible);
-    };
-  }, [owner]);
-
-  const open = async (url: string) => {
-    if (
-      current.current.owner !== owner ||
-      current.current.disabled ||
-      (attempt.current && !attempt.current.awaiting)
-    )
-      return;
-    const opening = { owner, awaiting: false };
-    attempt.current = opening;
-    setResult({ owner, phase: "opening" });
-    try {
-      await openUrl(url);
-      if (attempt.current !== opening || current.current.owner !== owner)
-        return;
-      if (current.current.onReturn) opening.awaiting = true;
-      else attempt.current = null;
-      setResult({ owner, phase: "opened" });
-    } catch (reason) {
-      if (attempt.current !== opening || current.current.owner !== owner)
-        return;
-      attempt.current = null;
-      setResult({
-        owner,
-        phase: "failed",
-        error: uiError(reason, PREPARATION_STRINGS.openFailed),
-      });
-    }
-  };
+  const { open, status, checkNow } = useOfficialPageReturn(
+    owner,
+    true,
+    disabled,
+    onReturn,
+  );
 
   const guides = items.filter((item) => officialLink(item.url));
   if (!guides.length) return null;
@@ -117,24 +59,19 @@ export function AgentConnectionGuidance({
           </li>
         ))}
       </ul>
-      {canCheck && status?.phase === "opened" && (
+      {onReturn && status?.phase === "opened" && (
         <button
           className="btn btn-text"
           type="button"
           disabled={disabled}
-          onClick={() => {
-            if (current.current.owner !== owner || current.current.disabled)
-              return;
-            attempt.current = null;
-            current.current.onReturn?.();
-          }}
+          onClick={checkNow}
         >
           {R.checkOfficialSettings}
         </button>
       )}
       {status?.phase === "failed" && (
         <p className="auth-note" role="alert">
-          {status.error}
+          {uiError(status.reason, PREPARATION_STRINGS.openFailed)}
         </p>
       )}
     </div>

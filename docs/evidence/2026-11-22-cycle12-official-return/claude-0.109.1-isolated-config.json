@@ -1,0 +1,100 @@
+{
+  "releaseVersion": "0.109.1",
+  "officialArchiveSha256": "becbcbb93bf4b0d0a47254324816d6fe60c4b22ab2a765adbceda4192e030d52",
+  "preflight": {
+    "A": {
+      "allowedLoopback": 0,
+      "otherLoopbacks": [
+        1
+      ],
+      "ipv4Egress": 1,
+      "ipv6Egress": 1,
+      "homeRead": 1,
+      "outsideFixtureRead": 1,
+      "outsideFixtureWrite": 1
+    },
+    "B": {
+      "allowedLoopback": 0,
+      "otherLoopbacks": [
+        1
+      ],
+      "ipv4Egress": 1,
+      "ipv6Egress": 1,
+      "homeRead": 1,
+      "outsideFixtureRead": 1,
+      "outsideFixtureWrite": 1
+    }
+  },
+  "lanes": {
+    "A": {
+      "methods": [
+        "initialize",
+        "providers/list",
+        "providers/set",
+        "providers/list",
+        "session/new"
+      ],
+      "notifiedReply": false,
+      "sameHomeWithEmptyScopedVendorConfig": true,
+      "version": "0.109.1",
+      "selectedEndpointConfirmed": true,
+      "error": "RuntimeError: session/new: -32603: Internal error",
+      "ownedProcessGroupExited": true,
+      "companionArgv": [],
+      "syntheticCredentialInStderr": false,
+      "stderrEmpty": false,
+      "stderrEvidenceCategories": {
+        "permissionDenied": true,
+        "spawnFailed": false
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models?limit=1000",
+          "selectedBearer": true,
+          "authorizationPresent": true,
+          "selectedApiKey": true,
+          "apiKeyPresent": true,
+          "proxyAuthorizationPresent": false,
+          "selectedLaneCanary": true
+        }
+      ],
+      "scratchCredentialArtifactCount": 0
+    },
+    "B": {
+      "methods": [
+        "initialize",
+        "providers/list",
+        "providers/set",
+        "providers/list",
+        "session/new"
+      ],
+      "notifiedReply": false,
+      "sameHomeWithEmptyScopedVendorConfig": true,
+      "version": "0.109.1",
+      "selectedEndpointConfirmed": true,
+      "error": "RuntimeError: session/new: -32603: Internal error",
+      "ownedProcessGroupExited": true,
+      "companionArgv": [],
+      "syntheticCredentialInStderr": false,
+      "stderrEmpty": false,
+      "stderrEvidenceCategories": {
+        "permissionDenied": true,
+        "spawnFailed": false
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models?limit=1000",
+          "selectedBearer": true,
+          "authorizationPresent": true,
+          "selectedApiKey": true,
+          "apiKeyPresent": true,
+          "proxyAuthorizationPresent": false,
+          "selectedLaneCanary": true
+        }
+      ],
+      "scratchCredentialArtifactCount": 0
+    }
+  }
+}

@@ -761,7 +761,12 @@ beforeEach(() => {
   h.io.mockClear();
   h.execution.mockClear();
   h.fixtureModelRead.mockClear();
-  vi.stubGlobal("document", { activeElement: null });
+  vi.stubGlobal("document", {
+    activeElement: null,
+    visibilityState: "visible",
+    addEventListener() {},
+    removeEventListener() {},
+  });
   vi.stubGlobal("HTMLElement", class {});
   vi.stubGlobal("window", { addEventListener() {}, removeEventListener() {} });
 });
