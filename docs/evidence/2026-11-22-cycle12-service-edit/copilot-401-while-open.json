@@ -1,0 +1,301 @@
+{
+  "artifact": {
+    "registry": "https://registry.npmjs.org/@github%2Fcopilot-darwin-arm64/1.0.114",
+    "integrity": "sha512-Mw47DTwMNDG0bb4t1rVu7S+ekdThIGGitpG28/wGpACZ0lFhYnpNEoSJ7hHBM3oix4b/w6+ZcmxE9J9MngsR9Q==",
+    "installedRegistrationUsed": false,
+    "officialReleaseVersion": "1.0.114",
+    "archiveBytes": 140699142,
+    "executableBytes": 202294880
+  },
+  "inheritedHomeUnchanged": true,
+  "senderPreflight": {
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "ownLoopbackAllowed": true,
+    "otherLoopbackDenied": true,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "readerPreflight": {
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "ownLoopbackAllowed": false,
+    "otherLoopbackDenied": true,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "agentInfo": {
+    "name": "Copilot",
+    "title": "Copilot",
+    "version": "1.0.114"
+  },
+  "sessionId": "7d041051-4cf5-46c3-a7b9-57180f2b8e04",
+  "sdkProtocolVersion": 4,
+  "beforePromptRead": {
+    "errorCode": -32603,
+    "error": "Request sessions.readPersistedEvents failed with message: Persisted event journal is unavailable for session 7d041051-4cf5-46c3-a7b9-57180f2b8e04"
+  },
+  "outgoingPrompt": {
+    "jsonRpcId": 3,
+    "parameterKeys": [
+      "prompt",
+      "sessionId"
+    ],
+    "contentBlockKeys": [
+      "text",
+      "type"
+    ]
+  },
+  "acpResult": {
+    "stopReason": "end_turn"
+  },
+  "afterPromptReads": [
+    {
+      "cursorStatus": "ok",
+      "hasMore": false,
+      "events": [
+        {
+          "type": "session.start",
+          "id": "879234df-cbed-4964-94ae-f849bb061660",
+          "parentId": null,
+          "agentId": null,
+          "ephemeral": null,
+          "checkpoint": null,
+          "marker": false,
+          "errorMarker": false,
+          "keyFound": false
+        },
+        {
+          "type": "instruction.update",
+          "id": "b1f3bc00-d79e-4d34-a9d9-7de48c3256c2",
+          "parentId": "879234df-cbed-4964-94ae-f849bb061660",
+          "agentId": null,
+          "ephemeral": null,
+          "checkpoint": null,
+          "marker": false,
+          "errorMarker": false,
+          "keyFound": false
+        },
+        {
+          "type": "user.message",
+          "id": "8a2f8b0d-fcf7-4b2a-a5d0-baffaaced54a",
+          "parentId": "b1f3bc00-d79e-4d34-a9d9-7de48c3256c2",
+          "agentId": null,
+          "ephemeral": null,
+          "checkpoint": null,
+          "marker": true,
+          "errorMarker": false,
+          "keyFound": false,
+          "messageId": "ec94bd53-1471-4977-b7ed-14e9d6c9eda5",
+          "interactionId": "e1da93b1-6560-478d-b398-7fdc622a56f6",
+          "turnId": "0"
+        },
+        {
+          "type": "system.message",
+          "id": "ce45b8d2-2d40-4e17-943c-3897c32ecfbd",
+          "parentId": "8a2f8b0d-fcf7-4b2a-a5d0-baffaaced54a",
+          "agentId": null,
+          "ephemeral": null,
+          "checkpoint": null,
+          "marker": false,
+          "errorMarker": false,
+          "keyFound": false,
+          "interactionId": "e1da93b1-6560-478d-b398-7fdc622a56f6"
+        },
+        {
+          "type": "assistant.turn_start",
+          "id": "0b5d0102-44b9-4c97-a76b-72d9abf4f2fd",
+          "parentId": "ce45b8d2-2d40-4e17-943c-3897c32ecfbd",
+          "agentId": null,
+          "ephemeral": null,
+          "checkpoint": null,
+          "marker": false,
+          "errorMarker": false,
+          "keyFound": false,
+          "turnId": "0",
+          "interactionId": "e1da93b1-6560-478d-b398-7fdc622a56f6"
+        },
+        {
+          "type": "assistant.turn_end",
+          "id": "c78d4eb7-4106-43e1-b247-3e4917bce2eb",
+          "parentId": "0b5d0102-44b9-4c97-a76b-72d9abf4f2fd",
+          "agentId": null,
+          "ephemeral": null,
+          "checkpoint": null,
+          "marker": false,
+          "errorMarker": false,
+          "keyFound": false,
+          "turnId": "0"
+        },
+        {
+          "type": "session.error",
+          "id": "4c3a334b-836e-4ae2-aa2e-916d71dfc07b",
+          "parentId": "c78d4eb7-4106-43e1-b247-3e4917bce2eb",
+          "agentId": null,
+          "ephemeral": null,
+          "checkpoint": null,
+          "marker": false,
+          "errorMarker": false,
+          "keyFound": false,
+          "errorType": "authentication",
+          "statusCode": 401,
+          "providerErrorType": "authentication_error",
+          "providerErrorCode": "invalid_api_key",
+          "originatingMessageId": "ec94bd53-1471-4977-b7ed-14e9d6c9eda5"
+        }
+      ],
+      "startMsAfterAcpResult": 0.18,
+      "endMsAfterAcpResult": 2.07,
+      "senderAliveAfterRead": true,
+      "noCloseSentAtRead": true
+    }
+  ],
+  "journalHashUnchangedDuringRead": true,
+  "matchedLiveFailure": true,
+  "matchedIdsExposedByAcp": [],
+  "acpFramesBeforeClose": [
+    {
+      "method": null,
+      "update": null,
+      "structuredCandidateFields": {
+        "id": 1,
+        "result.authMethods[0].id": "copilot-login",
+        "result.authMethods[0]._meta": [
+          "terminal-auth"
+        ]
+      }
+    },
+    {
+      "method": null,
+      "update": null,
+      "structuredCandidateFields": {
+        "id": 2,
+        "result.models.availableModels[1]._meta": [
+          "copilotEnablement",
+          "copilotUsage"
+        ],
+        "result.configOptions[0].id": "mode",
+        "result.configOptions[1].id": "model",
+        "result.configOptions[1].options[0]._meta": null,
+        "result.configOptions[1].options[1]._meta": [
+          "copilotEnablement",
+          "copilotUsage"
+        ],
+        "result.configOptions[2].id": "allow_all",
+        "result.modes.availableModes[0].id": "str",
+        "result.modes.availableModes[1].id": "str",
+        "result.modes.availableModes[2].id": "str"
+      }
+    },
+    {
+      "method": "session/update",
+      "update": "available_commands_update",
+      "structuredCandidateFields": {}
+    },
+    {
+      "method": "session/update",
+      "update": "available_commands_update",
+      "structuredCandidateFields": {}
+    },
+    {
+      "method": "session/update",
+      "update": "available_commands_update",
+      "structuredCandidateFields": {}
+    },
+    {
+      "method": "session/update",
+      "update": "session_info_update",
+      "structuredCandidateFields": {}
+    },
+    {
+      "method": "session/update",
+      "update": "usage_update",
+      "structuredCandidateFields": {}
+    },
+    {
+      "method": "session/update",
+      "update": "agent_message_chunk",
+      "structuredCandidateFields": {}
+    },
+    {
+      "method": "session/update",
+      "update": "usage_update",
+      "structuredCandidateFields": {}
+    },
+    {
+      "method": "session/update",
+      "update": "agent_message_chunk",
+      "structuredCandidateFields": {}
+    },
+    {
+      "method": "session/update",
+      "update": "usage_update",
+      "structuredCandidateFields": {}
+    },
+    {
+      "method": "session/update",
+      "update": "agent_message_chunk",
+      "structuredCandidateFields": {}
+    },
+    {
+      "method": null,
+      "update": null,
+      "structuredCandidateFields": {
+        "id": 3
+      }
+    }
+  ],
+  "explicitAcpCloseSucceeded": true,
+  "reader": {
+    "exitCode": 0,
+    "methods": [
+      "ping",
+      "sessions.readPersistedEvents",
+      "sessions.readPersistedEvents"
+    ],
+    "stderrBytes": 0
+  },
+  "sender": {
+    "exitCode": 0,
+    "methods": [
+      "initialize",
+      "session/new",
+      "session/prompt",
+      "session/close"
+    ],
+    "syntheticKeyInCapturedStderr": false,
+    "stderrFirstLine": null
+  },
+  "providerRequests": [
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "servedStatus": 401,
+      "selectedSyntheticBearer": true,
+      "model": "gpt-4o-mini",
+      "rootPromptMarker": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "servedStatus": 401,
+      "selectedSyntheticBearer": true,
+      "model": "gpt-4o-mini",
+      "rootPromptMarker": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "servedStatus": 401,
+      "selectedSyntheticBearer": true,
+      "model": "gpt-4o-mini",
+      "rootPromptMarker": true
+    }
+  ]
+}

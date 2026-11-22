@@ -37,6 +37,7 @@ import {
 import { MessageMediaVisibility } from "./components/message-media-visibility";
 import {
   AgentHub,
+  type AgentHubOrigin,
   type AgentHubSurface,
   type AgentPreparationContext,
 } from "./components/AgentHub";
@@ -79,7 +80,10 @@ import {
   historicalSelectionNeedsReview,
   storedConversationSelection,
 } from "./runtime/conversation_actions";
-import { listCredentials } from "./runtime/credentials";
+import {
+  listCredentials,
+  type ServiceEditRequest,
+} from "./runtime/credentials";
 import { historyFailureKey } from "./runtime/session_recovery";
 import { useThemePreference } from "./runtime/theme";
 import {
@@ -99,18 +103,8 @@ type View = (
   | { kind: "start"; draftFocus?: () => void }
   | { kind: "thread"; key: string }
   | { kind: "library"; returnFocus?: LibraryReturnFocus }
-  | {
-      kind: "agents";
-      entry?: {
-        target: string | null;
-        intent: "use" | "manage";
-        directoryView: "discover" | "added";
-        context?: AgentPreparationContext;
-        surface?: AgentHubSurface;
-        draft: ReturnType<typeof composerDrafts.read> | null;
-      };
-    }
-  | { kind: "settings"; tab?: SettingsTab }
+  | { kind: "agents"; entry?: AgentHubOrigin }
+  | { kind: "settings"; tab?: SettingsTab; editService?: ServiceEditRequest }
 ) & { historyImport?: true };
 type PreparedSelection = {
   requiresReview?: boolean;
@@ -342,9 +336,7 @@ export default function App() {
   const [hubRequest, setHubRequest] = useState(0);
   const [hubRestoredState, setHubRestoredState] = useState<AgentHubSurface>();
   const hubSurface = useRef<AgentHubSurface | undefined>(undefined);
-  const originatingDraft = useRef<ReturnType<
-    typeof composerDrafts.read
-  > | null>(null);
+  const originatingDraft = useRef<AgentHubOrigin["draft"]>(null);
   const [hubContext, setHubContext] = useState<AgentPreparationContext>();
   const [actionError, setActionError] = useState<string | null>(null);
   const loadDirectory = () => {
@@ -434,11 +426,16 @@ export default function App() {
     if (historyImport) setImportOpen(true);
   });
   const openSettings = afterBrowserClose(
-    (tab: SettingsTab = "general", reminder = false) => {
+    (
+      destination: SettingsTab | ServiceEditRequest = "general",
+      reminder = false,
+    ) => {
       if (view.kind !== "settings") rememberOrigin();
-      setSettingsTab(tab);
+      setSettingsTab(typeof destination === "string" ? destination : "keys");
       setSettingsMounted(true);
-      setView({ kind: "settings" });
+      const editService =
+        typeof destination === "string" ? undefined : destination;
+      setView({ kind: "settings", editService });
       if (reminder) requestGeneralPanel("notifications");
     },
   );
@@ -1263,7 +1260,7 @@ export default function App() {
                 rememberOrigin();
                 opened(key);
               }}
-              onOpenApi={() => openSettings("keys")}
+              onOpenApi={(edit) => openSettings(edit ?? "keys")}
               onResumeDraft={goNew}
               onCustom={(opener) => {
                 customReturnFocus.current = opener;
@@ -1277,6 +1274,9 @@ export default function App() {
           <SettingsPage
             active={view.kind === "settings"}
             tab={settingsTab}
+            editService={
+              view.kind === "settings" ? view.editService : undefined
+            }
             generalRequest={generalRequest}
             onGeneralRequestHandled={() => setGeneralRequest(null)}
             onTabChange={setSettingsTab}

@@ -85,6 +85,7 @@ import { API_EDITOR_STRINGS as E } from "../runtime/api_editor_strings";
 import { ACCOUNT_GUIDE_STRINGS as G } from "../runtime/account_guide_strings";
 import { ACCESS_STRINGS as A } from "../runtime/access_strings";
 import type { ApiResult, Credential } from "../runtime/credentials";
+import { getServiceCapabilities } from "../runtime/credentials";
 
 const S = STRINGS.credentials;
 type Element = ReactElement<Record<string, unknown>>;
@@ -201,6 +202,131 @@ const saved: Credential = {
   deleting: false,
   grants: [],
 };
+function selectedEditor(
+  request: { agentId: string; id: string; revision: string },
+  onReturn: () => void,
+) {
+  const root = render("root", () =>
+    CredentialSettings({ cards: [], editService: request, onReturn }),
+  );
+  return child("requested", byComponent(root, "SelectedServiceEditor"));
+}
+it("edits the chosen second service even when the saved library search hides it, and cancel keeps the search", async () => {
+  const other = {
+    ...saved,
+    id: "other",
+    label: "Other service",
+    revision: "r2",
+  };
+  h.items = [saved, other, { ...saved, id: "third" }];
+  vi.mocked(getServiceCapabilities).mockResolvedValueOnce({
+    apiTypes: [saved.apiType],
+    validatedApiTypes: [],
+    selectionScope: "connection",
+    unavailableReason: null,
+  });
+  rootView();
+  flush();
+  await settle();
+  input(
+    rootView().find((node) => node.props.type === "search")!,
+    "Alpha",
+  );
+  const target = { agentId: "A", id: other.id, revision: other.revision };
+  const back = vi.fn();
+  selectedEditor(target, back);
+  flush();
+  await settle();
+  const editor = byComponent(selectedEditor(target, back), "Editor");
+  expect(editor.props.item).toEqual(other);
+  (editor.props.onClose as () => void)();
+  expect(back).toHaveBeenCalledOnce();
+  expect(
+    rootView().find((node) => node.props.type === "search")?.props.value,
+  ).toBe("Alpha");
+  expect(h.save).not.toHaveBeenCalled();
+  expect(h.test).not.toHaveBeenCalled();
+});
+it.each([
+  ["missing", [], E.selectedUnavailable],
+  ["changed", [{ ...saved, revision: "new" }], E.selectedChanged],
+  ["pending deletion", [{ ...saved, deleting: true }], E.selectedUnavailable],
+] as const)(
+  "keeps the editor closed for a %s selected service and rechecks the same ID on retry",
+  async (_case, records, message) => {
+    h.items = [{ ...saved, id: "other" }, ...records];
+    const usable = {
+      apiTypes: [saved.apiType],
+      validatedApiTypes: [],
+      selectionScope: "connection",
+      unavailableReason: null,
+    };
+    vi.mocked(getServiceCapabilities)
+      .mockResolvedValueOnce(usable)
+      .mockResolvedValueOnce(usable);
+    const target = { agentId: "A", id: saved.id, revision: saved.revision };
+    const back = vi.fn();
+    selectedEditor(target, back);
+    flush();
+    await settle();
+    const failed = selectedEditor(target, back);
+    expect(failed.some((node) => node.props.children === message)).toBe(true);
+    expect(byComponent(failed, "Editor")).toBeUndefined();
+    h.items = [saved];
+    click(button(failed, S.retry));
+    selectedEditor(target, back);
+    flush();
+    await settle();
+    expect(
+      byComponent(selectedEditor(target, back), "Editor").props.item,
+    ).toEqual(saved);
+    expect(h.save).not.toHaveBeenCalled();
+  },
+);
+it("retains direct edits on a concurrent change, refuses a repeat save and returns through explicit discard", async () => {
+  h.items = [saved];
+  const target = { agentId: "A", id: saved.id, revision: saved.revision };
+  const back = vi.fn();
+  vi.mocked(getServiceCapabilities).mockResolvedValueOnce({
+    apiTypes: [saved.apiType],
+    validatedApiTypes: [],
+    selectionScope: "connection",
+    unavailableReason: null,
+  });
+  const requested = () => selectedEditor(target, back);
+  const form = () => child("editor", byComponent(requested(), "Editor"));
+  requested();
+  flush();
+  await settle();
+  input(labelInput(form()), "Unsaved rename");
+  h.save.mockRejectedValueOnce(E.selectedSaveConflict);
+  click(button(form(), S.save));
+  await settle();
+  const stopped = form();
+  expect(h.save).toHaveBeenCalledWith(
+    expect.objectContaining({
+      id: saved.id,
+      label: "Unsaved rename",
+      expectedService: {
+        revision: saved.revision,
+        label: saved.label,
+        provider: saved.provider,
+      },
+    }),
+  );
+  expect(
+    stopped.some((node) => node.props.children === E.selectedSaveConflict),
+  ).toBe(true);
+  expect(labelInput(stopped).props.value).toBe("Unsaved rename");
+  expect(button(stopped, S.save).props.disabled).toBe(true);
+  expect(byComponent(stopped, "ApiTestPanel").props.disabled).toBe(true);
+  click(button(stopped, S.save));
+  expect(h.save).toHaveBeenCalledOnce();
+  expect(back).not.toHaveBeenCalled();
+  click(button(stopped, S.cancel));
+  click(button(form(), A.discardChanges));
+  expect(back).toHaveBeenCalledOnce();
+});
 async function openEditor(item: Credential | null = null) {
   h.items = item ? [item] : [];
   rootView();
@@ -605,7 +731,9 @@ it("keeps the query and clear exit after deleting its only match from three reco
 it("keeps saved configuration search when temporarily hidden", async () => {
   await loadSearchItems();
   input(searchInput(rootView()), "GammaModel");
-  expect(rootView(false)[0].props.hidden).toBe(true);
+  expect(
+    rootView(false).find((node) => node.type === "section")?.props.hidden,
+  ).toBe(true);
   expect(searchInput(rootView()).props.value).toBe("GammaModel");
   expect(records(rootView())).toHaveLength(1);
 });
@@ -708,7 +836,7 @@ it("hides all API editor dialogs and restores the same unsaved form without clos
   expect(native.showModal).toHaveBeenCalledOnce();
 
   root = render("root", () => CredentialSettings({ cards: [], active: false }));
-  expect(root[0].props.hidden).toBe(true);
+  expect(root.find((node) => node.type === "section")?.props.hidden).toBe(true);
   editor = child("editor", byComponent(root, "Editor"));
   expect(byComponent(editor, "Dialog").props.active).toBe(false);
   dialog = child("dialog", byComponent(editor, "Dialog"));
@@ -801,6 +929,7 @@ it("explains the save condition immediately and allows saving without any diagno
   click(button(editor, S.save));
   await settle();
   expect(h.save).toHaveBeenCalledOnce();
+  expect(h.save.mock.calls[0][0]).not.toHaveProperty("expectedService");
   expect(h.fetchModels).not.toHaveBeenCalled();
   expect(h.test).not.toHaveBeenCalled();
 });

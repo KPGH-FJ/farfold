@@ -8,6 +8,7 @@ import {
   X,
 } from "@phosphor-icons/react";
 import type { AgentCardModel, AgentsState } from "../runtime/agents";
+import type { ComposerDraft } from "../runtime/drafts";
 import {
   agentDirectoryDescription,
   agentDirectorySource,
@@ -56,6 +57,7 @@ import {
 import {
   listCredentials,
   subscribeCredentialChanges,
+  type ServiceEditRequest,
 } from "../runtime/credentials";
 import {
   setupStorage,
@@ -89,6 +91,14 @@ export interface AgentHubSurface {
   source: string;
   availability: string;
   category?: DirectoryCategory;
+}
+export interface AgentHubOrigin {
+  target: string | null;
+  intent: "use" | "manage";
+  directoryView: "discover" | "added";
+  context?: AgentPreparationContext;
+  surface?: AgentHubSurface;
+  draft: ComposerDraft | null;
 }
 
 export function preparationProgressKey(
@@ -126,7 +136,7 @@ export interface AgentHubProps {
     selection?: AgentSetupSelection,
     destination?: "new-conversation",
   ) => void;
-  onOpenApi: (agentId?: string) => void;
+  onOpenApi: (edit?: ServiceEditRequest) => void;
   onCustom?: (opener: HTMLButtonElement) => void;
   onImport?: (agentId: string, opener?: HTMLElement) => void;
   onOpenConversation?: (threadKey: string) => void;

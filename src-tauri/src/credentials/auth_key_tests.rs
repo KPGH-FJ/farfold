@@ -132,6 +132,7 @@ fn method_provider_is_part_of_selection_identity_and_cannot_be_reassigned_by_ser
         &vault,
         SaveInput {
             id: Some(view.id),
+            expected_service: None,
             label: "changed".into(),
             provider: "other".into(),
             endpoint: String::new(),

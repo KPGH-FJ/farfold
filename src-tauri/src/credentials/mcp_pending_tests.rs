@@ -132,6 +132,7 @@ fn mcp_pending_commit_serializes_after_service_edit_and_preserves_original_selec
         &vault,
         SaveInput {
             id: Some("selected".into()),
+            expected_service: None,
             label: "Selected".into(),
             provider: "fixture".into(),
             endpoint: "https://changed.test/api".into(),
@@ -171,6 +172,7 @@ fn mcp_pending_selected_service_cannot_change_after_commit_but_unrelated_service
                 &*capture,
                 SaveInput {
                     id: Some("selected".into()),
+                    expected_service: None,
                     label: "Changed".into(),
                     provider: "fixture".into(),
                     endpoint: "https://example.test/api".into(),

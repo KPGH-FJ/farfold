@@ -9,6 +9,7 @@ use std::sync::{
 };
 use tauri::{AppHandle, Manager};
 const SETTING: &str = "credentials.v1";
+const SERVICE_EDIT_CHANGED: &str = "这份服务已更新或移除，请返回准备与连接后重新打开。";
 static MUTATION: Mutex<()> = Mutex::new(());
 #[derive(Clone, Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -62,11 +63,7 @@ impl From<&Credential> for View {
             endpoint: c.endpoint.clone(),
             api_type: c.api_type.clone(),
             models: c.models.clone(),
-            revision: if method_key(c) {
-                digest(&("method-key", &c.provider, &c.secret_ref))
-            } else {
-                service_revision(&c.endpoint, &c.api_type, &c.models, &c.secret_ref)
-            },
+            revision: credential_revision(c),
             fingerprint: validate_endpoint(&c.endpoint)
                 .ok()
                 .filter(|_| validate_api_type(&c.api_type).is_ok())
@@ -79,8 +76,16 @@ impl From<&Credential> for View {
 }
 #[derive(Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct ExpectedService {
+    revision: String,
+    label: String,
+    provider: String,
+}
+#[derive(Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SaveInput {
     pub id: Option<String>,
+    pub expected_service: Option<Box<ExpectedService>>,
     pub label: String,
     pub provider: String,
     pub endpoint: String,
@@ -262,6 +267,19 @@ fn digest(value: &impl Serialize) -> String {
 fn service_revision(endpoint: &str, api_type: &str, models: &[String], secret_ref: &str) -> String {
     let endpoint = validate_endpoint(endpoint).unwrap_or_else(|_| endpoint.to_string());
     digest(&(&endpoint, api_type, models, secret_ref))
+}
+
+fn credential_revision(item: &Credential) -> String {
+    if method_key(item) {
+        digest(&("method-key", &item.provider, &item.secret_ref))
+    } else {
+        service_revision(
+            &item.endpoint,
+            &item.api_type,
+            &item.models,
+            &item.secret_ref,
+        )
+    }
 }
 
 fn service_fingerprint(endpoint: &str, api_type: &str) -> String {
@@ -550,16 +568,22 @@ fn save(store: &MetaStore, vault: &dyn Vault, mut input: SaveInput) -> Result<Vi
         return Err("请填写简短的密钥用途说明".into());
     }
     let mut pool = read(store)?;
-    let index = if let Some(id) = input.id.as_ref() {
-        Some(
-            pool.iter()
-                .position(|c| &c.id == id && !c.deleting)
-                .ok_or("此密钥已移除，请刷新")?,
-        )
-    } else {
-        None
-    };
+    let index = input
+        .id
+        .as_ref()
+        .and_then(|id| pool.iter().position(|c| &c.id == id && !c.deleting));
     let previous = index.map(|i| &pool[i]);
+    if let Some(expected) = input.expected_service.as_ref() {
+        let item = previous.ok_or(SERVICE_EDIT_CHANGED)?;
+        if credential_revision(item) != expected.revision
+            || item.label != expected.label
+            || item.provider != expected.provider
+        {
+            return Err(SERVICE_EDIT_CHANGED.into());
+        }
+    } else if input.id.is_some() && previous.is_none() {
+        return Err("此密钥已移除，请刷新".into());
+    }
     if let Some(previous) = previous {
         store.require_mcp_service_ready(&previous.id)?;
         for grant in &previous.grants {
@@ -837,6 +861,7 @@ mod tests {
     fn input(id: Option<String>, key: &str) -> SaveInput {
         SaveInput {
             id,
+            expected_service: None,
             label: "account".into(),
             provider: "fixture".into(),
             endpoint: "https://example.test/api".into(),
@@ -1233,6 +1258,70 @@ mod tests {
                 "{change} must fail before Key access"
             );
         }
+    }
+
+    #[test]
+    fn guarded_service_edit_rejects_a_changed_or_removed_service_before_touching_its_key() {
+        for change in ["model", "key", "label", "provider", "removed", "no ID"] {
+            let (_dir, store) = store();
+            let vault = Fake::default();
+            let saved = save(&store, &vault, input(None, "original-secret")).unwrap();
+            let mut stale: SaveInput = serde_json::from_value(serde_json::json!({
+                "id": saved.id,
+                "expectedService": {"revision": saved.revision, "label": saved.label, "provider": saved.provider},
+                "label": "old draft",
+                "provider": "fixture",
+                "endpoint": "https://example.test/api",
+                "apiType": "chat-completions",
+                "key": "stale-draft-secret",
+                "models": ["fixture-model"]
+            }))
+            .unwrap();
+            let mut newer = input(Some(saved.id.clone()), "");
+            match change {
+                "model" => newer.models.push("another-model".into()),
+                "key" => newer.key = "newer-secret".into(),
+                "label" => newer.label = "renamed".into(),
+                "provider" => newer.provider = "updated provider".into(),
+                "removed" => remove(&store, &vault, &saved.id).unwrap(),
+                "no ID" => stale.id = None,
+                _ => unreachable!(),
+            }
+            if !matches!(change, "removed" | "no ID") {
+                save(&store, &vault, newer).unwrap();
+            }
+            let before = store.get_setting(SETTING).unwrap();
+            let keys_before = vault.keys.borrow().clone();
+            vault.fail.set(true);
+            assert_eq!(
+                save(&store, &vault, stale).err().as_deref(),
+                Some(SERVICE_EDIT_CHANGED),
+                "{change}"
+            );
+            assert_eq!(store.get_setting(SETTING).unwrap(), before);
+            assert_eq!(*vault.keys.borrow(), keys_before);
+            assert_eq!(vault.reads.get(), 0);
+        }
+    }
+
+    #[test]
+    fn guarded_service_edit_saves_when_its_snapshot_still_matches() {
+        let (_dir, store) = store();
+        let vault = Fake::default();
+        let saved = save(&store, &vault, input(None, "original-secret")).unwrap();
+        let mut edit = input(Some(saved.id.clone()), "");
+        edit.expected_service = Some(Box::new(ExpectedService {
+            revision: saved.revision.clone(),
+            label: saved.label,
+            provider: saved.provider,
+        }));
+        edit.models.push("another-model".into());
+        let updated = save(&store, &vault, edit).unwrap();
+        assert_eq!(updated.id, saved.id);
+        assert_ne!(updated.revision, saved.revision);
+        assert_eq!(updated.models, ["fixture-model", "another-model"]);
+        assert_eq!(vault.keys.borrow().len(), 1);
+        assert_eq!(vault.reads.get(), 0);
     }
 
     #[test]

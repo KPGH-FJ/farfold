@@ -34,6 +34,13 @@ export interface ServiceSelection {
   id: string;
   model: string;
 }
+export type ServiceEditRequest = Pick<Credential, "id" | "revision"> & {
+  agentId: string;
+};
+export type ExpectedService = Pick<
+  Credential,
+  "revision" | "label" | "provider"
+>;
 
 export function preservesLegacyService(
   saved: Credential | null,
@@ -73,7 +80,7 @@ export function subscribeCredentialChanges(callback: () => void): () => void {
 }
 export const listCredentials = () => invoke<Credential[]>("credential_list");
 export async function saveCredential(
-  input: CredentialInput,
+  input: CredentialInput & { expectedService?: ExpectedService },
 ): Promise<Credential> {
   const result = await invoke<Credential>("credential_save", { input });
   window.dispatchEvent(new Event(changeEvent));

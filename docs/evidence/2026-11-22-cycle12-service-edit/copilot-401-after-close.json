@@ -1,0 +1,289 @@
+{
+  "artifact": {
+    "registry": "https://registry.npmjs.org/@github%2Fcopilot-darwin-arm64/1.0.114",
+    "integrity": "sha512-Mw47DTwMNDG0bb4t1rVu7S+ekdThIGGitpG28/wGpACZ0lFhYnpNEoSJ7hHBM3oix4b/w6+ZcmxE9J9MngsR9Q==",
+    "installedRegistrationUsed": false,
+    "officialReleaseVersion": "1.0.114",
+    "archiveBytes": 140699142,
+    "executableBytes": 202294880
+  },
+  "externalProvider": false,
+  "inheritedHomeUnchanged": true,
+  "senderPreflight": {
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "ownLoopbackAllowed": true,
+    "otherLoopbackDenied": true,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "readerPreflight": {
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "ownLoopbackAllowed": false,
+    "otherLoopbackDenied": true,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "agentInfo": {
+    "name": "Copilot",
+    "title": "Copilot",
+    "version": "1.0.114"
+  },
+  "sessionId": "c2b0ae13-7b6f-4ddf-804f-8b6143e20b44",
+  "acpResult": {
+    "stopReason": "end_turn"
+  },
+  "acpCloseSucceeded": true,
+  "sender": {
+    "exitCode": 0,
+    "methods": [
+      "initialize",
+      "session/new",
+      "session/prompt",
+      "session/close"
+    ],
+    "syntheticKeyInCapturedStderr": false,
+    "stderrFirstLine": null
+  },
+  "acpNotifications": [
+    {
+      "method": "session/update",
+      "update": "available_commands_update",
+      "errorMarker": false,
+      "promptMarker": false,
+      "keyFound": false
+    },
+    {
+      "method": "session/update",
+      "update": "available_commands_update",
+      "errorMarker": false,
+      "promptMarker": false,
+      "keyFound": false
+    },
+    {
+      "method": "session/update",
+      "update": "available_commands_update",
+      "errorMarker": false,
+      "promptMarker": false,
+      "keyFound": false
+    },
+    {
+      "method": "session/update",
+      "update": "session_info_update",
+      "errorMarker": false,
+      "promptMarker": true,
+      "keyFound": false
+    },
+    {
+      "method": "session/update",
+      "update": "usage_update",
+      "errorMarker": false,
+      "promptMarker": false,
+      "keyFound": false
+    },
+    {
+      "method": "session/update",
+      "update": "agent_message_chunk",
+      "errorMarker": false,
+      "promptMarker": false,
+      "keyFound": false
+    },
+    {
+      "method": "session/update",
+      "update": "usage_update",
+      "errorMarker": false,
+      "promptMarker": false,
+      "keyFound": false
+    },
+    {
+      "method": "session/update",
+      "update": "agent_message_chunk",
+      "errorMarker": false,
+      "promptMarker": false,
+      "keyFound": false
+    },
+    {
+      "method": "session/update",
+      "update": "usage_update",
+      "errorMarker": false,
+      "promptMarker": false,
+      "keyFound": false
+    },
+    {
+      "method": "session/update",
+      "update": "agent_message_chunk",
+      "errorMarker": false,
+      "promptMarker": false,
+      "keyFound": false
+    }
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "servedStatus": 401,
+      "selectedSyntheticBearer": true,
+      "model": "gpt-4o-mini",
+      "rootPromptMarker": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "servedStatus": 401,
+      "selectedSyntheticBearer": true,
+      "model": "gpt-4o-mini",
+      "rootPromptMarker": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "servedStatus": 401,
+      "selectedSyntheticBearer": true,
+      "model": "gpt-4o-mini",
+      "rootPromptMarker": true
+    }
+  ],
+  "originalReceiptSha256": "6f8e786c99787b93348a919dc4c5ac980177ec20dd0b646163bdb608075490a4",
+  "officialReadReceiptSha256": "908fb88de7304be0de4dd5519a48085ec8879e99bcc3872d91b66950c651f29b",
+  "officialRead": {
+    "sessionId": "c2b0ae13-7b6f-4ddf-804f-8b6143e20b44",
+    "methods": [
+      "ping",
+      "sessions.readPersistedEvents"
+    ],
+    "headlessArgs": [
+      "--headless",
+      "--no-auto-update",
+      "--stdio"
+    ],
+    "offline": true,
+    "inheritedHomeUnchanged": true,
+    "ping": {
+      "message": "pong: FF_SYNTHETIC_READ_ONLY",
+      "timestamp": "2026-11-22T01:52:29.223045Z",
+      "protocolVersion": 4
+    },
+    "cursorStatus": "ok",
+    "hasMore": false,
+    "eventKeys": [
+      "cursor",
+      "cursorStatus",
+      "events",
+      "hasMore"
+    ],
+    "events": [
+      {
+        "type": "session.start",
+        "id": "1c326a48-52e4-4369-9b8a-cdbe8b7d51c8",
+        "parentId": null,
+        "agentId": null,
+        "ephemeral": null,
+        "checkpoint": null,
+        "marker": false,
+        "errorMarker": false,
+        "keyFound": false
+      },
+      {
+        "type": "instruction.update",
+        "id": "445ebbf1-2c2d-4346-a14c-dc4e7cf90906",
+        "parentId": "1c326a48-52e4-4369-9b8a-cdbe8b7d51c8",
+        "agentId": null,
+        "ephemeral": null,
+        "checkpoint": null,
+        "marker": false,
+        "errorMarker": false,
+        "keyFound": false
+      },
+      {
+        "type": "user.message",
+        "id": "4beb0a84-be07-4357-8d61-9824debd47b9",
+        "parentId": "445ebbf1-2c2d-4346-a14c-dc4e7cf90906",
+        "agentId": null,
+        "ephemeral": null,
+        "checkpoint": null,
+        "marker": true,
+        "errorMarker": false,
+        "keyFound": false,
+        "messageId": "898baef9-7a2a-463e-b226-1e660554b81b",
+        "interactionId": "2e2f1425-9363-44fc-9974-665f9640832c",
+        "turnId": "0"
+      },
+      {
+        "type": "system.message",
+        "id": "e687976a-639f-4d4c-97dd-33cc965eacfe",
+        "parentId": "4beb0a84-be07-4357-8d61-9824debd47b9",
+        "agentId": null,
+        "ephemeral": null,
+        "checkpoint": null,
+        "marker": false,
+        "errorMarker": false,
+        "keyFound": false,
+        "interactionId": "2e2f1425-9363-44fc-9974-665f9640832c"
+      },
+      {
+        "type": "assistant.turn_start",
+        "id": "5ba9ea03-1432-4163-96d4-e2011a726959",
+        "parentId": "e687976a-639f-4d4c-97dd-33cc965eacfe",
+        "agentId": null,
+        "ephemeral": null,
+        "checkpoint": null,
+        "marker": false,
+        "errorMarker": false,
+        "keyFound": false,
+        "turnId": "0",
+        "interactionId": "2e2f1425-9363-44fc-9974-665f9640832c"
+      },
+      {
+        "type": "assistant.turn_end",
+        "id": "86a851bd-b171-4585-815f-7afe42c72465",
+        "parentId": "5ba9ea03-1432-4163-96d4-e2011a726959",
+        "agentId": null,
+        "ephemeral": null,
+        "checkpoint": null,
+        "marker": false,
+        "errorMarker": false,
+        "keyFound": false,
+        "turnId": "0"
+      },
+      {
+        "type": "session.error",
+        "id": "43470ee2-96a1-4ad7-badc-af233796eb46",
+        "parentId": "86a851bd-b171-4585-815f-7afe42c72465",
+        "agentId": null,
+        "ephemeral": null,
+        "checkpoint": null,
+        "marker": false,
+        "errorMarker": false,
+        "keyFound": false,
+        "errorType": "authentication",
+        "statusCode": 401,
+        "providerErrorType": "authentication_error",
+        "providerErrorCode": "invalid_api_key",
+        "originatingMessageId": "898baef9-7a2a-463e-b226-1e660554b81b"
+      },
+      {
+        "type": "session.shutdown",
+        "id": "7ae24e18-d57d-4ce7-b150-b26bb19a1b8d",
+        "parentId": "43470ee2-96a1-4ad7-badc-af233796eb46",
+        "agentId": null,
+        "ephemeral": null,
+        "checkpoint": null,
+        "marker": false,
+        "errorMarker": false,
+        "keyFound": false
+      }
+    ],
+    "exactDiskEventsSame": true,
+    "exitCode": 0,
+    "stderrLength": 0,
+    "journalSha256Before": "1804df919525904c4f10c563f5f2b56cd26ddfb5b36b932064f47943ea39d3e8",
+    "journalSha256After": "1804df919525904c4f10c563f5f2b56cd26ddfb5b36b932064f47943ea39d3e8"
+  }
+}

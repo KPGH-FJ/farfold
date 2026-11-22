@@ -1,4 +1,7 @@
 export const API_EDITOR_STRINGS = {
+  selectedUnavailable: "所选服务已不可用。请返回 Agent 重新选择。",
+  selectedChanged: "所选服务已更新。请返回 Agent 核对后再编辑。",
+  selectedSaveConflict: "这份服务已更新或移除，请返回准备与连接后重新打开。",
   endpointRequired: "请填写完整的 HTTPS 基础地址。",
   endpointInvalid: "请输入不含账号、密码、查询参数或片段的 HTTPS 基础地址。",
   endpointPath: "请填写基础地址，不包含具体请求路径。",

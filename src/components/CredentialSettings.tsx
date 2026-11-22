@@ -21,7 +21,9 @@ import {
   saveCredential,
   type Credential,
   type CredentialInput,
+  type ExpectedService,
   type ServiceCapability,
+  type ServiceEditRequest,
 } from "../runtime/credentials";
 import { uiError } from "../runtime/ui_error";
 import { canUseService } from "../runtime/service_capability";
@@ -116,6 +118,7 @@ function Dialog({
 
 function Editor({
   item,
+  expectedService,
   onClose,
   onSaved,
   active,
@@ -124,10 +127,11 @@ function Editor({
 }: {
   active: boolean;
   item: Credential | null;
+  expectedService?: ExpectedService;
   onClose: () => void;
   onSaved: (value: Credential) => void;
-  returnFocusRef: RefObject<HTMLElement | null>;
-  fallbackFocusRef: RefObject<HTMLElement | null>;
+  returnFocusRef?: RefObject<HTMLElement | null>;
+  fallbackFocusRef?: RefObject<HTMLElement | null>;
 }) {
   const [original] = useState(() => credentialDraft(item));
   const [draft, setDraft] = useState<CredentialInput>(() =>
@@ -158,6 +162,7 @@ function Editor({
   };
   const [showKey, setShowKey] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [staleSelection, setStaleSelection] = useState(false);
   const savePending = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [fetching, setFetching] = useState(false);
@@ -180,17 +185,20 @@ function Editor({
   const showEndpointIssue =
     !!endpointIssue && (endpointTouched || !!draft.endpoint.length);
   const ready =
+    !staleSelection &&
     !endpointIssue &&
     isFormat(draft.apiType) &&
     !credentialKeyIssue(draft.key, retainingKey);
   const preservingLegacy =
     preservesLegacyService(item, draft) &&
     (!keySourceChanged || draft.key.trim() !== "");
-  const saveIssue = credentialSaveIssue(draft, {
-    retainingKey,
-    preservingLegacy,
-    pendingModel: modelInput,
-  });
+  const saveIssue = staleSelection
+    ? E.selectedSaveConflict
+    : credentialSaveIssue(draft, {
+        retainingKey,
+        preservingLegacy,
+        pendingModel: modelInput,
+      });
   const affectsExisting =
     item != null &&
     (!sameSavedSource ||
@@ -291,10 +299,19 @@ function Editor({
     fetchScope.invalidate();
     setFetching(false);
     try {
-      onSaved(await saveCredential(input));
+      onSaved(
+        await saveCredential(
+          expectedService ? { ...input, expectedService } : input,
+        ),
+      );
     } catch (reason) {
       savePending.current = false;
-      setError(uiError(reason, S.failed));
+      if (
+        expectedService &&
+        uiError(reason, S.failed) === E.selectedSaveConflict
+      )
+        setStaleSelection(true);
+      else setError(uiError(reason, S.failed));
       setSaving(false);
     }
   };
@@ -351,7 +368,7 @@ function Editor({
             <button
               ref={guideTrigger}
               className="btn btn-ghost"
-              disabled={saving}
+              disabled={saving || staleSelection}
               onClick={() => {
                 if (savePending.current) return;
                 fetchScope.invalidate();
@@ -393,7 +410,7 @@ function Editor({
               <p>{R.sourceComparisonHint}</p>
             </section>
           )}
-          <fieldset disabled={saving}>
+          <fieldset disabled={saving || staleSelection}>
             <div className="api-field-grid">
               <label className="api-field">
                 <span>{S.label}</span>
@@ -786,9 +803,13 @@ function LegacyGrants({
 export function CredentialSettings({
   cards,
   active = true,
+  editService,
+  onReturn,
 }: {
   cards: AgentCardModel[];
   active?: boolean;
+  editService?: ServiceEditRequest;
+  onReturn?: () => void;
 }) {
   const [items, setItems] = useState<Credential[]>([]);
   const addTrigger = useRef<HTMLButtonElement | null>(null);
@@ -879,8 +900,9 @@ export function CredentialSettings({
       .toLocaleLowerCase()
       .includes(search),
   );
-  return (
-    <section className="api-settings" hidden={!active}>
+  const libraryActive = active && !editService;
+  const library = (
+    <section className="api-settings" hidden={!libraryActive}>
       <div className="api-page-heading">
         <div>
           <h1>{S.heading}</h1>
@@ -1097,7 +1119,7 @@ export function CredentialSettings({
       </div>
       {editor && (
         <Editor
-          active={active}
+          active={libraryActive}
           item={editor.item}
           returnFocusRef={editorTrigger}
           fallbackFocusRef={addTrigger}
@@ -1114,7 +1136,7 @@ export function CredentialSettings({
       )}
       {deleting && (
         <Dialog
-          active={active}
+          active={libraryActive}
           title={
             deleting.purpose === "authentication"
               ? S.confirmDeleteAuthenticationKey
@@ -1187,6 +1209,113 @@ export function CredentialSettings({
             </button>
           </footer>
         </Dialog>
+      )}
+    </section>
+  );
+  return (
+    <>
+      {library}
+      {editService && onReturn && (
+        <SelectedServiceEditor
+          key={JSON.stringify([
+            editService.agentId,
+            editService.id,
+            editService.revision,
+          ])}
+          active={active}
+          request={editService}
+          onReturn={onReturn}
+          onSaved={load}
+        />
+      )}
+    </>
+  );
+}
+
+function SelectedServiceEditor({
+  active,
+  request,
+  onReturn,
+  onSaved,
+}: {
+  active: boolean;
+  request: ServiceEditRequest;
+  onReturn: () => void;
+  onSaved: () => void;
+}) {
+  const [item, setItem] = useState<Credential | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [retry, setRetry] = useState(0);
+  const visible = useRef(active);
+  useEffect(() => {
+    visible.current = active;
+    return () => {
+      visible.current = false;
+    };
+  }, [active]);
+  useEffect(() => {
+    let current = true;
+    setError(null);
+    void Promise.all([
+      listCredentials(),
+      getServiceCapabilities(request.agentId),
+    ])
+      .then(([items, capability]) => {
+        if (!current) return;
+        const selected = items.find((record) => record.id === request.id);
+        if (
+          !selected ||
+          !selected.complete ||
+          selected.deleting ||
+          selected.purpose === "authentication" ||
+          !selected.models.length ||
+          !canUseService(capability, selected)
+        ) {
+          setError(E.selectedUnavailable);
+        } else if (selected.revision !== request.revision) {
+          setError(E.selectedChanged);
+        } else {
+          setItem(selected);
+        }
+      })
+      .catch((reason) => {
+        if (current) setError(uiError(reason, S.readFailed));
+      });
+    return () => {
+      current = false;
+    };
+  }, [request.agentId, request.id, request.revision, retry]);
+  return (
+    <section className="api-settings" hidden={!active}>
+      <h1>{S.heading}</h1>
+      {error ? (
+        <div role="alert" className="api-page-message">
+          <span>{error}</span>
+          <button
+            className="btn btn-ghost"
+            onClick={() => setRetry((count) => count + 1)}
+          >
+            {S.retry}
+          </button>
+        </div>
+      ) : (
+        !item && <p role="status">{S.loading}</p>
+      )}
+      {item && (
+        <Editor
+          item={item}
+          expectedService={{
+            revision: request.revision,
+            label: item.label,
+            provider: item.provider,
+          }}
+          active={active}
+          onClose={onReturn}
+          onSaved={() => {
+            onSaved();
+            if (visible.current) onReturn();
+          }}
+        />
       )}
     </section>
   );

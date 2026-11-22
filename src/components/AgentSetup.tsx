@@ -24,6 +24,7 @@ import {
   subscribeCredentialChanges,
   type Credential,
   type ServiceCapability,
+  type ServiceEditRequest,
 } from "../runtime/credentials";
 import { uiError } from "../runtime/ui_error";
 import { AgentAuthSection } from "./AgentAuthSection";
@@ -148,7 +149,7 @@ export function AgentSetup({
     agentId: string,
     selection?: AgentSetupSelection,
   ) => void | Promise<void>;
-  onOpenApi: (agentId?: string) => void;
+  onOpenApi: (edit?: ServiceEditRequest) => void;
   returnFocusRef?: RefObject<HTMLElement | null>;
   active?: boolean;
   progress: AgentSetupProgress;
@@ -648,11 +649,14 @@ export function AgentSetup({
       setConnecting(false);
     }
   };
-  const openApi = () => {
+  const openApi = (edit?: ServiceChoice | null) => {
     if (apiState === "unsupported") return;
-    // A modal must leave the top layer before the settings page can be used.
     dialog.current?.close();
-    onOpenApi(card.id);
+    onOpenApi(
+      edit
+        ? { agentId: card.id, id: edit.id, revision: edit.revision }
+        : undefined,
+    );
   };
   const prepareAgain = () => {
     if (!canReadModels) return;
@@ -1057,7 +1061,7 @@ export function AgentSetup({
                               readonly={false}
                               editing={false}
                               onChangeService={() => setServiceEditing(true)}
-                              onEditService={openApi}
+                              onEditService={() => openApi(selection.service)}
                               onChangeMethod={() =>
                                 updateAccess({ accessStage: "method" })
                               }
@@ -1107,7 +1111,7 @@ export function AgentSetup({
                 onReconnect={async () => {
                   await connect(true);
                 }}
-                onConfigureKey={openApi}
+                onConfigureKey={() => openApi()}
                 onBusyChange={setAuthBusy}
                 onOpenConversation={
                   onOpenConversation

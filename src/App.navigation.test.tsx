@@ -736,6 +736,33 @@ it("restores A's preparation and draft origin after API settings temporarily man
   expect(h.open).not.toHaveBeenCalled();
 });
 
+it("carries only the requested service into editing and returns to the same preparation and draft", () => {
+  const draft = h.draft;
+  const choice = h.choice;
+  call("EmptyState", "onGoSettings", "A");
+  const target = { agentId: "A", id: "second-service", revision: "r2" };
+  call("AgentHub", "onOpenApi", target);
+  expect(component("SettingsPage")).toMatchObject({
+    active: true,
+    tab: "keys",
+    editService: target,
+  });
+  call("SettingsPage", "onReturn");
+  expect(component("AgentHub")).toMatchObject({
+    active: true,
+    initialAgentId: "A",
+    returnToDraftOnClose: true,
+  });
+  call("AgentHub", "onOpenApi");
+  expect(component("SettingsPage").editService).toBeUndefined();
+  call("SettingsPage", "onReturn");
+  call("AgentHub", "onReturn");
+  expect(component("EmptyState").active).toBe(true);
+  expect(h.choice).toBe(choice);
+  expect(h.draft).toBe(draft);
+  expect(h.open).not.toHaveBeenCalled();
+});
+
 it("opens My Agents from settings and returns to the exact settings tab without changing the draft", () => {
   const originalDraft = h.draft;
   const originalChoice = structuredClone(h.choice);

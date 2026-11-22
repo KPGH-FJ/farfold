@@ -17,6 +17,7 @@ const h = vi.hoisted(() => ({
   invalidate: vi.fn(),
   getCapabilities: vi.fn(),
   listCredentials: vi.fn(),
+  openApi: vi.fn(),
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -139,6 +140,7 @@ const service: Credential = {
   deleting: false,
   grants: [],
 };
+const second = { ...service, id: "second-service", revision: "r2" };
 type Element = ReactElement<Record<string, unknown>>;
 type Connection = NonNullable<
   ComponentProps<typeof AgentAuthSection>["connection"]
@@ -174,7 +176,7 @@ function render() {
       onProgress: changed,
       onClose() {},
       onStart() {},
-      onOpenApi() {},
+      onOpenApi: h.openApi,
     }),
   );
   for (const effect of h.pending.splice(0)) effect();
@@ -210,7 +212,8 @@ beforeEach(() => {
     selectionScope: "connection",
     unavailableReason: null,
   });
-  h.listCredentials.mockReset().mockResolvedValue([service]);
+  h.listCredentials.mockReset().mockResolvedValue([service, second]);
+  h.openApi.mockClear();
   changed.mockClear();
   progress = {
     step: 1,
@@ -272,6 +275,28 @@ it("reopens service editing from the actual summary management button while reta
     ),
   ).toBe(true);
   expect(progress.selection).toEqual({ service: selected, config: {} });
+  expect(h.prepare).not.toHaveBeenCalled();
+  expect(h.start).not.toHaveBeenCalled();
+});
+
+it("opens the exact selected second service from its summary without preparing or sending", async () => {
+  const selected = {
+    id: second.id,
+    revision: second.revision,
+    model: "model-b",
+  };
+  progress = { ...progress, selection: { service: selected, config: {} } };
+  const api = connection(await settled());
+  const edit = serviceSection(api.apiSummary).find(
+    (node) => node.type === "button" && node.props.children === R.editService,
+  )!;
+  (edit.props.onClick as () => void)();
+  expect(h.openApi).toHaveBeenCalledWith({
+    agentId: card.id,
+    id: second.id,
+    revision: second.revision,
+  });
+  expect(progress.selection?.service).toEqual(selected);
   expect(h.prepare).not.toHaveBeenCalled();
   expect(h.start).not.toHaveBeenCalled();
 });

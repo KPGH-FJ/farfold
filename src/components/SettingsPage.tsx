@@ -7,6 +7,7 @@ import {
   SparkleIcon,
 } from "@phosphor-icons/react";
 import type { AgentsState } from "../runtime/agents";
+import type { ServiceEditRequest } from "../runtime/credentials";
 import { STRINGS } from "../runtime/strings";
 import type { ThemeMode, ThemeStatus } from "../runtime/theme";
 import {
@@ -40,6 +41,7 @@ interface SettingsPageProps {
   onOpenArchived?: () => void;
   active?: boolean;
   tab?: SettingsTab;
+  editService?: ServiceEditRequest;
   generalRequest?: GeneralSettingsRequest | null;
   onGeneralRequestHandled?: () => void;
   onTabChange?: (tab: SettingsTab) => void;
@@ -61,6 +63,7 @@ export function SettingsPage({
   onOpenArchived,
   active = true,
   tab: selectedTab,
+  editService,
   generalRequest,
   onGeneralRequestHandled,
   onTabChange,
@@ -119,6 +122,8 @@ export function SettingsPage({
                 <CredentialSettings
                   cards={agents.cards}
                   active={active && tab === "keys"}
+                  editService={editService}
+                  onReturn={onReturn}
                 />
               </div>
             )}
