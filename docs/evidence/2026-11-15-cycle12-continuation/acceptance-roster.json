@@ -705,27 +705,29 @@
     {
       "agentId": "codex-acp",
       "runtime": "当前本机登记 ID codex，登记和保存握手 1.13.1；已保存 gpt-6-astra / ultra / Agent；当前无本地索引。",
-      "liveAction": "用户明确批准的独立新草稿只发送一条，准确实答且零工具。官方当前模式实际为工作区可写、网络关闭及用户审批，严格只读未通过。NEW-24 涉及的其他发送仍按原条件。 官方新版独立前检已读配置要求，真实同账号及正式只读条件未核合，获准的一条短测未发送。",
+      "liveAction": "用户明确批准的独立新草稿只发送一条，准确实答且零工具。官方当前模式实际为工作区可写、网络关闭及用户审批，严格只读未通过。NEW-24 涉及的其他发送仍按原条件。 官方新版独立前检分别核到实际只读、工具网络关闭和当前 ChatGPT 登录；旧版账号比对及新连接联合条件未齐，一次短测未发送。",
       "standards": {
         "S1": {
-          "observed": "旧正式已有设置、官方服务交付路径及首发有窄证；保存握手有 API key、登录和设备授权声明。\n2026-11-15 盘点：程序可执行，登记版本 1.13.1。登记所存握手版本 1.13.1。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：原目录恢复后点「重试」，目录提示清除并开始准备。后续重新选择 Codex，原文字、路径保持，发送按钮可用。\n2026-11-22 官方 ACP 2.9.0 和原厂 CLI 0.171.0 独立前检完成初始化并读到配置要求。",
-          "remaining": "当前认证、其他服务路径和认证取消仍待；既有发送限制保持。 原账号查询需要网络，实际只读线程创建受阻，获准短测未用。",
+          "observed": "旧正式已有设置、官方服务交付路径及首发有窄证；保存握手有 API key、登录和设备授权声明。\n2026-11-15 盘点：程序可执行，登记版本 1.13.1。登记所存握手版本 1.13.1。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：原目录恢复后点「重试」，目录提示清除并开始准备。后续重新选择 Codex，原文字、路径保持，发送按钮可用。\n2026-11-22 官方 ACP 2.9.0 和原厂 CLI 0.171.0 独立前检完成初始化并读到配置要求。\n2026-11-22 官方 CLI 0.171.0 临时线程有实际只读及工具网络关闭回执。同一连接的联合前检停在工作区路由。",
+          "remaining": "当前认证、其他服务路径和认证取消仍待；既有发送限制保持。 原版 0.155.1 已读回原配置使用 ChatGPT 登录，隔离账号查询未完成握手及身份比对，正式发送连接的实际权限待核，获准短测未用。",
           "sources": [
             "docs/agent-first-release.md",
             "docs/evidence/2026-11-03-conversation-controls/control-formal-summary.json",
             "docs/evidence/2026-11-15-cycle12-continuation/registry-inventory-summary.md",
             "docs/evidence/2026-11-18-cycle12-s1-preparation/README.md",
             "docs/evidence/2026-11-18-cycle12-s1-preparation/directory-recovery-installed.json",
-            "docs/evidence/2026-11-22-cycle12-sdk-and-goose-isolation/README.md#codex-官方新版零模型前检"
+            "docs/evidence/2026-11-22-cycle12-sdk-and-goose-isolation/README.md#codex-官方新版零模型前检",
+            "docs/evidence/2026-11-22-cycle12-goose-recovery-and-codex-readonly/README.md#codex-账号与实际只读前检"
           ],
           "status": "准备未齐"
         },
         "S2": {
-          "observed": "旧 6 Astra/Ultra 首发成功。\n2026-11-21 正常新建沿已有设置一次准确实答，厂商模型 gpt-6-astra / ultra 与选择一致，身份与计费未回报。原权限回执工作区可写。",
-          "remaining": "没有当前实际身份、费用、账户退出/换号证明。",
+          "observed": "旧 6 Astra/Ultra 首发成功。\n2026-11-21 正常新建沿已有设置一次准确实答，厂商模型 gpt-6-astra / ultra 与选择一致，身份与计费未回报。原权限回执工作区可写。\n2026-11-22 独立官方账号接口识别当前已有 ChatGPT 登录及官方工作区；回执已脱敏，零模型请求。",
+          "remaining": "当前已有登录在独立前检已识别，旧版账号一致性及实际计费、账号退出与换号仍待。",
           "sources": [
             "docs/agent-first-release.md",
-            "docs/evidence/2026-11-21-cycle12-s1-s2-restore/README.md#codex-单次首答与实际权限"
+            "docs/evidence/2026-11-21-cycle12-s1-s2-restore/README.md#codex-单次首答与实际权限",
+            "docs/evidence/2026-11-22-cycle12-goose-recovery-and-codex-readonly/README.md#codex-账号与实际只读前检"
           ],
           "status": "已有设置实答"
         },
@@ -1458,7 +1460,7 @@
     {
       "agentId": "goose",
       "runtime": "当前登记、握手均 1.59.1。现有 C8 B 保存 OpenRouter 免费 Super VL / off；旧停止样本保存免费 Ultra / off。",
-      "liveAction": "同家双任务沿已有 OpenRouter 免费 Super VL / Off，A 实际停止且 B 交付。重开原 A 恢复草稿和附件并续答。其他后台、断线和工具终态依适用范围续验。 新正式版原目录单条待发冷开并明确续发通过。 同一自建工作目录双前台实停已验：A 原 Shell 与子进程确实退出，原步骤仍未知；B 继续并实际交付。 正式统一小米 Chat Completions 首答、同原 ID 冷开续答和独立 401 提示已核。原失败对话修正密钥后继续待验。",
+      "liveAction": "同家双任务沿已有 OpenRouter 免费 Super VL / Off，A 实际停止且 B 交付。重开原 A 恢复草稿和附件并续答。其他后台、断线和工具终态依适用范围续验。 新正式版原目录单条待发冷开并明确续发通过。 同一自建工作目录双前台实停已验：A 原 Shell 与子进程确实退出，原步骤仍未知；B 继续并实际交付。 正式统一小米 Chat Completions 首答、同原 ID 冷开续答和独立 401 提示已核。原失败对话换密钥后手动续发一次，实际仍走小米 MiMo，保存前后和成功后冷开均无自动重发。",
       "standards": {
         "S1": {
           "observed": "正式更新到 1.59.1，旧 67 会话与 312 消息 ID 保持。旧配置终端有暂离、取消和重查样本。\n2026-11-15 盘点：程序可执行，登记版本 1.59.1。登记所存握手版本 1.59.1。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-20 正式版从原未发草稿打开 Goose 1.59.1 的官方内嵌配置终端。取消后返回原草稿并重新检查。读到官方当前默认 Claude Sonnet 4 与原免费模型不一致，保留草稿并提示前往模型选择，零模型请求。\n2026-11-21 原稿取消配置、发现默认不同后选回原免费模型，正常退出冷开保留原文字、目录、模型及 Off。只手动发一次，准确回复并完成，厂商原 ID 确认 OpenRouter 免费 Nemotron。\n2026-11-22 正式 8b990fae 从程序准备及新对话看到兼容的已存 Xiaomi Chat Completions。使用原登记 1.59.1 在独立目录从普通发送实答。",
@@ -1476,15 +1478,16 @@
           "status": "分项通过"
         },
         "S2": {
-          "observed": "旧 OpenRouter 免费样本按原请求核到已有默认工作区及账单 $0.00。C8 Super VL 为既有实际选择。\n2026-11-18 补录 11-17：自有对话冷开后沿用户已选的 OpenRouter 免费 Ultra 手动实答，官方账单该条记录 0 成本，随后恢复原 Super VL / Off。\n2026-11-20 正式 87ac54ec2，两组独立样本沿用已保存的 OpenRouter 免费 Super VL / Off 再次实答。\n2026-11-22 原登记 1.59.1 已在隔离环境走官方 Chat Completions，首答、同一 ID 冷开续答和结构化 401 有证。继承的旧自定义请求头会进所选服务，需先隔离及核提供方，Farfold 统一 API 未开放。\n2026-11-22 已存小米 MiMo 普通首答，同原会话冷开零自动发送并手动实答。原 Goose 用量及提供方核合。独立无效密钥返回 401，界面准确提示并暂停发送。",
-          "remaining": "新样本核实已选服务能实答。旧账单仅覆盖原样本，换号、服务失效的处理和其他收费情况仍待。 原失败对话修复密钥后的手动续发待验，点停未得到明确回执。",
+          "observed": "旧 OpenRouter 免费样本按原请求核到已有默认工作区及账单 $0.00。C8 Super VL 为既有实际选择。\n2026-11-18 补录 11-17：自有对话冷开后沿用户已选的 OpenRouter 免费 Ultra 手动实答，官方账单该条记录 0 成本，随后恢复原 Super VL / Off。\n2026-11-20 正式 87ac54ec2，两组独立样本沿用已保存的 OpenRouter 免费 Super VL / Off 再次实答。\n2026-11-22 原登记 1.59.1 已在隔离环境走官方 Chat Completions，首答、同一 ID 冷开续答和结构化 401 有证。继承的旧自定义请求头会进所选服务，需先隔离及核提供方，Farfold 统一 API 未开放。\n2026-11-22 已存小米 MiMo 普通首答，同原会话冷开零自动发送并手动实答。原 Goose 用量及提供方核合。独立无效密钥返回 401，界面准确提示并暂停发送。\n2026-11-22 正式从 Goose 的原失败会话 20261122_7，以同一测试配置只替换密钥，零自动发送后手动重试一次。已完成，官方用量仍为 MiMo；成功后冷开仍只有历史读取。",
+          "remaining": "新样本核实已选服务能实答。旧账单仅覆盖原样本，换号、服务失效的处理和其他收费情况仍待。 本样本原失败时点停未得到明确回执。",
           "sources": [
             "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
             "docs/evidence/2026-11-15-cycle8-observation/README.md",
             "docs/evidence/2026-11-18-cycle12-goal-reconciliation/README.md",
             "docs/evidence/2026-11-20-cycle12-goose-queue-recheck/README.md",
             "docs/evidence/2026-11-22-cycle12-api-compatibility/README.md#goose-官方-chat-completions",
-            "docs/evidence/2026-11-22-cycle12-sdk-and-goose-isolation/README.md#goose-正常入口首答冷续答与-401"
+            "docs/evidence/2026-11-22-cycle12-sdk-and-goose-isolation/README.md#goose-正常入口首答冷续答与-401",
+            "docs/evidence/2026-11-22-cycle12-goose-recovery-and-codex-readonly/README.md#goose-原失败对话恢复"
           ],
           "status": "已选服务有实答"
         },
@@ -1690,7 +1693,7 @@
     {
       "agentId": "kilo",
       "runtime": "登记、握手为 7.8.1，已有 Kilo Gateway 免费 Ultra / none / code。本次原样本有一条匹配的 Farfold 索引。",
-      "liveAction": "原直接完整写入缺 LF。采用复制副本并只编辑状态行的真实路径，字节正确且可打开。正式冷开同一原 ID 读回文件和原模型并准确续答。 Kilo 同家两条前台命令及实际停止、冷开原配置、保留草稿和续答已有正式证据。",
+      "liveAction": "原直接完整写入缺 LF。采用复制副本并只编辑状态行的真实路径，字节正确且可打开。正式冷开同一原 ID 读回文件和原模型并准确续答。 Kilo 同家两条前台命令及实际停止、冷开原配置、保留草稿和续答已有正式证据。 受控 7.8.1 同名模型可受更高优先级配置覆盖，官方来源列表能定位优先级，仍无法核最终发送地址。",
       "standards": {
         "S1": {
           "observed": "旧正式登录启动/取消及 ZIP 连接有窄证；官方真实设备挑战和受控关闭已验证。\n2026-11-15 盘点：程序可执行，登记版本 7.8.1。登记所存握手版本 7.8.1。\n2026-11-17 从正常新建在独立目录沿已保存选项发出首条并准确实答。\n2026-11-18 正式零发送续验：取消模型选择器及文件夹对话框后，原草稿文字与目录保持。重启后目录暂不可用时，原文字与路径保持，发送禁用，提示可重试。\n2026-11-18 新版正式零发送复验：共用目录恢复后，从新对话选择本 Agent，原文字与路径保持且发送恢复可用。\n2026-11-21 官方登录终端在等待账号设置时无输入取消。回到原草稿、目录以及可用发送，零模型请求。",
@@ -1707,13 +1710,14 @@
           "status": "分项通过"
         },
         "S2": {
-          "observed": "正式旧已有 Gateway 实际短答，官方本机记录给出提供方及模型；受控匿名冷开 Dots3 报费用 0。\n2026-11-17 已有 Kilo Gateway 的所选免费 Ultra 实答。\n2026-11-20 正式版从正常新建沿用 Kilo Gateway 免费 Nemotron 3 Ultra，只发送一次并收到真实首答。账号和计费范围继续按原条件核验。",
-          "remaining": "对应实际账号、计费字段、退出及换号仍待核。",
+          "observed": "正式旧已有 Gateway 实际短答，官方本机记录给出提供方及模型；受控匿名冷开 Dots3 报费用 0。\n2026-11-17 已有 Kilo Gateway 的所选免费 Ultra 实答。\n2026-11-20 正式版从正常新建沿用 Kilo Gateway 免费 Nemotron 3 Ultra，只发送一次并收到真实首答。账号和计费范围继续按原条件核验。\n2026-11-22 Kilo 7.8.1 的官方进程内来源回执能区分更高优先级的管理配置，受控同名模型显示名变化。回执不含最终服务地址，两台测试服务均未收到请求。",
+          "remaining": "对应实际账号、计费字段、退出及换号仍待核。 统一 API 待最终地址的官方窄回执或经验证的官方排他选择。",
           "sources": [
             "docs/evidence/2026-11-06-phase1-next/README.md",
             "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json",
             "docs/evidence/2026-11-17-cycle12-history-and-stop/README.md",
-            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md"
+            "docs/evidence/2026-11-20-cycle12-s1-s2-followup/README.md",
+            "docs/evidence/2026-11-22-cycle12-goose-recovery-and-codex-readonly/README.md#kilo-发送前的服务地址核对"
           ],
           "status": "已有设置实答"
         },

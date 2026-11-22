@@ -1,0 +1,24 @@
+{
+  "candidate": "native-codex-0.155.1",
+  "officialCommand": "codex login status",
+  "noModelInterface": true,
+  "targetsOriginalConfiguration": true,
+  "networkAndKeychainPreflight": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "pid": 73464,
+  "exitCode": 0,
+  "chatgptPersistedStatusObserved": true,
+  "notLoggedInObserved": false,
+  "statusExposesAccountIdentifier": false,
+  "managedPreferencesSyncFailed": false,
+  "permissionError": false,
+  "originalIdentityUnchangedAfter": true
+}

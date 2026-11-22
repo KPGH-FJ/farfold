@@ -264,7 +264,9 @@
 
 <!-- /task-current -->
 
-**当前 API 接入补验。** 可选 4 家，3 家有真实首答。Goose 1.59.1 的普通入口用小米 Chat Completions 实答，同一原 ID 冷开零自动发送，手动续答仍走 `mimo-v2.6-flash`。本机转发隔离旧请求头、固定已选模型并拒绝重定向。独立无效密钥样本报 401，界面准确提示认证失败并暂停发送。失败会话修好后重试，以及可归属的停止确认仍待。Goose 原设置保持。备选 Copilot SDK 已通过受控历史、审批和实际子进程停止，原工具终态及断线后的原待批仍有缺口。现有 Copilot ACP 三种 API 格式的正式结果单列。 [本批正式及受控证据](evidence/2026-11-22-cycle12-sdk-and-goose-isolation/README.md) · [兼容提示前批](evidence/2026-11-22-cycle12-api-compatibility/README.md)
+**当前 API 接入补验。** 可选 4 家，3 家有真实首答。Goose 1.59.1 的普通入口用小米 Chat Completions 实答，同一原 ID 冷开零自动发送，手动续答仍走 `mimo-v2.6-flash`。本机转发隔离旧请求头、固定已选模型并拒绝重定向。独立无效密钥样本报 401，界面准确提示认证失败并暂停发送。用户更换独立测试密钥后，在原 401 对话 `20261122_7` 手动重试一次，准确实答，厂商用量仍为 MiMo；换密钥前、重开后和成功后再冷开均零自动发送。[原对话恢复](evidence/2026-11-22-cycle12-goose-recovery-and-codex-readonly/README.md#goose-原失败对话恢复)。原停止确认仍待。Goose 原设置保持。备选 Copilot SDK 已通过受控历史、审批和实际子进程停止，原工具终态及断线后的原待批仍有缺口。现有 Copilot ACP 三种 API 格式的正式结果单列。 [本批正式及受控证据](evidence/2026-11-22-cycle12-sdk-and-goose-isolation/README.md) · [兼容提示前批](evidence/2026-11-22-cycle12-api-compatibility/README.md)
+
+Kilo 7.8.1 的进程内只读来源接口可见管理文件优先级，但不提供最终请求地址。同名模型可被更高优先级配置覆盖，两台受控服务没有收到请求。统一 API 保持待验，已可沿用官方设置。 [官方源码与受控回执](evidence/2026-11-22-cycle12-goose-recovery-and-codex-readonly/README.md#kilo-发送前的服务地址核对)
 
 <!-- task-current: ARCH-08 -->
 
@@ -274,7 +276,7 @@
 
 2026-11-22 Claude 0.107.0 从同一独立草稿分别启动官方 Claude Subscription 与 Anthropic Console，实际等待后分别取消。原草稿、目录、MiMo Haiku 和发送入口恢复，零模型请求。两种实际登录成功、账号身份与权益仍待。 [两条正式取消](evidence/2026-11-22-cycle12-official-return/README.md#claude-官方终端取消)
 
-2026-11-22 Codex 官方 2.9.0 和 0.171.0 的独立前检读到配置要求。隔离环境下账号查询需要联网，新建线程仍未能读到真正的只读权限。用户另准一次仍未使用。 [独立前检](evidence/2026-11-22-cycle12-sdk-and-goose-isolation/README.md#codex-官方新版零模型前检)
+2026-11-22 Codex 0.171.0 通过两个独立前检。临时线程回报实际只读、工具网络关闭和原模型；官方账号接口识别当前已有 ChatGPT 登录。原 0.155.1 已核原配置的 ChatGPT 登录方式，隔离账号查询未完成握手，仍无同一身份比对，新版联合前检仍停在工作区路由。用户另准一次仍未使用。 [新版续验](evidence/2026-11-22-cycle12-goose-recovery-and-codex-readonly/README.md#codex-账号与实际只读前检)
 
 2026-11-21 Codex 1.13.1 从正式版独立草稿沿既有设置单次实答，厂商实际模型 6 Astra／Ultra，零工具。其「Ask for approval」回执为工作区可写、网络关闭和用户审批，本次严格只读条件未通过。已使用本次唯一授权。Farfold 已补新版分组选项识别并通过受控测试，实际权限和其他受影响实测仍按原条件。 [单次短测](evidence/2026-11-21-cycle12-s1-s2-restore/README.md#codex-单次首答与实际权限)
 
@@ -1175,7 +1177,7 @@ Autohand 前台子进程及工具终态、Copilot、Cursor 与 Kilo 工具终态
 - **Kilo**。当前正式 7.8.1 实时与冷开都未在原步骤摘要显示中止。现行目录 7.8.27 的工具映射仍把同类完成记录映射为 `completed`。等同一工具的可归属失败或中止信号，再复验两种界面呈现。 [正式实测](evidence/2026-11-18-cycle12-kilo-stop-display/README.md)
 
 - **Mistral Vibe**。原运行命令在连接丢失后继续，重开未结束对话会触发厂商再次推理。受影响样本保留草稿、待发和未知结果。等官方无副作用的原历史读取、或可先结束原工作再安全重连的入口，以及可核对的原工具终态。 [正式证据及复验条件](evidence/2026-11-20-cycle12-mistral-queue-recovery/README.md#官方入口与复验条件)
-- **Codex**。本机所选 ACP 1.13.1 的「Ask for approval」单次已实答，但官方原回执仍是工作区可写。官方 2.9.0 发布包已有独立只读预设。新版独立前检读到了配置要求，原账号与实际只读仍缺回执，尚未发出获准的短测。[前检](evidence/2026-11-22-cycle12-sdk-and-goose-isolation/README.md#codex-官方新版零模型前检) · [2.9.0 源码核对](evidence/2026-11-22-cycle12-official-return/README.md#codex-官方只读预设复核)。NEW-24 仍等原连接完整文件范围、网络、审批及冷开恢复。 [本次证据](evidence/2026-11-21-cycle12-s1-s2-restore/README.md#codex-单次首答与实际权限)。 [官方接口复核](evidence/2026-11-19-cycle12-official-route-recheck/README.md#codex-的-new-24-发送保护)
+- **Codex**。本机所选 ACP 1.13.1 的「Ask for approval」单次已实答，但官方原回执仍是工作区可写。官方 2.9.0 发布包已有独立只读预设。新版两个独立前检已分别核实际只读、工具网络关闭及当前官方登录。与原 0.155.1 的账号比对与同连接联合核验仍未取得，获准短测尚未发出。[续验](evidence/2026-11-22-cycle12-goose-recovery-and-codex-readonly/README.md#codex-账号与实际只读前检) · [2.9.0 源码核对](evidence/2026-11-22-cycle12-official-return/README.md#codex-官方只读预设复核)。NEW-24 仍等原连接完整文件范围、网络、审批及冷开恢复。 [本次证据](evidence/2026-11-21-cycle12-s1-s2-restore/README.md#codex-单次首答与实际权限)。 [官方接口复核](evidence/2026-11-19-cycle12-official-route-recheck/README.md#codex-的-new-24-发送保护)
 - **Claude Code**。Farfold 独立小米 Messages 测试已有实答。官方 0.109.1 的跟进只证明分开的合成凭据分别用于模型列表。实际 Messages 交接与服务隔离未验，统一 API 保持关闭。Claude 订阅与 Console 的正式终端启动、取消和回原草稿已验。两种真实登录及来源仍待用户在对应官方入口完成。 [正式复验](evidence/2026-11-22-cycle12-official-return/README.md#claude-官方终端取消)
 - **Gemini CLI 与 Antigravity**。保持暂缓，后续恢复该验收时由用户本人完成官方登录。
 

@@ -1,0 +1,26 @@
+{
+  "candidate": "native-codex-0.155.1",
+  "branch": "verified-original-account",
+  "rpc": ["initialize"],
+  "targetsOriginalConfiguration": true,
+  "negativeControls": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "pid": 70795,
+  "fixtureFailure": "Empty",
+  "officialHostTlsTunnels": 0,
+  "rejectedProxyConnections": 0,
+  "officialHostTcpConnected": 0,
+  "encryptedClientBytesForwarded": 0,
+  "encryptedServerBytesForwarded": 0,
+  "exitCode": -15,
+  "originalIdentityUnchangedAfter": true,
+  "notifications": []
+}

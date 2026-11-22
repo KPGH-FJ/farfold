@@ -1,0 +1,329 @@
+{
+  "scope": "synthetic no-credential preflight; same model, two isolated config variants, one has higher-precedence file; never called prompt or global provider inventories",
+  "lanes": [
+    {
+      "managedFixture": false,
+      "calls": ["initialize", "session/new"],
+      "sentModelRequests": 0,
+      "identity": {
+        "name": "Kilo",
+        "version": "7.8.1"
+      },
+      "opened": true,
+      "modelsReturned": ["fixture-local/one-model"],
+      "includesEitherEndpoint": false,
+      "modelOptionFields": [
+        "category",
+        "currentValue",
+        "id",
+        "name",
+        "options",
+        "type"
+      ],
+      "sessionResponseFields": ["configOptions", "sessionId"],
+      "sourceIndexStatus": 200,
+      "indexHasTargetAddress": false,
+      "managedOrInline": [
+        {
+          "kind": "env-content",
+          "order": 5,
+          "exists": true,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "reason",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-dir",
+          "order": 6,
+          "exists": false,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-file",
+          "order": 7,
+          "exists": false,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "reason",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-file",
+          "order": 8,
+          "exists": false,
+          "fixtureFile": true,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "reason",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-file",
+          "order": 9,
+          "exists": false,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "reason",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-file",
+          "order": 10,
+          "exists": false,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "reason",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-preferences",
+          "order": 11,
+          "exists": false,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "reason",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-preferences",
+          "order": 12,
+          "exists": false,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "reason",
+            "scope",
+            "source"
+          ]
+        }
+      ],
+      "exitCode": 0,
+      "diagnosticBytes": 0
+    },
+    {
+      "managedFixture": true,
+      "calls": ["initialize", "session/new"],
+      "sentModelRequests": 0,
+      "identity": {
+        "name": "Kilo",
+        "version": "7.8.1"
+      },
+      "opened": true,
+      "modelsReturned": ["fixture-local/one-model"],
+      "includesEitherEndpoint": false,
+      "modelOptionFields": [
+        "category",
+        "currentValue",
+        "id",
+        "name",
+        "options",
+        "type"
+      ],
+      "sessionResponseFields": ["configOptions", "sessionId"],
+      "sourceIndexStatus": 200,
+      "indexHasTargetAddress": false,
+      "managedOrInline": [
+        {
+          "kind": "env-content",
+          "order": 5,
+          "exists": true,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "reason",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-dir",
+          "order": 6,
+          "exists": false,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-file",
+          "order": 7,
+          "exists": false,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "reason",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-file",
+          "order": 8,
+          "exists": true,
+          "fixtureFile": true,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "reason",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-file",
+          "order": 9,
+          "exists": false,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "reason",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-file",
+          "order": 10,
+          "exists": false,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "reason",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-preferences",
+          "order": 11,
+          "exists": false,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "reason",
+            "scope",
+            "source"
+          ]
+        },
+        {
+          "kind": "managed-preferences",
+          "order": 12,
+          "exists": false,
+          "fixtureFile": false,
+          "fields": [
+            "editable",
+            "exists",
+            "kind",
+            "label",
+            "order",
+            "path",
+            "reason",
+            "scope",
+            "source"
+          ]
+        }
+      ],
+      "exitCode": 0,
+      "diagnosticBytes": 0
+    }
+  ],
+  "syntheticProviderAHttpMethods": [],
+  "syntheticProviderBHttpMethods": []
+}

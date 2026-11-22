@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-22 Asia/Shanghai",
+  "installedCDHash": "8b990faeef206603cc5fbd1f822266d99a2f7a29",
+  "gooseVersion": "1.59.1",
+  "credentialOwnerEnteredKey": true,
+  "testConfiguration": "FF_C12_GOOSE_401_TEST",
+  "apiType": "chat-completions",
+  "endpoint": "https://api.xiaomimimo.com/v1",
+  "readOnlyLedger": {
+    "sessionId": "20261122_7",
+    "serviceIdentityUnchanged": true,
+    "mainXiaomiMetadataUnchanged": true,
+    "testKeyReferenceChanged": true,
+    "beforeRepairWire": {
+      "name": "protocol-v1-1795324021490-0.jsonl",
+      "sha256": "c08c7e30debf1c75bc553e8688c51ab803cb5780df0afa2939f98eadf253a209",
+      "outgoing": ["initialize", "session/load"]
+    },
+    "officialProvider": "openai",
+    "model": "mimo-v2.6-flash",
+    "newMessages": [
+      {
+        "row": 416,
+        "role": "user",
+        "types": ["text"],
+        "markerMatches": 1,
+        "exactReply": false
+      },
+      {
+        "row": 417,
+        "role": "user",
+        "types": ["text"],
+        "markerMatches": 0,
+        "exactReply": false
+      },
+      {
+        "row": 418,
+        "role": "assistant",
+        "types": ["thinking", "text"],
+        "markerMatches": 1,
+        "exactReply": true
+      }
+    ],
+    "usage": [
+      {
+        "model": "mimo-v2.6-flash",
+        "tokens": 4679
+      }
+    ],
+    "wire": [
+      {
+        "name": "protocol-v1-1795324021490-0.jsonl",
+        "sha256": "0de1edaeb36c5d6cef4256bca2c91b554a6ba1333920849b54e67821dddd122f",
+        "outgoing": ["initialize", "session/load"],
+        "toolEventCount": 0,
+        "errorCategories": []
+      },
+      {
+        "name": "protocol-v1-1795324665133-0.jsonl",
+        "sha256": "efd3579941103e49a90bf957f3260e101731806168759f60f921cafcf3184213",
+        "outgoing": ["initialize", "session/load", "session/prompt"],
+        "toolEventCount": 0,
+        "errorCategories": []
+      },
+      {
+        "name": "protocol-v1-1795324766417-0.jsonl",
+        "sha256": "adba94faad870be67cb46bc0dc31309bc727ba42d7ed5fe69bcbd1163c681ac4",
+        "outgoing": ["initialize", "session/load"],
+        "toolEventCount": 0,
+        "errorCategories": []
+      }
+    ]
+  },
+  "olderFailureStillVisible": true,
+  "recoveryDisplayedCompleted": true,
+  "promptCounts": {
+    "readBeforeRepair": 0,
+    "afterSave": 0,
+    "readBeforeManualRetry": 0,
+    "manualRetry": 1,
+    "readAfterSuccessfulRetry": 0
+  }
+}

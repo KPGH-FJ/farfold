@@ -1,0 +1,80 @@
+{
+  "scope": "Kilo CLI 7.8.1 — source and isolated no-inference runtime observations, no production/access token/user data",
+  "officialTag": "v7.8.1",
+  "sources": [
+    {
+      "purpose": "CLI serving the same ACP process",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/cli/cmd/acp.ts#L24-L30",
+      "gitBlob": "c0a26326fac00aeaa6be63184d3354f42871ea22"
+    },
+    {
+      "purpose": "ACP model identity projection",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/acp/config-option.ts#L34-L51",
+      "gitBlob": "b730ae075336a6195b2cc9ca6a3bb4eaff81ed3b"
+    },
+    {
+      "purpose": "Inline followed by organization config",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/config/config.ts#L897-L927",
+      "gitBlob": "4a2ff592898a3b8d98bc509217741211b0a97923"
+    },
+    {
+      "purpose": "Machine config and managed preferences are applied later",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/config/config.ts#L970-L999",
+      "gitBlob": "4a2ff592898a3b8d98bc509217741211b0a97923"
+    },
+    {
+      "purpose": "Source metadata contains identity/order, without values",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/kilocode/server/httpapi/groups/config-console.ts#L44-L54",
+      "gitBlob": "1b52d4a5d9ebe4f1850f143b7ce1ae4e18c5cf76"
+    },
+    {
+      "purpose": "GET source provenance form",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/kilocode/config/sources.ts#L225-L241",
+      "gitBlob": "1dedcb0dca4c330dda8ae27180b0236ff160e438"
+    },
+    {
+      "purpose": "Bulk public provider projection",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/server/routes/instance/httpapi/handlers/config.ts#L63-L67",
+      "gitBlob": "0fd41d897eb7ecb34f3be0e757091faff54c5a2d"
+    },
+    {
+      "purpose": "Scope of public provider filtering",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/kilocode/provider/provider.ts#L186-L189",
+      "gitBlob": "e0ae755451edc14344a06e17d966157ad3898654"
+    },
+    {
+      "purpose": "Base URL chosen after provider/model selection; environment interpolation",
+      "url": "https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/provider/provider.ts#L1852-L1875",
+      "gitBlob": "2fa5d8610de80620d53229b7a2a1113f0c62bc78"
+    }
+  ],
+  "receipts": [
+    {
+      "file": "preflight.json",
+      "sha256": "0275ff457dc9bff028e686717ebda66f1c971e935cab9e8de8c8c62f90c03713"
+    },
+    {
+      "file": "label-check.json",
+      "sha256": "037ee15440aec185dfce4ed2626af45d25e69aa0880be8decba9c09c2bba4a95"
+    }
+  ],
+  "results": {
+    "selectedModel": "fixture-local/one-model",
+    "higherSourceObservedBothInInventoryAndInACPModelLabel": true,
+    "selectedUserModelIdUnchanged": true,
+    "selectedOrEffectiveProviderUrlVisibleInACPOrSourceIndex": false,
+    "higherSourceCanBeFlaggedBeforePrompt": true,
+    "runtimeConfirmedDestinationOrUnconditionalEnforcement": false,
+    "normalFarfoldAcceptance": false,
+    "numberOfRequestsToEitherSyntheticProvider": 0,
+    "readOnlyOfficialSourcesInvoked": [
+      "session/new",
+      "initialize",
+      "GET /config/sources"
+    ],
+    "noBulkProviderOrConfigQuery": true,
+    "noDirectSdkOrAgentLoopChanges": true
+  },
+  "officialCommit": "4089197545a01bbc9fa8041c1305b3fb0b0f8e66",
+  "officialTree": "93f83029d7bd0dccc0e4992d06c0e782dcf06848"
+}

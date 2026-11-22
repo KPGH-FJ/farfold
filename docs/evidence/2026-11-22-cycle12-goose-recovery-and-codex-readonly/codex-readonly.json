@@ -1,0 +1,34 @@
+{
+  "candidate": "native-codex-0.171.0",
+  "branch": "scope",
+  "rpc": ["initialize", "thread/start"],
+  "targetsOriginalConfiguration": true,
+  "negativeControls": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "pid": 68432,
+  "nativeHandshake": true,
+  "threadReceipt": {
+    "modelMatches": true,
+    "providerMatches": true,
+    "effortMatches": true,
+    "readOnly": true,
+    "networkEnabled": false,
+    "approvalsOnRequest": true,
+    "approvalsUser": true,
+    "cwdMatches": true,
+    "ephemeral": true,
+    "noStoredPath": true,
+    "emptyTurns": true
+  },
+  "exitCode": 0,
+  "originalIdentityUnchangedAfter": true,
+  "notifications": ["configWarning", "remoteControl/status/changed"]
+}

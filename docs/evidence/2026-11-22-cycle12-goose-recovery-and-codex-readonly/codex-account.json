@@ -1,0 +1,39 @@
+{
+  "candidate": "native-codex-0.171.0",
+  "branch": "account-system-roots",
+  "rpc": ["initialize", "account/read"],
+  "targetsOriginalConfiguration": true,
+  "negativeControls": {
+    "allowedLoopback": 1,
+    "ipv4Egress": 1,
+    "ipv6Egress": 1,
+    "homeRead": 1,
+    "outsideFixtureRead": 1,
+    "outsideFixtureWrite": 1,
+    "securitydLookup": 1100,
+    "securityServerLookup": 1100
+  },
+  "pid": 68986,
+  "nativeHandshake": true,
+  "accountReceipt": {
+    "chatgpt": true,
+    "namedAccountPresent": true,
+    "planPresent": true,
+    "userIdPresent": true,
+    "requiresOpenaiAuth": true,
+    "workspaceRoutePresent": true,
+    "backendOriginMatchesOfficial": true
+  },
+  "officialHostTlsTunnels": 4,
+  "rejectedProxyConnections": 0,
+  "officialHostTcpConnected": 4,
+  "encryptedClientBytesForwarded": 13279,
+  "encryptedServerBytesForwarded": 19248,
+  "exitCode": 0,
+  "originalIdentityUnchangedAfter": true,
+  "notifications": [
+    "configWarning",
+    "remoteControl/status/changed",
+    "account/updated"
+  ]
+}
