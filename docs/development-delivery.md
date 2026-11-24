@@ -22,6 +22,8 @@ node scripts/delivery-check.mjs stable /tmp/farfold-stable.json
 
 `affected` 校验差异、变更文件格式和任务文档，执行配套工具测试。前端或原生代码有变化时运行相应套件。`stable` 运行 [AGENTS.md](../AGENTS.md) 约定的七项，适用于稳定功能批，记录提交、执行平台、每项退出状态与耗时。工作区有其他批次时直接运行本批受影响检查，通过 PR 的干净环境校验提交。等待适用平台、设备或外部条件时记录范围。
 
+交付按实际合并预览相对基线的路径判断适用范围。产品源码、打包输入和 `public/` 静态资源变更要求稳定检查及安装回执。测试和检查规则变更属于治理复核范围。只改文档或工具时，在审查记录说明稳定检查和安装回执的适用性。新旧文件名都参与重命名影响判断。
+
 ## 正式应用回执
 
 只选已授权、归属明确的样本。先定义要观察的实际行为。Agent 用正常界面操作，在操作后读回结果。正式安装或 Agent 版本无法核对时先保留缺口。昼夜时间由工具记录 UTC，操作说明可用当地时间。
@@ -29,6 +31,7 @@ node scripts/delivery-check.mjs stable /tmp/farfold-stable.json
 在 macOS 正式 Farfold 运行时，以下入口从实际安装读取版本、可执行文件摘要、签名身份、进程和平台。可选的 Codex 对话摘要须来自已核实的自有样本。它仅定位一条官方记录，并输出版本和证据摘要。
 
 ```sh
+node scripts/record-delivery-build.mjs /tmp/farfold-build.json
 node scripts/observe-installed-app.mjs [owned-Codex-thread-SHA256]
 node scripts/record-installed-case.mjs begin output/owned-run /path/to/case.json
 # 通过真实界面操作并读回。将观察时间和已核对的布尔值写入 ui.json。
@@ -38,28 +41,39 @@ corepack pnpm acceptance:check output/owned-run/receipt.json
 
 案例用 `agentId`、`caseId`、`binarySha256`、`productCommit`、`conditions` 和 `observations`。`conditions` 的元素形如 `{ "id": "P01", "excerpt": "不自动发送" }`，其正文从原条件读取。`observations` 是命名布尔值，例如 `{ "send-disabled": true }`。`threadSha256` 可选。未指定时，从实际 Agent 取 `observedAgentVersion` 并填入案例。`productCommit` 填安装候选的来源，无法核清时如实标记。计划复用时显式设 `reviewBy`。
 
+产品变更在干净的候选提交上运行 macOS arm64 构建记录命令。它将实际打包的可执行文件摘要、源码提交与源码树写入构建报告；按仓库安装约定替换唯一正式应用，再采集安装摘要。构建报告与安装回执的二进制摘要须一致，源码树须与 GitHub 候选一致。来源未核实的旧试点可以保留其原观察结论。
+
 `ui.json` 只包含 `startedAt`、`finishedAt` 和相同字段名的 `observations`，时间取实际读回窗口的 ISO UTC 毫秒值。原始观察私有保存，公开摘要只保留范围与结果。此工具记录 Agent 从界面读回的观察，并校验运行前后的输入身份；独审仍需查原始观察和因果边界。Codex 当前分项示例见[正式版试点](evidence/2026-11-24-development-delivery/README.md)。
 
 ### 何时补验
 
 - PR 的基线或候选提交变化时，重新核对变更对原意见和检查的影响，独审结论明确绑定新基线与新候选。PR 检查使用实际合并预览。
-- 应用、Agent 程序、服务和配置、系统、样本或检查定义变化时，核对相关回执依赖。以新采集的 `currentInputs` 和 `changes` 写入变更文件，运行 `corepack pnpm acceptance:revalidate <receipt.json> <changes.json>`。逐案读取 `action` 和 `reasons`。
-- `revalidate` 表示补验。`reuse-candidate` 表示可交独审判断复用；确认原件、作用范围和当前条件后再使用。命令执行成功只表示复验规划已生成。原失败、结果未知、证据不可复核或新的不确定性继续留证。
+- 打开 PR 并冻结候选后，新执行的回执使用 `mode: "fresh"`，复用既有回执使用 `mode: "reuse"`。超过已声明的 `reviewBy` 时补验。新回执可以省略复用期限。
+- 复用时从实际环境重新采集输入和适用依赖摘要，将其写进本次复验记录。字段为 `base`、`head`、`receiptSha256`、`capturedAt`、`currentInputs`、`currentDependencies`、`missingEvidence`、`concerns`。`currentDependencies` 逐项写 `dependencyId` 和当前 `fingerprint`。通过 `corepack pnpm acceptance:revalidate <receipt.json> <changes.json>` 单独查询时，将依赖列表传入 `changes` 字段。
+- 放行工具重算每案复验结论。`revalidate` 要求补验。`reuse-candidate` 还须由本次独立复核绑定原回执和复验记录摘要。原失败、结果未知、证据不可复核或新的不确定性继续留证。
 
 ## 独立复核和合入
 
 在同一候选差异上独立检查实现、保护规则、测试和原始操作证据。记录审查人、基线与候选完整 SHA、发现以及修正后结论。在 PR 中给出任务 ID、改动作用、工程检查、实测范围和余项。保护规则、验收强度和工作流规则变动须由审查人明确核对。
 
-GitHub Actions 验证合并预览的两个父提交，按触达范围产生 `Farfold delivery check`。主线推送后的检查使用推送前的提交作为基线。若浅克隆缺少推送前基线，工作流会报错，需对完整推送范围检查。
+GitHub 在 `main` 上执行 PR 与工程检查规则。工程工作流验证合并预览的两个父提交，按范围产生 `Farfold delivery check`。最终核验工作流从受保护的 `main` 读取核验代码，在工程工作流之后评估同一基线、候选、合并预览和工程报告。当前生效的必需检查以 [GitHub 主线规则](https://github.com/KPGH-FJ/farfold/rules?ref=main) 为准。
 
 ```sh
 node scripts/delivery-pr.mjs <PR-number> /path/to/delivery-record.json
+```
+
+本地交付记录顶层为 `base`、`head`、`review`、`stable`、`installed`。`review` 包含同样的 `base`、`head`、独立审查人、结论和摘要；接受既有回执时还须填 `review.revalidations`，逐项绑定 `receiptSha256` 与 `revalidationSha256`。适用的七项回执提供 `stable.report` 与 `stable.sha256`。安装回执项使用 `{ path, sha256, productCommit, binarySha256, requirementIds, mode, build }`，`build` 为构建记录的 `{ path, sha256 }`。复用额外提供 `revalidation: { path, sha256 }`。无适用证据时使用空列表。
+
+独立审查者应通过受限的交接渠道取得原件，核对本地验证结果、源码、实机原件和适用范围。公开 PR 中只保留摘要、身份和可交接编号。受信审查者使用有写权限且与 PR 作者或提交人不同的 GitHub 身份，在精确候选上提交 `APPROVED` 审查。正文为 JSON，包含 `schemaVersion: 1`、本地命令结果中的 `engineeringRunId`、`engineeringRunAttempt` 和 `evidence`，以及 `originalsId`、`reviewSummary`、`scopeReasons`、`policyReview`。其中 `originalsId` 只存受限交接编号，`scopeReasons` 的 `stable`、`installed` 在要求证据时为 null，其余提供审查理由。治理变更使用 `policyReview: { preservesRequirements: true, assessment: "具体说明规则变更如何保留原要求" }`，普通改动使用 null。
+
+```sh
+gh workflow run delivery-final.yml --ref main -f pr_number=<PR-number>
 gh pr merge <PR-number> --merge --match-head-commit <reviewed-head-SHA>
 ```
 
-交付记录顶层为 `base`、`head`、`review`、`stable`、`installed`。`review` 包含同样的 `base`、`head`、独立 `reviewer`、`verdict` 和 `summary`。完成独审后填写 `approved`。`stable` 和 `installed` 各写 `required` 与 `reason`，适用的七项回执提供 `stable.report` 与 `stable.sha256`。`installed.receipts` 是 `{ path, sha256, productCommit, binarySha256, requirementIds }` 列表。无相关证据时使用空列表。合入命令中的 `head` 必须对应刚核对的 PR。合入后用实际主线结果核对交付。
+补交证据、独立审查变化、基线推进或证据到期后，重新运行最终核验。GitHub 的状态会缓存上一次结果，合入前用当前输入完成本地核验并确认当前合并预览的服务器结果。合入后核对实际主线结果。启动独立的服务器核验不替代私有原件复核。
 
-当前仓库的服务器端主线保护须由仓库套餐启用。保护启用前，合入者执行以上核验，检查通过和独审记录可用于放行。`--match-head-commit` 保护候选头变化。若主线同时推进，重新确认基线和合并结果。
+2026-11-24，仓库所有者在原研发交付会话中明确授权把该 GitHub 仓库设为公开，原会话保留执行及无登录访问核验。该授权范围为仓库可见性。
 
 ## 交付耗时和返工
 
