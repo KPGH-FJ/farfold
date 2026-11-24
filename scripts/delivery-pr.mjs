@@ -98,7 +98,7 @@ async function main([number, recordPath, ...extra]) {
     base,
     head,
     merge,
-    scope: { stable: scope.product, installed: scope.product },
+    scope,
     sourceTrees,
     freshSince: pr.createdAt,
   });

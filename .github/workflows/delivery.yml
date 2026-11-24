@@ -20,7 +20,8 @@ jobs:
     timeout-minutes: 15
     outputs:
       base: ${{ steps.scope.outputs.base }}
-      native: ${{ steps.scope.outputs.native }}
+      mac_native: ${{ steps.scope.outputs.macNative }}
+      windows_native: ${{ steps.scope.outputs.windowsNative }}
       frontend: ${{ steps.scope.outputs.frontend }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -54,14 +55,14 @@ jobs:
         with:
           node-version: 22.22.3
       - name: Run task and receipt tooling checks
-        if: steps.scope.outputs.native == 'false' && steps.scope.outputs.frontend == 'false'
+        if: steps.scope.outputs.macNative == 'false' && steps.scope.outputs.frontend == 'false'
         env:
           DELIVERY_BASE: ${{ steps.scope.outputs.base }}
         run: |
           corepack pnpm install --frozen-lockfile
           node scripts/delivery-check.mjs affected "$RUNNER_TEMP/delivery-checks.json" "$DELIVERY_BASE"
       - name: Keep tooling results
-        if: always() && steps.scope.outputs.native == 'false' && steps.scope.outputs.frontend == 'false'
+        if: always() && steps.scope.outputs.macNative == 'false' && steps.scope.outputs.frontend == 'false'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: delivery-checks-${{ github.run_attempt }}
@@ -72,8 +73,8 @@ jobs:
   affected:
     name: Affected engineering checks
     needs: scope
-    if: needs.scope.outputs.native == 'true' || needs.scope.outputs.frontend == 'true'
-    runs-on: ${{ needs.scope.outputs.native == 'true' && 'macos-15' || 'ubuntu-24.04' }}
+    if: needs.scope.outputs.mac_native == 'true' || needs.scope.outputs.frontend == 'true'
+    runs-on: ${{ needs.scope.outputs.mac_native == 'true' && 'macos-15' || 'ubuntu-24.04' }}
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -84,7 +85,7 @@ jobs:
         with:
           node-version: 22.22.3
       - name: Prepare pinned Rust toolchain
-        if: needs.scope.outputs.native == 'true'
+        if: needs.scope.outputs.mac_native == 'true'
         run: |
           rustup toolchain install 1.96.0 --profile minimal --component rustfmt --component clippy
           rustup default 1.96.0
@@ -103,9 +104,53 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+  affected-windows:
+    name: Windows affected engineering checks
+    needs: scope
+    if: needs.scope.outputs.windows_native == 'true'
+    runs-on: windows-2022
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Enable long Git paths before checkout
+        run: git config --global core.longpaths true
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+          ref: ${{ github.sha }}
+          fetch-depth: ${{ github.event_name == 'push' && '20' || '2' }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22.22.3
+      - name: Prepare pinned Rust toolchain
+        run: |
+          rustup toolchain install 1.96.0 --profile minimal --component rustfmt --component clippy
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          rustup default 1.96.0
+      - name: Run Windows native suite and exact worktree controls
+        env:
+          DELIVERY_BASE: ${{ needs.scope.outputs.base }}
+        run: |
+          $fixturePython = (Get-Command python.exe -CommandType Application -ErrorAction Stop).Source
+          & $fixturePython -c "import sys; assert sys.version_info >= (3, 9); print(sys.version)"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $head = (git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $head -cne $env:GITHUB_SHA) { throw 'Windows checkout differs from the engineering candidate.' }
+          node scripts/delivery-check.mjs affected-windows (Join-Path $env:RUNNER_TEMP 'delivery-windows.json') $env:DELIVERY_BASE
+      - name: Keep Windows engineering results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: delivery-windows-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/delivery-windows.json
+          if-no-files-found: warn
+          retention-days: 14
+
   verify:
     name: Farfold delivery check
-    needs: [scope, affected]
+    needs: [scope, affected, affected-windows]
     if: always() && !cancelled()
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -114,12 +159,20 @@ jobs:
         env:
           SCOPE: ${{ needs.scope.result }}
           AFFECTED: ${{ needs.affected.result }}
-          NATIVE: ${{ needs.scope.outputs.native }}
+          MAC_NATIVE: ${{ needs.scope.outputs.mac_native }}
+          WINDOWS_NATIVE: ${{ needs.scope.outputs.windows_native }}
+          WINDOWS_AFFECTED: ${{ needs.affected-windows.result }}
           FRONTEND: ${{ needs.scope.outputs.frontend }}
         run: |
           test "$SCOPE" = success
-          if [[ "$NATIVE" == false && "$FRONTEND" == false ]]; then
+          if [[ "$MAC_NATIVE" == false && "$FRONTEND" == false ]]; then
             test "$AFFECTED" = skipped
           else
             test "$AFFECTED" = success
+          fi
+          if [[ "$WINDOWS_NATIVE" == true ]]; then
+            test "$WINDOWS_AFFECTED" = success
+          else
+            test "$WINDOWS_NATIVE" = false
+            test "$WINDOWS_AFFECTED" = skipped
           fi

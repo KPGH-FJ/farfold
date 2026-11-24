@@ -5,44 +5,25 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { requiredAffectedCommands } from "./delivery-check.mjs";
+import {
+  requiredAffectedCommands,
+  requiredWindowsAffectedCommands,
+  windowsAffectedTests,
+} from "./delivery-check.mjs";
+import {
+  codexReviewEvent,
+  codexReviewProof,
+  pullRequestComments,
+} from "./delivery-codex-review.mjs";
+import { verifyDeliveryPrivateAttestation } from "./delivery-private-attestation.mjs";
 import { classifyDeliveryPaths } from "./delivery-scope.mjs";
 
 const sha = /^[0-9a-f]{40}$/;
-const digest = /^[0-9a-f]{64}$/;
-const isDigest = (value) => typeof value === "string" && digest.test(value);
 const workflowPath = ".github/workflows/delivery.yml";
 const engineeringCheck = "Farfold delivery check";
+const windowsCheck = "Windows affected engineering checks";
 export const finalCheck = "Farfold final delivery";
-const approvedRoles = new Set(["write", "maintain", "admin"]);
-const reviewStates = new Set(["APPROVED", "CHANGES_REQUESTED", "DISMISSED"]);
-
-function hasKeys(value, keys) {
-  return (
-    value !== null &&
-    typeof value === "object" &&
-    !Array.isArray(value) &&
-    Object.keys(value).length === keys.length &&
-    keys.every((key) => Object.hasOwn(value, key))
-  );
-}
-
-const text = (value, min = 12, max = 1600) =>
-  typeof value === "string" &&
-  value.trim().length >= min &&
-  value.length <= max;
-
-function date(value) {
-  assert.ok(
-    typeof value === "string" &&
-      /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?Z$/.test(
-        value,
-      ) &&
-      Number.isFinite(Date.parse(value)),
-    "Installed receipt timestamp is invalid.",
-  );
-  return Date.parse(value);
-}
+const privateProofMarker = "<!-- farfold-private-delivery:v1 -->";
 
 function sameTuple(left, right) {
   return (
@@ -52,170 +33,54 @@ function sameTuple(left, right) {
   );
 }
 
-export function reviewPayload(body) {
-  assert.ok(
-    typeof body === "string" && Buffer.byteLength(body) <= 12000,
-    "Independent approval needs a bounded delivery record.",
-  );
-  const fenced = body.trim().match(/^```json\s*([\s\S]+?)\s*```$/i);
-  try {
-    return JSON.parse(fenced?.[1] ?? body);
-  } catch {
-    throw new Error(
-      "Independent approval must contain one JSON delivery record.",
-    );
-  }
-}
-
-export function validateReviewedEvidence(
-  record,
+export function privateEvidenceFor(
+  comments,
   target,
   scope,
   run,
   now,
-  reviewedAt = now,
+  publicKey,
 ) {
+  if (!scope.product && !scope.governance) return null;
   assert.ok(
-    hasKeys(record, [
-      "schemaVersion",
-      "evidence",
-      "engineeringRunId",
-      "engineeringRunAttempt",
-      "reviewSummary",
-      "scopeReasons",
-      "policyReview",
-      "originalsId",
-    ]) &&
-      record.schemaVersion === 1 &&
-      text(record.reviewSummary) &&
-      typeof record.originalsId === "string" &&
-      /^[A-Za-z0-9_-]{8,100}$/.test(record.originalsId),
-    "Independent approval needs an exact record, substantive review summary, and an opaque originals ID.",
+    typeof publicKey === "string" && publicKey.trim(),
+    "Applicable private evidence or policy assessment needs a configured trusted custodian key.",
   );
+  const witnesses = comments.filter(
+    (comment) =>
+      comment.author_association === "OWNER" &&
+      comment.user?.type === "User" &&
+      Number.isSafeInteger(comment.id) &&
+      typeof comment.body === "string" &&
+      comment.body.startsWith(privateProofMarker + "\n"),
+  );
+  const [witness] = witnesses;
   assert.ok(
-    record.engineeringRunId === run.id &&
-      record.engineeringRunAttempt === run.run_attempt,
-    "Independent approval belongs to a different engineering run or attempt.",
+    witnesses.length === 1 && Buffer.byteLength(witness.body) <= 24000,
+    "Applicable private evidence or policy assessment needs exactly one authenticated custodian record.",
   );
-  const { evidence, scopeReasons, policyReview } = record;
-  assert.ok(
-    hasKeys(evidence, ["base", "head", "merge", "stable", "installed"]) &&
-      sameTuple(evidence, target),
-    "Independent approval belongs to a different base, head, or merge preview.",
-  );
-  assert.ok(
-    hasKeys(scopeReasons, ["stable", "installed"]) &&
-      (scope.product
-        ? scopeReasons.stable === null && scopeReasons.installed === null
-        : text(scopeReasons.stable) && text(scopeReasons.installed)),
-    "Record why stable and installed checks do not apply, or provide both for this product change.",
-  );
-  assert.ok(
-    scope.governance
-      ? hasKeys(policyReview, ["preservesRequirements", "assessment"]) &&
-          policyReview.preservesRequirements === true &&
-          text(policyReview.assessment, 30)
-      : policyReview === null,
-    "Changes to delivery governance need an independent assessment that existing requirements are preserved.",
-  );
-  const { stable, installed } = evidence;
-  assert.ok(
-    hasKeys(stable, ["required", "sha256"]) &&
-      stable.required === scope.product &&
-      (scope.product ? isDigest(stable.sha256) : stable.sha256 === null),
-    "Affected product changes need a reviewed stable-check report.",
-  );
-  assert.ok(
-    hasKeys(installed, ["required", "receipts"]) &&
-      installed.required === scope.product &&
-      Array.isArray(installed.receipts) &&
-      installed.receipts.length <= 20 &&
-      (!scope.product || installed.receipts.length > 0),
-    "Affected product changes need reviewed installed evidence.",
-  );
-  for (const receipt of installed.receipts) {
-    assert.ok(
-      hasKeys(receipt, [
-        "mode",
-        "receiptSha256",
-        "manifestSha256",
-        "productCommit",
-        "binarySha256",
-        "requirementIds",
-        "preparedAt",
-        "finishedAt",
-        "reviewBy",
-        "revalidationSha256",
-        "revalidatedAt",
-        "buildSha256",
-        "sourceTree",
-      ]) &&
-        isDigest(receipt.receiptSha256) &&
-        isDigest(receipt.manifestSha256) &&
-        isDigest(receipt.binarySha256) &&
-        text(receipt.productCommit, 1, 128) &&
-        Array.isArray(receipt.requirementIds) &&
-        receipt.requirementIds.length > 0 &&
-        receipt.requirementIds.length <= 50 &&
-        receipt.requirementIds.every(
-          (id) => typeof id === "string" && /^[A-Z][A-Z0-9-]{1,30}$/.test(id),
-        ) &&
-        new Set(receipt.requirementIds).size === receipt.requirementIds.length,
-      "Installed evidence summary is incomplete.",
-    );
-    const preparedAt = date(receipt.preparedAt);
-    const finishedAt = date(receipt.finishedAt);
-    assert.ok(
-      preparedAt <= finishedAt && finishedAt <= now && finishedAt <= reviewedAt,
-      "Installed evidence timing is inconsistent or later than the approval.",
-    );
-    if (receipt.reviewBy !== null) {
-      const reviewBy = date(receipt.reviewBy);
-      assert.ok(
-        reviewBy > finishedAt && now < reviewBy,
-        "Installed evidence has expired (review-horizon-reached).",
-      );
-    }
-    assert.ok(
-      (receipt.mode === "fresh" &&
-        receipt.revalidationSha256 === null &&
-        receipt.revalidatedAt === null &&
-        preparedAt >= date(target.createdAt)) ||
-        (receipt.mode === "reuse" &&
-          receipt.reviewBy !== null &&
-          isDigest(receipt.revalidationSha256) &&
-          receipt.revalidatedAt !== null),
-      "Use fresh evidence prepared for this PR, or provide reviewed revalidation and an unexpired horizon for historical evidence.",
-    );
-    if (receipt.mode === "reuse") {
-      const revalidatedAt = date(receipt.revalidatedAt);
-      assert.ok(
-        revalidatedAt >= Math.max(date(target.createdAt), finishedAt) &&
-          revalidatedAt <= Math.min(now, reviewedAt),
-        "Historical evidence revalidation was not captured for this PR before the approving review.",
-      );
-    }
-    if (
-      scope.product ||
-      receipt.buildSha256 !== null ||
-      receipt.sourceTree !== null
-    ) {
-      const sourceTree =
-        receipt.productCommit === target.head
-          ? target.headTree
-          : receipt.productCommit === target.merge
-            ? target.mergeTree
-            : null;
-      assert.ok(
-        isDigest(receipt.buildSha256) &&
-          typeof receipt.sourceTree === "string" &&
-          sha.test(receipt.sourceTree) &&
-          receipt.sourceTree === sourceTree &&
-          receipt.sourceTree === target.mergeTree,
-        "Installed evidence must identify the reviewed build and exact candidate source tree.",
-      );
-    }
+  const raw = witness.body.slice(privateProofMarker.length).trim();
+  const fenced = raw.match(/^```json\s*([\s\S]+?)\s*```$/i);
+  let envelope;
+  try {
+    envelope = JSON.parse(fenced?.[1] ?? raw);
+  } catch {
+    throw new Error("Private custodian record is not a bounded JSON envelope.");
   }
+  const verified = verifyDeliveryPrivateAttestation(envelope, {
+    publicKey,
+    target,
+    scope,
+    run,
+    now,
+  });
+  return {
+    evidenceId: witness.id,
+    evidenceDigest: createHash("sha256")
+      .update(JSON.stringify(envelope))
+      .digest("hex"),
+    executionId: verified.executionId,
+  };
 }
 
 function githubClient(repo) {
@@ -247,7 +112,25 @@ function githubClient(repo) {
         throw new Error("Could not read verified data from the GitHub API.");
       }
     },
-    report(artifact) {
+    graphql(query, node) {
+      try {
+        const response = JSON.parse(
+          run(
+            ["api", "graphql", "-f", `query=${query}`, "-f", `node=${node}`],
+            {
+              encoding: "utf8",
+            },
+          ),
+        );
+        assert.ok(!response.errors);
+        return response;
+      } catch {
+        throw new Error(
+          "Could not authenticate the current Codex comment editor through GitHub GraphQL.",
+        );
+      }
+    },
+    report(artifact, entry) {
       const bytes = run(
         ["api", `repos/${repo}/actions/artifacts/${artifact.id}/zip`],
         { maxBuffer: 96 * 1024 },
@@ -269,10 +152,10 @@ function githubClient(repo) {
             timeout: 5000,
           });
         assert.ok(
-          unzip("-Z1").trim() === "delivery-checks.json",
+          unzip("-Z1").trim() === entry,
           "Unexpected engineering artifact contents.",
         );
-        return JSON.parse(unzip("-p", "delivery-checks.json"));
+        return JSON.parse(unzip("-p", entry));
       } catch {
         throw new Error(
           "Engineering artifact is not a bounded, standalone JSON report.",
@@ -337,24 +220,6 @@ function githubClient(repo) {
   };
 }
 
-function pages(api, path, maxPages) {
-  const result = [];
-  for (let page = 1; page <= maxPages; page++) {
-    const batch = api(
-      `${path}${path.includes("?") ? "&" : "?"}per_page=100&page=${page}`,
-    );
-    assert.ok(
-      Array.isArray(batch),
-      "GitHub pagination did not return the expected records.",
-    );
-    result.push(...batch);
-    if (batch.length < 100) return result;
-  }
-  throw new Error(
-    "GitHub result exceeds the safely verifiable pagination limit.",
-  );
-}
-
 export function targetFor(api, pr, trustedBase, repositoryId) {
   const pull = api(`pulls/${pr}`);
   const { base, head, merge_commit_sha: merge } = pull;
@@ -394,7 +259,7 @@ export function targetFor(api, pr, trustedBase, repositoryId) {
     mergeTree: integration.tree.sha,
     author: pull.user.id,
     createdAt: pull.created_at,
-    commits: pull.commits,
+    previewCreatedAt: integration.committer?.date,
     repositoryId,
   };
 }
@@ -441,8 +306,69 @@ function engineeringProof(client, target, scope) {
     "Matching engineering aggregate job did not pass.",
   );
   const artifactList = api(`actions/runs/${run.id}/artifacts?per_page=100`);
+  const affected = engineeringArtifact(
+    client,
+    artifactList,
+    run,
+    target,
+    "delivery-checks",
+    "affected",
+  );
+  const commands = new Set(
+    affected.results.map(({ command }) => JSON.stringify(command)),
+  );
+  assert.ok(
+    requiredAffectedCommands(scope, target.base, target.merge).every(
+      (command) => commands.has(JSON.stringify(command)),
+    ),
+    "Engineering report omitted a required affected-scope check.",
+  );
+  if (scope.windowsNative) {
+    assert.ok(
+      jobList.jobs.some(
+        ({ name, head_sha, status, conclusion }) =>
+          name === windowsCheck &&
+          head_sha === target.head &&
+          status === "completed" &&
+          conclusion === "success",
+      ),
+      "Affected Windows engineering job did not pass.",
+    );
+    const report = engineeringArtifact(
+      client,
+      artifactList,
+      run,
+      target,
+      "delivery-windows",
+      "affected-windows",
+    );
+    assert.ok(
+      report.platform === "win32-x64" &&
+        JSON.stringify(report.results.map(({ command }) => command)) ===
+          JSON.stringify(
+            requiredWindowsAffectedCommands(target.base, target.merge),
+          ) &&
+        report.results.every(
+          ({ signal, error }) => signal === null && error === null,
+        ) &&
+        Array.isArray(report.tests) &&
+        report.tests.length === windowsAffectedTests.length &&
+        report.tests.every(
+          ({ name, passed, failed, ignored }, i) =>
+            name === windowsAffectedTests[i] &&
+            passed === 1 &&
+            failed === 0 &&
+            ignored === 0,
+        ),
+      "Windows engineering report omitted required native commands or test outcomes.",
+    );
+  }
+  return run;
+}
+
+function engineeringArtifact(client, artifactList, run, target, name, mode) {
   const matches = artifactList.artifacts.filter(
-    ({ name }) => name === `delivery-checks-${run.run_attempt}`,
+    ({ name: label }) => label === `${name}-${run.run_attempt}`,
   );
   const [artifact] = matches;
   assert.ok(
@@ -454,11 +380,11 @@ function engineeringProof(client, target, scope) {
       artifact.size_in_bytes <= 64 * 1024 &&
       typeof artifact.digest === "string" &&
       /^sha256:[0-9a-f]{64}$/.test(artifact.digest),
-    "Engineering attempt must have one current bounded report artifact.",
+    "Engineering attempt must have one current bounded report artifact for each affected platform.",
   );
-  const report = client.report(artifact);
+  const report = client.report(artifact, `${name}.json`);
   assert.ok(
-    report.mode === "affected" &&
+    report.mode === mode &&
       report.head === target.merge &&
       report.base === target.base &&
       report.inputsStable === true &&
@@ -467,58 +393,7 @@ function engineeringProof(client, target, scope) {
       report.results.every(({ exitCode }) => exitCode === 0),
     "Engineering report did not pass on this exact merge preview and base.",
   );
-  const commands = new Set(
-    report.results.map(({ command }) => JSON.stringify(command)),
-  );
-  assert.ok(
-    requiredAffectedCommands(scope, target.base, target.merge).every(
-      (command) => commands.has(JSON.stringify(command)),
-    ),
-    "Engineering report omitted a required affected-scope check.",
-  );
-  return run;
-}
-
-function currentReviews(api, target) {
-  // Candidate attribution uses linked GitHub accounts, not names or emails
-  // from the commit object. GitHub's own web-flow signer is not a candidate author.
-  const commits = pages(api, `pulls/${target.number}/commits`, 3);
-  assert.ok(
-    commits.length === target.commits && commits.length > 0,
-    "GitHub did not provide the complete candidate commit list.",
-  );
-  const authors = new Set([
-    target.author,
-    ...commits
-      .flatMap(({ author, committer }) => [
-        author?.id,
-        committer?.login !== "web-flow" ? committer?.id : null,
-      ])
-      .filter(Number.isSafeInteger),
-  ]);
-  const latest = new Map();
-  for (const review of pages(api, `pulls/${target.number}/reviews`, 11)) {
-    const user = review.user;
-    if (
-      !reviewStates.has(review.state) ||
-      user?.type !== "User" ||
-      !Number.isSafeInteger(user.id) ||
-      !/^[A-Za-z0-9-]{1,39}$/.test(user.login ?? "") ||
-      authors.has(user.id) ||
-      !["OWNER", "MEMBER", "COLLABORATOR"].includes(review.author_association)
-    )
-      continue;
-    const previous = latest.get(user.id);
-    if (!previous || previous.id < review.id) latest.set(user.id, review);
-  }
-  return [...latest.values()].filter(({ user }) => {
-    const permission = api(`collaborators/${user.login}/permission`);
-    return (
-      permission.user?.id === user.id &&
-      (approvedRoles.has(permission.role_name) ||
-        approvedRoles.has(permission.permission))
-    );
-  });
+  return report;
 }
 
 function inspectScope(api, target) {
@@ -549,50 +424,32 @@ function inspectScope(api, target) {
   return classifyDeliveryPaths(paths);
 }
 
-function independentReview(api, target, scope, run, now) {
-  const reviews = currentReviews(api, target);
-  assert.ok(
-    !reviews.some(({ state }) => state === "CHANGES_REQUESTED"),
-    "An authorized independent reviewer has requested changes.",
+function deliveryProof(client, target, scope, run, now) {
+  const comments = pullRequestComments(client.api, target.number);
+  const review = codexReviewProof(
+    client.api,
+    client.graphql,
+    comments,
+    target,
+    run,
+    now,
   );
-  const approvals = reviews.filter(
-    ({ state, commit_id }) => state === "APPROVED" && commit_id === target.head,
+  const evidence = privateEvidenceFor(
+    comments,
+    target,
+    scope,
+    run,
+    now,
+    client.publicKey,
   );
-  assert.ok(
-    approvals.length > 0,
-    scope.product
-      ? "Current product changes need independent approval and reviewed stable and installed evidence."
-      : "Current candidate needs an authorized independent GitHub approving review.",
-  );
-  let reason;
-  for (const approval of approvals) {
-    try {
-      const reviewedAt = date(approval.submitted_at);
-      assert.ok(
-        reviewedAt <= now,
-        "Independent approval timestamp is in the future.",
-      );
-      validateReviewedEvidence(
-        reviewPayload(approval.body),
-        target,
-        scope,
-        run,
-        now,
-        reviewedAt,
-      );
-      return approval.id;
-    } catch (error) {
-      reason = error;
-    }
-  }
-  throw reason;
+  return { review, evidence };
 }
 
 export function verifyFinalDelivery(client, target, now = Date.now()) {
   const scope = inspectScope(client.api, target);
   const run = engineeringProof(client, target, scope);
-  const reviewId = independentReview(client.api, target, scope, run, now);
-  return { scope, runId: run.id, runAttempt: run.run_attempt, reviewId };
+  const proof = deliveryProof(client, target, scope, run, now);
+  return { scope, runId: run.id, runAttempt: run.run_attempt, ...proof };
 }
 
 function requestedPr(eventName, event) {
@@ -609,6 +466,19 @@ function requestedPr(eventName, event) {
     );
     return number;
   }
+  if (eventName === "issue_comment") {
+    const privateUpdate =
+      Number.isSafeInteger(event.issue?.number) &&
+      event.issue?.pull_request != null &&
+      ["created", "edited", "deleted"].includes(event.action) &&
+      event.comment?.author_association === "OWNER" &&
+      [event.comment?.body, event.changes?.body?.from].some(
+        (body) =>
+          typeof body === "string" &&
+          body.startsWith(privateProofMarker + "\n"),
+      );
+    return codexReviewEvent(event) || privateUpdate ? event.issue.number : null;
+  }
   const run = event.workflow_run;
   if (run?.event !== "pull_request" || run.path !== workflowPath) return null;
   const linked = run.pull_requests ?? [];
@@ -622,7 +492,9 @@ function main(env) {
     env.GITHUB_REF === "refs/heads/main" &&
       sha.test(env.GITHUB_SHA ?? "") &&
       /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(env.GITHUB_REPOSITORY ?? "") &&
-      ["workflow_dispatch", "workflow_run"].includes(env.GITHUB_EVENT_NAME) &&
+      ["workflow_dispatch", "workflow_run", "issue_comment"].includes(
+        env.GITHUB_EVENT_NAME,
+      ) &&
       /^[1-9][0-9]*$/.test(env.GITHUB_RUN_ID ?? ""),
     "Final delivery must run from the trusted default branch.",
   );
@@ -644,7 +516,10 @@ function main(env) {
     Number.isSafeInteger(event.repository?.id),
     "GitHub event lacks the verified repository identity.",
   );
-  const client = githubClient(repo);
+  const client = {
+    ...githubClient(repo),
+    publicKey: env.FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY,
+  };
   const snapshot = () =>
     targetFor(client.api, number, base, event.repository.id);
   const serverUrl = `https://github.com/${repo}/actions/runs/${runId}`;
@@ -667,16 +542,17 @@ function main(env) {
         currentRun.run_attempt === result.runAttempt,
       "Engineering workflow changed during final verification.",
     );
-    assert.equal(
-      independentReview(
-        client.api,
-        target,
-        result.scope,
-        currentRun,
-        Date.now(),
-      ),
-      result.reviewId,
-      "Independent approval changed during final verification.",
+    const current = deliveryProof(
+      client,
+      target,
+      result.scope,
+      currentRun,
+      Date.now(),
+    );
+    assert.ok(
+      current.review.reviewDigest === result.review.reviewDigest &&
+        current.evidence?.evidenceDigest === result.evidence?.evidenceDigest,
+      "Independent review or private evidence changed during final verification.",
     );
     client.finishCheck(
       check,

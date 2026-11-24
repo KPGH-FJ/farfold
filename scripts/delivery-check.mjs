@@ -23,6 +23,15 @@ export const stableChecks = [
   cargo("test", "--locked"),
 ];
 
+// Run named, source-backed controls instead of letting a successful empty
+// Cargo filter stand in for Windows worktree coverage.
+export const windowsAffectedTests = [
+  "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+  "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source",
+  "worktrees::create::windows::tests::selected_custom_filter_is_rejected_before_target_or_branch_creation",
+  "worktrees::windows_tests::expired_or_missing_conditions_refuse_before_retirement_or_durable_intent",
+];
+
 function git(...args) {
   return execFileSync("git", args, { encoding: "utf8" });
 }
@@ -41,20 +50,59 @@ function changeScope(base, head) {
   return classifyDeliveryPaths(paths);
 }
 
-export function requiredAffectedCommands({ frontend, native }, base, head) {
+export function requiredAffectedCommands(
+  { frontend, native, macNative = native },
+  base,
+  head,
+) {
   return [
     ["git", "diff", "--check", base, head],
     pnpm("docs:check"),
     ...(frontend ? stableChecks.slice(1, 4) : [pnpm("test", "scripts")]),
-    ...(native ? stableChecks.slice(4) : []),
+    ...(macNative ? stableChecks.slice(4) : []),
   ];
+}
+
+export function requiredWindowsAffectedCommands(base, head) {
+  return [
+    ["git", "diff", "--check", base, head],
+    cargo("fmt"),
+    cargo("clippy", "--locked", "--all-targets", "--", "-D", "warnings"),
+    ...windowsAffectedTests.map((name) =>
+      cargo("test", "--locked", "--lib", name, "--", "--exact", "--nocapture"),
+    ),
+    cargo("build", "--locked", "--example", "windows_process_fixture"),
+    cargo("test", "--locked", "--", "--nocapture"),
+  ];
+}
+
+export function parseWindowsTestResult(output) {
+  const runs = [...output.matchAll(/^running (\d+) tests?\r?$/gm)];
+  const summaries = [
+    ...output.matchAll(
+      /^test result: (?:ok|FAILED)\. (\d+) passed; (\d+) failed; (\d+) ignored;/gm,
+    ),
+  ];
+  if (runs.length !== 1 || runs[0][1] !== "1" || summaries.length !== 1)
+    return null;
+  const [passed, failed, ignored] = summaries[0].slice(1).map(Number);
+  return { passed, failed, ignored };
 }
 
 function checksFor(mode, base, head) {
   if (mode === "stable" && base === undefined) return stableChecks;
+  if (mode === "affected-windows") {
+    if (process.platform !== "win32" || process.arch !== "x64")
+      throw new Error("Windows affected evidence requires Windows x64.");
+    if (!changeScope(base, head).windowsNative)
+      throw new Error(
+        "Windows affected evidence requires a matching Windows change.",
+      );
+    return requiredWindowsAffectedCommands(base, head);
+  }
   if (mode !== "affected")
     throw new Error(
-      "Use stable <new-report.json> or affected <new-report.json> <base-SHA>.",
+      "Use stable <new-report.json> or affected[-windows] <new-report.json> <base-SHA>.",
     );
   const [whitespace, ...required] = requiredAffectedCommands(
     changeScope(base, head),
@@ -102,11 +150,41 @@ function main([mode, output, base, ...extra]) {
     : null;
   writeFileSync(output, "", { flag: "wx", mode: 0o600 });
   const startedAt = new Date().toISOString();
-  const availableBytesBefore = freeBytes();
+  const windows = mode === "affected-windows";
+  const availableBytesBefore = windows ? null : freeBytes();
+  const tests = [];
   const results = checks.map(([program, ...args]) => {
     console.log(`[delivery] ${[program, ...args].join(" ")}`);
     const start = performance.now();
-    const result = spawnSync(program, args, { stdio: "inherit" });
+    const testName =
+      windows &&
+      program === "cargo" &&
+      args[0] === "test" &&
+      windowsAffectedTests.includes(args.at(-4))
+        ? args.at(-4)
+        : undefined;
+    const result = spawnSync(
+      program,
+      args,
+      testName
+        ? {
+            stdio: ["ignore", "pipe", "inherit"],
+            encoding: "utf8",
+            maxBuffer: 4 * 1024 * 1024,
+          }
+        : { stdio: "inherit" },
+    );
+    if (testName) {
+      const stdout = result.stdout ?? "";
+      process.stdout.write(stdout);
+      const counts = parseWindowsTestResult(stdout);
+      tests.push({
+        name: testName,
+        passed: counts?.passed ?? null,
+        failed: counts?.failed ?? null,
+        ignored: counts?.ignored ?? null,
+      });
+    }
     return {
       command: [program, ...args],
       exitCode: result.status,
@@ -129,15 +207,26 @@ function main([mode, output, base, ...extra]) {
         node: process.version,
         rust,
         availableBytesBefore,
-        availableBytesAfter: freeBytes(),
+        availableBytesAfter: windows ? null : freeBytes(),
         inputsStable,
         results,
+        ...(windows ? { tests } : {}),
       },
       null,
       2,
     )}\n`,
   );
-  if (!inputsStable || results.some(({ exitCode }) => exitCode !== 0))
+  if (
+    !inputsStable ||
+    results.some(
+      ({ exitCode, signal, error }) =>
+        exitCode !== 0 || signal !== null || error !== null,
+    ) ||
+    tests.some(
+      ({ passed, failed, ignored }) =>
+        passed !== 1 || failed !== 0 || ignored !== 0,
+    )
+  )
     process.exitCode = 1;
 }
 

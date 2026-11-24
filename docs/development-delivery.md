@@ -22,7 +22,7 @@ node scripts/delivery-check.mjs stable /tmp/farfold-stable.json
 
 `affected` 校验差异、变更文件格式和任务文档，执行配套工具测试。前端或原生代码有变化时运行相应套件。`stable` 运行 [AGENTS.md](../AGENTS.md) 约定的七项，适用于稳定功能批，记录提交、执行平台、每项退出状态与耗时。工作区有其他批次时直接运行本批受影响检查，通过 PR 的干净环境校验提交。等待适用平台、设备或外部条件时记录范围。
 
-交付按实际合并预览相对基线的路径判断适用范围。产品源码、打包输入和 `public/` 静态资源变更要求稳定检查及安装回执。测试和检查规则变更属于治理复核范围。只改文档或工具时，在审查记录说明稳定检查和安装回执的适用性。新旧文件名都参与重命名影响判断。
+交付按实际合并预览相对基线的路径判断适用范围。影响 macOS 产品的源码、打包输入和 `public/` 静态资源要求七项稳定检查及 macOS 安装回执。经模块声明确认的 Windows 专属实现要求匹配的 Windows 工程结果及 Windows 安装回执。纯测试修改保留适用工程检查和独立复核。例如 `worktrees/tests.rs` 由 `cfg(test)` 声明，两平台要跑相应工程检查，无需重装 macOS。共用和混合修改按各路径的实际影响合并要求。新旧文件名都参与重命名影响判断。
 
 ## 正式应用回执
 
@@ -54,9 +54,13 @@ corepack pnpm acceptance:check output/owned-run/receipt.json
 
 ## 独立复核和合入
 
-在同一候选差异上独立检查实现、保护规则、测试和原始操作证据。记录审查人、基线与候选完整 SHA、发现以及修正后结论。在 PR 中给出任务 ID、改动作用、工程检查、实测范围和余项。保护规则、验收强度和工作流规则变动须由审查人明确核对。
+在 PR 中给出任务 ID、改动作用、原要求和证据摘要的定位、工程检查及余项。代码审查在独立上下文中核对当前差异、原要求和测试。可提交 `@codex review` 请求现有 Codex GitHub App 复审。在受限环境处理实机原件和规则变更的独立任务，记录实际执行编号、基线与候选完整 SHA、所读材料、发现及修正后结论。
 
 GitHub 在 `main` 上执行 PR 与工程检查规则。工程工作流验证合并预览的两个父提交，按范围产生 `Farfold delivery check`。最终核验工作流从受保护的 `main` 读取核验代码，在工程工作流之后评估同一基线、候选、合并预览和工程报告。当前生效的必需检查以 [GitHub 主线规则](https://github.com/KPGH-FJ/farfold/rules?ref=main) 为准。
+
+当前个人仓库的规则只能按检查名称和 GitHub App 身份识别发布者。同一仓库的工作流共用 GitHub Actions App 身份。最终核验保持可运行，独立发布身份和适用私有证据的真实放行链路完成验证后，再设为永久必需检查。
+
+`Farfold final delivery` 从 GitHub API 核验 Codex App 发布的独立代码审查。原始 App、机器人和最近编辑者身份均要匹配。审查须完成、无报告发现、对应当前候选，并在当前合并预览和工程运行启动后完成。候选须包含当前基线，候选与合并预览的源码树须相同。App 评论格式变化、空结果和旧结果都会拒绝放行。App 审查原始文件的范围是 GitHub 可访问的材料，私有实机原件由独立任务在受限环境复核。
 
 ```sh
 node scripts/delivery-pr.mjs <PR-number> /path/to/delivery-record.json
@@ -64,14 +68,16 @@ node scripts/delivery-pr.mjs <PR-number> /path/to/delivery-record.json
 
 本地交付记录顶层为 `base`、`head`、`review`、`stable`、`installed`。`review` 包含同样的 `base`、`head`、独立审查人、结论和摘要；接受既有回执时还须填 `review.revalidations`，逐项绑定 `receiptSha256` 与 `revalidationSha256`。适用的七项回执提供 `stable.report` 与 `stable.sha256`。安装回执项使用 `{ path, sha256, productCommit, binarySha256, requirementIds, mode, build }`，`build` 为构建记录的 `{ path, sha256 }`。复用额外提供 `revalidation: { path, sha256 }`。无适用证据时使用空列表。
 
-独立审查者应通过受限的交接渠道取得原件，核对本地验证结果、源码、实机原件和适用范围。公开 PR 中只保留摘要、身份和可交接编号。受信审查者使用有写权限且与 PR 作者或提交人不同的 GitHub 身份，在精确候选上提交 `APPROVED` 审查。正文为 JSON，包含 `schemaVersion: 1`、本地命令结果中的 `engineeringRunId`、`engineeringRunAttempt` 和 `evidence`，以及 `originalsId`、`reviewSummary`、`scopeReasons`、`policyReview`。其中 `originalsId` 只存受限交接编号，`scopeReasons` 的 `stable`、`installed` 在要求证据时为 null，其余提供审查理由。治理变更使用 `policyReview: { preservesRequirements: true, assessment: "具体说明规则变更如何保留原要求" }`，普通改动使用 null。
+独立复核任务通过受限交接取得原件，读回行为结果，核对安装与构建来源、原条件、证据完整性及复验报告。适用平台的构建报告和安装回执须对应同一候选源码树及已验证二进制。Windows 工程测试和安装程序生命周期检查分别记录其实际范围，Windows 正式应用操作须有相应原始观察。
+
+适用实机或治理复核时，受信保管方用隔离的 Ed25519 密钥签署独立执行的最小公开摘要，GitHub Actions 只持有 `FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY` 公钥。签名涵盖实际审查执行编号、记录摘要、原件交接编号、PR 和版本、工程运行及尝试编号、适用回执和规则影响。署名前查阅原件并核对 `delivery-pr.mjs` 的结果。治理变更须附上规则怎样保留原验收要求的具体依据。签名格式以 `scripts/delivery-private-attestation.mjs` 为准。原件、会话正文、账号信息、机器路径和密钥留在受限环境。每个 PR 保留一条摘要评论，补交时编辑同一条。仓库所有者发布摘要时，评论首行用 `<!-- farfold-private-delivery:v1 -->`，其后是已签名的 JSON。当前公钥应由能独立运行复核且能保管私钥的执行环境提供；缺少受信记录时，适用的最终核验会拒绝。
 
 ```sh
 gh workflow run delivery-final.yml --ref main -f pr_number=<PR-number>
 gh pr merge <PR-number> --merge --match-head-commit <reviewed-head-SHA>
 ```
 
-补交证据、独立审查变化、基线推进或证据到期后，重新运行最终核验。GitHub 的状态会缓存上一次结果，合入前用当前输入完成本地核验并确认当前合并预览的服务器结果。合入后核对实际主线结果。启动独立的服务器核验不替代私有原件复核。
+App 审查和保管方摘要的发布、编辑和删除会重跑最终核验。基线推进后更新候选，重新取得对应工程结果和审查。证据到期时补验，再提交对应摘要。GitHub 会缓存上一轮状态，时钟跨过期限本身不会启动工作流。合入前重新运行，确认当前合并预览的服务器结果和证据期限，再用匹配的候选提交合入并核对主线。
 
 2026-11-24，仓库所有者在原研发交付会话中明确授权把该 GitHub 仓库设为公开，原会话保留执行及无登录访问核验。该授权范围为仓库可见性。
 
