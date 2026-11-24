@@ -1,0 +1,17 @@
+name: Farfold publisher environment boundary control
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  ordinary-pr:
+    name: Ordinary pull request must be denied
+    runs-on: ubuntu-24.04
+    environment: farfold-final-publisher
+    steps:
+      - run: |
+          echo "Boundary failure: an ordinary pull request reached a protected runner step."
+          exit 1
