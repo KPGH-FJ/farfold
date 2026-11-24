@@ -629,7 +629,7 @@ function validateAttempt(attempt, expected, manifest, previous, errors, index) {
  */
 export async function validateReceipt(
   receipt,
-  { rootDir = process.cwd() } = {},
+  { rootDir = process.cwd(), retainManifest = false } = {},
 ) {
   const report = {
     schemaVersion: RECEIPT_SCHEMA_VERSION,
@@ -817,6 +817,7 @@ export async function validateReceipt(
   }
   report.mechanicallyValid = errors.length === 0;
   report.complete = report.mechanicallyValid && report.counts.incomplete === 0;
+  if (retainManifest && report.mechanicallyValid) report.manifest = manifest;
   report.allExpectedOutcomesMatched =
     report.complete &&
     report.counts.failed === 0 &&

@@ -2,6 +2,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { statfsSync, writeFileSync } from "node:fs";
 import { performance } from "node:perf_hooks";
 import { pathToFileURL } from "node:url";
+import { classifyDeliveryPaths } from "./delivery-scope.mjs";
 
 const pnpm = (...args) => ["corepack", "pnpm", ...args];
 const cargo = (subcommand, ...args) => [
@@ -34,21 +35,19 @@ function freeBytes() {
 function changeScope(base, head) {
   if (!/^[a-f0-9]{40}$/.test(base ?? ""))
     throw new Error("Supply the full base SHA.");
-  const paths = git(
-    "diff",
-    "--name-only",
-    "--no-renames",
-    "-z",
-    base,
-    head,
-  ).split("\0");
-  const frontend = paths.some((path) =>
-    /^(src\/|package\.json$|pnpm-lock\.yaml$|index\.html$|(?:tsconfig|vite|vitest)\.)/.test(
-      path,
-    ),
-  );
-  const native = paths.some((path) => path.startsWith("src-tauri/"));
-  return { frontend, native };
+  const paths = git("diff", "--name-only", "--no-renames", "-z", base, head)
+    .split("\0")
+    .filter(Boolean);
+  return classifyDeliveryPaths(paths);
+}
+
+export function requiredAffectedCommands({ frontend, native }, base, head) {
+  return [
+    ["git", "diff", "--check", base, head],
+    pnpm("docs:check"),
+    ...(frontend ? stableChecks.slice(1, 4) : [pnpm("test", "scripts")]),
+    ...(native ? stableChecks.slice(4) : []),
+  ];
 }
 
 function checksFor(mode, base, head) {
@@ -57,7 +56,11 @@ function checksFor(mode, base, head) {
     throw new Error(
       "Use stable <new-report.json> or affected <new-report.json> <base-SHA>.",
     );
-  const { frontend, native } = changeScope(base, head);
+  const [whitespace, ...required] = requiredAffectedCommands(
+    changeScope(base, head),
+    base,
+    head,
+  );
   const changedText = git(
     "diff",
     "--name-only",
@@ -73,13 +76,11 @@ function checksFor(mode, base, head) {
       ),
     );
   return [
-    ["git", "diff", "--check", base, head],
+    whitespace,
     ...(changedText.length
       ? [pnpm("exec", "prettier", "--check", ...changedText)]
       : []),
-    pnpm("docs:check"),
-    ...(frontend ? stableChecks.slice(1, 4) : [pnpm("test", "scripts")]),
-    ...(native ? stableChecks.slice(4) : []),
+    ...required,
   ];
 }
 

@@ -1,22 +1,15 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { createHash } from "node:crypto";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { validateReceipt } from "./acceptance-receipts.mjs";
-import { stableChecks } from "./delivery-check.mjs";
+import { validateLocalDeliveryRecord } from "./delivery-evidence.mjs";
+import { classifyDeliveryPaths } from "./delivery-scope.mjs";
+import { requiredAffectedCommands } from "./delivery-check.mjs";
 
 const checkName = "Farfold delivery check";
 const sha = /^[a-f0-9]{40}$/;
 const jsonFile = (file) => JSON.parse(readFileSync(file, "utf8"));
-
-function reviewedJson(file, expectedDigest) {
-  const bytes = readFileSync(file);
-  const digest = createHash("sha256").update(bytes).digest("hex");
-  assert.equal(digest, expectedDigest, "Reviewed record bytes changed.");
-  return JSON.parse(bytes);
-}
 
 function gh(...args) {
   return JSON.parse(execFileSync("gh", args, { encoding: "utf8" }));
@@ -28,56 +21,17 @@ async function main([number, recordPath, ...extra]) {
     "Use delivery-pr.mjs <PR number> <delivery-record.json> from the repository root.",
   );
   const record = jsonFile(recordPath);
-  const { base, head, review, installed, stable } = record;
+  const { base, head } = record;
   assert.ok(
     sha.test(base ?? "") && sha.test(head ?? ""),
     "A delivery record needs full base and head SHAs.",
   );
-  assert.ok(
-    review?.verdict === "approved" &&
-      review.base === base &&
-      review.head === head &&
-      review.reviewer?.trim() &&
-      review.summary?.trim(),
-    "An independent review of this exact base and head must be recorded.",
-  );
-  assert.ok(
-    typeof stable?.required === "boolean" && stable.reason?.trim(),
-    "Record why the stable checks apply or do not apply.",
-  );
-  assert.ok(
-    typeof installed?.required === "boolean" &&
-      installed.reason?.trim() &&
-      Array.isArray(installed.receipts),
-    "Record the scope of the installed-app verification.",
-  );
-  assert.ok(
-    !installed.required || installed.receipts.length > 0,
-    "Applicable installed verification needs receipt paths.",
-  );
-  if (stable.required) {
-    const report = reviewedJson(stable.report, stable.sha256);
-    assert.ok(
-      report.mode === "stable" &&
-        report.platform === "darwin-arm64" &&
-        report.inputsStable &&
-        report.head === head &&
-        report.results?.every(({ exitCode }) => exitCode === 0),
-      "Applicable stable checks must pass on the reviewed candidate.",
-    );
-    assert.deepEqual(
-      report.results.map(({ command }) => command),
-      stableChecks,
-      "Stable check command list changed.",
-    );
-  }
-
   const pr = gh(
     "pr",
     "view",
     number,
     "--json",
-    "url,state,isDraft,baseRefName,baseRefOid,headRefOid,potentialMergeCommit,mergeable,reviewDecision",
+    "url,state,isDraft,baseRefName,baseRefOid,headRefOid,potentialMergeCommit,mergeable,reviewDecision,createdAt",
   );
   assert.ok(
     pr.state === "OPEN" && !pr.isDraft && pr.baseRefName === "main",
@@ -102,40 +56,52 @@ async function main([number, recordPath, ...extra]) {
     [base, head],
     "GitHub tested merge parents differ from the reviewed base and head.",
   );
-  for (const entry of installed.receipts) {
-    const receipt = reviewedJson(entry.path, entry.sha256);
-    const report = await validateReceipt(receipt);
-    assert.ok(
-      report.allExpectedOutcomesMatched &&
-        report.cases.every(({ level }) =>
-          ["installed", "real-agent"].includes(level),
-        ),
-      "Installed verification requires matching installed observations.",
-    );
-    assert.ok(
-      Array.isArray(entry.requirementIds) &&
-        entry.requirementIds.length &&
-        entry.requirementIds.every((requirement) =>
-          report.cases.some(({ requirementIds }) =>
-            requirementIds.includes(requirement),
-          ),
-        ),
-      "Installed receipt requirements differ from the reviewed scope.",
-    );
-    assert.ok(
-      receipt.attempts.every(
-        ({ context }) =>
-          context.productCommit === entry.productCommit &&
-          context.app.binarySha256 === entry.binarySha256,
-      ),
-      "Installed receipt identity differs from the reviewed build.",
-    );
-    if (installed.required)
+  const comparison = gh(
+    "api",
+    `repos/{owner}/{repo}/compare/${base}...${merge}`,
+  );
+  const { files } = comparison;
+  // GitHub truncates compare file lists at 300. Refuse ambiguous scope rather
+  // than silently omitting the applicable evidence requirements.
+  assert.ok(
+    comparison.base_commit?.sha === base &&
+      comparison.merge_base_commit?.sha === base &&
+      Array.isArray(files) &&
+      files.length > 0 &&
+      files.length < 300,
+    "Could not determine the complete candidate scope from GitHub.",
+  );
+  const paths = files.flatMap(
+    ({ filename, previous_filename: previous, status }) => {
       assert.ok(
-        [head, merge].includes(entry.productCommit),
-        "Applicable installation evidence must identify a build of this candidate.",
+        typeof filename === "string" &&
+          filename.length > 0 &&
+          (!["renamed", "copied"].includes(status) ||
+            (typeof previous === "string" && previous.length > 0)),
+        "GitHub change did not include all required file paths.",
       );
-  }
+      return previous ? [filename, previous] : [filename];
+    },
+  );
+  const scope = classifyDeliveryPaths(paths);
+  const receipts = record.installed?.receipts;
+  const sourceTrees =
+    scope.product ||
+    (Array.isArray(receipts) && receipts.some((entry) => entry?.build))
+      ? {
+          [merge]: integration.commit?.tree?.sha,
+          [head]: gh("api", `repos/{owner}/{repo}/commits/${head}`).commit?.tree
+            ?.sha,
+        }
+      : {};
+  const evidence = await validateLocalDeliveryRecord(record, {
+    base,
+    head,
+    merge,
+    scope: { stable: scope.product, installed: scope.product },
+    sourceTrees,
+    freshSince: pr.createdAt,
+  });
 
   const { workflow_runs: runs } = gh(
     "api",
@@ -183,9 +149,18 @@ async function main([number, recordPath, ...extra]) {
         report.head === merge &&
         report.base === base &&
         report.inputsStable &&
-        report.results?.length &&
+        Array.isArray(report.results) &&
         report.results.every(({ exitCode }) => exitCode === 0),
       "The CI report does not match the current synthetic merge commit and base.",
+    );
+    assert.ok(
+      requiredAffectedCommands(scope, base, merge).every((command) =>
+        report.results.some(
+          (result) =>
+            JSON.stringify(result.command) === JSON.stringify(command),
+        ),
+      ),
+      "The CI report does not include all checks required for this scope.",
     );
   } finally {
     rmSync(directory, { recursive: true, force: true });
@@ -205,7 +180,11 @@ async function main([number, recordPath, ...extra]) {
         testedMerge: merge,
         check: check.html_url,
         branchProtected: branch.protected,
-        decision: "record-and-checks-current",
+        engineeringRunId: run.id,
+        engineeringRunAttempt: run.run_attempt,
+        evidence,
+        scope,
+        decision: "local-evidence-verified",
       },
       null,
       2,

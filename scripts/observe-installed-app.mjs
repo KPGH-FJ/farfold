@@ -130,6 +130,7 @@ export async function observeInstalledApp(threadDigest) {
     );
   const exe = await readStable(executable, 1024 * 1024 * 1024);
   const running = processIdentity(exe.stat.ino);
+  text("/usr/bin/codesign", ["--verify", "--strict", "--deep", app]);
   const signature = spawnSync("/usr/bin/codesign", ["-d", "--verbose=4", app], {
     encoding: "utf8",
   });
