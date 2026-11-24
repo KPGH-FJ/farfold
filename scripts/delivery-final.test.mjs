@@ -2,6 +2,7 @@ import { generateKeyPairSync, sign } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import {
   privateEvidenceFor,
+  publishFinalDelivery,
   targetFor,
   verifyFinalDelivery,
 } from "./delivery-final.mjs";
@@ -41,6 +42,65 @@ const run = {
 };
 const now = Date.parse("2026-11-24T09:00:00Z");
 const artifactDigest = "1".repeat(64);
+
+describe("publishing the final GitHub check", () => {
+  const publisher = (events) => ({
+    startCheck(sha) {
+      events.push(["start", sha]);
+      return sha === target.head ? 1 : 2;
+    },
+    finishCheck(id, conclusion) {
+      events.push([conclusion, id]);
+    },
+  });
+
+  it("publishes one decision on both commits and marks the candidate successful last", () => {
+    const events = [];
+    expect(
+      publishFinalDelivery(publisher(events), target, "run-url", () => {
+        events.push(["verify"]);
+        return "verified";
+      }),
+    ).toBe("verified");
+    expect(events).toEqual([
+      ["start", target.head],
+      ["start", target.merge],
+      ["verify"],
+      ["success", 2],
+      ["success", 1],
+    ]);
+  });
+
+  it("publishes refusal on both commits when current verification fails", () => {
+    const events = [];
+    expect(() =>
+      publishFinalDelivery(publisher(events), target, "run-url", () => {
+        throw new Error("evidence no longer valid");
+      }),
+    ).toThrow("evidence no longer valid");
+    expect(events.slice(-2)).toEqual([
+      ["failure", 1],
+      ["failure", 2],
+    ]);
+  });
+
+  it("leaves a failed candidate check if the preview check cannot be started", () => {
+    const events = [];
+    const client = {
+      ...publisher(events),
+      startCheck(sha) {
+        if (sha === target.merge) throw new Error("preview unavailable");
+        return 1;
+      },
+    };
+    expect(() =>
+      publishFinalDelivery(client, target, "run-url", () => {
+        throw new Error("unexpected verification");
+      }),
+    ).toThrow("preview unavailable");
+    expect(events).toEqual([["failure", 1]]);
+  });
+});
 
 function providerComment() {
   return {
