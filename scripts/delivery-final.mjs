@@ -22,8 +22,23 @@ const sha = /^[0-9a-f]{40}$/;
 const workflowPath = ".github/workflows/delivery.yml";
 const engineeringCheck = "Farfold delivery check";
 const windowsCheck = "Windows affected engineering checks";
+const actionsAppId = 15368;
 export const finalCheck = "Farfold final delivery";
 const privateProofMarker = "<!-- farfold-private-delivery:v1 -->";
+const witnessSnapshot = `query($node: ID!) {
+  node(id: $node) {
+    __typename
+    ... on IssueComment {
+      id fullDatabaseId body createdAt updatedAt lastEditedAt
+      author { __typename ... on User { databaseId } }
+      userContentEdits(first: 3) {
+        totalCount
+        pageInfo { hasNextPage }
+        nodes { editedAt deletedAt editor { __typename ... on User { databaseId } } }
+      }
+    }
+  }
+}`;
 
 function sameTuple(left, right) {
   return (
@@ -40,6 +55,7 @@ export function privateEvidenceFor(
   run,
   now,
   publicKey,
+  graphql,
 ) {
   if (!scope.product && !scope.governance) return null;
   assert.ok(
@@ -73,7 +89,37 @@ export function privateEvidenceFor(
     scope,
     run,
     now,
+    witnessId: witness.id,
   });
+  // GitHub records the original body and the new body after the first edit.
+  // A signed comment is single-use. Any further edit requires a fresh signed ID.
+  assert.ok(
+    /^[A-Za-z0-9_+/=-]{3,180}$/.test(witness.node_id ?? ""),
+    "Private evidence comment lacks a verifiable node identity.",
+  );
+  const node = graphql(witnessSnapshot, witness.node_id)?.data?.node;
+  const history = node?.userContentEdits;
+  const owner = (actor) =>
+    actor?.__typename === "User" && actor.databaseId === witness.user.id;
+  assert.ok(
+    node?.__typename === "IssueComment" &&
+      node.id === witness.node_id &&
+      node.fullDatabaseId === String(witness.id) &&
+      node.body === witness.body &&
+      node.createdAt === witness.created_at &&
+      node.updatedAt === witness.updated_at &&
+      owner(node.author) &&
+      history?.totalCount === 2 &&
+      history.pageInfo?.hasNextPage === false &&
+      history.nodes?.length === 2 &&
+      typeof node.lastEditedAt === "string" &&
+      history.nodes[0]?.editedAt === node.lastEditedAt &&
+      history.nodes[1]?.editedAt === node.createdAt &&
+      history.nodes.every(
+        (edit) => edit?.deletedAt === null && owner(edit.editor),
+      ),
+    "Private evidence comment was edited again or its one-time publication could not be verified.",
+  );
   return {
     evidenceId: witness.id,
     evidenceDigest: createHash("sha256")
@@ -83,10 +129,31 @@ export function privateEvidenceFor(
   };
 }
 
-function githubClient(repo) {
+export function githubClient(repo, env, execute = execFileSync) {
+  const readEnv = { ...env };
+  const publisherToken = readEnv.FARFOLD_FINAL_PUBLISHER_TOKEN;
+  delete readEnv.FARFOLD_FINAL_PUBLISHER_TOKEN;
+  const rawAppId = readEnv.FARFOLD_FINAL_PUBLISHER_APP_ID ?? "";
+  const publisherAppId = Number(rawAppId);
+  assert.ok(
+    /^[1-9][0-9]*$/.test(rawAppId) &&
+      Number.isSafeInteger(publisherAppId) &&
+      publisherAppId !== actionsAppId &&
+      typeof publisherToken === "string" &&
+      publisherToken.trim() &&
+      publisherToken !== readEnv.GH_TOKEN,
+    "A dedicated final-publisher App ID and installation token are required.",
+  );
+  const archiveEnv = { ...readEnv };
+  delete archiveEnv.GH_TOKEN;
+  delete archiveEnv.GITHUB_TOKEN;
+  const writeEnv = { ...readEnv, GH_TOKEN: publisherToken };
+  const publishedHeads = new Map();
+
   function run(args, options = {}) {
     try {
-      return execFileSync("gh", args, {
+      return execute("gh", args, {
+        env: readEnv,
         stdio: [
           options.input === undefined ? "ignore" : "pipe",
           "pipe",
@@ -102,7 +169,39 @@ function githubClient(repo) {
       );
     }
   }
+  function writeCheck(method, path, body) {
+    return JSON.parse(
+      run(
+        [
+          "api",
+          "--method",
+          method,
+          `repos/${repo}/check-runs${path}`,
+          "--input",
+          "-",
+        ],
+        {
+          env: writeEnv,
+          input: JSON.stringify(body),
+          encoding: "utf8",
+        },
+      ),
+    );
+  }
+  function assertPublishedCheck(check, head, status) {
+    assert.ok(
+      Number.isSafeInteger(check?.id) &&
+        check.id > 0 &&
+        check.head_sha === head &&
+        check.name === finalCheck &&
+        check.status === status &&
+        check.app?.id === publisherAppId &&
+        check.app.slug !== "github-actions",
+      "GitHub did not return the exact final check from the configured publisher App.",
+    );
+  }
   return {
+    publisherAppId,
     api(path) {
       try {
         return JSON.parse(
@@ -145,7 +244,8 @@ function githubClient(repo) {
         const archive = join(directory, "report.zip");
         writeFileSync(archive, bytes, { mode: 0o600 });
         const unzip = (flag, ...rest) =>
-          execFileSync("unzip", [flag, archive, ...rest], {
+          execute("unzip", [flag, archive, ...rest], {
+            env: archiveEnv,
             encoding: "utf8",
             stdio: ["ignore", "pipe", "ignore"],
             maxBuffer: 64 * 1024,
@@ -169,52 +269,32 @@ function githubClient(repo) {
         sha.test(target),
         "Refusing to publish a check without an exact commit.",
       );
-      const created = JSON.parse(
-        run(
-          [
-            "api",
-            "--method",
-            "POST",
-            `repos/${repo}/check-runs`,
-            "--input",
-            "-",
-          ],
-          {
-            input: JSON.stringify({
-              name: finalCheck,
-              head_sha: target,
-              status: "in_progress",
-              details_url: serverUrl,
-            }),
-          },
-        ),
-      );
+      const created = writeCheck("POST", "", {
+        name: finalCheck,
+        head_sha: target,
+        status: "in_progress",
+        details_url: serverUrl,
+      });
+      assertPublishedCheck(created, target, "in_progress");
       assert.ok(
-        Number.isSafeInteger(created.id) &&
-          created.head_sha === target &&
-          created.name === finalCheck &&
-          created.app?.slug === "github-actions",
-        "GitHub did not issue the final check for the exact preview from GitHub Actions.",
+        !publishedHeads.has(created.id),
+        "GitHub returned a duplicate final check ID.",
       );
+      publishedHeads.set(created.id, target);
       return created.id;
     },
     finishCheck(checkId, conclusion, summary) {
-      run(
-        [
-          "api",
-          "--method",
-          "PATCH",
-          `repos/${repo}/check-runs/${checkId}`,
-          "--input",
-          "-",
-        ],
-        {
-          input: JSON.stringify({
-            status: "completed",
-            conclusion,
-            output: { title: finalCheck, summary },
-          }),
-        },
+      const head = publishedHeads.get(checkId);
+      assert.ok(head, "Cannot update a check this publisher did not create.");
+      const updated = writeCheck("PATCH", `/${checkId}`, {
+        status: "completed",
+        conclusion,
+        output: { title: finalCheck, summary },
+      });
+      assertPublishedCheck(updated, head, "completed");
+      assert.ok(
+        updated.id === checkId && updated.conclusion === conclusion,
+        "GitHub did not confirm the requested final check result.",
       );
     },
   };
@@ -441,6 +521,7 @@ function deliveryProof(client, target, scope, run, now) {
     run,
     now,
     client.publicKey,
+    client.graphql,
   );
   return { review, evidence };
 }
@@ -541,7 +622,7 @@ function main(env) {
   const number = requestedPr(eventName, event);
   if (!number) {
     console.log(
-      "No uniquely associated PR. Use workflow_dispatch from main for a specific PR.",
+      JSON.stringify({ decision: "not-run", reason: "no-associated-pr" }),
     );
     return;
   }
@@ -550,7 +631,7 @@ function main(env) {
     "GitHub event lacks the verified repository identity.",
   );
   const client = {
-    ...githubClient(repo),
+    ...githubClient(repo, env),
     publicKey: env.FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY,
   };
   const snapshot = () =>
@@ -583,6 +664,7 @@ function main(env) {
     );
     assert.ok(
       current.review.reviewDigest === result.review.reviewDigest &&
+        current.evidence?.evidenceId === result.evidence?.evidenceId &&
         current.evidence?.evidenceDigest === result.evidence?.evidenceDigest,
       "Independent review or private evidence changed during final verification.",
     );
@@ -594,6 +676,7 @@ function main(env) {
       candidate: target.head,
       target: target.merge,
       pr: number,
+      publisherAppId: client.publisherAppId,
       ...result,
     }),
   );

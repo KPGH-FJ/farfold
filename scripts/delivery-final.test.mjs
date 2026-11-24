@@ -1,6 +1,7 @@
-import { generateKeyPairSync, sign } from "node:crypto";
+import { createHash, generateKeyPairSync, sign } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import {
+  githubClient,
   privateEvidenceFor,
   publishFinalDelivery,
   targetFor,
@@ -42,6 +43,108 @@ const run = {
 };
 const now = Date.parse("2026-11-24T09:00:00Z");
 const artifactDigest = "1".repeat(64);
+
+describe("dedicated final publisher identity", () => {
+  const env = {
+    GH_TOKEN: "read-only-fixture",
+    FARFOLD_FINAL_PUBLISHER_APP_ID: "123456",
+    FARFOLD_FINAL_PUBLISHER_TOKEN: "installation-token-fixture",
+  };
+  function fixture({ create = {}, update = {} } = {}) {
+    const calls = [];
+    const archive = Buffer.from("archive fixture");
+    const check = {
+      id: 31,
+      head_sha: target.head,
+      name: "Farfold final delivery",
+      app: { id: 123456, slug: "farfold-final-publisher" },
+    };
+    const client = githubClient(
+      "KPGH-FJ/farfold",
+      env,
+      (command, args, options) => {
+        calls.push({ command, args, env: options.env });
+        if (command === "unzip")
+          return args[0] === "-Z1" ? "report.json\n" : "{}";
+        if (args.at(-1).endsWith("/zip")) return archive;
+        if (args[2] === "POST")
+          return JSON.stringify({ ...check, status: "in_progress", ...create });
+        if (args[2] === "PATCH")
+          return JSON.stringify({
+            ...check,
+            status: "completed",
+            conclusion: "success",
+            ...update,
+          });
+        return "{}";
+      },
+    );
+    return { client, calls, archive };
+  }
+
+  it("isolates the App token to check writes and validates GitHub's publisher response", () => {
+    const { client, calls, archive } = fixture();
+    expect(client.api("pulls/7")).toEqual({});
+    expect(
+      client.report(
+        {
+          id: 123,
+          digest: `sha256:${createHash("sha256").update(archive).digest("hex")}`,
+        },
+        "report.json",
+      ),
+    ).toEqual({});
+    const id = client.startCheck(target.head, "run-url");
+    client.finishCheck(id, "success", "verified");
+    expect(client.publisherAppId).toBe(123456);
+    expect(calls.map(({ env }) => env.GH_TOKEN)).toEqual([
+      "read-only-fixture",
+      "read-only-fixture",
+      undefined,
+      undefined,
+      "installation-token-fixture",
+      "installation-token-fixture",
+    ]);
+    expect(
+      calls.every(({ env }) => !("FARFOLD_FINAL_PUBLISHER_TOKEN" in env)),
+    ).toBe(true);
+  });
+
+  it("refuses a missing App or the generic Actions identity and credential", () => {
+    for (const overrides of [
+      { FARFOLD_FINAL_PUBLISHER_APP_ID: "" },
+      { FARFOLD_FINAL_PUBLISHER_APP_ID: "15368" },
+      { FARFOLD_FINAL_PUBLISHER_TOKEN: "" },
+      { FARFOLD_FINAL_PUBLISHER_TOKEN: env.GH_TOKEN },
+    ]) {
+      expect(() =>
+        githubClient("KPGH-FJ/farfold", { ...env, ...overrides }),
+      ).toThrow(/dedicated final-publisher/);
+    }
+  });
+
+  it("rejects source or candidate mismatches on creation and completion", () => {
+    for (const mismatch of [
+      { app: { id: 222222, slug: "some-other-app" } },
+      { app: { id: 123456, slug: "github-actions" } },
+      { head_sha: target.merge },
+    ]) {
+      expect(() =>
+        fixture({ create: mismatch }).client.startCheck(target.head, "run-url"),
+      ).toThrow(/exact final check/);
+      const { client } = fixture({ update: mismatch });
+      const id = client.startCheck(target.head, "run-url");
+      expect(() => client.finishCheck(id, "success", "verified")).toThrow(
+        /exact final check/,
+      );
+    }
+    const { client } = fixture({ update: { conclusion: "failure" } });
+    const id = client.startCheck(target.head, "run-url");
+    expect(() => client.finishCheck(id, "success", "verified")).toThrow(
+      /did not confirm/,
+    );
+  });
+});
 
 describe("publishing the final GitHub check", () => {
   const publisher = (events) => ({
@@ -128,6 +231,7 @@ function buildAttestation(scope, overrides = {}) {
   const claim = {
     repositoryId,
     pr: target.number,
+    witnessId: 40,
     base,
     head,
     merge,
@@ -156,18 +260,21 @@ function buildAttestation(scope, overrides = {}) {
   };
   const signature = sign(
     null,
-    privateAttestationBytes(claim),
+    privateAttestationBytes(claim, 2),
     privateKey,
   ).toString("base64url");
   return {
     publicKey: publicKey.export({ format: "pem", type: "spki" }),
     comment: {
       id: 40,
+      node_id: "IC_owner_witness_40",
+      created_at: "2026-11-24T08:00:00Z",
+      updated_at: "2026-11-24T08:11:00Z",
       user: { id: 77, type: "User" },
       author_association: "OWNER",
       body:
         "<!-- farfold-private-delivery:v1 -->\n" +
-        JSON.stringify({ schemaVersion: 1, claim, signature }),
+        JSON.stringify({ schemaVersion: 2, claim, signature }),
     },
   };
 }
@@ -186,6 +293,7 @@ function client({
     ignored: 0,
   })),
   publicKey,
+  witnessEdits,
 } = {}) {
   const scope = classifyDeliveryPaths(
     files.flatMap(({ filename, previous_filename }) =>
@@ -251,6 +359,16 @@ function client({
         databaseId: 199175422,
         login: "chatgpt-codex-connector",
       };
+      const userWitness = comment.user.type === "User";
+      const actor = userWitness
+        ? { __typename: "User", databaseId: comment.user.id }
+        : bot;
+      const edits = [
+        { editedAt: comment.updated_at, deletedAt: null, editor: actor },
+        ...(userWitness
+          ? [{ editedAt: comment.created_at, deletedAt: null, editor: actor }]
+          : []),
+      ];
       return {
         data: {
           node: {
@@ -261,14 +379,14 @@ function client({
             createdAt: comment.created_at,
             updatedAt: comment.updated_at,
             lastEditedAt: comment.updated_at,
-            author: bot,
-            editor: bot,
+            author: actor,
+            editor: actor,
             userContentEdits: {
-              totalCount: 1,
+              totalCount: userWitness
+                ? (witnessEdits ?? edits.length)
+                : edits.length,
               pageInfo: { hasNextPage: false },
-              nodes: [
-                { editedAt: comment.updated_at, deletedAt: null, editor: bot },
-              ],
+              nodes: edits,
             },
           },
         },
@@ -453,6 +571,35 @@ describe("hosted final delivery", () => {
         privateEvidenceFor(comments, target, scope, run, now, publicKey),
       ).toThrow(/exactly one authenticated custodian record/i);
     }
+  });
+
+  it("rejects copying a withdrawn witness into a new comment or restoring it after another edit", () => {
+    const path = "scripts/delivery-final.mjs";
+    const scope = classifyDeliveryPaths([path]);
+    const { comment, publicKey } = buildAttestation(scope);
+    expect(() =>
+      verifyFinalDelivery(
+        client({
+          path,
+          publicKey,
+          comments: [providerComment(), { ...comment, id: 41 }],
+        }),
+        target,
+        now,
+      ),
+    ).toThrow(/different witness comment/);
+    expect(() =>
+      verifyFinalDelivery(
+        client({
+          path,
+          publicKey,
+          comments: [providerComment(), comment],
+          witnessEdits: 3,
+        }),
+        target,
+        now,
+      ),
+    ).toThrow(/edited again/);
   });
 
   it("does not fall back to older successful attempts when the current one failed", () => {

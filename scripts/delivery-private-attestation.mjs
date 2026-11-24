@@ -63,14 +63,14 @@ export function assertInstalledEvidencePlatforms(scope, receipts) {
   }
 }
 
-export function privateAttestationBytes(claim) {
+export function privateAttestationBytes(claim, schemaVersion = 1) {
   return Buffer.from(
-    `Farfold private delivery evidence v1\n${canonicalJson(claim)}`,
+    `Farfold private delivery evidence v${schemaVersion}\n${canonicalJson(claim)}`,
     "utf8",
   );
 }
 
-function verifySignature(claim, encodedSignature, publicKey) {
+function verifySignature(claim, encodedSignature, publicKey, schemaVersion) {
   assert.ok(
     typeof publicKey === "string" && publicKey.trim(),
     "No trusted private evidence signer is configured.",
@@ -101,7 +101,7 @@ function verifySignature(claim, encodedSignature, publicKey) {
   const bytes = Buffer.from(encodedSignature, "base64url");
   assert.ok(
     bytes.toString("base64url") === encodedSignature &&
-      verify(null, privateAttestationBytes(claim), key, bytes),
+      verify(null, privateAttestationBytes(claim, schemaVersion), key, bytes),
     "The private evidence signature does not match the trusted signer.",
   );
 }
@@ -245,12 +245,13 @@ function validateEvidence(evidence, { target, scope, now, reviewedAt }) {
 /** Verify the independently signed compact proof, while originals remain with the custodian. */
 export function verifyDeliveryPrivateAttestation(
   envelope,
-  { publicKey, target, scope, run, now },
+  { publicKey, target, scope, run, now, witnessId },
 ) {
   assertEvidenceScope(scope);
+  const schemaVersion = witnessId === undefined ? 1 : 2;
   assert.ok(
     exactKeys(envelope, ["schemaVersion", "claim", "signature"]) &&
-      envelope.schemaVersion === 1,
+      envelope.schemaVersion === schemaVersion,
     "Expected one versioned private evidence attestation.",
   );
   const { claim, signature } = envelope;
@@ -270,10 +271,19 @@ export function verifyDeliveryPrivateAttestation(
       "decision",
       "evidence",
       "policyReview",
+      ...(schemaVersion === 2 ? ["witnessId"] : []),
     ]),
     "The signed private evidence claim is incomplete.",
   );
-  verifySignature(claim, signature, publicKey);
+  verifySignature(claim, signature, publicKey, schemaVersion);
+  if (schemaVersion === 2) {
+    assert.ok(
+      Number.isSafeInteger(witnessId) &&
+        witnessId > 0 &&
+        claim.witnessId === witnessId,
+      "Private evidence attestation belongs to a different witness comment.",
+    );
+  }
   assert.ok(
     Number.isSafeInteger(target.repositoryId) &&
       claim.repositoryId === target.repositoryId &&
