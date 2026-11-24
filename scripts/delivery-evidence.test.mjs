@@ -25,7 +25,7 @@ afterEach(() => {
     rmSync(root, { recursive: true, force: true });
 });
 
-function fixture({ reviewBy, mode = "fresh" } = {}) {
+function fixture({ reviewBy, mode = "fresh", platform = "macos-arm64" } = {}) {
   const rootDir = mkdtempSync(join(tmpdir(), "farfold-delivery-evidence-"));
   roots.push(rootDir);
   mkdirSync(join(rootDir, "output"));
@@ -36,7 +36,7 @@ function fixture({ reviewBy, mode = "fresh" } = {}) {
   }
   const context = {
     agentId: "delivery-controlled-sample",
-    platform: "macos-arm64",
+    platform,
     productCommit: head,
     app: {
       bundleId: "ai.farfold.desktop",
@@ -207,7 +207,7 @@ function fixture({ reviewBy, mode = "fresh" } = {}) {
     now,
     freshSince,
     rootDir,
-    scope: { stable: true, installed: true },
+    scope: { product: true, macProduct: true, windowsProduct: false },
     sourceTrees: { [head]: headTree, [merge]: mergeTree },
   };
   return {
@@ -250,6 +250,7 @@ describe("dispatch to the existing acceptance revalidation rules", () => {
     const summary = await validateLocalDeliveryRecord(f.record, f.options);
     expect(summary.installed.receipts[0]).toMatchObject({
       mode: "fresh",
+      platform: "macos-arm64",
       preparedAt: f.manifest.preparedAt,
       reviewBy: null,
       revalidationSha256: null,
@@ -260,6 +261,43 @@ describe("dispatch to the existing acceptance revalidation rules", () => {
     expect(JSON.stringify(summary)).not.toMatch(
       /private-fingerprint|output\/|private-ui-observation/,
     );
+  });
+
+  it("requires native Windows receipt bytes rather than a macOS substitute", async () => {
+    const f = fixture();
+    f.options.scope = {
+      product: true,
+      macProduct: false,
+      windowsProduct: true,
+    };
+    f.record.stable.required = false;
+    await expect(
+      validateLocalDeliveryRecord(f.record, f.options),
+    ).rejects.toThrow("native Windows installed evidence");
+  });
+
+  it("accepts a sealed Windows fixture under Windows-only scope without the seven macOS checks", async () => {
+    const f = fixture({ platform: "windows-x64" });
+    f.options.scope = {
+      product: true,
+      macProduct: false,
+      windowsProduct: true,
+    };
+    f.record.stable = { required: false, reason: "Candidate is Windows-only" };
+    const summary = await validateLocalDeliveryRecord(f.record, f.options);
+    expect(summary.stable).toEqual({ required: false, sha256: null });
+    expect(summary.installed.receipts[0]).toMatchObject({
+      platform: "windows-x64",
+      sourceTree: headTree,
+    });
+  });
+
+  it("requires both installed platforms on a mixed-platform candidate", async () => {
+    const f = fixture({ platform: "windows-x64" });
+    f.options.scope.windowsProduct = true;
+    await expect(
+      validateLocalDeliveryRecord(f.record, f.options),
+    ).rejects.toThrow("macOS arm64 installed evidence");
   });
 
   it("accepts historical evidence when current inputs and dependencies match and the review binds the updated capture", async () => {

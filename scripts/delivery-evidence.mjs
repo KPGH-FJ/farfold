@@ -4,6 +4,11 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { planRevalidation, validateReceipt } from "./acceptance-receipts.mjs";
 import { stableChecks } from "./delivery-check.mjs";
+import {
+  assertEvidenceScope,
+  assertInstalledEvidencePlatforms,
+  isEvidencePlatform,
+} from "./delivery-private-attestation.mjs";
 
 const timestamp = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,3})?Z$/;
 const dated = (value) =>
@@ -216,6 +221,10 @@ async function verifyInstalledReceipt(
       manifest.context.app.binarySha256 === entry.binarySha256,
     "Installed receipt identity differs from the reviewed build.",
   );
+  assert.ok(
+    isEvidencePlatform(manifest.context.platform),
+    "Installed evidence must identify the actual macOS arm64 or native Windows platform.",
+  );
   if (installedRequired) {
     assert.ok(
       [head, merge].includes(entry.productCommit),
@@ -265,6 +274,7 @@ async function verifyInstalledReceipt(
     manifestSha256: receipt.manifest.sha256,
     productCommit: entry.productCommit,
     binarySha256: entry.binarySha256,
+    platform: manifest.context.platform,
     requirementIds: entry.requirementIds,
     preparedAt: manifest.preparedAt,
     finishedAt: receipt.finishedAt,
@@ -297,6 +307,7 @@ export async function validateLocalDeliveryRecord(
     "The delivery record does not match this base and candidate.",
   );
   const { review, stable, installed } = record;
+  assertEvidenceScope(scope);
   assert.ok(
     review?.verdict === "approved" &&
       review.base === base &&
@@ -307,12 +318,12 @@ export async function validateLocalDeliveryRecord(
       review.summary.trim(),
     "An independent review of this exact base and head must be recorded.",
   );
-  for (const [name, claim] of [
-    ["stable", stable],
-    ["installed", installed],
+  for (const [name, claim, required] of [
+    ["stable", stable, scope.macProduct],
+    ["installed", installed, scope.product],
   ]) {
     assert.ok(
-      typeof scope?.[name] === "boolean" && claim?.required === scope[name],
+      claim?.required === required,
       `The ${name} applicability claim differs from the assessed candidate scope.`,
     );
     assert.ok(
@@ -320,11 +331,10 @@ export async function validateLocalDeliveryRecord(
       `Record why ${name} verification applies or does not apply.`,
     );
   }
-  if (scope.stable) validateStableReport(stable, head, rootDir);
+  if (scope.macProduct) validateStableReport(stable, head, rootDir);
   assert.ok(
-    Array.isArray(installed.receipts) &&
-      (!scope.installed || installed.receipts.length > 0),
-    "Applicable installed verification needs receipt paths.",
+    Array.isArray(installed.receipts) && installed.receipts.length <= 20,
+    "Record a finite list of installed verification receipt paths.",
   );
   const receipts = [];
   for (const entry of installed.receipts) {
@@ -333,7 +343,7 @@ export async function validateLocalDeliveryRecord(
         base,
         head,
         merge,
-        installedRequired: scope.installed,
+        installedRequired: scope.product,
         sourceTrees,
         review,
         now,
@@ -342,14 +352,15 @@ export async function validateLocalDeliveryRecord(
       }),
     );
   }
+  assertInstalledEvidencePlatforms(scope, receipts);
   return {
     base,
     head,
     merge,
     stable: {
-      required: scope.stable,
-      sha256: scope.stable ? stable.sha256 : null,
+      required: scope.macProduct,
+      sha256: scope.macProduct ? stable.sha256 : null,
     },
-    installed: { required: scope.installed, receipts },
+    installed: { required: scope.product, receipts },
   };
 }
