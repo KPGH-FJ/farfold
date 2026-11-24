@@ -487,6 +487,39 @@ function requestedPr(eventName, event) {
   return linked[0].number;
 }
 
+export function publishFinalDelivery(client, target, serverUrl, verifyCurrent) {
+  // GitHub needs a check on the PR head as well as the reviewed merge preview.
+  // Mark the head pending first and complete it last, after verifying both SHAs.
+  const checks = [client.startCheck(target.head, serverUrl)];
+  try {
+    checks.push(client.startCheck(target.merge, serverUrl));
+    const result = verifyCurrent();
+    for (const check of checks.toReversed()) {
+      client.finishCheck(
+        check,
+        "success",
+        "Current candidate, preview, engineering run and independent evidence verified.",
+      );
+    }
+    return result;
+  } catch (error) {
+    for (const check of checks) {
+      try {
+        client.finishCheck(
+          check,
+          "failure",
+          "Final delivery requirements are not satisfied. See workflow log.",
+        );
+      } catch {
+        console.error(
+          "Could not publish a failed final delivery check to GitHub.",
+        );
+      }
+    }
+    throw error;
+  }
+}
+
 function main(env) {
   assert.ok(
     env.GITHUB_REF === "refs/heads/main" &&
@@ -524,8 +557,7 @@ function main(env) {
     targetFor(client.api, number, base, event.repository.id);
   const serverUrl = `https://github.com/${repo}/actions/runs/${runId}`;
   const target = snapshot();
-  const check = client.startCheck(target.merge, serverUrl);
-  try {
+  const result = publishFinalDelivery(client, target, serverUrl, () => {
     const result = verifyFinalDelivery(client, target);
     assert.ok(
       sameTuple(target, snapshot()),
@@ -554,27 +586,17 @@ function main(env) {
         current.evidence?.evidenceDigest === result.evidence?.evidenceDigest,
       "Independent review or private evidence changed during final verification.",
     );
-    client.finishCheck(
-      check,
-      "success",
-      "Current engineering result and independent evidence verified.",
-    );
-    console.log(
-      JSON.stringify({
-        decision: "verified",
-        target: target.merge,
-        pr: number,
-        ...result,
-      }),
-    );
-  } catch (error) {
-    client.finishCheck(
-      check,
-      "failure",
-      "Final delivery requirements are not satisfied. See workflow log.",
-    );
-    throw error;
-  }
+    return result;
+  });
+  console.log(
+    JSON.stringify({
+      decision: "verified",
+      candidate: target.head,
+      target: target.merge,
+      pr: number,
+      ...result,
+    }),
+  );
 }
 
 if (
