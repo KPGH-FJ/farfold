@@ -98,8 +98,13 @@ function verifyCommentEditor(graphql, summary) {
     node.lastEditedAt === null &&
     node.editor === null &&
     node.createdAt === node.updatedAt;
+  // GitHub can update comment metadata after recording the last content edit.
+  // The matching edit-history entry below authenticates the content timestamp.
   const botEdited =
-    node.lastEditedAt === node.updatedAt && codexBot(node.editor);
+    codexBot(node.editor) &&
+    typeof node.lastEditedAt === "string" &&
+    time(node.lastEditedAt) >= time(node.createdAt) &&
+    time(node.lastEditedAt) <= time(node.updatedAt);
   assert.ok(
     pristine || botEdited,
     "Codex review comment's current content was not written by the pinned Codex bot.",
