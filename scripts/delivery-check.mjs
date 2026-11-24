@@ -68,10 +68,10 @@ export function requiredWindowsAffectedCommands(base, head) {
     ["git", "diff", "--check", base, head],
     cargo("fmt"),
     cargo("clippy", "--locked", "--all-targets", "--", "-D", "warnings"),
+    cargo("build", "--locked", "--example", "windows_process_fixture"),
     ...windowsAffectedTests.map((name) =>
       cargo("test", "--locked", "--lib", name, "--", "--exact", "--nocapture"),
     ),
-    cargo("build", "--locked", "--example", "windows_process_fixture"),
     cargo("test", "--locked", "--", "--nocapture"),
   ];
 }
@@ -153,7 +153,23 @@ function main([mode, output, base, ...extra]) {
   const windows = mode === "affected-windows";
   const availableBytesBefore = windows ? null : freeBytes();
   const tests = [];
-  const results = checks.map(([program, ...args]) => {
+  const results = [];
+  const commandFailed = ({ exitCode, signal, error }) =>
+    exitCode !== 0 || signal !== null || error !== null;
+  const exactTestFailed = ({ passed, failed, ignored }) =>
+    passed !== 1 || failed !== 0 || ignored !== 0;
+  const fullWindowsSuite = windows ? checks.at(-1) : null;
+  for (const command of checks) {
+    if (
+      command === fullWindowsSuite &&
+      (results.some(commandFailed) || tests.some(exactTestFailed))
+    ) {
+      console.log(
+        "[delivery] Full Windows suite deferred because earlier required checks failed.",
+      );
+      break;
+    }
+    const [program, ...args] = command;
     console.log(`[delivery] ${[program, ...args].join(" ")}`);
     const start = performance.now();
     const testName =
@@ -185,14 +201,14 @@ function main([mode, output, base, ...extra]) {
         ignored: counts?.ignored ?? null,
       });
     }
-    return {
-      command: [program, ...args],
+    results.push({
+      command,
       exitCode: result.status,
       signal: result.signal,
       error: result.error?.code ?? null,
       elapsedMs: Math.round(performance.now() - start),
-    };
-  });
+    });
+  }
   const inputsStable = !status() && git("rev-parse", "HEAD").trim() === head;
   writeFileSync(
     output,
@@ -218,14 +234,8 @@ function main([mode, output, base, ...extra]) {
   );
   if (
     !inputsStable ||
-    results.some(
-      ({ exitCode, signal, error }) =>
-        exitCode !== 0 || signal !== null || error !== null,
-    ) ||
-    tests.some(
-      ({ passed, failed, ignored }) =>
-        passed !== 1 || failed !== 0 || ignored !== 0,
-    )
+    results.some(commandFailed) ||
+    tests.some(exactTestFailed)
   )
     process.exitCode = 1;
 }
