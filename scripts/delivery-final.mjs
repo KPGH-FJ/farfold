@@ -54,15 +54,12 @@ export function privateEvidenceFor(
       typeof comment.body === "string" &&
       comment.body.startsWith(privateProofMarker + "\n"),
   );
-  const latest = witnesses.reduce(
-    (current, item) => (!current || item.id > current.id ? item : current),
-    null,
-  );
+  const [witness] = witnesses;
   assert.ok(
-    latest && Buffer.byteLength(latest.body) <= 24000,
-    "Applicable private evidence or policy assessment needs an authenticated custodian record.",
+    witnesses.length === 1 && Buffer.byteLength(witness.body) <= 24000,
+    "Applicable private evidence or policy assessment needs exactly one authenticated custodian record.",
   );
-  const raw = latest.body.slice(privateProofMarker.length).trim();
+  const raw = witness.body.slice(privateProofMarker.length).trim();
   const fenced = raw.match(/^```json\s*([\s\S]+?)\s*```$/i);
   let envelope;
   try {
@@ -78,7 +75,7 @@ export function privateEvidenceFor(
     now,
   });
   return {
-    evidenceId: latest.id,
+    evidenceId: witness.id,
     evidenceDigest: createHash("sha256")
       .update(JSON.stringify(envelope))
       .digest("hex"),

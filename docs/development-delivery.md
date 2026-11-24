@@ -68,7 +68,7 @@ node scripts/delivery-pr.mjs <PR-number> /path/to/delivery-record.json
 
 独立复核任务通过受限交接取得原件，读回行为结果，核对安装与构建来源、原条件、证据完整性及复验报告。适用平台的构建报告和安装回执须对应同一候选源码树及已验证二进制。Windows 工程测试和安装程序生命周期检查分别记录其实际范围，Windows 正式应用操作须有相应原始观察。
 
-适用实机或治理复核时，受信保管方用隔离的 Ed25519 密钥签署独立执行的最小公开摘要，GitHub Actions 只持有 `FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY` 公钥。签名涵盖实际审查执行编号、记录摘要、原件交接编号、PR 和版本、工程运行及尝试编号、适用回执和规则影响。署名前查阅原件并核对 `delivery-pr.mjs` 的结果。治理变更须附上规则怎样保留原验收要求的具体依据。签名格式以 `scripts/delivery-private-attestation.mjs` 为准。原件、会话正文、账号信息、机器路径和密钥留在受限环境。仓库所有者发布摘要时，评论首行用 `<!-- farfold-private-delivery:v1 -->`，其后是已签名的 JSON。当前公钥应由能独立运行复核且能保管私钥的执行环境提供；缺少受信记录时，适用的最终核验会拒绝。
+适用实机或治理复核时，受信保管方用隔离的 Ed25519 密钥签署独立执行的最小公开摘要，GitHub Actions 只持有 `FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY` 公钥。签名涵盖实际审查执行编号、记录摘要、原件交接编号、PR 和版本、工程运行及尝试编号、适用回执和规则影响。署名前查阅原件并核对 `delivery-pr.mjs` 的结果。治理变更须附上规则怎样保留原验收要求的具体依据。签名格式以 `scripts/delivery-private-attestation.mjs` 为准。原件、会话正文、账号信息、机器路径和密钥留在受限环境。每个 PR 保留一条摘要评论，补交时编辑同一条。仓库所有者发布摘要时，评论首行用 `<!-- farfold-private-delivery:v1 -->`，其后是已签名的 JSON。当前公钥应由能独立运行复核且能保管私钥的执行环境提供；缺少受信记录时，适用的最终核验会拒绝。
 
 ```sh
 gh workflow run delivery-final.yml --ref main -f pr_number=<PR-number>

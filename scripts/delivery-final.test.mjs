@@ -305,6 +305,19 @@ describe("hosted final delivery", () => {
     ).toThrow(/signature does not match/i);
   });
 
+  it("requires one active evidence record and rejects a withdrawn record", () => {
+    const scope = classifyDeliveryPaths(["scripts/delivery-final.mjs"]);
+    const { comment, publicKey } = buildAttestation(scope);
+    for (const comments of [
+      [],
+      [comment, { ...comment, id: comment.id + 1 }],
+    ]) {
+      expect(() =>
+        privateEvidenceFor(comments, target, scope, run, now, publicKey),
+      ).toThrow(/exactly one authenticated custodian record/i);
+    }
+  });
+
   it("does not fall back to older successful attempts when the current one failed", () => {
     expect(() =>
       verifyFinalDelivery(
