@@ -112,6 +112,24 @@ function githubClient(repo) {
         throw new Error("Could not read verified data from the GitHub API.");
       }
     },
+    graphql(query, node) {
+      try {
+        const response = JSON.parse(
+          run(
+            ["api", "graphql", "-f", `query=${query}`, "-f", `node=${node}`],
+            {
+              encoding: "utf8",
+            },
+          ),
+        );
+        assert.ok(!response.errors);
+        return response;
+      } catch {
+        throw new Error(
+          "Could not authenticate the current Codex comment editor through GitHub GraphQL.",
+        );
+      }
+    },
     report(artifact, entry) {
       const bytes = run(
         ["api", `repos/${repo}/actions/artifacts/${artifact.id}/zip`],
@@ -408,7 +426,14 @@ function inspectScope(api, target) {
 
 function deliveryProof(client, target, scope, run, now) {
   const comments = pullRequestComments(client.api, target.number);
-  const review = codexReviewProof(client.api, comments, target, run, now);
+  const review = codexReviewProof(
+    client.api,
+    client.graphql,
+    comments,
+    target,
+    run,
+    now,
+  );
   const evidence = privateEvidenceFor(
     comments,
     target,

@@ -129,10 +129,13 @@ jobs:
           rustup toolchain install 1.96.0 --profile minimal --component rustfmt --component clippy
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           rustup default 1.96.0
-      - name: Run Windows native checks and exact worktree controls
+      - name: Run Windows native suite and exact worktree controls
         env:
           DELIVERY_BASE: ${{ needs.scope.outputs.base }}
         run: |
+          $fixturePython = (Get-Command python.exe -CommandType Application -ErrorAction Stop).Source
+          & $fixturePython -c "import sys; assert sys.version_info >= (3, 9); print(sys.version)"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $head = (git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $head -cne $env:GITHUB_SHA) { throw 'Windows checkout differs from the engineering candidate.' }
           node scripts/delivery-check.mjs affected-windows (Join-Path $env:RUNNER_TEMP 'delivery-windows.json') $env:DELIVERY_BASE

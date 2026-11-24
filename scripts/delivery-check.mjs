@@ -71,6 +71,8 @@ export function requiredWindowsAffectedCommands(base, head) {
     ...windowsAffectedTests.map((name) =>
       cargo("test", "--locked", "--lib", name, "--", "--exact", "--nocapture"),
     ),
+    cargo("build", "--locked", "--example", "windows_process_fixture"),
+    cargo("test", "--locked", "--", "--nocapture"),
   ];
 }
 
@@ -155,7 +157,10 @@ function main([mode, output, base, ...extra]) {
     console.log(`[delivery] ${[program, ...args].join(" ")}`);
     const start = performance.now();
     const testName =
-      windows && program === "cargo" && args[0] === "test"
+      windows &&
+      program === "cargo" &&
+      args[0] === "test" &&
+      windowsAffectedTests.includes(args.at(-4))
         ? args.at(-4)
         : undefined;
     const result = spawnSync(

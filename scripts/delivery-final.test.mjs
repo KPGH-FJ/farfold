@@ -45,6 +45,8 @@ const artifactDigest = "1".repeat(64);
 function providerComment() {
   return {
     id: 7127685325,
+    node_id: "IC_kwDOUF9Z6s8AAAABqNfYzQ",
+    created_at: "2026-11-24T07:55:00Z",
     user: { id: 199175422, type: "Bot", login: "chatgpt-codex-connector[bot]" },
     performed_via_github_app: {
       id: 1144995,
@@ -182,6 +184,36 @@ function client({
     }));
   return {
     publicKey,
+    graphql(_query, id) {
+      const comment = comments.find(({ node_id }) => node_id === id);
+      const bot = {
+        __typename: "Bot",
+        databaseId: 199175422,
+        login: "chatgpt-codex-connector",
+      };
+      return {
+        data: {
+          node: {
+            __typename: "IssueComment",
+            id: comment.node_id,
+            fullDatabaseId: String(comment.id),
+            body: comment.body,
+            createdAt: comment.created_at,
+            updatedAt: comment.updated_at,
+            lastEditedAt: comment.updated_at,
+            author: bot,
+            editor: bot,
+            userContentEdits: {
+              totalCount: 1,
+              pageInfo: { hasNextPage: false },
+              nodes: [
+                { editedAt: comment.updated_at, deletedAt: null, editor: bot },
+              ],
+            },
+          },
+        },
+      };
+    },
     api(route) {
       if (!Object.hasOwn(routes, route))
         throw new Error(`Unexpected test route: ${route}`);
@@ -265,6 +297,51 @@ describe("hosted final delivery", () => {
         /needs a configured trusted custodian key/i,
       );
     }
+  });
+
+  it("checks signed installed evidence after the current independent code review", () => {
+    const path = "public/brand/wordmark.svg";
+    const scope = classifyDeliveryPaths([path]);
+    const installed = {
+      mode: "fresh",
+      receiptSha256: "1".repeat(64),
+      manifestSha256: "2".repeat(64),
+      productCommit: target.head,
+      binarySha256: "3".repeat(64),
+      platform: "macos-arm64",
+      requirementIds: ["P01"],
+      preparedAt: "2026-11-24T07:20:00Z",
+      finishedAt: "2026-11-24T07:30:00Z",
+      reviewBy: null,
+      revalidationSha256: null,
+      revalidatedAt: null,
+      buildSha256: "4".repeat(64),
+      sourceTree: target.mergeTree,
+    };
+    const verify = (receipt) => {
+      const { comment, publicKey } = buildAttestation(scope, {
+        evidence: {
+          base: target.base,
+          head: target.head,
+          merge: target.merge,
+          stable: { required: true, sha256: "5".repeat(64) },
+          installed: { required: true, receipts: receipt ? [receipt] : [] },
+        },
+      });
+      return verifyFinalDelivery(
+        client({ path, publicKey, comments: [providerComment(), comment] }),
+        target,
+        now,
+      );
+    };
+    expect(verify(installed)).toMatchObject({ evidence: { evidenceId: 40 } });
+    expect(() => verify(null)).toThrow(/macOS arm64 installed evidence/i);
+    expect(() =>
+      verify({ ...installed, reviewBy: "2026-11-24T08:59:00Z" }),
+    ).toThrow(/review-horizon-reached/i);
+    expect(() => verify({ ...installed, sourceTree: "e".repeat(40) })).toThrow(
+      /exact tested candidate source tree/i,
+    );
   });
 
   it("requires a signed policy assessment for delivery-governance changes", () => {

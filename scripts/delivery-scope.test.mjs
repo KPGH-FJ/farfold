@@ -61,6 +61,24 @@ describe("delivery scope", () => {
     });
   });
 
+  it.each([
+    "AGENTS.override.md",
+    "docs/AGENTS.md",
+    "docs/deep/AGENTS.override.md",
+    "src-tauri/src/worktrees/AGENTS.md",
+  ])("treats scoped Codex instructions as governance (%s)", (path) => {
+    expect(classifyDeliveryPaths([path])).toEqual({
+      frontend: false,
+      native: false,
+      product: false,
+      governance: true,
+      macNative: false,
+      windowsNative: false,
+      macProduct: false,
+      windowsProduct: false,
+    });
+  });
+
   it("keeps the cfg(test) worktree module out of installed acceptance on both platforms", () => {
     expect(classifyDeliveryPaths(["src-tauri/src/worktrees/tests.rs"])).toEqual(
       {
@@ -76,10 +94,16 @@ describe("delivery scope", () => {
     );
   });
 
-  it("requires only Windows-appropriate evidence for Windows worktree production or test paths", () => {
-    expect(
-      classifyDeliveryPaths(["src-tauri/src/worktrees/create_windows.rs"]),
-    ).toEqual({
+  it.each([
+    "create_windows.rs",
+    "git_source_checkout_inputs_windows.rs",
+    "material_owner_remove.rs",
+    "material_windows.rs",
+    "preparation_windows.rs",
+    "recovery_graph.rs",
+    "windows_git_paths.rs",
+  ])("requires Windows runtime evidence for %s", (file) => {
+    expect(classifyDeliveryPaths([`src-tauri/src/worktrees/${file}`])).toEqual({
       frontend: false,
       native: true,
       product: true,
@@ -89,17 +113,72 @@ describe("delivery scope", () => {
       macProduct: false,
       windowsProduct: true,
     });
+  });
+
+  it.each([
+    "create_windows_tests.rs",
+    "git_source_checkout_null_attributes_windows_tests.rs",
+    "material_directory_restore_owner_tests.rs",
+    "recovery_windows_diagnostics.rs",
+    "source_graph_managed_material_tests.rs",
+    "windows_git_plain_paths_tests.rs",
+  ])(
+    "requires Windows engineering without installed evidence for %s",
+    (file) => {
+      expect(
+        classifyDeliveryPaths([`src-tauri/src/worktrees/${file}`]),
+      ).toEqual({
+        frontend: false,
+        native: true,
+        product: false,
+        governance: true,
+        macNative: false,
+        windowsNative: true,
+        macProduct: false,
+        windowsProduct: false,
+      });
+    },
+  );
+
+  it.each([
+    "git.rs",
+    "material_scan.rs",
+    "mod.rs",
+    "preparation_manager.rs",
+    "recovery_artifact.rs",
+    "recovery_pack.rs",
+  ])("checks both platforms when a shared parent changes (%s)", (file) => {
     expect(
-      classifyDeliveryPaths([
-        "src-tauri/src/worktrees/create_windows_tests.rs",
-      ]),
+      classifyDeliveryPaths([`src-tauri/src/worktrees/${file}`]),
     ).toMatchObject({
-      native: true,
-      product: false,
-      governance: true,
-      macNative: false,
+      macNative: true,
       windowsNative: true,
-      macProduct: false,
+      macProduct: true,
+      windowsProduct: false,
+    });
+  });
+
+  it.each(["material_links.rs", "read_policy.rs"])(
+    "requires Windows runtime evidence and shared engineering for %s",
+    (file) => {
+      expect(
+        classifyDeliveryPaths([`src-tauri/src/worktrees/${file}`]),
+      ).toMatchObject({
+        macNative: true,
+        windowsNative: true,
+        macProduct: false,
+        windowsProduct: true,
+      });
+    },
+  );
+
+  it("does not infer a platform from an unfamiliar filename", () => {
+    expect(
+      classifyDeliveryPaths(["src-tauri/src/worktrees/example_windows.rs"]),
+    ).toMatchObject({
+      macNative: true,
+      windowsNative: false,
+      macProduct: true,
       windowsProduct: false,
     });
   });
@@ -142,7 +221,7 @@ describe("Windows engineering producer requirements", () => {
     ]);
     const commands = requiredWindowsAffectedCommands(base, head);
     expect(commands[0]).toEqual(["git", "diff", "--check", base, head]);
-    expect(commands.slice(3).map((command) => command.slice(-4))).toEqual(
+    expect(commands.slice(3, -2).map((command) => command.slice(-4))).toEqual(
       windowsAffectedTests.map((name) => [
         name,
         "--",
@@ -156,6 +235,19 @@ describe("Windows engineering producer requirements", () => {
     expect(windowsAffectedTests).toContain(
       "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source",
     );
+    expect(commands.at(-2)?.slice(-2)).toEqual([
+      "--example",
+      "windows_process_fixture",
+    ]);
+    expect(commands.at(-1)).toEqual([
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--",
+      "--nocapture",
+    ]);
   });
 
   it("rejects successful empty Cargo filters and retains failure or ignored counts", () => {

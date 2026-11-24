@@ -58,7 +58,9 @@ corepack pnpm acceptance:check output/owned-run/receipt.json
 
 GitHub 在 `main` 上执行 PR 与工程检查规则。工程工作流验证合并预览的两个父提交，按范围产生 `Farfold delivery check`。最终核验工作流从受保护的 `main` 读取核验代码，在工程工作流之后评估同一基线、候选、合并预览和工程报告。当前生效的必需检查以 [GitHub 主线规则](https://github.com/KPGH-FJ/farfold/rules?ref=main) 为准。
 
-`Farfold final delivery` 从 GitHub API 核验 Codex App 发布的独立代码审查。App 和机器人身份均要匹配。审查须完成、无报告发现、对应当前候选，并在当前合并预览和工程运行启动后完成。候选须包含当前基线，候选与合并预览的源码树须相同。App 评论格式变化、空结果和旧结果都会拒绝放行。App 审查原始文件的范围是 GitHub 可访问的材料，私有实机原件由独立任务在受限环境复核。
+当前个人仓库的规则只能按检查名称和 GitHub App 身份识别发布者。同一仓库的工作流共用 GitHub Actions App 身份。最终核验保持可运行，独立发布身份和适用私有证据的真实放行链路完成验证后，再设为永久必需检查。
+
+`Farfold final delivery` 从 GitHub API 核验 Codex App 发布的独立代码审查。原始 App、机器人和最近编辑者身份均要匹配。审查须完成、无报告发现、对应当前候选，并在当前合并预览和工程运行启动后完成。候选须包含当前基线，候选与合并预览的源码树须相同。App 评论格式变化、空结果和旧结果都会拒绝放行。App 审查原始文件的范围是 GitHub 可访问的材料，私有实机原件由独立任务在受限环境复核。
 
 ```sh
 node scripts/delivery-pr.mjs <PR-number> /path/to/delivery-record.json

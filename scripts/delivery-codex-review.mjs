@@ -5,6 +5,21 @@ export const codexReviewBotId = 199175422;
 const summaryMarker = "<!-- codex-pull-request-review-summary -->";
 const stateMarker = /^<!-- codex-review-state:v1 (\{.+\}) -->$/;
 const reviewRow = /^\| 📝 \*\*Code Review\*\* \|/;
+const commentSnapshot = `query($node: ID!) {
+  node(id: $node) {
+    __typename
+    ... on IssueComment {
+      id fullDatabaseId body createdAt updatedAt lastEditedAt
+      author { __typename login ... on Bot { databaseId } }
+      editor { __typename login ... on Bot { databaseId } }
+      userContentEdits(first: 100) {
+        totalCount
+        pageInfo { hasNextPage }
+        nodes { editedAt deletedAt editor { __typename login ... on Bot { databaseId } } }
+      }
+    }
+  }
+}`;
 
 export function codexReviewEvent(event) {
   return (
@@ -51,7 +66,59 @@ function time(value) {
   return Date.parse(value);
 }
 
-export function codexReviewProof(api, comments, target, run, now) {
+function codexBot(actor) {
+  return (
+    actor?.__typename === "Bot" &&
+    actor.databaseId === codexReviewBotId &&
+    actor.login === "chatgpt-codex-connector"
+  );
+}
+
+function verifyCommentEditor(graphql, summary) {
+  assert.ok(
+    typeof summary.node_id === "string" &&
+      /^[A-Za-z0-9_+/=-]{3,180}$/.test(summary.node_id),
+    "Codex review summary has no verifiable GitHub node identity.",
+  );
+  // REST records the original author and App even when somebody with repo
+  // write access edits the comment. A later App update can preserve prior content,
+  // so verify the complete bounded edit history as well as the current editor.
+  const node = graphql(commentSnapshot, summary.node_id)?.data?.node;
+  assert.ok(
+    node?.__typename === "IssueComment" &&
+      node.id === summary.node_id &&
+      node.fullDatabaseId === String(summary.id) &&
+      node.body === summary.body &&
+      node.createdAt === summary.created_at &&
+      node.updatedAt === summary.updated_at &&
+      codexBot(node.author),
+    "Codex review comment identity or content changed between GitHub observations.",
+  );
+  const pristine =
+    node.lastEditedAt === null &&
+    node.editor === null &&
+    node.createdAt === node.updatedAt;
+  const botEdited =
+    node.lastEditedAt === node.updatedAt && codexBot(node.editor);
+  assert.ok(
+    pristine || botEdited,
+    "Codex review comment's current content was not written by the pinned Codex bot.",
+  );
+  const history = node.userContentEdits;
+  const edits = history?.nodes;
+  assert.ok(
+    history?.pageInfo?.hasNextPage === false &&
+      Array.isArray(edits) &&
+      edits.length === history.totalCount &&
+      (pristine
+        ? edits.length === 0
+        : edits[0]?.editedAt === node.lastEditedAt) &&
+      edits.every((edit) => edit?.deletedAt === null && codexBot(edit.editor)),
+    "Codex review comment edit history is incomplete or includes a different editor.",
+  );
+}
+
+export function codexReviewProof(api, graphql, comments, target, run, now) {
   // The provider certifies head only. Require the exact same source tree
   // in the GitHub-tested preview and prove the review starts from current main.
   assert.ok(
@@ -84,6 +151,7 @@ export function codexReviewProof(api, comments, target, run, now) {
       Buffer.byteLength(summary.body) <= 24000,
     "Codex review summary is not safely identifiable or bounded.",
   );
+  verifyCommentEditor(graphql, summary);
   const lines = summary.body.split("\n");
   const marked = lines.filter((line) =>
     line.startsWith("<!-- codex-review-state:"),

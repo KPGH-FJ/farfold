@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   codexReviewBotId,
   codexReviewEvent,
-  codexReviewProof,
+  codexReviewProof as verifyProof,
   pullRequestComments,
 } from "./delivery-codex-review.mjs";
 
@@ -30,6 +30,8 @@ const compare = () => ({
 function summary({ code = {}, completed = completion } = {}) {
   return {
     id: 7127685325,
+    node_id: "IC_kwDOUF9Z6s8AAAABqNfYzQ",
+    created_at: "2026-11-24T09:38:18Z",
     user: {
       id: codexReviewBotId,
       login: "chatgpt-codex-connector[bot]",
@@ -63,6 +65,48 @@ function summary({ code = {}, completed = completion } = {}) {
       "",
     ].join("\n"),
   };
+}
+
+function codexReviewProof(api, comments, target, run, now, snapshot = {}) {
+  return verifyProof(
+    api,
+    (query, id) => {
+      expect(query).toContain("node(id: $node)");
+      const comment = comments.find(({ node_id }) => node_id === id);
+      const bot = {
+        __typename: "Bot",
+        databaseId: codexReviewBotId,
+        login: "chatgpt-codex-connector",
+      };
+      return {
+        data: {
+          node: {
+            __typename: "IssueComment",
+            id: comment.node_id,
+            fullDatabaseId: String(comment.id),
+            body: comment.body,
+            createdAt: comment.created_at,
+            updatedAt: comment.updated_at,
+            lastEditedAt: comment.updated_at,
+            author: bot,
+            editor: bot,
+            userContentEdits: {
+              totalCount: 1,
+              pageInfo: { hasNextPage: false },
+              nodes: [
+                { editedAt: comment.updated_at, deletedAt: null, editor: bot },
+              ],
+            },
+            ...snapshot,
+          },
+        },
+      };
+    },
+    comments,
+    target,
+    run,
+    now,
+  );
 }
 
 describe("authenticated Codex App review", () => {
@@ -99,6 +143,76 @@ describe("authenticated Codex App review", () => {
         codexReviewProof(compare, [forged], target, run, now),
       ).toThrow(/one authenticated Codex App review summary/i);
     }
+  });
+
+  it("rejects a write-capable owner's edit despite unchanged REST author and App", () => {
+    expect(() =>
+      codexReviewProof(compare, [summary()], target, run, now, {
+        editor: { __typename: "User", databaseId: 22, login: "KPGH-FJ" },
+      }),
+    ).toThrow(/current content was not written by the pinned Codex bot/i);
+  });
+
+  it("rejects an owner edit retained through a later App edit", () => {
+    const comment = summary();
+    expect(() =>
+      codexReviewProof(compare, [comment], target, run, now, {
+        userContentEdits: {
+          totalCount: 2,
+          pageInfo: { hasNextPage: false },
+          nodes: [
+            {
+              editedAt: comment.updated_at,
+              deletedAt: null,
+              editor: {
+                __typename: "Bot",
+                databaseId: codexReviewBotId,
+                login: "chatgpt-codex-connector",
+              },
+            },
+            {
+              editedAt: comment.created_at,
+              deletedAt: null,
+              editor: { __typename: "User", login: "owner" },
+            },
+          ],
+        },
+      }),
+    ).toThrow(/edit history is incomplete or includes a different editor/i);
+  });
+
+  it("rejects REST/GraphQL races or changes to an exact summary identity", () => {
+    for (const snapshot of [
+      { body: "new body" },
+      { id: "different_node" },
+      { fullDatabaseId: "7127685324" },
+      { updatedAt: "2026-11-24T09:42:09Z" },
+      { author: { __typename: "Bot", databaseId: 17, login: "another" } },
+    ]) {
+      expect(() =>
+        codexReviewProof(compare, [summary()], target, run, now, snapshot),
+      ).toThrow(/identity or content changed/i);
+    }
+  });
+
+  it("verifies new unedited comments and still queries GraphQL for same-second edits", () => {
+    const comment = { ...summary(), created_at: "2026-11-24T09:41:06Z" };
+    expect(
+      codexReviewProof(compare, [comment], target, run, now, {
+        editor: null,
+        lastEditedAt: null,
+        userContentEdits: {
+          totalCount: 0,
+          pageInfo: { hasNextPage: false },
+          nodes: [],
+        },
+      }),
+    ).toMatchObject({ reviewId: comment.id });
+    expect(() =>
+      codexReviewProof(compare, [comment], target, run, now, {
+        editor: { __typename: "User", login: "owner" },
+      }),
+    ).toThrow(/not written by the pinned Codex bot/i);
   });
 
   it("rejects ambiguous provider summaries or an unavailable marker format", () => {
