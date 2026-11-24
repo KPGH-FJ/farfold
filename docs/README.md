@@ -7,6 +7,7 @@
 | [PRODUCT.md](../PRODUCT.md)                                         | 唯一产品契约；不随缺陷下调承诺               |
 | [AGENTS.md](../AGENTS.md)                                           | 仓库工作规则                                 |
 | [architecture.md](architecture.md)                                  | 当前源码结构、数据和调用路径                 |
+| [研发交付](development-delivery.md)                                 | 受影响检查、正式应用回执、独审和 PR 放行     |
 | [status.md](status.md)                                              | 能力、验证范围、已知问题的当前基线           |
 | [活动计划](../plans/agent-access.md)                                | 唯一短执行入口；安排顺序、依赖和本批出口     |
 | [任务要求参考](agent-access-requirements.md)                        | 151条原始任务、工作包条件和进度；无调度权    |

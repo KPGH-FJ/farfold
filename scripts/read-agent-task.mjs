@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { renderDeliveryContext } from "./task-delivery-context.mjs";
 import {
   parseTaskReference,
   renderTaskRequirements,
@@ -35,8 +36,9 @@ export function readTaskRequirements(args) {
     parseTaskReference(readFileSync(resolve(root, taskReferencePath), "utf8")),
     readFileSync(resolve(root, taskStatusPath), "utf8"),
   );
-  return renderTaskRequirements(
-    selectTaskRequirements(reference, ids, packages),
+  const selection = selectTaskRequirements(reference, ids, packages);
+  return (
+    renderTaskRequirements(selection) + renderDeliveryContext(selection.tasks)
   );
 }
 
