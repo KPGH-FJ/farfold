@@ -56,7 +56,7 @@ corepack pnpm acceptance:check output/owned-run/receipt.json
 
 在 PR 中给出任务 ID、改动作用、原要求和证据摘要的定位、工程检查及余项。代码审查在独立上下文中核对当前差异、原要求和测试。可提交 `@codex review` 请求现有 Codex GitHub App 复审。在受限环境处理实机原件和规则变更的独立任务，记录实际执行编号、基线与候选完整 SHA、所读材料、发现及修正后结论。
 
-GitHub 在 `main` 上执行 PR 与工程检查规则。工程工作流验证合并预览的两个父提交，按范围产生 `Farfold delivery check`。最终核验工作流从受保护的 `main` 读取核验代码，在工程工作流之后评估同一基线、候选、合并预览和工程报告。当前生效的必需检查以 [GitHub 主线规则](https://github.com/KPGH-FJ/farfold/rules?ref=main) 为准。
+GitHub 在 `main` 上执行 PR 与工程检查规则。工程工作流验证合并预览的两个父提交，按范围产生 `Farfold delivery check`。最终核验工作流从受保护的 `main` 读取核验代码，在工程工作流之后评估同一基线、候选、合并预览和工程报告。它把同一次判断发布到合并预览和候选提交，候选提交的检查最后通过，供 GitHub 合入规则识别。当前生效的必需检查以 [GitHub 主线规则](https://github.com/KPGH-FJ/farfold/rules?ref=main) 为准。
 
 当前个人仓库的规则只能按检查名称和 GitHub App 身份识别发布者。同一仓库的工作流共用 GitHub Actions App 身份。最终核验保持可运行，独立发布身份和适用私有证据的真实放行链路完成验证后，再设为永久必需检查。
 
