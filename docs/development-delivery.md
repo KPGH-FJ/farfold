@@ -24,6 +24,8 @@ node scripts/delivery-check.mjs stable /tmp/farfold-stable.json
 
 交付按实际合并预览相对基线的路径判断适用范围。影响 macOS 产品的源码、打包输入和 `public/` 静态资源要求七项稳定检查及 macOS 安装回执。经模块声明确认的 Windows 专属实现要求匹配的 Windows 工程结果及 Windows 安装回执。纯测试修改保留适用工程检查和独立复核。例如 `worktrees/tests.rs` 由 `cfg(test)` 声明，两平台要跑相应工程检查，无需重装 macOS。共用和混合修改按各路径的实际影响合并要求。新旧文件名都参与重命名影响判断。
 
+Windows 工程检查先构建进程测试夹具，再运行精确选择的工作树用例。前置检查已有失败时，工作流保存具体失败和定向测试结果，本次直接拒绝。清除前置失败后，仍须完整 Windows 套件通过才能交付。
+
 ## 正式应用回执
 
 只选已授权、归属明确的样本。先定义要观察的实际行为。Agent 用正常界面操作，在操作后读回结果。正式安装或 Agent 版本无法核对时先保留缺口。昼夜时间由工具记录 UTC，操作说明可用当地时间。
@@ -56,7 +58,7 @@ corepack pnpm acceptance:check output/owned-run/receipt.json
 
 在 PR 中给出任务 ID、改动作用、原要求和证据摘要的定位、工程检查及余项。代码审查在独立上下文中核对当前差异、原要求和测试。可提交 `@codex review` 请求现有 Codex GitHub App 复审。在受限环境处理实机原件和规则变更的独立任务，记录实际执行编号、基线与候选完整 SHA、所读材料、发现及修正后结论。
 
-GitHub 在 `main` 上执行 PR 与工程检查规则。工程工作流验证合并预览的两个父提交，按范围产生 `Farfold delivery check`。最终核验工作流从受保护的 `main` 读取核验代码，在工程工作流之后评估同一基线、候选、合并预览和工程报告。当前生效的必需检查以 [GitHub 主线规则](https://github.com/KPGH-FJ/farfold/rules?ref=main) 为准。
+GitHub 在 `main` 上执行 PR 与工程检查规则。工程工作流验证合并预览的两个父提交，按范围产生 `Farfold delivery check`。最终核验工作流从受保护的 `main` 读取核验代码，在工程工作流之后评估同一基线、候选、合并预览和工程报告。它把同一次判断发布到合并预览和候选提交，候选提交的检查最后通过，供 GitHub 合入规则识别。当前生效的必需检查以 [GitHub 主线规则](https://github.com/KPGH-FJ/farfold/rules?ref=main) 为准。
 
 当前个人仓库的规则只能按检查名称和 GitHub App 身份识别发布者。同一仓库的工作流共用 GitHub Actions App 身份。最终核验保持可运行，独立发布身份和适用私有证据的真实放行链路完成验证后，再设为永久必需检查。
 

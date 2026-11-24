@@ -120,6 +120,31 @@ describe("authenticated Codex App review", () => {
     });
   });
 
+  it("accepts app-authored content when comment metadata is newer than the last edit", () => {
+    const comment = summary();
+    const lastEditedAt = "2026-11-24T09:41:05Z";
+    expect(
+      codexReviewProof(compare, [comment], target, run, now, {
+        lastEditedAt,
+        userContentEdits: {
+          totalCount: 1,
+          pageInfo: { hasNextPage: false },
+          nodes: [
+            {
+              editedAt: lastEditedAt,
+              deletedAt: null,
+              editor: {
+                __typename: "Bot",
+                databaseId: codexReviewBotId,
+                login: "chatgpt-codex-connector",
+              },
+            },
+          ],
+        },
+      }),
+    ).toMatchObject({ reviewId: comment.id });
+  });
+
   it("does not accept a user-authored marker or a different GitHub App", () => {
     const authentic = summary();
     for (const forged of [

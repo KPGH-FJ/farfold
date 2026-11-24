@@ -221,7 +221,11 @@ describe("Windows engineering producer requirements", () => {
     ]);
     const commands = requiredWindowsAffectedCommands(base, head);
     expect(commands[0]).toEqual(["git", "diff", "--check", base, head]);
-    expect(commands.slice(3, -2).map((command) => command.slice(-4))).toEqual(
+    expect(commands[3]?.slice(-2)).toEqual([
+      "--example",
+      "windows_process_fixture",
+    ]);
+    expect(commands.slice(4, -1).map((command) => command.slice(-4))).toEqual(
       windowsAffectedTests.map((name) => [
         name,
         "--",
@@ -235,10 +239,6 @@ describe("Windows engineering producer requirements", () => {
     expect(windowsAffectedTests).toContain(
       "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source",
     );
-    expect(commands.at(-2)?.slice(-2)).toEqual([
-      "--example",
-      "windows_process_fixture",
-    ]);
     expect(commands.at(-1)).toEqual([
       "cargo",
       "test",
