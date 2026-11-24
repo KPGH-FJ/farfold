@@ -101,3 +101,5 @@ pub(super) fn add(intent: &Intent, cancel: &AtomicBool) -> Result<()> {
 #[cfg(test)]
 #[path = "create_windows_tests.rs"]
 mod tests;
+
+// Controlled delivery verification: no behavior change.
