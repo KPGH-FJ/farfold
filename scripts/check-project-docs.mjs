@@ -24,6 +24,7 @@ const entrypoints = [
   "docs/README.md",
   "docs/status.md",
   "docs/architecture.md",
+  "docs/development-delivery.md",
   "docs/archive/README.md",
   "docs/archive/2026-10-17-documentation-alignment/INDEX.md",
   "plans/agent-access.md",
