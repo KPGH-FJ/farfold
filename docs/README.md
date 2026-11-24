@@ -50,3 +50,5 @@
 ## 核对交付结果
 
 在 PR 的 Checks 查看 `Farfold delivery check`。到该 PR 对应的 `Farfold final delivery` 运行核对 PR 编号、合并预览和工程运行编号。适用证据有变化时，按[研发交付](development-delivery.md)重新核验并取得当次结果。
+
+<!-- Controlled check of incomplete and authenticated App review. -->
