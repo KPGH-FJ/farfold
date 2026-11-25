@@ -6,6 +6,7 @@ export const codexReviewBotId = 199175422;
 const summaryMarker = "<!-- codex-pull-request-review-summary -->";
 const stateMarker = /^<!-- codex-review-state:v1 (\{.+\}) -->$/;
 const reviewRow = /^\| 📝 \*\*Code Review\*\* \|/;
+const commentEditLimit = 100;
 const commentSnapshot = `query($node: ID!) {
   node(id: $node) {
     __typename
@@ -13,7 +14,7 @@ const commentSnapshot = `query($node: ID!) {
       id fullDatabaseId body createdAt updatedAt lastEditedAt
       author { __typename login ... on Bot { databaseId } }
       editor { __typename login ... on Bot { databaseId } }
-      userContentEdits(first: 100) {
+      userContentEdits(first: ${commentEditLimit}) {
         totalCount
         pageInfo { hasNextPage }
         nodes { editedAt deletedAt editor { __typename login ... on Bot { databaseId } } }
@@ -22,7 +23,7 @@ const commentSnapshot = `query($node: ID!) {
   }
 }`;
 
-export function codexReviewEvent(event) {
+export function codexReviewEvent(event, confirmCurrentReview) {
   const comment = event.comment;
   if (
     !Number.isSafeInteger(event.issue?.number) ||
@@ -41,11 +42,13 @@ export function codexReviewEvent(event) {
   )
     return true;
 
-  // Code review is authenticated again when the final verifier runs. Ignore
-  // only the pinned actor's edits that keep every consumed review field equal.
+  // Equivalent content can still lose trust when its edit history changes.
+  // Confirm the current comment before deciding that the full check can wait.
   const current = reviewSignal(comment.body);
   return (
-    current === null || current !== reviewSignal(event.changes?.body?.from)
+    current === null ||
+    current !== reviewSignal(event.changes?.body?.from) ||
+    confirmCurrentReview?.(comment) !== true
   );
 }
 
@@ -200,6 +203,7 @@ function verifyCommentEditor(graphql, summary) {
   assert.ok(
     history?.pageInfo?.hasNextPage === false &&
       Array.isArray(edits) &&
+      edits.length <= commentEditLimit &&
       edits.length === history.totalCount &&
       (pristine
         ? edits.length === 0
@@ -207,6 +211,26 @@ function verifyCommentEditor(graphql, summary) {
       edits.every((edit) => edit?.deletedAt === null && codexBot(edit.editor)),
     "Codex review comment edit history is incomplete or includes a different editor.",
   );
+}
+
+export function codexReviewEditCurrent(reader, eventComment) {
+  if (!Number.isSafeInteger(eventComment?.id) || eventComment.id <= 0)
+    return false;
+  try {
+    const comment = reader.api(`issues/comments/${eventComment.id}`);
+    if (
+      comment?.id !== eventComment.id ||
+      comment.node_id !== eventComment.node_id ||
+      comment.body !== eventComment.body ||
+      comment.updated_at !== eventComment.updated_at ||
+      !authoredByCodex(comment)
+    )
+      return false;
+    verifyCommentEditor(reader.graphql, comment);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function codexReviewProof(api, graphql, comments, target, run, now) {

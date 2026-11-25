@@ -38,6 +38,8 @@ jobs:
     timeout-minutes: 3
     permissions:
       contents: read
+      issues: read
+      pull-requests: read
     outputs:
       pr_number: ${{ steps.route.outputs.pr_number }}
     steps:
@@ -49,6 +51,8 @@ jobs:
         with:
           node-version: 22.22.3
       - id: route
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: node scripts/delivery-final.mjs --route
 
   verify:

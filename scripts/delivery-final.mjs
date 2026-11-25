@@ -17,6 +17,7 @@ import {
   windowsAffectedTests,
 } from "./delivery-check.mjs";
 import {
+  codexReviewEditCurrent,
   codexReviewEvent,
   codexReviewProof,
   pullRequestComments,
@@ -138,6 +139,58 @@ export function privateEvidenceFor(
   };
 }
 
+function githubReader(repo, readEnv, execute = execFileSync) {
+  function run(args, options = {}) {
+    try {
+      return execute("gh", args, {
+        env: readEnv,
+        stdio: [
+          options.input === undefined ? "ignore" : "pipe",
+          "pipe",
+          "ignore",
+        ],
+        maxBuffer: options.maxBuffer ?? 8 * 1024 * 1024,
+        timeout: 30000,
+        ...options,
+      });
+    } catch {
+      throw new Error(
+        "GitHub API request failed or exceeded its bounded response.",
+      );
+    }
+  }
+  return {
+    run,
+    api(path) {
+      try {
+        return JSON.parse(
+          run(["api", `repos/${repo}/${path}`], { encoding: "utf8" }),
+        );
+      } catch {
+        throw new Error("Could not read verified data from the GitHub API.");
+      }
+    },
+    graphql(query, node) {
+      try {
+        const response = JSON.parse(
+          run(
+            ["api", "graphql", "-f", `query=${query}`, "-f", `node=${node}`],
+            {
+              encoding: "utf8",
+            },
+          ),
+        );
+        assert.ok(!response.errors);
+        return response;
+      } catch {
+        throw new Error(
+          "Could not authenticate the current comment editor through GitHub GraphQL.",
+        );
+      }
+    },
+  };
+}
+
 export function githubClient(repo, env, execute = execFileSync) {
   const readEnv = { ...env };
   const publisherToken = readEnv.FARFOLD_FINAL_PUBLISHER_TOKEN;
@@ -162,26 +215,8 @@ export function githubClient(repo, env, execute = execFileSync) {
   delete archiveEnv.GITHUB_TOKEN;
   const writeEnv = { ...readEnv, GH_TOKEN: publisherToken };
   const publishedHeads = new Map();
+  const { run, api, graphql } = githubReader(repo, readEnv, execute);
 
-  function run(args, options = {}) {
-    try {
-      return execute("gh", args, {
-        env: readEnv,
-        stdio: [
-          options.input === undefined ? "ignore" : "pipe",
-          "pipe",
-          "ignore",
-        ],
-        maxBuffer: options.maxBuffer ?? 8 * 1024 * 1024,
-        timeout: 30000,
-        ...options,
-      });
-    } catch {
-      throw new Error(
-        "GitHub API request failed or exceeded its bounded response.",
-      );
-    }
-  }
   function writeCheck(method, path, body) {
     return JSON.parse(
       run(
@@ -215,33 +250,8 @@ export function githubClient(repo, env, execute = execFileSync) {
   }
   return {
     publisherAppId,
-    api(path) {
-      try {
-        return JSON.parse(
-          run(["api", `repos/${repo}/${path}`], { encoding: "utf8" }),
-        );
-      } catch {
-        throw new Error("Could not read verified data from the GitHub API.");
-      }
-    },
-    graphql(query, node) {
-      try {
-        const response = JSON.parse(
-          run(
-            ["api", "graphql", "-f", `query=${query}`, "-f", `node=${node}`],
-            {
-              encoding: "utf8",
-            },
-          ),
-        );
-        assert.ok(!response.errors);
-        return response;
-      } catch {
-        throw new Error(
-          "Could not authenticate the current Codex comment editor through GitHub GraphQL.",
-        );
-      }
-    },
+    api,
+    graphql,
     report(artifact, entry) {
       const bytes = run(
         ["api", `repos/${repo}/actions/artifacts/${artifact.id}/zip`],
@@ -569,7 +579,7 @@ export function verifyFinalDelivery(client, target, now = Date.now()) {
   return { scope, runId: run.id, runAttempt: run.run_attempt, ...proof };
 }
 
-function requestedPr(eventName, event) {
+function requestedPr(eventName, event, confirmCurrentReview) {
   if (eventName === "workflow_dispatch") {
     const raw = event.inputs?.pr_number;
     assert.ok(
@@ -594,7 +604,9 @@ function requestedPr(eventName, event) {
           typeof body === "string" &&
           body.startsWith(privateProofMarker + "\n"),
       );
-    return codexReviewEvent(event) || privateUpdate ? event.issue.number : null;
+    return codexReviewEvent(event, confirmCurrentReview) || privateUpdate
+      ? event.issue.number
+      : null;
   }
   const run = event.workflow_run;
   if (run?.event !== "pull_request" || run.path !== workflowPath) return null;
@@ -668,7 +680,10 @@ function main(env, routeOnly) {
     GITHUB_EVENT_NAME: eventName,
   } = env;
   const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, "utf8"));
-  const number = requestedPr(eventName, event);
+  const confirmCurrentReview = routeOnly
+    ? (comment) => codexReviewEditCurrent(githubReader(repo, env), comment)
+    : undefined;
+  const number = requestedPr(eventName, event, confirmCurrentReview);
   if (!number) {
     let reason = "no-associated-pr";
     if (eventName === "issue_comment")
