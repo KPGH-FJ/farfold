@@ -22,6 +22,7 @@ import {
   codexReviewProof,
   pullRequestComments,
 } from "./delivery-codex-review.mjs";
+import { canonicalJson } from "./acceptance-receipts.mjs";
 import { verifyDeliveryPrivateAttestation } from "./delivery-private-attestation.mjs";
 import { classifyDeliveryPaths } from "./delivery-scope.mjs";
 import { DeliveryBlocked, DeliveryWaiting } from "./delivery-state.mjs";
@@ -136,6 +137,7 @@ export function privateEvidenceFor(
       .update(JSON.stringify(envelope))
       .digest("hex"),
     executionId: verified.executionId,
+    recordSha256: proofHash(envelope.claim.evidence),
   };
 }
 
@@ -191,67 +193,14 @@ function githubReader(repo, readEnv, execute = execFileSync) {
   };
 }
 
-export function githubClient(repo, env, execute = execFileSync) {
-  const readEnv = { ...env };
-  const publisherToken = readEnv.FARFOLD_FINAL_PUBLISHER_TOKEN;
-  delete readEnv.FARFOLD_FINAL_PUBLISHER_TOKEN;
-  const rawAppId = readEnv.FARFOLD_FINAL_PUBLISHER_APP_ID ?? "";
-  const publisherAppId = Number(rawAppId);
-  if (!(
-    /^[1-9][0-9]*$/.test(rawAppId) &&
-    Number.isSafeInteger(publisherAppId) &&
-    publisherAppId !== actionsAppId &&
-    typeof publisherToken === "string" &&
-    publisherToken.trim() &&
-    publisherToken !== readEnv.GH_TOKEN
-  )) {
-    throw new DeliveryBlocked(
-      "missing-configuration",
-      "A dedicated final-publisher App ID and installation token are required.",
-    );
-  }
+export function githubFinalReader(repo, readEnv, execute = execFileSync) {
+  const reader = githubReader(repo, readEnv, execute);
+  const { run } = reader;
   const archiveEnv = { ...readEnv };
   delete archiveEnv.GH_TOKEN;
   delete archiveEnv.GITHUB_TOKEN;
-  const writeEnv = { ...readEnv, GH_TOKEN: publisherToken };
-  const publishedHeads = new Map();
-  const { run, api, graphql } = githubReader(repo, readEnv, execute);
-
-  function writeCheck(method, path, body) {
-    return JSON.parse(
-      run(
-        [
-          "api",
-          "--method",
-          method,
-          `repos/${repo}/check-runs${path}`,
-          "--input",
-          "-",
-        ],
-        {
-          env: writeEnv,
-          input: JSON.stringify(body),
-          encoding: "utf8",
-        },
-      ),
-    );
-  }
-  function assertPublishedCheck(check, head, status) {
-    assert.ok(
-      Number.isSafeInteger(check?.id) &&
-        check.id > 0 &&
-        check.head_sha === head &&
-        check.name === finalCheck &&
-        check.status === status &&
-        check.app?.id === publisherAppId &&
-        check.app.slug !== "github-actions",
-      "GitHub did not return the exact final check from the configured publisher App.",
-    );
-  }
   return {
-    publisherAppId,
-    api,
-    graphql,
+    ...reader,
     report(artifact, entry) {
       const bytes = run(
         ["api", `repos/${repo}/actions/artifacts/${artifact.id}/zip`],
@@ -287,6 +236,84 @@ export function githubClient(repo, env, execute = execFileSync) {
         rmSync(directory, { recursive: true, force: true });
       }
     },
+  };
+}
+
+export function proofHash(value) {
+  return createHash("sha256").update(canonicalJson(value)).digest("hex");
+}
+
+export function publishedProof(target, result) {
+  return {
+    decision: "verified",
+    pr: target.number,
+    base: target.base,
+    head: target.head,
+    merge: target.merge,
+    engineeringRunId: result.runId,
+    engineeringRunAttempt: result.runAttempt,
+    proofSha256: proofHash(result),
+  };
+}
+
+export function githubClient(repo, env, execute = execFileSync) {
+  const readEnv = { ...env };
+  const publisherToken = readEnv.FARFOLD_FINAL_PUBLISHER_TOKEN;
+  delete readEnv.FARFOLD_FINAL_PUBLISHER_TOKEN;
+  const rawAppId = readEnv.FARFOLD_FINAL_PUBLISHER_APP_ID ?? "";
+  const publisherAppId = Number(rawAppId);
+  if (!(
+    /^[1-9][0-9]*$/.test(rawAppId) &&
+    Number.isSafeInteger(publisherAppId) &&
+    publisherAppId !== actionsAppId &&
+    typeof publisherToken === "string" &&
+    publisherToken.trim() &&
+    publisherToken !== readEnv.GH_TOKEN
+  )) {
+    throw new DeliveryBlocked(
+      "missing-configuration",
+      "A dedicated final-publisher App ID and installation token are required.",
+    );
+  }
+  const reader = githubFinalReader(repo, readEnv, execute);
+  const { run } = reader;
+  const writeEnv = { ...readEnv, GH_TOKEN: publisherToken };
+  const publishedHeads = new Map();
+
+  function writeCheck(method, path, body) {
+    return JSON.parse(
+      run(
+        [
+          "api",
+          "--method",
+          method,
+          `repos/${repo}/check-runs${path}`,
+          "--input",
+          "-",
+        ],
+        {
+          env: writeEnv,
+          input: JSON.stringify(body),
+          encoding: "utf8",
+        },
+      ),
+    );
+  }
+  function assertPublishedCheck(check, head, status) {
+    assert.ok(
+      Number.isSafeInteger(check?.id) &&
+        check.id > 0 &&
+        check.head_sha === head &&
+        check.name === finalCheck &&
+        check.status === status &&
+        check.app?.id === publisherAppId &&
+        check.app.slug !== "github-actions",
+      "GitHub did not return the exact final check from the configured publisher App.",
+    );
+  }
+  return {
+    publisherAppId,
+    ...reader,
     startCheck(target, serverUrl) {
       assert.ok(
         sha.test(target),
@@ -297,6 +324,7 @@ export function githubClient(repo, env, execute = execFileSync) {
         head_sha: target,
         status: "in_progress",
         details_url: serverUrl,
+        external_id: serverUrl,
       });
       assertPublishedCheck(created, target, "in_progress");
       assert.ok(
@@ -368,7 +396,7 @@ export function targetFor(api, pr, trustedBase, repositoryId) {
   };
 }
 
-function latestEngineeringRun(api, target, announcedRun) {
+export function latestEngineeringRun(api, target, announcedRun) {
   const currentWorkflow = api("actions/workflows/delivery.yml");
   const runList = api(
     `actions/workflows/delivery.yml/runs?event=pull_request&head_sha=${target.head}&per_page=100`,
@@ -545,7 +573,7 @@ function inspectScope(api, target) {
   return classifyDeliveryPaths(paths);
 }
 
-function deliveryProof(client, target, scope, run, now) {
+export function deliveryProof(client, target, scope, run, now) {
   const comments = pullRequestComments(client.api, target.number);
   const review = codexReviewProof(
     client.api,
@@ -641,7 +669,7 @@ export function publishFinalDelivery(client, target, serverUrl, verifyCurrent) {
       client.finishCheck(
         check,
         "success",
-        "Current candidate, preview, engineering run and independent evidence verified.",
+        JSON.stringify(publishedProof(target, result)),
       );
     }
     return result;
@@ -717,7 +745,11 @@ function main(env, routeOnly) {
   };
   const snapshot = () =>
     targetFor(client.api, number, base, event.repository.id);
-  const serverUrl = `https://github.com/${repo}/actions/runs/${runId}`;
+  assert.ok(
+    /^[1-9][0-9]*$/.test(env.GITHUB_RUN_ATTEMPT ?? ""),
+    "Missing publisher run attempt.",
+  );
+  const serverUrl = `https://github.com/${repo}/actions/runs/${runId}/attempts/${env.GITHUB_RUN_ATTEMPT}`;
   const target = snapshot();
   function verifyCurrent() {
     const result = verifyFinalDelivery(client, target);

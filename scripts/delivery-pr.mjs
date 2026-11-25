@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { validateLocalDeliveryRecord } from "./delivery-evidence.mjs";
 import { classifyDeliveryPaths } from "./delivery-scope.mjs";
+import { mergeVerifiedDelivery } from "./delivery-merge.mjs";
 import { requiredAffectedCommands } from "./delivery-check.mjs";
 
 const checkName = "Farfold delivery check";
@@ -17,8 +18,10 @@ function gh(...args) {
 
 async function main([number, recordPath, ...extra]) {
   assert.ok(
-    /^[1-9]\d*$/.test(number ?? "") && recordPath && !extra.length,
-    "Use delivery-pr.mjs <PR number> <delivery-record.json> from the repository root.",
+    /^[1-9]\d*$/.test(number ?? "") &&
+      recordPath &&
+      (extra.length === 0 || (extra.length === 1 && extra[0] === "--merge")),
+    "Use delivery-pr.mjs <PR number> <delivery-record.json> [--merge] from the repository root.",
   );
   const record = jsonFile(recordPath);
   const { base, head } = record;
@@ -94,14 +97,15 @@ async function main([number, recordPath, ...extra]) {
             ?.sha,
         }
       : {};
-  const evidence = await validateLocalDeliveryRecord(record, {
+  const localInputs = {
     base,
     head,
     merge,
     scope,
     sourceTrees,
     freshSince: pr.createdAt,
-  });
+  };
+  const evidence = await validateLocalDeliveryRecord(record, localInputs);
 
   const { workflow_runs: runs } = gh(
     "api",
@@ -171,6 +175,22 @@ async function main([number, recordPath, ...extra]) {
     base,
     "main changed. Review the new base and recheck.",
   );
+  if (extra[0] === "--merge") {
+    const result = await mergeVerifiedDelivery({
+      prUrl: pr.url,
+      number: Number(number),
+      base,
+      head,
+      merge,
+      scope,
+      engineeringRunId: run.id,
+      engineeringRunAttempt: run.run_attempt,
+      readEvidence: () =>
+        validateLocalDeliveryRecord(jsonFile(recordPath), localInputs),
+    });
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
   console.log(
     JSON.stringify(
       {

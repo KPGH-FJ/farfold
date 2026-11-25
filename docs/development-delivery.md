@@ -68,7 +68,7 @@ GitHub 在 `main` 上执行 PR 与工程检查规则。工程工作流验证合�
 
 在 [发布 Environment 设置](https://github.com/KPGH-FJ/farfold/settings/environments) 选 `Selected branches and tags`，保留唯一 `Branch: main`，核验没有 Tag 或 PR 引用。Environment 变量 `FARFOLD_FINAL_PUBLISHER_CLIENT_ID` 用 App Client ID，`FARFOLD_FINAL_PUBLISHER_APP_ID` 用数字 App ID。将 App 的 PEM 私钥放入同一 Environment 的 `FARFOLD_FINAL_PUBLISHER_PRIVATE_KEY` secret。工作流只在 `main` 检出受信提交，以单仓库、`checks: write` 权限生成短期安装令牌。发布任务不执行候选提供的代码、不安装候选依赖、不恢复候选缓存。
 
-过渡 PR 保留现有 PR、严格基线及工程检查规则。这一阶段 GitHub 的合入按钮可能在旧终检失败时仍可用。交付人须等独立保管方签署当前候选的 `schemaVersion: 1` 治理记录，再从旧 `main` 发起终检，核对本次运行确实验证了签名，并在候选和合并预览上都发布成功。缺少本次通过结果、输入有变化或无法读回时停止合入。满足条件后按下方带候选 SHA 的命令正常合入。
+首次安装专用发布程序沿用现有 PR、严格基线和工程检查。所有者已单独授权 PR #15 的一次性迁移审查。隔离独审须读取当前候选、原验收要求、先前的拒绝、认证原件及验证结果，并明确同意。独审拒绝、证据过期或版本改变都会阻止此次交付。合入前从 GitHub 再读基线、候选、合并预览、工程尝试、完整代码审查和保护规则，同时读回本次独审结果，再按候选 SHA 正常合入。这次授权只覆盖安装检查器，后续产品交付执行下述终检。
 
 过渡合入后，先验证专用 App 实际发布、普通 PR 无法访问发布 Environment，以及同一真实产品候选的完整证据能通过、缺失或撤回证据能被终检拒绝。撤回验证须从已有专用 App 成功状态开始，并读回该候选和合并预览的新结果。若刷新失败或仅剩旧绿勾，停止合入和永久启用，先核清旧状态为何仍可用于合入。用上述结果确认生效规则能绑定专用 App 后，将终检加入现有 `main` ruleset，保留工程检查、严格基线和 PR 规则。在规则生效时核验 GitHub 确实阻止拒绝案例，完成合格产品 PR 的正常合入，再读回规则。
 
@@ -88,18 +88,27 @@ node scripts/delivery-pr.mjs <PR-number> /path/to/delivery-record.json
 
 本机复核身份可用一次性系统授权配置为专用标准用户或受管服务。由管理员保护签发入口和密钥目录，开发身份仅提交请求和只读原件副本。给独立 Agent 提供这一候选的精确源码、原验收条件、封存回执及工程报告。签发方从其实际完成的执行记录取得编号、结束时间和原始记录摘要，核对结论后在隔离环境签署。仓库变量只接收该签发方的公开 Ed25519 SPKI 公钥。现有共享系统用户可做只读独审，同一用户生成的密钥无法提供独立保管。
 
+日常合入使用 `node scripts/delivery-pr.mjs <PR-number> /path/to/delivery-record.json --merge`。使用已核对的受保护主线脚本及其依赖，从仓库根目录运行。如果同一工作区正开发其他改动，可以只提取主线脚本。以下示例的 PR 编号和记录路径须替换为实际值。
+
 ```sh
-gh workflow run delivery-final.yml --ref main -f pr_number=<PR-number>
-gh run watch <returned-run-id> --exit-status
-gh run view <returned-run-id> --log
-gh pr merge <PR-number> --merge --match-head-commit <reviewed-head-SHA>
+(
+  set -eu
+  set -- 123 /absolute/path/to/delivery-record.json
+  delivery_base=$(gh api repos/KPGH-FJ/farfold/git/ref/heads/main --jq '.object.sha')
+  git fetch --no-write-fetch-head --no-tags origin "$delivery_base"
+  delivery_scripts=$(mktemp -d)
+  trap 'rm -rf -- "$delivery_scripts"' EXIT
+  git archive --format=tar --output="$delivery_scripts/main-scripts.tar" "$delivery_base" scripts
+  tar -xf "$delivery_scripts/main-scripts.tar" -C "$delivery_scripts"
+  node "$delivery_scripts/scripts/delivery-pr.mjs" "$1" "$2" --merge
+)
 ```
 
 终检在工程尝试完成或重跑启动、Codex 的有效代码审查变化、保管方摘要变化或手动刷新时运行。普通评论与首次工程检查启动不触发完整核验。Codex 只更新展示内容时，路由任务先用只读权限核对来源和完整编辑历史，核对通过才跳过。核验任务按 PR 串行读取当前输入。工程重跑启动事件即使先于工程查询更新，也不会复用同一运行的旧尝试。
 
 日志中的 `waiting-engineering` 和 `waiting-review` 表示等待，对应的专用检查保持进行中。`missing-configuration` 表示发布身份或复核公钥配置缺失。`evidence-rejected` 表示适用的签署证据缺失、过期或核验不合格。`not-run` 表示本事件没有执行交付核验。只有 `verified` 对应专用 App 发布的成功结果。发布凭据缺失时，工作流无法更新已有的 App 检查。
 
-基线推进后更新候选，再获取对应工程结果和审查。证据到期时补验，再提交对应摘要。GitHub 会缓存上一轮状态，到期本身不会启动工作流。每次合入前按上面的入口刷新，等待此次运行结束并确认 `decision: verified`。核对 PR、基线、候选、合并预览、工程尝试、证据期限及专用 App ID，再读回本次运行在两处提交发布的成功记录。各项吻合后，执行带候选 SHA 的正常合入并核对 `main`。
+合入命令先校验本地交付记录，再调度当前主线终检并等待这一次运行。只有工程尝试和独审仍然有效，且专用 App 对本次候选、合并预览都发布了这一次的成功结果，命令才会发出带候选 SHA 的合入请求。刷新、读取或发布失败时，保留错误供定位。GitHub 保存已发布的检查。凭据失效或首次写入失败时，页面仍可能显示上一次成功。证据到期本身也不会触发工作流。再次交付时按同一入口刷新。GitHub 在合入时核对候选 SHA，最后读回之后的证据和审查变动仍有短暂间隔。
 
 2026-11-24，仓库所有者在原研发交付会话中明确授权把该 GitHub 仓库设为公开，原会话保留执行及无登录访问核验。该授权范围为仓库可见性。
 
