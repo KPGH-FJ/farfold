@@ -68,7 +68,9 @@ GitHub 在 `main` 上执行 PR 与工程检查规则。工程工作流验证合�
 
 在 [发布 Environment 设置](https://github.com/KPGH-FJ/farfold/settings/environments) 选 `Selected branches and tags`，保留唯一 `Branch: main`，核验没有 Tag 或 PR 引用。Environment 变量 `FARFOLD_FINAL_PUBLISHER_CLIENT_ID` 用 App Client ID，`FARFOLD_FINAL_PUBLISHER_APP_ID` 用数字 App ID。将 App 的 PEM 私钥放入同一 Environment 的 `FARFOLD_FINAL_PUBLISHER_PRIVATE_KEY` secret。工作流只在 `main` 检出受信提交，以单仓库、`checks: write` 权限生成短期安装令牌。发布任务不执行候选提供的代码、不安装候选依赖、不恢复候选缓存。
 
-过渡 PR 使用当前工程规则和主线既有终检验证治理证据。由独立保管方复核本次规则修改，以当前主线支持的 `schemaVersion: 1` 签名并配置验证公钥后，再推进过渡合入。合入后验证专用 App 实际发布和普通 PR 访问 Environment 的边界。真实产品正例和拒绝对照完成后，将终检名称与该数字 App ID 一起加入现有 `main` ruleset，保留工程检查、严格基线和 PR 规则。合入真实正例后读回规则，确认保护仍在。
+过渡 PR 保留现有 PR、严格基线及工程检查规则。这一阶段 GitHub 的合入按钮可能在旧终检失败时仍可用。交付人须等独立保管方签署当前候选的 `schemaVersion: 1` 治理记录，再从旧 `main` 发起终检，核对本次运行确实验证了签名，并在候选和合并预览上都发布成功。缺少本次通过结果、输入有变化或无法读回时停止合入。满足条件后按下方带候选 SHA 的命令正常合入。
+
+过渡合入后，先验证专用 App 实际发布、普通 PR 无法访问发布 Environment，以及同一真实产品候选的完整证据能通过、缺失或撤回证据能被终检拒绝。撤回验证须从已有专用 App 成功状态开始，并读回该候选和合并预览的新结果。若刷新失败或仅剩旧绿勾，停止合入和永久启用，先核清旧状态为何仍可用于合入。用上述结果确认生效规则能绑定专用 App 后，将终检加入现有 `main` ruleset，保留工程检查、严格基线和 PR 规则。在规则生效时核验 GitHub 确实阻止拒绝案例，完成合格产品 PR 的正常合入，再读回规则。
 
 `Farfold final delivery` 从 GitHub API 核验 Codex App 发布的独立代码审查。原始 App、机器人和最近编辑者身份均要匹配。审查须完成、无报告发现、对应当前候选，并在当前合并预览和工程运行启动后完成。候选须包含当前基线，候选与合并预览的源码树须相同。App 评论格式变化、空结果和旧结果都会拒绝放行。App 审查原始文件的范围是 GitHub 可访问的材料，私有实机原件由独立任务在受限环境复核。
 
