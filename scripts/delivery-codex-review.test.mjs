@@ -27,7 +27,7 @@ const compare = () => ({
   ahead_by: 1,
 });
 
-function summary({ code = {}, completed = completion } = {}) {
+function summary({ code = {}, completed = completion, security = {} } = {}) {
   return {
     id: 7127685325,
     node_id: "IC_kwDOUF9Z6s8AAAABqNfYzQ",
@@ -58,12 +58,23 @@ function summary({ code = {}, completed = completion } = {}) {
           has_any_findings: null,
           has_unresolved_findings: null,
           status: "completed",
+          ...security,
         },
       })} -->`,
       `| 📝 **Code Review** | ✅ **Completed** <relative-time datetime="${completed}">${completed}</relative-time> | \`92219ac\` | PR opened |`,
       '| 🔒 **Security Review** | ✅ **Completed** <relative-time datetime="2026-11-24T09:41:05Z">2026-11-24T09:41:05Z</relative-time> | `92219ac` | PR opened |',
       "",
     ].join("\n"),
+  };
+}
+
+function editedReview(previous, current, sender = current.user) {
+  return {
+    action: "edited",
+    issue: { number: target.number, pull_request: {} },
+    comment: current,
+    changes: { body: { from: previous.body } },
+    sender,
   };
 }
 
@@ -262,14 +273,38 @@ describe("authenticated Codex App review", () => {
     );
   });
 
+  it("waits for the first authenticated review", () => {
+    expect(() => codexReviewProof(compare, [], target, run, now)).toThrow(
+      expect.objectContaining({ state: "waiting-review" }),
+    );
+  });
+
+  it.each(["requested", "running"])(
+    "waits for a %s current review",
+    (status) => {
+      expect(() =>
+        codexReviewProof(
+          compare,
+          [summary({ code: { status } })],
+          target,
+          run,
+          now,
+        ),
+      ).toThrow(expect.objectContaining({ state: "waiting-review" }));
+    },
+  );
+
   it.each([
     { commit_sha: "c".repeat(40) },
-    { status: "requested" },
-    { status: "running" },
-  ])("rejects a review that is not complete for current head: %o", (code) => {
+    { commit_sha: "c".repeat(40), status: "running" },
+    { status: "withdrawn" },
+  ])("rejects an invalid current review: %o", (code) => {
     expect(() =>
       codexReviewProof(compare, [summary({ code })], target, run, now),
     ).toThrow(/has not completed code review/i);
+    expect(() =>
+      codexReviewProof(compare, [summary({ code })], target, run, now),
+    ).not.toThrow(expect.objectContaining({ state: "waiting-review" }));
   });
 
   it.each([
@@ -338,6 +373,48 @@ describe("authenticated Codex App review", () => {
         comment: { user: { id: 21, type: "User" } },
       }),
     ).toBe(false);
+  });
+
+  it("ignores a pinned bot edit that only updates the security review or display text", () => {
+    const previous = summary({ security: { status: "running" } });
+    previous.body = previous.body.replace(
+      'datetime="2026-11-24T09:41:05Z"',
+      'datetime="2026-11-24T09:39:15Z"',
+    );
+    const current = summary();
+    current.body += "An updated display footer.";
+    expect(codexReviewEvent(editedReview(previous, current))).toBe(false);
+  });
+
+  it("rechecks changed findings, status, head, timing and removed review text", () => {
+    const previous = summary();
+    for (const current of [
+      summary({ code: { has_any_findings: true } }),
+      summary({ code: { has_unresolved_findings: true } }),
+      summary({ code: { status: "running" } }),
+      summary({ code: { commit_sha: "c".repeat(40) } }),
+      summary({ completed: "2026-11-24T09:40:00Z" }),
+      { ...previous, body: "Review withdrawn." },
+    ]) {
+      expect(codexReviewEvent(editedReview(previous, current))).toBe(true);
+    }
+  });
+
+  it("does not filter unknown editors or unverifiable prior text", () => {
+    const previous = summary();
+    const current = summary({ security: { status: "running" } });
+    for (const sender of [
+      null,
+      { id: 22, login: "KPGH-FJ", type: "User" },
+      { ...previous.user, id: 223 },
+    ]) {
+      expect(codexReviewEvent(editedReview(previous, current, sender))).toBe(
+        true,
+      );
+    }
+    expect(codexReviewEvent(editedReview({ body: "invalid" }, current))).toBe(
+      true,
+    );
   });
 
   it("does not use an older truncated comment list as the current state", () => {

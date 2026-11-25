@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  appendFileSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -17,6 +23,7 @@ import {
 } from "./delivery-codex-review.mjs";
 import { verifyDeliveryPrivateAttestation } from "./delivery-private-attestation.mjs";
 import { classifyDeliveryPaths } from "./delivery-scope.mjs";
+import { DeliveryBlocked, DeliveryWaiting } from "./delivery-state.mjs";
 
 const sha = /^[0-9a-f]{40}$/;
 const workflowPath = ".github/workflows/delivery.yml";
@@ -58,10 +65,12 @@ export function privateEvidenceFor(
   graphql,
 ) {
   if (!scope.product && !scope.governance) return null;
-  assert.ok(
-    typeof publicKey === "string" && publicKey.trim(),
-    "Applicable private evidence or policy assessment needs a configured trusted custodian key.",
-  );
+  if (typeof publicKey !== "string" || !publicKey.trim()) {
+    throw new DeliveryBlocked(
+      "missing-configuration",
+      "Applicable private evidence or policy assessment needs a configured trusted custodian key.",
+    );
+  }
   const witnesses = comments.filter(
     (comment) =>
       comment.author_association === "OWNER" &&
@@ -135,15 +144,19 @@ export function githubClient(repo, env, execute = execFileSync) {
   delete readEnv.FARFOLD_FINAL_PUBLISHER_TOKEN;
   const rawAppId = readEnv.FARFOLD_FINAL_PUBLISHER_APP_ID ?? "";
   const publisherAppId = Number(rawAppId);
-  assert.ok(
+  if (!(
     /^[1-9][0-9]*$/.test(rawAppId) &&
-      Number.isSafeInteger(publisherAppId) &&
-      publisherAppId !== actionsAppId &&
-      typeof publisherToken === "string" &&
-      publisherToken.trim() &&
-      publisherToken !== readEnv.GH_TOKEN,
-    "A dedicated final-publisher App ID and installation token are required.",
-  );
+    Number.isSafeInteger(publisherAppId) &&
+    publisherAppId !== actionsAppId &&
+    typeof publisherToken === "string" &&
+    publisherToken.trim() &&
+    publisherToken !== readEnv.GH_TOKEN
+  )) {
+    throw new DeliveryBlocked(
+      "missing-configuration",
+      "A dedicated final-publisher App ID and installation token are required.",
+    );
+  }
   const archiveEnv = { ...readEnv };
   delete archiveEnv.GH_TOKEN;
   delete archiveEnv.GITHUB_TOKEN;
@@ -286,12 +299,13 @@ export function githubClient(repo, env, execute = execFileSync) {
     finishCheck(checkId, conclusion, summary) {
       const head = publishedHeads.get(checkId);
       assert.ok(head, "Cannot update a check this publisher did not create.");
+      const status = conclusion === null ? "in_progress" : "completed";
       const updated = writeCheck("PATCH", `/${checkId}`, {
-        status: "completed",
-        conclusion,
+        status,
+        ...(conclusion === null ? {} : { conclusion }),
         output: { title: finalCheck, summary },
       });
-      assertPublishedCheck(updated, head, "completed");
+      assertPublishedCheck(updated, head, status);
       assert.ok(
         updated.id === checkId && updated.conclusion === conclusion,
         "GitHub did not confirm the requested final check result.",
@@ -359,13 +373,28 @@ function latestEngineeringRun(api, target) {
       entry.head_sha === target.head &&
       entry.pull_requests?.some(({ number }) => number === target.number),
   );
-  assert.ok(
-    Number.isSafeInteger(run?.id) &&
-      Number.isSafeInteger(run?.run_attempt) &&
-      run.status === "completed" &&
-      run.conclusion === "success",
-    "Current PR needs a successful engineering workflow attempt.",
-  );
+  if (
+    !run ||
+    ["queued", "in_progress", "requested", "waiting", "pending"].includes(
+      run.status,
+    )
+  ) {
+    throw new DeliveryWaiting(
+      "waiting-engineering",
+      "Current PR needs a successful engineering workflow attempt. A matching attempt has not completed.",
+    );
+  }
+  if (
+    !Number.isSafeInteger(run.id) ||
+    !Number.isSafeInteger(run.run_attempt) ||
+    run.status !== "completed" ||
+    run.conclusion !== "success"
+  ) {
+    throw new DeliveryBlocked(
+      "engineering-rejected",
+      "Current PR needs a successful engineering workflow attempt. The matching attempt did not succeed.",
+    );
+  }
   return run;
 }
 
@@ -514,16 +543,21 @@ function deliveryProof(client, target, scope, run, now) {
     run,
     now,
   );
-  const evidence = privateEvidenceFor(
-    comments,
-    target,
-    scope,
-    run,
-    now,
-    client.publicKey,
-    client.graphql,
-  );
-  return { review, evidence };
+  try {
+    const evidence = privateEvidenceFor(
+      comments,
+      target,
+      scope,
+      run,
+      now,
+      client.publicKey,
+      client.graphql,
+    );
+    return { review, evidence };
+  } catch (error) {
+    if (error instanceof DeliveryBlocked) throw error;
+    throw new DeliveryBlocked("evidence-rejected", deliveryReason(error));
+  }
 }
 
 export function verifyFinalDelivery(client, target, now = Date.now()) {
@@ -568,6 +602,19 @@ function requestedPr(eventName, event) {
   return linked[0].number;
 }
 
+function deliveryReason(error) {
+  return error instanceof SyntaxError || error instanceof TypeError
+    ? "Final delivery evidence or GitHub metadata is malformed."
+    : error.message;
+}
+
+function blockedDecision(error) {
+  return {
+    decision: error instanceof DeliveryBlocked ? error.state : "rejected",
+    reason: deliveryReason(error),
+  };
+}
+
 export function publishFinalDelivery(client, target, serverUrl, verifyCurrent) {
   // GitHub needs a check on the PR head as well as the reviewed merge preview.
   // Mark the head pending first and complete it last, after verifying both SHAs.
@@ -584,24 +631,23 @@ export function publishFinalDelivery(client, target, serverUrl, verifyCurrent) {
     }
     return result;
   } catch (error) {
+    const { decision, reason } = blockedDecision(error);
     for (const check of checks) {
       try {
         client.finishCheck(
           check,
-          "failure",
-          "Final delivery requirements are not satisfied. See workflow log.",
+          error instanceof DeliveryWaiting ? null : "failure",
+          `${decision}: ${reason}`,
         );
       } catch {
-        console.error(
-          "Could not publish a failed final delivery check to GitHub.",
-        );
+        console.error("Could not update the final delivery check on GitHub.");
       }
     }
     throw error;
   }
 }
 
-function main(env) {
+function main(env, routeOnly) {
   assert.ok(
     env.GITHUB_REF === "refs/heads/main" &&
       sha.test(env.GITHUB_SHA ?? "") &&
@@ -621,14 +667,24 @@ function main(env) {
   const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, "utf8"));
   const number = requestedPr(eventName, event);
   if (!number) {
-    console.log(
-      JSON.stringify({ decision: "not-run", reason: "no-associated-pr" }),
-    );
+    const reason =
+      eventName === "issue_comment"
+        ? "no-effective-review-or-evidence-change"
+        : "no-associated-pr";
+    console.log(JSON.stringify({ decision: "not-run", reason }));
     return;
   }
   assert.ok(
     Number.isSafeInteger(event.repository?.id),
     "GitHub event lacks the verified repository identity.",
+  );
+  if (routeOnly) {
+    appendFileSync(env.GITHUB_OUTPUT, `pr_number=${number}\n`);
+    return;
+  }
+  assert.ok(
+    env.FARFOLD_DELIVERY_PR_NUMBER === String(number),
+    "Final delivery did not receive the routed pull request number.",
   );
   const client = {
     ...githubClient(repo, env),
@@ -638,7 +694,7 @@ function main(env) {
     targetFor(client.api, number, base, event.repository.id);
   const serverUrl = `https://github.com/${repo}/actions/runs/${runId}`;
   const target = snapshot();
-  const result = publishFinalDelivery(client, target, serverUrl, () => {
+  function verifyCurrent() {
     const result = verifyFinalDelivery(client, target);
     assert.ok(
       sameTuple(target, snapshot()),
@@ -669,17 +725,32 @@ function main(env) {
       "Independent review or private evidence changed during final verification.",
     );
     return result;
-  });
-  console.log(
-    JSON.stringify({
-      decision: "verified",
-      candidate: target.head,
-      target: target.merge,
-      pr: number,
-      publisherAppId: client.publisherAppId,
-      ...result,
-    }),
-  );
+  }
+  const binding = {
+    base,
+    candidate: target.head,
+    target: target.merge,
+    pr: number,
+    publisherAppId: client.publisherAppId,
+  };
+  try {
+    const result = publishFinalDelivery(
+      client,
+      target,
+      serverUrl,
+      verifyCurrent,
+    );
+    console.log(
+      JSON.stringify({
+        decision: "verified",
+        ...binding,
+        ...result,
+      }),
+    );
+  } catch (error) {
+    console.log(JSON.stringify({ ...blockedDecision(error), ...binding }));
+    if (!(error instanceof DeliveryWaiting)) process.exitCode = 1;
+  }
 }
 
 if (
@@ -687,13 +758,9 @@ if (
   import.meta.url === pathToFileURL(process.argv[1]).href
 ) {
   try {
-    main(process.env);
+    main(process.env, process.argv[2] === "--route");
   } catch (error) {
-    console.error(
-      error instanceof SyntaxError || error instanceof TypeError
-        ? "Final delivery evidence or GitHub metadata is malformed."
-        : error.message,
-    );
+    console.error(JSON.stringify(blockedDecision(error)));
     process.exitCode = 1;
   }
 }

@@ -1,4 +1,9 @@
+import { execFileSync } from "node:child_process";
 import { createHash, generateKeyPairSync, sign } from "node:crypto";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
   githubClient,
@@ -14,6 +19,7 @@ import {
 } from "./delivery-check.mjs";
 import { classifyDeliveryPaths } from "./delivery-scope.mjs";
 import { privateAttestationBytes } from "./delivery-private-attestation.mjs";
+import { DeliveryWaiting } from "./delivery-state.mjs";
 
 const target = {
   number: 7,
@@ -44,6 +50,60 @@ const run = {
 const now = Date.parse("2026-11-24T09:00:00Z");
 const artifactDigest = "1".repeat(64);
 
+describe("routing final delivery without publisher credentials", () => {
+  const workflow = fileURLToPath(
+    new URL("./delivery-final.mjs", import.meta.url),
+  );
+
+  function runRoute(eventName, event) {
+    const directory = mkdtempSync(join(tmpdir(), "farfold-delivery-route-"));
+    const eventPath = join(directory, "event.json");
+    const outputPath = join(directory, "output");
+    try {
+      writeFileSync(
+        eventPath,
+        JSON.stringify({ repository: { id: 12 }, ...event }),
+      );
+      writeFileSync(outputPath, "");
+      const log = execFileSync(process.execPath, [workflow, "--route"], {
+        encoding: "utf8",
+        env: {
+          GITHUB_REF: "refs/heads/main",
+          GITHUB_SHA: target.base,
+          GITHUB_REPOSITORY: "KPGH-FJ/farfold",
+          GITHUB_RUN_ID: "30",
+          GITHUB_EVENT_NAME: eventName,
+          GITHUB_EVENT_PATH: eventPath,
+          GITHUB_OUTPUT: outputPath,
+        },
+      });
+      return { log, output: readFileSync(outputPath, "utf8") };
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  }
+
+  it("routes completion of exact engineering and explicit pre-merge refreshes", () => {
+    for (const result of [
+      runRoute("workflow_run", { workflow_run: run }),
+      runRoute("workflow_dispatch", { inputs: { pr_number: "7" } }),
+    ]) {
+      expect(result).toEqual({ log: "", output: "pr_number=7\n" });
+    }
+  });
+
+  it("leaves publication unqueued when engineering has no associated PR", () => {
+    const { log, output } = runRoute("workflow_run", {
+      workflow_run: { ...run, pull_requests: [] },
+    });
+    expect(output).toBe("");
+    expect(JSON.parse(log)).toEqual({
+      decision: "not-run",
+      reason: "no-associated-pr",
+    });
+  });
+});
+
 describe("dedicated final publisher identity", () => {
   const env = {
     GH_TOKEN: "read-only-fixture",
@@ -63,7 +123,7 @@ describe("dedicated final publisher identity", () => {
       "KPGH-FJ/farfold",
       env,
       (command, args, options) => {
-        calls.push({ command, args, env: options.env });
+        calls.push({ command, args, env: options.env, input: options.input });
         if (command === "unzip")
           return args[0] === "-Z1" ? "report.json\n" : "{}";
         if (args.at(-1).endsWith("/zip")) return archive;
@@ -144,6 +204,18 @@ describe("dedicated final publisher identity", () => {
       /did not confirm/,
     );
   });
+
+  it("keeps a waiting check in progress without any conclusion", () => {
+    const { client, calls } = fixture({
+      update: { status: "in_progress", conclusion: null },
+    });
+    const id = client.startCheck(target.head, "run-url");
+    client.finishCheck(id, null, "waiting-review");
+    expect(JSON.parse(calls.at(-1).input)).toEqual({
+      status: "in_progress",
+      output: { title: "Farfold final delivery", summary: "waiting-review" },
+    });
+  });
 });
 
 describe("publishing the final GitHub check", () => {
@@ -186,6 +258,23 @@ describe("publishing the final GitHub check", () => {
       ["failure", 2],
     ]);
   });
+
+  it.each(["waiting-engineering", "waiting-review"])(
+    "keeps both required-check records in progress for %s",
+    (state) => {
+      const events = [];
+      const waiting = new DeliveryWaiting(state, "still pending");
+      expect(() =>
+        publishFinalDelivery(publisher(events), target, "run-url", () => {
+          throw waiting;
+        }),
+      ).toThrow(waiting);
+      expect(events.slice(-2)).toEqual([
+        [null, 1],
+        [null, 2],
+      ]);
+    },
+  );
 
   it("leaves a failed candidate check if the preview check cannot be started", () => {
     const events = [];
@@ -441,7 +530,18 @@ describe("hosted final delivery", () => {
   it("fails green engineering when authenticated code review is missing", () => {
     expect(() =>
       verifyFinalDelivery(client({ comments: [] }), target, now),
-    ).toThrow(/authenticated Codex App review summary/i);
+    ).toThrow(expect.objectContaining({ state: "waiting-review" }));
+  });
+
+  it("distinguishes queued engineering from a completed attempt that failed", () => {
+    for (const [attempt, state] of [
+      [{ ...run, status: "queued", conclusion: null }, "waiting-engineering"],
+      [{ ...run, conclusion: "failure" }, "engineering-rejected"],
+    ]) {
+      expect(() =>
+        verifyFinalDelivery(client({ runList: [attempt] }), target, now),
+      ).toThrow(expect.objectContaining({ state }));
+    }
   });
 
   it("fails closed on an incomplete exact-scope compare or rename record", () => {
@@ -472,7 +572,7 @@ describe("hosted final delivery", () => {
       ],
     ]) {
       expect(() => verifyFinalDelivery(client({ files }), target, now)).toThrow(
-        /needs a configured trusted custodian key/i,
+        expect.objectContaining({ state: "missing-configuration" }),
       );
     }
   });
@@ -516,7 +616,12 @@ describe("hosted final delivery", () => {
     expect(() => verify(null)).toThrow(/macOS arm64 installed evidence/i);
     expect(() =>
       verify({ ...installed, reviewBy: "2026-11-24T08:59:00Z" }),
-    ).toThrow(/review-horizon-reached/i);
+    ).toThrow(
+      expect.objectContaining({
+        state: "evidence-rejected",
+        message: expect.stringMatching(/review-horizon-reached/i),
+      }),
+    );
     expect(() => verify({ ...installed, sourceTree: "e".repeat(40) })).toThrow(
       /exact tested candidate source tree/i,
     );
