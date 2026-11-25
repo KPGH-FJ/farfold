@@ -358,7 +358,7 @@ export function targetFor(api, pr, trustedBase, repositoryId) {
   };
 }
 
-function latestEngineeringRun(api, target) {
+function latestEngineeringRun(api, target, announcedRun) {
   const currentWorkflow = api("actions/workflows/delivery.yml");
   const runList = api(
     `actions/workflows/delivery.yml/runs?event=pull_request&head_sha=${target.head}&per_page=100`,
@@ -375,6 +375,8 @@ function latestEngineeringRun(api, target) {
   );
   if (
     !run ||
+    (announcedRun?.id === run?.id &&
+      run.run_attempt < announcedRun.run_attempt) ||
     ["queued", "in_progress", "requested", "waiting", "pending"].includes(
       run.status,
     )
@@ -400,7 +402,7 @@ function latestEngineeringRun(api, target) {
 
 function engineeringProof(client, target, scope) {
   const { api } = client;
-  const run = latestEngineeringRun(api, target);
+  const run = latestEngineeringRun(api, target, client.announcedRun);
   const jobList = api(
     `actions/runs/${run.id}/attempts/${run.run_attempt}/jobs?per_page=100`,
   );
@@ -596,6 +598,7 @@ function requestedPr(eventName, event) {
   }
   const run = event.workflow_run;
   if (run?.event !== "pull_request" || run.path !== workflowPath) return null;
+  if (event.action === "in_progress" && !(run.run_attempt > 1)) return null;
   const linked = run.pull_requests ?? [];
   if (linked.length !== 1 || !Number.isSafeInteger(linked[0].number))
     return null;
@@ -667,10 +670,16 @@ function main(env, routeOnly) {
   const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, "utf8"));
   const number = requestedPr(eventName, event);
   if (!number) {
-    const reason =
-      eventName === "issue_comment"
-        ? "no-effective-review-or-evidence-change"
-        : "no-associated-pr";
+    let reason = "no-associated-pr";
+    if (eventName === "issue_comment")
+      reason = "no-effective-review-or-evidence-change";
+    if (
+      eventName === "workflow_run" &&
+      event.action === "in_progress" &&
+      event.workflow_run?.run_attempt === 1 &&
+      event.workflow_run?.pull_requests?.length === 1
+    )
+      reason = "initial-engineering-attempt-in-progress";
     console.log(JSON.stringify({ decision: "not-run", reason }));
     return;
   }
@@ -689,6 +698,7 @@ function main(env, routeOnly) {
   const client = {
     ...githubClient(repo, env),
     publicKey: env.FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY,
+    announcedRun: eventName === "workflow_run" ? event.workflow_run : undefined,
   };
   const snapshot = () =>
     targetFor(client.api, number, base, event.repository.id);
@@ -705,7 +715,11 @@ function main(env, routeOnly) {
       branch.object?.sha === base,
       "main changed during final verification.",
     );
-    const currentRun = latestEngineeringRun(client.api, target);
+    const currentRun = latestEngineeringRun(
+      client.api,
+      target,
+      client.announcedRun,
+    );
     assert.ok(
       currentRun.id === result.runId &&
         currentRun.run_attempt === result.runAttempt,

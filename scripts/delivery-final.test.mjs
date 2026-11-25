@@ -102,6 +102,25 @@ describe("routing final delivery without publisher credentials", () => {
       reason: "no-associated-pr",
     });
   });
+
+  it("routes a restarted engineering attempt and skips the first attempt starting", () => {
+    const started = { ...run, status: "in_progress", conclusion: null };
+    expect(
+      runRoute("workflow_run", {
+        action: "in_progress",
+        workflow_run: started,
+      }),
+    ).toEqual({ log: "", output: "pr_number=7\n" });
+    const { log, output } = runRoute("workflow_run", {
+      action: "in_progress",
+      workflow_run: { ...started, run_attempt: 1 },
+    });
+    expect(output).toBe("");
+    expect(JSON.parse(log)).toEqual({
+      decision: "not-run",
+      reason: "initial-engineering-attempt-in-progress",
+    });
+  });
 });
 
 describe("dedicated final publisher identity", () => {
@@ -542,6 +561,17 @@ describe("hosted final delivery", () => {
         verifyFinalDelivery(client({ runList: [attempt] }), target, now),
       ).toThrow(expect.objectContaining({ state }));
     }
+  });
+
+  it("does not reuse the previous engineering success after a restart event", () => {
+    const restarted = { ...run, run_attempt: run.run_attempt + 1 };
+    expect(() =>
+      verifyFinalDelivery(
+        { ...client(), announcedRun: restarted },
+        target,
+        now,
+      ),
+    ).toThrow(expect.objectContaining({ state: "waiting-engineering" }));
   });
 
   it("fails closed on an incomplete exact-scope compare or rename record", () => {

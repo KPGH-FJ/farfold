@@ -93,7 +93,7 @@ gh run view <returned-run-id> --log
 gh pr merge <PR-number> --merge --match-head-commit <reviewed-head-SHA>
 ```
 
-终检在工程尝试完成、Codex 的有效代码审查变化、保管方摘要变化或手动刷新时运行。普通评论与 Codex 仅更新安全审查展示的编辑不启动完整核验。核验任务按 PR 串行读取当前输入。审查或摘要删除、内容改变、工程重跑仍会触发核验。
+终检在工程尝试完成或重跑启动、Codex 的有效代码审查变化、保管方摘要变化或手动刷新时运行。普通评论、首次工程检查启动与 Codex 仅更新安全审查展示的编辑不启动完整核验。核验任务按 PR 串行读取当前输入。工程重跑启动事件即使先于工程查询更新，也不会复用同一运行的旧尝试。
 
 日志中的 `waiting-engineering` 和 `waiting-review` 表示等待，对应的专用检查保持进行中。`missing-configuration` 表示发布身份或复核公钥配置缺失。`evidence-rejected` 表示适用的签署证据缺失、过期或核验不合格。`not-run` 表示本事件没有执行交付核验。只有 `verified` 对应专用 App 发布的成功结果。发布凭据缺失时，工作流无法更新已有的 App 检查。
 
