@@ -28,6 +28,7 @@ import { classifyDeliveryPaths } from "./delivery-scope.mjs";
 import { DeliveryBlocked, DeliveryWaiting } from "./delivery-state.mjs";
 import {
   pendingRelease,
+  pendingReleaseForMergedPr,
   reconcileRelease,
   releaseCheck,
   releaseDelivery,
@@ -848,12 +849,16 @@ async function main(env, routeOnly) {
     "Missing publisher run attempt.",
   );
   const serverUrl = `https://github.com/${repo}/actions/runs/${runId}/attempts/${env.GITHUB_RUN_ATTEMPT}`;
-  const pending = pendingRelease(client, base, event.repository.id);
+  const ownerDispatch =
+    eventName === "workflow_dispatch" &&
+    event.sender?.id === event.repository.owner?.id;
+  const pending =
+    pendingRelease(client, base, event.repository.id) ??
+    (ownerDispatch && !releaseProof
+      ? pendingReleaseForMergedPr(client, number, event.repository.id)
+      : null);
   if (pending) {
-    if (
-      eventName !== "workflow_dispatch" ||
-      event.sender?.id !== event.repository.owner?.id
-    ) {
+    if (!ownerDispatch) {
       throw new DeliveryBlocked(
         "release-outcome-unknown",
         "Evidence or review changed while a release may be in flight. Refresh from main to resolve the existing request.",

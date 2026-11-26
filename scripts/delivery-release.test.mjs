@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   pendingRelease,
+  pendingReleaseForMergedPr,
   reconcileRelease,
   releaseCheck,
   releaseDelivery,
@@ -109,6 +110,38 @@ function fixture({
   };
   return { client, calls, created };
 }
+
+describe("release recovery after main advances", () => {
+  it("finds the old marker through the actual merge parents", async () => {
+    const { client, calls } = fixture();
+    const pending = pendingReleaseForMergedPr(
+      client,
+      target.number,
+      target.repositoryId,
+    );
+    expect(pending).toEqual({
+      id: markerId,
+      intent: pendingIntent,
+      publisherSlug,
+    });
+    await expect(reconcileRelease(client, pending)).resolves.toEqual({
+      decision: "merged",
+      mergeCommit,
+    });
+    expect(calls).not.toContain("PUT");
+  });
+
+  it("does not recover a marker belonging to a different PR", () => {
+    const { client } = fixture({
+      marker: {
+        output: { summary: JSON.stringify({ ...pendingIntent, pr: 22 }) },
+      },
+    });
+    expect(() =>
+      pendingReleaseForMergedPr(client, target.number, target.repositoryId),
+    ).toThrow(/different pending release/);
+  });
+});
 
 describe("verified release request", () => {
   it("confirms an exact merged PR when the original operation is no longer available", async () => {

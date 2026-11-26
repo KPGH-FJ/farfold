@@ -176,3 +176,33 @@ export function pendingRelease(client, base, repositoryId) {
   );
   return { id: check.id, intent, publisherSlug: check.app.slug };
 }
+
+// When the merge succeeded but the runner could not close the record, main
+// already points elsewhere. The actual merge parents locate the old record.
+export function pendingReleaseForMergedPr(client, number, repositoryId) {
+  const pr = client.api(`pulls/${number}`);
+  if (!pr.merged) return null;
+  assert.ok(
+    pr.number === number &&
+      pr.base?.ref === "main" &&
+      pr.base.repo?.id === repositoryId &&
+      sha.test(pr.merge_commit_sha) &&
+      sha.test(pr.head?.sha),
+    "Merged PR does not identify a recoverable release.",
+  );
+  const commit = client.api(`git/commits/${pr.merge_commit_sha}`);
+  assert.ok(
+    commit.sha === pr.merge_commit_sha &&
+      commit.parents?.length === 2 &&
+      sha.test(commit.parents[0].sha) &&
+      commit.parents[1].sha === pr.head.sha,
+    "Merged PR does not have the expected merge parents.",
+  );
+  const pending = pendingRelease(client, commit.parents[0].sha, repositoryId);
+  if (!pending) return null;
+  assert.ok(
+    pending.intent.pr === number && pending.intent.head === pr.head.sha,
+    "The old base holds a different pending release.",
+  );
+  return pending;
+}
