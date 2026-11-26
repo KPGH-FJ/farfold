@@ -2,7 +2,7 @@ name: Farfold delivery
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, codex/merge-actor-control-positive-base]
   push:
     branches: [main]
 
