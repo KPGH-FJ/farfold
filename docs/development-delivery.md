@@ -66,7 +66,7 @@ GitHub 在 `main` 上执行 PR 与工程检查规则。工程工作流验证合�
 
 从 [GitHub Apps](https://github.com/settings/apps) 核对现有身份。需要新建时，App 仅在仓库所有者账号下可安装，主页用 [Farfold 仓库](https://github.com/KPGH-FJ/farfold)，关闭 webhook。仓库权限先配置 `Checks: Read and write` 及自动授予的 `Metadata: Read`。安装时选 `Only select repositories`，只选择 `farfold`。验证 ruleset 能绑定真实检查的数字 App ID。若 GitHub 实际要求其他权限，先记录平台拒绝及所需权限。
 
-在 [发布 Environment 设置](https://github.com/KPGH-FJ/farfold/settings/environments) 选 `Selected branches and tags`，保留唯一 `Branch: main`，核验没有 Tag 或 PR 引用。Environment 变量 `FARFOLD_FINAL_PUBLISHER_CLIENT_ID` 用 App Client ID，`FARFOLD_FINAL_PUBLISHER_APP_ID` 用数字 App ID。将 App 的 PEM 私钥放入同一 Environment 的 `FARFOLD_FINAL_PUBLISHER_PRIVATE_KEY` secret。工作流只在 `main` 检出受信提交，以单仓库、`checks: write` 权限生成短期安装令牌。发布任务不执行候选提供的代码、不安装候选依赖、不恢复候选缓存。
+在 [发布 Environment 设置](https://github.com/KPGH-FJ/farfold/settings/environments) 选 `Selected branches and tags`，保留唯一 `Branch: main`，核验没有 Tag 或 PR 引用。Environment 变量 `FARFOLD_FINAL_PUBLISHER_CLIENT_ID` 用 App Client ID，`FARFOLD_FINAL_PUBLISHER_APP_ID` 用数字 App ID。将 App 的 PEM 私钥放入同一 Environment 的 `FARFOLD_FINAL_PUBLISHER_PRIVATE_KEY` secret。工作流只在 `main` 检出受信提交，以单仓库、`checks: write` 权限生成短期安装令牌。所有者从主线手动请求核对或合入时，短期令牌还可取得 `contents: write`。发布任务不执行候选提供的代码、不安装候选依赖、不恢复候选缓存。
 
 首次安装专用发布程序沿用现有 PR、严格基线和工程检查。所有者已单独授权 PR #15 的一次性迁移审查。隔离独审须读取当前候选、原验收要求、先前的拒绝、认证原件及验证结果，并明确同意。独审拒绝、证据过期或版本改变都会阻止此次交付。合入前从 GitHub 再读基线、候选、合并预览、工程尝试、完整代码审查和保护规则，同时读回本次独审结果，再按候选 SHA 正常合入。这次授权只覆盖安装检查器，后续产品交付执行下述终检。
 
@@ -104,11 +104,13 @@ node scripts/delivery-pr.mjs <PR-number> /path/to/delivery-record.json
 )
 ```
 
-终检在工程尝试完成或重跑启动、Codex 的有效代码审查变化、保管方摘要变化或手动刷新时运行。普通评论与首次工程检查启动不触发完整核验。Codex 只更新展示内容时，路由任务先用只读权限核对来源和完整编辑历史，核对通过才跳过。核验任务按 PR 串行读取当前输入。工程重跑启动事件即使先于工程查询更新，也不会复用同一运行的旧尝试。
+终检在工程尝试完成或重跑启动、Codex 的有效代码审查变化、保管方摘要变化或手动刷新时运行。普通评论与首次工程检查启动不触发完整核验。Codex 只更新展示内容时，路由任务先用只读权限核对来源和完整编辑历史，核对通过才跳过。核验和合入任务共用一个主线发布并发组，串行读取当前输入。工程重跑启动事件即使先于工程查询更新，也不会复用同一运行的旧尝试。
 
 日志中的 `waiting-engineering` 和 `waiting-review` 表示等待，对应的专用检查保持进行中。`missing-configuration` 表示发布身份或复核公钥配置缺失。`evidence-rejected` 表示适用的签署证据缺失、过期或核验不合格。`not-run` 表示本事件没有执行交付核验。只有 `verified` 对应专用 App 发布的成功结果。发布凭据缺失时，工作流无法更新已有的 App 检查。
 
-合入命令先校验本地交付记录，再调度当前主线终检并等待这一次运行。只有工程尝试和独审仍然有效，且专用 App 对本次候选、合并预览都发布了这一次的成功结果，命令才会发出带候选 SHA 的合入请求。刷新、读取或发布失败时，保留错误供定位。GitHub 保存已发布的检查。凭据失效或首次写入失败时，页面仍可能显示上一次成功。证据到期本身也不会触发工作流。再次交付时按同一入口刷新。GitHub 在合入时核对候选 SHA，最后读回之后的证据和审查变动仍有短暂间隔。
+合入命令先校验本地交付记录，再把本次核验摘要交给受保护的主线工作流。由工作流复核并由专用 App 请求合入。专用 App 仅获准通过单独的更新限制，仍受 PR 和必需检查规则约束。发布入口先保存候选、基线、合并预览和核验摘要，再读回当前基线、工程尝试、独审和适用证据。读取失败或输入变化会停止合入。GitHub 保存旧检查，证据到期本身也不会启动工作流。
+
+签署评论被删除后，仍需检查候选和预览是否已更新为失败。合入请求已发出或网络中断且结果未知时，撤回保持待确认。所有者从 `main` 手动刷新该 PR（留空 `release_proof`），后台核对原请求和 PR，无需重发。只有旧成功检查已更新，且没有在途请求或 GitHub 已确认原请求失败时，才能确认撤回。若 GitHub 已合入，记录实际提交，按正常流程回退。若没有收到请求编号、PR 仍开放且没有其他服务端终态证据，保留阻断，由维护者从受信服务端记录查证，不能以 PR 仍开放为由重投。GitHub 的合入接口比较候选 SHA，Mac 上的撤回无法保证叫停已经提交给 GitHub 的请求。
 
 2026-11-24，仓库所有者在原研发交付会话中明确授权把该 GitHub 仓库设为公开，原会话保留执行及无登录访问核验。该授权范围为仓库可见性。
 

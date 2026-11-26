@@ -1,10 +1,8 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import {
-  deliveryProof,
   finalCheck,
   githubFinalReader,
-  latestEngineeringRun,
   proofHash,
   publishedProof,
   targetFor,
@@ -73,7 +71,28 @@ export async function mergeVerifiedDelivery(input, execute = execFileSync) {
     );
     return current;
   };
+  const target = snapshot();
+  const local = await readEvidence();
+  const verified = verifyFinalDelivery(client, target);
+  assert.ok(
+    verified.runId === input.engineeringRunId &&
+      verified.runAttempt === input.engineeringRunAttempt,
+    "The locally verified engineering attempt changed.",
+  );
+  if (verified.evidence)
+    assert.equal(
+      verified.evidence.recordSha256,
+      proofHash(local),
+      "The signed evidence differs from the current local evidence.",
+    );
+  const expected = publishedProof(target, verified);
+  assert.deepEqual(
+    readSettings(),
+    settings,
+    "Publisher or evidence key changed.",
+  );
   snapshot();
+
   const dispatch = JSON.parse(
     run(
       [
@@ -89,7 +108,10 @@ export async function mergeVerifiedDelivery(input, execute = execFileSync) {
       {
         input: JSON.stringify({
           ref: "main",
-          inputs: { pr_number: String(number) },
+          inputs: {
+            pr_number: String(number),
+            release_proof: proofHash(expected),
+          },
         }),
       },
     ),
@@ -102,11 +124,25 @@ export async function mergeVerifiedDelivery(input, execute = execFileSync) {
   );
   // A new dispatch starts at attempt 1. A retry is a separate evaluation.
   const attemptUrl = runUrl + "/attempts/1";
-  execute(
-    "gh",
-    ["run", "watch", String(id), "--repo", repo, "--compact", "--exit-status"],
-    { stdio: ["ignore", "inherit", "inherit"] },
-  );
+  try {
+    execute(
+      "gh",
+      [
+        "run",
+        "watch",
+        String(id),
+        "--repo",
+        repo,
+        "--compact",
+        "--exit-status",
+      ],
+      { stdio: ["ignore", "inherit", "inherit"] },
+    );
+  } catch {
+    throw new Error(
+      `Release is unconfirmed. Inspect ${attemptUrl} and the PR before requesting another release.`,
+    );
+  }
   const finalRun = () => {
     const current = api("actions/runs/" + id);
     assert.ok(
@@ -123,23 +159,9 @@ export async function mergeVerifiedDelivery(input, execute = execFileSync) {
     );
   };
   finalRun();
-  const target = snapshot();
-  const local = await readEvidence();
-  const verified = verifyFinalDelivery(client, target);
-  assert.ok(
-    verified.runId === input.engineeringRunId &&
-      verified.runAttempt === input.engineeringRunAttempt,
-    "The locally verified engineering attempt changed.",
-  );
-  if (verified.evidence)
-    assert.equal(
-      verified.evidence.recordSha256,
-      proofHash(local),
-      "The signed evidence differs from the current local evidence.",
-    );
-  const expected = publishedProof(target, verified);
   // filter=latest excludes superseded checks. Another run, an earlier success, or
   // another App with the same name cannot stand in for this dispatch.
+  const publisherSlugs = new Set();
   for (const sha of new Set([head, merge])) {
     const path = `commits/${sha}/check-runs?check_name=${encodeURIComponent(finalCheck)}&app_id=${appId}&filter=latest&per_page=100`;
     const response = api(path);
@@ -152,6 +174,8 @@ export async function mergeVerifiedDelivery(input, execute = execFileSync) {
       positiveId(check.id) &&
         check.name === finalCheck &&
         check.app?.id === appId &&
+        /^[a-z0-9-]+$/.test(check.app.slug ?? "") &&
+        check.app.slug !== "github-actions" &&
         check.head_sha === sha &&
         check.external_id === attemptUrl &&
         check.status === "completed" &&
@@ -163,62 +187,18 @@ export async function mergeVerifiedDelivery(input, execute = execFileSync) {
       expected,
       "The published final decision differs from current verification.",
     );
+    publisherSlugs.add(check.app.slug);
   }
 
-  assert.deepEqual(
-    readSettings(),
-    settings,
-    "Publisher or evidence key changed before merge.",
-  );
-  const currentTarget = snapshot();
-  const currentRun = latestEngineeringRun(api, currentTarget);
-  assert.ok(
-    currentRun.id === verified.runId &&
-      currentRun.run_attempt === verified.runAttempt,
-    "The engineering attempt changed before merge.",
-  );
-  finalRun();
-  assert.deepEqual(
-    deliveryProof(
-      client,
-      currentTarget,
-      verified.scope,
-      currentRun,
-      Date.now(),
-    ),
-    { review: verified.review, evidence: verified.evidence },
-    "The review or evidence changed before merge.",
-  );
-
-  // GitHub atomically compares head; the remaining inputs were observed just
-  // before this request. On a lost response, read the outcome before any retry.
-  let mergeError;
-  try {
-    execute(
-      "gh",
-      [
-        "pr",
-        "merge",
-        String(number),
-        "--repo",
-        repo,
-        "--merge",
-        "--match-head-commit",
-        head,
-      ],
-      { stdio: ["ignore", "pipe", "pipe"] },
-    );
-  } catch (error) {
-    mergeError = error;
-  }
   const merged = api("pulls/" + number);
   assert.ok(
     merged.merged === true &&
       merged.head?.sha === head &&
+      publisherSlugs.size === 1 &&
+      publisherSlugs.has(merged.merged_by?.login?.replace(/\[bot\]$/, "")) &&
+      merged.merged_by?.type === "Bot" &&
       /^[0-9a-f]{40}$/.test(merged.merge_commit_sha),
-    mergeError
-      ? "GitHub did not confirm the merge after the request failed. Check the PR before retrying."
-      : "The merge request returned without a confirmed merge. Check the PR before retrying.",
+    "The protected workflow did not confirm the requested PR merge.",
   );
   const commit = api("git/commits/" + merged.merge_commit_sha);
   assert.deepEqual(

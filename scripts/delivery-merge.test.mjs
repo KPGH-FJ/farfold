@@ -1,9 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mergeVerifiedDelivery } from "./delivery-merge.mjs";
 import {
-  deliveryProof,
   githubFinalReader,
-  latestEngineeringRun,
   proofHash,
   publishedProof,
   targetFor,
@@ -13,10 +11,8 @@ import {
 vi.mock("./delivery-final.mjs", async (getActual) => ({
   ...(await getActual()),
   githubFinalReader: vi.fn(),
-  latestEngineeringRun: vi.fn(),
   verifyFinalDelivery: vi.fn(),
   targetFor: vi.fn(),
-  deliveryProof: vi.fn(),
 }));
 
 const base = "1".repeat(40),
@@ -49,7 +45,7 @@ function fixture({
   finalRun = {},
   dispatchFailure = false,
   watchFailure = false,
-  conflictingMerge = false,
+  mergeObserved = true,
   dispatchId = 71,
   rotateKey = false,
 } = {}) {
@@ -74,7 +70,10 @@ function fixture({
     if (args.includes("POST")) {
       expect(JSON.parse(options.input)).toEqual({
         ref: "main",
-        inputs: { pr_number: "12" },
+        inputs: {
+          pr_number: "12",
+          release_proof: proofHash(publishedProof(target, verified)),
+        },
       });
       if (dispatchFailure) throw new Error("dispatch failed");
       return JSON.stringify({ workflow_run_id: dispatchId, html_url: runUrl });
@@ -105,7 +104,7 @@ function fixture({
             id: 42,
             head_sha: sha,
             name: "Farfold final delivery",
-            app: { id: 121 },
+            app: { id: 121, slug: "test-publisher" },
             external_id: runUrl + "/attempts/1",
             status: "completed",
             conclusion: "success",
@@ -119,7 +118,8 @@ function fixture({
     }
     if (path === "pulls/12")
       return {
-        merged: true,
+        merged: mergeObserved,
+        merged_by: { type: "Bot", login: "test-publisher[bot]" },
         head: { sha: head },
         merge_commit_sha: actualMerge,
       };
@@ -131,40 +131,21 @@ function fixture({
     throw new Error("unexpected read " + path);
   };
   githubFinalReader.mockReturnValue({ api, run });
-  const mergeCalls = [];
+  const localCalls = [];
   const execute = (_gh, args) => {
-    if (args[0] === "run" && args[1] === "watch") {
-      if (watchFailure)
-        throw new Error("refresh failed before creating a check");
-      return;
-    }
-    expect(args).toEqual([
-      "pr",
-      "merge",
-      "12",
-      "--repo",
-      repo,
-      "--merge",
-      "--match-head-commit",
-      head,
-    ]);
-    mergeCalls.push(args);
-    if (conflictingMerge) throw new Error("response lost");
+    localCalls.push(args.slice(0, 2));
+    expect(args.slice(0, 2)).toEqual(["run", "watch"]);
+    if (watchFailure) throw new Error("refresh failed before creating a check");
   };
-  return { mergeCalls, run: () => mergeVerifiedDelivery(input, execute) };
+  return { localCalls, run: () => mergeVerifiedDelivery(input, execute) };
 }
 
 beforeEach(() => {
   vi.resetAllMocks();
   targetFor.mockReturnValue(target);
   verifyFinalDelivery.mockReturnValue(verified);
-  latestEngineeringRun.mockReturnValue({ id: 52, run_attempt: 1 });
-  deliveryProof.mockReturnValue({
-    review: verified.review,
-    evidence: verified.evidence,
-  });
 });
-describe("fresh final verification before ordinary merge", () => {
+describe("protected publisher release request", () => {
   it.each([
     ["reviewer key rotated", { rotateKey: true }],
     ["dispatch fails", { dispatchFailure: true }],
@@ -188,39 +169,38 @@ describe("fresh final verification before ordinary merge", () => {
       "the final decision does not bind the current evidence",
       { checks: { output: { summary: '{"decision":"verified"}' } } },
     ],
-  ])("never sends a merge request when %s", async (_reason, condition) => {
+  ])("rejects when %s", async (_reason, condition) => {
     const f = fixture(condition);
     await expect(f.run()).rejects.toThrow();
-    expect(f.mergeCalls).toHaveLength(0);
+    expect(f.localCalls.every((call) => call.join(" ") === "run watch")).toBe(
+      true,
+    );
   });
-  it("stops if the private witness disappears after the green decision", async () => {
-    deliveryProof.mockImplementation(() => {
+  it("stops without a new local operation if the private witness disappears", async () => {
+    verifyFinalDelivery.mockImplementation(() => {
       throw new Error("witness revoked");
     });
     const f = fixture();
     await expect(f.run()).rejects.toThrow("witness revoked");
-    expect(f.mergeCalls).toHaveLength(0);
+    expect(f.localCalls).toHaveLength(0);
   });
-  it("rejects a superseding engineering attempt after the green decision", async () => {
-    latestEngineeringRun.mockReturnValue({ id: 52, run_attempt: 2 });
+  it("rejects a different engineering attempt before dispatch", async () => {
+    verifyFinalDelivery.mockReturnValue({ ...verified, runAttempt: 2 });
     const f = fixture();
     await expect(f.run()).rejects.toThrow(/engineering attempt changed/);
-    expect(f.mergeCalls).toHaveLength(0);
+    expect(f.localCalls).toHaveLength(0);
   });
-  it("submits only the exact candidate after current proof and source checks", async () => {
+  it("reports a merge only after reading the checked commit", async () => {
     const f = fixture();
     await expect(f.run()).resolves.toMatchObject({
       decision: "merged",
       mergeCommit: actualMerge,
     });
-    expect(f.mergeCalls).toHaveLength(1);
+    expect(f.localCalls).toEqual([["run", "watch"]]);
   });
-  it("reads back the exact result if the merge response is lost", async () => {
-    const f = fixture({ conflictingMerge: true });
-    await expect(f.run()).resolves.toMatchObject({
-      decision: "merged",
-      mergeCommit: actualMerge,
-    });
-    expect(f.mergeCalls).toHaveLength(1);
+  it("does not treat workflow success as confirmation of a merge", async () => {
+    const f = fixture({ mergeObserved: false });
+    await expect(f.run()).rejects.toThrow(/did not confirm/);
+    expect(f.localCalls).toEqual([["run", "watch"]]);
   });
 });

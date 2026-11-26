@@ -12,9 +12,14 @@ on:
         description: Open pull request to recheck after a Codex review or private evidence submission
         type: string
         required: true
+      release_proof:
+        description: Exact proof digest supplied by delivery-pr --merge
+        type: string
+        required: false
 
 permissions:
   actions: read
+  checks: read
   contents: read
   issues: read
   pull-requests: read
@@ -60,10 +65,10 @@ jobs:
     needs: route
     if: needs.route.outputs.pr_number != ''
     concurrency:
-      group: final-delivery-${{ needs.route.outputs.pr_number }}
+      group: farfold-main-delivery
       cancel-in-progress: false
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 10
     environment: farfold-final-publisher
     steps:
       - name: Check dedicated publisher configuration
@@ -104,6 +109,7 @@ jobs:
           owner: ${{ github.repository_owner }}
           repositories: ${{ github.event.repository.name }}
           permission-checks: write
+          permission-contents: ${{ github.event_name == 'workflow_dispatch' && github.event.sender.id == github.event.repository.owner.id && 'write' || 'read' }}
       - name: Verify engineering run and authenticated independent review
         env:
           GH_TOKEN: ${{ github.token }}

@@ -26,6 +26,12 @@ import { canonicalJson } from "./acceptance-receipts.mjs";
 import { verifyDeliveryPrivateAttestation } from "./delivery-private-attestation.mjs";
 import { classifyDeliveryPaths } from "./delivery-scope.mjs";
 import { DeliveryBlocked, DeliveryWaiting } from "./delivery-state.mjs";
+import {
+  pendingRelease,
+  reconcileRelease,
+  releaseCheck,
+  releaseDelivery,
+} from "./delivery-release.mjs";
 
 const sha = /^[0-9a-f]{40}$/;
 const workflowPath = ".github/workflows/delivery.yml";
@@ -299,21 +305,103 @@ export function githubClient(repo, env, execute = execFileSync) {
       ),
     );
   }
-  function assertPublishedCheck(check, head, status) {
+  function assertPublishedCheck(check, head, status, name = finalCheck) {
     assert.ok(
       Number.isSafeInteger(check?.id) &&
         check.id > 0 &&
         check.head_sha === head &&
-        check.name === finalCheck &&
+        check.name === name &&
         check.status === status &&
         check.app?.id === publisherAppId &&
         check.app.slug !== "github-actions",
       "GitHub did not return the exact final check from the configured publisher App.",
     );
   }
+  const readerWithApp = { ...reader, publisherAppId };
+  function saveRelease(id, intent, conclusion) {
+    const status = conclusion === null ? "in_progress" : "completed";
+    const updated = writeCheck("PATCH", `/${id}`, {
+      status,
+      ...(conclusion === null ? {} : { conclusion }),
+      output: { title: releaseCheck, summary: JSON.stringify(intent) },
+    });
+    assertPublishedCheck(updated, intent.base, status, releaseCheck);
+    assert.equal(updated.id, id);
+    assert.equal(updated.conclusion, conclusion);
+    assert.deepEqual(JSON.parse(updated.output?.summary), intent);
+  }
   return {
     publisherAppId,
     ...reader,
+    async releaseApi(method, path, body) {
+      assert.match(
+        path,
+        /^pulls\/[1-9][0-9]*\/merge-async(?:\/[0-9a-f-]{36})?$/i,
+      );
+      let response;
+      try {
+        response = await fetch(`https://api.github.com/repos/${repo}/${path}`, {
+          method,
+          headers: {
+            Accept: "application/vnd.github+json",
+            Authorization: `Bearer ${publisherToken}`,
+            "Content-Type": "application/json",
+            "X-GitHub-Api-Version": "2026-03-10",
+          },
+          redirect: "error",
+          signal: AbortSignal.timeout(15000),
+          ...(body ? { body: JSON.stringify(body) } : {}),
+        });
+      } catch {
+        throw new DeliveryBlocked(
+          "release-outcome-unknown",
+          "Could not confirm the response from GitHub.",
+        );
+      }
+      if (
+        method === "PUT" &&
+        [400, 401, 403, 404, 422].includes(response.status)
+      ) {
+        return { status: "refused", httpStatus: response.status };
+      }
+      if (!response.ok) {
+        throw new DeliveryBlocked(
+          "release-outcome-unknown",
+          `GitHub returned HTTP ${response.status} for release.`,
+        );
+      }
+      return response.json();
+    },
+    startRelease(intent, serverUrl) {
+      const check = writeCheck("POST", "", {
+        name: releaseCheck,
+        head_sha: intent.base,
+        status: "in_progress",
+        details_url: serverUrl,
+        external_id: serverUrl,
+        output: { title: releaseCheck, summary: JSON.stringify(intent) },
+      });
+      assertPublishedCheck(check, intent.base, "in_progress", releaseCheck);
+      assert.deepEqual(JSON.parse(check.output?.summary), intent);
+      const stored = pendingRelease(
+        readerWithApp,
+        intent.base,
+        intent.repositoryId,
+      );
+      assert.equal(
+        stored?.id,
+        check.id,
+        "Could not read back the protected release intent.",
+      );
+      assert.deepEqual(stored.intent, intent);
+      return stored;
+    },
+    updateRelease(id, intent) {
+      saveRelease(id, intent, null);
+    },
+    finishRelease(id, intent, conclusion) {
+      saveRelease(id, intent, conclusion);
+    },
     startCheck(target, serverUrl) {
       assert.ok(
         sha.test(target),
@@ -690,7 +778,7 @@ export function publishFinalDelivery(client, target, serverUrl, verifyCurrent) {
   }
 }
 
-function main(env, routeOnly) {
+async function main(env, routeOnly) {
   assert.ok(
     env.GITHUB_REF === "refs/heads/main" &&
       sha.test(env.GITHUB_SHA ?? "") &&
@@ -738,6 +826,16 @@ function main(env, routeOnly) {
     env.FARFOLD_DELIVERY_PR_NUMBER === String(number),
     "Final delivery did not receive the routed pull request number.",
   );
+  const releaseProof =
+    eventName === "workflow_dispatch" ? event.inputs?.release_proof : "";
+  if (releaseProof) {
+    assert.ok(
+      /^[0-9a-f]{64}$/.test(releaseProof) &&
+        env.GITHUB_RUN_ATTEMPT === "1" &&
+        event.sender?.id === event.repository.owner?.id,
+      "Release requires an exact proof digest and a repository-owner dispatch.",
+    );
+  }
   const client = {
     ...githubClient(repo, env),
     publicKey: env.FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY,
@@ -750,6 +848,31 @@ function main(env, routeOnly) {
     "Missing publisher run attempt.",
   );
   const serverUrl = `https://github.com/${repo}/actions/runs/${runId}/attempts/${env.GITHUB_RUN_ATTEMPT}`;
+  const pending = pendingRelease(client, base, event.repository.id);
+  if (pending) {
+    if (
+      eventName !== "workflow_dispatch" ||
+      event.sender?.id !== event.repository.owner?.id
+    ) {
+      throw new DeliveryBlocked(
+        "release-outcome-unknown",
+        "Evidence or review changed while a release may be in flight. Refresh from main to resolve the existing request.",
+      );
+    }
+    const outcome = await reconcileRelease(client, pending);
+    console.log(JSON.stringify({ pr: pending.intent.pr, ...outcome }));
+    if (releaseProof) {
+      process.exitCode = 1;
+      return;
+    }
+    if (outcome.decision === "merged") return;
+    if (pending.intent.pr !== number) {
+      throw new DeliveryBlocked(
+        "release-rejected",
+        `The previous request for PR #${pending.intent.pr} failed. Refresh that PR separately to confirm withdrawal.`,
+      );
+    }
+  }
   const target = snapshot();
   function verifyCurrent() {
     const result = verifyFinalDelivery(client, target);
@@ -802,12 +925,42 @@ function main(env, routeOnly) {
       verifyCurrent,
     );
     console.log(
-      JSON.stringify({
-        decision: "verified",
-        ...binding,
-        ...result,
-      }),
+      JSON.stringify({ decision: "verified", ...binding, ...result }),
     );
+    if (!releaseProof) return;
+
+    const proof = publishedProof(target, result);
+    assert.equal(
+      proofHash(proof),
+      releaseProof,
+      "Current proof differs from the requested release.",
+    );
+    const outcome = await releaseDelivery(
+      client,
+      target,
+      proof,
+      serverUrl,
+      () => {
+        try {
+          assert.deepEqual(
+            publishedProof(target, verifyCurrent()),
+            proof,
+            "Independent review, evidence, or engineering checks changed before release.",
+          );
+        } catch (error) {
+          // The earlier proof may already be green. Replace both mirrors before
+          // treating a before-dispatch refusal as having retired that result.
+          const reason = blockedDecision(error);
+          for (const sha of [target.head, target.merge]) {
+            const check = client.startCheck(sha, serverUrl);
+            client.finishCheck(check, "failure", JSON.stringify(reason));
+          }
+          throw error;
+        }
+      },
+    );
+    console.log(JSON.stringify({ ...binding, ...outcome }));
+    if (outcome.decision !== "merged") process.exitCode = 1;
   } catch (error) {
     console.log(JSON.stringify({ ...blockedDecision(error), ...binding }));
     if (!(error instanceof DeliveryWaiting)) process.exitCode = 1;
@@ -819,7 +972,7 @@ if (
   import.meta.url === pathToFileURL(process.argv[1]).href
 ) {
   try {
-    main(process.env, process.argv[2] === "--route");
+    await main(process.env, process.argv[2] === "--route");
   } catch (error) {
     console.error(JSON.stringify(blockedDecision(error)));
     process.exitCode = 1;
