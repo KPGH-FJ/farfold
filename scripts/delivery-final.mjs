@@ -584,6 +584,28 @@ function requestedPr(eventName, event) {
   return linked[0].number;
 }
 
+export function finalCheckEnforcement(rules, publisherAppId) {
+  assert.ok(
+    Array.isArray(rules),
+    "GitHub did not return the effective main rules.",
+  );
+  const named = rules.flatMap((rule) =>
+    rule.type === "required_status_checks"
+      ? (rule.parameters?.required_status_checks ?? [])
+          .filter((check) => check.context === finalCheck)
+          .map((check) => ({
+            id: check.integration_id,
+            strict: rule.parameters.strict_required_status_checks_policy,
+          }))
+      : [],
+  );
+  return named.length === 1 &&
+    named[0].id === publisherAppId &&
+    named[0].strict === true
+    ? "required"
+    : "advisory";
+}
+
 export function publishFinalDelivery(client, target, serverUrl, verifyCurrent) {
   const { repositoryId, number, base, head, merge } = target;
   const key = `farfold:${repositoryId}:${number}:${base}:${head}:${merge}`;
@@ -610,6 +632,7 @@ export function publishFinalDelivery(client, target, serverUrl, verifyCurrent) {
       runAttempt: result.runAttempt,
       reviewDigest: result.review.reviewDigest,
       evidenceDigest: result.evidence?.evidenceDigest ?? null,
+      enforcement: result.enforcement,
     });
     for (const check of checks.toReversed()) {
       client.finishCheck(check, "success", summary);
@@ -760,7 +783,11 @@ function main(env) {
       Date.parse(lease.expiresAt) > Date.now(),
       "The protected publisher lease expired during final verification.",
     );
-    return result;
+    const enforcement = finalCheckEnforcement(
+      client.api("rules/branches/main?per_page=100"),
+      Number(env.FARFOLD_FINAL_PUBLISHER_APP_ID),
+    );
+    return { ...result, enforcement };
   });
   console.log(
     JSON.stringify({

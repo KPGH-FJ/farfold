@@ -2,6 +2,7 @@ import { generateKeyPairSync, sign } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import {
   finalCheck,
+  finalCheckEnforcement,
   githubClient,
   leasedPublisherCredential,
   privateEvidenceFor,
@@ -769,5 +770,36 @@ describe("leased final publisher credentials", () => {
     expect(() =>
       leasedPublisherCredential("", target.number, target.base, now),
     ).toThrow(/short-lived publisher lease/);
+  });
+});
+
+describe("effective final check rule", () => {
+  const rule = (context, integration_id, strict = true) => ({
+    type: "required_status_checks",
+    parameters: {
+      strict_required_status_checks_policy: strict,
+      required_status_checks: [{ context, integration_id }],
+    },
+  });
+
+  it("treats a final verdict as advisory while main still requires the transition check", () => {
+    expect(
+      finalCheckEnforcement(
+        [rule("Farfold transition review", 5913751)],
+        5913751,
+      ),
+    ).toBe("advisory");
+  });
+
+  it("recognizes the final context only with the exact App and a strict rule", () => {
+    expect(finalCheckEnforcement([rule(finalCheck, 5913751)], 5913751)).toBe(
+      "required",
+    );
+    expect(finalCheckEnforcement([rule(finalCheck, 15368)], 5913751)).toBe(
+      "advisory",
+    );
+    expect(
+      finalCheckEnforcement([rule(finalCheck, 5913751, false)], 5913751),
+    ).toBe("advisory");
   });
 });
