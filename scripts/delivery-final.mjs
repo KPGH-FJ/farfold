@@ -280,6 +280,15 @@ export function githubClient(repo, env, execute = execFileSync) {
         "GitHub did not return the exact check from the configured publisher App.",
       );
       checks.set(check.id, { head, key, serverUrl });
+      // A runner can stop before verification finishes. Remove the prior green
+      // in place before reading evidence, using the supported failure transition.
+      if (check.conclusion === "success") {
+        this.finishCheck(
+          check.id,
+          "failure",
+          "Rechecking current delivery evidence. The previous approval is no longer effective.",
+        );
+      }
       return check.id;
     },
     finishCheck(id, conclusion, summary) {

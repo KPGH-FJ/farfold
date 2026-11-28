@@ -179,6 +179,17 @@ describe("dedicated publisher", () => {
     );
     expect(() =>
       publishFinalDelivery(open(), target, "revocation-run", () => {
+        expect([...records.values()].map((check) => check.conclusion)).toEqual([
+          "failure",
+          "failure",
+        ]);
+        expect(
+          [...records.values()].every((check) =>
+            check.output.summary.startsWith(
+              "Rechecking current delivery evidence",
+            ),
+          ),
+        ).toBe(true);
         throw new Error("signed record was withdrawn");
       }),
     ).toThrow(/signed record was withdrawn/);
