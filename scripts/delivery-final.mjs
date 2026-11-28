@@ -641,6 +641,38 @@ export function publishFinalDelivery(client, target, serverUrl, verifyCurrent) {
   }
 }
 
+export function leasedPublisherCredential(raw, number, base, now = Date.now()) {
+  assert.ok(raw, "A protected short-lived publisher lease is required.");
+  let lease;
+  try {
+    lease = JSON.parse(raw);
+  } catch {
+    throw new Error("The protected publisher lease is malformed.");
+  }
+  assert.ok(
+    lease &&
+      typeof lease === "object" &&
+      Object.keys(lease).sort().join(",") ===
+        "base,expiresAt,head,merge,pr,token" &&
+      lease.pr === number &&
+      lease.base === base &&
+      sha.test(lease.base ?? "") &&
+      sha.test(lease.head ?? "") &&
+      sha.test(lease.merge ?? "") &&
+      new Set([lease.base, lease.head, lease.merge]).size === 3 &&
+      typeof lease.token === "string" &&
+      /^ghs_[A-Za-z0-9_.-]{20,4096}$/.test(lease.token),
+    "The protected publisher lease does not match this PR and main.",
+  );
+  assert.ok(
+    typeof lease.expiresAt === "string" &&
+      Date.parse(lease.expiresAt) > now &&
+      Date.parse(lease.expiresAt) <= now + 60 * 60 * 1000 + 60 * 1000,
+    "The protected publisher lease is expired or has an invalid lifetime.",
+  );
+  return lease;
+}
+
 function main(env) {
   assert.ok(
     env.GITHUB_REF === "refs/heads/main" &&
@@ -670,8 +702,13 @@ function main(env) {
     Number.isSafeInteger(event.repository?.id),
     "GitHub event lacks the verified repository identity.",
   );
+  const { FARFOLD_FINAL_PUBLISHER_LEASE: rawLease, ...verifyEnv } = env;
+  const lease = leasedPublisherCredential(rawLease, number, base);
   const client = {
-    ...githubClient(repo, env),
+    ...githubClient(repo, {
+      ...verifyEnv,
+      FARFOLD_FINAL_PUBLISHER_TOKEN: lease.token,
+    }),
     publicKey: env.FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY,
   };
   const snapshot = () =>
@@ -680,6 +717,10 @@ function main(env) {
   let target;
   try {
     target = snapshot();
+    assert.ok(
+      lease.head === target.head && lease.merge === target.merge,
+      "The protected publisher lease is for a different head or merge preview.",
+    );
   } catch (error) {
     throw new Error(
       "Final delivery was not verified. The exact current PR tuple could not be resolved, so no withdrawal was confirmed.",
@@ -714,6 +755,10 @@ function main(env) {
       current.review.reviewDigest === result.review.reviewDigest &&
         current.evidence?.evidenceDigest === result.evidence?.evidenceDigest,
       "Independent review or private evidence changed during final verification.",
+    );
+    assert.ok(
+      Date.parse(lease.expiresAt) > Date.now(),
+      "The protected publisher lease expired during final verification.",
     );
     return result;
   });

@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   finalCheck,
   githubClient,
+  leasedPublisherCredential,
   privateEvidenceFor,
   publishFinalDelivery,
   targetFor,
@@ -720,5 +721,53 @@ describe("hosted final delivery", () => {
     expect(() =>
       targetFor(api, target.number, target.base, target.repositoryId),
     ).toThrow(/preview or candidate tree/i);
+  });
+});
+
+describe("leased final publisher credentials", () => {
+  const lease = {
+    pr: target.number,
+    base: target.base,
+    head: target.head,
+    merge: target.merge,
+    expiresAt: new Date(now + 30 * 60 * 1000).toISOString(),
+    token: "ghs_" + "x".repeat(40),
+  };
+
+  it("accepts a short lease for the exact PR and main", () => {
+    expect(
+      leasedPublisherCredential(
+        JSON.stringify(lease),
+        target.number,
+        target.base,
+        now,
+      ),
+    ).toEqual(lease);
+  });
+
+  it.each([
+    { pr: 8 },
+    { base: "f".repeat(40) },
+    { merge: target.head },
+    { head: "unbound" },
+    { expiresAt: new Date(now - 1).toISOString() },
+    { expiresAt: new Date(now + 2 * 60 * 60 * 1000).toISOString() },
+    { token: "invalid" },
+    { privateKey: "unexpected" },
+  ])("rejects leases with an invalid field", (fields) => {
+    expect(() =>
+      leasedPublisherCredential(
+        JSON.stringify({ ...lease, ...fields }),
+        target.number,
+        target.base,
+        now,
+      ),
+    ).toThrow();
+  });
+
+  it("stops without a lease", () => {
+    expect(() =>
+      leasedPublisherCredential("", target.number, target.base, now),
+    ).toThrow(/short-lived publisher lease/);
   });
 });

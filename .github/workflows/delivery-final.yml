@@ -49,20 +49,10 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22.22.3
-      - name: Mint repository-scoped final publisher token
-        id: publisher
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
-        with:
-          client-id: ${{ vars.FARFOLD_FINAL_PUBLISHER_CLIENT_ID }}
-          private-key: ${{ secrets.FARFOLD_FINAL_PUBLISHER_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: ${{ github.event.repository.name }}
-          permission-checks: write
-          permission-contents: read
       - name: Verify engineering run and authenticated independent review
         env:
           GH_TOKEN: ${{ github.token }}
           FARFOLD_FINAL_PUBLISHER_APP_ID: ${{ vars.FARFOLD_FINAL_PUBLISHER_APP_ID }}
-          FARFOLD_FINAL_PUBLISHER_TOKEN: ${{ steps.publisher.outputs.token }}
+          FARFOLD_FINAL_PUBLISHER_LEASE: ${{ secrets.FARFOLD_FINAL_PUBLISHER_LEASE }}
           FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY: ${{ vars.FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY }}
         run: node scripts/delivery-final.mjs
