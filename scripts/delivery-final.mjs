@@ -174,9 +174,14 @@ function githubReader(repo, readEnv, execute = execFileSync) {
     run,
     api(path) {
       try {
-        return JSON.parse(
-          run(["api", `repos/${repo}/${path}`], { encoding: "utf8" }),
-        );
+        const args = [
+          "api",
+          ...(path.startsWith("rules")
+            ? ["-H", "Cache-Control: no-cache"]
+            : []),
+          `repos/${repo}/${path}`,
+        ];
+        return JSON.parse(run(args, { encoding: "utf8" }));
       } catch {
         throw new Error("Could not read verified data from the GitHub API.");
       }
@@ -250,6 +255,10 @@ export function githubFinalReader(repo, readEnv, execute = execFileSync) {
 
 export function proofHash(value) {
   return createHash("sha256").update(canonicalJson(value)).digest("hex");
+}
+
+export function releaseProofDigest(proof, protection) {
+  return proofHash({ proof, protection });
 }
 
 export function publishedProof(target, result) {
@@ -1008,12 +1017,17 @@ async function main(env, phase) {
         pending,
         verifyRelease() {
           const target = snapshot();
-          assert.equal(
-            proofHash(publishedProof(target, verifyCurrent(target))),
-            releaseProof,
-            "Current proof differs from the requested release.",
+          const proof = publishedProof(target, verifyCurrent(target));
+          const protection = verifyDeliveryMainRules(
+            client.api,
+            repo,
+            client.publisherAppId,
           );
-          verifyDeliveryMainRules(client.api, repo, client.publisherAppId);
+          assert.equal(
+            releaseProofDigest(proof, protection),
+            releaseProof,
+            "Current proof or main protection differs from the requested release.",
+          );
         },
       });
       if (plan)
@@ -1074,10 +1088,15 @@ async function main(env, phase) {
 
     try {
       const proof = publishedProof(target, result);
+      const protection = verifyDeliveryMainRules(
+        client.api,
+        repo,
+        client.publisherAppId,
+      );
       assert.equal(
-        proofHash(proof),
+        releaseProofDigest(proof, protection),
         releaseProof,
-        "Current proof differs from the requested release.",
+        "Current proof or main protection differs from the requested release.",
       );
       assert.ok(
         ownerDispatch &&
@@ -1096,7 +1115,16 @@ async function main(env, phase) {
             proof,
             "Independent review, evidence, or engineering checks changed before release.",
           );
-          verifyDeliveryMainRules(client.api, repo, client.publisherAppId);
+          const currentProtection = verifyDeliveryMainRules(
+            client.api,
+            repo,
+            client.publisherAppId,
+          );
+          assert.equal(
+            releaseProofDigest(proof, currentProtection),
+            releaseProof,
+            "Main protection changed after the owner authorized this release.",
+          );
         },
       );
       if (outcome.decision !== "merged") {

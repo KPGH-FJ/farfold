@@ -5,9 +5,11 @@ import {
   githubFinalReader,
   proofHash,
   publishedProof,
+  releaseProofDigest,
   targetFor,
   verifyFinalDelivery,
 } from "./delivery-final.mjs";
+import { verifyDeliveryMainRules } from "./delivery-main-rules.mjs";
 
 const workflow = "delivery-final.yml";
 const publisherEnvironment = "farfold-final-publisher";
@@ -92,6 +94,7 @@ export async function mergeVerifiedDelivery(input, execute = execFileSync) {
     "Publisher or evidence key changed.",
   );
   snapshot();
+  const protection = verifyDeliveryMainRules(api, repo, appId, { owner: true });
 
   const dispatch = JSON.parse(
     run(
@@ -110,7 +113,7 @@ export async function mergeVerifiedDelivery(input, execute = execFileSync) {
           ref: "main",
           inputs: {
             pr_number: String(number),
-            release_proof: proofHash(expected),
+            release_proof: releaseProofDigest(expected, protection),
           },
         }),
       },

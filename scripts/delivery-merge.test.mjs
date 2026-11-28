@@ -4,9 +4,15 @@ import {
   githubFinalReader,
   proofHash,
   publishedProof,
+  releaseProofDigest,
   targetFor,
   verifyFinalDelivery,
 } from "./delivery-final.mjs";
+import { verifyDeliveryMainRules } from "./delivery-main-rules.mjs";
+
+vi.mock("./delivery-main-rules.mjs", () => ({
+  verifyDeliveryMainRules: vi.fn(),
+}));
 
 vi.mock("./delivery-final.mjs", async (getActual) => ({
   ...(await getActual()),
@@ -23,6 +29,7 @@ const repo = "example/farfold",
   repository = { id: 10, full_name: repo, default_branch: "main" };
 const target = { number: 12, base, head, merge, mergeTree: "5".repeat(40) };
 const runUrl = `https://github.com/${repo}/actions/runs/71`;
+const protection = [{ id: 27971261, updatedAt: "2026-11-24T08:51:14.846Z" }];
 const evidence = { installed: { required: true, receipts: [] } };
 const verified = {
   scope: { product: true },
@@ -72,7 +79,10 @@ function fixture({
         ref: "main",
         inputs: {
           pr_number: "12",
-          release_proof: proofHash(publishedProof(target, verified)),
+          release_proof: releaseProofDigest(
+            publishedProof(target, verified),
+            protection,
+          ),
         },
       });
       if (dispatchFailure) throw new Error("dispatch failed");
@@ -131,6 +141,17 @@ function fixture({
     throw new Error("unexpected read " + path);
   };
   githubFinalReader.mockReturnValue({ api, run });
+  verifyDeliveryMainRules.mockImplementation(
+    (actualApi, actualRepo, appId, options) => {
+      expect([actualApi, actualRepo, appId, options]).toEqual([
+        api,
+        repo,
+        121,
+        { owner: true },
+      ]);
+      return protection;
+    },
+  );
   const localCalls = [];
   const execute = (_gh, args) => {
     localCalls.push(args.slice(0, 2));
@@ -188,6 +209,14 @@ describe("protected publisher release request", () => {
     verifyFinalDelivery.mockReturnValue({ ...verified, runAttempt: 2 });
     const f = fixture();
     await expect(f.run()).rejects.toThrow(/engineering attempt changed/);
+    expect(f.localCalls).toHaveLength(0);
+  });
+  it("rejects an unavailable owner bypass readback before dispatch", async () => {
+    const f = fixture();
+    verifyDeliveryMainRules.mockImplementation(() => {
+      throw new Error("Cannot read bypass actors");
+    });
+    await expect(f.run()).rejects.toThrow("Cannot read bypass actors");
     expect(f.localCalls).toHaveLength(0);
   });
   it("reports a merge only after reading the checked commit", async () => {

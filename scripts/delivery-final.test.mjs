@@ -11,9 +11,21 @@ import {
   privateEvidenceFor,
   proofHash,
   publishFinalDelivery,
+  releaseProofDigest,
   targetFor,
   verifyFinalDelivery,
 } from "./delivery-final.mjs";
+
+it("binds each release request to the reviewed protection revision", () => {
+  const proof = { proofSha256: "b".repeat(64) };
+  const protection = [{ id: 27971261, updatedAt: "2026-11-24T08:51:14.846Z" }];
+  const samePolicyChanged = [
+    { ...protection[0], updatedAt: "2026-11-24T08:51:14.847Z" },
+  ];
+  expect(releaseProofDigest(proof, protection)).not.toBe(
+    releaseProofDigest(proof, samePolicyChanged),
+  );
+});
 import {
   requiredAffectedCommands,
   requiredWindowsAffectedCommands,
