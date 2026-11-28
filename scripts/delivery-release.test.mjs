@@ -4,6 +4,7 @@ import {
   reconcileRelease,
   releaseCheck,
   releaseDelivery,
+  releaseJournal,
   releaseRequestAnchor,
 } from "./delivery-release.mjs";
 
@@ -24,6 +25,11 @@ const publisherSlug = "farfold-final-delivery-publisher";
 const serverUrl =
   "https://github.com/example/farfold/actions/runs/7/attempts/1";
 const markerId = 12;
+const readyPayload = {
+  repositoryId: target.repositoryId,
+  schemaVersion: 1,
+  state: "ready",
+};
 const pendingIntent = {
   repositoryId: target.repositoryId,
   pr: target.number,
@@ -43,24 +49,35 @@ function fixture({
   marker = {},
   activeIntent,
   completed,
+  missing = false,
   visibleMerge = true,
 } = {}) {
   const calls = [];
   const created = [];
-  let savedIntent;
+  let journal = readyPayload;
+  if (activeIntent)
+    journal = { ...readyPayload, state: "pending", intent: activeIntent };
+  if (completed) journal = { ...readyPayload, state: "settled", ...completed };
   const client = {
     publisherAppId,
-    startRelease: vi.fn((intent, url) => {
+    startRelease: vi.fn((intent, url, previous) => {
       calls.push("record");
-      savedIntent = { ...intent };
-      created.push({ intent: savedIntent, url });
+      journal = { ...readyPayload, state: "pending", intent: { ...intent } };
+      created.push({ intent: journal.intent, url, previous });
       return { id: markerId, publisherSlug };
     }),
     updateRelease: vi.fn((_id, intent) => {
       calls.push("save-uuid");
-      savedIntent = { ...intent };
+      journal = { ...journal, intent: { ...intent } };
     }),
-    finishRelease: vi.fn(),
+    finishRelease: vi.fn((_id, intent, outcome) => {
+      journal = {
+        ...readyPayload,
+        state: "settled",
+        intent: { ...intent },
+        outcome,
+      };
+    }),
     releaseApi: vi.fn((method, path) => {
       calls.push(method);
       if (method === "PUT" && path === "pulls/15/merge-async") {
@@ -94,13 +111,9 @@ function fixture({
       if (path === `git/commits/${mergeCommit}`) return commit;
       if (path.startsWith(`commits/${releaseRequestAnchor}/check-runs?`)) {
         const params = new URLSearchParams(path.split("?")[1]);
-        const status = params.get("status");
-        const active = status === "in_progress";
-        expect(params.get("filter")).toBe(active ? "all" : "latest");
-        const intent = active
-          ? (savedIntent ?? activeIntent)
-          : completed?.intent;
-        if (!intent) return { total_count: 0, check_runs: [] };
+        expect(params.get("filter")).toBe("all");
+        expect(params.has("status")).toBe(false);
+        if (missing) return { total_count: 0, check_runs: [] };
         return {
           total_count: 1,
           check_runs: [
@@ -110,9 +123,9 @@ function fixture({
               name: releaseCheck,
               app: { id: publisherAppId, slug: publisherSlug },
               head_sha: releaseRequestAnchor,
-              status,
-              conclusion: active ? null : completed.conclusion,
-              output: { summary: JSON.stringify(intent) },
+              status: "completed",
+              conclusion: "neutral",
+              output: { summary: JSON.stringify(journal) },
               ...marker,
             },
           ],
@@ -189,29 +202,50 @@ describe("release recovery after main advances", () => {
     );
   });
 
-  it("does not clear an in-progress marker because an older successful check exists", () => {
-    const { client } = fixture({
-      activeIntent: { ...pendingIntent, pr: 22 },
-      completed: {
-        conclusion: "success",
-        intent: { ...pendingIntent, uuid: requestUuid },
-      },
+  it("uses the App's initialized slot before the first request", () => {
+    const { client } = fixture();
+    expect(releaseJournal(client, target.base, target.repositoryId)).toEqual({
+      id: markerId,
+      publisherSlug,
+      state: "ready",
+      intent: null,
     });
-    expect(
-      pendingRelease(client, advancedBase, target.repositoryId).intent.pr,
-    ).toBe(22);
-    expect(
-      client.api.mock.calls
-        .flat()
-        .some((route) => route.includes("status=completed")),
-    ).toBe(false);
+    expect(pendingRelease(client, target.base, target.repositoryId)).toBeNull();
   });
 
-  it.each(["stale", "cancelled", "neutral", "success"])(
-    "blocks new requests when the last check's %s state lacks a trusted terminal outcome",
+  it("does not send or recreate a request when GitHub no longer shows the slot", async () => {
+    const { client } = fixture({ missing: true });
+    await expect(
+      releaseDelivery(client, target, proof, serverUrl, () => {}),
+    ).rejects.toMatchObject({
+      state: "release-outcome-unknown",
+      message: /missing or ambiguous/,
+    });
+    expect(client.startRelease).not.toHaveBeenCalled();
+    expect(client.releaseApi).not.toHaveBeenCalled();
+  });
+
+  it("does not send when the journal disappears during the fresh proof check", async () => {
+    const { client } = fixture();
+    const recheck = () => {
+      client.api.mockReturnValue({ total_count: 0, check_runs: [] });
+    };
+    await expect(
+      releaseDelivery(client, target, proof, serverUrl, recheck),
+    ).rejects.toMatchObject({
+      state: "release-outcome-unknown",
+      message: /missing or ambiguous/,
+    });
+    expect(client.startRelease).toHaveBeenCalledTimes(1);
+    expect(client.releaseApi).not.toHaveBeenCalled();
+    expect(client.finishRelease).not.toHaveBeenCalled();
+  });
+
+  it.each(["stale", "cancelled", "failure", "success"])(
+    "blocks new requests when the slot's conclusion is %s rather than neutral",
     async (conclusion) => {
       const { client } = fixture({
-        completed: { conclusion, intent: pendingIntent },
+        marker: { conclusion },
       });
       await expect(
         releaseDelivery(
@@ -227,12 +261,36 @@ describe("release recovery after main advances", () => {
     },
   );
 
+  it.each([
+    ["legacy bare intent", pendingIntent],
+    [
+      "settled success without operation identity",
+      {
+        ...readyPayload,
+        state: "settled",
+        intent: pendingIntent,
+        outcome: "success",
+      },
+    ],
+    ["ready state with an intent", { ...readyPayload, intent: pendingIntent }],
+    ["wrong repository identity", { ...readyPayload, repositoryId: 1 }],
+  ])("blocks %s in the release journal", async (_description, output) => {
+    const { client } = fixture({
+      marker: { output: { summary: JSON.stringify(output) } },
+    });
+    await expect(
+      releaseDelivery(client, target, proof, serverUrl, () => {}),
+    ).rejects.toMatchObject({ state: "release-outcome-unknown" });
+    expect(client.startRelease).not.toHaveBeenCalled();
+    expect(client.releaseApi).not.toHaveBeenCalled();
+  });
+
   it.each(["success", "failure"])(
     "recognizes a trusted %s after main advances",
-    (conclusion) => {
+    (outcome) => {
       const { client } = fixture({
         completed: {
-          conclusion,
+          outcome,
           intent: { ...pendingIntent, uuid: requestUuid },
         },
       });
@@ -242,7 +300,7 @@ describe("release recovery after main advances", () => {
     },
   );
 
-  it("refuses ambiguous active records rather than choosing one", () => {
+  it("refuses duplicate journal slots", () => {
     const { client } = fixture({ activeIntent: pendingIntent });
     const original = client.api.getMockImplementation();
     client.api.mockImplementation((route) => {
@@ -254,7 +312,7 @@ describe("release recovery after main advances", () => {
     });
     expect(() =>
       pendingRelease(client, advancedBase, target.repositoryId),
-    ).toThrow(/incomplete or ambiguous/);
+    ).toThrow(/missing or ambiguous/);
     expect(client.startRelease).not.toHaveBeenCalled();
   });
 });
@@ -392,7 +450,13 @@ describe("verified release request", () => {
       releaseDelivery(client, target, proof, serverUrl, recheck),
     ).resolves.toEqual({ decision: "merged", mergeCommit });
     expect(calls).toEqual(["record", "fresh-proof", "PUT", "save-uuid", "GET"]);
-    expect(created).toEqual([{ intent: pendingIntent, url: serverUrl }]);
+    expect(created).toEqual([
+      {
+        intent: pendingIntent,
+        url: serverUrl,
+        previous: { id: markerId, publisherSlug, state: "ready", intent: null },
+      },
+    ]);
     expect(client.releaseApi).toHaveBeenNthCalledWith(
       1,
       "PUT",
@@ -480,17 +544,21 @@ describe("verified release request", () => {
   });
 
   it.each([
-    ["wrong App", { app: { id: 15368 } }, /protected check or intent/],
+    ["wrong App", { app: { id: 15368 } }, /unexpected source or status/],
     [
       "wrong check anchor",
       { head_sha: target.head },
-      /protected check or intent/,
+      /unexpected source or status/,
     ],
     [
       "wrong base in the intent",
       {
         output: {
-          summary: JSON.stringify({ ...pendingIntent, base: target.head }),
+          summary: JSON.stringify({
+            ...readyPayload,
+            state: "pending",
+            intent: { ...pendingIntent, base: target.head },
+          }),
         },
       },
       /not in the protected main history/,

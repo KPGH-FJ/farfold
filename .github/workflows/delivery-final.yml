@@ -100,6 +100,15 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22.22.3
+      - name: Prepare an authorized release with read-only credentials
+        id: release-plan
+        if: github.event_name == 'workflow_dispatch' && github.event.sender.id == github.event.repository.owner.id && github.run_attempt == 1
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FARFOLD_DELIVERY_PR_NUMBER: ${{ needs.route.outputs.pr_number }}
+          FARFOLD_FINAL_PUBLISHER_APP_ID: ${{ vars.FARFOLD_FINAL_PUBLISHER_APP_ID }}
+          FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY: ${{ vars.FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY }}
+        run: node scripts/delivery-final.mjs --prepare-release
       - name: Mint repository-scoped final publisher token
         id: publisher
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
@@ -109,12 +118,25 @@ jobs:
           owner: ${{ github.repository_owner }}
           repositories: ${{ github.event.repository.name }}
           permission-checks: write
-          permission-contents: ${{ github.event_name == 'workflow_dispatch' && github.event.sender.id == github.event.repository.owner.id && 'write' || 'read' }}
+          permission-contents: read
+      - name: Mint write token for the prepared release or exact readback
+        id: release-token
+        if: steps.release-plan.outputs.mode == 'release' || steps.release-plan.outputs.mode == 'reconcile'
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.FARFOLD_FINAL_PUBLISHER_CLIENT_ID }}
+          private-key: ${{ secrets.FARFOLD_FINAL_PUBLISHER_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
       - name: Verify engineering run and authenticated independent review
         env:
           GH_TOKEN: ${{ github.token }}
           FARFOLD_DELIVERY_PR_NUMBER: ${{ needs.route.outputs.pr_number }}
           FARFOLD_FINAL_PUBLISHER_APP_ID: ${{ vars.FARFOLD_FINAL_PUBLISHER_APP_ID }}
           FARFOLD_FINAL_PUBLISHER_TOKEN: ${{ steps.publisher.outputs.token }}
+          FARFOLD_FINAL_RELEASE_TOKEN: ${{ steps.release-token.outputs.token }}
+          FARFOLD_RELEASE_MODE: ${{ steps.release-plan.outputs.mode }}
+          FARFOLD_RELEASE_BINDING: ${{ steps.release-plan.outputs.binding }}
           FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY: ${{ vars.FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY }}
         run: node scripts/delivery-final.mjs

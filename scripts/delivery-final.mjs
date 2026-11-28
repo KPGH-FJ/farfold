@@ -24,6 +24,7 @@ import {
 } from "./delivery-codex-review.mjs";
 import { canonicalJson } from "./acceptance-receipts.mjs";
 import { verifyDeliveryPrivateAttestation } from "./delivery-private-attestation.mjs";
+import { verifyDeliveryMainRules } from "./delivery-main-rules.mjs";
 import { classifyDeliveryPaths } from "./delivery-scope.mjs";
 import { DeliveryBlocked, DeliveryWaiting } from "./delivery-state.mjs";
 import {
@@ -35,6 +36,7 @@ import {
 } from "./delivery-release.mjs";
 
 const sha = /^[0-9a-f]{40}$/;
+const uuid = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 const workflowPath = ".github/workflows/delivery.yml";
 const engineeringCheck = "Farfold delivery check";
 const windowsCheck = "Windows affected engineering checks";
@@ -263,16 +265,35 @@ export function publishedProof(target, result) {
   };
 }
 
-export function githubClient(repo, env, execute = execFileSync) {
+function configuredPublisherAppId(env) {
+  const raw = env.FARFOLD_FINAL_PUBLISHER_APP_ID ?? "";
+  const id = Number(raw);
+  if (
+    !/^[1-9][0-9]*$/.test(raw) ||
+    !Number.isSafeInteger(id) ||
+    id === actionsAppId
+  ) {
+    throw new DeliveryBlocked(
+      "missing-configuration",
+      "A dedicated final-publisher App ID is required.",
+    );
+  }
+  return id;
+}
+
+export function githubClient(
+  repo,
+  env,
+  execute = execFileSync,
+  request = fetch,
+) {
   const readEnv = { ...env };
   const publisherToken = readEnv.FARFOLD_FINAL_PUBLISHER_TOKEN;
+  const releaseToken = readEnv.FARFOLD_FINAL_RELEASE_TOKEN;
   delete readEnv.FARFOLD_FINAL_PUBLISHER_TOKEN;
-  const rawAppId = readEnv.FARFOLD_FINAL_PUBLISHER_APP_ID ?? "";
-  const publisherAppId = Number(rawAppId);
+  delete readEnv.FARFOLD_FINAL_RELEASE_TOKEN;
+  const publisherAppId = configuredPublisherAppId(env);
   if (!(
-    /^[1-9][0-9]*$/.test(rawAppId) &&
-    Number.isSafeInteger(publisherAppId) &&
-    publisherAppId !== actionsAppId &&
     typeof publisherToken === "string" &&
     publisherToken.trim() &&
     publisherToken !== readEnv.GH_TOKEN
@@ -286,6 +307,8 @@ export function githubClient(repo, env, execute = execFileSync) {
   const { run } = reader;
   const writeEnv = { ...readEnv, GH_TOKEN: publisherToken };
   const publishedHeads = new Map();
+  let release;
+  let submitted = false;
 
   function writeCheck(method, path, body) {
     return JSON.parse(
@@ -319,40 +342,83 @@ export function githubClient(repo, env, execute = execFileSync) {
     );
   }
   const readerWithApp = { ...reader, publisherAppId };
-  function saveRelease(id, intent, conclusion) {
-    const status = conclusion === null ? "in_progress" : "completed";
+  function saveRelease(id, intent, outcome, serverUrl) {
+    const record = {
+      schemaVersion: 1,
+      repositoryId: intent.repositoryId,
+      state: outcome === null ? "pending" : "settled",
+      intent,
+      ...(outcome === null ? {} : { outcome }),
+    };
     const updated = writeCheck("PATCH", `/${id}`, {
-      status,
-      ...(conclusion === null ? {} : { conclusion }),
-      output: { title: releaseCheck, summary: JSON.stringify(intent) },
+      status: "completed",
+      conclusion: "neutral",
+      ...(serverUrl ? { details_url: serverUrl, external_id: serverUrl } : {}),
+      output: { title: releaseCheck, summary: JSON.stringify(record) },
     });
-    assertPublishedCheck(updated, releaseRequestAnchor, status, releaseCheck);
+    assertPublishedCheck(
+      updated,
+      releaseRequestAnchor,
+      "completed",
+      releaseCheck,
+    );
     assert.equal(updated.id, id);
-    assert.equal(updated.conclusion, conclusion);
-    assert.deepEqual(JSON.parse(updated.output?.summary), intent);
+    assert.equal(updated.conclusion, "neutral");
+    assert.deepEqual(JSON.parse(updated.output?.summary), record);
   }
   return {
     publisherAppId,
     ...reader,
-    async releaseApi(method, path, body) {
-      assert.match(
-        path,
-        /^pulls\/[1-9][0-9]*\/merge-async(?:\/[0-9a-f-]{36})?$/i,
+    authorizeRelease(plan) {
+      assert.ok(
+        !release &&
+          Number.isSafeInteger(plan.pr) &&
+          plan.pr > 0 &&
+          ((plan.mode === "release" && plan.uuid === undefined) ||
+            (plan.mode === "reconcile" && uuid.test(plan.uuid))),
       );
+      assert.ok(
+        typeof releaseToken === "string" &&
+          releaseToken.trim() &&
+          releaseToken !== publisherToken &&
+          releaseToken !== readEnv.GH_TOKEN,
+        "The protected release needs a distinct, short-lived write credential.",
+      );
+      release = { ...plan };
+    },
+    async releaseApi(method, path, body) {
+      const endpoint = `pulls/${release?.pr}/merge-async`;
+      if (method === "PUT") {
+        assert.ok(
+          release?.mode === "release" && !submitted && path === endpoint,
+          "The prepared release does not authorize this merge request.",
+        );
+        submitted = true;
+      } else {
+        assert.ok(
+          method === "GET" &&
+            release?.uuid &&
+            path === `${endpoint}/${release.uuid}`,
+          "The prepared release does not authorize this merge readback.",
+        );
+      }
       let response;
       try {
-        response = await fetch(`https://api.github.com/repos/${repo}/${path}`, {
-          method,
-          headers: {
-            Accept: "application/vnd.github+json",
-            Authorization: `Bearer ${publisherToken}`,
-            "Content-Type": "application/json",
-            "X-GitHub-Api-Version": "2026-03-10",
+        response = await request(
+          `https://api.github.com/repos/${repo}/${path}`,
+          {
+            method,
+            headers: {
+              Accept: "application/vnd.github+json",
+              Authorization: `Bearer ${releaseToken}`,
+              "Content-Type": "application/json",
+              "X-GitHub-Api-Version": "2026-03-10",
+            },
+            redirect: "error",
+            signal: AbortSignal.timeout(15000),
+            ...(body ? { body: JSON.stringify(body) } : {}),
           },
-          redirect: "error",
-          signal: AbortSignal.timeout(15000),
-          ...(body ? { body: JSON.stringify(body) } : {}),
-        });
+        );
       } catch {
         throw new DeliveryBlocked(
           "release-outcome-unknown",
@@ -371,24 +437,18 @@ export function githubClient(repo, env, execute = execFileSync) {
           `GitHub returned HTTP ${response.status} for release.`,
         );
       }
-      return response.json();
+      const result = await response.json();
+      if (
+        method === "PUT" &&
+        result.status === "pending" &&
+        uuid.test(result.details?.uuid)
+      ) {
+        release.uuid = result.details.uuid;
+      }
+      return result;
     },
-    startRelease(intent, serverUrl) {
-      const check = writeCheck("POST", "", {
-        name: releaseCheck,
-        head_sha: releaseRequestAnchor,
-        status: "in_progress",
-        details_url: serverUrl,
-        external_id: serverUrl,
-        output: { title: releaseCheck, summary: JSON.stringify(intent) },
-      });
-      assertPublishedCheck(
-        check,
-        releaseRequestAnchor,
-        "in_progress",
-        releaseCheck,
-      );
-      assert.deepEqual(JSON.parse(check.output?.summary), intent);
+    startRelease(intent, serverUrl, journal) {
+      saveRelease(journal.id, intent, null, serverUrl);
       const stored = pendingRelease(
         readerWithApp,
         intent.base,
@@ -396,7 +456,7 @@ export function githubClient(repo, env, execute = execFileSync) {
       );
       assert.equal(
         stored?.id,
-        check.id,
+        journal.id,
         "Could not read back the protected release intent.",
       );
       assert.deepEqual(stored.intent, intent);
@@ -784,7 +844,35 @@ export function publishFinalDelivery(client, target, serverUrl, verifyCurrent) {
   }
 }
 
-async function main(env, routeOnly) {
+export function prepareReleasePlan({
+  ownerDispatch,
+  number,
+  releaseProof,
+  pending,
+  verifyRelease,
+}) {
+  if (!ownerDispatch) return null;
+  if (pending) {
+    return !releaseProof &&
+      pending.intent.pr === number &&
+      uuid.test(pending.intent.uuid)
+      ? { mode: "reconcile", binding: proofHash(pending) }
+      : null;
+  }
+  if (!releaseProof) return null;
+  verifyRelease();
+  return { mode: "release", binding: releaseProof };
+}
+
+function matchesReleasePlan(env, plan) {
+  return (
+    plan &&
+    env.FARFOLD_RELEASE_MODE === plan.mode &&
+    env.FARFOLD_RELEASE_BINDING === plan.binding
+  );
+}
+
+async function main(env, phase) {
   assert.ok(
     env.GITHUB_REF === "refs/heads/main" &&
       sha.test(env.GITHUB_SHA ?? "") &&
@@ -802,6 +890,8 @@ async function main(env, routeOnly) {
     GITHUB_EVENT_NAME: eventName,
   } = env;
   const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, "utf8"));
+  const routeOnly = phase === "--route";
+  const prepare = phase === "--prepare-release";
   const confirmCurrentReview = routeOnly
     ? (comment) => codexReviewEditCurrent(githubReader(repo, env), comment)
     : undefined;
@@ -834,16 +924,24 @@ async function main(env, routeOnly) {
   );
   const releaseProof =
     eventName === "workflow_dispatch" ? event.inputs?.release_proof : "";
+  const ownerDispatch =
+    eventName === "workflow_dispatch" &&
+    Number.isSafeInteger(event.repository.owner?.id) &&
+    event.sender?.id === event.repository.owner.id &&
+    env.GITHUB_RUN_ATTEMPT === "1";
   if (releaseProof) {
     assert.ok(
-      /^[0-9a-f]{64}$/.test(releaseProof) &&
-        env.GITHUB_RUN_ATTEMPT === "1" &&
-        event.sender?.id === event.repository.owner?.id,
+      /^[0-9a-f]{64}$/.test(releaseProof) && ownerDispatch,
       "Release requires an exact proof digest and a repository-owner dispatch.",
     );
   }
   const client = {
-    ...githubClient(repo, env),
+    ...(prepare
+      ? {
+          ...githubFinalReader(repo, env),
+          publisherAppId: configuredPublisherAppId(env),
+        }
+      : githubClient(repo, env)),
     publicKey: env.FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY,
     announcedRun: eventName === "workflow_run" ? event.workflow_run : undefined,
   };
@@ -854,33 +952,7 @@ async function main(env, routeOnly) {
     "Missing publisher run attempt.",
   );
   const serverUrl = `https://github.com/${repo}/actions/runs/${runId}/attempts/${env.GITHUB_RUN_ATTEMPT}`;
-  const ownerDispatch =
-    eventName === "workflow_dispatch" &&
-    event.sender?.id === event.repository.owner?.id;
-  const pending = pendingRelease(client, base, event.repository.id);
-  if (pending) {
-    if (!ownerDispatch) {
-      throw new DeliveryBlocked(
-        "release-outcome-unknown",
-        "Evidence or review changed while a release may be in flight. Refresh from main to resolve the existing request.",
-      );
-    }
-    const outcome = await reconcileRelease(client, pending);
-    console.log(JSON.stringify({ pr: pending.intent.pr, ...outcome }));
-    if (releaseProof) {
-      process.exitCode = 1;
-      return;
-    }
-    if (outcome.decision === "merged") return;
-    if (pending.intent.pr !== number) {
-      throw new DeliveryBlocked(
-        "release-rejected",
-        `The previous request for PR #${pending.intent.pr} failed. Refresh that PR separately to confirm withdrawal.`,
-      );
-    }
-  }
-  const target = snapshot();
-  function verifyCurrent() {
+  function verifyCurrent(target) {
     const result = verifyFinalDelivery(client, target);
     assert.ok(
       sameTuple(target, snapshot()),
@@ -916,6 +988,72 @@ async function main(env, routeOnly) {
     );
     return result;
   }
+  let pending;
+  let journalError;
+  try {
+    pending = pendingRelease(client, base, event.repository.id);
+  } catch (error) {
+    journalError = error;
+  }
+  if (prepare) {
+    if (journalError) {
+      console.log(JSON.stringify(blockedDecision(journalError)));
+      return;
+    }
+    try {
+      const plan = prepareReleasePlan({
+        ownerDispatch,
+        number,
+        releaseProof,
+        pending,
+        verifyRelease() {
+          const target = snapshot();
+          assert.equal(
+            proofHash(publishedProof(target, verifyCurrent(target))),
+            releaseProof,
+            "Current proof differs from the requested release.",
+          );
+          verifyDeliveryMainRules(client.api, repo, client.publisherAppId);
+        },
+      });
+      if (plan)
+        appendFileSync(
+          env.GITHUB_OUTPUT,
+          `mode=${plan.mode}\nbinding=${plan.binding}\n`,
+        );
+    } catch (error) {
+      console.log(JSON.stringify(blockedDecision(error)));
+    }
+    return;
+  }
+  if (pending) {
+    const plan = prepareReleasePlan({
+      ownerDispatch,
+      number,
+      releaseProof,
+      pending,
+    });
+    if (matchesReleasePlan(env, plan)) {
+      client.authorizeRelease({
+        mode: "reconcile",
+        pr: number,
+        uuid: pending.intent.uuid,
+      });
+      try {
+        const outcome = await reconcileRelease(client, pending);
+        console.log(JSON.stringify({ pr: number, ...outcome }));
+        if (outcome.decision === "merged") return;
+      } catch (error) {
+        journalError = error;
+      }
+    } else {
+      journalError = new DeliveryBlocked(
+        "release-outcome-unknown",
+        `PR #${pending.intent.pr} may still have a release in flight. Refresh that PR from main without sending a new release.`,
+      );
+    }
+  }
+  const target = snapshot();
   const binding = {
     base,
     candidate: target.head,
@@ -924,49 +1062,63 @@ async function main(env, routeOnly) {
     publisherAppId: client.publisherAppId,
   };
   try {
-    const result = publishFinalDelivery(
-      client,
-      target,
-      serverUrl,
-      verifyCurrent,
-    );
+    const result = publishFinalDelivery(client, target, serverUrl, () => {
+      const verified = verifyCurrent(target);
+      if (journalError) throw journalError;
+      return verified;
+    });
     console.log(
       JSON.stringify({ decision: "verified", ...binding, ...result }),
     );
     if (!releaseProof) return;
 
-    const proof = publishedProof(target, result);
-    assert.equal(
-      proofHash(proof),
-      releaseProof,
-      "Current proof differs from the requested release.",
-    );
-    const outcome = await releaseDelivery(
-      client,
-      target,
-      proof,
-      serverUrl,
-      () => {
-        try {
+    try {
+      const proof = publishedProof(target, result);
+      assert.equal(
+        proofHash(proof),
+        releaseProof,
+        "Current proof differs from the requested release.",
+      );
+      assert.ok(
+        ownerDispatch &&
+          matchesReleasePlan(env, { mode: "release", binding: releaseProof }),
+        "This workflow did not prepare an authorized release for the current proof.",
+      );
+      client.authorizeRelease({ mode: "release", pr: number });
+      const outcome = await releaseDelivery(
+        client,
+        target,
+        proof,
+        serverUrl,
+        () => {
           assert.deepEqual(
-            publishedProof(target, verifyCurrent()),
+            publishedProof(target, verifyCurrent(target)),
             proof,
             "Independent review, evidence, or engineering checks changed before release.",
           );
-        } catch (error) {
-          // The earlier proof may already be green. Replace both mirrors before
-          // treating a before-dispatch refusal as having retired that result.
-          const reason = blockedDecision(error);
-          for (const sha of [target.head, target.merge]) {
-            const check = client.startCheck(sha, serverUrl);
-            client.finishCheck(check, "failure", JSON.stringify(reason));
-          }
+          verifyDeliveryMainRules(client.api, repo, client.publisherAppId);
+        },
+      );
+      if (outcome.decision !== "merged") {
+        throw new DeliveryBlocked(
+          "release-rejected",
+          "GitHub rejected the recorded merge request.",
+        );
+      }
+      console.log(JSON.stringify({ ...binding, ...outcome }));
+    } catch (error) {
+      // Retire the earlier check pair even when the journal or rules fail
+      // the final read. The journal still governs any in-flight request.
+      try {
+        publishFinalDelivery(client, target, serverUrl, () => {
           throw error;
-        }
-      },
-    );
-    console.log(JSON.stringify({ ...binding, ...outcome }));
-    if (outcome.decision !== "merged") process.exitCode = 1;
+        });
+      } catch (publicationError) {
+        if (publicationError !== error)
+          console.error("Could not republish the blocked release.");
+      }
+      throw error;
+    }
   } catch (error) {
     console.log(JSON.stringify({ ...blockedDecision(error), ...binding }));
     if (!(error instanceof DeliveryWaiting)) process.exitCode = 1;
@@ -978,7 +1130,7 @@ if (
   import.meta.url === pathToFileURL(process.argv[1]).href
 ) {
   try {
-    await main(process.env, process.argv[2] === "--route");
+    await main(process.env, process.argv[2]);
   } catch (error) {
     console.error(JSON.stringify(blockedDecision(error)));
     process.exitCode = 1;

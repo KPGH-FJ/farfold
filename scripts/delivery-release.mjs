@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { setTimeout as wait } from "node:timers/promises";
+import { isDeepStrictEqual } from "node:util";
 import { DeliveryBlocked } from "./delivery-state.mjs";
 
 export const releaseCheck = "Farfold release request";
@@ -109,11 +110,11 @@ export async function releaseDelivery(
   serverUrl,
   recheck,
 ) {
-  const pending = pendingRelease(client, target.base, target.repositoryId);
-  if (pending) {
+  const journal = releaseJournal(client, target.base, target.repositoryId);
+  if (journal.state === "pending") {
     throw new DeliveryBlocked(
       "release-outcome-unknown",
-      `PR #${pending.intent.pr} already has an unresolved release request. Do not submit another merge.`,
+      `PR #${journal.intent.pr} already has an unresolved release request. Do not submit another merge.`,
     );
   }
   const intent = {
@@ -125,13 +126,25 @@ export async function releaseDelivery(
     tree: target.mergeTree,
     proofSha256: proof.proofSha256,
   };
-  const { id, publisherSlug } = client.startRelease(intent, serverUrl);
+  const { id, publisherSlug } = client.startRelease(intent, serverUrl, journal);
+  assert.ok(
+    id === journal.id && publisherSlug === journal.publisherSlug,
+    "The written release request does not match the initialized journal.",
+  );
   try {
     recheck();
   } catch (error) {
     client.finishRelease(id, intent, "failure");
     throw error;
   }
+  const current = releaseJournal(client, target.base, target.repositoryId);
+  requireJournal(
+    current.id === id &&
+      current.publisherSlug === publisherSlug &&
+      current.state === "pending" &&
+      isDeepStrictEqual(current.intent, intent),
+    "The recorded release request changed before dispatch.",
+  );
   // Publishing the durable intent precedes the only dispatch. If the runner
   // dies after this point, an open PR alone cannot prove the request failed.
   const response = await client.releaseApi(
@@ -165,45 +178,111 @@ export async function releaseDelivery(
   return reconcileRelease(client, { id, intent, publisherSlug });
 }
 
-export function pendingRelease(client, base, repositoryId) {
+const journalFields = ["repositoryId", "schemaVersion", "state"];
+const intentFields = [
+  "base",
+  "head",
+  "pr",
+  "preview",
+  "proofSha256",
+  "repositoryId",
+  "tree",
+];
+const positiveId = (value) => Number.isSafeInteger(value) && value > 0;
+
+function requireJournal(condition, description) {
+  if (!condition) {
+    throw new DeliveryBlocked(
+      "release-outcome-unknown",
+      `${description} Recover the original release journal before requesting a merge.`,
+    );
+  }
+}
+
+function hasFields(value, fields) {
+  return (
+    value &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    Object.keys(value).length === fields.length &&
+    fields.every((field) => Object.hasOwn(value, field))
+  );
+}
+
+export function releaseJournal(client, base, repositoryId) {
   assert.ok(sha.test(base), "The current protected base is missing.");
-  const lookup = (status, filter) => {
-    const response = client.api(
-      `commits/${releaseRequestAnchor}/check-runs?check_name=${encodeURIComponent(releaseCheck)}&app_id=${client.publisherAppId}&status=${status}&filter=${filter}&per_page=100`,
-    );
-    const checks = response.check_runs;
-    assert.ok(
-      Array.isArray(checks) &&
-        response.total_count === checks.length &&
-        checks.length <= 1 &&
-        checks.every((check) => check.status === status),
-      "Release request history is incomplete or ambiguous.",
-    );
-    return checks[0];
-  };
-  // GitHub's latest filter uses completion time. An older completed check must
-  // not hide an in-flight request, and GitHub can complete one as stale.
-  const active = lookup("in_progress", "all");
-  const check = active ?? lookup("completed", "latest");
-  if (!check) return null;
-  const intent = JSON.parse(check.output?.summary);
   assert.ok(
-    check.name === releaseCheck &&
+    positiveId(repositoryId) && positiveId(client.publisherAppId),
+    "The protected repository or publisher identity is missing.",
+  );
+  const response = client.api(
+    `commits/${releaseRequestAnchor}/check-runs?check_name=${encodeURIComponent(releaseCheck)}&app_id=${client.publisherAppId}&filter=all&per_page=100`,
+  );
+  // A missing slot cannot prove that there has never been a merge request.
+  requireJournal(
+    response?.total_count === 1 &&
+      response.check_runs?.length === 1 &&
+      Array.isArray(response.check_runs),
+    "The original release journal is missing or ambiguous.",
+  );
+  const [check] = response.check_runs;
+  requireJournal(
+    check?.name === releaseCheck &&
       check.app?.id === client.publisherAppId &&
-      /^[a-z0-9-]+$/.test(check.app.slug ?? "") &&
+      typeof check.app.slug === "string" &&
+      /^[a-z0-9-]+$/.test(check.app.slug) &&
       check.app.slug !== "github-actions" &&
       check.head_sha === releaseRequestAnchor &&
-      Number.isSafeInteger(check.id) &&
-      check.id > 0 &&
-      intent.repositoryId === repositoryId &&
-      Number.isSafeInteger(intent.pr) &&
-      intent.pr > 0 &&
-      [intent.base, intent.head, intent.preview, intent.tree].every((hash) =>
-        sha.test(hash),
+      check.status === "completed" &&
+      check.conclusion === "neutral" &&
+      positiveId(check.id),
+    "The release journal has an unexpected source or status.",
+  );
+  let payload;
+  try {
+    payload = JSON.parse(check.output?.summary);
+  } catch {
+    requireJournal(false, "The release journal is not valid JSON.");
+  }
+  requireJournal(
+    payload?.schemaVersion === 1 && payload.repositoryId === repositoryId,
+    "The release journal does not match the expected version or repository.",
+  );
+  const { state, intent, outcome } = payload;
+  const {
+    id,
+    app: { slug: publisherSlug },
+  } = check;
+  if (state === "ready") {
+    requireJournal(
+      hasFields(payload, journalFields),
+      "The initialized release journal is invalid.",
+    );
+    return { id, publisherSlug, state, intent: null };
+  }
+  const pending =
+    state === "pending" && hasFields(payload, [...journalFields, "intent"]);
+  const settled =
+    state === "settled" &&
+    hasFields(payload, [...journalFields, "intent", "outcome"]) &&
+    (outcome === "failure" ||
+      (outcome === "success" && typeof intent?.uuid === "string"));
+  requireJournal(
+    (pending || settled) &&
+      hasFields(
+        intent,
+        intent?.uuid === undefined ? intentFields : [...intentFields, "uuid"],
       ) &&
+      intent.repositoryId === repositoryId &&
+      positiveId(intent.pr) &&
+      [intent.base, intent.head, intent.preview, intent.tree].every(
+        (hash) => typeof hash === "string" && sha.test(hash),
+      ) &&
+      typeof intent.proofSha256 === "string" &&
       /^[0-9a-f]{64}$/.test(intent.proofSha256) &&
-      (intent.uuid === undefined || uuid.test(intent.uuid)),
-    "Pending release record does not match the protected check or intent.",
+      (intent.uuid === undefined ||
+        (typeof intent.uuid === "string" && uuid.test(intent.uuid))),
+    "The release journal contains an invalid request or outcome.",
   );
   if (intent.base !== base) {
     const ancestry = client.api(`compare/${intent.base}...${base}?per_page=1`);
@@ -217,22 +296,14 @@ export function pendingRelease(client, base, repositoryId) {
       "The pending release base is not in the protected main history.",
     );
   }
-  if (!active) {
-    if (
-      check.conclusion === "failure" ||
-      (check.conclusion === "success" && intent.uuid)
-    ) {
-      return null;
-    }
-    throw new DeliveryBlocked(
-      "release-outcome-unknown",
-      `The last release check for PR #${intent.pr} does not confirm a terminal request outcome. Do not submit another merge.`,
-    );
-  }
-  assert.equal(
-    check.conclusion,
-    null,
-    "An in-flight release check already has a conclusion.",
+  return { id, publisherSlug, state, intent };
+}
+
+export function pendingRelease(client, base, repositoryId) {
+  const { id, publisherSlug, state, intent } = releaseJournal(
+    client,
+    base,
+    repositoryId,
   );
-  return { id: check.id, intent, publisherSlug: check.app.slug };
+  return state === "pending" ? { id, publisherSlug, intent } : null;
 }

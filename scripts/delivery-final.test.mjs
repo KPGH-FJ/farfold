@@ -4,10 +4,12 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   githubClient,
+  prepareReleasePlan,
   privateEvidenceFor,
+  proofHash,
   publishFinalDelivery,
   targetFor,
   verifyFinalDelivery,
@@ -50,6 +52,8 @@ const run = {
 };
 const now = Date.parse("2026-11-24T09:00:00Z");
 const artifactDigest = "1".repeat(64);
+const requestUuid = "5b266ac4-d4b2-483a-9d39-f3ef264ac3cb";
+const otherUuid = "e976b8b4-a0f8-4ce0-a567-1f89b336aad8";
 
 describe("routing final delivery without publisher credentials", () => {
   const workflow = fileURLToPath(
@@ -130,7 +134,7 @@ describe("dedicated final publisher identity", () => {
     FARFOLD_FINAL_PUBLISHER_APP_ID: "123456",
     FARFOLD_FINAL_PUBLISHER_TOKEN: "installation-token-fixture",
   };
-  function fixture({ create = {}, update = {} } = {}) {
+  function fixture({ create = {}, update = {}, overrides = {}, request } = {}) {
     const calls = [];
     const archive = Buffer.from("archive fixture");
     const check = {
@@ -141,7 +145,7 @@ describe("dedicated final publisher identity", () => {
     };
     const client = githubClient(
       "KPGH-FJ/farfold",
-      env,
+      { ...env, ...overrides },
       (command, args, options) => {
         calls.push({ command, args, env: options.env, input: options.input });
         if (command === "unzip")
@@ -158,6 +162,7 @@ describe("dedicated final publisher identity", () => {
           });
         return "{}";
       },
+      request,
     );
     return { client, calls, archive };
   }
@@ -190,7 +195,7 @@ describe("dedicated final publisher identity", () => {
     ).toBe(true);
   });
 
-  it("creates, reads and finishes the same App check at the permanent request anchor", () => {
+  it("records and settles intent in the same pre-enrolled App journal", () => {
     const intent = {
       repositoryId: target.repositoryId,
       pr: target.number,
@@ -201,24 +206,38 @@ describe("dedicated final publisher identity", () => {
       proofSha256: "0".repeat(64),
     };
     const events = [];
-    let marker;
+    const journal = {
+      id: 31,
+      state: "ready",
+      publisherSlug: "farfold-final-publisher",
+    };
+    let marker = {
+      id: journal.id,
+      head_sha: releaseRequestAnchor,
+      name: releaseCheck,
+      app: { id: 123456, slug: journal.publisherSlug },
+      status: "completed",
+      conclusion: "neutral",
+      output: {
+        title: releaseCheck,
+        summary: JSON.stringify({
+          schemaVersion: 1,
+          repositoryId: target.repositoryId,
+          state: "ready",
+        }),
+      },
+    };
     const client = githubClient(
       "KPGH-FJ/farfold",
       env,
       (_command, args, options) => {
         const method = args[2];
-        if (method === "POST" || method === "PATCH") {
+        if (method === "PATCH") {
           expect(options.env.GH_TOKEN).toBe(env.FARFOLD_FINAL_PUBLISHER_TOKEN);
+          expect(args[3]).toBe("repos/KPGH-FJ/farfold/check-runs/31");
           const body = JSON.parse(options.input);
           events.push([method, body]);
-          marker = {
-            id: 31,
-            name: releaseCheck,
-            app: { id: 123456, slug: "farfold-final-publisher" },
-            conclusion: null,
-            ...marker,
-            ...body,
-          };
+          marker = { ...marker, ...body };
           return JSON.stringify(marker);
         }
         expect(options.env.GH_TOKEN).toBe(env.GH_TOKEN);
@@ -226,37 +245,173 @@ describe("dedicated final publisher identity", () => {
         expect(route).toContain(
           `repos/KPGH-FJ/farfold/commits/${releaseRequestAnchor}/check-runs?`,
         );
-        expect(route).toMatch(/status=in_progress&filter=all/);
+        expect(route).toMatch(/app_id=123456&filter=all&per_page=100$/);
         events.push(["READ"]);
         return JSON.stringify({ total_count: 1, check_runs: [marker] });
       },
     );
-    expect(client.startRelease(intent, "run-url")).toMatchObject({
+    expect(client.startRelease(intent, "run-url", journal)).toMatchObject({
       id: 31,
       intent,
     });
-    const accepted = {
-      ...intent,
-      uuid: "5b266ac4-d4b2-483a-9d39-f3ef264ac3cb",
-    };
+    const accepted = { ...intent, uuid: requestUuid };
     client.updateRelease(31, accepted);
     client.finishRelease(31, accepted, "success");
     expect(events.map(([method]) => method)).toEqual([
-      "POST",
+      "PATCH",
       "READ",
       "PATCH",
       "PATCH",
     ]);
     expect(events[0][1]).toMatchObject({
-      head_sha: releaseRequestAnchor,
-      status: "in_progress",
+      status: "completed",
+      conclusion: "neutral",
     });
-    expect(JSON.parse(events[0][1].output.summary).base).toBe(target.base);
+    const pending = {
+      schemaVersion: 1,
+      repositoryId: target.repositoryId,
+      state: "pending",
+      intent,
+    };
+    expect(JSON.parse(events[0][1].output.summary)).toEqual(pending);
+    expect(JSON.parse(events[2][1].output.summary)).toEqual({
+      ...pending,
+      intent: accepted,
+    });
     expect(events[3][1]).toMatchObject({
       status: "completed",
-      conclusion: "success",
+      conclusion: "neutral",
     });
-    expect(JSON.parse(events[3][1].output.summary)).toEqual(accepted);
+    expect(JSON.parse(events[3][1].output.summary)).toEqual({
+      ...pending,
+      state: "settled",
+      outcome: "success",
+      intent: accepted,
+    });
+  });
+
+  const releaseToken = "release-token-fixture";
+  const mergeRoute = `pulls/${target.number}/merge-async`;
+  const requestPath = `${mergeRoute}/${requestUuid}`;
+
+  it("limits the distinct release token to one prepared request and its exact operation", async () => {
+    const request = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          status: "pending",
+          details: { uuid: requestUuid },
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ status: "merged" }),
+      });
+    const { client, calls } = fixture({
+      overrides: { FARFOLD_FINAL_RELEASE_TOKEN: releaseToken },
+      request,
+    });
+    await expect(client.releaseApi("PUT", mergeRoute)).rejects.toThrow(
+      /does not authorize/,
+    );
+    client.authorizeRelease({ mode: "release", pr: target.number });
+    client.api("pulls/7");
+    const checkId = client.startCheck(target.head, "run-url");
+    client.finishCheck(checkId, "success", "verified");
+    expect(calls.map(({ env }) => env.GH_TOKEN)).toEqual([
+      env.GH_TOKEN,
+      env.FARFOLD_FINAL_PUBLISHER_TOKEN,
+      env.FARFOLD_FINAL_PUBLISHER_TOKEN,
+    ]);
+    for (const { env: childEnv } of calls) {
+      expect(childEnv).not.toHaveProperty("FARFOLD_FINAL_RELEASE_TOKEN");
+      expect(childEnv).not.toHaveProperty("FARFOLD_FINAL_PUBLISHER_TOKEN");
+    }
+    await expect(client.releaseApi("GET", requestPath)).rejects.toThrow(
+      /does not authorize/,
+    );
+    await expect(
+      client.releaseApi("PUT", "pulls/8/merge-async"),
+    ).rejects.toThrow(/does not authorize/);
+    await expect(
+      client.releaseApi("PUT", mergeRoute, { sha: target.head }),
+    ).resolves.toMatchObject({ status: "pending" });
+    await expect(client.releaseApi("PUT", mergeRoute)).rejects.toThrow(
+      /does not authorize/,
+    );
+    await expect(
+      client.releaseApi("GET", `${mergeRoute}/${otherUuid}`),
+    ).rejects.toThrow(/does not authorize/);
+    await expect(client.releaseApi("GET", requestPath)).resolves.toMatchObject({
+      status: "merged",
+    });
+    expect(
+      request.mock.calls.map(([url, opts]) => [
+        url,
+        opts.method,
+        opts.headers.Authorization,
+      ]),
+    ).toEqual([
+      [
+        `https://api.github.com/repos/KPGH-FJ/farfold/${mergeRoute}`,
+        "PUT",
+        `Bearer ${releaseToken}`,
+      ],
+      [
+        `https://api.github.com/repos/KPGH-FJ/farfold/${requestPath}`,
+        "GET",
+        `Bearer ${releaseToken}`,
+      ],
+    ]);
+  });
+
+  it("only reads back the bound UUID during recovery and never sends another request", async () => {
+    const request = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ status: "failed" }),
+    });
+    const { client } = fixture({
+      overrides: { FARFOLD_FINAL_RELEASE_TOKEN: releaseToken },
+      request,
+    });
+    client.authorizeRelease({
+      mode: "reconcile",
+      pr: target.number,
+      uuid: requestUuid,
+    });
+    await expect(client.releaseApi("PUT", mergeRoute)).rejects.toThrow(
+      /does not authorize/,
+    );
+    await expect(
+      client.releaseApi("GET", `${mergeRoute}/${otherUuid}`),
+    ).rejects.toThrow(/does not authorize/);
+    await expect(
+      client.releaseApi("GET", `pulls/8/merge-async/${requestUuid}`),
+    ).rejects.toThrow(/does not authorize/);
+    await expect(client.releaseApi("GET", requestPath)).resolves.toEqual({
+      status: "failed",
+    });
+    expect(request).toHaveBeenCalledTimes(1);
+    expect(request.mock.calls[0][1]).toMatchObject({
+      method: "GET",
+      headers: { Authorization: `Bearer ${releaseToken}` },
+    });
+  });
+
+  it("refuses to use a missing or shared credential for release", () => {
+    for (const invalid of [
+      undefined,
+      env.GH_TOKEN,
+      env.FARFOLD_FINAL_PUBLISHER_TOKEN,
+    ]) {
+      const { client } = fixture({
+        overrides: { FARFOLD_FINAL_RELEASE_TOKEN: invalid },
+      });
+      expect(() =>
+        client.authorizeRelease({ mode: "release", pr: target.number }),
+      ).toThrow(/distinct/);
+    }
   });
 
   it("refuses a missing App or the generic Actions identity and credential", () => {
@@ -304,6 +459,78 @@ describe("dedicated final publisher identity", () => {
       status: "in_progress",
       output: { title: "Farfold final delivery", summary: "waiting-review" },
     });
+  });
+});
+
+describe("preparing least-privilege release credentials", () => {
+  const releaseProof = "5".repeat(64);
+  const pending = {
+    id: 31,
+    intent: { pr: target.number, uuid: requestUuid },
+    publisherSlug: "farfold-final-publisher",
+  };
+  const owner = { ownerDispatch: true, number: target.number };
+
+  it("only prepares a fresh release after current proof and rules verification", () => {
+    const verifyRelease = vi.fn();
+    expect(
+      prepareReleasePlan({
+        ...owner,
+        ownerDispatch: false,
+        releaseProof,
+        verifyRelease,
+      }),
+    ).toBeNull();
+    expect(prepareReleasePlan({ ...owner, verifyRelease })).toBeNull();
+    expect(
+      prepareReleasePlan({ ...owner, releaseProof, pending, verifyRelease }),
+    ).toBeNull();
+    expect(verifyRelease).not.toHaveBeenCalled();
+    expect(
+      prepareReleasePlan({ ...owner, releaseProof, verifyRelease }),
+    ).toEqual({ mode: "release", binding: releaseProof });
+    expect(verifyRelease).toHaveBeenCalledTimes(1);
+    verifyRelease.mockImplementationOnce(() => {
+      throw new Error("Current release proof changed");
+    });
+    expect(() =>
+      prepareReleasePlan({ ...owner, releaseProof, verifyRelease }),
+    ).toThrow(/proof changed/);
+  });
+
+  it("prepares recovery only for the owner refreshing the matching stored UUID", () => {
+    const verifyRelease = vi.fn();
+    expect(prepareReleasePlan({ ...owner, pending, verifyRelease })).toEqual({
+      mode: "reconcile",
+      binding: proofHash(pending),
+    });
+    const replacement = {
+      ...pending,
+      intent: { ...pending.intent, uuid: otherUuid },
+    };
+    expect(
+      prepareReleasePlan({ ...owner, pending: replacement, verifyRelease })
+        .binding,
+    ).not.toBe(proofHash(pending));
+    expect(
+      prepareReleasePlan({ ...owner, number: 8, pending, verifyRelease }),
+    ).toBeNull();
+    expect(
+      prepareReleasePlan({
+        ...owner,
+        ownerDispatch: false,
+        pending,
+        verifyRelease,
+      }),
+    ).toBeNull();
+    expect(
+      prepareReleasePlan({
+        ...owner,
+        pending: { ...pending, intent: { pr: target.number } },
+        verifyRelease,
+      }),
+    ).toBeNull();
+    expect(verifyRelease).not.toHaveBeenCalled();
   });
 });
 
