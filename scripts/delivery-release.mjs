@@ -3,6 +3,7 @@ import { setTimeout as wait } from "node:timers/promises";
 import { DeliveryBlocked } from "./delivery-state.mjs";
 
 export const releaseCheck = "Farfold release request";
+export const releaseRequestAnchor = "33305b8a0d66f0bb841acb3dfdd659449c52e96a";
 const sha = /^[0-9a-f]{40}$/;
 const uuid = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 
@@ -101,7 +102,6 @@ export async function reconcileRelease(
 }
 
 // All callers run in the same protected, repository-wide publisher queue.
-// Anchor the in-flight record to the current base so it also blocks other PRs.
 export async function releaseDelivery(
   client,
   target,
@@ -109,6 +109,13 @@ export async function releaseDelivery(
   serverUrl,
   recheck,
 ) {
+  const pending = pendingRelease(client, target.base, target.repositoryId);
+  if (pending) {
+    throw new DeliveryBlocked(
+      "release-outcome-unknown",
+      `PR #${pending.intent.pr} already has an unresolved release request. Do not submit another merge.`,
+    );
+  }
   const intent = {
     repositoryId: target.repositoryId,
     pr: target.number,
@@ -159,16 +166,25 @@ export async function releaseDelivery(
 }
 
 export function pendingRelease(client, base, repositoryId) {
-  const response = client.api(
-    `commits/${base}/check-runs?check_name=${encodeURIComponent(releaseCheck)}&app_id=${client.publisherAppId}&status=in_progress&filter=all&per_page=100`,
-  );
-  assert.ok(
-    Array.isArray(response.check_runs) &&
-      response.total_count === response.check_runs.length &&
-      response.total_count <= 1,
-    "Release request history is incomplete or ambiguous.",
-  );
-  const [check] = response.check_runs;
+  assert.ok(sha.test(base), "The current protected base is missing.");
+  const lookup = (status, filter) => {
+    const response = client.api(
+      `commits/${releaseRequestAnchor}/check-runs?check_name=${encodeURIComponent(releaseCheck)}&app_id=${client.publisherAppId}&status=${status}&filter=${filter}&per_page=100`,
+    );
+    const checks = response.check_runs;
+    assert.ok(
+      Array.isArray(checks) &&
+        response.total_count === checks.length &&
+        checks.length <= 1 &&
+        checks.every((check) => check.status === status),
+      "Release request history is incomplete or ambiguous.",
+    );
+    return checks[0];
+  };
+  // GitHub's latest filter uses completion time. An older completed check must
+  // not hide an in-flight request, and GitHub can complete one as stale.
+  const active = lookup("in_progress", "all");
+  const check = active ?? lookup("completed", "latest");
   if (!check) return null;
   const intent = JSON.parse(check.output?.summary);
   assert.ok(
@@ -176,49 +192,47 @@ export function pendingRelease(client, base, repositoryId) {
       check.app?.id === client.publisherAppId &&
       /^[a-z0-9-]+$/.test(check.app.slug ?? "") &&
       check.app.slug !== "github-actions" &&
-      check.head_sha === base &&
-      check.status === "in_progress" &&
+      check.head_sha === releaseRequestAnchor &&
       Number.isSafeInteger(check.id) &&
+      check.id > 0 &&
       intent.repositoryId === repositoryId &&
       Number.isSafeInteger(intent.pr) &&
       intent.pr > 0 &&
-      intent.base === base &&
-      [intent.head, intent.preview, intent.tree].every((hash) =>
+      [intent.base, intent.head, intent.preview, intent.tree].every((hash) =>
         sha.test(hash),
       ) &&
       /^[0-9a-f]{64}$/.test(intent.proofSha256) &&
       (intent.uuid === undefined || uuid.test(intent.uuid)),
-    "Pending release record does not match the protected base.",
+    "Pending release record does not match the protected check or intent.",
+  );
+  if (intent.base !== base) {
+    const ancestry = client.api(`compare/${intent.base}...${base}?per_page=1`);
+    assert.ok(
+      ancestry.base_commit?.sha === intent.base &&
+        ancestry.merge_base_commit?.sha === intent.base &&
+        ancestry.status === "ahead" &&
+        Number.isSafeInteger(ancestry.ahead_by) &&
+        ancestry.ahead_by > 0 &&
+        ancestry.behind_by === 0,
+      "The pending release base is not in the protected main history.",
+    );
+  }
+  if (!active) {
+    if (
+      check.conclusion === "failure" ||
+      (check.conclusion === "success" && intent.uuid)
+    ) {
+      return null;
+    }
+    throw new DeliveryBlocked(
+      "release-outcome-unknown",
+      `The last release check for PR #${intent.pr} does not confirm a terminal request outcome. Do not submit another merge.`,
+    );
+  }
+  assert.equal(
+    check.conclusion,
+    null,
+    "An in-flight release check already has a conclusion.",
   );
   return { id: check.id, intent, publisherSlug: check.app.slug };
-}
-
-// A merged PR's parents can locate a record on an old base. The record's own
-// operation must still establish its outcome.
-export function pendingReleaseForMergedPr(client, number, repositoryId) {
-  const pr = client.api(`pulls/${number}`);
-  if (!pr.merged) return null;
-  assert.ok(
-    pr.number === number &&
-      pr.base?.ref === "main" &&
-      pr.base.repo?.id === repositoryId &&
-      sha.test(pr.merge_commit_sha) &&
-      sha.test(pr.head?.sha),
-    "Merged PR does not identify a recoverable release.",
-  );
-  const commit = client.api(`git/commits/${pr.merge_commit_sha}`);
-  assert.ok(
-    commit.sha === pr.merge_commit_sha &&
-      commit.parents?.length === 2 &&
-      sha.test(commit.parents[0].sha) &&
-      commit.parents[1].sha === pr.head.sha,
-    "Merged PR does not have the expected merge parents.",
-  );
-  const pending = pendingRelease(client, commit.parents[0].sha, repositoryId);
-  if (!pending) return null;
-  assert.ok(
-    pending.intent.pr === number && pending.intent.head === pr.head.sha,
-    "The old base holds a different pending release.",
-  );
-  return pending;
 }

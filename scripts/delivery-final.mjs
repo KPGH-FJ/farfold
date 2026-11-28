@@ -28,9 +28,9 @@ import { classifyDeliveryPaths } from "./delivery-scope.mjs";
 import { DeliveryBlocked, DeliveryWaiting } from "./delivery-state.mjs";
 import {
   pendingRelease,
-  pendingReleaseForMergedPr,
   reconcileRelease,
   releaseCheck,
+  releaseRequestAnchor,
   releaseDelivery,
 } from "./delivery-release.mjs";
 
@@ -326,7 +326,7 @@ export function githubClient(repo, env, execute = execFileSync) {
       ...(conclusion === null ? {} : { conclusion }),
       output: { title: releaseCheck, summary: JSON.stringify(intent) },
     });
-    assertPublishedCheck(updated, intent.base, status, releaseCheck);
+    assertPublishedCheck(updated, releaseRequestAnchor, status, releaseCheck);
     assert.equal(updated.id, id);
     assert.equal(updated.conclusion, conclusion);
     assert.deepEqual(JSON.parse(updated.output?.summary), intent);
@@ -376,13 +376,18 @@ export function githubClient(repo, env, execute = execFileSync) {
     startRelease(intent, serverUrl) {
       const check = writeCheck("POST", "", {
         name: releaseCheck,
-        head_sha: intent.base,
+        head_sha: releaseRequestAnchor,
         status: "in_progress",
         details_url: serverUrl,
         external_id: serverUrl,
         output: { title: releaseCheck, summary: JSON.stringify(intent) },
       });
-      assertPublishedCheck(check, intent.base, "in_progress", releaseCheck);
+      assertPublishedCheck(
+        check,
+        releaseRequestAnchor,
+        "in_progress",
+        releaseCheck,
+      );
       assert.deepEqual(JSON.parse(check.output?.summary), intent);
       const stored = pendingRelease(
         readerWithApp,
@@ -852,11 +857,7 @@ async function main(env, routeOnly) {
   const ownerDispatch =
     eventName === "workflow_dispatch" &&
     event.sender?.id === event.repository.owner?.id;
-  const pending =
-    pendingRelease(client, base, event.repository.id) ??
-    (ownerDispatch && !releaseProof
-      ? pendingReleaseForMergedPr(client, number, event.repository.id)
-      : null);
+  const pending = pendingRelease(client, base, event.repository.id);
   if (pending) {
     if (!ownerDispatch) {
       throw new DeliveryBlocked(

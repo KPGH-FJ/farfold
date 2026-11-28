@@ -108,9 +108,9 @@ node scripts/delivery-pr.mjs <PR-number> /path/to/delivery-record.json
 
 日志中的 `waiting-engineering` 和 `waiting-review` 表示等待，对应的专用检查保持进行中。`missing-configuration` 表示发布身份或复核公钥配置缺失。`evidence-rejected` 表示适用的签署证据缺失、过期或核验不合格。`not-run` 表示本事件没有执行交付核验。只有 `verified` 对应专用 App 发布的成功结果。发布凭据缺失时，工作流无法更新已有的 App 检查。
 
-合入命令先校验本地交付记录，再把本次核验摘要交给受保护的主线工作流。由工作流复核并由专用 App 请求合入。专用 App 仅获准通过单独的更新限制，仍受 PR 和必需检查规则约束。发布入口先保存候选、基线、合并预览和核验摘要，再读回当前基线、工程尝试、独审和适用证据。读取失败或输入变化会停止合入。GitHub 保存旧检查，证据到期本身也不会启动工作流。
+合入命令先校验本地交付记录，再把本次核验摘要交给受保护的主线工作流。由工作流复核并由专用 App 请求合入。专用 App 仅获准通过单独的更新限制，仍受 PR 和必需检查规则约束。发布入口先保存候选、基线、合并预览和核验摘要，再读回当前基线、工程尝试、独审和适用证据。未确认请求记录在固定的主线祖先提交上，保留每笔请求的实际基线。即使主线推进、原 PR 仍开放，未确认请求也会阻止新的合入请求。读取失败或输入变化会停止合入。GitHub 保存旧检查，证据到期本身也不会启动工作流。
 
-签署评论被删除后，仍需检查候选和预览是否已更新为失败。合入请求已发出或网络中断且结果未知时，撤回保持待确认。所有者从 `main` 手动刷新该 PR（留空 `release_proof`），后台核对原请求和 PR，无需重发。只有旧成功检查已更新，且没有在途请求或 GitHub 已确认原请求失败时，才能确认撤回。若 GitHub 已合入，记录实际提交，按正常流程回退。若没有收到请求编号、PR 仍开放且没有其他服务端终态证据，保留阻断，由维护者从受信服务端记录查证，不能以 PR 仍开放为由重投。GitHub 的合入接口比较候选 SHA，Mac 上的撤回无法保证叫停已经提交给 GitHub 的请求。
+签署评论被删除后，仍需检查候选和预览是否已更新为失败。合入请求已发出或网络中断且结果未知时，撤回保持待确认。所有者从 `main` 手动刷新该 PR（留空 `release_proof`），后台核对原请求和 PR，无需重发。只有旧成功检查已更新，且没有在途请求或 GitHub 已确认原请求失败时，才能确认撤回。若 GitHub 已合入，记录实际提交，按正常流程回退。若没有收到请求编号、PR 仍开放且没有其他服务端终态证据，保留阻断，由维护者从受信服务端记录查证，不能以 PR 仍开放为由重投。GitHub 标为 `stale` 的请求检查继续阻止新请求。归档或删除检查记录后，系统无法仅凭 GitHub 检查列表还原旧请求。已有待确认请求时，应从留存的受信服务端记录查证。GitHub 的合入接口比较候选 SHA，Mac 上的撤回无法保证叫停已经提交给 GitHub 的请求。[GitHub 检查保留说明](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#setting-the-check-workflow-run-status-artifact-and-log-retention-period-for-a-repository)
 
 2026-11-24，仓库所有者在原研发交付会话中明确授权把该 GitHub 仓库设为公开，原会话保留执行及无登录访问核验。该授权范围为仓库可见性。
 

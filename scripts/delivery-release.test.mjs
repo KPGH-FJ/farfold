@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   pendingRelease,
-  pendingReleaseForMergedPr,
   reconcileRelease,
   releaseCheck,
   releaseDelivery,
+  releaseRequestAnchor,
 } from "./delivery-release.mjs";
 
 const target = {
@@ -18,6 +18,7 @@ const target = {
 const proof = { proofSha256: "5".repeat(64) };
 const mergeCommit = "6".repeat(40);
 const requestUuid = "5b266ac4-d4b2-483a-9d39-f3ef264ac3cb";
+const advancedBase = "9".repeat(40);
 const publisherAppId = 5913751;
 const publisherSlug = "farfold-final-delivery-publisher";
 const serverUrl =
@@ -40,6 +41,8 @@ function fixture({
     tree: { sha: target.mergeTree },
   },
   marker = {},
+  activeIntent,
+  completed,
   visibleMerge = true,
 } = {}) {
   const calls = [];
@@ -80,6 +83,7 @@ function fixture({
       if (path === "pulls/15") {
         return {
           merged: visibleMerge,
+          state: visibleMerge ? "closed" : "open",
           merged_by: { login: publisherSlug + "[bot]" },
           number: 15,
           base: { ref: "main", repo: { id: target.repositoryId } },
@@ -88,7 +92,15 @@ function fixture({
         };
       }
       if (path === `git/commits/${mergeCommit}`) return commit;
-      if (path.startsWith(`commits/${target.base}/check-runs?`)) {
+      if (path.startsWith(`commits/${releaseRequestAnchor}/check-runs?`)) {
+        const params = new URLSearchParams(path.split("?")[1]);
+        const status = params.get("status");
+        const active = status === "in_progress";
+        expect(params.get("filter")).toBe(active ? "all" : "latest");
+        const intent = active
+          ? (savedIntent ?? activeIntent)
+          : completed?.intent;
+        if (!intent) return { total_count: 0, check_runs: [] };
         return {
           total_count: 1,
           check_runs: [
@@ -97,13 +109,32 @@ function fixture({
               publisherSlug,
               name: releaseCheck,
               app: { id: publisherAppId, slug: publisherSlug },
-              head_sha: target.base,
-              status: "in_progress",
-              output: { summary: JSON.stringify(savedIntent ?? pendingIntent) },
+              head_sha: releaseRequestAnchor,
+              status,
+              conclusion: active ? null : completed.conclusion,
+              output: { summary: JSON.stringify(intent) },
               ...marker,
             },
           ],
         };
+      }
+      if (path.startsWith("compare/")) {
+        const expected = `compare/${target.base}...${advancedBase}?per_page=1`;
+        return path === expected
+          ? {
+              base_commit: { sha: target.base },
+              merge_base_commit: { sha: target.base },
+              status: "ahead",
+              ahead_by: 1,
+              behind_by: 0,
+            }
+          : {
+              base_commit: { sha: target.head },
+              merge_base_commit: { sha: target.base },
+              status: "diverged",
+              ahead_by: 1,
+              behind_by: 1,
+            };
       }
       throw new Error(`Unexpected read: ${path}`);
     }),
@@ -112,38 +143,40 @@ function fixture({
 }
 
 describe("release recovery after main advances", () => {
-  it("finds the old marker through actual merge parents without attributing that merge", async () => {
-    const { client, calls } = fixture();
-    const pending = pendingReleaseForMergedPr(
-      client,
-      target.number,
-      target.repositoryId,
-    );
+  it("finds the old marker while its PR is open and prevents another PR or the same PR from dispatching", async () => {
+    const { client, calls } = fixture({
+      activeIntent: pendingIntent,
+      visibleMerge: false,
+    });
+    const pending = pendingRelease(client, advancedBase, target.repositoryId);
     expect(pending).toEqual({
       id: markerId,
       intent: pendingIntent,
       publisherSlug,
     });
-    await expect(reconcileRelease(client, pending)).rejects.toMatchObject({
-      state: "release-outcome-unknown",
-    });
+    for (const number of [target.number, target.number + 1]) {
+      await expect(
+        releaseDelivery(
+          client,
+          { ...target, number, base: advancedBase },
+          proof,
+          serverUrl,
+          () => {},
+        ),
+      ).rejects.toMatchObject({ state: "release-outcome-unknown" });
+    }
     expect(calls).toEqual([]);
+    expect(client.startRelease).not.toHaveBeenCalled();
+    expect(client.releaseApi).not.toHaveBeenCalled();
     expect(client.finishRelease).not.toHaveBeenCalled();
+    expect(client.api.mock.calls.flat()).not.toContain("pulls/15");
   });
 
   it("confirms an old marker only through its saved UUID and matching terminal result", async () => {
     const { client, calls } = fixture({
-      marker: {
-        output: {
-          summary: JSON.stringify({ ...pendingIntent, uuid: requestUuid }),
-        },
-      },
+      activeIntent: { ...pendingIntent, uuid: requestUuid },
     });
-    const pending = pendingReleaseForMergedPr(
-      client,
-      target.number,
-      target.repositoryId,
-    );
+    const pending = pendingRelease(client, advancedBase, target.repositoryId);
     await expect(reconcileRelease(client, pending)).resolves.toEqual({
       decision: "merged",
       mergeCommit,
@@ -156,15 +189,73 @@ describe("release recovery after main advances", () => {
     );
   });
 
-  it("does not recover a marker belonging to a different PR", () => {
+  it("does not clear an in-progress marker because an older successful check exists", () => {
     const { client } = fixture({
-      marker: {
-        output: { summary: JSON.stringify({ ...pendingIntent, pr: 22 }) },
+      activeIntent: { ...pendingIntent, pr: 22 },
+      completed: {
+        conclusion: "success",
+        intent: { ...pendingIntent, uuid: requestUuid },
       },
     });
+    expect(
+      pendingRelease(client, advancedBase, target.repositoryId).intent.pr,
+    ).toBe(22);
+    expect(
+      client.api.mock.calls
+        .flat()
+        .some((route) => route.includes("status=completed")),
+    ).toBe(false);
+  });
+
+  it.each(["stale", "cancelled", "neutral", "success"])(
+    "blocks new requests when the last check's %s state lacks a trusted terminal outcome",
+    async (conclusion) => {
+      const { client } = fixture({
+        completed: { conclusion, intent: pendingIntent },
+      });
+      await expect(
+        releaseDelivery(
+          client,
+          { ...target, base: advancedBase },
+          proof,
+          serverUrl,
+          () => {},
+        ),
+      ).rejects.toMatchObject({ state: "release-outcome-unknown" });
+      expect(client.startRelease).not.toHaveBeenCalled();
+      expect(client.releaseApi).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each(["success", "failure"])(
+    "recognizes a trusted %s after main advances",
+    (conclusion) => {
+      const { client } = fixture({
+        completed: {
+          conclusion,
+          intent: { ...pendingIntent, uuid: requestUuid },
+        },
+      });
+      expect(
+        pendingRelease(client, advancedBase, target.repositoryId),
+      ).toBeNull();
+    },
+  );
+
+  it("refuses ambiguous active records rather than choosing one", () => {
+    const { client } = fixture({ activeIntent: pendingIntent });
+    const original = client.api.getMockImplementation();
+    client.api.mockImplementation((route) => {
+      const { check_runs } = original(route);
+      return {
+        total_count: 2,
+        check_runs: [...check_runs, { ...check_runs[0], id: markerId + 1 }],
+      };
+    });
     expect(() =>
-      pendingReleaseForMergedPr(client, target.number, target.repositoryId),
-    ).toThrow(/different pending release/);
+      pendingRelease(client, advancedBase, target.repositoryId),
+    ).toThrow(/incomplete or ambiguous/);
+    expect(client.startRelease).not.toHaveBeenCalled();
   });
 });
 
@@ -389,8 +480,12 @@ describe("verified release request", () => {
   });
 
   it.each([
-    ["wrong App", { app: { id: 15368 } }],
-    ["wrong commit", { head_sha: target.head }],
+    ["wrong App", { app: { id: 15368 } }, /protected check or intent/],
+    [
+      "wrong check anchor",
+      { head_sha: target.head },
+      /protected check or intent/,
+    ],
     [
       "wrong base in the intent",
       {
@@ -398,11 +493,12 @@ describe("verified release request", () => {
           summary: JSON.stringify({ ...pendingIntent, base: target.head }),
         },
       },
+      /not in the protected main history/,
     ],
-  ])("rejects an in-flight record with the %s", (_reason, marker) => {
-    const { client } = fixture({ marker });
+  ])("rejects an in-flight record with the %s", (_reason, marker, reason) => {
+    const { client } = fixture({ marker, activeIntent: pendingIntent });
     expect(() =>
       pendingRelease(client, target.base, target.repositoryId),
-    ).toThrow("Pending release record does not match the protected base");
+    ).toThrow(reason);
   });
 });

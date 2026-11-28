@@ -19,6 +19,7 @@ import {
 } from "./delivery-check.mjs";
 import { classifyDeliveryPaths } from "./delivery-scope.mjs";
 import { privateAttestationBytes } from "./delivery-private-attestation.mjs";
+import { releaseCheck, releaseRequestAnchor } from "./delivery-release.mjs";
 import { DeliveryWaiting } from "./delivery-state.mjs";
 
 const target = {
@@ -187,6 +188,75 @@ describe("dedicated final publisher identity", () => {
     expect(
       calls.every(({ env }) => !("FARFOLD_FINAL_PUBLISHER_TOKEN" in env)),
     ).toBe(true);
+  });
+
+  it("creates, reads and finishes the same App check at the permanent request anchor", () => {
+    const intent = {
+      repositoryId: target.repositoryId,
+      pr: target.number,
+      base: target.base,
+      head: target.head,
+      preview: target.merge,
+      tree: target.mergeTree,
+      proofSha256: "0".repeat(64),
+    };
+    const events = [];
+    let marker;
+    const client = githubClient(
+      "KPGH-FJ/farfold",
+      env,
+      (_command, args, options) => {
+        const method = args[2];
+        if (method === "POST" || method === "PATCH") {
+          expect(options.env.GH_TOKEN).toBe(env.FARFOLD_FINAL_PUBLISHER_TOKEN);
+          const body = JSON.parse(options.input);
+          events.push([method, body]);
+          marker = {
+            id: 31,
+            name: releaseCheck,
+            app: { id: 123456, slug: "farfold-final-publisher" },
+            conclusion: null,
+            ...marker,
+            ...body,
+          };
+          return JSON.stringify(marker);
+        }
+        expect(options.env.GH_TOKEN).toBe(env.GH_TOKEN);
+        const route = args.at(-1);
+        expect(route).toContain(
+          `repos/KPGH-FJ/farfold/commits/${releaseRequestAnchor}/check-runs?`,
+        );
+        expect(route).toMatch(/status=in_progress&filter=all/);
+        events.push(["READ"]);
+        return JSON.stringify({ total_count: 1, check_runs: [marker] });
+      },
+    );
+    expect(client.startRelease(intent, "run-url")).toMatchObject({
+      id: 31,
+      intent,
+    });
+    const accepted = {
+      ...intent,
+      uuid: "5b266ac4-d4b2-483a-9d39-f3ef264ac3cb",
+    };
+    client.updateRelease(31, accepted);
+    client.finishRelease(31, accepted, "success");
+    expect(events.map(([method]) => method)).toEqual([
+      "POST",
+      "READ",
+      "PATCH",
+      "PATCH",
+    ]);
+    expect(events[0][1]).toMatchObject({
+      head_sha: releaseRequestAnchor,
+      status: "in_progress",
+    });
+    expect(JSON.parse(events[0][1].output.summary).base).toBe(target.base);
+    expect(events[3][1]).toMatchObject({
+      status: "completed",
+      conclusion: "success",
+    });
+    expect(JSON.parse(events[3][1].output.summary)).toEqual(accepted);
   });
 
   it("refuses a missing App or the generic Actions identity and credential", () => {
