@@ -6,6 +6,18 @@ export const releaseCheck = "Farfold release request";
 const sha = /^[0-9a-f]{40}$/;
 const uuid = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 
+function pendingOperation(response, head) {
+  return (
+    response?.status === "pending" &&
+    uuid.test(response.details?.uuid) &&
+    response.details.expected_head_sha === head &&
+    response.details.merge_method === "merge" &&
+    response.details.merge_action === "direct_merge" &&
+    (response.details.bypass_rules === undefined ||
+      response.details.bypass_rules === true)
+  );
+}
+
 function confirmedMerge(api, intent, publisherSlug, expectedCommit) {
   const pr = api(`pulls/${intent.pr}`);
   if (!pr.merged) return null;
@@ -17,7 +29,7 @@ function confirmedMerge(api, intent, publisherSlug, expectedCommit) {
       pr.head?.sha === intent.head &&
       pr.merged_by?.login === publisherSlug + "[bot]" &&
       sha.test(commitSha) &&
-      (!expectedCommit || commitSha === expectedCommit),
+      commitSha === expectedCommit,
     "GitHub reported a different merge than the authorized request.",
   );
   const commit = api(`git/commits/${commitSha}`);
@@ -44,36 +56,43 @@ export async function reconcileRelease(
   { id, intent, publisherSlug },
   delay = wait,
 ) {
-  let status;
-  for (let attempt = 0; attempt < 4; attempt++) {
-    if (intent.uuid) {
-      try {
-        status = await client.releaseApi(
-          "GET",
-          `pulls/${intent.pr}/merge-async/${intent.uuid}`,
-        );
-      } catch {
-        // GitHub may no longer have the operation. A matching merged PR is
-        // positive evidence; an open PR still leaves the outcome unknown.
-        status = undefined;
-      }
-      if (status?.status === "failed") {
-        client.finishRelease(id, intent, "failure");
-        return { decision: "release-rejected" };
-      }
+  for (let attempt = 0; intent.uuid && attempt < 4; attempt++) {
+    let status;
+    try {
+      status = await client.releaseApi(
+        "GET",
+        `pulls/${intent.pr}/merge-async/${intent.uuid}`,
+      );
+    } catch {
+      // An unavailable operation cannot establish this request's outcome.
     }
-    const commit = confirmedMerge(
-      client.api,
-      intent,
-      publisherSlug,
-      status?.details?.sha,
-    );
-    if (commit) {
-      client.finishRelease(id, intent, "success");
-      return { decision: "merged", mergeCommit: commit };
+    if (status?.status === "failed") {
+      client.finishRelease(id, intent, "failure");
+      return { decision: "release-rejected" };
     }
-    if (attempt < 3 && intent.uuid) await delay(2000);
-    else break;
+    if (status?.status === "merged") {
+      assert.ok(
+        sha.test(status.details?.sha),
+        "GitHub did not identify the original operation's merge commit.",
+      );
+      const commit = confirmedMerge(
+        client.api,
+        intent,
+        publisherSlug,
+        status.details.sha,
+      );
+      if (commit) {
+        client.finishRelease(id, intent, "success");
+        return { decision: "merged", mergeCommit: commit };
+      }
+    } else if (status?.status === "pending") {
+      assert.ok(
+        pendingOperation(status, intent.head) &&
+          status.details.uuid === intent.uuid,
+        "GitHub returned a different pending release request.",
+      );
+    }
+    if (attempt < 3) await delay(2000);
   }
   throw new DeliveryBlocked(
     "release-outcome-unknown",
@@ -127,17 +146,14 @@ export async function releaseDelivery(
       `GitHub rejected this release with HTTP ${response.httpStatus}.`,
     );
   }
-  if (
-    response.status === "pending" &&
-    uuid.test(response.details?.uuid) &&
-    response.details.expected_head_sha === intent.head &&
-    response.details.merge_method === "merge" &&
-    response.details.merge_action === "direct_merge"
-  ) {
+  if (pendingOperation(response, intent.head)) {
     intent.uuid = response.details.uuid;
     client.updateRelease(id, intent);
-  } else if (response.status !== "merged") {
-    throw new Error("GitHub did not confirm the merge request identity.");
+  } else {
+    throw new DeliveryBlocked(
+      "release-outcome-unknown",
+      "GitHub did not confirm the merge request identity. Do not resubmit the merge.",
+    );
   }
   return reconcileRelease(client, { id, intent, publisherSlug });
 }
@@ -177,8 +193,8 @@ export function pendingRelease(client, base, repositoryId) {
   return { id: check.id, intent, publisherSlug: check.app.slug };
 }
 
-// When the merge succeeded but the runner could not close the record, main
-// already points elsewhere. The actual merge parents locate the old record.
+// A merged PR's parents can locate a record on an old base. The record's own
+// operation must still establish its outcome.
 export function pendingReleaseForMergedPr(client, number, repositoryId) {
   const pr = client.api(`pulls/${number}`);
   if (!pr.merged) return null;

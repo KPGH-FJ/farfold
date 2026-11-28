@@ -112,7 +112,7 @@ function fixture({
 }
 
 describe("release recovery after main advances", () => {
-  it("finds the old marker through the actual merge parents", async () => {
+  it("finds the old marker through actual merge parents without attributing that merge", async () => {
     const { client, calls } = fixture();
     const pending = pendingReleaseForMergedPr(
       client,
@@ -124,11 +124,36 @@ describe("release recovery after main advances", () => {
       intent: pendingIntent,
       publisherSlug,
     });
+    await expect(reconcileRelease(client, pending)).rejects.toMatchObject({
+      state: "release-outcome-unknown",
+    });
+    expect(calls).toEqual([]);
+    expect(client.finishRelease).not.toHaveBeenCalled();
+  });
+
+  it("confirms an old marker only through its saved UUID and matching terminal result", async () => {
+    const { client, calls } = fixture({
+      marker: {
+        output: {
+          summary: JSON.stringify({ ...pendingIntent, uuid: requestUuid }),
+        },
+      },
+    });
+    const pending = pendingReleaseForMergedPr(
+      client,
+      target.number,
+      target.repositoryId,
+    );
     await expect(reconcileRelease(client, pending)).resolves.toEqual({
       decision: "merged",
       mergeCommit,
     });
-    expect(calls).not.toContain("PUT");
+    expect(calls).toEqual(["GET"]);
+    expect(client.finishRelease).toHaveBeenCalledWith(
+      markerId,
+      pending.intent,
+      "success",
+    );
   });
 
   it("does not recover a marker belonging to a different PR", () => {
@@ -144,10 +169,67 @@ describe("release recovery after main advances", () => {
 });
 
 describe("verified release request", () => {
-  it("confirms an exact merged PR when the original operation is no longer available", async () => {
+  it.each(["unavailable", "pending"])(
+    "keeps a claim open when its exact operation is %s even if the PR visibly merged",
+    async (state) => {
+      const { client } = fixture();
+      client.releaseApi.mockImplementation(() => {
+        if (state === "unavailable")
+          throw new Error("GitHub operation returned HTTP 404");
+        return {
+          status: "pending",
+          details: {
+            uuid: requestUuid,
+            expected_head_sha: target.head,
+            merge_method: "merge",
+            merge_action: "direct_merge",
+            bypass_rules: true,
+          },
+        };
+      });
+      await expect(
+        reconcileRelease(
+          client,
+          {
+            id: markerId,
+            publisherSlug,
+            intent: { ...pendingIntent, uuid: requestUuid },
+          },
+          async () => {},
+        ),
+      ).rejects.toMatchObject({ state: "release-outcome-unknown" });
+      expect(client.releaseApi.mock.calls).toEqual(
+        Array.from({ length: 4 }, () => [
+          "GET",
+          `pulls/15/merge-async/${requestUuid}`,
+        ]),
+      );
+      expect(client.api).not.toHaveBeenCalled();
+      expect(client.finishRelease).not.toHaveBeenCalled();
+    },
+  );
+
+  it("does not attribute an already merged response to the current dispatch", async () => {
+    const { client, calls } = fixture();
+    client.releaseApi.mockResolvedValue({
+      status: "merged",
+      details: { sha: mergeCommit },
+    });
+    await expect(
+      releaseDelivery(client, target, proof, serverUrl, () => {}),
+    ).rejects.toMatchObject({
+      state: "release-outcome-unknown",
+    });
+    expect(calls).toEqual(["record"]);
+    expect(client.releaseApi).toHaveBeenCalledTimes(1);
+    expect(client.finishRelease).not.toHaveBeenCalled();
+  });
+
+  it("does not close a marker when the exact operation returns a different merge commit", async () => {
     const { client } = fixture();
-    client.releaseApi.mockImplementation(() => {
-      throw new Error("GitHub operation unavailable");
+    client.releaseApi.mockResolvedValue({
+      status: "merged",
+      details: { sha: "8".repeat(40) },
     });
     await expect(
       reconcileRelease(client, {
@@ -155,10 +237,48 @@ describe("verified release request", () => {
         publisherSlug,
         intent: { ...pendingIntent, uuid: requestUuid },
       }),
-    ).resolves.toEqual({ decision: "merged", mergeCommit });
-    expect(
-      client.releaseApi.mock.calls.every(([method]) => method === "GET"),
-    ).toBe(true);
+    ).rejects.toThrow("GitHub reported a different merge");
+    expect(client.finishRelease).not.toHaveBeenCalled();
+  });
+
+  it("settles a failure from the exact original UUID independently of a visible PR merge", async () => {
+    const { client } = fixture();
+    client.releaseApi.mockResolvedValue({
+      status: "failed",
+      details: { message: "Required check missing" },
+    });
+    const intent = { ...pendingIntent, uuid: requestUuid };
+    await expect(
+      reconcileRelease(client, { id: markerId, publisherSlug, intent }),
+    ).resolves.toEqual({ decision: "release-rejected" });
+    expect(client.releaseApi.mock.calls).toEqual([
+      ["GET", `pulls/15/merge-async/${requestUuid}`],
+    ]);
+    expect(client.api).not.toHaveBeenCalled();
+    expect(client.finishRelease).toHaveBeenCalledWith(
+      markerId,
+      intent,
+      "failure",
+    );
+  });
+
+  it("does not close a marker when the pending response identifies another UUID", async () => {
+    const { client } = fixture();
+    client.releaseApi.mockResolvedValue({
+      status: "pending",
+      details: {
+        uuid: "142c028d-6a1d-4baf-8876-f1f89445cff6",
+        expected_head_sha: target.head,
+        merge_method: "merge",
+        merge_action: "direct_merge",
+      },
+    });
+    const intent = { ...pendingIntent, uuid: requestUuid };
+    await expect(
+      reconcileRelease(client, { id: markerId, publisherSlug, intent }),
+    ).rejects.toThrow(/different pending release/);
+    expect(client.api).not.toHaveBeenCalled();
+    expect(client.finishRelease).not.toHaveBeenCalled();
   });
 
   it("closes a durable intent when GitHub explicitly refuses dispatch", async () => {
