@@ -25,6 +25,21 @@ const windowsCheck = "Windows affected engineering checks";
 export const finalCheck = "Farfold final delivery";
 const privateProofMarker = "<!-- farfold-private-delivery:v1 -->";
 
+const witnessSnapshot = `query($node: ID!) {
+  node(id: $node) {
+    __typename
+    ... on IssueComment {
+      id fullDatabaseId body createdAt updatedAt lastEditedAt
+      author { __typename ... on User { databaseId } }
+      userContentEdits(first: 3) {
+        totalCount
+        pageInfo { hasNextPage }
+        nodes { editedAt deletedAt editor { __typename ... on User { databaseId } } }
+      }
+    }
+  }
+}`;
+
 function sameTuple(left, right) {
   return (
     left.base === right.base &&
@@ -40,11 +55,12 @@ export function privateEvidenceFor(
   run,
   now,
   publicKey,
+  graphql,
 ) {
   if (!scope.product && !scope.governance) return null;
   assert.ok(
     typeof publicKey === "string" && publicKey.trim(),
-    "Applicable private evidence or policy assessment needs a configured trusted custodian key.",
+    "Missing configuration: a trusted custodian public key is required.",
   );
   const witnesses = comments.filter(
     (comment) =>
@@ -73,7 +89,37 @@ export function privateEvidenceFor(
     scope,
     run,
     now,
+    witnessId: witness.id,
   });
+  // GitHub records the original body and the new body after the first edit.
+  // A signed comment is single-use. Any further edit requires a fresh signed ID.
+  assert.ok(
+    /^[A-Za-z0-9_+/=-]{3,180}$/.test(witness.node_id ?? ""),
+    "Private evidence comment lacks a verifiable node identity.",
+  );
+  const node = graphql(witnessSnapshot, witness.node_id)?.data?.node;
+  const history = node?.userContentEdits;
+  const owner = (actor) =>
+    actor?.__typename === "User" && actor.databaseId === witness.user.id;
+  assert.ok(
+    node?.__typename === "IssueComment" &&
+      node.id === witness.node_id &&
+      node.fullDatabaseId === String(witness.id) &&
+      node.body === witness.body &&
+      node.createdAt === witness.created_at &&
+      node.updatedAt === witness.updated_at &&
+      owner(node.author) &&
+      history?.totalCount === 2 &&
+      history.pageInfo?.hasNextPage === false &&
+      history.nodes?.length === 2 &&
+      typeof node.lastEditedAt === "string" &&
+      history.nodes[0]?.editedAt === node.lastEditedAt &&
+      history.nodes[1]?.editedAt === node.createdAt &&
+      history.nodes.every(
+        (edit) => edit?.deletedAt === null && owner(edit.editor),
+      ),
+    "Private evidence comment was edited again or its one-time publication could not be verified.",
+  );
   return {
     evidenceId: witness.id,
     evidenceDigest: createHash("sha256")
@@ -83,10 +129,24 @@ export function privateEvidenceFor(
   };
 }
 
-function githubClient(repo) {
+export function githubClient(repo, env, execute = execFileSync) {
+  const { FARFOLD_FINAL_PUBLISHER_TOKEN: publisherToken, ...readEnv } = env;
+  const appId = Number(env.FARFOLD_FINAL_PUBLISHER_APP_ID);
+  assert.ok(
+    /^[1-9][0-9]*$/.test(env.FARFOLD_FINAL_PUBLISHER_APP_ID ?? "") &&
+      Number.isSafeInteger(appId) &&
+      appId !== 15368 &&
+      publisherToken?.trim() &&
+      publisherToken !== readEnv.GH_TOKEN,
+    "Missing configuration: a dedicated final-publisher App and token are required.",
+  );
+  const writeEnv = { ...readEnv, GH_TOKEN: publisherToken };
+  const checks = new Map();
+
   function run(args, options = {}) {
     try {
-      return execFileSync("gh", args, {
+      return execute("gh", args, {
+        env: readEnv,
         stdio: [
           options.input === undefined ? "ignore" : "pipe",
           "pipe",
@@ -102,6 +162,44 @@ function githubClient(repo) {
       );
     }
   }
+  const isPublisherCheck = (check, head, key) =>
+    Number.isSafeInteger(check?.id) &&
+    check.id > 0 &&
+    check.head_sha === head &&
+    check.name === finalCheck &&
+    check.external_id === key &&
+    check.app?.id === appId &&
+    check.app.slug !== "github-actions";
+
+  function write(method, path, body) {
+    return JSON.parse(
+      run(
+        [
+          "api",
+          "--method",
+          method,
+          `repos/${repo}/check-runs${path}`,
+          "--input",
+          "-",
+        ],
+        { env: writeEnv, input: JSON.stringify(body), encoding: "utf8" },
+      ),
+    );
+  }
+
+  function latestCheck(api, head) {
+    const existing = api(
+      `commits/${head}/check-runs?check_name=${encodeURIComponent(finalCheck)}&app_id=${appId}&filter=latest&per_page=100`,
+    );
+    assert.ok(
+      Array.isArray(existing.check_runs) &&
+        existing.total_count === existing.check_runs.length &&
+        existing.total_count <= 1,
+      "GitHub did not return a unique latest result from the dedicated publisher.",
+    );
+    return existing.check_runs[0];
+  }
+
   return {
     api(path) {
       try {
@@ -147,6 +245,7 @@ function githubClient(repo) {
         const unzip = (flag, ...rest) =>
           execFileSync("unzip", [flag, archive, ...rest], {
             encoding: "utf8",
+            env: readEnv,
             stdio: ["ignore", "pipe", "ignore"],
             maxBuffer: 64 * 1024,
             timeout: 5000,
@@ -164,57 +263,54 @@ function githubClient(repo) {
         rmSync(directory, { recursive: true, force: true });
       }
     },
-    startCheck(target, serverUrl) {
+    startCheck(head, serverUrl, key) {
+      assert.ok(sha.test(head), "Refusing to publish without an exact commit.");
+      const latest = latestCheck(this.api, head);
+      const check = isPublisherCheck(latest, head, key)
+        ? latest
+        : write("POST", "", {
+            name: finalCheck,
+            head_sha: head,
+            status: "in_progress",
+            details_url: serverUrl,
+            external_id: key,
+          });
       assert.ok(
-        sha.test(target),
-        "Refusing to publish a check without an exact commit.",
+        isPublisherCheck(check, head, key) && !checks.has(check.id),
+        "GitHub did not return the exact check from the configured publisher App.",
       );
-      const created = JSON.parse(
-        run(
-          [
-            "api",
-            "--method",
-            "POST",
-            `repos/${repo}/check-runs`,
-            "--input",
-            "-",
-          ],
-          {
-            input: JSON.stringify({
-              name: finalCheck,
-              head_sha: target,
-              status: "in_progress",
-              details_url: serverUrl,
-            }),
-          },
-        ),
-      );
-      assert.ok(
-        Number.isSafeInteger(created.id) &&
-          created.head_sha === target &&
-          created.name === finalCheck &&
-          created.app?.slug === "github-actions",
-        "GitHub did not issue the final check for the exact preview from GitHub Actions.",
-      );
-      return created.id;
+      checks.set(check.id, { head, key, serverUrl });
+      // A runner can stop before verification finishes. Remove the prior green
+      // in place before reading evidence, using the supported failure transition.
+      if (check.conclusion === "success") {
+        this.finishCheck(
+          check.id,
+          "failure",
+          "Rechecking current delivery evidence. The previous approval is no longer effective.",
+        );
+      }
+      return check.id;
     },
-    finishCheck(checkId, conclusion, summary) {
-      run(
-        [
-          "api",
-          "--method",
-          "PATCH",
-          `repos/${repo}/check-runs/${checkId}`,
-          "--input",
-          "-",
-        ],
-        {
-          input: JSON.stringify({
-            status: "completed",
-            conclusion,
-            output: { title: finalCheck, summary },
-          }),
-        },
+    finishCheck(id, conclusion, summary) {
+      const { head, key, serverUrl } = checks.get(id) ?? {};
+      assert.ok(head, "Cannot update an unknown check ID.");
+      const updated = write("PATCH", `/${id}`, {
+        status: "completed",
+        conclusion,
+        details_url: serverUrl,
+        output: { title: finalCheck, summary },
+      });
+      const confirmed = this.api(`check-runs/${id}`);
+      assert.ok(
+        [updated, confirmed, latestCheck(this.api, head)].every(
+          (check) =>
+            isPublisherCheck(check, head, key) &&
+            check.id === id &&
+            check.status === "completed" &&
+            check.conclusion === conclusion &&
+            check.output?.summary === summary,
+        ),
+        "GitHub did not confirm the exact requested check result.",
       );
     },
   };
@@ -441,6 +537,7 @@ function deliveryProof(client, target, scope, run, now) {
     run,
     now,
     client.publicKey,
+    client.graphql,
   );
   return { review, evidence };
 }
@@ -487,22 +584,62 @@ function requestedPr(eventName, event) {
   return linked[0].number;
 }
 
+export function finalCheckEnforcement(rules, publisherAppId) {
+  assert.ok(
+    Array.isArray(rules),
+    "GitHub did not return the effective main rules.",
+  );
+  const named = rules.flatMap((rule) =>
+    rule.type === "required_status_checks"
+      ? (rule.parameters?.required_status_checks ?? [])
+          .filter((check) => check.context === finalCheck)
+          .map((check) => ({
+            id: check.integration_id,
+            strict: rule.parameters.strict_required_status_checks_policy,
+          }))
+      : [],
+  );
+  return named.length === 1 &&
+    named[0].id === publisherAppId &&
+    named[0].strict === true
+    ? "required"
+    : "advisory";
+}
+
 export function publishFinalDelivery(client, target, serverUrl, verifyCurrent) {
-  // GitHub needs a check on the PR head as well as the reviewed merge preview.
-  // Mark the head pending first and complete it last, after verifying both SHAs.
-  const checks = [client.startCheck(target.head, serverUrl)];
+  const { repositoryId, number, base, head, merge } = target;
+  const key = `farfold:${repositoryId}:${number}:${base}:${head}:${merge}`;
+  const checks = [];
   try {
-    checks.push(client.startCheck(target.merge, serverUrl));
+    let startError;
+    for (const commit of [head, merge]) {
+      try {
+        checks.push(client.startCheck(commit, serverUrl, key));
+      } catch (error) {
+        startError ??= error;
+      }
+    }
+    if (startError) throw startError;
     const result = verifyCurrent();
+    const summary = JSON.stringify({
+      decision: "verified",
+      repositoryId,
+      pr: number,
+      base,
+      head,
+      merge,
+      runId: result.runId,
+      runAttempt: result.runAttempt,
+      reviewDigest: result.review.reviewDigest,
+      evidenceDigest: result.evidence?.evidenceDigest ?? null,
+      enforcement: result.enforcement,
+    });
     for (const check of checks.toReversed()) {
-      client.finishCheck(
-        check,
-        "success",
-        "Current candidate, preview, engineering run and independent evidence verified.",
-      );
+      client.finishCheck(check, "success", summary);
     }
     return result;
   } catch (error) {
+    const unconfirmed = [];
     for (const check of checks) {
       try {
         client.finishCheck(
@@ -511,13 +648,52 @@ export function publishFinalDelivery(client, target, serverUrl, verifyCurrent) {
           "Final delivery requirements are not satisfied. See workflow log.",
         );
       } catch {
-        console.error(
-          "Could not publish a failed final delivery check to GitHub.",
-        );
+        unconfirmed.push(check);
       }
     }
+    if (checks.length !== 2 || unconfirmed.length > 0) {
+      throw new Error(
+        "Final delivery blocked, but GitHub did not confirm failure on both exact checks.",
+        { cause: error },
+      );
+    }
+    console.error(
+      "GitHub confirmed both exact final delivery checks are failing.",
+    );
     throw error;
   }
+}
+
+export function leasedPublisherCredential(raw, number, base, now = Date.now()) {
+  assert.ok(raw, "A protected short-lived publisher lease is required.");
+  let lease;
+  try {
+    lease = JSON.parse(raw);
+  } catch {
+    throw new Error("The protected publisher lease is malformed.");
+  }
+  assert.ok(
+    lease &&
+      typeof lease === "object" &&
+      Object.keys(lease).sort().join(",") ===
+        "base,expiresAt,head,merge,pr,token" &&
+      lease.pr === number &&
+      lease.base === base &&
+      sha.test(lease.base ?? "") &&
+      sha.test(lease.head ?? "") &&
+      sha.test(lease.merge ?? "") &&
+      new Set([lease.base, lease.head, lease.merge]).size === 3 &&
+      typeof lease.token === "string" &&
+      /^ghs_[A-Za-z0-9_.-]{20,4096}$/.test(lease.token),
+    "The protected publisher lease does not match this PR and main.",
+  );
+  assert.ok(
+    typeof lease.expiresAt === "string" &&
+      Date.parse(lease.expiresAt) > now &&
+      Date.parse(lease.expiresAt) <= now + 60 * 60 * 1000 + 60 * 1000,
+    "The protected publisher lease is expired or has an invalid lifetime.",
+  );
+  return lease;
 }
 
 function main(env) {
@@ -549,14 +725,31 @@ function main(env) {
     Number.isSafeInteger(event.repository?.id),
     "GitHub event lacks the verified repository identity.",
   );
+  const { FARFOLD_FINAL_PUBLISHER_LEASE: rawLease, ...verifyEnv } = env;
+  const lease = leasedPublisherCredential(rawLease, number, base);
   const client = {
-    ...githubClient(repo),
+    ...githubClient(repo, {
+      ...verifyEnv,
+      FARFOLD_FINAL_PUBLISHER_TOKEN: lease.token,
+    }),
     publicKey: env.FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY,
   };
   const snapshot = () =>
     targetFor(client.api, number, base, event.repository.id);
   const serverUrl = `https://github.com/${repo}/actions/runs/${runId}`;
-  const target = snapshot();
+  let target;
+  try {
+    target = snapshot();
+    assert.ok(
+      lease.head === target.head && lease.merge === target.merge,
+      "The protected publisher lease is for a different head or merge preview.",
+    );
+  } catch (error) {
+    throw new Error(
+      "Final delivery was not verified. The exact current PR tuple could not be resolved, so no withdrawal was confirmed.",
+      { cause: error },
+    );
+  }
   const result = publishFinalDelivery(client, target, serverUrl, () => {
     const result = verifyFinalDelivery(client, target);
     assert.ok(
@@ -586,7 +779,15 @@ function main(env) {
         current.evidence?.evidenceDigest === result.evidence?.evidenceDigest,
       "Independent review or private evidence changed during final verification.",
     );
-    return result;
+    assert.ok(
+      Date.parse(lease.expiresAt) > Date.now(),
+      "The protected publisher lease expired during final verification.",
+    );
+    const enforcement = finalCheckEnforcement(
+      client.api("rules/branches/main?per_page=100"),
+      Number(env.FARFOLD_FINAL_PUBLISHER_APP_ID),
+    );
+    return { ...result, enforcement };
   });
   console.log(
     JSON.stringify({

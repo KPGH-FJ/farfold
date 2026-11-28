@@ -1,6 +1,10 @@
 import { generateKeyPairSync, sign } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import {
+  finalCheck,
+  finalCheckEnforcement,
+  githubClient,
+  leasedPublisherCredential,
   privateEvidenceFor,
   publishFinalDelivery,
   targetFor,
@@ -42,6 +46,12 @@ const run = {
 };
 const now = Date.parse("2026-11-24T09:00:00Z");
 const artifactDigest = "1".repeat(64);
+const verified = {
+  runId: run.id,
+  runAttempt: run.run_attempt,
+  review: { reviewDigest: "1".repeat(64) },
+  evidence: { evidenceDigest: "2".repeat(64) },
+};
 
 describe("publishing the final GitHub check", () => {
   const publisher = (events) => ({
@@ -59,9 +69,9 @@ describe("publishing the final GitHub check", () => {
     expect(
       publishFinalDelivery(publisher(events), target, "run-url", () => {
         events.push(["verify"]);
-        return "verified";
+        return verified;
       }),
-    ).toBe("verified");
+    ).toBe(verified);
     expect(events).toEqual([
       ["start", target.head],
       ["start", target.merge],
@@ -97,8 +107,125 @@ describe("publishing the final GitHub check", () => {
       publishFinalDelivery(client, target, "run-url", () => {
         throw new Error("unexpected verification");
       }),
-    ).toThrow("preview unavailable");
+    ).toThrow("did not confirm failure on both exact checks");
     expect(events).toEqual([["failure", 1]]);
+  });
+});
+
+describe("dedicated publisher", () => {
+  function github({ wrongApp = false, staleReadback = false } = {}) {
+    const records = new Map();
+    const calls = [];
+    let serial = 10;
+    const env = {
+      GH_TOKEN: "read-token",
+      FARFOLD_FINAL_PUBLISHER_TOKEN: "app-token",
+      FARFOLD_FINAL_PUBLISHER_APP_ID: "5913751",
+    };
+    const open = () =>
+      githubClient("owner/farfold", env, (_command, args, options) => {
+        const body = options.input ? JSON.parse(options.input) : null;
+        const route = args.find((arg) => arg.startsWith("repos/"));
+        expect(options.env).not.toHaveProperty("FARFOLD_FINAL_PUBLISHER_TOKEN");
+        expect(options.env.GH_TOKEN).toBe(body ? "app-token" : "read-token");
+        const commit = route.match(/commits\/([a-f]{40})\/check-runs/);
+        if (commit) {
+          expect(route).toContain("app_id=5913751");
+          const check_runs = [...records.values()].filter(
+            (item) => item.head_sha === commit[1],
+          );
+          return JSON.stringify({ total_count: check_runs.length, check_runs });
+        }
+        const id = Number(route.split("/").at(-1));
+        const previous = records.get(id);
+        if (!body) {
+          const confirmed = staleReadback
+            ? { ...previous, conclusion: "success" }
+            : previous;
+          return JSON.stringify(confirmed);
+        }
+        calls.push([args[2], body.conclusion, id]);
+        if (Number.isNaN(id)) {
+          const check = {
+            id: serial++,
+            app: { id: wrongApp ? 15368 : 5913751, slug: "publisher" },
+            ...body,
+          };
+          records.set(check.id, check);
+          return JSON.stringify(check);
+        }
+        const check = { ...previous, ...body };
+        records.set(id, check);
+        return JSON.stringify(check);
+      });
+    return { open, records, calls };
+  }
+
+  it("reuses the identical GitHub check IDs and reads both back as failed on revocation", () => {
+    const { open, records, calls } = github();
+    publishFinalDelivery(open(), target, "verified-run", () => verified);
+    expect([...records.values()].map((check) => check.conclusion)).toEqual([
+      "success",
+      "success",
+    ]);
+    expect(
+      [...records.values()].map((check) => JSON.parse(check.output.summary)),
+    ).toEqual(
+      [0, 1].map(() =>
+        expect.objectContaining({
+          head: target.head,
+          merge: target.merge,
+          runAttempt: 2,
+        }),
+      ),
+    );
+    expect(() =>
+      publishFinalDelivery(open(), target, "revocation-run", () => {
+        expect([...records.values()].map((check) => check.conclusion)).toEqual([
+          "failure",
+          "failure",
+        ]);
+        expect(
+          [...records.values()].every((check) =>
+            check.output.summary.startsWith(
+              "Rechecking current delivery evidence",
+            ),
+          ),
+        ).toBe(true);
+        throw new Error("signed record was withdrawn");
+      }),
+    ).toThrow(/signed record was withdrawn/);
+    expect([...records.keys()]).toEqual([10, 11]);
+    expect([...records.values()].map((check) => check.conclusion)).toEqual([
+      "failure",
+      "failure",
+    ]);
+    expect(calls.slice(-2)).toEqual([
+      ["PATCH", "failure", 10],
+      ["PATCH", "failure", 11],
+    ]);
+  });
+
+  it("will not approve an unexpected publisher or confirm stale failure readback", () => {
+    const wrong = github({ wrongApp: true });
+    expect(() =>
+      publishFinalDelivery(
+        wrong.open(),
+        target,
+        "verified-run",
+        () => verified,
+      ),
+    ).toThrow(/did not confirm failure on both exact checks/);
+    expect(wrong.calls.some(([, conclusion]) => conclusion === "success")).toBe(
+      false,
+    );
+
+    const stale = github({ staleReadback: true });
+    expect(() =>
+      publishFinalDelivery(stale.open(), target, "revocation-run", () => {
+        throw new Error("signed record was withdrawn");
+      }),
+    ).toThrow(/did not confirm failure on both exact checks/);
   });
 });
 
@@ -127,6 +254,7 @@ function buildAttestation(scope, overrides = {}) {
   const { base, head, merge, repositoryId } = target;
   const claim = {
     repositoryId,
+    witnessId: 40,
     pr: target.number,
     base,
     head,
@@ -156,18 +284,44 @@ function buildAttestation(scope, overrides = {}) {
   };
   const signature = sign(
     null,
-    privateAttestationBytes(claim),
+    privateAttestationBytes(claim, 2),
     privateKey,
   ).toString("base64url");
   return {
     publicKey: publicKey.export({ format: "pem", type: "spki" }),
     comment: {
       id: 40,
+      node_id: "IC_private_delivery",
+      created_at: "2026-11-24T07:01:00Z",
+      updated_at: "2026-11-24T08:15:00Z",
       user: { id: 77, type: "User" },
       author_association: "OWNER",
       body:
         "<!-- farfold-private-delivery:v1 -->\n" +
-        JSON.stringify({ schemaVersion: 1, claim, signature }),
+        JSON.stringify({ schemaVersion: 2, claim, signature }),
+    },
+  };
+}
+
+function witnessNode(comment) {
+  const owner = { __typename: "User", databaseId: comment.user.id };
+  return {
+    __typename: "IssueComment",
+    id: comment.node_id,
+    fullDatabaseId: String(comment.id),
+    body: comment.body,
+    createdAt: comment.created_at,
+    updatedAt: comment.updated_at,
+    lastEditedAt: comment.updated_at,
+    author: owner,
+    userContentEdits: {
+      totalCount: 2,
+      pageInfo: { hasNextPage: false },
+      nodes: [comment.updated_at, comment.created_at].map((editedAt) => ({
+        editedAt,
+        deletedAt: null,
+        editor: owner,
+      })),
     },
   };
 }
@@ -246,6 +400,9 @@ function client({
     publicKey,
     graphql(_query, id) {
       const comment = comments.find(({ node_id }) => node_id === id);
+      if (comment?.user?.type === "User") {
+        return { data: { node: witnessNode(comment) } };
+      }
       const bot = {
         __typename: "Bot",
         databaseId: 199175422,
@@ -354,7 +511,7 @@ describe("hosted final delivery", () => {
       ],
     ]) {
       expect(() => verifyFinalDelivery(client({ files }), target, now)).toThrow(
-        /needs a configured trusted custodian key/i,
+        /missing configuration.*trusted custodian public key/i,
       );
     }
   });
@@ -408,7 +565,7 @@ describe("hosted final delivery", () => {
     const path = ".github/workflows/delivery.yml";
     const scope = classifyDeliveryPaths([path]);
     expect(() => verifyFinalDelivery(client({ path }), target, now)).toThrow(
-      /policy assessment needs a configured trusted custodian key/i,
+      /missing configuration.*trusted custodian public key/i,
     );
     const { comment, publicKey } = buildAttestation(scope);
     expect(
@@ -453,6 +610,26 @@ describe("hosted final delivery", () => {
         privateEvidenceFor(comments, target, scope, run, now, publicKey),
       ).toThrow(/exactly one authenticated custodian record/i);
     }
+  });
+
+  it("rejects a copied signature and an altered witness edit history", () => {
+    const scope = classifyDeliveryPaths(["scripts/delivery-final.mjs"]);
+    const { comment, publicKey } = buildAttestation(scope);
+    const verify = (witness, node) =>
+      privateEvidenceFor([witness], target, scope, run, now, publicKey, () => ({
+        data: { node },
+      }));
+    const node = witnessNode(comment);
+    expect(verify(comment, node)).toMatchObject({ evidenceId: comment.id });
+    expect(() => verify({ ...comment, id: 41 }, node)).toThrow(
+      /different witness comment/i,
+    );
+    expect(() =>
+      verify(comment, {
+        ...node,
+        userContentEdits: { ...node.userContentEdits, totalCount: 3 },
+      }),
+    ).toThrow(/one-time publication/i);
   });
 
   it("does not fall back to older successful attempts when the current one failed", () => {
@@ -517,7 +694,7 @@ describe("hosted final delivery", () => {
       verifyFinalDelivery(client({ path, windowsTests: [] }), target, now),
     ).toThrow(/Windows engineering report omitted/i);
     expect(() => verifyFinalDelivery(client({ path }), target, now)).toThrow(
-      /needs a configured trusted custodian key/i,
+      /missing configuration.*trusted custodian public key/i,
     );
   });
 
@@ -545,5 +722,84 @@ describe("hosted final delivery", () => {
     expect(() =>
       targetFor(api, target.number, target.base, target.repositoryId),
     ).toThrow(/preview or candidate tree/i);
+  });
+});
+
+describe("leased final publisher credentials", () => {
+  const lease = {
+    pr: target.number,
+    base: target.base,
+    head: target.head,
+    merge: target.merge,
+    expiresAt: new Date(now + 30 * 60 * 1000).toISOString(),
+    token: "ghs_" + "x".repeat(40),
+  };
+
+  it("accepts a short lease for the exact PR and main", () => {
+    expect(
+      leasedPublisherCredential(
+        JSON.stringify(lease),
+        target.number,
+        target.base,
+        now,
+      ),
+    ).toEqual(lease);
+  });
+
+  it.each([
+    { pr: 8 },
+    { base: "f".repeat(40) },
+    { merge: target.head },
+    { head: "unbound" },
+    { expiresAt: new Date(now - 1).toISOString() },
+    { expiresAt: new Date(now + 2 * 60 * 60 * 1000).toISOString() },
+    { token: "invalid" },
+    { privateKey: "unexpected" },
+  ])("rejects leases with an invalid field", (fields) => {
+    expect(() =>
+      leasedPublisherCredential(
+        JSON.stringify({ ...lease, ...fields }),
+        target.number,
+        target.base,
+        now,
+      ),
+    ).toThrow();
+  });
+
+  it("stops without a lease", () => {
+    expect(() =>
+      leasedPublisherCredential("", target.number, target.base, now),
+    ).toThrow(/short-lived publisher lease/);
+  });
+});
+
+describe("effective final check rule", () => {
+  const rule = (context, integration_id, strict = true) => ({
+    type: "required_status_checks",
+    parameters: {
+      strict_required_status_checks_policy: strict,
+      required_status_checks: [{ context, integration_id }],
+    },
+  });
+
+  it("treats a final verdict as advisory while main still requires the transition check", () => {
+    expect(
+      finalCheckEnforcement(
+        [rule("Farfold transition review", 5913751)],
+        5913751,
+      ),
+    ).toBe("advisory");
+  });
+
+  it("recognizes the final context only with the exact App and a strict rule", () => {
+    expect(finalCheckEnforcement([rule(finalCheck, 5913751)], 5913751)).toBe(
+      "required",
+    );
+    expect(finalCheckEnforcement([rule(finalCheck, 15368)], 5913751)).toBe(
+      "advisory",
+    );
+    expect(
+      finalCheckEnforcement([rule(finalCheck, 5913751, false)], 5913751),
+    ).toBe("advisory");
   });
 });
