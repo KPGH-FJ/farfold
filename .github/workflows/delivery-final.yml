@@ -3,7 +3,7 @@ name: Farfold final delivery
 on:
   workflow_run:
     workflows: [Farfold delivery]
-    types: [completed]
+    types: [in_progress, completed]
   issue_comment:
     types: [created, edited, deleted]
   workflow_dispatch:
@@ -12,33 +12,85 @@ on:
         description: Open pull request to recheck after a Codex review or private evidence submission
         type: string
         required: true
+      release_proof:
+        description: Delivery and main protection digest supplied by delivery-pr --merge
+        type: string
+        required: false
 
 permissions:
   actions: read
+  checks: read
   contents: read
   issues: read
   pull-requests: read
-  checks: write
-
-concurrency:
-  group: final-delivery-${{ github.event.workflow_run.pull_requests[0].number || github.event.issue.number || inputs.pr_number || github.run_id }}
-  cancel-in-progress: false
 
 jobs:
-  verify:
-    name: Publish final delivery result
+  route:
+    name: Route final delivery event
     if: >-
       github.ref == 'refs/heads/main' &&
       (github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'workflow_run' && github.event.workflow_run.event == 'pull_request') ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.event == 'pull_request' &&
+      (github.event.action == 'completed' || github.event.workflow_run.run_attempt > 1) &&
+      github.event.workflow_run.pull_requests[0].number != null &&
+      github.event.workflow_run.pull_requests[1].number == null) ||
       (github.event_name == 'issue_comment' && github.event.issue.pull_request != null &&
       (github.event.comment.user.id == 199175422 ||
       (github.event.comment.author_association == 'OWNER' &&
       (startsWith(github.event.comment.body, '<!-- farfold-private-delivery:v1 -->') ||
       startsWith(github.event.changes.body.from, '<!-- farfold-private-delivery:v1 -->'))))))
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 3
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+    outputs:
+      pr_number: ${{ steps.route.outputs.pr_number }}
     steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22.22.3
+      - id: route
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/delivery-final.mjs --route
+
+  verify:
+    name: Publish final delivery result
+    needs: route
+    if: needs.route.outputs.pr_number != ''
+    concurrency:
+      group: farfold-main-delivery
+      cancel-in-progress: false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: farfold-final-publisher
+    steps:
+      - name: Check dedicated publisher configuration
+        env:
+          FARFOLD_FINAL_PUBLISHER_APP_ID: ${{ vars.FARFOLD_FINAL_PUBLISHER_APP_ID }}
+          FARFOLD_FINAL_PUBLISHER_CLIENT_ID: ${{ vars.FARFOLD_FINAL_PUBLISHER_CLIENT_ID }}
+          HAS_PUBLISHER_PRIVATE_KEY: ${{ secrets.FARFOLD_FINAL_PUBLISHER_PRIVATE_KEY != '' }}
+        run: |
+          missing=()
+          if [[ ! "$FARFOLD_FINAL_PUBLISHER_APP_ID" =~ ^[1-9][0-9]*$ || "$FARFOLD_FINAL_PUBLISHER_APP_ID" == 15368 ]]; then
+            missing+=(FARFOLD_FINAL_PUBLISHER_APP_ID)
+          fi
+          if [[ ! "$FARFOLD_FINAL_PUBLISHER_CLIENT_ID" =~ [^[:space:]] ]]; then
+            missing+=(FARFOLD_FINAL_PUBLISHER_CLIENT_ID)
+          fi
+          if [[ "$HAS_PUBLISHER_PRIVATE_KEY" != true ]]; then
+            missing+=(FARFOLD_FINAL_PUBLISHER_PRIVATE_KEY)
+          fi
+          if (( ${#missing[@]} )); then
+            printf 'Final delivery not checked. Decision: missing-configuration. Missing or invalid publisher settings: %s\n' "${missing[*]}" | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
       # This job can write commit checks. Do not check out the PR, execute
       # its scripts, install its dependencies, or restore its caches here.
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -48,8 +100,43 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22.22.3
+      - name: Prepare an authorized release with read-only credentials
+        id: release-plan
+        if: github.event_name == 'workflow_dispatch' && github.event.sender.id == github.event.repository.owner.id && github.run_attempt == 1
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FARFOLD_DELIVERY_PR_NUMBER: ${{ needs.route.outputs.pr_number }}
+          FARFOLD_FINAL_PUBLISHER_APP_ID: ${{ vars.FARFOLD_FINAL_PUBLISHER_APP_ID }}
+          FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY: ${{ vars.FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY }}
+        run: node scripts/delivery-final.mjs --prepare-release
+      - name: Mint repository-scoped final publisher token
+        id: publisher
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.FARFOLD_FINAL_PUBLISHER_CLIENT_ID }}
+          private-key: ${{ secrets.FARFOLD_FINAL_PUBLISHER_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-checks: write
+          permission-contents: read
+      - name: Mint write token for the prepared release or exact readback
+        id: release-token
+        if: steps.release-plan.outputs.mode == 'release' || steps.release-plan.outputs.mode == 'reconcile'
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.FARFOLD_FINAL_PUBLISHER_CLIENT_ID }}
+          private-key: ${{ secrets.FARFOLD_FINAL_PUBLISHER_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
       - name: Verify engineering run and authenticated independent review
         env:
           GH_TOKEN: ${{ github.token }}
+          FARFOLD_DELIVERY_PR_NUMBER: ${{ needs.route.outputs.pr_number }}
+          FARFOLD_FINAL_PUBLISHER_APP_ID: ${{ vars.FARFOLD_FINAL_PUBLISHER_APP_ID }}
+          FARFOLD_FINAL_PUBLISHER_TOKEN: ${{ steps.publisher.outputs.token }}
+          FARFOLD_FINAL_RELEASE_TOKEN: ${{ steps.release-token.outputs.token }}
+          FARFOLD_RELEASE_MODE: ${{ steps.release-plan.outputs.mode }}
+          FARFOLD_RELEASE_BINDING: ${{ steps.release-plan.outputs.binding }}
           FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY: ${{ vars.FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY }}
         run: node scripts/delivery-final.mjs

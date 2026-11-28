@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  appendFileSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -11,19 +17,46 @@ import {
   windowsAffectedTests,
 } from "./delivery-check.mjs";
 import {
+  codexReviewEditCurrent,
   codexReviewEvent,
   codexReviewProof,
   pullRequestComments,
 } from "./delivery-codex-review.mjs";
+import { canonicalJson } from "./acceptance-receipts.mjs";
 import { verifyDeliveryPrivateAttestation } from "./delivery-private-attestation.mjs";
+import { verifyDeliveryMainRules } from "./delivery-main-rules.mjs";
 import { classifyDeliveryPaths } from "./delivery-scope.mjs";
+import { DeliveryBlocked, DeliveryWaiting } from "./delivery-state.mjs";
+import {
+  pendingRelease,
+  reconcileRelease,
+  releaseCheck,
+  releaseRequestAnchor,
+  releaseDelivery,
+} from "./delivery-release.mjs";
 
 const sha = /^[0-9a-f]{40}$/;
+const uuid = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 const workflowPath = ".github/workflows/delivery.yml";
 const engineeringCheck = "Farfold delivery check";
 const windowsCheck = "Windows affected engineering checks";
+const actionsAppId = 15368;
 export const finalCheck = "Farfold final delivery";
 const privateProofMarker = "<!-- farfold-private-delivery:v1 -->";
+const witnessSnapshot = `query($node: ID!) {
+  node(id: $node) {
+    __typename
+    ... on IssueComment {
+      id fullDatabaseId body createdAt updatedAt lastEditedAt
+      author { __typename ... on User { databaseId } }
+      userContentEdits(first: 3) {
+        totalCount
+        pageInfo { hasNextPage }
+        nodes { editedAt deletedAt editor { __typename ... on User { databaseId } } }
+      }
+    }
+  }
+}`;
 
 function sameTuple(left, right) {
   return (
@@ -40,12 +73,15 @@ export function privateEvidenceFor(
   run,
   now,
   publicKey,
+  graphql,
 ) {
   if (!scope.product && !scope.governance) return null;
-  assert.ok(
-    typeof publicKey === "string" && publicKey.trim(),
-    "Applicable private evidence or policy assessment needs a configured trusted custodian key.",
-  );
+  if (typeof publicKey !== "string" || !publicKey.trim()) {
+    throw new DeliveryBlocked(
+      "missing-configuration",
+      "Applicable private evidence or policy assessment needs a configured trusted custodian key.",
+    );
+  }
   const witnesses = comments.filter(
     (comment) =>
       comment.author_association === "OWNER" &&
@@ -73,20 +109,52 @@ export function privateEvidenceFor(
     scope,
     run,
     now,
+    witnessId: witness.id,
   });
+  // GitHub records the original body and the new body after the first edit.
+  // A signed comment is single-use. Any further edit requires a fresh signed ID.
+  assert.ok(
+    /^[A-Za-z0-9_+/=-]{3,180}$/.test(witness.node_id ?? ""),
+    "Private evidence comment lacks a verifiable node identity.",
+  );
+  const node = graphql(witnessSnapshot, witness.node_id)?.data?.node;
+  const history = node?.userContentEdits;
+  const owner = (actor) =>
+    actor?.__typename === "User" && actor.databaseId === witness.user.id;
+  assert.ok(
+    node?.__typename === "IssueComment" &&
+      node.id === witness.node_id &&
+      node.fullDatabaseId === String(witness.id) &&
+      node.body === witness.body &&
+      node.createdAt === witness.created_at &&
+      node.updatedAt === witness.updated_at &&
+      owner(node.author) &&
+      history?.totalCount === 2 &&
+      history.pageInfo?.hasNextPage === false &&
+      history.nodes?.length === 2 &&
+      typeof node.lastEditedAt === "string" &&
+      history.nodes[0]?.editedAt === node.lastEditedAt &&
+      history.nodes[1]?.editedAt === node.createdAt &&
+      history.nodes.every(
+        (edit) => edit?.deletedAt === null && owner(edit.editor),
+      ),
+    "Private evidence comment was edited again or its one-time publication could not be verified.",
+  );
   return {
     evidenceId: witness.id,
     evidenceDigest: createHash("sha256")
       .update(JSON.stringify(envelope))
       .digest("hex"),
     executionId: verified.executionId,
+    recordSha256: proofHash(envelope.claim.evidence),
   };
 }
 
-function githubClient(repo) {
+function githubReader(repo, readEnv, execute = execFileSync) {
   function run(args, options = {}) {
     try {
-      return execFileSync("gh", args, {
+      return execute("gh", args, {
+        env: readEnv,
         stdio: [
           options.input === undefined ? "ignore" : "pipe",
           "pipe",
@@ -103,11 +171,17 @@ function githubClient(repo) {
     }
   }
   return {
+    run,
     api(path) {
       try {
-        return JSON.parse(
-          run(["api", `repos/${repo}/${path}`], { encoding: "utf8" }),
-        );
+        const args = [
+          "api",
+          ...(path.startsWith("rules")
+            ? ["-H", "Cache-Control: no-cache"]
+            : []),
+          `repos/${repo}/${path}`,
+        ];
+        return JSON.parse(run(args, { encoding: "utf8" }));
       } catch {
         throw new Error("Could not read verified data from the GitHub API.");
       }
@@ -126,10 +200,21 @@ function githubClient(repo) {
         return response;
       } catch {
         throw new Error(
-          "Could not authenticate the current Codex comment editor through GitHub GraphQL.",
+          "Could not authenticate the current comment editor through GitHub GraphQL.",
         );
       }
     },
+  };
+}
+
+export function githubFinalReader(repo, readEnv, execute = execFileSync) {
+  const reader = githubReader(repo, readEnv, execute);
+  const { run } = reader;
+  const archiveEnv = { ...readEnv };
+  delete archiveEnv.GH_TOKEN;
+  delete archiveEnv.GITHUB_TOKEN;
+  return {
+    ...reader,
     report(artifact, entry) {
       const bytes = run(
         ["api", `repos/${repo}/actions/artifacts/${artifact.id}/zip`],
@@ -145,7 +230,8 @@ function githubClient(repo) {
         const archive = join(directory, "report.zip");
         writeFileSync(archive, bytes, { mode: 0o600 });
         const unzip = (flag, ...rest) =>
-          execFileSync("unzip", [flag, archive, ...rest], {
+          execute("unzip", [flag, archive, ...rest], {
+            env: archiveEnv,
             encoding: "utf8",
             stdio: ["ignore", "pipe", "ignore"],
             maxBuffer: 64 * 1024,
@@ -164,57 +250,266 @@ function githubClient(repo) {
         rmSync(directory, { recursive: true, force: true });
       }
     },
+  };
+}
+
+export function proofHash(value) {
+  return createHash("sha256").update(canonicalJson(value)).digest("hex");
+}
+
+export function releaseProofDigest(proof, protection) {
+  return proofHash({ proof, protection });
+}
+
+export function publishedProof(target, result) {
+  return {
+    decision: "verified",
+    pr: target.number,
+    base: target.base,
+    head: target.head,
+    merge: target.merge,
+    engineeringRunId: result.runId,
+    engineeringRunAttempt: result.runAttempt,
+    proofSha256: proofHash(result),
+  };
+}
+
+function configuredPublisherAppId(env) {
+  const raw = env.FARFOLD_FINAL_PUBLISHER_APP_ID ?? "";
+  const id = Number(raw);
+  if (
+    !/^[1-9][0-9]*$/.test(raw) ||
+    !Number.isSafeInteger(id) ||
+    id === actionsAppId
+  ) {
+    throw new DeliveryBlocked(
+      "missing-configuration",
+      "A dedicated final-publisher App ID is required.",
+    );
+  }
+  return id;
+}
+
+export function githubClient(
+  repo,
+  env,
+  execute = execFileSync,
+  request = fetch,
+) {
+  const readEnv = { ...env };
+  const publisherToken = readEnv.FARFOLD_FINAL_PUBLISHER_TOKEN;
+  const releaseToken = readEnv.FARFOLD_FINAL_RELEASE_TOKEN;
+  delete readEnv.FARFOLD_FINAL_PUBLISHER_TOKEN;
+  delete readEnv.FARFOLD_FINAL_RELEASE_TOKEN;
+  const publisherAppId = configuredPublisherAppId(env);
+  if (!(
+    typeof publisherToken === "string" &&
+    publisherToken.trim() &&
+    publisherToken !== readEnv.GH_TOKEN
+  )) {
+    throw new DeliveryBlocked(
+      "missing-configuration",
+      "A dedicated final-publisher App ID and installation token are required.",
+    );
+  }
+  const reader = githubFinalReader(repo, readEnv, execute);
+  const { run } = reader;
+  const writeEnv = { ...readEnv, GH_TOKEN: publisherToken };
+  const publishedHeads = new Map();
+  let release;
+  let submitted = false;
+
+  function writeCheck(method, path, body) {
+    return JSON.parse(
+      run(
+        [
+          "api",
+          "--method",
+          method,
+          `repos/${repo}/check-runs${path}`,
+          "--input",
+          "-",
+        ],
+        {
+          env: writeEnv,
+          input: JSON.stringify(body),
+          encoding: "utf8",
+        },
+      ),
+    );
+  }
+  function assertPublishedCheck(check, head, status, name = finalCheck) {
+    assert.ok(
+      Number.isSafeInteger(check?.id) &&
+        check.id > 0 &&
+        check.head_sha === head &&
+        check.name === name &&
+        check.status === status &&
+        check.app?.id === publisherAppId &&
+        check.app.slug !== "github-actions",
+      "GitHub did not return the exact final check from the configured publisher App.",
+    );
+  }
+  const readerWithApp = { ...reader, publisherAppId };
+  function saveRelease(id, intent, outcome, serverUrl) {
+    const record = {
+      schemaVersion: 1,
+      repositoryId: intent.repositoryId,
+      state: outcome === null ? "pending" : "settled",
+      intent,
+      ...(outcome === null ? {} : { outcome }),
+    };
+    const updated = writeCheck("PATCH", `/${id}`, {
+      status: "completed",
+      conclusion: "neutral",
+      ...(serverUrl ? { details_url: serverUrl, external_id: serverUrl } : {}),
+      output: { title: releaseCheck, summary: JSON.stringify(record) },
+    });
+    assertPublishedCheck(
+      updated,
+      releaseRequestAnchor,
+      "completed",
+      releaseCheck,
+    );
+    assert.equal(updated.id, id);
+    assert.equal(updated.conclusion, "neutral");
+    assert.deepEqual(JSON.parse(updated.output?.summary), record);
+  }
+  return {
+    publisherAppId,
+    ...reader,
+    authorizeRelease(plan) {
+      assert.ok(
+        !release &&
+          Number.isSafeInteger(plan.pr) &&
+          plan.pr > 0 &&
+          ((plan.mode === "release" && plan.uuid === undefined) ||
+            (plan.mode === "reconcile" && uuid.test(plan.uuid))),
+      );
+      assert.ok(
+        typeof releaseToken === "string" &&
+          releaseToken.trim() &&
+          releaseToken !== publisherToken &&
+          releaseToken !== readEnv.GH_TOKEN,
+        "The protected release needs a distinct, short-lived write credential.",
+      );
+      release = { ...plan };
+    },
+    async releaseApi(method, path, body) {
+      const endpoint = `pulls/${release?.pr}/merge-async`;
+      if (method === "PUT") {
+        assert.ok(
+          release?.mode === "release" && !submitted && path === endpoint,
+          "The prepared release does not authorize this merge request.",
+        );
+        submitted = true;
+      } else {
+        assert.ok(
+          method === "GET" &&
+            release?.uuid &&
+            path === `${endpoint}/${release.uuid}`,
+          "The prepared release does not authorize this merge readback.",
+        );
+      }
+      let response;
+      try {
+        response = await request(
+          `https://api.github.com/repos/${repo}/${path}`,
+          {
+            method,
+            headers: {
+              Accept: "application/vnd.github+json",
+              Authorization: `Bearer ${releaseToken}`,
+              "Content-Type": "application/json",
+              "X-GitHub-Api-Version": "2026-03-10",
+            },
+            redirect: "error",
+            signal: AbortSignal.timeout(15000),
+            ...(body ? { body: JSON.stringify(body) } : {}),
+          },
+        );
+      } catch {
+        throw new DeliveryBlocked(
+          "release-outcome-unknown",
+          "Could not confirm the response from GitHub.",
+        );
+      }
+      if (
+        method === "PUT" &&
+        [400, 401, 403, 404, 422].includes(response.status)
+      ) {
+        return { status: "refused", httpStatus: response.status };
+      }
+      if (!response.ok) {
+        throw new DeliveryBlocked(
+          "release-outcome-unknown",
+          `GitHub returned HTTP ${response.status} for release.`,
+        );
+      }
+      const result = await response.json();
+      if (
+        method === "PUT" &&
+        result.status === "pending" &&
+        uuid.test(result.details?.uuid)
+      ) {
+        release.uuid = result.details.uuid;
+      }
+      return result;
+    },
+    startRelease(intent, serverUrl, journal) {
+      saveRelease(journal.id, intent, null, serverUrl);
+      const stored = pendingRelease(
+        readerWithApp,
+        intent.base,
+        intent.repositoryId,
+      );
+      assert.equal(
+        stored?.id,
+        journal.id,
+        "Could not read back the protected release intent.",
+      );
+      assert.deepEqual(stored.intent, intent);
+      return stored;
+    },
+    updateRelease(id, intent) {
+      saveRelease(id, intent, null);
+    },
+    finishRelease(id, intent, conclusion) {
+      saveRelease(id, intent, conclusion);
+    },
     startCheck(target, serverUrl) {
       assert.ok(
         sha.test(target),
         "Refusing to publish a check without an exact commit.",
       );
-      const created = JSON.parse(
-        run(
-          [
-            "api",
-            "--method",
-            "POST",
-            `repos/${repo}/check-runs`,
-            "--input",
-            "-",
-          ],
-          {
-            input: JSON.stringify({
-              name: finalCheck,
-              head_sha: target,
-              status: "in_progress",
-              details_url: serverUrl,
-            }),
-          },
-        ),
-      );
+      const created = writeCheck("POST", "", {
+        name: finalCheck,
+        head_sha: target,
+        status: "in_progress",
+        details_url: serverUrl,
+        external_id: serverUrl,
+      });
+      assertPublishedCheck(created, target, "in_progress");
       assert.ok(
-        Number.isSafeInteger(created.id) &&
-          created.head_sha === target &&
-          created.name === finalCheck &&
-          created.app?.slug === "github-actions",
-        "GitHub did not issue the final check for the exact preview from GitHub Actions.",
+        !publishedHeads.has(created.id),
+        "GitHub returned a duplicate final check ID.",
       );
+      publishedHeads.set(created.id, target);
       return created.id;
     },
     finishCheck(checkId, conclusion, summary) {
-      run(
-        [
-          "api",
-          "--method",
-          "PATCH",
-          `repos/${repo}/check-runs/${checkId}`,
-          "--input",
-          "-",
-        ],
-        {
-          input: JSON.stringify({
-            status: "completed",
-            conclusion,
-            output: { title: finalCheck, summary },
-          }),
-        },
+      const head = publishedHeads.get(checkId);
+      assert.ok(head, "Cannot update a check this publisher did not create.");
+      const status = conclusion === null ? "in_progress" : "completed";
+      const updated = writeCheck("PATCH", `/${checkId}`, {
+        status,
+        ...(conclusion === null ? {} : { conclusion }),
+        output: { title: finalCheck, summary },
+      });
+      assertPublishedCheck(updated, head, status);
+      assert.ok(
+        updated.id === checkId && updated.conclusion === conclusion,
+        "GitHub did not confirm the requested final check result.",
       );
     },
   };
@@ -264,7 +559,7 @@ export function targetFor(api, pr, trustedBase, repositoryId) {
   };
 }
 
-function latestEngineeringRun(api, target) {
+export function latestEngineeringRun(api, target, announcedRun) {
   const currentWorkflow = api("actions/workflows/delivery.yml");
   const runList = api(
     `actions/workflows/delivery.yml/runs?event=pull_request&head_sha=${target.head}&per_page=100`,
@@ -279,19 +574,36 @@ function latestEngineeringRun(api, target) {
       entry.head_sha === target.head &&
       entry.pull_requests?.some(({ number }) => number === target.number),
   );
-  assert.ok(
-    Number.isSafeInteger(run?.id) &&
-      Number.isSafeInteger(run?.run_attempt) &&
-      run.status === "completed" &&
-      run.conclusion === "success",
-    "Current PR needs a successful engineering workflow attempt.",
-  );
+  if (
+    !run ||
+    (announcedRun?.id === run?.id &&
+      run.run_attempt < announcedRun.run_attempt) ||
+    ["queued", "in_progress", "requested", "waiting", "pending"].includes(
+      run.status,
+    )
+  ) {
+    throw new DeliveryWaiting(
+      "waiting-engineering",
+      "Current PR needs a successful engineering workflow attempt. A matching attempt has not completed.",
+    );
+  }
+  if (
+    !Number.isSafeInteger(run.id) ||
+    !Number.isSafeInteger(run.run_attempt) ||
+    run.status !== "completed" ||
+    run.conclusion !== "success"
+  ) {
+    throw new DeliveryBlocked(
+      "engineering-rejected",
+      "Current PR needs a successful engineering workflow attempt. The matching attempt did not succeed.",
+    );
+  }
   return run;
 }
 
 function engineeringProof(client, target, scope) {
   const { api } = client;
-  const run = latestEngineeringRun(api, target);
+  const run = latestEngineeringRun(api, target, client.announcedRun);
   const jobList = api(
     `actions/runs/${run.id}/attempts/${run.run_attempt}/jobs?per_page=100`,
   );
@@ -424,7 +736,7 @@ function inspectScope(api, target) {
   return classifyDeliveryPaths(paths);
 }
 
-function deliveryProof(client, target, scope, run, now) {
+export function deliveryProof(client, target, scope, run, now) {
   const comments = pullRequestComments(client.api, target.number);
   const review = codexReviewProof(
     client.api,
@@ -434,15 +746,21 @@ function deliveryProof(client, target, scope, run, now) {
     run,
     now,
   );
-  const evidence = privateEvidenceFor(
-    comments,
-    target,
-    scope,
-    run,
-    now,
-    client.publicKey,
-  );
-  return { review, evidence };
+  try {
+    const evidence = privateEvidenceFor(
+      comments,
+      target,
+      scope,
+      run,
+      now,
+      client.publicKey,
+      client.graphql,
+    );
+    return { review, evidence };
+  } catch (error) {
+    if (error instanceof DeliveryBlocked) throw error;
+    throw new DeliveryBlocked("evidence-rejected", deliveryReason(error));
+  }
 }
 
 export function verifyFinalDelivery(client, target, now = Date.now()) {
@@ -452,7 +770,7 @@ export function verifyFinalDelivery(client, target, now = Date.now()) {
   return { scope, runId: run.id, runAttempt: run.run_attempt, ...proof };
 }
 
-function requestedPr(eventName, event) {
+function requestedPr(eventName, event, confirmCurrentReview) {
   if (eventName === "workflow_dispatch") {
     const raw = event.inputs?.pr_number;
     assert.ok(
@@ -477,14 +795,30 @@ function requestedPr(eventName, event) {
           typeof body === "string" &&
           body.startsWith(privateProofMarker + "\n"),
       );
-    return codexReviewEvent(event) || privateUpdate ? event.issue.number : null;
+    return codexReviewEvent(event, confirmCurrentReview) || privateUpdate
+      ? event.issue.number
+      : null;
   }
   const run = event.workflow_run;
   if (run?.event !== "pull_request" || run.path !== workflowPath) return null;
+  if (event.action === "in_progress" && !(run.run_attempt > 1)) return null;
   const linked = run.pull_requests ?? [];
   if (linked.length !== 1 || !Number.isSafeInteger(linked[0].number))
     return null;
   return linked[0].number;
+}
+
+function deliveryReason(error) {
+  return error instanceof SyntaxError || error instanceof TypeError
+    ? "Final delivery evidence or GitHub metadata is malformed."
+    : error.message;
+}
+
+function blockedDecision(error) {
+  return {
+    decision: error instanceof DeliveryBlocked ? error.state : "rejected",
+    reason: deliveryReason(error),
+  };
 }
 
 export function publishFinalDelivery(client, target, serverUrl, verifyCurrent) {
@@ -498,29 +832,56 @@ export function publishFinalDelivery(client, target, serverUrl, verifyCurrent) {
       client.finishCheck(
         check,
         "success",
-        "Current candidate, preview, engineering run and independent evidence verified.",
+        JSON.stringify(publishedProof(target, result)),
       );
     }
     return result;
   } catch (error) {
+    const { decision, reason } = blockedDecision(error);
     for (const check of checks) {
       try {
         client.finishCheck(
           check,
-          "failure",
-          "Final delivery requirements are not satisfied. See workflow log.",
+          error instanceof DeliveryWaiting ? null : "failure",
+          `${decision}: ${reason}`,
         );
       } catch {
-        console.error(
-          "Could not publish a failed final delivery check to GitHub.",
-        );
+        console.error("Could not update the final delivery check on GitHub.");
       }
     }
     throw error;
   }
 }
 
-function main(env) {
+export function prepareReleasePlan({
+  ownerDispatch,
+  number,
+  releaseProof,
+  pending,
+  verifyRelease,
+}) {
+  if (!ownerDispatch) return null;
+  if (pending) {
+    return !releaseProof &&
+      pending.intent.pr === number &&
+      uuid.test(pending.intent.uuid)
+      ? { mode: "reconcile", binding: proofHash(pending) }
+      : null;
+  }
+  if (!releaseProof) return null;
+  verifyRelease();
+  return { mode: "release", binding: releaseProof };
+}
+
+function matchesReleasePlan(env, plan) {
+  return (
+    plan &&
+    env.FARFOLD_RELEASE_MODE === plan.mode &&
+    env.FARFOLD_RELEASE_BINDING === plan.binding
+  );
+}
+
+async function main(env, phase) {
   assert.ok(
     env.GITHUB_REF === "refs/heads/main" &&
       sha.test(env.GITHUB_SHA ?? "") &&
@@ -538,26 +899,69 @@ function main(env) {
     GITHUB_EVENT_NAME: eventName,
   } = env;
   const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, "utf8"));
-  const number = requestedPr(eventName, event);
+  const routeOnly = phase === "--route";
+  const prepare = phase === "--prepare-release";
+  const confirmCurrentReview = routeOnly
+    ? (comment) => codexReviewEditCurrent(githubReader(repo, env), comment)
+    : undefined;
+  const number = requestedPr(eventName, event, confirmCurrentReview);
   if (!number) {
-    console.log(
-      "No uniquely associated PR. Use workflow_dispatch from main for a specific PR.",
-    );
+    let reason = "no-associated-pr";
+    if (eventName === "issue_comment")
+      reason = "no-effective-review-or-evidence-change";
+    if (
+      eventName === "workflow_run" &&
+      event.action === "in_progress" &&
+      event.workflow_run?.run_attempt === 1 &&
+      event.workflow_run?.pull_requests?.length === 1
+    )
+      reason = "initial-engineering-attempt-in-progress";
+    console.log(JSON.stringify({ decision: "not-run", reason }));
     return;
   }
   assert.ok(
     Number.isSafeInteger(event.repository?.id),
     "GitHub event lacks the verified repository identity.",
   );
+  if (routeOnly) {
+    appendFileSync(env.GITHUB_OUTPUT, `pr_number=${number}\n`);
+    return;
+  }
+  assert.ok(
+    env.FARFOLD_DELIVERY_PR_NUMBER === String(number),
+    "Final delivery did not receive the routed pull request number.",
+  );
+  const releaseProof =
+    eventName === "workflow_dispatch" ? event.inputs?.release_proof : "";
+  const ownerDispatch =
+    eventName === "workflow_dispatch" &&
+    Number.isSafeInteger(event.repository.owner?.id) &&
+    event.sender?.id === event.repository.owner.id &&
+    env.GITHUB_RUN_ATTEMPT === "1";
+  if (releaseProof) {
+    assert.ok(
+      /^[0-9a-f]{64}$/.test(releaseProof) && ownerDispatch,
+      "Release requires an exact proof digest and a repository-owner dispatch.",
+    );
+  }
   const client = {
-    ...githubClient(repo),
+    ...(prepare
+      ? {
+          ...githubFinalReader(repo, env),
+          publisherAppId: configuredPublisherAppId(env),
+        }
+      : githubClient(repo, env)),
     publicKey: env.FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY,
+    announcedRun: eventName === "workflow_run" ? event.workflow_run : undefined,
   };
   const snapshot = () =>
     targetFor(client.api, number, base, event.repository.id);
-  const serverUrl = `https://github.com/${repo}/actions/runs/${runId}`;
-  const target = snapshot();
-  const result = publishFinalDelivery(client, target, serverUrl, () => {
+  assert.ok(
+    /^[1-9][0-9]*$/.test(env.GITHUB_RUN_ATTEMPT ?? ""),
+    "Missing publisher run attempt.",
+  );
+  const serverUrl = `https://github.com/${repo}/actions/runs/${runId}/attempts/${env.GITHUB_RUN_ATTEMPT}`;
+  function verifyCurrent(target) {
     const result = verifyFinalDelivery(client, target);
     assert.ok(
       sameTuple(target, snapshot()),
@@ -568,7 +972,11 @@ function main(env) {
       branch.object?.sha === base,
       "main changed during final verification.",
     );
-    const currentRun = latestEngineeringRun(client.api, target);
+    const currentRun = latestEngineeringRun(
+      client.api,
+      target,
+      client.announcedRun,
+    );
     assert.ok(
       currentRun.id === result.runId &&
         currentRun.run_attempt === result.runAttempt,
@@ -583,20 +991,166 @@ function main(env) {
     );
     assert.ok(
       current.review.reviewDigest === result.review.reviewDigest &&
+        current.evidence?.evidenceId === result.evidence?.evidenceId &&
         current.evidence?.evidenceDigest === result.evidence?.evidenceDigest,
       "Independent review or private evidence changed during final verification.",
     );
     return result;
-  });
-  console.log(
-    JSON.stringify({
-      decision: "verified",
-      candidate: target.head,
-      target: target.merge,
-      pr: number,
-      ...result,
-    }),
-  );
+  }
+  let pending;
+  let journalError;
+  try {
+    pending = pendingRelease(client, base, event.repository.id);
+  } catch (error) {
+    journalError = error;
+  }
+  if (prepare) {
+    if (journalError) {
+      console.log(JSON.stringify(blockedDecision(journalError)));
+      return;
+    }
+    try {
+      const plan = prepareReleasePlan({
+        ownerDispatch,
+        number,
+        releaseProof,
+        pending,
+        verifyRelease() {
+          const target = snapshot();
+          const proof = publishedProof(target, verifyCurrent(target));
+          const protection = verifyDeliveryMainRules(
+            client.api,
+            repo,
+            client.publisherAppId,
+          );
+          assert.equal(
+            releaseProofDigest(proof, protection),
+            releaseProof,
+            "Current proof or main protection differs from the requested release.",
+          );
+        },
+      });
+      if (plan)
+        appendFileSync(
+          env.GITHUB_OUTPUT,
+          `mode=${plan.mode}\nbinding=${plan.binding}\n`,
+        );
+    } catch (error) {
+      console.log(JSON.stringify(blockedDecision(error)));
+    }
+    return;
+  }
+  if (pending) {
+    const plan = prepareReleasePlan({
+      ownerDispatch,
+      number,
+      releaseProof,
+      pending,
+    });
+    if (matchesReleasePlan(env, plan)) {
+      client.authorizeRelease({
+        mode: "reconcile",
+        pr: number,
+        uuid: pending.intent.uuid,
+      });
+      try {
+        const outcome = await reconcileRelease(client, pending);
+        console.log(JSON.stringify({ pr: number, ...outcome }));
+        if (outcome.decision === "merged") return;
+      } catch (error) {
+        journalError = error;
+      }
+    } else {
+      journalError = new DeliveryBlocked(
+        "release-outcome-unknown",
+        `PR #${pending.intent.pr} may still have a release in flight. Refresh that PR from main without sending a new release.`,
+      );
+    }
+  }
+  const target = snapshot();
+  const binding = {
+    base,
+    candidate: target.head,
+    target: target.merge,
+    pr: number,
+    publisherAppId: client.publisherAppId,
+  };
+  try {
+    const result = publishFinalDelivery(client, target, serverUrl, () => {
+      const verified = verifyCurrent(target);
+      if (journalError) throw journalError;
+      return verified;
+    });
+    console.log(
+      JSON.stringify({ decision: "verified", ...binding, ...result }),
+    );
+    if (!releaseProof) return;
+
+    try {
+      const proof = publishedProof(target, result);
+      const protection = verifyDeliveryMainRules(
+        client.api,
+        repo,
+        client.publisherAppId,
+      );
+      assert.equal(
+        releaseProofDigest(proof, protection),
+        releaseProof,
+        "Current proof or main protection differs from the requested release.",
+      );
+      assert.ok(
+        ownerDispatch &&
+          matchesReleasePlan(env, { mode: "release", binding: releaseProof }),
+        "This workflow did not prepare an authorized release for the current proof.",
+      );
+      client.authorizeRelease({ mode: "release", pr: number });
+      const outcome = await releaseDelivery(
+        client,
+        target,
+        proof,
+        serverUrl,
+        () => {
+          assert.deepEqual(
+            publishedProof(target, verifyCurrent(target)),
+            proof,
+            "Independent review, evidence, or engineering checks changed before release.",
+          );
+          const currentProtection = verifyDeliveryMainRules(
+            client.api,
+            repo,
+            client.publisherAppId,
+          );
+          assert.equal(
+            releaseProofDigest(proof, currentProtection),
+            releaseProof,
+            "Main protection changed after the owner authorized this release.",
+          );
+        },
+      );
+      if (outcome.decision !== "merged") {
+        throw new DeliveryBlocked(
+          "release-rejected",
+          "GitHub rejected the recorded merge request.",
+        );
+      }
+      console.log(JSON.stringify({ ...binding, ...outcome }));
+    } catch (error) {
+      // Retire the earlier check pair even when the journal or rules fail
+      // the final read. The journal still governs any in-flight request.
+      try {
+        publishFinalDelivery(client, target, serverUrl, () => {
+          throw error;
+        });
+      } catch (publicationError) {
+        if (publicationError !== error)
+          console.error("Could not republish the blocked release.");
+      }
+      throw error;
+    }
+  } catch (error) {
+    console.log(JSON.stringify({ ...blockedDecision(error), ...binding }));
+    if (!(error instanceof DeliveryWaiting)) process.exitCode = 1;
+  }
 }
 
 if (
@@ -604,13 +1158,9 @@ if (
   import.meta.url === pathToFileURL(process.argv[1]).href
 ) {
   try {
-    main(process.env);
+    await main(process.env, process.argv[2]);
   } catch (error) {
-    console.error(
-      error instanceof SyntaxError || error instanceof TypeError
-        ? "Final delivery evidence or GitHub metadata is malformed."
-        : error.message,
-    );
+    console.error(JSON.stringify(blockedDecision(error)));
     process.exitCode = 1;
   }
 }

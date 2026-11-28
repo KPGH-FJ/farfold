@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   codexReviewBotId,
+  codexReviewEditCurrent,
   codexReviewEvent,
   codexReviewProof as verifyProof,
   pullRequestComments,
@@ -27,7 +28,7 @@ const compare = () => ({
   ahead_by: 1,
 });
 
-function summary({ code = {}, completed = completion } = {}) {
+function summary({ code = {}, completed = completion, security = {} } = {}) {
   return {
     id: 7127685325,
     node_id: "IC_kwDOUF9Z6s8AAAABqNfYzQ",
@@ -58,6 +59,7 @@ function summary({ code = {}, completed = completion } = {}) {
           has_any_findings: null,
           has_unresolved_findings: null,
           status: "completed",
+          ...security,
         },
       })} -->`,
       `| 📝 **Code Review** | ✅ **Completed** <relative-time datetime="${completed}">${completed}</relative-time> | \`92219ac\` | PR opened |`,
@@ -67,41 +69,55 @@ function summary({ code = {}, completed = completion } = {}) {
   };
 }
 
+function editedReview(previous, current, sender = current.user) {
+  return {
+    action: "edited",
+    issue: { number: target.number, pull_request: {} },
+    comment: current,
+    changes: { body: { from: previous.body } },
+    sender,
+  };
+}
+
+function commentGraphql(comments, snapshot = {}) {
+  return (query, id) => {
+    expect(query).toContain("node(id: $node)");
+    const comment = comments.find(({ node_id }) => node_id === id);
+    const bot = {
+      __typename: "Bot",
+      databaseId: codexReviewBotId,
+      login: "chatgpt-codex-connector",
+    };
+    return {
+      data: {
+        node: {
+          __typename: "IssueComment",
+          id: comment.node_id,
+          fullDatabaseId: String(comment.id),
+          body: comment.body,
+          createdAt: comment.created_at,
+          updatedAt: comment.updated_at,
+          lastEditedAt: comment.updated_at,
+          author: bot,
+          editor: bot,
+          userContentEdits: {
+            totalCount: 1,
+            pageInfo: { hasNextPage: false },
+            nodes: [
+              { editedAt: comment.updated_at, deletedAt: null, editor: bot },
+            ],
+          },
+          ...snapshot,
+        },
+      },
+    };
+  };
+}
+
 function codexReviewProof(api, comments, target, run, now, snapshot = {}) {
   return verifyProof(
     api,
-    (query, id) => {
-      expect(query).toContain("node(id: $node)");
-      const comment = comments.find(({ node_id }) => node_id === id);
-      const bot = {
-        __typename: "Bot",
-        databaseId: codexReviewBotId,
-        login: "chatgpt-codex-connector",
-      };
-      return {
-        data: {
-          node: {
-            __typename: "IssueComment",
-            id: comment.node_id,
-            fullDatabaseId: String(comment.id),
-            body: comment.body,
-            createdAt: comment.created_at,
-            updatedAt: comment.updated_at,
-            lastEditedAt: comment.updated_at,
-            author: bot,
-            editor: bot,
-            userContentEdits: {
-              totalCount: 1,
-              pageInfo: { hasNextPage: false },
-              nodes: [
-                { editedAt: comment.updated_at, deletedAt: null, editor: bot },
-              ],
-            },
-            ...snapshot,
-          },
-        },
-      };
-    },
+    commentGraphql(comments, snapshot),
     comments,
     target,
     run,
@@ -262,14 +278,38 @@ describe("authenticated Codex App review", () => {
     );
   });
 
+  it("waits for the first authenticated review", () => {
+    expect(() => codexReviewProof(compare, [], target, run, now)).toThrow(
+      expect.objectContaining({ state: "waiting-review" }),
+    );
+  });
+
+  it.each(["requested", "running"])(
+    "waits for a %s current review",
+    (status) => {
+      expect(() =>
+        codexReviewProof(
+          compare,
+          [summary({ code: { status } })],
+          target,
+          run,
+          now,
+        ),
+      ).toThrow(expect.objectContaining({ state: "waiting-review" }));
+    },
+  );
+
   it.each([
     { commit_sha: "c".repeat(40) },
-    { status: "requested" },
-    { status: "running" },
-  ])("rejects a review that is not complete for current head: %o", (code) => {
+    { commit_sha: "c".repeat(40), status: "running" },
+    { status: "withdrawn" },
+  ])("rejects an invalid current review: %o", (code) => {
     expect(() =>
       codexReviewProof(compare, [summary({ code })], target, run, now),
     ).toThrow(/has not completed code review/i);
+    expect(() =>
+      codexReviewProof(compare, [summary({ code })], target, run, now),
+    ).not.toThrow(expect.objectContaining({ state: "waiting-review" }));
   });
 
   it.each([
@@ -338,6 +378,125 @@ describe("authenticated Codex App review", () => {
         comment: { user: { id: 21, type: "User" } },
       }),
     ).toBe(false);
+  });
+
+  it("ignores a pinned bot edit that only updates the security review or display text", () => {
+    const previous = summary({ security: { status: "running" } });
+    previous.body = previous.body.replace(
+      'datetime="2026-11-24T09:41:05Z"',
+      'datetime="2026-11-24T09:39:15Z"',
+    );
+    const current = summary();
+    current.body += "An updated display footer.";
+    const event = editedReview(previous, current);
+    expect(codexReviewEvent(event)).toBe(true);
+    expect(codexReviewEvent(event, () => false)).toBe(true);
+    expect(codexReviewEvent(event, (comment) => comment === current)).toBe(
+      false,
+    );
+  });
+
+  it("confirms an equivalent edit using the current REST identity and full editor history", () => {
+    const current = summary();
+    const reader = {
+      api(path) {
+        expect(path).toBe(`issues/comments/${current.id}`);
+        return current;
+      },
+      graphql: commentGraphql([current]),
+    };
+    const event = editedReview(
+      summary({ security: { status: "running" } }),
+      current,
+    );
+    const confirm = (comment) => codexReviewEditCurrent(reader, comment);
+    expect(confirm(current)).toBe(true);
+    expect(codexReviewEvent(event, confirm)).toBe(false);
+
+    const node = reader.graphql("node(id: $node)", current.node_id).data.node;
+    for (const snapshot of [
+      { editor: { __typename: "User", login: "owner" } },
+      {
+        userContentEdits: {
+          ...node.userContentEdits,
+          totalCount: 101,
+          pageInfo: { hasNextPage: true },
+        },
+      },
+      {
+        userContentEdits: {
+          ...node.userContentEdits,
+          totalCount: 101,
+          nodes: Array(101).fill(node.userContentEdits.nodes[0]),
+        },
+      },
+    ]) {
+      reader.graphql = commentGraphql([current], snapshot);
+      expect(confirm(current)).toBe(false);
+      expect(codexReviewEvent(event, confirm)).toBe(true);
+    }
+  });
+
+  it("does not skip an edit whose live source, body, identity or update time changed", () => {
+    const eventComment = summary();
+    for (const live of [
+      null,
+      { ...eventComment, id: eventComment.id + 1 },
+      { ...eventComment, node_id: "a_different_node" },
+      summary({ security: { status: "running" } }),
+      { ...eventComment, updated_at: "2026-11-24T09:42:00Z" },
+      { ...eventComment, performed_via_github_app: { id: 15368 } },
+    ]) {
+      expect(
+        codexReviewEditCurrent(
+          { api: () => live, graphql: commentGraphql([live]) },
+          eventComment,
+        ),
+      ).toBe(false);
+    }
+    expect(
+      codexReviewEditCurrent(
+        {
+          api() {
+            throw new Error("GitHub API unavailable");
+          },
+        },
+        eventComment,
+      ),
+    ).toBe(false);
+  });
+
+  it("rechecks changed findings, status, head, timing and removed review text", () => {
+    const previous = summary();
+    for (const current of [
+      summary({ code: { has_any_findings: true } }),
+      summary({ code: { has_unresolved_findings: true } }),
+      summary({ code: { status: "running" } }),
+      summary({ code: { commit_sha: "c".repeat(40) } }),
+      summary({ completed: "2026-11-24T09:40:00Z" }),
+      { ...previous, body: "Review withdrawn." },
+    ]) {
+      expect(
+        codexReviewEvent(editedReview(previous, current), () => true),
+      ).toBe(true);
+    }
+  });
+
+  it("does not filter unknown editors or unverifiable prior text", () => {
+    const previous = summary();
+    const current = summary({ security: { status: "running" } });
+    for (const sender of [
+      null,
+      { id: 22, login: "KPGH-FJ", type: "User" },
+      { ...previous.user, id: 223 },
+    ]) {
+      expect(
+        codexReviewEvent(editedReview(previous, current, sender), () => true),
+      ).toBe(true);
+    }
+    expect(
+      codexReviewEvent(editedReview({ body: "invalid" }, current), () => true),
+    ).toBe(true);
   });
 
   it("does not use an older truncated comment list as the current state", () => {

@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { DeliveryWaiting } from "./delivery-state.mjs";
 
 export const codexReviewBotId = 199175422;
 const summaryMarker = "<!-- codex-pull-request-review-summary -->";
 const stateMarker = /^<!-- codex-review-state:v1 (\{.+\}) -->$/;
 const reviewRow = /^\| 📝 \*\*Code Review\*\* \|/;
+const commentEditLimit = 100;
 const commentSnapshot = `query($node: ID!) {
   node(id: $node) {
     __typename
@@ -12,7 +14,7 @@ const commentSnapshot = `query($node: ID!) {
       id fullDatabaseId body createdAt updatedAt lastEditedAt
       author { __typename login ... on Bot { databaseId } }
       editor { __typename login ... on Bot { databaseId } }
-      userContentEdits(first: 100) {
+      userContentEdits(first: ${commentEditLimit}) {
         totalCount
         pageInfo { hasNextPage }
         nodes { editedAt deletedAt editor { __typename login ... on Bot { databaseId } } }
@@ -21,13 +23,32 @@ const commentSnapshot = `query($node: ID!) {
   }
 }`;
 
-export function codexReviewEvent(event) {
+export function codexReviewEvent(event, confirmCurrentReview) {
+  const comment = event.comment;
+  if (
+    !Number.isSafeInteger(event.issue?.number) ||
+    event.issue?.pull_request == null ||
+    !["created", "edited", "deleted"].includes(event.action) ||
+    comment?.user?.id !== codexReviewBotId ||
+    comment.user.type !== "Bot"
+  )
+    return false;
+  if (
+    event.action !== "edited" ||
+    !restCodexBot(comment.user) ||
+    !restCodexBot(event.sender) ||
+    !Number.isSafeInteger(comment.id) ||
+    (comment.performed_via_github_app != null && !authoredByCodex(comment))
+  )
+    return true;
+
+  // Equivalent content can still lose trust when its edit history changes.
+  // Confirm the current comment before deciding that the full check can wait.
+  const current = reviewSignal(comment.body);
   return (
-    Number.isSafeInteger(event.issue?.number) &&
-    event.issue?.pull_request != null &&
-    ["created", "edited", "deleted"].includes(event.action) &&
-    event.comment?.user?.id === codexReviewBotId &&
-    event.comment?.user?.type === "Bot"
+    current === null ||
+    current !== reviewSignal(event.changes?.body?.from) ||
+    confirmCurrentReview?.(comment) !== true
   );
 }
 
@@ -42,16 +63,84 @@ export function pullRequestComments(api, number) {
   throw new Error("PR comments exceed the safely verifiable pagination limit.");
 }
 
+function restCodexBot(actor) {
+  return (
+    actor?.id === codexReviewBotId &&
+    actor.login === "chatgpt-codex-connector[bot]" &&
+    actor.type === "Bot"
+  );
+}
+
 function authoredByCodex(comment) {
   const app = comment.performed_via_github_app;
   return (
-    comment.user?.id === codexReviewBotId &&
-    comment.user?.login === "chatgpt-codex-connector[bot]" &&
-    comment.user?.type === "Bot" &&
+    restCodexBot(comment.user) &&
     app?.id === 1144995 &&
     app.slug === "chatgpt-codex-connector" &&
     app.owner?.login === "openai"
   );
+}
+
+function reviewBody(body) {
+  const lines = body.split("\n");
+  const marked = lines.filter((line) =>
+    line.startsWith("<!-- codex-review-state:"),
+  );
+  const rows = lines.filter((line) => reviewRow.test(line));
+  assert.ok(
+    marked.length === 1 && stateMarker.test(marked[0]) && rows.length === 1,
+    "Codex App review summary format is unsupported or ambiguous.",
+  );
+  try {
+    return {
+      state: JSON.parse(stateMarker.exec(marked[0])[1]).code_review,
+      row: rows[0],
+    };
+  } catch {
+    throw new Error("Codex App review state is malformed.");
+  }
+}
+
+function codeReviewTime(row) {
+  // A change to Security Review must not make an earlier code review newer.
+  const times = [...row.matchAll(/<relative-time datetime="([^"]+)">/g)];
+  assert.ok(
+    times.length === 1,
+    "Codex App did not publish the code review completion time.",
+  );
+  return times[0][1];
+}
+
+function reviewSignal(body) {
+  if (
+    typeof body !== "string" ||
+    !body.startsWith(summaryMarker + "\n") ||
+    Buffer.byteLength(body) > 24000
+  )
+    return null;
+  try {
+    const { state, row } = reviewBody(body);
+    const { commit_sha, status, has_any_findings, has_unresolved_findings } =
+      state;
+    if (
+      typeof commit_sha !== "string" ||
+      typeof status !== "string" ||
+      ![true, false, null].includes(has_any_findings) ||
+      ![true, false, null].includes(has_unresolved_findings)
+    )
+      return null;
+    const reviewedAt = codeReviewTime(row);
+    time(reviewedAt);
+    return JSON.stringify([
+      commit_sha,
+      status,
+      has_any_findings,
+      has_unresolved_findings,
+      reviewedAt,
+    ]);
+  } catch {
+    return null;
+  }
 }
 
 function time(value) {
@@ -114,6 +203,7 @@ function verifyCommentEditor(graphql, summary) {
   assert.ok(
     history?.pageInfo?.hasNextPage === false &&
       Array.isArray(edits) &&
+      edits.length <= commentEditLimit &&
       edits.length === history.totalCount &&
       (pristine
         ? edits.length === 0
@@ -121,6 +211,26 @@ function verifyCommentEditor(graphql, summary) {
       edits.every((edit) => edit?.deletedAt === null && codexBot(edit.editor)),
     "Codex review comment edit history is incomplete or includes a different editor.",
   );
+}
+
+export function codexReviewEditCurrent(reader, eventComment) {
+  if (!Number.isSafeInteger(eventComment?.id) || eventComment.id <= 0)
+    return false;
+  try {
+    const comment = reader.api(`issues/comments/${eventComment.id}`);
+    if (
+      comment?.id !== eventComment.id ||
+      comment.node_id !== eventComment.node_id ||
+      comment.body !== eventComment.body ||
+      comment.updated_at !== eventComment.updated_at ||
+      !authoredByCodex(comment)
+    )
+      return false;
+    verifyCommentEditor(reader.graphql, comment);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function codexReviewProof(api, graphql, comments, target, run, now) {
@@ -146,6 +256,11 @@ export function codexReviewProof(api, graphql, comments, target, run, now) {
       typeof comment.body === "string" &&
       comment.body.startsWith(summaryMarker + "\n"),
   );
+  if (summaries.length === 0)
+    throw new DeliveryWaiting(
+      "waiting-review",
+      "Need one authenticated Codex App review summary on this PR.",
+    );
   assert.ok(
     summaries.length === 1,
     "Need one authenticated Codex App review summary on this PR.",
@@ -157,21 +272,15 @@ export function codexReviewProof(api, graphql, comments, target, run, now) {
     "Codex review summary is not safely identifiable or bounded.",
   );
   verifyCommentEditor(graphql, summary);
-  const lines = summary.body.split("\n");
-  const marked = lines.filter((line) =>
-    line.startsWith("<!-- codex-review-state:"),
-  );
-  const rows = lines.filter((line) => reviewRow.test(line));
-  assert.ok(
-    marked.length === 1 && stateMarker.test(marked[0]) && rows.length === 1,
-    "Codex App review summary format is unsupported or ambiguous.",
-  );
-  let state;
-  try {
-    state = JSON.parse(stateMarker.exec(marked[0])[1]).code_review;
-  } catch {
-    throw new Error("Codex App review state is malformed.");
-  }
+  const { state, row } = reviewBody(summary.body);
+  if (
+    state?.commit_sha === target.head &&
+    ["requested", "running"].includes(state.status)
+  )
+    throw new DeliveryWaiting(
+      "waiting-review",
+      "Codex App has not completed code review for this exact candidate head.",
+    );
   assert.ok(
     state?.commit_sha === target.head && state.status === "completed",
     "Codex App has not completed code review for this exact candidate head.",
@@ -181,14 +290,7 @@ export function codexReviewProof(api, graphql, comments, target, run, now) {
     "Codex App code review reports findings or an indeterminate result.",
   );
 
-  // Use the Code Review row timestamp. Changing the summary to update
-  // Security Review must not make an earlier code review look newer.
-  const times = [...rows[0].matchAll(/<relative-time datetime="([^"]+)">/g)];
-  assert.ok(
-    times.length === 1,
-    "Codex App did not publish the code review completion time.",
-  );
-  const reviewedAt = times[0][1];
+  const reviewedAt = codeReviewTime(row);
   const instant = time(reviewedAt);
   assert.ok(
     instant >=

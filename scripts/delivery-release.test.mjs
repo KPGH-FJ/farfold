@@ -1,0 +1,572 @@
+import { describe, expect, it, vi } from "vitest";
+import {
+  pendingRelease,
+  reconcileRelease,
+  releaseCheck,
+  releaseDelivery,
+  releaseJournal,
+  releaseRequestAnchor,
+} from "./delivery-release.mjs";
+
+const target = {
+  repositoryId: 10,
+  number: 15,
+  base: "1".repeat(40),
+  head: "2".repeat(40),
+  merge: "3".repeat(40),
+  mergeTree: "4".repeat(40),
+};
+const proof = { proofSha256: "5".repeat(64) };
+const mergeCommit = "6".repeat(40);
+const requestUuid = "5b266ac4-d4b2-483a-9d39-f3ef264ac3cb";
+const advancedBase = "9".repeat(40);
+const publisherAppId = 5913751;
+const publisherSlug = "farfold-final-delivery-publisher";
+const serverUrl =
+  "https://github.com/example/farfold/actions/runs/7/attempts/1";
+const markerId = 12;
+const readyPayload = {
+  repositoryId: target.repositoryId,
+  schemaVersion: 1,
+  state: "ready",
+};
+const pendingIntent = {
+  repositoryId: target.repositoryId,
+  pr: target.number,
+  base: target.base,
+  head: target.head,
+  preview: target.merge,
+  tree: target.mergeTree,
+  ...proof,
+};
+
+function fixture({
+  commit = {
+    sha: mergeCommit,
+    parents: [{ sha: target.base }, { sha: target.head }],
+    tree: { sha: target.mergeTree },
+  },
+  marker = {},
+  activeIntent,
+  completed,
+  missing = false,
+  visibleMerge = true,
+} = {}) {
+  const calls = [];
+  const created = [];
+  let journal = readyPayload;
+  if (activeIntent)
+    journal = { ...readyPayload, state: "pending", intent: activeIntent };
+  if (completed) journal = { ...readyPayload, state: "settled", ...completed };
+  const client = {
+    publisherAppId,
+    startRelease: vi.fn((intent, url, previous) => {
+      calls.push("record");
+      journal = { ...readyPayload, state: "pending", intent: { ...intent } };
+      created.push({ intent: journal.intent, url, previous });
+      return { id: markerId, publisherSlug };
+    }),
+    updateRelease: vi.fn((_id, intent) => {
+      calls.push("save-uuid");
+      journal = { ...journal, intent: { ...intent } };
+    }),
+    finishRelease: vi.fn((_id, intent, outcome) => {
+      journal = {
+        ...readyPayload,
+        state: "settled",
+        intent: { ...intent },
+        outcome,
+      };
+    }),
+    releaseApi: vi.fn((method, path) => {
+      calls.push(method);
+      if (method === "PUT" && path === "pulls/15/merge-async") {
+        return {
+          status: "pending",
+          details: {
+            uuid: requestUuid,
+            expected_head_sha: target.head,
+            merge_method: "merge",
+            merge_action: "direct_merge",
+          },
+        };
+      }
+      if (method === "GET" && path === `pulls/15/merge-async/${requestUuid}`) {
+        return { status: "merged", details: { sha: mergeCommit } };
+      }
+      throw new Error(`Unexpected release call: ${method} ${path}`);
+    }),
+    api: vi.fn((path) => {
+      if (path === "pulls/15") {
+        return {
+          merged: visibleMerge,
+          state: visibleMerge ? "closed" : "open",
+          merged_by: { login: publisherSlug + "[bot]" },
+          number: 15,
+          base: { ref: "main", repo: { id: target.repositoryId } },
+          head: { sha: target.head },
+          merge_commit_sha: mergeCommit,
+        };
+      }
+      if (path === `git/commits/${mergeCommit}`) return commit;
+      if (path.startsWith(`commits/${releaseRequestAnchor}/check-runs?`)) {
+        const params = new URLSearchParams(path.split("?")[1]);
+        expect(params.get("filter")).toBe("all");
+        expect(params.has("status")).toBe(false);
+        if (missing) return { total_count: 0, check_runs: [] };
+        return {
+          total_count: 1,
+          check_runs: [
+            {
+              id: markerId,
+              publisherSlug,
+              name: releaseCheck,
+              app: { id: publisherAppId, slug: publisherSlug },
+              head_sha: releaseRequestAnchor,
+              status: "completed",
+              conclusion: "neutral",
+              output: { summary: JSON.stringify(journal) },
+              ...marker,
+            },
+          ],
+        };
+      }
+      if (path.startsWith("compare/")) {
+        const expected = `compare/${target.base}...${advancedBase}?per_page=1`;
+        return path === expected
+          ? {
+              base_commit: { sha: target.base },
+              merge_base_commit: { sha: target.base },
+              status: "ahead",
+              ahead_by: 1,
+              behind_by: 0,
+            }
+          : {
+              base_commit: { sha: target.head },
+              merge_base_commit: { sha: target.base },
+              status: "diverged",
+              ahead_by: 1,
+              behind_by: 1,
+            };
+      }
+      throw new Error(`Unexpected read: ${path}`);
+    }),
+  };
+  return { client, calls, created };
+}
+
+describe("release recovery after main advances", () => {
+  it("finds the old marker while its PR is open and prevents another PR or the same PR from dispatching", async () => {
+    const { client, calls } = fixture({
+      activeIntent: pendingIntent,
+      visibleMerge: false,
+    });
+    const pending = pendingRelease(client, advancedBase, target.repositoryId);
+    expect(pending).toEqual({
+      id: markerId,
+      intent: pendingIntent,
+      publisherSlug,
+    });
+    for (const number of [target.number, target.number + 1]) {
+      await expect(
+        releaseDelivery(
+          client,
+          { ...target, number, base: advancedBase },
+          proof,
+          serverUrl,
+          () => {},
+        ),
+      ).rejects.toMatchObject({ state: "release-outcome-unknown" });
+    }
+    expect(calls).toEqual([]);
+    expect(client.startRelease).not.toHaveBeenCalled();
+    expect(client.releaseApi).not.toHaveBeenCalled();
+    expect(client.finishRelease).not.toHaveBeenCalled();
+    expect(client.api.mock.calls.flat()).not.toContain("pulls/15");
+  });
+
+  it("confirms an old marker only through its saved UUID and matching terminal result", async () => {
+    const { client, calls } = fixture({
+      activeIntent: { ...pendingIntent, uuid: requestUuid },
+    });
+    const pending = pendingRelease(client, advancedBase, target.repositoryId);
+    await expect(reconcileRelease(client, pending)).resolves.toEqual({
+      decision: "merged",
+      mergeCommit,
+    });
+    expect(calls).toEqual(["GET"]);
+    expect(client.finishRelease).toHaveBeenCalledWith(
+      markerId,
+      pending.intent,
+      "success",
+    );
+  });
+
+  it("uses the App's initialized slot before the first request", () => {
+    const { client } = fixture();
+    expect(releaseJournal(client, target.base, target.repositoryId)).toEqual({
+      id: markerId,
+      publisherSlug,
+      state: "ready",
+      intent: null,
+    });
+    expect(pendingRelease(client, target.base, target.repositoryId)).toBeNull();
+  });
+
+  it("does not send or recreate a request when GitHub no longer shows the slot", async () => {
+    const { client } = fixture({ missing: true });
+    await expect(
+      releaseDelivery(client, target, proof, serverUrl, () => {}),
+    ).rejects.toMatchObject({
+      state: "release-outcome-unknown",
+      message: /missing or ambiguous/,
+    });
+    expect(client.startRelease).not.toHaveBeenCalled();
+    expect(client.releaseApi).not.toHaveBeenCalled();
+  });
+
+  it("does not send when the journal disappears during the fresh proof check", async () => {
+    const { client } = fixture();
+    const recheck = () => {
+      client.api.mockReturnValue({ total_count: 0, check_runs: [] });
+    };
+    await expect(
+      releaseDelivery(client, target, proof, serverUrl, recheck),
+    ).rejects.toMatchObject({
+      state: "release-outcome-unknown",
+      message: /missing or ambiguous/,
+    });
+    expect(client.startRelease).toHaveBeenCalledTimes(1);
+    expect(client.releaseApi).not.toHaveBeenCalled();
+    expect(client.finishRelease).not.toHaveBeenCalled();
+  });
+
+  it.each(["stale", "cancelled", "failure", "success"])(
+    "blocks new requests when the slot's conclusion is %s rather than neutral",
+    async (conclusion) => {
+      const { client } = fixture({
+        marker: { conclusion },
+      });
+      await expect(
+        releaseDelivery(
+          client,
+          { ...target, base: advancedBase },
+          proof,
+          serverUrl,
+          () => {},
+        ),
+      ).rejects.toMatchObject({ state: "release-outcome-unknown" });
+      expect(client.startRelease).not.toHaveBeenCalled();
+      expect(client.releaseApi).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each([
+    ["legacy bare intent", pendingIntent],
+    [
+      "settled success without operation identity",
+      {
+        ...readyPayload,
+        state: "settled",
+        intent: pendingIntent,
+        outcome: "success",
+      },
+    ],
+    ["ready state with an intent", { ...readyPayload, intent: pendingIntent }],
+    ["wrong repository identity", { ...readyPayload, repositoryId: 1 }],
+  ])("blocks %s in the release journal", async (_description, output) => {
+    const { client } = fixture({
+      marker: { output: { summary: JSON.stringify(output) } },
+    });
+    await expect(
+      releaseDelivery(client, target, proof, serverUrl, () => {}),
+    ).rejects.toMatchObject({ state: "release-outcome-unknown" });
+    expect(client.startRelease).not.toHaveBeenCalled();
+    expect(client.releaseApi).not.toHaveBeenCalled();
+  });
+
+  it.each(["success", "failure"])(
+    "recognizes a trusted %s after main advances",
+    (outcome) => {
+      const { client } = fixture({
+        completed: {
+          outcome,
+          intent: { ...pendingIntent, uuid: requestUuid },
+        },
+      });
+      expect(
+        pendingRelease(client, advancedBase, target.repositoryId),
+      ).toBeNull();
+    },
+  );
+
+  it("refuses duplicate journal slots", () => {
+    const { client } = fixture({ activeIntent: pendingIntent });
+    const original = client.api.getMockImplementation();
+    client.api.mockImplementation((route) => {
+      const { check_runs } = original(route);
+      return {
+        total_count: 2,
+        check_runs: [...check_runs, { ...check_runs[0], id: markerId + 1 }],
+      };
+    });
+    expect(() =>
+      pendingRelease(client, advancedBase, target.repositoryId),
+    ).toThrow(/missing or ambiguous/);
+    expect(client.startRelease).not.toHaveBeenCalled();
+  });
+});
+
+describe("verified release request", () => {
+  it.each(["unavailable", "pending"])(
+    "keeps a claim open when its exact operation is %s even if the PR visibly merged",
+    async (state) => {
+      const { client } = fixture();
+      client.releaseApi.mockImplementation(() => {
+        if (state === "unavailable")
+          throw new Error("GitHub operation returned HTTP 404");
+        return {
+          status: "pending",
+          details: {
+            uuid: requestUuid,
+            expected_head_sha: target.head,
+            merge_method: "merge",
+            merge_action: "direct_merge",
+            bypass_rules: true,
+          },
+        };
+      });
+      await expect(
+        reconcileRelease(
+          client,
+          {
+            id: markerId,
+            publisherSlug,
+            intent: { ...pendingIntent, uuid: requestUuid },
+          },
+          async () => {},
+        ),
+      ).rejects.toMatchObject({ state: "release-outcome-unknown" });
+      expect(client.releaseApi.mock.calls).toEqual(
+        Array.from({ length: 4 }, () => [
+          "GET",
+          `pulls/15/merge-async/${requestUuid}`,
+        ]),
+      );
+      expect(client.api).not.toHaveBeenCalled();
+      expect(client.finishRelease).not.toHaveBeenCalled();
+    },
+  );
+
+  it("does not attribute an already merged response to the current dispatch", async () => {
+    const { client, calls } = fixture();
+    client.releaseApi.mockResolvedValue({
+      status: "merged",
+      details: { sha: mergeCommit },
+    });
+    await expect(
+      releaseDelivery(client, target, proof, serverUrl, () => {}),
+    ).rejects.toMatchObject({
+      state: "release-outcome-unknown",
+    });
+    expect(calls).toEqual(["record"]);
+    expect(client.releaseApi).toHaveBeenCalledTimes(1);
+    expect(client.finishRelease).not.toHaveBeenCalled();
+  });
+
+  it("does not close a marker when the exact operation returns a different merge commit", async () => {
+    const { client } = fixture();
+    client.releaseApi.mockResolvedValue({
+      status: "merged",
+      details: { sha: "8".repeat(40) },
+    });
+    await expect(
+      reconcileRelease(client, {
+        id: markerId,
+        publisherSlug,
+        intent: { ...pendingIntent, uuid: requestUuid },
+      }),
+    ).rejects.toThrow("GitHub reported a different merge");
+    expect(client.finishRelease).not.toHaveBeenCalled();
+  });
+
+  it("settles a failure from the exact original UUID independently of a visible PR merge", async () => {
+    const { client } = fixture();
+    client.releaseApi.mockResolvedValue({
+      status: "failed",
+      details: { message: "Required check missing" },
+    });
+    const intent = { ...pendingIntent, uuid: requestUuid };
+    await expect(
+      reconcileRelease(client, { id: markerId, publisherSlug, intent }),
+    ).resolves.toEqual({ decision: "release-rejected" });
+    expect(client.releaseApi.mock.calls).toEqual([
+      ["GET", `pulls/15/merge-async/${requestUuid}`],
+    ]);
+    expect(client.api).not.toHaveBeenCalled();
+    expect(client.finishRelease).toHaveBeenCalledWith(
+      markerId,
+      intent,
+      "failure",
+    );
+  });
+
+  it("does not close a marker when the pending response identifies another UUID", async () => {
+    const { client } = fixture();
+    client.releaseApi.mockResolvedValue({
+      status: "pending",
+      details: {
+        uuid: "142c028d-6a1d-4baf-8876-f1f89445cff6",
+        expected_head_sha: target.head,
+        merge_method: "merge",
+        merge_action: "direct_merge",
+      },
+    });
+    const intent = { ...pendingIntent, uuid: requestUuid };
+    await expect(
+      reconcileRelease(client, { id: markerId, publisherSlug, intent }),
+    ).rejects.toThrow(/different pending release/);
+    expect(client.api).not.toHaveBeenCalled();
+    expect(client.finishRelease).not.toHaveBeenCalled();
+  });
+
+  it("closes a durable intent when GitHub explicitly refuses dispatch", async () => {
+    const { client } = fixture();
+    client.releaseApi.mockReturnValue({ status: "refused", httpStatus: 403 });
+    await expect(
+      releaseDelivery(client, target, proof, serverUrl, () => {}),
+    ).rejects.toThrow(/HTTP 403/);
+    expect(client.finishRelease).toHaveBeenCalledWith(
+      markerId,
+      pendingIntent,
+      "failure",
+    );
+  });
+
+  it("records intent before dispatch and verifies the actual merged commit", async () => {
+    const { client, calls, created } = fixture();
+    const recheck = () => calls.push("fresh-proof");
+    await expect(
+      releaseDelivery(client, target, proof, serverUrl, recheck),
+    ).resolves.toEqual({ decision: "merged", mergeCommit });
+    expect(calls).toEqual(["record", "fresh-proof", "PUT", "save-uuid", "GET"]);
+    expect(created).toEqual([
+      {
+        intent: pendingIntent,
+        url: serverUrl,
+        previous: { id: markerId, publisherSlug, state: "ready", intent: null },
+      },
+    ]);
+    expect(client.releaseApi).toHaveBeenNthCalledWith(
+      1,
+      "PUT",
+      "pulls/15/merge-async",
+      expect.objectContaining({ sha: target.head, merge_method: "merge" }),
+    );
+    expect(client.finishRelease).toHaveBeenCalledWith(
+      markerId,
+      { ...pendingIntent, uuid: requestUuid },
+      "success",
+    );
+  });
+
+  it.each([
+    [
+      "parents",
+      {
+        sha: mergeCommit,
+        parents: [{ sha: target.head }, { sha: target.base }],
+      },
+    ],
+    ["tree", { sha: mergeCommit, tree: { sha: "7".repeat(40) } }],
+  ])("rejects a claimed merge with the wrong %s", async (part, mismatch) => {
+    const { client } = fixture({
+      commit: {
+        parents: [{ sha: target.base }, { sha: target.head }],
+        tree: { sha: target.mergeTree },
+        ...mismatch,
+      },
+    });
+    await expect(
+      releaseDelivery(client, target, proof, serverUrl, () => {}),
+    ).rejects.toThrow(new RegExp(`Merged ${part} differs?`));
+    expect(client.finishRelease).not.toHaveBeenCalled();
+  });
+
+  it("retains the refusal and never sends an already withdrawn release", async () => {
+    const { client } = fixture();
+    await expect(
+      releaseDelivery(client, target, proof, serverUrl, () => {
+        throw new Error("Evidence withdrawn");
+      }),
+    ).rejects.toThrow("Evidence withdrawn");
+    expect(client.releaseApi).not.toHaveBeenCalled();
+    expect(client.finishRelease).toHaveBeenCalledWith(
+      markerId,
+      pendingIntent,
+      "failure",
+    );
+  });
+
+  it("keeps an unknown request without a UUID blocked and does not dispatch again", async () => {
+    const { client } = fixture({ visibleMerge: false });
+    client.releaseApi.mockImplementationOnce(() => {
+      throw new Error("Response lost");
+    });
+    await expect(
+      releaseDelivery(client, target, proof, serverUrl, () => {}),
+    ).rejects.toThrow("Response lost");
+    const pending = pendingRelease(client, target.base, target.repositoryId);
+    expect(pending).toEqual({
+      id: markerId,
+      publisherSlug,
+      intent: pendingIntent,
+    });
+    await expect(reconcileRelease(client, pending)).rejects.toThrow(
+      "Do not resubmit the merge",
+    );
+    expect(client.releaseApi).toHaveBeenCalledTimes(1);
+    expect(client.finishRelease).not.toHaveBeenCalled();
+  });
+
+  it("reads the original UUID after a restart without dispatching a new merge", async () => {
+    const { client } = fixture();
+    const intent = { ...pendingIntent, uuid: requestUuid };
+    await expect(
+      reconcileRelease(client, { id: markerId, intent, publisherSlug }),
+    ).resolves.toEqual({
+      decision: "merged",
+      mergeCommit,
+    });
+    expect(client.releaseApi.mock.calls).toEqual([
+      ["GET", `pulls/15/merge-async/${requestUuid}`],
+    ]);
+  });
+
+  it.each([
+    ["wrong App", { app: { id: 15368 } }, /unexpected source or status/],
+    [
+      "wrong check anchor",
+      { head_sha: target.head },
+      /unexpected source or status/,
+    ],
+    [
+      "wrong base in the intent",
+      {
+        output: {
+          summary: JSON.stringify({
+            ...readyPayload,
+            state: "pending",
+            intent: { ...pendingIntent, base: target.head },
+          }),
+        },
+      },
+      /not in the protected main history/,
+    ],
+  ])("rejects an in-flight record with the %s", (_reason, marker, reason) => {
+    const { client } = fixture({ marker, activeIntent: pendingIntent });
+    expect(() =>
+      pendingRelease(client, target.base, target.repositoryId),
+    ).toThrow(reason);
+  });
+});

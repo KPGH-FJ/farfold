@@ -60,7 +60,17 @@ corepack pnpm acceptance:check output/owned-run/receipt.json
 
 GitHub 在 `main` 上执行 PR 与工程检查规则。工程工作流验证合并预览的两个父提交，按范围产生 `Farfold delivery check`。最终核验工作流从受保护的 `main` 读取核验代码，在工程工作流之后评估同一基线、候选、合并预览和工程报告。它把同一次判断发布到合并预览和候选提交，候选提交的检查最后通过，供 GitHub 合入规则识别。当前生效的必需检查以 [GitHub 主线规则](https://github.com/KPGH-FJ/farfold/rules?ref=main) 为准。
 
-当前个人仓库的规则只能按检查名称和 GitHub App 身份识别发布者。同一仓库的工作流共用 GitHub Actions App 身份。最终核验保持可运行，独立发布身份和适用私有证据的真实放行链路完成验证后，再设为永久必需检查。
+当前个人仓库的规则按检查名称和 GitHub App 身份识别发布者。同一仓库的普通工作流共用 GitHub Actions App 身份。专用发布工作流在 `farfold-final-publisher` Environment 取得安装令牌。`GITHUB_TOKEN` 仅用于读取验证数据。写入候选和预览后分别核对返回的数字 App ID、提交和状态。没有唯一关联 PR 的事件不发布检查。独立发布和适用私有证据的真实放行链路验证通过后，才将最终检查设为永久必需。
+
+### 一次性配置和治理过渡
+
+从 [GitHub Apps](https://github.com/settings/apps) 核对现有身份。需要新建时，App 仅在仓库所有者账号下可安装，主页用 [Farfold 仓库](https://github.com/KPGH-FJ/farfold)，关闭 webhook。仓库权限先配置 `Checks: Read and write` 及自动授予的 `Metadata: Read`。安装时选 `Only select repositories`，只选择 `farfold`。验证 ruleset 能绑定真实检查的数字 App ID。若 GitHub 实际要求其他权限，先记录平台拒绝及所需权限。
+
+在 [发布 Environment 设置](https://github.com/KPGH-FJ/farfold/settings/environments) 选 `Selected branches and tags`，保留唯一 `Branch: main`，核验没有 Tag 或 PR 引用。Environment 变量 `FARFOLD_FINAL_PUBLISHER_CLIENT_ID` 用 App Client ID，`FARFOLD_FINAL_PUBLISHER_APP_ID` 用数字 App ID。将 App 的 PEM 私钥放入同一 Environment 的 `FARFOLD_FINAL_PUBLISHER_PRIVATE_KEY` secret。工作流只在 `main` 检出受信提交，以单仓库、`checks: write` 权限生成短期安装令牌。所有者从主线手动请求核对或合入时，短期令牌还可取得 `contents: write`。发布任务不执行候选提供的代码、不安装候选依赖、不恢复候选缓存。
+
+首次安装专用发布程序沿用现有 PR、严格基线和工程检查。所有者已单独授权 PR #15 的一次性迁移审查。隔离独审须读取当前候选、原验收要求、先前的拒绝、认证原件及验证结果，并明确同意。独审拒绝、证据过期或版本改变都会阻止此次交付。合入前从 GitHub 再读基线、候选、合并预览、工程尝试、完整代码审查和保护规则，同时读回本次独审结果，再按候选 SHA 正常合入。这次授权只覆盖安装检查器，后续产品交付执行下述终检。
+
+过渡合入后，先验证专用 App 实际发布、普通 PR 无法访问发布 Environment，以及同一真实产品候选的完整证据能通过、缺失或撤回证据能被终检拒绝。撤回验证须从已有专用 App 成功状态开始，并读回该候选和合并预览的新结果。若刷新失败或仅剩旧绿勾，停止合入和永久启用，先核清旧状态为何仍可用于合入。用上述结果确认生效规则能绑定专用 App 后，将终检加入现有 `main` ruleset，保留工程检查、严格基线和 PR 规则。在规则生效时核验 GitHub 确实阻止拒绝案例，完成合格产品 PR 的正常合入，再读回规则。
 
 `Farfold final delivery` 从 GitHub API 核验 Codex App 发布的独立代码审查。原始 App、机器人和最近编辑者身份均要匹配。审查须完成、无报告发现、对应当前候选，并在当前合并预览和工程运行启动后完成。候选须包含当前基线，候选与合并预览的源码树须相同。App 评论格式变化、空结果和旧结果都会拒绝放行。App 审查原始文件的范围是 GitHub 可访问的材料，私有实机原件由独立任务在受限环境复核。
 
@@ -72,14 +82,37 @@ node scripts/delivery-pr.mjs <PR-number> /path/to/delivery-record.json
 
 独立复核任务通过受限交接取得原件，读回行为结果，核对安装与构建来源、原条件、证据完整性及复验报告。适用平台的构建报告和安装回执须对应同一候选源码树及已验证二进制。Windows 工程测试和安装程序生命周期检查分别记录其实际范围，Windows 正式应用操作须有相应原始观察。
 
-适用实机或治理复核时，受信保管方用隔离的 Ed25519 密钥签署独立执行的最小公开摘要，GitHub Actions 只持有 `FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY` 公钥。签名涵盖实际审查执行编号、记录摘要、原件交接编号、PR 和版本、工程运行及尝试编号、适用回执和规则影响。署名前查阅原件并核对 `delivery-pr.mjs` 的结果。治理变更须附上规则怎样保留原验收要求的具体依据。签名格式以 `scripts/delivery-private-attestation.mjs` 为准。原件、会话正文、账号信息、机器路径和密钥留在受限环境。每个 PR 保留一条摘要评论，补交时编辑同一条。仓库所有者发布摘要时，评论首行用 `<!-- farfold-private-delivery:v1 -->`，其后是已签名的 JSON。当前公钥应由能独立运行复核且能保管私钥的执行环境提供；缺少受信记录时，适用的最终核验会拒绝。
+适用实机或治理复核时，受信保管方用隔离的 Ed25519 密钥签署独立执行的最小公开摘要，GitHub Actions 只持有 `FARFOLD_PRIVATE_EVIDENCE_PUBLIC_KEY` 公钥。签名涵盖实际审查执行编号、记录摘要、原件交接编号、PR 和版本、工程运行及尝试编号、适用回执和规则影响。署名前查阅原件并核对 `delivery-pr.mjs` 的结果。治理变更须附上规则怎样保留原验收要求的具体依据。签名格式以 `scripts/delivery-private-attestation.mjs` 为准。原件、会话正文、账号信息、机器路径和密钥留在受限环境。缺少受信记录时，适用的最终核验会拒绝。
+
+专用 App 路线使用 `schemaVersion: 2`。所有者先为该 PR 发布唯一的占位评论，首行用 `<!-- farfold-private-delivery:v1 -->`。签发方把 GitHub 返回的评论数字 ID 写进 `claim.witnessId`，用 `privateAttestationBytes(claim, 2)` 签署。所有者只编辑这条评论一次，保留首行并将正文替换为已签名的 JSON。终检一致核对 GitHub 两个接口的正文、作者和编辑历史。撤回时删除该评论。更换原件、审查或签发结论时，撤回旧评论，再创建新评论，由签发方重新签署该新 ID。复制旧信封或再次编辑已发布的摘要均被拒绝。
+
+本机复核身份可用一次性系统授权配置为专用标准用户或受管服务。由管理员保护签发入口和密钥目录，开发身份仅提交请求和只读原件副本。给独立 Agent 提供这一候选的精确源码、原验收条件、封存回执及工程报告。签发方从其实际完成的执行记录取得编号、结束时间和原始记录摘要，核对结论后在隔离环境签署。仓库变量只接收该签发方的公开 Ed25519 SPKI 公钥。现有共享系统用户可做只读独审，同一用户生成的密钥无法提供独立保管。
+
+日常合入使用 `node scripts/delivery-pr.mjs <PR-number> /path/to/delivery-record.json --merge`。使用已核对的受保护主线脚本及其依赖，从仓库根目录运行。如果同一工作区正开发其他改动，可以只提取主线脚本。以下示例的 PR 编号和记录路径须替换为实际值。
 
 ```sh
-gh workflow run delivery-final.yml --ref main -f pr_number=<PR-number>
-gh pr merge <PR-number> --merge --match-head-commit <reviewed-head-SHA>
+(
+  set -eu
+  set -- 123 /absolute/path/to/delivery-record.json
+  delivery_base=$(gh api repos/KPGH-FJ/farfold/git/ref/heads/main --jq '.object.sha')
+  git fetch --no-write-fetch-head --no-tags origin "$delivery_base"
+  delivery_scripts=$(mktemp -d)
+  trap 'rm -rf -- "$delivery_scripts"' EXIT
+  git archive --format=tar --output="$delivery_scripts/main-scripts.tar" "$delivery_base" scripts
+  tar -xf "$delivery_scripts/main-scripts.tar" -C "$delivery_scripts"
+  node "$delivery_scripts/scripts/delivery-pr.mjs" "$1" "$2" --merge
+)
 ```
 
-App 审查和保管方摘要的发布、编辑和删除会重跑最终核验。基线推进后更新候选，重新取得对应工程结果和审查。证据到期时补验，再提交对应摘要。GitHub 会缓存上一轮状态，时钟跨过期限本身不会启动工作流。合入前重新运行，确认当前合并预览的服务器结果和证据期限，再用匹配的候选提交合入并核对主线。
+终检在工程尝试完成或重跑启动、Codex 的有效代码审查变化、保管方摘要变化或手动刷新时运行。普通评论与首次工程检查启动不触发完整核验。Codex 只更新展示内容时，路由任务先用只读权限核对来源和完整编辑历史，核对通过才跳过。核验和合入任务共用一个主线发布并发组，串行读取当前输入。工程重跑启动事件即使先于工程查询更新，也不会复用同一运行的旧尝试。
+
+日志中的 `waiting-engineering` 和 `waiting-review` 表示等待，对应的专用检查保持进行中。`missing-configuration` 表示发布身份或复核公钥配置缺失。`evidence-rejected` 表示适用的签署证据缺失、过期或核验不合格。`not-run` 表示本事件没有执行交付核验。只有 `verified` 对应专用 App 发布的成功结果。发布凭据缺失时，工作流无法更新已有的 App 检查。
+
+合入命令先校验本地交付记录，再用仓库所有者的现有认证核对 GitHub 生效规则和完整绕过名单。合入摘要绑定这次核对的规则 ID、精确更新时间、分支范围和公开规则参数。受保护的主线工作流用只读凭据核对当前候选、工程结果、独审、适用证据和同一规则摘要，校验通过后才签发单仓库的短期合入令牌。发布检查使用单独的令牌。发送合入请求前，工作流再次读回并比对规则摘要。GitHub 只向有规则写权限的身份返回绕过名单，工作流通过同一可见规则状态核对所有者预检的时效。专用 App 获准通过单独的更新限制，GitHub 仍执行原 PR 和必需检查规则。
+
+首次安装确认合入后，专用 App 在固定的主线祖先提交上初始化一份合入请求记录。日常流程更新同一份记录，在发送前保存并读回本次候选、基线、合并预览和核验摘要，然后再次核对证据、主线规则和在途记录。记录缺失、重复、格式不符或出现无法确认的在途请求时，停止合入。已有 UUID 的请求可在对应 PR 发起一次空 `release_proof` 刷新，临时令牌仅用于读取该 UUID 的原请求。GitHub 保存旧检查，证据到期本身也不会启动工作流。
+
+签署评论被删除后，仍需检查候选和预览是否已更新为失败。合入请求已发出或网络中断且结果未知时，撤回保持待确认。只有旧成功检查已更新，且没有在途请求或 GitHub 已确认原请求失败时，才能确认撤回。若 GitHub 已合入，记录实际提交，按正常流程回退。若没有收到 UUID，或合入记录已过期、归档或消失，保留阻断，先由维护者从留存的受信服务端记录查证，确认后才可恢复记录。GitHub 的合入接口比较候选 SHA，Mac 上的撤回无法保证叫停已经提交给 GitHub 的请求。[GitHub 检查保留说明](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#setting-the-check-workflow-run-status-artifact-and-log-retention-period-for-a-repository)
 
 2026-11-24，仓库所有者在原研发交付会话中明确授权把该 GitHub 仓库设为公开，原会话保留执行及无登录访问核验。该授权范围为仓库可见性。
 
